@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Infrastructure;
@@ -12,14 +13,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private Store _store;
         private EmailAccount _emailAccount;
+        private Language _language;
 
-        private readonly StoreInformationSettings _storeInformationSettings;
-
-        public LiquidStore(Store store, EmailAccount emailAccount = null)
+        public LiquidStore(Store store, Language language, EmailAccount emailAccount = null)
         {
-            this._storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-
             this._store = store;
+            this._language = language;
             this._emailAccount = emailAccount;
 
             AdditionalTokens = new Dictionary<string, string>();
@@ -27,7 +26,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string Name
         {
-            get { return _store.GetLocalized(x => x.Name); }
+            get { return _store.GetLocalized(x => x.Name, _language.Id); }
         }
 
         public string URL
@@ -70,35 +69,17 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _store.CompanyVat; }
         }
 
-        public string TwitterLink
-        {
-            get { return _storeInformationSettings.TwitterLink; }
-        }
+        public string TwitterLink { get; set; }
 
-        public string FacebookLink
-        {
-            get { return _storeInformationSettings.FacebookLink; }
-        }
+        public string FacebookLink { get; set; }
 
-        public string YoutubeLink
-        {
-            get { return _storeInformationSettings.YoutubeLink; }
-        }
+        public string YoutubeLink { get; set; }
 
-        public string InstagramLink
-        {
-            get { return _storeInformationSettings.InstagramLink; }
-        }
+        public string InstagramLink { get; set; }
 
-        public string LinkedInLink
-        {
-            get { return _storeInformationSettings.LinkedInLink; }
-        }
+        public string LinkedInLink { get; set; }
 
-        public string PinterestLink
-        {
-            get { return _storeInformationSettings.PinterestLink; }
-        }
+        public string PinterestLink { get; set; }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }
     }

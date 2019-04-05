@@ -1,18 +1,12 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Directory;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Tax;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
-using Grand.Services.Directory;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Localization;
-using Grand.Services.Media;
-using Grand.Services.Orders;
-using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -20,131 +14,43 @@ namespace Grand.Services.Messages.DotLiquidDrops
     public partial class LiquidOrderItem : Drop
     {
         private OrderItem _orderItem;
-        private string _languageId;
         private Order _order;
         private Product _product;
+        private Language _language;
+        private Currency _currency;
+        private Store _store;
 
-        private readonly IProductService _productService;
-        private readonly IDownloadService _downloadService;
-        private readonly IStoreService _storeService;
-        private readonly IOrderService _orderService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICurrencyService _currencyService;
-        private readonly ILanguageService _languageService;
-        private readonly CatalogSettings _catalogSettings;
-
-        public LiquidOrderItem(OrderItem orderItem, Order order, string lanugageId)
+        public LiquidOrderItem(OrderItem orderItem, Product product, Order order, Language language, Currency currency, Store store)
         {
-            this._productService = EngineContext.Current.Resolve<IProductService>();
-            this._downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._orderService = EngineContext.Current.Resolve<IOrderService>();
-            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
-            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
-            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
-            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
-            this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-
             this._orderItem = orderItem;
-            this._languageId = lanugageId;
-            this._order = _orderService.GetOrderByOrderItemId(_orderItem.Id);
-            this._product = _productService.GetProductById(orderItem.ProductId);
-
+            this._store = store;
+            this._language = language;
+            this._currency = currency;
+            this._order = order;
+            this._product = product;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public string UnitPrice
-        {
-            get
-            {
-                string unitPriceStr;
-                if (_order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(_orderItem.UnitPriceInclTax, _order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, _order.CustomerCurrencyCode,
-                        _languageService.GetLanguageById(_languageId), true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(_orderItem.UnitPriceExclTax, _order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, _order.CustomerCurrencyCode,
-                        _languageService.GetLanguageById(_languageId), false);
-                }
+        public string UnitPrice { get; set; }
 
-                return unitPriceStr;
-            }
-        }
+        public string TotalPrice { get; set; }
 
-        public string TotalPrice
-        {
-            get
-            {
-                string priceStr;
-                if (_order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(_orderItem.PriceInclTax, _order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, _order.CustomerCurrencyCode,
-                        _languageService.GetLanguageById(_languageId), true);
-                }
-                else
-                {
-                    //excluding tax
-                    var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(_orderItem.PriceExclTax, _order.CurrencyRate);
-                    priceStr = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, _order.CustomerCurrencyCode,
-                        _languageService.GetLanguageById(_languageId), false);
-                }
 
-                return priceStr;
-            }
-        }
+        public string ProductSku { get; set; }
 
-        public string ProductSku
-        {
-            get
-            {
-                string sku = "";
 
-                if (_product != null)
-                    sku = _product.FormatSku(_orderItem.AttributesXml, _productAttributeParser);
+        public bool ShowSkuOnProductDetailsPage { get; set; }
 
-                return WebUtility.HtmlEncode(sku);
-            }
-        }
+        public bool IsDownloadAllowed { get; set; }
 
-        public bool ShowSkuOnProductDetailsPage
-        {
-            get
-            {
-                return _catalogSettings.ShowSkuOnProductDetailsPage;
-            }
-        }
-
-        public bool IsDownloadAllowed
-        {
-            get
-            {
-                return _downloadService.IsDownloadAllowed(_orderItem);
-            }
-        }
-
-        public bool IsLicenseDownloadAllowed
-        {
-            get
-            {
-                return _downloadService.IsLicenseDownloadAllowed(_orderItem);
-            }
-        }
+        public bool IsLicenseDownloadAllowed { get; set; }
 
         public string DownloadUrl
         {
             get
             {
                 var storeId = _order?.StoreId;
-                string downloadUrl = string.Format("{0}download/getdownload/{1}", _storeService.GetStoreUrl(storeId), _orderItem.OrderItemGuid);
+                string downloadUrl = string.Format("{0}download/getdownload/{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _orderItem.OrderItemGuid);
                 return downloadUrl;
             }
         }
@@ -154,12 +60,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var storeId = _order?.StoreId;
-                string licenseUrl = string.Format("{0}download/getlicense/{1}", _storeService.GetStoreUrl(storeId), _orderItem.OrderItemGuid);
+                string licenseUrl = string.Format("{0}download/getlicense/{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _orderItem.OrderItemGuid);
                 return licenseUrl;
             }
         }
 
-        public Guid OrderItemGuid
+        public Guid OrderItemGuid0
         {
             get
             {
@@ -174,7 +80,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 string name = "";
 
                 if (_product != null)
-                    name = WebUtility.HtmlEncode(_product.GetLocalized(x => x.Name, _languageId));
+                    name = WebUtility.HtmlEncode(_product.GetLocalized(x => x.Name, _language.Id));
 
                 return name;
             }
@@ -187,7 +93,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 string desc = "";
 
                 if (_product != null)
-                    desc = WebUtility.HtmlEncode(_product.GetLocalized(x => x.ShortDescription, _languageId));
+                    desc = WebUtility.HtmlEncode(_product.GetLocalized(x => x.ShortDescription, _language.Id));
 
                 return desc;
             }
@@ -200,37 +106,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 string desc = "";
 
                 if (_product != null)
-                    desc = WebUtility.HtmlDecode(_product.GetLocalized(x => x.FullDescription, _languageId));
+                    desc = WebUtility.HtmlDecode(_product.GetLocalized(x => x.FullDescription, _language.Id));
 
                 return desc;
             }
         }
 
-        public string ProductPrice
-        {
-            get
-            {
-                string price = "";
+        public string ProductOldPrice { get; set; }
 
-                if (_product != null)
-                    price = _priceFormatter.FormatPrice(_product.Price, true, _order.CustomerCurrencyCode, _languageService.GetLanguageById(_languageId), true);
 
-                return price;
-            }
-        }
-
-        public string ProductOldPrice
-        {
-            get
-            {
-                string price = "";
-
-                if (_product != null)
-                    price = _priceFormatter.FormatPrice(_product.OldPrice, true, _order.CustomerCurrencyCode, _languageService.GetLanguageById(_languageId), true);
-
-                return price;
-            }
-        }
 
         public string ProductId
         {
