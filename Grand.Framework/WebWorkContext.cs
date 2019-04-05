@@ -154,6 +154,7 @@ namespace Grand.Framework
             return language;
         }
 
+
         /// <summary>
         /// Get language from the request
         /// </summary>
@@ -169,7 +170,7 @@ namespace Grand.Framework
                 return null;
 
             //try to get language by culture name
-            var requestLanguage = _languageService.GetAllLanguages().FirstOrDefault(language => 
+            var requestLanguage = _languageService.GetAllLanguages().GetAwaiter().GetResult().FirstOrDefault(language => 
                 language.LanguageCulture.Equals(requestCulture.Culture.Name, StringComparison.OrdinalIgnoreCase));
 
             //check language availability
@@ -200,7 +201,7 @@ namespace Grand.Framework
                 if (_httpContextAccessor.HttpContext == null)
                 {
                     //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
+                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask).GetAwaiter().GetResult();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active)
@@ -212,7 +213,7 @@ namespace Grand.Framework
                 if (customer == null)
                 {
                     //try to get api user
-                    customer = _apiauthenticationService.GetAuthenticatedCustomer().Result;
+                    customer = _apiauthenticationService.GetAuthenticatedCustomer().GetAwaiter().GetResult();
                     //if customer comes from api, doesn't need to create cookies
                     if (customer != null)
                     {
@@ -225,10 +226,10 @@ namespace Grand.Framework
                 if (customer != null && !customer.Deleted && customer.Active)
                 {
                     //get impersonate user if required
-                    var impersonatedCustomerId = customer.GetAttribute<string>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                    var impersonatedCustomerId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
                     if (!string.IsNullOrEmpty(impersonatedCustomerId))
                     {
-                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId);
+                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId).GetAwaiter().GetResult();
                         if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
                         {
                             //set impersonated customer
@@ -247,7 +248,7 @@ namespace Grand.Framework
                         if (Guid.TryParse(customerCookie, out Guid customerGuid))
                         {
                             //get customer from cookie (should not be registered)
-                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
+                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid).GetAwaiter().GetResult();
                             if (customerByCookie != null && !customerByCookie.IsRegistered())
                                 customer = customerByCookie;
                         }
@@ -258,14 +259,14 @@ namespace Grand.Framework
                 {
                     //check whether request is made by a search engine, in this case return built-in customer record for search engines
                     if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine).GetAwaiter().GetResult();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     //create guest if not exists
                     string referrer = _httpContextAccessor?.HttpContext?.Request?.Headers[HeaderNames.Referer];
-                    customer = _customerService.InsertGuestCustomer(_storeContext.CurrentStore, referrer);
+                    customer = _customerService.InsertGuestCustomer(_storeContext.CurrentStore, referrer).GetAwaiter().GetResult();
                 }
 
                 if (!customer.Deleted && customer.Active)
@@ -312,7 +313,7 @@ namespace Grand.Framework
                     return null;
 
                 //try to get vendor
-                var vendor = _vendorService.GetVendorById(this.CurrentCustomer.VendorId);
+                var vendor = _vendorService.GetVendorById(this.CurrentCustomer.VendorId).GetAwaiter().GetResult();
 
                 //check vendor availability
                 if (vendor == null || vendor.Deleted || !vendor.Active)
@@ -346,7 +347,7 @@ namespace Grand.Framework
                 if (detectedLanguage == null && _localizationSettings.AutomaticallyDetectLanguage)
                 {
                     //whether language already detected by this way
-                    var alreadyDetected = this.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected, _storeContext.CurrentStore.Id);
+                    var alreadyDetected = CurrentCustomer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected, _storeContext.CurrentStore.Id);
 
                     //if not, try to get language from the request
                     if (!alreadyDetected)
@@ -365,7 +366,7 @@ namespace Grand.Framework
                 if (detectedLanguage != null)
                 {
                     //get current saved language identifier
-                    var currentLanguageId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
+                    var currentLanguageId = CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
 
                     //save the detected language identifier if it differs from the current one
                     if (detectedLanguage.Id != currentLanguageId)
@@ -376,9 +377,9 @@ namespace Grand.Framework
                 }
                 
                 //get current customer language identifier
-                var customerLanguageId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
+                var customerLanguageId = CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
 
-                var allStoreLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
+                var allStoreLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id).GetAwaiter().GetResult();
 
                 //check customer language availability
                 var customerLanguage = allStoreLanguages.FirstOrDefault(language => language.Id == customerLanguageId);
@@ -394,7 +395,7 @@ namespace Grand.Framework
 
                 //if there are no languages for the current store try to get the first one regardless of the store
                 if (customerLanguage == null)
-                    customerLanguage = _languageService.GetAllLanguages().FirstOrDefault();
+                    customerLanguage = _languageService.GetAllLanguages().GetAwaiter().GetResult().FirstOrDefault();
 
                 //cache the found language
                 _cachedLanguage = customerLanguage;
@@ -430,7 +431,7 @@ namespace Grand.Framework
                 var adminAreaUrl = _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments(new PathString("/Admin"));
                 if(adminAreaUrl)
                 {
-                    var primaryStoreCurrency =  _currencyService.GetPrimaryStoreCurrency();
+                    var primaryStoreCurrency =  _currencyService.GetPrimaryStoreCurrency().GetAwaiter().GetResult();
                     if (primaryStoreCurrency != null)
                     {
                         _cachedCurrency = primaryStoreCurrency;
@@ -439,9 +440,9 @@ namespace Grand.Framework
                 }
 
                 //find a currency previously selected by a customer
-                var customerCurrencyId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CurrencyId, _storeContext.CurrentStore.Id);
+                var customerCurrencyId = CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CurrencyId, _storeContext.CurrentStore.Id);
 
-                var allStoreCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
+                var allStoreCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id).GetAwaiter().GetResult();
 
                 //check customer currency availability
                 var customerCurrency = allStoreCurrencies.FirstOrDefault(currency => currency.Id == customerCurrencyId);
@@ -457,7 +458,7 @@ namespace Grand.Framework
 
                 //if there are no currencies for the current store try to get the first one regardless of the store
                 if (customerCurrency == null)
-                    customerCurrency = _currencyService.GetAllCurrencies().FirstOrDefault();
+                    customerCurrency = _currencyService.GetAllCurrencies().GetAwaiter().GetResult().FirstOrDefault();
 
                 //cache the found currency
                 _cachedCurrency = customerCurrency;
@@ -495,7 +496,7 @@ namespace Grand.Framework
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
                     //try to get previously saved tax display type
-                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.TaxDisplayTypeId, _storeContext.CurrentStore.Id);
+                    var taxDisplayTypeId = CurrentCustomer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.TaxDisplayTypeId, _storeContext.CurrentStore.Id);
                     taxDisplayType = (TaxDisplayType)taxDisplayTypeId;
                 }
                 else

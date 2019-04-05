@@ -51,7 +51,7 @@ namespace Grand.Framework
                 //try to determine the current store by HOST header
                 string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
 
-                var allStores = _storeService.GetAllStores();
+                var allStores = _storeService.GetAllStores().GetAwaiter().GetResult();
                 var stores = allStores.Where(s => s.ContainsHostValue(host));
                 if (stores.Count() == 0)
                 {
