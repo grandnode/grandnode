@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Localization;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Localization
 {
@@ -12,7 +13,7 @@ namespace Grand.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        void DeleteLanguage(Language language);
+        Task DeleteLanguage(Language language);
 
         /// <summary>
         /// Gets all languages
@@ -20,25 +21,25 @@ namespace Grand.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        IList<Language> GetAllLanguages(bool showHidden = false, string storeId = "");
+        Task<IList<Language>> GetAllLanguages(bool showHidden = false, string storeId = "");
 
         /// <summary>
         /// Gets a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        Language GetLanguageById(string languageId);
+        Task<Language> GetLanguageById(string languageId);
 
         /// <summary>
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        void InsertLanguage(Language language);
+        Task InsertLanguage(Language language);
 
         /// <summary>
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        void UpdateLanguage(Language language);
+        Task UpdateLanguage(Language language);
     }
 }
