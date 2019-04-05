@@ -37,7 +37,7 @@ namespace Grand.Framework.Mvc.Filters
             private readonly IGenericAttributeService _genericAttributeService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
-
+            private readonly ICustomerActivityService _customerActivityService;
             #endregion
 
             #region Ctor
@@ -45,12 +45,14 @@ namespace Grand.Framework.Mvc.Filters
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
                 IWebHelper webHelper, 
-                IWorkContext workContext)
+                IWorkContext workContext,
+                ICustomerActivityService customerActivityService)
             {
                 this._customerSettings = customerSettings;
                 this._genericAttributeService = genericAttributeService;
                 this._webHelper = webHelper;
                 this._workContext = workContext;
+                this._customerActivityService = customerActivityService;
             }
 
             #endregion
@@ -88,7 +90,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
                 
                 //get previous last page
-                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastVisitedPage).GetAwaiter().GetResult();
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.OrdinalIgnoreCase))
@@ -97,7 +99,7 @@ namespace Grand.Framework.Mvc.Filters
                 if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers[HeaderNames.Referer]))
                     if (!context.HttpContext.Request.Headers[HeaderNames.Referer].ToString().Contains(context.HttpContext.Request.Host.ToString()))
                     {
-                        var previousUrlReferrer = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
+                        var previousUrlReferrer = _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer);
                         var actualUrlReferrer = context.HttpContext.Request.Headers[HeaderNames.Referer];
                         if (previousUrlReferrer != actualUrlReferrer)
                         {
@@ -109,8 +111,7 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     if (!_workContext.CurrentCustomer.IsSearchEngineAccount())
                     {
-                        var customerActivity = EngineContext.Current.Resolve<ICustomerActivityService>();
-                        customerActivity.InsertActivityAsync("PublicStore.Url", pageUrl, pageUrl, _workContext.CurrentCustomer.Id, _webHelper.GetCurrentIpAddress());
+                        _customerActivityService.InsertActivityAsync("PublicStore.Url", pageUrl, pageUrl, _workContext.CurrentCustomer.Id, _webHelper.GetCurrentIpAddress());
                     }
                 }
 

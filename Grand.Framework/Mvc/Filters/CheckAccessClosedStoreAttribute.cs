@@ -103,7 +103,7 @@ namespace Grand.Framework.Mvc.Filters
                     actionName.Equals("TopicDetails", StringComparison.OrdinalIgnoreCase))
                 {
                     //get identifiers of topics are accessible when a store is closed
-                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).GetAwaiter().GetResult()
                         .Where(topic => topic.AccessibleWhenStoreClosed).Select(topic => topic.Id);
 
                     //check whether requested topic is allowed
