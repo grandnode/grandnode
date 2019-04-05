@@ -39,7 +39,7 @@ namespace Grand.Framework.Localization
 
             //suppose that the first segment is the language code and try to get language
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            language = languageService.GetAllLanguages()
+            language = languageService.GetAllLanguages().GetAwaiter().GetResult()
                 .FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.OrdinalIgnoreCase));
 
             //if language exists and published passed URL is localized
