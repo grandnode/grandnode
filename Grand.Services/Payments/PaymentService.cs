@@ -26,7 +26,6 @@ namespace Grand.Services.Payments
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly ICurrencyService _currencyService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
@@ -43,14 +42,12 @@ namespace Grand.Services.Payments
             IPluginFinder pluginFinder,
             ISettingService settingService,
             ICurrencyService currencyService,
-            IServiceProvider serviceProvider,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._currencyService = currencyService;
-            this._serviceProvider = serviceProvider;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -111,7 +108,7 @@ namespace Grand.Services.Payments
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IPaymentMethod>(_serviceProvider);
+                return descriptor.Instance<IPaymentMethod>(_pluginFinder.ServiceProvider);
 
             return null;
         }

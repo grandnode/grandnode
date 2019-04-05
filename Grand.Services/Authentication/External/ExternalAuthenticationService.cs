@@ -44,7 +44,6 @@ namespace Grand.Services.Authentication.External
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly LocalizationSettings _localizationSettings;
 
         #endregion
@@ -67,7 +66,6 @@ namespace Grand.Services.Authentication.External
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            IServiceProvider serviceProvider,
             LocalizationSettings localizationSettings)
         {
             this._customerSettings = customerSettings;
@@ -86,7 +84,6 @@ namespace Grand.Services.Authentication.External
             this._storeContext = storeContext;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
-            this._serviceProvider = serviceProvider;
             this._localizationSettings = localizationSettings;
         }
 
@@ -285,7 +282,7 @@ namespace Grand.Services.Authentication.External
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExternalAuthenticationMethod>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IExternalAuthenticationMethod>(_serviceProvider);
+                return descriptor.Instance<IExternalAuthenticationMethod>(_pluginFinder.ServiceProvider);
 
             return null;
         }

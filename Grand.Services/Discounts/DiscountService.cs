@@ -90,7 +90,6 @@ namespace Grand.Services.Discounts
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IServiceProvider _serviceProvider;
         private readonly PerRequestCacheManager _perRequestCache;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -110,7 +109,6 @@ namespace Grand.Services.Discounts
             IGenericAttributeService genericAttributeService,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher,
-            IServiceProvider serviceProvider,
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
@@ -128,7 +126,6 @@ namespace Grand.Services.Discounts
             this._storeContext = storeContext;
             this._genericAttributeService = genericAttributeService;
             this._pluginFinder = pluginFinder;
-            this._serviceProvider = serviceProvider;
             this._eventPublisher = eventPublisher;
             this._productRepository = productRepository;
             this._categoryRepository = categoryRepository;
@@ -930,7 +927,7 @@ namespace Grand.Services.Discounts
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountAmountProvider>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IDiscountAmountProvider>(_serviceProvider);
+                return descriptor.Instance<IDiscountAmountProvider>(_pluginFinder.ServiceProvider);
 
             return null;
         }

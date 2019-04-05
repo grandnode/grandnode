@@ -22,6 +22,7 @@ namespace Grand.Services.Directory.Tests
         private CurrencySettings _currencySettings;
         private IEventPublisher _eventPublisher;
         private ICurrencyService _currencyService;
+        private IServiceProvider _serviceProvider;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
 
@@ -86,6 +87,7 @@ namespace Grand.Services.Directory.Tests
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
@@ -99,7 +101,7 @@ namespace Grand.Services.Directory.Tests
             
             _currencyService = new CurrencyService(
                 cacheManager, _currencyRepository, _storeMappingService,
-                _currencySettings, new PluginFinder(), _eventPublisher);
+                _currencySettings, new PluginFinder(_serviceProvider), _eventPublisher);
 
             //tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
         }

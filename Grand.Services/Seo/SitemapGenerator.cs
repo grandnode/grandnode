@@ -279,7 +279,7 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="stream">Stream</param>
         /// <param name="sitemapNumber">The number of sitemaps</param>
-        protected virtual void WriteSitemapIndex(IUrlHelper urlHelper, Stream stream, int sitemapNumber)
+        protected virtual async Task WriteSitemapIndex(IUrlHelper urlHelper, Stream stream, int sitemapNumber)
         {
             var xwSettings = new XmlWriterSettings
             {
@@ -287,12 +287,13 @@ namespace Grand.Services.Seo
                 Indent = true,
                 IndentChars = "\t",
                 NewLineChars = "\r\n",
-                Encoding = Encoding.UTF8
+                Encoding = Encoding.UTF8,
+                Async = true
             };
 
             using (var writer = XmlWriter.Create(stream, xwSettings))
             {
-                writer.WriteStartDocument();
+                await writer.WriteStartDocumentAsync();
                 writer.WriteStartElement("sitemapindex");
                 writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
                 writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
@@ -311,7 +312,7 @@ namespace Grand.Services.Seo
                 }
 
                 writer.WriteEndElement();
-                writer.Flush();
+                await writer.FlushAsync();
             }
         }
 
@@ -321,7 +322,7 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="stream">Stream</param>
         /// <param name="sitemapUrls">List of sitemap URLs</param>
-        protected virtual void WriteSitemap(IUrlHelper urlHelper, Stream stream, IList<SitemapUrl> sitemapUrls)
+        protected virtual async Task WriteSitemap(IUrlHelper urlHelper, Stream stream, IList<SitemapUrl> sitemapUrls)
         {
             var xwSettings = new XmlWriterSettings
             {
@@ -330,15 +331,16 @@ namespace Grand.Services.Seo
                 IndentChars = "\t",
                 NewLineChars = "\r\n",
                 Encoding = Encoding.UTF8,
+                Async = true
             };
 
             using (var writer = XmlWriter.Create(stream, xwSettings))
             {
-                writer.WriteStartDocument();
+                await writer.WriteStartDocumentAsync();
                 writer.WriteStartElement("urlset");
-                writer.WriteAttributeString("urlset", "xmlns", null, "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xsi", "schemaLocation", null, "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                await writer.WriteAttributeStringAsync("urlset", "xmlns", null, "http://www.sitemaps.org/schemas/sitemap/0.9");
+                await writer.WriteAttributeStringAsync("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
+                await writer.WriteAttributeStringAsync("xsi", "schemaLocation", null, "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
                 //write URLs from list to the sitemap
                 foreach (var url in sitemapUrls)
@@ -352,8 +354,8 @@ namespace Grand.Services.Seo
                     writer.WriteEndElement();
                 }
 
-                writer.WriteEndElement();
-                writer.Flush();
+                await writer.WriteEndElementAsync();
+                await writer.FlushAsync();
             }
         }
 
@@ -403,7 +405,7 @@ namespace Grand.Services.Seo
                     return;
 
                 //otherwise write a certain numbered sitemap file into the stream
-                WriteSitemap(urlHelper, stream, sitemaps.ElementAt(id.Value - 1));
+                await WriteSitemap(urlHelper, stream, sitemaps.ElementAt(id.Value - 1));
 
             }
             else
@@ -412,12 +414,12 @@ namespace Grand.Services.Seo
                 if (sitemapUrls.Count >= maxSitemapUrlNumber)
                 {
                     //write a sitemap index file into the stream
-                    WriteSitemapIndex(urlHelper, stream, sitemaps.Count);
+                    await WriteSitemapIndex(urlHelper, stream, sitemaps.Count);
                 }
                 else
                 {
                     //otherwise generate a standard sitemap
-                    WriteSitemap(urlHelper, stream, sitemaps.First());
+                    await WriteSitemap(urlHelper, stream, sitemaps.First());
                 }
             }
         }

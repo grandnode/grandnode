@@ -294,14 +294,15 @@ namespace Grand.Services.Localization
 
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true
             };
 
             using (var stringWriter = new StringWriter(sb))
             using (var xmlWriter = XmlWriter.Create(stringWriter, xwSettings))
             {
 
-                xmlWriter.WriteStartDocument();
+                await xmlWriter.WriteStartDocumentAsync();
                 xmlWriter.WriteStartElement("Language");
                 xmlWriter.WriteAttributeString("Name", language.Name);
 

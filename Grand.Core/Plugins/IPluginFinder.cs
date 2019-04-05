@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Plugins
 {
@@ -70,6 +71,11 @@ namespace Grand.Core.Plugins
         /// <returns>>Plugin descriptor</returns>
         PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
             where T : class, IPlugin;
+
+        /// <summary>
+        /// Get service provider
+        /// </summary>
+        IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// Reload plugins

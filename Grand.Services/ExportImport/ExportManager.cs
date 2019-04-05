@@ -153,10 +153,11 @@ namespace Grand.Services.ExportImport
             var stringWriter = new StringWriter(sb);
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true,
             };
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
-            xmlWriter.WriteStartDocument();
+            await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Manufacturers");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
 
@@ -210,7 +211,7 @@ namespace Grand.Services.ExportImport
 
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
+            await xmlWriter.FlushAsync();
             return stringWriter.ToString();
         }
 
@@ -253,16 +254,17 @@ namespace Grand.Services.ExportImport
             var stringWriter = new StringWriter(sb);
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true,
             };
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
-            xmlWriter.WriteStartDocument();
+            await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Categories");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
             await WriteCategories(xmlWriter, "");
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
+            await xmlWriter.FlushAsync();
             return stringWriter.ToString();
         }
 
@@ -310,10 +312,11 @@ namespace Grand.Services.ExportImport
             var stringWriter = new StringWriter(sb);
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true
             };
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
-            xmlWriter.WriteStartDocument();
+            await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Products");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
 
@@ -577,7 +580,7 @@ namespace Grand.Services.ExportImport
 
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
+            await xmlWriter.FlushAsync();
             return stringWriter.ToString();
         }
 
@@ -701,10 +704,11 @@ namespace Grand.Services.ExportImport
             var stringWriter = new StringWriter(sb);
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true
             };
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
-            xmlWriter.WriteStartDocument();
+            await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Orders");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
 
@@ -825,7 +829,7 @@ namespace Grand.Services.ExportImport
 
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
+            await xmlWriter.FlushAsync();
             return stringWriter.ToString();
         }
 
@@ -982,10 +986,11 @@ namespace Grand.Services.ExportImport
             var stringWriter = new StringWriter(sb);
             var xwSettings = new XmlWriterSettings
             {
-                ConformanceLevel = ConformanceLevel.Auto
+                ConformanceLevel = ConformanceLevel.Auto,
+                Async = true,
             };
             var xmlWriter = XmlWriter.Create(stringWriter, xwSettings);
-            xmlWriter.WriteStartDocument();
+            await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Customers");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
 
@@ -1044,7 +1049,7 @@ namespace Grand.Services.ExportImport
 
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
+            await xmlWriter.FlushAsync();
             return stringWriter.ToString();
         }
 

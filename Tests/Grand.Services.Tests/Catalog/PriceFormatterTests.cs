@@ -29,6 +29,7 @@ namespace Grand.Services.Catalog.Tests
         private ILocalizationService _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
+        private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -74,10 +75,11 @@ namespace Grand.Services.Catalog.Tests
             }
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _currencyRepo = new Mock<IRepository<Currency>>().Object;
 
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_serviceProvider);
             _currencyService = new CurrencyService(
                 cacheManager,
                 _currencyRepo,

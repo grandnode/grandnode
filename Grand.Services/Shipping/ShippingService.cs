@@ -67,6 +67,7 @@ namespace Grand.Services.Shipping
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<PickupPoint> _pickupPointsRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -74,14 +75,15 @@ namespace Grand.Services.Shipping
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAddressService _addressService;
-        private readonly ShippingSettings _shippingSettings;
+        private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ICacheManager _cacheManager;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -90,25 +92,6 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="shippingMethodRepository">Shipping method repository</param>
-        /// <param name="deliveryDateRepository">Delivery date repository</param>
-        /// <param name="warehouseRepository">Warehouse repository</param>
-        /// <param name="pickupPointsRepository">Pickup points repository</param>
-        /// <param name="logger">Logger</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="addressService">Address service</param>
-        /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="serviceProvider">Service provide</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
@@ -120,14 +103,16 @@ namespace Grand.Services.Shipping
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IAddressService addressService,
-            ShippingSettings shippingSettings,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             IPluginFinder pluginFinder,
             IStoreContext storeContext,
             IEventPublisher eventPublisher,
-            ShoppingCartSettings shoppingCartSettings,
+            ICurrencyService currencyService,
             ICacheManager cacheManager,
             IRepository<Product> productRepository,
-            IServiceProvider serviceProvider)
+            ShoppingCartSettings shoppingCartSettings,
+            ShippingSettings shippingSettings)
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
@@ -140,14 +125,16 @@ namespace Grand.Services.Shipping
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._addressService = addressService;
-            this._shippingSettings = shippingSettings;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._pluginFinder = pluginFinder;
             this._storeContext = storeContext;
+            this._currencyService = currencyService;
             this._eventPublisher = eventPublisher;
-            this._shoppingCartSettings = shoppingCartSettings;
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
-            this._serviceProvider = serviceProvider;
+            this._shoppingCartSettings = shoppingCartSettings;
+            this._shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -185,7 +172,7 @@ namespace Grand.Services.Shipping
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IShippingRateComputationMethod>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IShippingRateComputationMethod>(_serviceProvider);
+                return descriptor.Instance<IShippingRateComputationMethod>(_pluginFinder.ServiceProvider);
 
             return null;
         }
@@ -909,8 +896,8 @@ namespace Grand.Services.Shipping
                     }
                     if (originAddress != null)
                     {
-                        var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(originAddress.CountryId);
-                        var state = await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(originAddress.StateProvinceId);
+                        var country = await _countryService.GetCountryById(originAddress.CountryId);
+                        var state = await _stateProvinceService.GetStateProvinceById(originAddress.StateProvinceId);
                         request.CountryFrom = country;
                         request.StateProvinceFrom = state;
                         request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
@@ -1034,7 +1021,7 @@ namespace Grand.Services.Shipping
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
                         {
-                            var currency = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryExchangeRateCurrency();
+                            var currency = await _currencyService.GetPrimaryExchangeRateCurrency();
                             so.Rate = RoundingHelper.RoundPrice(so.Rate, currency);
                         }
                         result.ShippingOptions.Add(so);

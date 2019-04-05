@@ -53,7 +53,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IThemeProvider _themeProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
-        private readonly IServiceProvider _serviceProvider;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -73,7 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IThemeProvider themeProvider,
             IEventPublisher eventPublisher,
             ICacheManager cacheManager,
-            IServiceProvider serviceProvider,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
@@ -92,7 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._cacheManager = cacheManager;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
-            this._serviceProvider = serviceProvider;
             this._taxSettings = taxSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._widgetSettings = widgetSettings;
@@ -115,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //locales
                 await AddLocales(_languageService, pluginModel.Locales, (locale, languageId) =>
                 {
-                    locale.FriendlyName = pluginDescriptor.Instance(_serviceProvider).GetLocalizedFriendlyName(_localizationService, languageId, false);
+                    locale.FriendlyName = pluginDescriptor.Instance(_pluginFinder.ServiceProvider).GetLocalizedFriendlyName(_localizationService, languageId, false);
                 });
             }
             if (prepareStores)
@@ -135,7 +132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (pluginDescriptor.Installed)
             {
                 //display configuration URL only when a plugin is already installed
-                var pluginInstance = pluginDescriptor.Instance(_serviceProvider);
+                var pluginInstance = pluginDescriptor.Instance(_pluginFinder.ServiceProvider);
                 pluginModel.ConfigurationUrl = pluginInstance.GetConfigurationPageUrl();
 
 
@@ -236,7 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
 
                 //install plugin
-                var plugin = pluginDescriptor.Instance(_serviceProvider);
+                var plugin = pluginDescriptor.Instance(_pluginFinder.ServiceProvider);
                 await plugin.Install();
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
@@ -273,7 +270,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
 
                 //uninstall plugin
-                await pluginDescriptor.Instance(_serviceProvider).Uninstall();
+                await pluginDescriptor.Instance(_pluginFinder.ServiceProvider).Uninstall();
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
                 //restart application
@@ -542,7 +539,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (descriptor == null || !descriptor.Installed)
                 return Redirect("List");
 
-            var plugin = descriptor.Instance<IMiscPlugin>(_serviceProvider);
+            var plugin = descriptor.Instance<IMiscPlugin>(_pluginFinder.ServiceProvider);
             var model = new MiscPluginModel
             {
                 FriendlyName = descriptor.FriendlyName,
@@ -588,12 +585,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //locales
                 foreach (var localized in model.Locales)
                 {
-                    await pluginDescriptor.Instance(_serviceProvider).SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
+                    await pluginDescriptor.Instance(_pluginFinder.ServiceProvider).SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
                 }
                 //enabled/disabled
                 if (pluginDescriptor.Installed)
                 {
-                    var pluginInstance = pluginDescriptor.Instance(_serviceProvider);
+                    var pluginInstance = pluginDescriptor.Instance(_pluginFinder.ServiceProvider);
                     //payment plugin
                     if (pluginInstance is IPaymentMethod pm)
                     {

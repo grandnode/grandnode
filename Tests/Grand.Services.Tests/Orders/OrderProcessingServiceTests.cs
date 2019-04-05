@@ -94,6 +94,7 @@ namespace Grand.Services.Orders.Tests
         private IStoreService _storeService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private Store _store;
@@ -113,7 +114,7 @@ namespace Grand.Services.Orders.Tests
                 _storeContext = tempStoreContext.Object;
             }
 
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_serviceProvider);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -133,6 +134,7 @@ namespace Grand.Services.Orders.Tests
             _currencyService = new Mock<ICurrencyService>().Object;
             _auctionService = new Mock<IAuctionService>().Object;
             _serviceProvider = new Mock<IServiceProvider>().Object;
+            _stateProvinceService = new Mock<IStateProvinceService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
@@ -159,24 +161,26 @@ namespace Grand.Services.Orders.Tests
 
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository,
-                _deliveryDateRepository,
-                _warehouseRepository,
-                _pickupPointRepository,
-                _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
-                _shippingSettings,
-                pluginFinder,
-                _storeContext,
-                _eventPublisher,
-                _shoppingCartSettings,
-                cacheManager,
-                null,
-                _serviceProvider);
+            _deliveryDateRepository,
+            _warehouseRepository,
+            null,
+            _logger,
+            _productService,
+            _productAttributeParser,
+            _checkoutAttributeParser,
+            _genericAttributeService,
+            _localizationService,
+            _addressService,
+            _countryService,
+            _stateProvinceService,
+            pluginFinder,
+            _storeContext,
+            _eventPublisher,
+            _currencyService,
+            cacheManager,
+            null,
+            _shoppingCartSettings,
+            _shippingSettings);
             _shipmentService = new Mock<IShipmentService>().Object;
 
             tempPaymentService = new Mock<IPaymentService>();

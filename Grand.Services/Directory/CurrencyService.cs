@@ -49,7 +49,6 @@ namespace Grand.Services.Directory
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
         private readonly CurrencySettings _currencySettings;
-        private readonly IServiceProvider _serviceProvider;
         private Currency _primaryCurrency;
         private Currency _primaryExchangeRateCurrency;
 
@@ -71,8 +70,7 @@ namespace Grand.Services.Directory
             IStoreMappingService storeMappingService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher,
-            IServiceProvider serviceProvider)
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
@@ -80,11 +78,10 @@ namespace Grand.Services.Directory
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
-            this._serviceProvider = serviceProvider;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -108,7 +105,7 @@ namespace Grand.Services.Directory
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
-            
+
             await _currencyRepository.DeleteAsync(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
@@ -282,7 +279,7 @@ namespace Grand.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount; 
+            decimal result = amount;
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
                 decimal exchangeRate = sourceCurrencyCode.Rate;
@@ -332,7 +329,7 @@ namespace Grand.Services.Directory
 
             var primaryStoreCurrency = await GetPrimaryStoreCurrency();
             var result = await ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
-            
+
             return result;
         }
 
@@ -347,7 +344,7 @@ namespace Grand.Services.Directory
             var result = await ConvertCurrency(amount, await GetPrimaryStoreCurrency(), targetCurrencyCode);
             return result;
         }
-       
+
 
         /// <summary>
         /// Load active exchange rate provider
@@ -370,7 +367,7 @@ namespace Grand.Services.Directory
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IExchangeRateProvider>(_serviceProvider);
+                return descriptor.Instance<IExchangeRateProvider>(_pluginFinder.ServiceProvider);
 
             return null;
         }

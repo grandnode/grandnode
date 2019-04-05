@@ -16,7 +16,6 @@ namespace Grand.Services.Cms
 
         private readonly IPluginFinder _pluginFinder;
         private readonly ICacheManager _cacheManager;
-        private readonly IServiceProvider _serviceProvider;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
@@ -30,12 +29,10 @@ namespace Grand.Services.Cms
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="widgetSettings">Widget settings</param>
         public WidgetService(IPluginFinder pluginFinder, ICacheManager cacheManager,
-            IServiceProvider serviceProvider,
             WidgetSettings widgetSettings)
         {
             this._pluginFinder = pluginFinder;
             this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
             this._widgetSettings = widgetSettings;
         }
 
@@ -80,7 +77,7 @@ namespace Grand.Services.Cms
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IWidgetPlugin>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IWidgetPlugin>(_serviceProvider);
+                return descriptor.Instance<IWidgetPlugin>(_pluginFinder.ServiceProvider);
 
             return null;
         }

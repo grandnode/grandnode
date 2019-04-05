@@ -191,7 +191,8 @@ namespace Grand.Plugin.Feed.GoogleShopping
 
             var settings = new XmlWriterSettings
             {
-                Encoding = Encoding.UTF8
+                Encoding = Encoding.UTF8,
+                Async = true,
             };
 
             //language

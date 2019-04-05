@@ -15,7 +15,6 @@ namespace Grand.Core.Plugins
             this.LimitedToStores = new List<string>();
         }
 
-
         public PluginDescriptor(Assembly referencedAssembly, FileInfo originalAssemblyFile,
             Type pluginType)
             : this()

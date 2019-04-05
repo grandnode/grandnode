@@ -36,7 +36,7 @@ namespace Grand.Services.Tax.Tests
             //plugin initialization
             new Grand.Services.Tests.ServiceTest().PluginInitializator();
 
-            _pluginFinder = new PluginFinder();
+            _pluginFinder = new PluginFinder(_serviceProvider);
             _taxSettings = new TaxSettings();
             _taxSettings.ActiveTaxProviderSystemName = "FixedTaxRateTest";
             _workContext = null;
