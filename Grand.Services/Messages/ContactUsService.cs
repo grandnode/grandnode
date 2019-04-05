@@ -4,6 +4,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
 using MongoDB.Driver;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -27,12 +28,12 @@ namespace Grand.Services.Messages
         /// Deletes a contactus item
         /// </summary>
         /// <param name="contactus">ContactUs item</param>
-        public virtual void DeleteContactUs(ContactUs contactus)
+        public virtual async Task DeleteContactUs(ContactUs contactus)
         {
             if (contactus == null)
                 throw new ArgumentNullException("contactus");
 
-            _contactusRepository.Delete(contactus);
+            await _contactusRepository.DeleteAsync(contactus);
 
             //event notification
             _eventPublisher.EntityDeleted(contactus);
@@ -42,9 +43,9 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Clears table
         /// </summary>
-        public virtual void ClearTable()
+        public virtual async Task ClearTable()
         {
-            _contactusRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
+            await _contactusRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Grand.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>ContactUs items</returns>
-        public virtual IPagedList<ContactUs> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual async Task<IPagedList<ContactUs>> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string email = "", string vendorId = "", string customerId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -83,9 +84,7 @@ namespace Grand.Services.Messages
             var query = _contactusRepository.Collection;
             var contactus = new PagedList<ContactUs>(query, filter, builderSort, pageIndex, pageSize);
 
-            return contactus;
-
-
+            return await Task.FromResult(contactus);
         }
 
         /// <summary>
@@ -93,9 +92,9 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="contactUsId">ContactUs item identifier</param>
         /// <returns>ContactUs item</returns>
-        public virtual ContactUs GetContactUsById(string contactUsId)
+        public virtual Task<ContactUs> GetContactUsById(string contactUsId)
         {
-            return _contactusRepository.GetById(contactUsId);
+            return _contactusRepository.GetByIdAsync(contactUsId);
         }
 
         /// <summary>
@@ -103,12 +102,12 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="contactus">ContactUs</param>
         /// <returns>A contactus item</returns>
-        public virtual void InsertContactUs(ContactUs contactus)
+        public virtual async Task InsertContactUs(ContactUs contactus)
         {
             if (contactus == null)
                 throw new ArgumentNullException("contactus");
 
-            _contactusRepository.Insert(contactus);
+            await _contactusRepository.InsertAsync(contactus);
 
             //event notification
             _eventPublisher.EntityInserted(contactus);
