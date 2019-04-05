@@ -8,6 +8,7 @@ using Grand.Services.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Services
 {
@@ -30,56 +31,56 @@ namespace Grand.Api.Services
 
             _customerRole = _mongoDBContext.Database().GetCollection<CustomerRoleDto>(typeof(Core.Domain.Customers.CustomerRole).Name);
         }
-        public virtual CustomerRoleDto GetById(string id)
+        public virtual Task<CustomerRoleDto> GetById(string id)
         {
-            return _customerRole.AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _customerRole.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public virtual IMongoQueryable<CustomerRoleDto> GetCustomerRoles()
         {
             return _customerRole.AsQueryable();
         }
-        public virtual CustomerRoleDto InsertOrUpdateCustomerRole(CustomerRoleDto model)
+        public virtual async Task<CustomerRoleDto> InsertOrUpdateCustomerRole(CustomerRoleDto model)
         {
             if (string.IsNullOrEmpty(model.Id))
-                model = InsertCustomerRole(model);
+                model = await InsertCustomerRole(model);
             else
-                model = UpdateCustomerRole(model);
+                model = await UpdateCustomerRole(model);
 
             return model;
         }
-        public virtual CustomerRoleDto InsertCustomerRole(CustomerRoleDto model)
+        public virtual async Task<CustomerRoleDto> InsertCustomerRole(CustomerRoleDto model)
         {
             var customerRole = model.ToEntity();
-            _customerService.InsertCustomerRole(customerRole);
+            await _customerService.InsertCustomerRole(customerRole);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+            await _customerActivityService.InsertActivity("AddNewCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
 
             return customerRole.ToModel();
         }
 
-        public virtual CustomerRoleDto UpdateCustomerRole(CustomerRoleDto model)
+        public virtual async Task<CustomerRoleDto> UpdateCustomerRole(CustomerRoleDto model)
         {
-            var customerRole = _customerService.GetCustomerRoleById(model.Id);
+            var customerRole = await _customerService.GetCustomerRoleById(model.Id);
             customerRole = model.ToEntity(customerRole);
-            _customerService.UpdateCustomerRole(customerRole);
+            await _customerService.UpdateCustomerRole(customerRole);
 
             //activity log
-            _customerActivityService.InsertActivity("EditCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+            await _customerActivityService.InsertActivity("EditCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
 
             return customerRole.ToModel();
         }
 
-        public virtual void DeleteCustomerRole(CustomerRoleDto model)
+        public virtual async Task DeleteCustomerRole(CustomerRoleDto model)
         {
-            var customerRole = _customerService.GetCustomerRoleById(model.Id);
+            var customerRole = await _customerService.GetCustomerRoleById(model.Id);
             if (customerRole != null)
             {
-                _customerService.DeleteCustomerRole(customerRole);
+                await _customerService.DeleteCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+                await _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
             }
         }
 
