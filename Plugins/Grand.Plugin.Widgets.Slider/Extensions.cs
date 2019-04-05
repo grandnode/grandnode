@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Widgets.Slider
 {
@@ -42,11 +43,11 @@ namespace Grand.Plugin.Widgets.Slider
             return entity.MapTo<PictureSlider, SlideListModel>();
         }
 
-        public static void PrepareStoresMappingModel<T>(this T baseGrandEntityModel, IStoreMappingSupported storeMapping, bool excludeProperties, IStoreService _storeService)
+        public static async Task PrepareStoresMappingModel<T>(this T baseGrandEntityModel, IStoreMappingSupported storeMapping, bool excludeProperties, IStoreService _storeService)
             where T : BaseGrandEntityModel, IStoreMappingModel
         {
-            baseGrandEntityModel.AvailableStores = _storeService
-               .GetAllStores()
+            baseGrandEntityModel.AvailableStores = (await _storeService
+               .GetAllStores())
                .Select(s => new StoreModel { Id = s.Id, Name = s.Name })
                .ToList();
             if (!excludeProperties)
