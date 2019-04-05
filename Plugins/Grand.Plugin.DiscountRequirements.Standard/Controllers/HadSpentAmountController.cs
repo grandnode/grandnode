@@ -9,6 +9,7 @@ using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
 {
@@ -29,12 +30,12 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
             this._permissionService = permissionService;
         }
 
-        public IActionResult Configure(string discountId, string discountRequirementId)
+        public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
@@ -60,12 +61,12 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult Configure(string discountId, string discountRequirementId, decimal spentAmount)
+        public async Task<IActionResult> Configure(string discountId, string discountRequirementId, decimal spentAmount)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
@@ -76,7 +77,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirements.Standard.HadSpentAmount-{0}-{1}", discount.Id, discountRequirement.Id), spentAmount);
+                await _settingService.SetSetting(string.Format("DiscountRequirements.Standard.HadSpentAmount-{0}-{1}", discount.Id, discountRequirement.Id), spentAmount);
             }
             else
             {
@@ -86,9 +87,9 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
                     DiscountRequirementRuleSystemName = "DiscountRequirements.Standard.HadSpentAmount"
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
-                _discountService.UpdateDiscount(discount);
-                
-                _settingService.SetSetting(string.Format("DiscountRequirements.Standard.HadSpentAmount-{0}-{1}", discount.Id, discountRequirement.Id), spentAmount);
+                await _discountService.UpdateDiscount(discount);
+
+                await _settingService.SetSetting(string.Format("DiscountRequirements.Standard.HadSpentAmount-{0}-{1}", discount.Id, discountRequirement.Id), spentAmount);
             }
             return new JsonResult(new { Result = true, NewRequirementId = discountRequirement.Id });
         }

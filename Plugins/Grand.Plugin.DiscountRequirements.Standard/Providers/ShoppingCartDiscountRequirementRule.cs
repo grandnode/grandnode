@@ -4,8 +4,10 @@ using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Orders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.DiscountRequirements.ShoppingCart
 {
@@ -14,12 +16,14 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
         private readonly IWorkContext _workContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ISettingService _settingService;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public ShoppingCartDiscountRequirementRule(ISettingService settingService)
+        public ShoppingCartDiscountRequirementRule(IServiceProvider serviceProvider)
         {
-            this._workContext = Core.Infrastructure.EngineContext.Current.Resolve<IWorkContext>();
-            this._priceCalculationService = Core.Infrastructure.EngineContext.Current.Resolve<IPriceCalculationService>();
-            this._settingService = settingService;
+            _workContext = serviceProvider.GetRequiredService<IWorkContext>();
+            _priceCalculationService = serviceProvider.GetRequiredService<IPriceCalculationService>();
+            _settingService = serviceProvider.GetRequiredService<ISettingService>();
+            _shoppingCartSettings = serviceProvider.GetRequiredService<ShoppingCartSettings>();
         }
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
         /// <returns>true - requirement is met; otherwise, false</returns>
-        public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
+        public async Task<DiscountRequirementValidationResult> CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -43,7 +47,7 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
             }
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(request.Store.Id)
+                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, request.Store.Id)
                     .ToList();
 
             if (cart.Count == 0)
@@ -56,7 +60,7 @@ namespace Grand.Plugin.DiscountRequirements.ShoppingCart
             foreach (var ca in cart)
             {
                 bool calculateWithDiscount = false;
-                spentAmount += _priceCalculationService.GetSubTotal(ca, calculateWithDiscount);
+                spentAmount += (await _priceCalculationService.GetSubTotal(ca, calculateWithDiscount)).subTotal;
             }
 
             result.IsValid = spentAmount > spentAmountRequirement;

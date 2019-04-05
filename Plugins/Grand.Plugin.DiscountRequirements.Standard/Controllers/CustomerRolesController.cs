@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
 {
@@ -33,12 +34,12 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             this._permissionService = permissionService;
         }
 
-        public IActionResult Configure(string discountId, string discountRequirementId)
+        public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
@@ -59,7 +60,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             //customer roles
             //TODO localize "Select customer role"
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "" });
-            foreach (var cr in _customerService.GetAllCustomerRoles(true))
+            foreach (var cr in await _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
 
             //add a prefix
@@ -70,12 +71,12 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult Configure(string discountId, string discountRequirementId, string customerRoleId)
+        public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
@@ -86,7 +87,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirements.Standard.MustBeAssignedToCustomerRole-{0}-{1}",discount.Id, discountRequirement.Id), customerRoleId);
+                await _settingService.SetSetting(string.Format("DiscountRequirements.Standard.MustBeAssignedToCustomerRole-{0}-{1}",discount.Id, discountRequirement.Id), customerRoleId);
             }
             else
             {
@@ -96,9 +97,9 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
                     DiscountRequirementRuleSystemName = "DiscountRequirements.Standard.MustBeAssignedToCustomerRole"
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
-                _discountService.UpdateDiscount(discount);
+                await _discountService.UpdateDiscount(discount);
 
-                _settingService.SetSetting(string.Format("DiscountRequirements.Standard.MustBeAssignedToCustomerRole-{0}-{1}", discount.Id, discountRequirement.Id), customerRoleId);
+                await _settingService.SetSetting(string.Format("DiscountRequirements.Standard.MustBeAssignedToCustomerRole-{0}-{1}", discount.Id, discountRequirement.Id), customerRoleId);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
         }
