@@ -9,7 +9,7 @@ namespace Grand.Web.Interfaces
     {
         Task<HomePageBlogItemsModel> PrepareHomePageBlogItems();
         Task PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments);
-        BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment);
+        Task<BlogCommentModel> PrepareBlogPostCommentModel(BlogComment blogComment);
         Task<BlogPostListModel> PrepareBlogPostListModel(BlogPagingFilteringModel command);
         Task<BlogPostTagListModel> PrepareBlogPostTagListModel();
         Task<List<BlogPostYearModel>> PrepareBlogPostYearModel();
