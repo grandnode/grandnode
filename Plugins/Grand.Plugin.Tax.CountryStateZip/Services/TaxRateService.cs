@@ -5,6 +5,7 @@ using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Services
 {
@@ -51,12 +52,12 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void DeleteTaxRate(TaxRate taxRate)
+        public virtual async Task DeleteTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException("taxRate");
 
-            _taxRateRepository.Delete(taxRate);
+            await _taxRateRepository.DeleteAsync(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
@@ -68,16 +69,15 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                             select tr;
-                var records = new PagedList<TaxRate>(query, pageIndex, pageSize);
-                return records;
+                return await Task.FromResult(new PagedList<TaxRate>(query, pageIndex, pageSize));
             });
         }
 
@@ -86,21 +86,21 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        public virtual TaxRate GetTaxRateById(string taxRateId)
+        public virtual Task<TaxRate> GetTaxRateById(string taxRateId)
         {
-           return _taxRateRepository.GetById(taxRateId);
+           return _taxRateRepository.GetByIdAsync(taxRateId);
         }
 
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void InsertTaxRate(TaxRate taxRate)
+        public virtual async Task InsertTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException("taxRate");
 
-            _taxRateRepository.Insert(taxRate);
+            await _taxRateRepository.InsertAsync(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
@@ -112,12 +112,12 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void UpdateTaxRate(TaxRate taxRate)
+        public virtual async Task UpdateTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException("taxRate");
 
-            _taxRateRepository.Update(taxRate);
+            await _taxRateRepository.UpdateAsync(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 

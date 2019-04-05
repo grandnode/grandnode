@@ -1,15 +1,16 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Events;
-using Grand.Core.Infrastructure;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
 {
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer: 
+    public partial class ModelCacheEventConsumer :
         //tax rates
         IConsumer<EntityInserted<TaxRate>>,
         IConsumer<EntityUpdated<TaxRate>>,
@@ -22,11 +23,11 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         public const string ALL_TAX_RATES_PATTERN_KEY = "Grand.plugins.tax.countrystatezip";
 
         private readonly ICacheManager _cacheManager;
-        
-        public ModelCacheEventConsumer()
+
+        public ModelCacheEventConsumer(IServiceProvider serviceProvider)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //tax rates
