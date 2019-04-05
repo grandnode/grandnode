@@ -1,5 +1,4 @@
-﻿using DotLiquid;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
@@ -13,11 +12,13 @@ using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Stores;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -40,6 +41,7 @@ namespace Grand.Services.Customers
         private readonly IProductService _productService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -60,7 +62,8 @@ namespace Grand.Services.Customers
             IProductService productService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerActivityService customerActivityService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IServiceProvider serviceProvider)
         {
             this._customerReminderRepository = customerReminderRepository;
             this._customerReminderHistoryRepository = customerReminderHistoryRepository;
@@ -77,25 +80,26 @@ namespace Grand.Services.Customers
             this._productService = productService;
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
 
         #region Utilities
 
-        protected bool SendEmail(Customer customer, CustomerReminder customerReminder, string reminderlevelId)
+        protected async Task<bool> SendEmail(Customer customer, CustomerReminder customerReminder, string reminderlevelId)
         {
             var reminderLevel = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId);
-            var emailAccount = _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
-            var store = customer.ShoppingCartItems.Count > 0 ? _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : _storeService.GetAllStores().FirstOrDefault();
+            var emailAccount = await _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
+            var store = customer.ShoppingCartItems.Count > 0 ? await _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : (await _storeService.GetAllStores()).FirstOrDefault();
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-
+            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
 
             var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
             var subject = LiquidExtensions.Render(liquidObject, reminderLevel.Subject);
@@ -122,27 +126,27 @@ namespace Grand.Services.Customers
                 EmailAccountId = emailAccount.Id,
             };
 
-            _queuedEmailService.InsertQueuedEmail(email);
+            await _queuedEmailService.InsertQueuedEmail(email);
             //activity log
-            _customerActivityService.InsertActivity(string.Format("CustomerReminder.{0}", customerReminder.ReminderRule.ToString()), customer.Id, _localizationService.GetResource(string.Format("ActivityLog.{0}", customerReminder.ReminderRule.ToString())), customer, customerReminder.Name);
+            await _customerActivityService.InsertActivity(string.Format("CustomerReminder.{0}", customerReminder.ReminderRule.ToString()), customer.Id, _localizationService.GetResource(string.Format("ActivityLog.{0}", customerReminder.ReminderRule.ToString())), customer, customerReminder.Name);
 
             return true;
         }
 
-        protected bool SendEmail(Customer customer, Order order, CustomerReminder customerReminder, string reminderlevelId)
+        protected async Task<bool> SendEmail(Customer customer, Order order, CustomerReminder customerReminder, string reminderlevelId)
         {
             var reminderLevel = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId);
-            var emailAccount = _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
-            var store = customer.ShoppingCartItems.Count > 0 ? _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : _storeService.GetAllStores().FirstOrDefault();
+            var emailAccount = await _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
+            var store = customer.ShoppingCartItems.Count > 0 ? await _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : (await _storeService.GetAllStores()).FirstOrDefault();
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-
+            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, order.CustomerLanguageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, await _storeService.GetStoreById(order.StoreId));
 
             var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
             var subject = LiquidExtensions.Render(liquidObject, reminderLevel.Subject);
@@ -169,16 +173,16 @@ namespace Grand.Services.Customers
                 EmailAccountId = emailAccount.Id,
             };
 
-            _queuedEmailService.InsertQueuedEmail(email);
+            await _queuedEmailService.InsertQueuedEmail(email);
             //activity log
-            _customerActivityService.InsertActivity(string.Format("CustomerReminder.{0}", customerReminder.ReminderRule.ToString()), customer.Id, string.Format("ActivityLog.{0}", customerReminder.ReminderRule.ToString()), customer, customerReminder.Name);
+            await _customerActivityService.InsertActivity(string.Format("CustomerReminder.{0}", customerReminder.ReminderRule.ToString()), customer.Id, string.Format("ActivityLog.{0}", customerReminder.ReminderRule.ToString()), customer, customerReminder.Name);
 
             return true;
         }
 
 
         #region Conditions
-        protected bool CheckConditions(CustomerReminder customerReminder, Customer customer)
+        protected async Task<bool> CheckConditions(CustomerReminder customerReminder, Customer customer)
         {
             if (customerReminder.Conditions.Count == 0)
                 return true;
@@ -189,7 +193,7 @@ namespace Grand.Services.Customers
             {
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Category)
                 {
-                    cond = ConditionCategory(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
+                    cond = await ConditionCategory(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Product)
                 {
@@ -197,7 +201,7 @@ namespace Grand.Services.Customers
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Manufacturer)
                 {
-                    cond = ConditionManufacturer(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
+                    cond = await ConditionManufacturer(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerTag)
                 {
@@ -213,13 +217,13 @@ namespace Grand.Services.Customers
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomCustomerAttribute)
                 {
-                    cond = ConditionCustomerAttribute(item, customer);
+                    cond = await ConditionCustomerAttribute(item, customer);
                 }
             }
 
             return cond;
         }
-        protected bool CheckConditions(CustomerReminder customerReminder, Customer customer, Order order)
+        protected async Task<bool> CheckConditions(CustomerReminder customerReminder, Customer customer, Order order)
         {
             if (customerReminder.Conditions.Count == 0)
                 return true;
@@ -230,7 +234,7 @@ namespace Grand.Services.Customers
             {
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Category)
                 {
-                    cond = ConditionCategory(item, order.OrderItems.Select(x => x.ProductId).ToList());
+                    cond = await ConditionCategory(item, order.OrderItems.Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Product)
                 {
@@ -238,7 +242,7 @@ namespace Grand.Services.Customers
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Manufacturer)
                 {
-                    cond = ConditionManufacturer(item, order.OrderItems.Select(x => x.ProductId).ToList());
+                    cond = await ConditionManufacturer(item, order.OrderItems.Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerTag)
                 {
@@ -254,13 +258,13 @@ namespace Grand.Services.Customers
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomCustomerAttribute)
                 {
-                    cond = ConditionCustomerAttribute(item, customer);
+                    cond = await ConditionCustomerAttribute(item, customer);
                 }
             }
 
             return cond;
         }
-        protected bool ConditionCategory(CustomerReminder.ReminderCondition condition, ICollection<string> products)
+        protected async Task<bool> ConditionCategory(CustomerReminder.ReminderCondition condition, ICollection<string> products)
         {
             bool cond = false;
             if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
@@ -270,7 +274,7 @@ namespace Grand.Services.Customers
                 {
                     foreach (var product in products)
                     {
-                        var pr = _productService.GetProductById(product);
+                        var pr = await _productService.GetProductById(product);
                         if (pr != null)
                         {
                             if (pr.ProductCategories.Where(x => x.CategoryId == item).Count() == 0)
@@ -290,7 +294,7 @@ namespace Grand.Services.Customers
                 {
                     foreach (var product in products)
                     {
-                        var pr = _productService.GetProductById(product);
+                        var pr = await _productService.GetProductById(product);
                         if (pr != null)
                         {
                             if (pr.ProductCategories.Where(x => x.CategoryId == item).Count() > 0)
@@ -302,7 +306,7 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-        protected bool ConditionManufacturer(CustomerReminder.ReminderCondition condition, ICollection<string> products)
+        protected async Task<bool> ConditionManufacturer(CustomerReminder.ReminderCondition condition, ICollection<string> products)
         {
             bool cond = false;
             if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
@@ -312,7 +316,7 @@ namespace Grand.Services.Customers
                 {
                     foreach (var product in products)
                     {
-                        var pr = _productService.GetProductById(product);
+                        var pr = await _productService.GetProductById(product);
                         if (pr != null)
                         {
                             if (pr.ProductManufacturers.Where(x => x.ManufacturerId == item).Count() == 0)
@@ -332,7 +336,7 @@ namespace Grand.Services.Customers
                 {
                     foreach (var product in products)
                     {
-                        var pr = _productService.GetProductById(product);
+                        var pr = await _productService.GetProductById(product);
                         if (pr != null)
                         {
                             if (pr.ProductManufacturers.Where(x => x.ManufacturerId == item).Count() > 0)
@@ -417,7 +421,7 @@ namespace Grand.Services.Customers
             }
             return cond;
         }
-        protected bool ConditionCustomerAttribute(CustomerReminder.ReminderCondition condition, Customer customer)
+        protected async Task<bool> ConditionCustomerAttribute(CustomerReminder.ReminderCondition condition, Customer customer)
         {
             bool cond = false;
             if (customer != null)
@@ -429,7 +433,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             cond = true;
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
@@ -453,7 +457,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
                                 var _fields = item.RegisterField.Split(':');
@@ -473,7 +477,7 @@ namespace Grand.Services.Customers
 
         #region History
 
-        protected void UpdateHistory(Customer customer, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
+        protected async Task UpdateHistory(Customer customer, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
         {
             if (history != null)
             {
@@ -489,7 +493,7 @@ namespace Grand.Services.Customers
                     history.Status = (int)CustomerReminderHistoryStatusEnum.CompletedReminder;
                     history.EndDate = DateTime.UtcNow;
                 }
-                _customerReminderHistoryRepository.Update(history);
+                await _customerReminderHistoryRepository.UpdateAsync(history);
             }
             else
             {
@@ -506,12 +510,12 @@ namespace Grand.Services.Customers
                     SendDate = DateTime.UtcNow,
                 });
 
-                _customerReminderHistoryRepository.Insert(history);
+                await _customerReminderHistoryRepository.InsertAsync(history);
             }
 
         }
 
-        protected void UpdateHistory(Order order, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
+        protected async Task UpdateHistory(Order order, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
         {
             if (history != null)
             {
@@ -527,7 +531,7 @@ namespace Grand.Services.Customers
                     history.Status = (int)CustomerReminderHistoryStatusEnum.CompletedReminder;
                     history.EndDate = DateTime.UtcNow;
                 }
-                _customerReminderHistoryRepository.Update(history);
+                await _customerReminderHistoryRepository.UpdateAsync(history);
             }
             else
             {
@@ -545,15 +549,15 @@ namespace Grand.Services.Customers
                     SendDate = DateTime.UtcNow,
                 });
 
-                _customerReminderHistoryRepository.Insert(history);
+                await _customerReminderHistoryRepository.InsertAsync(history);
             }
 
         }
-        protected void CloseHistoryReminder(CustomerReminder customerReminder, CustomerReminderHistory history)
+        protected async Task CloseHistoryReminder(CustomerReminder customerReminder, CustomerReminderHistory history)
         {
             history.Status = (int)CustomerReminderHistoryStatusEnum.CompletedReminder;
             history.EndDate = DateTime.UtcNow;
-            _customerReminderHistoryRepository.Update(history);
+            await _customerReminderHistoryRepository.UpdateAsync(history);
         }
 
         #endregion
@@ -567,9 +571,9 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="id">Customer reminder identifier</param>
         /// <returns>Customer reminder</returns>
-        public virtual CustomerReminder GetCustomerReminderById(string id)
+        public virtual Task<CustomerReminder> GetCustomerReminderById(string id)
         {
-            return _customerReminderRepository.GetById(id);
+            return _customerReminderRepository.GetByIdAsync(id);
         }
 
 
@@ -577,24 +581,24 @@ namespace Grand.Services.Customers
         /// Gets all customer reminders
         /// </summary>
         /// <returns>Customer reminders</returns>
-        public virtual IList<CustomerReminder> GetCustomerReminders()
+        public virtual async Task<IList<CustomerReminder>> GetCustomerReminders()
         {
             var query = from p in _customerReminderRepository.Table
                         orderby p.DisplayOrder
                         select p;
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// Inserts a customer reminder
         /// </summary>
         /// <param name="CustomerReminder">Customer reminder</param>
-        public virtual void InsertCustomerReminder(CustomerReminder customerReminder)
+        public virtual async Task InsertCustomerReminder(CustomerReminder customerReminder)
         {
             if (customerReminder == null)
                 throw new ArgumentNullException("customerReminder");
 
-            _customerReminderRepository.Insert(customerReminder);
+            await _customerReminderRepository.InsertAsync(customerReminder);
 
             //event notification
             _eventPublisher.EntityInserted(customerReminder);
@@ -605,12 +609,12 @@ namespace Grand.Services.Customers
         /// Delete a customer reminder
         /// </summary>
         /// <param name="customerReminder">Customer reminder</param>
-        public virtual void DeleteCustomerReminder(CustomerReminder customerReminder)
+        public virtual async Task DeleteCustomerReminder(CustomerReminder customerReminder)
         {
             if (customerReminder == null)
                 throw new ArgumentNullException("customerReminder");
 
-            _customerReminderRepository.Delete(customerReminder);
+            await _customerReminderRepository.DeleteAsync(customerReminder);
 
             //event notification
             _eventPublisher.EntityDeleted(customerReminder);
@@ -621,12 +625,12 @@ namespace Grand.Services.Customers
         /// Updates the customer reminder
         /// </summary>
         /// <param name="CustomerReminder">Customer reminder</param>
-        public virtual void UpdateCustomerReminder(CustomerReminder customerReminder)
+        public virtual async Task UpdateCustomerReminder(CustomerReminder customerReminder)
         {
             if (customerReminder == null)
                 throw new ArgumentNullException("customerReminder");
 
-            _customerReminderRepository.Update(customerReminder);
+            await _customerReminderRepository.UpdateAsync(customerReminder);
 
             //event notification
             _eventPublisher.EntityUpdated(customerReminder);
@@ -634,7 +638,7 @@ namespace Grand.Services.Customers
 
 
 
-        public IPagedList<SerializeCustomerReminderHistory> GetAllCustomerReminderHistory(string customerReminderId, int pageIndex = 0, int pageSize = 2147483647)
+        public virtual async Task<IPagedList<SerializeCustomerReminderHistory>> GetAllCustomerReminderHistory(string customerReminderId, int pageIndex = 0, int pageSize = 2147483647)
         {
             var query = from h in _customerReminderHistoryRepository.Table
                         from l in h.Levels
@@ -645,44 +649,43 @@ namespace Grand.Services.Customers
                     where p.CustomerReminderId == customerReminderId
                     select p;
 
-            var history = new PagedList<SerializeCustomerReminderHistory>(query, pageIndex, pageSize);
-            return history;
+            return await Task.FromResult(new PagedList<SerializeCustomerReminderHistory>(query, pageIndex, pageSize));
         }
 
         #endregion
 
         #region Tasks
 
-        public virtual void Task_AbandonedCart(string id = "")
+        public virtual async Task Task_AbandonedCart(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
+                                          select cr).ToListAsync();
             }
 
             foreach (var reminder in customerReminder)
             {
-                var customers = from cu in _customerRepository.Table
-                                where cu.ShoppingCartItems.Any() && cu.LastUpdateCartDateUtc > reminder.LastUpdateDate
-                                && (!String.IsNullOrEmpty(cu.Email))
-                                select cu;
+                var customers = await (from cu in _customerRepository.Table
+                                       where cu.ShoppingCartItems.Any() && cu.LastUpdateCartDateUtc > reminder.LastUpdateDate
+                                       && (!String.IsNullOrEmpty(cu.Email))
+                                       select cu).ToListAsync();
 
                 foreach (var customer in customers)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -694,14 +697,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -714,11 +717,11 @@ namespace Grand.Services.Customers
 
                                     if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
-                                        if (CheckConditions(reminder, customer))
+                                        if (await CheckConditions(reminder, customer))
                                         {
-                                            var send = SendEmail(customer, reminder, level.Id);
+                                            var send = await SendEmail(customer, reminder, level.Id);
                                             if (send)
-                                                UpdateHistory(customer, reminder, level.Id, null);
+                                                await UpdateHistory(customer, reminder, level.Id, null);
                                         }
                                     }
                                 }
@@ -733,11 +736,11 @@ namespace Grand.Services.Customers
 
                             if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
-                                if (CheckConditions(reminder, customer))
+                                if (await CheckConditions(reminder, customer))
                                 {
-                                    var send = SendEmail(customer, reminder, level.Id);
+                                    var send = await SendEmail(customer, reminder, level.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, level.Id, null);
+                                        await UpdateHistory(customer, reminder, level.Id, null);
                                 }
                             }
                         }
@@ -746,36 +749,36 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual void Task_RegisteredCustomer(string id = "")
+        public virtual async Task Task_RegisteredCustomer(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
+                                          select cr).ToListAsync();
             }
             foreach (var reminder in customerReminder)
             {
-                var customers = from cu in _customerRepository.Table
-                                where cu.CreatedOnUtc > reminder.LastUpdateDate
-                                && (!String.IsNullOrEmpty(cu.Email))
-                                && !cu.IsSystemAccount
-                                select cu;
+                var customers = await (from cu in _customerRepository.Table
+                                       where cu.CreatedOnUtc > reminder.LastUpdateDate
+                                       && (!String.IsNullOrEmpty(cu.Email))
+                                       && !cu.IsSystemAccount
+                                       select cu).ToListAsync();
 
                 foreach (var customer in customers)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -787,14 +790,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -807,11 +810,11 @@ namespace Grand.Services.Customers
 
                                     if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
-                                        if (CheckConditions(reminder, customer))
+                                        if (await CheckConditions(reminder, customer))
                                         {
-                                            var send = SendEmail(customer, reminder, level.Id);
+                                            var send = await SendEmail(customer, reminder, level.Id);
                                             if (send)
-                                                UpdateHistory(customer, reminder, level.Id, null);
+                                                await UpdateHistory(customer, reminder, level.Id, null);
                                         }
                                     }
                                 }
@@ -826,11 +829,11 @@ namespace Grand.Services.Customers
 
                             if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
-                                if (CheckConditions(reminder, customer))
+                                if (await CheckConditions(reminder, customer))
                                 {
-                                    var send = SendEmail(customer, reminder, level.Id);
+                                    var send = await SendEmail(customer, reminder, level.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, level.Id, null);
+                                        await UpdateHistory(customer, reminder, level.Id, null);
                                 }
                             }
                         }
@@ -839,35 +842,35 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual void Task_LastActivity(string id = "")
+        public virtual async Task Task_LastActivity(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
+                                          select cr).ToListAsync();
             }
             foreach (var reminder in customerReminder)
             {
-                var customers = from cu in _customerRepository.Table
-                                where cu.LastActivityDateUtc < reminder.LastUpdateDate
-                                && (!String.IsNullOrEmpty(cu.Email))
-                                select cu;
+                var customers = await (from cu in _customerRepository.Table
+                                       where cu.LastActivityDateUtc < reminder.LastUpdateDate
+                                       && (!String.IsNullOrEmpty(cu.Email))
+                                       select cu).ToListAsync();
 
                 foreach (var customer in customers)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -879,14 +882,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -899,11 +902,11 @@ namespace Grand.Services.Customers
 
                                     if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
-                                        if (CheckConditions(reminder, customer))
+                                        if (await CheckConditions(reminder, customer))
                                         {
-                                            var send = SendEmail(customer, reminder, level.Id);
+                                            var send = await SendEmail(customer, reminder, level.Id);
                                             if (send)
-                                                UpdateHistory(customer, reminder, level.Id, null);
+                                                await UpdateHistory(customer, reminder, level.Id, null);
                                         }
                                     }
                                 }
@@ -917,11 +920,11 @@ namespace Grand.Services.Customers
                         {
                             if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
-                                if (CheckConditions(reminder, customer))
+                                if (await CheckConditions(reminder, customer))
                                 {
-                                    var send = SendEmail(customer, reminder, level.Id);
+                                    var send = await SendEmail(customer, reminder, level.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, level.Id, null);
+                                        await UpdateHistory(customer, reminder, level.Id, null);
                                 }
                             }
                         }
@@ -930,36 +933,36 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual void Task_LastPurchase(string id = "")
+        public virtual async Task Task_LastPurchase(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
+                                          select cr).ToListAsync();
             }
             foreach (var reminder in customerReminder)
             {
-                var customers = from cu in _customerRepository.Table
-                                where cu.LastPurchaseDateUtc < reminder.LastUpdateDate || cu.LastPurchaseDateUtc == null
-                                && (!String.IsNullOrEmpty(cu.Email))
-                                && !cu.IsSystemAccount
-                                select cu;
+                var customers = await (from cu in _customerRepository.Table
+                                       where cu.LastPurchaseDateUtc < reminder.LastUpdateDate || cu.LastPurchaseDateUtc == null
+                                       && (!String.IsNullOrEmpty(cu.Email))
+                                       && !cu.IsSystemAccount
+                                       select cu).ToListAsync();
 
                 foreach (var customer in customers)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -971,14 +974,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -991,11 +994,11 @@ namespace Grand.Services.Customers
                                     DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes) : DateTime.MinValue;
                                     if (DateTime.UtcNow > lastpurchaseDate)
                                     {
-                                        if (CheckConditions(reminder, customer))
+                                        if (await CheckConditions(reminder, customer))
                                         {
-                                            var send = SendEmail(customer, reminder, level.Id);
+                                            var send = await SendEmail(customer, reminder, level.Id);
                                             if (send)
-                                                UpdateHistory(customer, reminder, level.Id, null);
+                                                await UpdateHistory(customer, reminder, level.Id, null);
                                         }
                                     }
                                 }
@@ -1010,11 +1013,11 @@ namespace Grand.Services.Customers
                             DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes) : DateTime.MinValue;
                             if (DateTime.UtcNow > lastpurchaseDate)
                             {
-                                if (CheckConditions(reminder, customer))
+                                if (await CheckConditions(reminder, customer))
                                 {
-                                    var send = SendEmail(customer, reminder, level.Id);
+                                    var send = await SendEmail(customer, reminder, level.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, level.Id, null);
+                                        await UpdateHistory(customer, reminder, level.Id, null);
                                 }
                             }
                         }
@@ -1023,22 +1026,22 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual void Task_Birthday(string id = "")
+        public virtual async Task Task_Birthday(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
+                                          select cr).ToListAsync();
             }
 
             foreach (var reminder in customerReminder)
@@ -1049,16 +1052,16 @@ namespace Grand.Services.Customers
 
                 string dateDDMM = DateTime.Now.AddDays(day).ToString("-MM-dd");
 
-                var customers = from cu in _customerRepository.Table
-                                where (!String.IsNullOrEmpty(cu.Email))
-                                && cu.GenericAttributes.Any(x => x.Key == "DateOfBirth" && x.Value.Contains(dateDDMM))
-                                select cu;
+                var customers = await (from cu in _customerRepository.Table
+                                       where (!String.IsNullOrEmpty(cu.Email))
+                                       && cu.GenericAttributes.Any(x => x.Key == "DateOfBirth" && x.Value.Contains(dateDDMM))
+                                       select cu).ToListAsync();
 
                 foreach (var customer in customers)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -1070,14 +1073,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -1087,11 +1090,11 @@ namespace Grand.Services.Customers
                                 var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                 if (level != null)
                                 {
-                                    if (CheckConditions(reminder, customer))
+                                    if (await CheckConditions(reminder, customer))
                                     {
-                                        var send = SendEmail(customer, reminder, level.Id);
+                                        var send = await SendEmail(customer, reminder, level.Id);
                                         if (send)
-                                            UpdateHistory(customer, reminder, level.Id, null);
+                                            await UpdateHistory(customer, reminder, level.Id, null);
                                     }
                                 }
                             }
@@ -1102,19 +1105,19 @@ namespace Grand.Services.Customers
                         var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                         if (level != null)
                         {
-                            if (CheckConditions(reminder, customer))
+                            if (await CheckConditions(reminder, customer))
                             {
-                                var send = SendEmail(customer, reminder, level.Id);
+                                var send = await SendEmail(customer, reminder, level.Id);
                                 if (send)
-                                    UpdateHistory(customer, reminder, level.Id, null);
+                                    await UpdateHistory(customer, reminder, level.Id, null);
                             }
                         }
                     }
                 }
 
-                var activehistory = (from hc in _customerReminderHistoryRepository.Table
-                                     where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
-                                     select hc).ToList();
+                var activehistory = await (from hc in _customerReminderHistoryRepository.Table
+                                           where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
+                                           select hc).ToListAsync();
 
                 foreach (var activereminderhistory in activehistory)
                 {
@@ -1125,37 +1128,37 @@ namespace Grand.Services.Customers
                     {
                         if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                         {
-                            var send = SendEmail(customer, reminder, reminderLevel.Id);
+                            var send = await SendEmail(customer, reminder, reminderLevel.Id);
                             if (send)
-                                UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                await UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
                         }
                     }
                     else
                     {
-                        CloseHistoryReminder(reminder, activereminderhistory);
+                        await CloseHistoryReminder(reminder, activereminderhistory);
                     }
                 }
             }
 
         }
 
-        public virtual void Task_CompletedOrder(string id = "")
+        public virtual async Task Task_CompletedOrder(string id = "")
         {
             var dateNow = DateTime.UtcNow.Date;
             var datetimeUtcNow = DateTime.UtcNow;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.CompletedOrder
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.CompletedOrder
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.CompletedOrder
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.CompletedOrder
+                                          select cr).ToListAsync();
             }
 
             foreach (var reminder in customerReminder)
@@ -1164,18 +1167,18 @@ namespace Grand.Services.Customers
                 if (reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null)
                     day = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault().Day;
 
-                var orders = from or in _orderRepository.Table
-                             where or.OrderStatusId == (int)OrderStatus.Complete
-                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
-                             select or;
+                var orders = await (from or in _orderRepository.Table
+                                    where or.OrderStatusId == (int)OrderStatus.Complete
+                                    && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
+                                    select or).ToListAsync();
 
                 foreach (var order in orders)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.BaseOrderId == order.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.BaseOrderId == order.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
 
-                    Customer customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
+                    Customer customer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Id == order.CustomerId);
 
                     if (history.Any())
                     {
@@ -1188,14 +1191,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, order, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, order, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -1205,11 +1208,11 @@ namespace Grand.Services.Customers
                                 var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                 if (level != null)
                                 {
-                                    if (CheckConditions(reminder, customer, order))
+                                    if (await CheckConditions(reminder, customer, order))
                                     {
-                                        var send = SendEmail(customer, order, reminder, level.Id);
+                                        var send = await SendEmail(customer, order, reminder, level.Id);
                                         if (send)
-                                            UpdateHistory(order, reminder, level.Id, null);
+                                            await UpdateHistory(order, reminder, level.Id, null);
                                     }
                                 }
                             }
@@ -1220,19 +1223,19 @@ namespace Grand.Services.Customers
                         var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                         if (level != null)
                         {
-                            if (CheckConditions(reminder, customer, order))
+                            if (await CheckConditions(reminder, customer, order))
                             {
-                                var send = SendEmail(customer, order, reminder, level.Id);
+                                var send = await SendEmail(customer, order, reminder, level.Id);
                                 if (send)
-                                    UpdateHistory(order, reminder, level.Id, null);
+                                    await UpdateHistory(order, reminder, level.Id, null);
                             }
                         }
                     }
                 }
 
-                var activehistory = (from hc in _customerReminderHistoryRepository.Table
-                                     where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
-                                     select hc).ToList();
+                var activehistory = await (from hc in _customerReminderHistoryRepository.Table
+                                           where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
+                                           select hc).ToListAsync();
 
                 foreach (var activereminderhistory in activehistory)
                 {
@@ -1244,37 +1247,37 @@ namespace Grand.Services.Customers
                         var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
                         if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                         {
-                            var send = SendEmail(customer, order, reminder, reminderLevel.Id);
+                            var send = await SendEmail(customer, order, reminder, reminderLevel.Id);
                             if (send)
-                                UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
+                                await UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
                         }
                     }
                     else
                     {
-                        CloseHistoryReminder(reminder, activereminderhistory);
+                        await CloseHistoryReminder(reminder, activereminderhistory);
                     }
                 }
 
             }
 
         }
-        public virtual void Task_UnpaidOrder(string id = "")
+        public virtual async Task Task_UnpaidOrder(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
             var dateNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.UnpaidOrder
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                          && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.UnpaidOrder
+                                          select cr).ToListAsync();
             }
             else
             {
-                customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.UnpaidOrder
-                                    select cr).ToList();
+                customerReminder = await (from cr in _customerReminderRepository.Table
+                                          where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.UnpaidOrder
+                                          select cr).ToListAsync();
             }
 
             foreach (var reminder in customerReminder)
@@ -1283,18 +1286,18 @@ namespace Grand.Services.Customers
                 if (reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null)
                     day = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault().Day;
 
-                var orders = from or in _orderRepository.Table
-                             where or.PaymentStatusId == (int)PaymentStatus.Pending
-                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
-                             select or;
+                var orders = await (from or in _orderRepository.Table
+                                    where or.PaymentStatusId == (int)PaymentStatus.Pending
+                                    && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
+                                    select or).ToListAsync();
 
                 foreach (var order in orders)
                 {
-                    var history = (from hc in _customerReminderHistoryRepository.Table
-                                   where hc.BaseOrderId == order.Id && hc.CustomerReminderId == reminder.Id
-                                   select hc).ToList();
+                    var history = await (from hc in _customerReminderHistoryRepository.Table
+                                         where hc.BaseOrderId == order.Id && hc.CustomerReminderId == reminder.Id
+                                         select hc).ToListAsync();
 
-                    Customer customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
+                    Customer customer = await _customerRepository.Table.FirstOrDefaultAsync(x => x.Id == order.CustomerId);
 
                     if (history.Any())
                     {
@@ -1307,14 +1310,14 @@ namespace Grand.Services.Customers
                             {
                                 if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
-                                    var send = SendEmail(customer, order, reminder, reminderLevel.Id);
+                                    var send = await SendEmail(customer, order, reminder, reminderLevel.Id);
                                     if (send)
-                                        UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
+                                        await UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                CloseHistoryReminder(reminder, activereminderhistory);
+                                await CloseHistoryReminder(reminder, activereminderhistory);
                             }
                         }
                         else
@@ -1324,11 +1327,11 @@ namespace Grand.Services.Customers
                                 var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                 if (level != null)
                                 {
-                                    if (CheckConditions(reminder, customer, order))
+                                    if (await CheckConditions(reminder, customer, order))
                                     {
-                                        var send = SendEmail(customer, order, reminder, level.Id);
+                                        var send = await SendEmail(customer, order, reminder, level.Id);
                                         if (send)
-                                            UpdateHistory(order, reminder, level.Id, null);
+                                            await UpdateHistory(order, reminder, level.Id, null);
                                     }
                                 }
                             }
@@ -1339,18 +1342,18 @@ namespace Grand.Services.Customers
                         var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                         if (level != null)
                         {
-                            if (CheckConditions(reminder, customer, order))
+                            if (await CheckConditions(reminder, customer, order))
                             {
-                                var send = SendEmail(customer, order, reminder, level.Id);
+                                var send = await SendEmail(customer, order, reminder, level.Id);
                                 if (send)
-                                    UpdateHistory(order, reminder, level.Id, null);
+                                    await UpdateHistory(order, reminder, level.Id, null);
                             }
                         }
                     }
                 }
-                var activehistory = (from hc in _customerReminderHistoryRepository.Table
-                                     where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
-                                     select hc).ToList();
+                var activehistory = await (from hc in _customerReminderHistoryRepository.Table
+                                           where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
+                                           select hc).ToListAsync();
 
                 foreach (var activereminderhistory in activehistory)
                 {
@@ -1364,18 +1367,18 @@ namespace Grand.Services.Customers
                             var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
                             if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                             {
-                                var send = SendEmail(customer, order, reminder, reminderLevel.Id);
+                                var send = await SendEmail(customer, order, reminder, reminderLevel.Id);
                                 if (send)
-                                    UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
+                                    await UpdateHistory(order, reminder, reminderLevel.Id, activereminderhistory);
                             }
                         }
                         else
-                            CloseHistoryReminder(reminder, activereminderhistory);
+                            await CloseHistoryReminder(reminder, activereminderhistory);
 
                     }
                     else
                     {
-                        CloseHistoryReminder(reminder, activereminderhistory);
+                        await CloseHistoryReminder(reminder, activereminderhistory);
                     }
                 }
             }
