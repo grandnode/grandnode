@@ -89,14 +89,14 @@ namespace Grand.Services.Logging
         /// Gets all activity log types (class for caching)
         /// </summary>
         /// <returns>Activity log types</returns>
-        protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
+        protected virtual async Task<IList<ActivityLogTypeForCaching>> GetAllActivityTypesCached()
         {
             //cache
             string key = string.Format(ACTIVITYTYPE_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
                 var result = new List<ActivityLogTypeForCaching>();
-                var activityLogTypes = GetAllActivityTypes();
+                var activityLogTypes = await GetAllActivityTypes();
                 foreach (var alt in activityLogTypes)
                 {
                     var altForCaching = new ActivityLogTypeForCaching
@@ -120,12 +120,12 @@ namespace Grand.Services.Logging
         /// Inserts an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public virtual void InsertActivityType(ActivityLogType activityLogType)
+        public virtual async Task InsertActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
 
-            _activityLogTypeRepository.Insert(activityLogType);
+            await _activityLogTypeRepository.InsertAsync(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
@@ -133,25 +133,25 @@ namespace Grand.Services.Logging
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public virtual void UpdateActivityType(ActivityLogType activityLogType)
+        public virtual async Task UpdateActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
 
-            _activityLogTypeRepository.Update(activityLogType);
+            await _activityLogTypeRepository.UpdateAsync(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
-                
+
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type</param>
-        public virtual void DeleteActivityType(ActivityLogType activityLogType)
+        public virtual async Task DeleteActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
 
-            _activityLogTypeRepository.Delete(activityLogType);
+            await _activityLogTypeRepository.DeleteAsync(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
@@ -159,13 +159,12 @@ namespace Grand.Services.Logging
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type items</returns>
-        public virtual IList<ActivityLogType> GetAllActivityTypes()
+        public virtual async Task<IList<ActivityLogType>> GetAllActivityTypes()
         {
             var query = from alt in _activityLogTypeRepository.Table
-                orderby alt.Name
-                select alt;
-            var activityLogTypes = query.ToList();
-            return activityLogTypes;
+                        orderby alt.Name
+                        select alt;
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -173,9 +172,9 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        public virtual ActivityLogType GetActivityTypeById(string activityLogTypeId)
+        public virtual Task<ActivityLogType> GetActivityTypeById(string activityLogTypeId)
         {
-            return _activityLogTypeRepository.GetById(activityLogTypeId);
+            return _activityLogTypeRepository.GetByIdAsync(activityLogTypeId);
         }
 
         /// <summary>
@@ -185,10 +184,10 @@ namespace Grand.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual void InsertActivity(string systemKeyword, string entityKeyId,
+        public virtual async Task InsertActivity(string systemKeyword, string entityKeyId,
             string comment, params object[] commentParams)
         {
-            InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
+            await InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
         }
 
         /// <summary>
@@ -199,13 +198,13 @@ namespace Grand.Services.Logging
         /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
+        public virtual async Task<ActivityLog> InsertActivity(string systemKeyword, string entityKeyId,
             string comment, Customer customer, params object[] commentParams)
         {
             if (customer == null)
                 return null;
 
-            var activityTypes = GetAllActivityTypesCached();
+            var activityTypes = await GetAllActivityTypesCached();
             var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
             if (activityType == null || !activityType.Enabled)
                 return null;
@@ -213,7 +212,7 @@ namespace Grand.Services.Logging
             comment = CommonHelper.EnsureNotNull(comment);
             comment = string.Format(comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
-            
+
             var activity = new ActivityLog();
             activity.ActivityLogTypeId = activityType.Id;
             activity.CustomerId = customer.Id;
@@ -221,7 +220,7 @@ namespace Grand.Services.Logging
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
             activity.IpAddress = _webHelper.GetCurrentIpAddress();
-            _activityLogRepository.Insert(activity);
+            await _activityLogRepository.InsertAsync(activity);
 
             return activity;
         }
@@ -235,40 +234,37 @@ namespace Grand.Services.Logging
         /// <param name="customerId">The customer</param>
         /// <param name="addressIp">IP Address</param>
         /// <returns>Activity log item</returns>
-        public virtual void InsertActivityAsync(string systemKeyword, string entityKeyId,
+        public virtual async Task InsertActivityAsync(string systemKeyword, string entityKeyId,
             string comment, string customerId, string addressIp)
         {
-            Task.Run(() =>
-            {
-               var activityTypes = GetAllActivityTypesCached();
-               var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
-               if (activityType == null || !activityType.Enabled)
-                   return;
+            var activityTypes = await GetAllActivityTypesCached();
+            var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
+            if (activityType == null || !activityType.Enabled)
+                return;
 
-               comment = CommonHelper.EnsureNotNull(comment);
-               comment = CommonHelper.EnsureMaximumLength(comment, 4000);
+            comment = CommonHelper.EnsureNotNull(comment);
+            comment = CommonHelper.EnsureMaximumLength(comment, 4000);
 
-               var activity = new ActivityLog();
-               activity.ActivityLogTypeId = activityType.Id;
-               activity.CustomerId = customerId;
-               activity.EntityKeyId = entityKeyId;
-               activity.Comment = comment;
-               activity.CreatedOnUtc = DateTime.UtcNow;
-               activity.IpAddress = addressIp;
-               _activityLogRepository.Insert(activity);
-           });
+            var activity = new ActivityLog();
+            activity.ActivityLogTypeId = activityType.Id;
+            activity.CustomerId = customerId;
+            activity.EntityKeyId = entityKeyId;
+            activity.Comment = comment;
+            activity.CreatedOnUtc = DateTime.UtcNow;
+            activity.IpAddress = addressIp;
+            await _activityLogRepository.InsertAsync(activity);
         }
 
         /// <summary>
         /// Deletes an activity log item
         /// </summary>
         /// <param name="activityLog">Activity log type</param>
-        public virtual void DeleteActivity(ActivityLog activityLog)
+        public virtual async Task DeleteActivity(ActivityLog activityLog)
         {
             if (activityLog == null)
                 throw new ArgumentNullException("activityLog");
 
-            _activityLogRepository.Delete(activityLog);
+            await _activityLogRepository.DeleteAsync(activityLog);
         }
 
         /// <summary>
@@ -281,7 +277,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -300,8 +296,7 @@ namespace Grand.Services.Logging
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await Task.FromResult(new PagedList<ActivityLog>(query, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -313,13 +308,13 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityStats> GetStatsActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null,string activityLogTypeId = "",
+        public virtual async Task<IPagedList<ActivityStats>> GetStatsActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, string activityLogTypeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
 
             var builder = Builders<ActivityLog>.Filter;
-            var filter = builder.Where(x=>true);
+            var filter = builder.Where(x => true);
             if (createdOnFrom.HasValue)
                 filter = filter & builder.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)
@@ -336,17 +331,16 @@ namespace Grand.Services.Logging
                             {
                                 Id = g.Key,
                                 Count = g.Count()
-                    })
+                            })
                     .Project(x => new ActivityStats
                     {
                         ActivityLogTypeId = x.Id.ActivityLogTypeId,
                         EntityKeyId = x.Id.EntityKeyId,
                         Count = x.Count
                     })
-                    .SortByDescending(x=>x.Count);
-                
-            var activityLog = new PagedList<ActivityStats>(query, pageIndex, pageSize);
-            return activityLog;
+                    .SortByDescending(x => x.Count);
+
+            return await Task.FromResult(new PagedList<ActivityStats>(query, pageIndex, pageSize));
         }
         /// <summary>
         /// Gets category activity log items
@@ -357,7 +351,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetCategoryActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetCategoryActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -366,9 +360,9 @@ namespace Grand.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            var activityTypes = GetAllActivityTypesCached();
-            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetCategorySystemKeywords().Contains(at.SystemKeyword)).Select(x=>x.Id);
-            
+            var activityTypes = await GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetCategorySystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
+
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
 
             query = query.Where(al => al.EntityKeyId == categoryId);
@@ -386,7 +380,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetKnowledgebaseCategoryActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetKnowledgebaseCategoryActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -395,7 +389,7 @@ namespace Grand.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            var activityTypes = GetAllActivityTypesCached();
+            var activityTypes = await GetAllActivityTypesCached();
             var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetKnowledgebaseCategorySystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
@@ -415,7 +409,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetKnowledgebaseArticleActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetKnowledgebaseArticleActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -424,7 +418,7 @@ namespace Grand.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            var activityTypes = GetAllActivityTypesCached();
+            var activityTypes = await GetAllActivityTypesCached();
             var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetKnowledgebaseArticleSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
@@ -444,7 +438,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetManufacturerActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetManufacturerActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string manufacturerId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -453,7 +447,7 @@ namespace Grand.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            var activityTypes = GetAllActivityTypesCached();
+            var activityTypes = await GetAllActivityTypesCached();
             var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetManufacturerSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
@@ -473,7 +467,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetProductActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetProductActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string productId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -482,7 +476,7 @@ namespace Grand.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            var activityTypes = GetAllActivityTypesCached();
+            var activityTypes = await GetAllActivityTypesCached();
             var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetProductSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
@@ -498,17 +492,17 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog GetActivityById(string activityLogId)
+        public virtual Task<ActivityLog> GetActivityById(string activityLogId)
         {
-            return _activityLogRepository.GetById(activityLogId);
+            return _activityLogRepository.GetByIdAsync(activityLogId);
         }
 
         /// <summary>
         /// Clears activity log
         /// </summary>
-        public virtual void ClearAllActivities()
+        public virtual async Task ClearAllActivities()
         {
-            _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());                
+            await _activityLogRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
         }
         #endregion
 
