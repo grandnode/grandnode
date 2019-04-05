@@ -2,103 +2,104 @@
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Orders;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IProductViewModelService
     {
-        void PrepareProductModel(ProductModel model, Product product,
+        Task PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties);
-        void PrepareProductReviewModel(ProductReviewModel model,
+        Task PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewText);
-        void BackInStockNotifications(Product product, ProductModel model, int prevStockQuantity,
+        Task BackInStockNotifications(Product product, ProductModel model, int prevStockQuantity,
             List<ProductWarehouseInventory> prevMultiWarehouseStock
             );
-        (IEnumerable<OrderModel> orderModels, int totalCount) PrepareOrderModel(string productId, int pageIndex, int pageSize);
-        void PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product);
-        void SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model);
-        void PrepareTierPriceModel(ProductModel.TierPriceModel model);
-        void PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model);
-        ProductListModel PrepareProductListModel();
-        (IEnumerable<ProductModel> productModels, int totalCount) PrepareProductsModel(ProductListModel model, int pageIndex, int pageSize);
-        IList<Product> PrepareProducts(ProductListModel model);
-        Product InsertProductModel(ProductModel model);
-        Product UpdateProductModel(Product product, ProductModel model);
-        void DeleteProduct(Product product);
-        void DeleteSelected(IList<string> selectedIds);
-        ProductModel.AddRequiredProductModel PrepareAddRequiredProductModel();
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.AddRequiredProductModel model, int pageIndex, int pageSize);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.AddRelatedProductModel model, int pageIndex, int pageSize);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.AddCrossSellProductModel model, int pageIndex, int pageSize);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.AddAssociatedProductModel model, int pageIndex, int pageSize);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model, int pageIndex, int pageSize);
-        IList<ProductModel.ProductCategoryModel> PrepareProductCategoryModel(Product product);
-        void InsertProductCategoryModel(ProductModel.ProductCategoryModel model);
-        void UpdateProductCategoryModel(ProductModel.ProductCategoryModel model);
-        void DeleteProductCategory(string id, string productId);
-        IList<ProductModel.ProductManufacturerModel> PrepareProductManufacturerModel(Product product);
-        void InsertProductManufacturer(ProductModel.ProductManufacturerModel model);
-        void UpdateProductManufacturer(ProductModel.ProductManufacturerModel model);
-        void DeleteProductManufacturer(string id, string productId);
-        void InsertRelatedProductModel(ProductModel.AddRelatedProductModel model);
-        void UpdateRelatedProductModel(ProductModel.RelatedProductModel model);
-        void DeleteRelatedProductModel(ProductModel.RelatedProductModel model);
-        void InsertBundleProductModel(ProductModel.AddBundleProductModel model);
-        void UpdateBundleProductModel(ProductModel.BundleProductModel model);
-        void DeleteBundleProductModel(ProductModel.BundleProductModel model);
-        void InsertCrossSellProductModel(ProductModel.AddCrossSellProductModel model);
-        void DeleteCrossSellProduct(string productId, string crossSellProductId);
-        void InsertAssociatedProductModel(ProductModel.AddAssociatedProductModel model);
-        void DeleteAssociatedProduct(Product product);
-        ProductModel.AddRelatedProductModel PrepareRelatedProductModel();
-        ProductModel.AddBundleProductModel PrepareBundleProductModel();
-        ProductModel.AddCrossSellProductModel PrepareCrossSellProductModel();
-        ProductModel.AddAssociatedProductModel PrepareAssociatedProductModel();
-        BulkEditListModel PrepareBulkEditListModel();
-        (IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount) PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize);
-        void UpdateBulkEdit(IList<BulkEditProductModel> products);
-        void DeleteBulkEdit(IList<BulkEditProductModel> products);
+        Task<(IEnumerable<OrderModel> orderModels, int totalCount)> PrepareOrderModel(string productId, int pageIndex, int pageSize);
+        Task PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product);
+        Task SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model);
+        Task PrepareTierPriceModel(ProductModel.TierPriceModel model);
+        Task PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model);
+        Task<ProductListModel> PrepareProductListModel();
+        Task<(IEnumerable<ProductModel> productModels, int totalCount)> PrepareProductsModel(ProductListModel model, int pageIndex, int pageSize);
+        Task<IList<Product>> PrepareProducts(ProductListModel model);
+        Task<Product> InsertProductModel(ProductModel model);
+        Task<Product> UpdateProductModel(Product product, ProductModel model);
+        Task DeleteProduct(Product product);
+        Task DeleteSelected(IList<string> selectedIds);
+        Task<ProductModel.AddRequiredProductModel> PrepareAddRequiredProductModel();
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRequiredProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRelatedProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddCrossSellProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddAssociatedProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model, int pageIndex, int pageSize);
+        Task<IList<ProductModel.ProductCategoryModel>> PrepareProductCategoryModel(Product product);
+        Task InsertProductCategoryModel(ProductModel.ProductCategoryModel model);
+        Task UpdateProductCategoryModel(ProductModel.ProductCategoryModel model);
+        Task DeleteProductCategory(string id, string productId);
+        Task<IList<ProductModel.ProductManufacturerModel>> PrepareProductManufacturerModel(Product product);
+        Task InsertProductManufacturer(ProductModel.ProductManufacturerModel model);
+        Task UpdateProductManufacturer(ProductModel.ProductManufacturerModel model);
+        Task DeleteProductManufacturer(string id, string productId);
+        Task InsertRelatedProductModel(ProductModel.AddRelatedProductModel model);
+        Task UpdateRelatedProductModel(ProductModel.RelatedProductModel model);
+        Task DeleteRelatedProductModel(ProductModel.RelatedProductModel model);
+        Task InsertBundleProductModel(ProductModel.AddBundleProductModel model);
+        Task UpdateBundleProductModel(ProductModel.BundleProductModel model);
+        Task DeleteBundleProductModel(ProductModel.BundleProductModel model);
+        Task InsertCrossSellProductModel(ProductModel.AddCrossSellProductModel model);
+        Task DeleteCrossSellProduct(string productId, string crossSellProductId);
+        Task InsertAssociatedProductModel(ProductModel.AddAssociatedProductModel model);
+        Task DeleteAssociatedProduct(Product product);
+        Task<ProductModel.AddRelatedProductModel> PrepareRelatedProductModel();
+        Task<ProductModel.AddBundleProductModel> PrepareBundleProductModel();
+        Task<ProductModel.AddCrossSellProductModel> PrepareCrossSellProductModel();
+        Task<ProductModel.AddAssociatedProductModel> PrepareAssociatedProductModel();
+        Task<BulkEditListModel> PrepareBulkEditListModel();
+        Task<(IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount)> PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize);
+        Task UpdateBulkEdit(IList<BulkEditProductModel> products);
+        Task DeleteBulkEdit(IList<BulkEditProductModel> products);
         //tierprices
-        IList<ProductModel.TierPriceModel> PrepareTierPriceModel(Product product);
-        (IEnumerable<ProductModel.BidModel> bidModels, int totalCount) PrepareBidMode(string productId, int pageIndex, int pageSize);
-        (IEnumerable<ProductModel.ActivityLogModel> activityLogModels, int totalCount) PrepareActivityLogModel(string productId, int pageIndex, int pageSize);
-        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product);
-        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
-        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product, ProductAttributeMapping productAttributeMapping);
-        IList<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModels(Product product);
-        void InsertProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
-        void UpdateProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
-        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping);
-        void UpdateProductAttributeValidationRulesModel(ProductAttributeMapping productAttributeMapping, ProductModel.ProductAttributeMappingModel model);
-        ProductAttributeConditionModel PrepareProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping);
-        void UpdateProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping, ProductAttributeConditionModel model, Dictionary<string, string> form);
-        IList<ProductModel.ProductAttributeValueModel> PrepareProductAttributeValueModels(Product product, ProductAttributeMapping productAttributeMapping);
-        ProductModel.ProductAttributeValueModel PrepareProductAttributeValueModel(ProductAttributeMapping pa, ProductAttributeValue pav);
-        void InsertProductAttributeValueModel(ProductModel.ProductAttributeValueModel model);
-        void UpdateProductAttributeValueModel(ProductAttributeValue pav, ProductModel.ProductAttributeValueModel model);
-        ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel PrepareAssociateProductToAttributeValueModel();
-        IList<ProductModel.ProductAttributeCombinationModel> PrepareProductAttributeCombinationModel(Product product);
-        ProductAttributeCombinationModel PrepareProductAttributeCombinationModel(Product product, string combinationId);
+        Task<IList<ProductModel.TierPriceModel>> PrepareTierPriceModel(Product product);
+        Task<(IEnumerable<ProductModel.BidModel> bidModels, int totalCount)> PrepareBidMode(string productId, int pageIndex, int pageSize);
+        Task<(IEnumerable<ProductModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareActivityLogModel(string productId, int pageIndex, int pageSize);
+        Task<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModel(Product product);
+        Task<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
+        Task<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModel(Product product, ProductAttributeMapping productAttributeMapping);
+        Task<IList<ProductModel.ProductAttributeMappingModel>> PrepareProductAttributeMappingModels(Product product);
+        Task InsertProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
+        Task UpdateProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
+        Task<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping);
+        Task UpdateProductAttributeValidationRulesModel(ProductAttributeMapping productAttributeMapping, ProductModel.ProductAttributeMappingModel model);
+        Task<ProductAttributeConditionModel> PrepareProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping);
+        Task UpdateProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping, ProductAttributeConditionModel model, Dictionary<string, string> form);
+        Task<IList<ProductModel.ProductAttributeValueModel>> PrepareProductAttributeValueModels(Product product, ProductAttributeMapping productAttributeMapping);
+        Task<ProductModel.ProductAttributeValueModel> PrepareProductAttributeValueModel(ProductAttributeMapping pa, ProductAttributeValue pav);
+        Task InsertProductAttributeValueModel(ProductModel.ProductAttributeValueModel model);
+        Task UpdateProductAttributeValueModel(ProductAttributeValue pav, ProductModel.ProductAttributeValueModel model);
+        Task<ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel> PrepareAssociateProductToAttributeValueModel();
+        Task<IList<ProductModel.ProductAttributeCombinationModel>> PrepareProductAttributeCombinationModel(Product product);
+        Task<ProductAttributeCombinationModel> PrepareProductAttributeCombinationModel(Product product, string combinationId);
         //tier prices for combination
-        IList<string> InsertOrUpdateProductAttributeCombinationPopup(Product product, ProductAttributeCombinationModel model, Dictionary<string, string> form);
-        void GenerateAllAttributeCombinations(Product product);
-        IList<ProductModel.ProductAttributeCombinationTierPricesModel> PrepareProductAttributeCombinationTierPricesModel(Product product, string productAttributeCombinationId);
-        void InsertProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model);
-        void UpdateProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model);
-        void DeleteProductAttributeCombinationTierPrices(Product product, ProductAttributeCombination productAttributeCombination, ProductCombinationTierPrices tierPrice);
+        Task<IList<string>> InsertOrUpdateProductAttributeCombinationPopup(Product product, ProductAttributeCombinationModel model, Dictionary<string, string> form);
+        Task GenerateAllAttributeCombinations(Product product);
+        Task<IList<ProductModel.ProductAttributeCombinationTierPricesModel>> PrepareProductAttributeCombinationTierPricesModel(Product product, string productAttributeCombinationId);
+        Task InsertProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model);
+        Task UpdateProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model);
+        Task DeleteProductAttributeCombinationTierPrices(Product product, ProductAttributeCombination productAttributeCombination, ProductCombinationTierPrices tierPrice);
 
         //Pictures
-        IList<ProductModel.ProductPictureModel> PrepareProductPictureModel(Product product);
-        void InsertProductPicture(Product product, string pictureId, int displayOrder,
+        Task<IList<ProductModel.ProductPictureModel>> PrepareProductPictureModel(Product product);
+        Task InsertProductPicture(Product product, string pictureId, int displayOrder,
            string overrideAltAttribute, string overrideTitleAttribute);
-        void UpdateProductPicture(ProductModel.ProductPictureModel model);
-        void DeleteProductPicture(ProductModel.ProductPictureModel model);
+        Task UpdateProductPicture(ProductModel.ProductPictureModel model);
+        Task DeleteProductPicture(ProductModel.ProductPictureModel model);
 
         //Product specification
-        IList<ProductSpecificationAttributeModel> PrepareProductSpecificationAttributeModel(Product product);
-        void InsertProductSpecificationAttributeModel(ProductModel.AddProductSpecificationAttributeModel model, Product product);
-        void UpdateProductSpecificationAttributeModel(Product product, ProductSpecificationAttribute psa, ProductSpecificationAttributeModel model);
-        void DeleteProductSpecificationAttribute(Product product, ProductSpecificationAttribute psa);
+        Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModel(Product product);
+        Task InsertProductSpecificationAttributeModel(ProductModel.AddProductSpecificationAttributeModel model, Product product);
+        Task UpdateProductSpecificationAttributeModel(Product product, ProductSpecificationAttribute psa, ProductSpecificationAttributeModel model);
+        Task DeleteProductSpecificationAttribute(Product product, ProductSpecificationAttribute psa);
     }
 }
