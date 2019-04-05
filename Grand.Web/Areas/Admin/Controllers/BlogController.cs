@@ -64,29 +64,29 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            var model = _blogViewModelService.PrepareBlogPostModel();
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
+            var model = await _blogViewModelService.PrepareBlogPostModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(BlogPostModel model, bool continueEditing)
+        public async Task<IActionResult> Create(BlogPostModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var blogPost = _blogViewModelService.InsertBlogPostModel(model);
+                var blogPost = await _blogViewModelService.InsertBlogPostModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            model = _blogViewModelService.PrepareBlogPostModel(model);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
+            model = await _blogViewModelService.PrepareBlogPostModel(model);
             return View(model);
         }
 
@@ -97,10 +97,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            var model = _blogViewModelService.PrepareBlogPostModel(blogPost);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
+            var model = await _blogViewModelService.PrepareBlogPostModel(blogPost);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Title = blogPost.GetLocalized(x => x.Title, languageId, false, false);
                 locale.Body = blogPost.GetLocalized(x => x.Body, languageId, false, false);
@@ -123,7 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                blogPost = _blogViewModelService.UpdateBlogPostModel(model, blogPost);
+                blogPost = await _blogViewModelService.UpdateBlogPostModel(model, blogPost);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 if (continueEditing)
@@ -137,11 +137,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
 
-            model = _blogViewModelService.PrepareBlogPostModel(model, blogPost);
+            model = await _blogViewModelService.PrepareBlogPostModel(model, blogPost);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Title = blogPost.GetLocalized(x => x.Title, languageId, false, false);
                 locale.Body = blogPost.GetLocalized(x => x.Body, languageId, false, false);
@@ -190,35 +190,35 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CategoryCreate()
+        public async Task<IActionResult> CategoryCreate()
         {
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = new BlogCategoryModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CategoryCreate(BlogCategoryModel model, bool continueEditing)
+        public async Task<IActionResult> CategoryCreate(BlogCategoryModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var blogCategory = model.ToEntity();
-                _blogService.InsertBlogCategory(blogCategory);
+                await _blogService.InsertBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Added"));
                 return continueEditing ? RedirectToAction("CategoryEdit", new { id = blogCategory.Id }) : RedirectToAction("CategoryList");
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
@@ -230,15 +230,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
 
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = blogCategory.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = blogCategory.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Store
-            model.PrepareStoresMappingModel(blogCategory, false, _storeService);
+            await model.PrepareStoresMappingModel(blogCategory, false, _storeService);
             return View(model);
         }
 
@@ -266,15 +266,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = blogCategory.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Store
-            model.PrepareStoresMappingModel(blogCategory, true, _storeService);
+            await model.PrepareStoresMappingModel(blogCategory, true, _storeService);
 
             return View(model);
         }
@@ -331,12 +331,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public IActionResult BlogPostAddPopup(string categoryId)
+        public async Task<IActionResult> BlogPostAddPopup(string categoryId)
         {
             var model = new AddBlogPostCategoryModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             model.CategoryId = categoryId;
             return View(model);
