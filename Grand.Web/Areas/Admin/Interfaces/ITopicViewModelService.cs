@@ -1,14 +1,15 @@
 ﻿using Grand.Core.Domain.Topics;
 using Grand.Web.Areas.Admin.Models.Topics;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface ITopicViewModelService
     {
-        TopicListModel PrepareTopicListModel();
-        void PrepareTemplatesModel(TopicModel model);
-        Topic InsertTopicModel(TopicModel model);
-        Topic UpdateTopicModel(Topic topic, TopicModel model);
-        void DeleteTopic(Topic topic);
+        Task<TopicListModel> PrepareTopicListModel();
+        Task PrepareTemplatesModel(TopicModel model);
+        Task<Topic> InsertTopicModel(TopicModel model);
+        Task<Topic> UpdateTopicModel(Topic topic, TopicModel model);
+        Task DeleteTopic(Topic topic);
     }
 }
