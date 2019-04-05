@@ -17,6 +17,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -102,11 +103,11 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Utilities
-        protected IList<CustomerActionType> GetAllCustomerActionType()
+        protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
-            return _cacheManager.Get(CUSTOMER_ACTION_TYPE, () =>
+            return await _cacheManager.Get(CUSTOMER_ACTION_TYPE, () =>
             {
-                return _customerActionTypeRepository.Table.AsQueryable().ToList();
+                return _customerActionTypeRepository.Table.ToListAsync();
             });
         }
 
@@ -124,16 +125,16 @@ namespace Grand.Services.Customers
             return false;
         }
 
-        protected void SaveActionToCustomer(string actionId, string customerId)
+        protected async Task SaveActionToCustomer(string actionId, string customerId)
         {
-            _customerActionHistoryRepository.Insert(new CustomerActionHistory() { CustomerId = customerId, CustomerActionId = actionId, CreateDateUtc = DateTime.UtcNow });
+            await _customerActionHistoryRepository.InsertAsync(new CustomerActionHistory() { CustomerId = customerId, CustomerActionId = actionId, CreateDateUtc = DateTime.UtcNow });
         }
         #endregion
 
         #region Condition
-        protected bool Condition(CustomerAction action, Product product, string attributesXml, Customer customer, string currentUrl, string previousUrl)
+        protected async Task<bool> Condition(CustomerAction action, Product product, string attributesXml, Customer customer, string currentUrl, string previousUrl)
         {
-            var _cat = GetAllCustomerActionType();
+            var _cat = await GetAllCustomerActionType();
             if (action.Conditions.Count() == 0)
                 return true;
 
@@ -251,12 +252,12 @@ namespace Grand.Services.Customers
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerRegisterField)
                 {
-                    cond = ConditionCustomerRegister(item, customer);
+                    cond = await ConditionCustomerRegister(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomCustomerAttribute)
                 {
-                    cond = ConditionCustomerAttribute(item, customer);
+                    cond = await ConditionCustomerAttribute(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.UrlCurrent)
@@ -282,7 +283,6 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionCategory(CustomerAction.ActionCondition condition, ICollection<ProductCategory> categorties)
         {
             bool cond = true;
@@ -311,7 +311,6 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionManufacturer(CustomerAction.ActionCondition condition, ICollection<ProductManufacturer> manufacturers)
         {
             bool cond = true;
@@ -327,7 +326,6 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionManufacturer(CustomerAction.ActionCondition condition, ICollection<string> manufacturers)
         {
             bool cond = true;
@@ -343,18 +341,14 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionProducts(CustomerAction.ActionCondition condition, string productId)
         {
             return condition.Products.Contains(productId);
         }
-
         protected bool ConditionStores(CustomerAction.ActionCondition condition, string storeId)
         {
             return condition.Stores.Contains(storeId);
         }
-
-
         protected bool ConditionProducts(CustomerAction.ActionCondition condition, ICollection<string> products)
         {
             bool cond = true;
@@ -369,7 +363,6 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionProductAttribute(CustomerAction.ActionCondition condition, Product product, string AttributesXml)
         {
             bool cond = false;
@@ -430,7 +423,6 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionSpecificationAttribute(CustomerAction.ActionCondition condition, ICollection<ProductSpecificationAttribute> productspecificationattribute)
         {
             bool cond = false;
@@ -455,12 +447,10 @@ namespace Grand.Services.Customers
 
             return cond;
         }
-
         protected bool ConditionVendors(CustomerAction.ActionCondition condition, string vendorId)
         {
             return condition.Vendors.Contains(vendorId);
         }
-
         protected bool ConditionCustomerRole(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
@@ -478,7 +468,6 @@ namespace Grand.Services.Customers
             }
             return cond;
         }
-
         protected bool ConditionCustomerTag(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
@@ -496,13 +485,12 @@ namespace Grand.Services.Customers
             }
             return cond;
         }
-
-        protected bool ConditionCustomerRegister(CustomerAction.ActionCondition condition, Customer customer)
+        protected async Task<bool> ConditionCustomerRegister(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
             if (customer != null)
             {
-                var _genericAttributes = _customerService.GetCustomerById(customer.Id).GenericAttributes;
+                var _genericAttributes = (await _customerService.GetCustomerById(customer.Id)).GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
                     cond = true;
@@ -523,13 +511,12 @@ namespace Grand.Services.Customers
             }
             return cond;
         }
-
-        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, Customer customer)
+        protected async Task<bool> ConditionCustomerAttribute(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
             if (customer != null)
             {
-                var _genericAttributes = _customerService.GetCustomerById(customer.Id).GenericAttributes;
+                var _genericAttributes = (await _customerService.GetCustomerById(customer.Id)).GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
                     var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
@@ -537,7 +524,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             cond = true;
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
@@ -560,7 +547,7 @@ namespace Grand.Services.Customers
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
-                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
                                 var _fields = item.RegisterField.Split(':');
@@ -580,49 +567,49 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Reaction
-        public void Reaction(CustomerAction action, Customer customer, ShoppingCartItem cartItem, Order order)
+        public async Task Reaction(CustomerAction action, Customer customer, ShoppingCartItem cartItem, Order order)
         {
             if (action.ReactionType == CustomerReactionTypeEnum.Banner)
             {
-                var banner = _bannerRepository.GetById(action.BannerId);
+                var banner = await _bannerRepository.GetByIdAsync(action.BannerId);
                 if (banner != null)
                     PrepareBanner(action, banner, customer.Id);
             }
             if (action.ReactionType == CustomerReactionTypeEnum.InteractiveForm)
             {
-                var interactiveform = _interactiveFormRepository.GetById(action.InteractiveFormId);
+                var interactiveform = await _interactiveFormRepository.GetByIdAsync(action.InteractiveFormId);
                 if (interactiveform != null)
                     PrepareInteractiveForm(action, interactiveform, customer.Id);
             }
 
-            var _cat = GetAllCustomerActionType();
+            var _cat = await GetAllCustomerActionType();
 
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
                 if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
                     if (cartItem != null)
-                        _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
+                        await _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
                             _workContext.WorkingLanguage.Id, customer);
                 }
 
                 if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id)
                 {
                     if (order != null)
-                        _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
+                        await _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
                             _workContext.WorkingLanguage.Id);
                 }
 
                 if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
-                    _workflowMessageService.SendCustomerActionEvent_Notification(action,
+                    await _workflowMessageService.SendCustomerActionEvent_Notification(action,
                         _workContext.WorkingLanguage.Id, customer);
                 }
             }
 
             if (action.ReactionType == CustomerReactionTypeEnum.AssignToCustomerRole)
             {
-                AssignToCustomerRole(action, customer);
+                await AssignToCustomerRole(action, customer);
             }
 
             if (action.ReactionType == CustomerReactionTypeEnum.AssignToCustomerTag)
@@ -630,18 +617,18 @@ namespace Grand.Services.Customers
                 AssignToCustomerTag(action, customer);
             }
 
-            SaveActionToCustomer(action.Id, customer.Id);
+            await SaveActionToCustomer(action.Id, customer.Id);
 
         }
         protected void PrepareBanner(CustomerAction action, Banner banner, string customerId)
         {
             var banneractive = new PopupActive()
             {
-                Body = banner.GetLocalized(x => x.Body),
+                Body = banner.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id),
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
                 CustomerActionId = action.Id,
-                Name = banner.GetLocalized(x => x.Name),
+                Name = banner.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 PopupTypeId = (int)PopupType.Banner
             };
             _popupService.InsertPopupActive(banneractive);
@@ -658,7 +645,7 @@ namespace Grand.Services.Customers
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
                 CustomerActionId = action.Id,
-                Name = form.GetLocalized(x => x.Name),
+                Name = form.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 PopupTypeId = (int)PopupType.InteractiveForm
             };
             _popupService.InsertPopupActive(formactive);
@@ -666,7 +653,7 @@ namespace Grand.Services.Customers
 
         protected string PrepareDataInteractiveForm(InteractiveForm form)
         {
-            var body = form.GetLocalized(x => x.Body);
+            var body = form.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id);
             body += "<input type=\"hidden\" name=\"Id\" value=\"" + form.Id + "\">";
             foreach (var item in form.FormAttributes)
             {
@@ -696,9 +683,9 @@ namespace Grand.Services.Customers
 
                         checkbox += "<label class=\"custom-control custom-checkbox\">";
                         checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\" >", _class, _style,
-                            itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name));
+                            itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
                         checkbox += "<span class=\"custom-control-indicator\"></span>";
-                        checkbox += string.Format("<span class=\"custom-control-description\">{0}</span>", itemcheck.GetLocalized(x => x.Name));
+                        checkbox += string.Format("<span class=\"custom-control-description\">{0}</span>", itemcheck.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
                         checkbox += "</label>";
                     }
                     checkbox += "</div>";
@@ -714,7 +701,7 @@ namespace Grand.Services.Customers
                     dropdown = string.Format("<select name=\"{0}\" class=\"{1}\" style=\"{2}\" >", item.SystemName, _class, _style);
                     foreach (var itemdropdown in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
                     {
-                        dropdown += string.Format("<option value=\"{0}\" {1}>{2}</option>", itemdropdown.GetLocalized(x => x.Name), itemdropdown.IsPreSelected ? "selected" : "", itemdropdown.GetLocalized(x => x.Name));
+                        dropdown += string.Format("<option value=\"{0}\" {1}>{2}</option>", itemdropdown.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id), itemdropdown.IsPreSelected ? "selected" : "", itemdropdown.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
                     }
                     dropdown += "</select>";
                     body = body.Replace(string.Format("%{0}%", item.SystemName), dropdown);
@@ -729,9 +716,9 @@ namespace Grand.Services.Customers
 
                         radio += "<label class=\"custom-control custom-radio\">";
                         radio += string.Format("<input type=\"radio\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\">", _class, _style,
-                            itemradio.IsPreSelected ? "checked" : "", itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name));
+                            itemradio.IsPreSelected ? "checked" : "", itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
                         radio += "<span class=\"custom-control-indicator\"></span>";
-                        radio += string.Format("<span class=\"custom-control-description\">{0}</span>", itemradio.GetLocalized(x => x.Name));
+                        radio += string.Format("<span class=\"custom-control-description\">{0}</span>", itemradio.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
                         radio += "</label>";
                     }
                     radio += "</div>";
@@ -742,15 +729,15 @@ namespace Grand.Services.Customers
             return body;
         }
 
-        protected void AssignToCustomerRole(CustomerAction action, Customer customer)
+        protected async Task AssignToCustomerRole(CustomerAction action, Customer customer)
         {
             if (customer.CustomerRoles.Where(x => x.Id == action.CustomerRoleId).Count() == 0)
             {
-                var customerRole = _customerService.GetCustomerRoleById(action.CustomerRoleId);
+                var customerRole = await _customerService.GetCustomerRoleById(action.CustomerRoleId);
                 if (customerRole != null)
                 {
                     customerRole.CustomerId = customer.Id;
-                    _customerService.InsertCustomerRoleInCustomer(customerRole);
+                    await _customerService.InsertCustomerRoleInCustomer(customerRole);
                 }
             }
         }
@@ -769,9 +756,10 @@ namespace Grand.Services.Customers
 
         #region Methods
 
-        public virtual void AddToCart(ShoppingCartItem cart, Product product, Customer customer)
+        public virtual async Task AddToCart(ShoppingCartItem cart, Product product, Customer customer)
         {
-            var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
+            var actiontypes = await GetAllCustomerActionType();
+            var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
             if (actionType.Enabled)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
@@ -784,18 +772,19 @@ namespace Grand.Services.Customers
                 {
                     if (!UsedAction(item.Id, customer.Id))
                     {
-                        if (Condition(item, product, cart.AttributesXml, customer, null, null))
+                        if (await Condition(item, product, cart.AttributesXml, customer, null, null))
                         {
-                            Reaction(item, customer, cart, null);
+                            await Reaction(item, customer, cart, null);
                         }
                     }
                 }
             }
         }
 
-        public virtual void AddOrder(Order order, Customer customer)
+        public virtual async Task AddOrder(Order order, Customer customer)
         {
-            var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
+            var actiontypes = await GetAllCustomerActionType();
+            var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
             if (actionType.Enabled)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
@@ -810,10 +799,10 @@ namespace Grand.Services.Customers
                     {
                         foreach (var orderItem in order.OrderItems)
                         {
-                            var product = _productService.GetProductById(orderItem.ProductId);
-                            if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
+                            var product = await _productService.GetProductById(orderItem.ProductId);
+                            if (await Condition(item, product, orderItem.AttributesXml, customer, null, null))
                             {
-                                Reaction(item, customer, null, order);
+                                await Reaction(item, customer, null, order);
                                 break;
                             }
                         }
@@ -824,11 +813,12 @@ namespace Grand.Services.Customers
 
         }
 
-        public virtual void Url(Customer customer, string currentUrl, string previousUrl)
+        public virtual async Task Url(Customer customer, string currentUrl, string previousUrl)
         {
             if (!customer.IsSystemAccount)
             {
-                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                var actiontypes = await GetAllCustomerActionType();
+                var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
@@ -841,9 +831,9 @@ namespace Grand.Services.Customers
                     {
                         if (!UsedAction(item.Id, customer.Id))
                         {
-                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            if (await Condition(item, null, null, customer, currentUrl, previousUrl))
                             {
-                                Reaction(item, customer, null, null);
+                                await Reaction(item, customer, null, null);
                             }
                         }
                     }
@@ -851,11 +841,12 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual void Viewed(Customer customer, string currentUrl, string previousUrl)
+        public virtual async Task Viewed(Customer customer, string currentUrl, string previousUrl)
         {
             if (!customer.IsSystemAccount)
             {
-                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
+                var actiontypes = await GetAllCustomerActionType();
+                var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
@@ -868,9 +859,9 @@ namespace Grand.Services.Customers
                     {
                         if (!UsedAction(item.Id, customer.Id))
                         {
-                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            if (await Condition(item, null, null, customer, currentUrl, previousUrl))
                             {
-                                Reaction(item, customer, null, null);
+                                await Reaction(item, customer, null, null);
                             }
                         }
                     }
@@ -879,9 +870,10 @@ namespace Grand.Services.Customers
             }
 
         }
-        public virtual void Registration(Customer customer)
+        public virtual async Task Registration(Customer customer)
         {
-            var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
+            var actiontypes = await GetAllCustomerActionType();
+            var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
             if (actionType.Enabled)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
@@ -894,9 +886,9 @@ namespace Grand.Services.Customers
                 {
                     if (!UsedAction(item.Id, customer.Id))
                     {
-                        if (Condition(item, null, null, customer, null, null))
+                        if (await Condition(item, null, null, customer, null, null))
                         {
-                            Reaction(item, customer, null, null);
+                            await Reaction(item, customer, null, null);
                         }
                     }
                 }
