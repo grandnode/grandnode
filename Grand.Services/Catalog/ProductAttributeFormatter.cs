@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -62,7 +63,7 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public virtual string FormatAttributes(Product product, string attributesXml)
+        public virtual Task<string> FormatAttributes(Product product, string attributesXml)
         {
             var customer = _workContext.CurrentCustomer;
             return FormatAttributes(product, attributesXml, customer);
@@ -81,7 +82,7 @@ namespace Grand.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public virtual string FormatAttributes(Product product, string attributesXml,
+        public virtual async Task<string> FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true, bool showInAdmin = false)
@@ -94,7 +95,7 @@ namespace Grand.Services.Catalog
                 var attributes = _productAttributeParser.ParseProductAttributeMappings(product, attributesXml);
                 for (int i = 0; i < attributes.Count; i++)
                 {
-                    var productAttribute = _productAttributeService.GetProductAttributeById(attributes[i].ProductAttributeId);
+                    var productAttribute = await _productAttributeService.GetProductAttributeById(attributes[i].ProductAttributeId);
                     var attribute = attributes[i];
                     var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
                     for (int j = 0; j < valuesStr.Count; j++)
@@ -119,7 +120,7 @@ namespace Grand.Services.Catalog
                                 //file upload
                                 Guid downloadGuid;
                                 Guid.TryParse(valueStr, out downloadGuid);
-                                var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
                                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
@@ -170,10 +171,11 @@ namespace Grand.Services.Catalog
                                     
                                     if (renderPrices)
                                     {
-                                        decimal taxRate;
-                                        decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
-                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                        decimal attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                        var prices = await _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer);
+                                        decimal priceAdjustmentBase = prices.productprice;
+                                        decimal taxRate = prices.taxRate;
+                                        decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {
                                             string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
