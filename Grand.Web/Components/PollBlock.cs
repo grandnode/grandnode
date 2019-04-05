@@ -19,7 +19,7 @@ namespace Grand.Web.ViewComponents
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
-            var model = await Task.Run(() => _pollViewModelService.PreparePollBySystemName(systemKeyword));
+            var model = await _pollViewModelService.PreparePollBySystemName(systemKeyword);
             if (model == null)
                 return Content("");
 

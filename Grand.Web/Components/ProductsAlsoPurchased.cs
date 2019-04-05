@@ -10,6 +10,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
@@ -56,7 +57,7 @@ namespace Grand.Web.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke(string productId, int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(string productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
@@ -69,7 +70,7 @@ namespace Grand.Web.Components
                     );
 
             //load products
-            var products = _productService.GetProductsByIds(productIds);
+            var products = await _productService.GetProductsByIds(productIds);
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
@@ -79,7 +80,7 @@ namespace Grand.Web.Components
                 return Content("");
 
             //prepare model
-            var model = _productViewModelService.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = await _productViewModelService.PrepareProductOverviewModels(products, true, true, productThumbPictureSize);
 
             return View(model);
         }

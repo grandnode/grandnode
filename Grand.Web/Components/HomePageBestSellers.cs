@@ -34,7 +34,7 @@ namespace Grand.Web.Components
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsHomePageBestSellers(productThumbPictureSize).ToList());
+            var model = await _productViewModelService.PrepareProductsHomePageBestSellers(productThumbPictureSize);
 
             if (!model.Any())
                 return Content("");

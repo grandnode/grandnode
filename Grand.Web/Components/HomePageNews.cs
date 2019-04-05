@@ -23,7 +23,7 @@ namespace Grand.Web.ViewComponents
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = await Task.Run(() => _newsViewModelService.PrepareHomePageNewsItems());
+            var model = await _newsViewModelService.PrepareHomePageNewsItems();
             if (!model.NewsItems.Any())
                 return Content("");
 

@@ -14,6 +14,7 @@ using Grand.Services.Media;
 using Grand.Web.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -54,9 +55,9 @@ namespace Grand.Web.ViewComponents
             this._countryService = countryService;
         }
 
-        public IViewComponentResult Invoke(string customerProfileId)
+        public async Task<IViewComponentResult> InvokeAsync(string customerProfileId)
         {
-            var customer = _customerService.GetCustomerById(customerProfileId);
+            var customer = await _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
             {
                 return Content("");
@@ -66,8 +67,8 @@ namespace Grand.Web.ViewComponents
             var avatarUrl = "";
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                avatarUrl = _pictureService.GetPictureUrl(
-                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                avatarUrl = await _pictureService.GetPictureUrl(
+                 customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
@@ -80,11 +81,11 @@ namespace Grand.Web.ViewComponents
             {
                 locationEnabled = true;
 
-                var countryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
-                var country = _countryService.GetCountryById(countryId);
+                var countryId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId);
+                var country = await _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
-                    location = country.GetLocalized(x => x.Name);
+                    location = country.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
                 }
                 else
                 {
@@ -101,7 +102,7 @@ namespace Grand.Web.ViewComponents
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
+                totalPosts = customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.ForumPostCount);
             }
 
             //registration date
@@ -119,7 +120,7 @@ namespace Grand.Web.ViewComponents
             string dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                var dob = customer.GetAttributeFromEntity<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;

@@ -34,7 +34,7 @@ namespace Grand.Web.Components
             if (!_catalogSettings.SuggestedProductsEnabled || _catalogSettings.SuggestedProductsNumber == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsSuggested(productThumbPictureSize));
+            var model = await _productViewModelService.PrepareProductsSuggested(productThumbPictureSize);
 
             if (!model.Any())
                 return Content("");

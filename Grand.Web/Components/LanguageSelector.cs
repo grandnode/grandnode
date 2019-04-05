@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareLanguageSelector());
+            var model = await _commonViewModelService.PrepareLanguageSelector();
             if (model.AvailableLanguages.Count == 1)
                 Content("");
 

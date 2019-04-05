@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareLogo());
+            var model = await _commonViewModelService.PrepareLogo();
             return View(model);
         }
     }
