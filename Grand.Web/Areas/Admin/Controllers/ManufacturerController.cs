@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -66,20 +67,20 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             var model = new ManufacturerListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, ManufacturerListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, ManufacturerListModel model)
         {
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
+            var manufacturers = await _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
                 model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -94,19 +95,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public IActionResult Create([FromServices] CatalogSettings catalogSettings)
+        public async Task<IActionResult> Create([FromServices] CatalogSettings catalogSettings)
         {
             var model = new ManufacturerModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //templates
-            _manufacturerViewModelService.PrepareTemplatesModel(model);
+            await _manufacturerViewModelService.PrepareTemplatesModel(model);
             //discounts
-            _manufacturerViewModelService.PrepareDiscountModel(model, null, true);
+            await _manufacturerViewModelService.PrepareDiscountModel(model, null, true);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.PageSize = catalogSettings.DefaultManufacturerPageSize;
             model.PageSizeOptions = catalogSettings.DefaultManufacturerPageSizeOptions;
@@ -117,38 +118,38 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(ManufacturerModel model, bool continueEditing)
+        public async Task<IActionResult> Create(ManufacturerModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var manufacturer = _manufacturerViewModelService.InsertManufacturerModel(model);
+                var manufacturer = await _manufacturerViewModelService.InsertManufacturerModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = manufacturer.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //templates
-            _manufacturerViewModelService.PrepareTemplatesModel(model);
+            await _manufacturerViewModelService.PrepareTemplatesModel(model);
             //discounts
-            _manufacturerViewModelService.PrepareDiscountModel(model, null, true);
+            await _manufacturerViewModelService.PrepareDiscountModel(model, null, true);
             //ACL
-            model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareACLModel(null, true, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var manufacturer = _manufacturerService.GetManufacturerById(id);
+            var manufacturer = await _manufacturerService.GetManufacturerById(id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
 
             var model = manufacturer.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = manufacturer.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = manufacturer.GetLocalized(x => x.Description, languageId, false, false);
@@ -158,28 +159,28 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = manufacturer.GetSeName(languageId, false, false);
             });
             //templates
-            _manufacturerViewModelService.PrepareTemplatesModel(model);
+            await _manufacturerViewModelService.PrepareTemplatesModel(model);
             //discounts
-            _manufacturerViewModelService.PrepareDiscountModel(model, manufacturer, false);
+            await _manufacturerViewModelService.PrepareDiscountModel(model, manufacturer, false);
             //ACL
-            model.PrepareACLModel(manufacturer, false, _customerService);
+            await model.PrepareACLModel(manufacturer, false, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(manufacturer, false, _storeService);
+            await model.PrepareStoresMappingModel(manufacturer, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(ManufacturerModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(ManufacturerModel model, bool continueEditing)
         {
-            var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
+            var manufacturer = await _manufacturerService.GetManufacturerById(model.Id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                manufacturer = _manufacturerViewModelService.UpdateManufacturerModel(manufacturer, model);
+                manufacturer = await _manufacturerViewModelService.UpdateManufacturerModel(manufacturer, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
                 if (continueEditing)
@@ -195,28 +196,28 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             //templates
-            _manufacturerViewModelService.PrepareTemplatesModel(model);
+            await _manufacturerViewModelService.PrepareTemplatesModel(model);
             //discounts
-            _manufacturerViewModelService.PrepareDiscountModel(model, manufacturer, true);
+            await _manufacturerViewModelService.PrepareDiscountModel(model, manufacturer, true);
             //ACL
-            model.PrepareACLModel(manufacturer, true, _customerService);
+            await model.PrepareACLModel(manufacturer, true, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(manufacturer, true, _storeService);
+            await model.PrepareStoresMappingModel(manufacturer, true, _storeService);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var manufacturer = _manufacturerService.GetManufacturerById(id);
+            var manufacturer = await _manufacturerService.GetManufacturerById(id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _manufacturerViewModelService.DeleteManufacturer(manufacturer);
+                await _manufacturerViewModelService.DeleteManufacturer(manufacturer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
                 return RedirectToAction("List");
@@ -229,12 +230,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        public IActionResult ExportXml()
+        public async Task<IActionResult> ExportXml()
         {
             try
             {
-                var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
-                var xml = _exportManager.ExportManufacturersToXml(manufacturers);
+                var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true);
+                var xml = await _exportManager.ExportManufacturersToXml(manufacturers);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "manufacturers.xml");
             }
             catch (Exception exc)
@@ -245,11 +246,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
-        public IActionResult ExportXlsx()
+        public async Task<IActionResult> ExportXlsx()
         {
             try
             {
-                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true));
+                var bytes = _exportManager.ExportManufacturersToXlsx(await _manufacturerService.GetAllManufacturers(showHidden: true));
                 return File(bytes, "text/xls", "manufacturers.xlsx");
             }
             catch (Exception exc)
@@ -260,7 +261,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
+        public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
         {
             //a vendor cannot import manufacturers
             if (workContext.CurrentVendor != null)
@@ -269,7 +270,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    _importManager.ImportManufacturerFromXlsx(importexcelfile.OpenReadStream());
+                    await _importManager.ImportManufacturerFromXlsx(importexcelfile.OpenReadStream());
                 }
                 else
                 {
@@ -290,65 +291,67 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public IActionResult ProductList(DataSourceRequest command, string manufacturerId)
+        public async Task<IActionResult> ProductList(DataSourceRequest command, string manufacturerId)
         {
-            var productManufacturers = _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, command.Page, command.PageSize);
+            var (manufacturerProductModels, totalCount) = await _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
-                Data = productManufacturers.manufacturerProductModels.ToList(),
-                Total = productManufacturers.totalCount
+                Data = manufacturerProductModels.ToList(),
+                Total = totalCount
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
+        public async Task<IActionResult> ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
         {
             if (ModelState.IsValid)
             {
-                _manufacturerViewModelService.ProductUpdate(model);
+                await _manufacturerViewModelService.ProductUpdate(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult ProductDelete(string id, string productId)
+        public async Task<IActionResult> ProductDelete(string id, string productId)
         {
             if (ModelState.IsValid)
             {
-                _manufacturerViewModelService.ProductDelete(id, productId);
+                await _manufacturerViewModelService.ProductDelete(id, productId);
                 return new NullJsonResult();
             }
 
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public IActionResult ProductAddPopup(string manufacturerId)
+        public async Task<IActionResult> ProductAddPopup(string manufacturerId)
         {
-            var model = _manufacturerViewModelService.PrepareAddManufacturerProductModel();
+            var model = await _manufacturerViewModelService.PrepareAddManufacturerProductModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
+        public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
-            var products = _manufacturerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.products.ToList();
-            gridModel.Total = products.totalCount;
+            var products = await _manufacturerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.products.ToList(),
+                Total = products.totalCount
+            };
 
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(ManufacturerModel.AddManufacturerProductModel model)
+        public async Task<IActionResult> ProductAddPopup(ManufacturerModel.AddManufacturerProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _manufacturerViewModelService.InsertManufacturerProductModel(model);
+                await _manufacturerViewModelService.InsertManufacturerProductModel(model);
             }
 
             ViewBag.RefreshPage = true;
@@ -359,20 +362,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Activity log
 
         [HttpPost]
-        public IActionResult ListActivityLog(DataSourceRequest command, string manufacturerId)
+        public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string manufacturerId)
         {
-            var activityLog = _manufacturerViewModelService.PrepareActivityLogModel(manufacturerId, command.Page, command.PageSize);
+            var (activityLogModels, totalCount) = await _manufacturerViewModelService.PrepareActivityLogModel(manufacturerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.activityLogModels.ToList(),
-                Total = activityLog.totalCount
+                Data = activityLogModels.ToList(),
+                Total = totalCount
             };
             return Json(gridModel);
         }
-
         #endregion
-
-
     }
 
 }
