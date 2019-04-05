@@ -25,20 +25,21 @@ namespace Grand.Web.Areas.Admin.Validators.Customers
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                
-                RuleFor(x => x).Must((x, context) =>
+                RuleFor(x => x.StateProvinceId).MustAsync(async (x, y, context) =>
                 {
-                    //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
+                    //does selected country has states?
+                    var countryId = !string.IsNullOrEmpty(x.CountryId) ? x.CountryId : "";
+                    var hasStates = (await stateProvinceService.GetStateProvincesByCountryId(countryId)).Count > 0;
                     if (hasStates)
                     {
-                        //if yes, then ensure that a state is selected
-                        if (string.IsNullOrEmpty(x.StateProvinceId))
-                            return true;
+                        //if yes, then ensure that state is selected
+                        if (string.IsNullOrEmpty(y))
+                        {
+                            return false;
+                        }
                     }
-                    return false;
+                    return true;
                 }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
-
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required"));
