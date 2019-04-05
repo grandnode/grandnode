@@ -34,7 +34,7 @@ namespace Grand.Services.Tasks
             lock (_lock)
             {
                 var maxTries = 3;
-                var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null, true, true, maxTries, false, 0, 500);
+                var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null, true, true, maxTries, false, 0, 500).GetAwaiter().GetResult();
                 foreach (var queuedEmail in queuedEmails)
                 {
                     var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc)
@@ -46,7 +46,7 @@ namespace Grand.Services.Tasks
 
                     try
                     {
-                        var emailAccount = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId);
+                        var emailAccount = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId).GetAwaiter().GetResult();
                         _emailSender.SendEmail(emailAccount,
                             queuedEmail.Subject,
                             queuedEmail.Body,

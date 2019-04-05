@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks
 {
@@ -10,37 +11,37 @@ namespace Grand.Services.Tasks
         /// </summary>
         /// <param name="taskId">Task identifier</param>
         /// <returns>Task</returns>
-        ScheduleTask GetTaskById(string taskId);
+        Task<ScheduleTask> GetTaskById(string taskId);
 
         /// <summary>
         /// Gets a task by its type
         /// </summary>
         /// <param name="type">Task type</param>
         /// <returns>Task</returns>
-        ScheduleTask GetTaskByType(string type);
+        Task<ScheduleTask> GetTaskByType(string type);
 
         /// <summary>
         /// Gets all tasks
         /// </summary>
         /// <returns>Tasks</returns>
-        IList<ScheduleTask> GetAllTasks();
+        Task<IList<ScheduleTask>> GetAllTasks();
 
         /// <summary>
         /// Insert the task
         /// </summary>
         /// <param name="task">Task</param>
-        ScheduleTask InsertTask(ScheduleTask task);
+        Task<ScheduleTask> InsertTask(ScheduleTask task);
 
         /// <summary>
         /// Updates the task
         /// </summary>
         /// <param name="task">Task</param>
-        void UpdateTask(ScheduleTask task);
+        Task UpdateTask(ScheduleTask task);
 
         /// <summary>
         /// Delete the task
         /// </summary>
         /// <param name="task">Task</param>
-        void DeleteTask(ScheduleTask task);
+        Task DeleteTask(ScheduleTask task);
     }
 }
