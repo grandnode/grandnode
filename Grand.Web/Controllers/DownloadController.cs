@@ -12,6 +12,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -38,40 +39,40 @@ namespace Grand.Web.Controllers
             this._localizationService = localizationService;
             this._customerSettings = customerSettings;
         }
-        
-        public virtual IActionResult Sample(string productId)
+
+        public virtual async Task<IActionResult> Sample(string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 return InvokeHttp404();
-            
+
             if (!product.HasSampleDownload)
                 return Content("Product doesn't have a sample download.");
 
-            var download = _downloadService.GetDownloadById(product.SampleDownloadId);
+            var download = await _downloadService.GetDownloadById(product.SampleDownloadId);
             if (download == null)
                 return Content("Sample download is not available any more.");
 
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
-            
+
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
-            
+
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetDownload(Guid orderItemId, bool agree = false)
+        public virtual async Task<IActionResult> GetDownload(Guid orderItemId, bool agree = false)
         {
-            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            var orderItem = await _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderByOrderItemId(orderItem.Id);
-            var product = _productService.GetProductById(orderItem.ProductId);
-            if (!_downloadService.IsDownloadAllowed(orderItem))
+            var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
+            var product = await _productService.GetProductById(orderItem.ProductId);
+            if (!await _downloadService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -83,7 +84,7 @@ namespace Grand.Web.Controllers
                     return Content("This is not your order");
             }
 
-            var download = _downloadService.GetDownloadById(product.DownloadId);
+            var download = await _downloadService.GetDownloadById(product.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -96,27 +97,27 @@ namespace Grand.Web.Controllers
 
             if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)
                 return Content(string.Format(_localizationService.GetResource("DownloadableProducts.ReachedMaximumNumber"), product.MaxNumberOfDownloads));
-            
+
 
             if (download.UseDownloadUrl)
             {
                 //increase download
                 order.OrderItems.FirstOrDefault(x => x.Id == orderItem.Id).DownloadCount++;
-                _orderService.UpdateOrder(order);
+                await _orderService.UpdateOrder(order);
 
                 //return result
                 return new RedirectResult(download.DownloadUrl);
             }
-            
+
             //binary download
             if (download.DownloadBinary == null)
-                    return Content("Download data is not available any more.");
+                return Content("Download data is not available any more.");
 
             //increase download
             order.OrderItems.FirstOrDefault(x => x.Id == orderItem.Id).DownloadCount++;
-            _orderService.UpdateOrder(order);
+            await _orderService.UpdateOrder(order);
 
-            if(product.ProductType != ProductType.BundledProduct)
+            if (product.ProductType != ProductType.BundledProduct)
             {
                 //return result
                 string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
@@ -124,7 +125,7 @@ namespace Grand.Web.Controllers
                 return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
             }
             else
-            {                
+            {
                 using (var memoryStream = new MemoryStream())
                 {
                     using (var ziparchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -142,11 +143,11 @@ namespace Grand.Web.Controllers
                         }
                         foreach (var bundle in product.BundleProducts)
                         {
-                            var p1 = _productService.GetProductById(bundle.ProductId);
-                            if(p1!=null && p1.IsDownload)
+                            var p1 = await _productService.GetProductById(bundle.ProductId);
+                            if (p1 != null && p1.IsDownload)
                             {
-                                var d1 = _downloadService.GetDownloadById(p1.DownloadId);
-                                if(d1!=null && !d1.UseDownloadUrl)
+                                var d1 = await _downloadService.GetDownloadById(p1.DownloadId);
+                                if (d1 != null && !d1.UseDownloadUrl)
                                 {
                                     fileName = (!String.IsNullOrWhiteSpace(d1.Filename) ? d1.Filename : p1.Id.ToString()) + d1.Extension;
                                     if (Grand.Core.OperatingSystem.IsWindows())
@@ -168,15 +169,15 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual IActionResult GetLicense(Guid orderItemId)
+        public virtual async Task<IActionResult> GetLicense(Guid orderItemId)
         {
-            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            var orderItem = await _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderByOrderItemId(orderItem.Id);
-            var product = _productService.GetProductById(orderItem.ProductId);
-            if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
+            var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
+            var product = await _productService.GetProductById(orderItem.ProductId);
+            if (!await _downloadService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -185,26 +186,26 @@ namespace Grand.Web.Controllers
                     return Challenge();
             }
 
-            var download = _downloadService.GetDownloadById(!String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "");
+            var download = await _downloadService.GetDownloadById(!String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "");
             if (download == null)
                 return Content("Download is not available any more.");
-            
+
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
             //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
-                
+
             //return result
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetFileUpload(Guid downloadId)
+        public virtual async Task<IActionResult> GetFileUpload(Guid downloadId)
         {
-            var download = _downloadService.GetDownloadByGuid(downloadId);
+            var download = await _downloadService.GetDownloadByGuid(downloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -221,20 +222,20 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetOrderNoteFile(string orderNoteId)
+        public virtual async Task<IActionResult> GetOrderNoteFile(string orderNoteId)
         {
-            var orderNote = _orderService.GetOrderNote(orderNoteId);
+            var orderNote = await _orderService.GetOrderNote(orderNoteId);
             if (orderNote == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderNote.OrderId);
+            var order = await _orderService.GetOrderById(orderNote.OrderId);
             if (order == null)
                 return InvokeHttp404();
 
             if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
                 return Challenge();
 
-            var download = _downloadService.GetDownloadById(orderNote.DownloadId);
+            var download = await _downloadService.GetDownloadById(orderNote.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -251,20 +252,20 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetCustomerNoteFile(string customerNoteId, 
+        public virtual async Task<IActionResult> GetCustomerNoteFile(string customerNoteId,
             [FromServices] ICustomerService customerService)
         {
-            if(string.IsNullOrEmpty(customerNoteId))
+            if (string.IsNullOrEmpty(customerNoteId))
                 return Content("Download is not available.");
 
-            var customerNote = customerService.GetCustomerNote(customerNoteId);
-            if (customerNote==null)
+            var customerNote = await customerService.GetCustomerNote(customerNoteId);
+            if (customerNote == null)
                 return InvokeHttp404();
 
             if (_workContext.CurrentCustomer == null || customerNote.CustomerId != _workContext.CurrentCustomer.Id)
                 return Challenge();
 
-            var download = _downloadService.GetDownloadById(customerNote.DownloadId);
+            var download = await _downloadService.GetDownloadById(customerNote.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
