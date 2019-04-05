@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Logging
 {
@@ -25,15 +26,17 @@ namespace Grand.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        public virtual void DeleteLog(Log log)
+        public virtual async Task DeleteLog(Log log)
         {
+            await Task.CompletedTask;
         }
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        public virtual void ClearLog()
+        public virtual async Task ClearLog()
         {
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -46,11 +49,11 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual async Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null, 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return new PagedList<Log>(new List<Log>(), pageIndex, pageSize);
+            return await Task.FromResult(new PagedList<Log>(new List<Log>(), pageIndex, pageSize));
         }
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual Log GetLogById(string logId)
+        public virtual Task<Log> GetLogById(string logId)
         {
             return null;
         }
@@ -68,9 +71,9 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        public virtual IList<Log> GetLogByIds(string[] logIds)
+        public virtual async Task<IList<Log>> GetLogByIds(string[] logIds)
         {
-            return new List<Log>();
+            return await Task.FromResult(new List<Log>());
         }
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace Grand.Services.Logging
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
+        public virtual Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             return null;
         }

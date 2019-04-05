@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Logging
 {
@@ -22,12 +23,12 @@ namespace Grand.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        void DeleteLog(Log log);
+        Task DeleteLog(Log log);
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        void ClearLog();
+        Task ClearLog();
 
         /// <summary>
         /// Gets all log items
@@ -39,7 +40,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -48,14 +49,14 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        Log GetLogById(string logId);
+        Task<Log> GetLogById(string logId);
 
         /// <summary>
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        IList<Log> GetLogByIds(string[] logIds);
+        Task<IList<Log>> GetLogByIds(string[] logIds);
 
         /// <summary>
         /// Inserts a log item
@@ -65,6 +66,6 @@ namespace Grand.Services.Logging
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+        Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
     }
 }
