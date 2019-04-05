@@ -7,10 +7,12 @@ using Grand.Core.Domain.Topics;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Topics
 {
@@ -82,12 +84,12 @@ namespace Grand.Services.Topics
         /// Deletes a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public virtual void DeleteTopic(Topic topic)
+        public virtual async Task DeleteTopic(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
 
-            _topicRepository.Delete(topic);
+            await _topicRepository.DeleteAsync(topic);
 
             //cache
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
@@ -100,10 +102,10 @@ namespace Grand.Services.Topics
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicById(string topicId)
+        public virtual Task<Topic> GetTopicById(string topicId)
         {
             string key = string.Format(TOPICS_BY_ID_KEY, topicId);
-            return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
+            return _cacheManager.Get(key, () => _topicRepository.GetByIdAsync(topicId));
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace Grand.Services.Topics
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName, string storeId = "")
+        public virtual async Task<Topic> GetTopicBySystemName(string systemName, string storeId = "")
         {
             if (String.IsNullOrEmpty(systemName))
                 return null;
@@ -120,7 +122,7 @@ namespace Grand.Services.Topics
             var query = _topicRepository.Table;
             query = query.Where(t => t.SystemName.ToLower() == systemName.ToLower());
             query = query.OrderBy(t => t.Id);
-            var topics = query.ToList();
+            var topics = await query.ToListAsync();
             if (!String.IsNullOrEmpty(storeId))
             {
                 topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
@@ -133,10 +135,10 @@ namespace Grand.Services.Topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false)
+        public virtual async Task<IList<Topic>> GetAllTopics(string storeId, bool ignorAcl = false)
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
 
@@ -162,10 +164,7 @@ namespace Grand.Services.Topics
                         query = query.OrderBy(t => t.SystemName);
                     }
                 }
-
-
-
-                return query.ToList();
+                return query.ToListAsync();
             });
         }
 
@@ -173,12 +172,12 @@ namespace Grand.Services.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public virtual void InsertTopic(Topic topic)
+        public virtual async Task InsertTopic(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
 
-            _topicRepository.Insert(topic);
+            await _topicRepository.InsertAsync(topic);
 
             //cache
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
@@ -190,12 +189,12 @@ namespace Grand.Services.Topics
         /// Updates the topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public virtual void UpdateTopic(Topic topic)
+        public virtual async Task UpdateTopic(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
 
-            _topicRepository.Update(topic);
+            await _topicRepository.UpdateAsync(topic);
 
             //cache
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
