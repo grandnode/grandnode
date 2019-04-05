@@ -4,9 +4,11 @@ using Grand.Core.Domain.Common;
 using Grand.Services.Events;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -85,12 +87,12 @@ namespace Grand.Services.Common
         /// Deletes an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void DeleteAddressAttribute(AddressAttribute addressAttribute)
+        public virtual async Task DeleteAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
                 throw new ArgumentNullException("addressAttribute");
 
-            _addressAttributeRepository.Delete(addressAttribute);
+            await _addressAttributeRepository.DeleteAsync(addressAttribute);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -103,15 +105,15 @@ namespace Grand.Services.Common
         /// Gets all address attributes
         /// </summary>
         /// <returns>Address attributes</returns>
-        public virtual IList<AddressAttribute> GetAllAddressAttributes()
+        public virtual async Task<IList<AddressAttribute>> GetAllAddressAttributes()
         {
             string key = ADDRESSATTRIBUTES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = from aa in _addressAttributeRepository.Table
                             orderby aa.DisplayOrder
                             select aa;
-                return query.ToList();
+                return query.ToListAsync();
             });
         }
 
@@ -120,25 +122,25 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute</returns>
-        public virtual AddressAttribute GetAddressAttributeById(string addressAttributeId)
+        public virtual async Task<AddressAttribute> GetAddressAttributeById(string addressAttributeId)
         {
             if (String.IsNullOrEmpty(addressAttributeId))
                 return null;
 
             string key = string.Format(ADDRESSATTRIBUTES_BY_ID_KEY, addressAttributeId);
-            return _cacheManager.Get(key, () => _addressAttributeRepository.GetById(addressAttributeId));
+            return await _cacheManager.Get(key, () => _addressAttributeRepository.GetByIdAsync(addressAttributeId));
         }
 
         /// <summary>
         /// Inserts an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void InsertAddressAttribute(AddressAttribute addressAttribute)
+        public virtual async Task InsertAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
                 throw new ArgumentNullException("addressAttribute");
 
-            _addressAttributeRepository.Insert(addressAttribute);
+            await _addressAttributeRepository.InsertAsync(addressAttribute);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -151,12 +153,12 @@ namespace Grand.Services.Common
         /// Updates the address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void UpdateAddressAttribute(AddressAttribute addressAttribute)
+        public virtual async Task UpdateAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
                 throw new ArgumentNullException("addressAttribute");
 
-            _addressAttributeRepository.Update(addressAttribute);
+            await _addressAttributeRepository.UpdateAsync(addressAttribute);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -169,14 +171,14 @@ namespace Grand.Services.Common
         /// Deletes an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        public virtual async Task DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
                 throw new ArgumentNullException("addressAttributeValue");
 
             var updatebuilder = Builders<AddressAttribute>.Update;
             var update = updatebuilder.Pull(p => p.AddressAttributeValues, addressAttributeValue);
-            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
+            await _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -189,14 +191,14 @@ namespace Grand.Services.Common
         /// Inserts an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        public virtual async Task InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
                 throw new ArgumentNullException("addressAttributeValue");
 
             var updatebuilder = Builders<AddressAttribute>.Update;
             var update = updatebuilder.AddToSet(p => p.AddressAttributeValues, addressAttributeValue);
-            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
+            await _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -209,7 +211,7 @@ namespace Grand.Services.Common
         /// Updates the address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        public virtual async Task UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
                 throw new ArgumentNullException("addressAttributeValue");
@@ -223,7 +225,7 @@ namespace Grand.Services.Common
                 .Set(x => x.AddressAttributeValues.ElementAt(-1).Locales, addressAttributeValue.Locales)
                 .Set(x => x.AddressAttributeValues.ElementAt(-1).Name, addressAttributeValue.Name);
 
-            var result = _addressAttributeRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _addressAttributeRepository.Collection.UpdateManyAsync(filter, update);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
