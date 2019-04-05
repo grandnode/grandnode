@@ -8,6 +8,7 @@ using Grand.Services.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Services
 {
@@ -30,61 +31,60 @@ namespace Grand.Api.Services
 
             _specificationAttribute = _mongoDBContext.Database().GetCollection<SpecificationAttributeDto>(typeof(Core.Domain.Catalog.SpecificationAttribute).Name);
         }
-        public virtual SpecificationAttributeDto GetById(string id)
+        public virtual Task<SpecificationAttributeDto> GetById(string id)
         {
-            return _specificationAttribute.AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _specificationAttribute.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
         public virtual IMongoQueryable<SpecificationAttributeDto> GetSpecificationAttributes()
         {
             return _specificationAttribute.AsQueryable();
         }
-        public virtual SpecificationAttributeDto InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model)
+        public virtual async Task<SpecificationAttributeDto> InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model)
         {
             if (string.IsNullOrEmpty(model.Id))
-                model = InsertSpecificationAttribute(model);
+                model = await InsertSpecificationAttribute(model);
             else
-                model = UpdateSpecificationAttribute(model);
+                model = await UpdateSpecificationAttribute(model);
 
             return model;
         }
-        public virtual SpecificationAttributeDto InsertSpecificationAttribute(SpecificationAttributeDto model)
+        public virtual async Task<SpecificationAttributeDto> InsertSpecificationAttribute(SpecificationAttributeDto model)
         {
             var specificationAttribute = model.ToEntity();
-            _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
+            await _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
+            await _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
 
             return specificationAttribute.ToModel();
         }
 
-        public virtual SpecificationAttributeDto UpdateSpecificationAttribute(SpecificationAttributeDto model)
+        public virtual async Task<SpecificationAttributeDto> UpdateSpecificationAttribute(SpecificationAttributeDto model)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             foreach (var option in specificationAttribute.SpecificationAttributeOptions)
             {
                 if (model.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == option.Id) == null)
                 {
-                    _specificationAttributeService.DeleteSpecificationAttributeOption(option);
+                    await _specificationAttributeService.DeleteSpecificationAttributeOption(option);
                 }
             }
             specificationAttribute = model.ToEntity(specificationAttribute);
-            _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
+            await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
+            await _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
 
             return specificationAttribute.ToModel();
         }
-        public virtual void DeleteSpecificationAttribute(SpecificationAttributeDto model)
+        public virtual async Task DeleteSpecificationAttribute(SpecificationAttributeDto model)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute != null)
             {
-                _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
-
+                await _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
                 //activity log
-                _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
+                await _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
             }
         }
     }
