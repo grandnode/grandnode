@@ -35,28 +35,28 @@ namespace Grand.Services.Authentication
         /// Valid
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual Task<bool> Valid(TokenValidatedContext context)
+        public virtual async Task<bool> Valid(TokenValidatedContext context)
         {
             _email = context.Principal.Claims.ToList().FirstOrDefault(x => x.Type == "Email")?.Value;
 
             if (string.IsNullOrEmpty(_email))
             {
                 _errorMessage = "Email not exists in the context";
-                return Task.FromResult(false);
+                return await Task.FromResult(false);
             }
-            var customer = _customerService.GetCustomerByEmail(_email);
+            var customer = await _customerService.GetCustomerByEmail(_email);
             if (customer == null || !customer.Active || customer.Deleted)
             {
                 _errorMessage = "Email not exists/or not active in the customer table";
-                return Task.FromResult(false);
+                return await Task.FromResult(false);
             }
-            var userapi = _userApiService.GetUserByEmail(_email);
+            var userapi = await _userApiService.GetUserByEmail(_email);
             if (userapi == null || !userapi.IsActive)
             {
                 _errorMessage = "User api not exists/or not active in the user api table";
-                return Task.FromResult(false);
+                return await Task.FromResult(false);
             }
-            return Task.FromResult(true);
+            return await Task.FromResult(true);
         }
 
         public virtual async Task SignIn()
@@ -73,7 +73,7 @@ namespace Grand.Services.Authentication
             if (string.IsNullOrEmpty(_email))
                 throw new ArgumentNullException(nameof(email));
 
-            var customer = _customerService.GetCustomerByEmail(email);
+            var customer = await _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _cachedCustomer = customer;
         }
@@ -108,7 +108,7 @@ namespace Grand.Services.Authentication
             //try to get customer by email
             var emailClaim = authenticateResult.Principal.Claims.FirstOrDefault(claim => claim.Type == "Email");
             if (emailClaim != null)
-                customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                customer = await _customerService.GetCustomerByEmail(emailClaim.Value);
 
 
             //whether the found customer is available

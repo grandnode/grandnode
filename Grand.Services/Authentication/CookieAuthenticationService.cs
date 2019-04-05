@@ -114,7 +114,7 @@ namespace Grand.Services.Authentication
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value).GetAwaiter().GetResult();
             }
             else
             {
@@ -122,7 +122,7 @@ namespace Grand.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                    customer = _customerService.GetCustomerByEmail(emailClaim.Value).GetAwaiter().GetResult();
             }
 
             //whether the found customer is available
