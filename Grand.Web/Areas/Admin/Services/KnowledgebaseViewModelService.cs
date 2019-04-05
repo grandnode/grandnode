@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.Seo;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -23,10 +25,13 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly ILanguageService _languageService;
+        private readonly SeoSettings _seoSettings;
 
         public KnowledgebaseViewModelService(ILocalizationService localizationService,
             IKnowledgebaseService knowledgebaseService, ICustomerActivityService customerActivityService,
-            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService)
+            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService,
+            ILanguageService languageService, SeoSettings seoSettings)
         {
             _localizationService = localizationService;
             _knowledgebaseService = knowledgebaseService;
@@ -34,6 +39,8 @@ namespace Grand.Web.Areas.Admin.Services
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _urlRecordService = urlRecordService;
+            _languageService = languageService;
+            _seoSettings = seoSettings;
         }
 
         protected virtual void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
@@ -54,10 +61,10 @@ namespace Grand.Web.Areas.Admin.Services
                 parentNode.nodes.Add(newNode);
             }
         }
-        public virtual void PrepareCategory(KnowledgebaseCategoryModel model)
+        public virtual async Task PrepareCategory(KnowledgebaseCategoryModel model)
         {
             model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            var categories = await _knowledgebaseService.GetKnowledgebaseCategories();
             foreach (var category in categories)
             {
                 model.Categories.Add(new SelectListItem
@@ -67,10 +74,10 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
         }
-        public virtual void PrepareCategory(KnowledgebaseArticleModel model)
+        public virtual async Task PrepareCategory(KnowledgebaseArticleModel model)
         {
             model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            var categories = await _knowledgebaseService.GetKnowledgebaseCategories();
             foreach (var category in categories)
             {
                 model.Categories.Add(new SelectListItem
@@ -80,10 +87,10 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
         }
-        public virtual List<TreeNode> PrepareTreeNode()
+        public virtual async Task<List<TreeNode>> PrepareTreeNode()
         {
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            var articles = _knowledgebaseService.GetKnowledgebaseArticles();
+            var categories = await _knowledgebaseService.GetKnowledgebaseCategories();
+            var articles = await _knowledgebaseService.GetKnowledgebaseArticles();
             List<TreeNode> nodeList = new List<TreeNode>();
 
             List<ITreeNode> list = new List<ITreeNode>();
@@ -109,9 +116,9 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return nodeList;
         }
-        public virtual (IEnumerable<KnowledgebaseArticleGridModel> knowledgebaseArticleGridModels, int totalCount) PrepareKnowledgebaseArticleGridModel(string parentCategoryId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<KnowledgebaseArticleGridModel> knowledgebaseArticleGridModels, int totalCount)> PrepareKnowledgebaseArticleGridModel(string parentCategoryId, int pageIndex, int pageSize)
         {
-            var articles = _knowledgebaseService.GetKnowledgebaseArticlesByCategoryId(parentCategoryId, pageIndex - 1, pageSize);
+            var articles = await _knowledgebaseService.GetKnowledgebaseArticlesByCategoryId(parentCategoryId, pageIndex - 1, pageSize);
             return (articles.Select(x => new KnowledgebaseArticleGridModel
             {
                 Name = x.Name,
@@ -121,143 +128,138 @@ namespace Grand.Web.Areas.Admin.Services
                 Id = x.Id
             }), articles.TotalCount);
         }
-        public virtual (IEnumerable<KnowledgebaseCategoryModel.ActivityLogModel> activityLogModels, int totalCount) PrepareCategoryActivityLogModels(string categoryId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<KnowledgebaseCategoryModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareCategoryActivityLogModels(string categoryId, int pageIndex, int pageSize)
         {
-            var activityLog = _customerActivityService.GetKnowledgebaseCategoryActivities(null, null, categoryId, pageIndex - 1, pageSize);
-
-            return (activityLog.Select(x =>
+            var activityLog = await _customerActivityService.GetKnowledgebaseCategoryActivities(null, null, categoryId, pageIndex - 1, pageSize);
+            var items = new List<KnowledgebaseCategoryModel.ActivityLogModel>();
+            foreach (var x in activityLog)
             {
-                var customer = _customerService.GetCustomerById(x.CustomerId);
+                var customer = await _customerService.GetCustomerById(x.CustomerId);
                 var m = new KnowledgebaseCategoryModel.ActivityLogModel
                 {
                     Id = x.Id,
-                    ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
+                    ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
                     Comment = x.Comment,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"
                 };
-
-                return m;
-            }), activityLog.TotalCount);
+                items.Add(m);
+            }
+            return (items, activityLog.TotalCount);
         }
-        public virtual (IEnumerable<KnowledgebaseArticleModel.ActivityLogModel> activityLogModels, int totalCount) PrepareArticleActivityLogModels(string articleId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<KnowledgebaseArticleModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareArticleActivityLogModels(string articleId, int pageIndex, int pageSize)
         {
-            var activityLog = _customerActivityService.GetKnowledgebaseArticleActivities(null, null, articleId, pageIndex - 1, pageSize);
-
-            return (activityLog.Select(x =>
+            var activityLog = await _customerActivityService.GetKnowledgebaseArticleActivities(null, null, articleId, pageIndex - 1, pageSize);
+            var items = new List<KnowledgebaseArticleModel.ActivityLogModel>();
+            foreach (var x in activityLog)
             {
-                var customer = _customerService.GetCustomerById(x.CustomerId);
+                var customer = await _customerService.GetCustomerById(x.CustomerId);
                 var m = new KnowledgebaseArticleModel.ActivityLogModel
                 {
                     Id = x.Id,
-                    ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
+                    ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
                     Comment = x.Comment,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"
                 };
-                return m;
-            }), activityLog.TotalCount);
+                items.Add(m);
+            }
+            return (items, activityLog.TotalCount);
         }
-        public virtual KnowledgebaseCategoryModel PrepareKnowledgebaseCategoryModel()
+        public virtual async Task<KnowledgebaseCategoryModel> PrepareKnowledgebaseCategoryModel()
         {
             var model = new KnowledgebaseCategoryModel();
-            PrepareCategory(model);
+            await PrepareCategory(model);
             return model;
         }
         
-        public virtual KnowledgebaseCategory InsertKnowledgebaseCategoryModel(KnowledgebaseCategoryModel model)
+        public virtual async Task<KnowledgebaseCategory> InsertKnowledgebaseCategoryModel(KnowledgebaseCategoryModel model)
         {
             var knowledgebaseCategory = model.ToEntity();
             knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
             knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-            knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-            model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
+            knowledgebaseCategory.Locales = await model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true, _seoSettings, _urlRecordService, _languageService);
             knowledgebaseCategory.SeName = model.SeName;
-            _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
-
-            _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
-
-            _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
+            await _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
+            await _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
+            await _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
                 _localizationService.GetResource("ActivityLog.CreateKnowledgebaseCategory"), knowledgebaseCategory.Name);
+
             return knowledgebaseCategory;
         }
-        public virtual KnowledgebaseCategory UpdateKnowledgebaseCategoryModel(KnowledgebaseCategory knowledgebaseCategory, KnowledgebaseCategoryModel model)
+        public virtual async Task<KnowledgebaseCategory> UpdateKnowledgebaseCategoryModel(KnowledgebaseCategory knowledgebaseCategory, KnowledgebaseCategoryModel model)
         {
             knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
             knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-            knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-            model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
+            knowledgebaseCategory.Locales = await model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true, _seoSettings, _urlRecordService, _languageService);
             knowledgebaseCategory.SeName = model.SeName;
-            _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
-
-            _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
-
-            _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
+            await _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
+            await _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
+            await _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
                 _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseCategory"), knowledgebaseCategory.Name);
+
             return knowledgebaseCategory;
         }
-        public virtual void DeleteKnowledgebaseCategoryModel(KnowledgebaseCategory knowledgebaseCategory)
+        public virtual async Task DeleteKnowledgebaseCategoryModel(KnowledgebaseCategory knowledgebaseCategory)
         {
-            _knowledgebaseService.DeleteKnowledgebaseCategory(knowledgebaseCategory);
-
-            _customerActivityService.InsertActivity("DeleteKnowledgebaseCategory", knowledgebaseCategory.Id,
+            await _knowledgebaseService.DeleteKnowledgebaseCategory(knowledgebaseCategory);
+            await _customerActivityService.InsertActivity("DeleteKnowledgebaseCategory", knowledgebaseCategory.Id,
                 _localizationService.GetResource("ActivityLog.DeleteKnowledgebaseCategory"), knowledgebaseCategory.Name);
         }
-        public virtual KnowledgebaseArticleModel PrepareKnowledgebaseArticleModel()
+        public virtual async Task<KnowledgebaseArticleModel> PrepareKnowledgebaseArticleModel()
         {
-            var model = new KnowledgebaseArticleModel();
-            model.Published = true;
-            model.AllowComments = true;
-            PrepareCategory(model);
+            var model = new KnowledgebaseArticleModel
+            {
+                Published = true,
+                AllowComments = true
+            };
+            await PrepareCategory(model);
             return model;
         }
-        public virtual KnowledgebaseArticle InsertKnowledgebaseArticleModel(KnowledgebaseArticleModel model)
+        public virtual async Task<KnowledgebaseArticle> InsertKnowledgebaseArticleModel(KnowledgebaseArticleModel model)
         {
             var knowledgebaseArticle = model.ToEntity();
             knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
             knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-            knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-            model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
+            knowledgebaseArticle.Locales = await model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true, _seoSettings, _urlRecordService, _languageService);
             knowledgebaseArticle.SeName = model.SeName;
             knowledgebaseArticle.AllowComments = model.AllowComments;
-
-            _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
-
-            _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
-
-            _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
+            await _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
+            await _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
+            await _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
                 _localizationService.GetResource("ActivityLog.CreateKnowledgebaseArticle"), knowledgebaseArticle.Name);
 
             return knowledgebaseArticle;
         }
-        public virtual KnowledgebaseArticle UpdateKnowledgebaseArticleModel(KnowledgebaseArticle knowledgebaseArticle, KnowledgebaseArticleModel model)
+        public virtual async Task<KnowledgebaseArticle> UpdateKnowledgebaseArticleModel(KnowledgebaseArticle knowledgebaseArticle, KnowledgebaseArticleModel model)
         {
             knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
             knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-            knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-            model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
+            knowledgebaseArticle.Locales = await model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true, _seoSettings, _urlRecordService, _languageService);
             knowledgebaseArticle.SeName = model.SeName;
             knowledgebaseArticle.AllowComments = model.AllowComments;
-            _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
-
-            _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
-
-            _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
+            await _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
+            await _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
+            await _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
                 _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseArticle"), knowledgebaseArticle.Name);
+
             return knowledgebaseArticle;
         }
-        public virtual void DeleteKnowledgebaseArticle(KnowledgebaseArticle knowledgebaseArticle)
+        public virtual async Task DeleteKnowledgebaseArticle(KnowledgebaseArticle knowledgebaseArticle)
         {
-            _knowledgebaseService.DeleteKnowledgebaseArticle(knowledgebaseArticle);
-
-            _customerActivityService.InsertActivity("DeleteKnowledgebaseArticle", knowledgebaseArticle.Id,
+            await _knowledgebaseService.DeleteKnowledgebaseArticle(knowledgebaseArticle);
+            await _customerActivityService.InsertActivity("DeleteKnowledgebaseArticle", knowledgebaseArticle.Id,
                 _localizationService.GetResource("ActivityLog.DeleteKnowledgebaseArticle"), knowledgebaseArticle.Name);
         }
-        public virtual void InsertKnowledgebaseRelatedArticle(KnowledgebaseArticleModel.AddRelatedArticleModel model)
+        public virtual async Task InsertKnowledgebaseRelatedArticle(KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
-            var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
+            var article = await _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
 
             foreach (var id in model.SelectedArticlesIds)
             {
@@ -265,13 +267,12 @@ namespace Grand.Web.Areas.Admin.Services
                     if (!article.RelatedArticles.Contains(id))
                         article.RelatedArticles.Add(id);
             }
-
-            _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+            await _knowledgebaseService.UpdateKnowledgebaseArticle(article);
         }
-        public virtual void DeleteKnowledgebaseRelatedArticle(KnowledgebaseArticleModel.AddRelatedArticleModel model)
+        public virtual async Task DeleteKnowledgebaseRelatedArticle(KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
-            var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
-            var related = _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
+            var article = await _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
+            var related = await _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
 
             if (article == null || related == null)
                 throw new ArgumentNullException("No article found with specified id");
@@ -286,7 +287,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (!string.IsNullOrEmpty(toDelete))
                 article.RelatedArticles.Remove(toDelete);
 
-            _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+            await _knowledgebaseService.UpdateKnowledgebaseArticle(article);
         }
     }
 }
