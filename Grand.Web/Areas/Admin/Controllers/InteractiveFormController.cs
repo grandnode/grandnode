@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -63,9 +64,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var forms = _interactiveFormService.GetAllForms();
+            var forms = await _interactiveFormService.GetAllForms();
             var gridModel = new DataSourceResult
             {
                 Data = forms.Select(x =>
@@ -82,55 +83,55 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Update form
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new InteractiveFormModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(InteractiveFormModel model, bool continueEditing)
+        public async Task<IActionResult> Create(InteractiveFormModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var form = model.ToEntity();
                 form.CreatedOnUtc = DateTime.UtcNow;
 
-                _interactiveFormService.InsertForm(form);
-                _customerActivityService.InsertActivity("InteractiveFormAdd", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAdd"), form.Name);
+                await _interactiveFormService.InsertForm(form);
+                await _customerActivityService.InsertActivity("InteractiveFormAdd", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAdd"), form.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = form.Id }) : RedirectToAction("List");
             }
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var form = _interactiveFormService.GetFormById(id);
+            var form = await _interactiveFormService.GetFormById(id);
             if (form == null)
                 return RedirectToAction("List");
 
             var model = form.ToModel();
 
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = form.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Body = form.GetLocalized(x => x.Body, languageId, false, false);
             });
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
 
             //available tokens
@@ -141,30 +142,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(InteractiveFormModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(InteractiveFormModel model, bool continueEditing)
         {
-            var form = _interactiveFormService.GetFormById(model.Id);
+            var form = await _interactiveFormService.GetFormById(model.Id);
             if (form == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 form = model.ToEntity(form);
-                _interactiveFormService.UpdateForm(form);
+                await _interactiveFormService.UpdateForm(form);
 
-                _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdate"), form.Name);
+                await _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdate"), form.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = form.Id }) : RedirectToAction("List");
             }
 
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = form.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Body = form.GetLocalized(x => x.Body, languageId, false, false);
             });
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
 
             //available tokens
@@ -174,15 +175,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var form = _interactiveFormService.GetFormById(id);
+            var form = await _interactiveFormService.GetFormById(id);
             if (form == null)
                 return RedirectToAction("List");
 
-            _interactiveFormService.DeleteForm(form);
-
-            _customerActivityService.InsertActivity("InteractiveFormDelete", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleted"), form.Name);
+            await _interactiveFormService.DeleteForm(form);
+            await _customerActivityService.InsertActivity("InteractiveFormDelete", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleted"), form.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Deleted"));
             return RedirectToAction("List");
@@ -192,9 +192,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Form attributes
 
         [HttpPost]
-        public IActionResult FormAttributesList(string formId)
+        public async Task<IActionResult> FormAttributesList(string formId)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
 
@@ -213,60 +213,58 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult FormAttributesDelete(string id, string formId)
+        public async Task<IActionResult> FormAttributesDelete(string id, string formId)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
 
             form.FormAttributes.Remove(form.FormAttributes.FirstOrDefault(x => x.Id == id));
-
-            _interactiveFormService.UpdateForm(form);
-
-            _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleteAttribute"), form.Name);
-
+            await _interactiveFormService.UpdateForm(form);
+            await _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleteAttribute"), form.Name);
 
             return new NullJsonResult();
         }
 
         #region Form Attributes
 
-        public IActionResult AddAttribute(string formId)
+        public async Task<IActionResult> AddAttribute(string formId)
         {
-            InteractiveFormAttributeModel model = new InteractiveFormAttributeModel();
-            model.FormId = formId;
+            InteractiveFormAttributeModel model = new InteractiveFormAttributeModel
+            {
+                FormId = formId
+            };
 
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult AddAttribute(InteractiveFormAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> AddAttribute(InteractiveFormAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var form = _interactiveFormService.GetFormById(model.FormId);
+                var form = await _interactiveFormService.GetFormById(model.FormId);
                 if (form == null)
                 {
                     return RedirectToAction("List");
                 }
                 var attribute = model.ToEntity();
                 form.FormAttributes.Add(attribute);
-                _interactiveFormService.UpdateForm(form);
+                await _interactiveFormService.UpdateForm(form);
 
-                _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttribute"), attribute.Name);
+                await _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttribute"), attribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Attribute.Added"));
 
                 return continueEditing ? RedirectToAction("EditAttribute", new { formId = form.Id, aid = attribute.Id }) : RedirectToAction("Edit", new { id = form.Id });
             }
-
             return View(model);
         }
 
-        public IActionResult EditAttribute(string formId, string aid)
+        public async Task<IActionResult> EditAttribute(string formId, string aid)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
 
@@ -277,7 +275,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = attribute.ToModel();
             model.FormId = formId;
 
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = attribute.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -286,9 +284,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditAttribute(string formId, InteractiveFormAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> EditAttribute(string formId, InteractiveFormAttributeModel model, bool continueEditing)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
 
@@ -300,8 +298,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     attribute = model.ToEntity(attribute);
-                    _interactiveFormService.UpdateForm(form);
-                    _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttribute"), attribute.Name);
+                    await _interactiveFormService.UpdateForm(form);
+                    await _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttribute"), attribute.Name);
                     SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Attribute.Updated"));
                     return continueEditing ? RedirectToAction("EditAttribute", new { formId = form.Id, aid = attribute.Id }) : RedirectToAction("Edit", new { id = form.Id });
                 }
@@ -319,9 +317,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Attribute Value
 
         [HttpPost]
-        public IActionResult AttributeValuesList(string formId, string aId)
+        public async Task<IActionResult> AttributeValuesList(string formId, string aId)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
             var values = form.FormAttributes.FirstOrDefault(x => x.Id == aId).FormAttributeValues;
@@ -339,31 +337,33 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult ValueCreatePopup(string form, string aId, string btnId, string formId)
+        public async Task<IActionResult> ValueCreatePopup(string form, string aId, string btnId, string formId)
         {
-            var fo = _interactiveFormService.GetFormById(form);
+            var fo = await _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
             var attribute = fo.FormAttributes.FirstOrDefault(x => x.Id == aId);
             if (attribute == null)
                 return RedirectToAction("List");
 
-            var model = new InteractiveFormAttributeValueModel();
-            model.FormId = fo.Id;
-            model.AttributeId = aId;
+            var model = new InteractiveFormAttributeValueModel
+            {
+                FormId = fo.Id,
+                AttributeId = aId
+            };
 
             ViewBag.RefreshPage = false;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
+        public async Task<IActionResult> ValueCreatePopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
-            var fo = _interactiveFormService.GetFormById(form);
+            var fo = await _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
             var attribute = fo.FormAttributes.FirstOrDefault(x => x.Id == aId);
@@ -374,8 +374,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var vaf = model.ToEntity();
                 attribute.FormAttributeValues.Add(vaf);
-                _interactiveFormService.UpdateForm(fo);
-                _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttributeValue"), vaf.Name);
+                await _interactiveFormService.UpdateForm(fo);
+                await _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttributeValue"), vaf.Name);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -387,9 +387,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult ValueEditPopup(string id, string form, string aId, string formId, string btnId)
+        public async Task<IActionResult> ValueEditPopup(string id, string form, string aId, string formId, string btnId)
         {
-            var fo = _interactiveFormService.GetFormById(form);
+            var fo = await _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
             var attribute = fo.FormAttributes.FirstOrDefault(x => x.Id == aId);
@@ -403,7 +403,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = vaf.ToModel();
             model.FormId = fo.Id;
             model.AttributeId = aId;
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = vaf.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -414,9 +414,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
+        public async Task<IActionResult> ValueEditPopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
-            var fo = _interactiveFormService.GetFormById(form);
+            var fo = await _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
             var attribute = fo.FormAttributes.FirstOrDefault(x => x.Id == aId);
@@ -430,8 +430,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 vaf = model.ToEntity();
-                _interactiveFormService.UpdateForm(fo);
-                _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttributeValue"), vaf.Name);
+                await _interactiveFormService.UpdateForm(fo);
+                await _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttributeValue"), vaf.Name);
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;
@@ -442,9 +442,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AttributeValuesDelete(string id, string formId, string aId)
+        public async Task<IActionResult> AttributeValuesDelete(string id, string formId, string aId)
         {
-            var form = _interactiveFormService.GetFormById(formId);
+            var form = await _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
             var attribute = form.FormAttributes.FirstOrDefault(x => x.Id == aId);
@@ -456,10 +456,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             attribute.FormAttributeValues.Remove(vaf);
-            _interactiveFormService.UpdateForm(form);
-
-            _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleteAttributeValue"), vaf.Name);
-
+            await _interactiveFormService.UpdateForm(form);
+            await _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormDeleteAttributeValue"), vaf.Name);
             return new NullJsonResult();
         }
 
