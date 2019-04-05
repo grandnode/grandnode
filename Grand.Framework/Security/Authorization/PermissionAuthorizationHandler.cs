@@ -22,10 +22,10 @@ namespace Grand.Framework.Security.Authorization
             this._contextAccessor = contextAccessor;
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
             var email = context.User.FindFirst(c => c.Type == ClaimTypes.Email);
-            var customer = _customerService.GetCustomerByEmail(email.Value);
+            var customer = await _customerService.GetCustomerByEmail(email.Value);
             if (customer != null)
             {
                 if (!_permissionService.Authorize(requirement.Permission, customer))
@@ -36,7 +36,6 @@ namespace Grand.Framework.Security.Authorization
                 }
                 context.Succeed(requirement);
             }
-            return Task.CompletedTask;
         }
     }
 }
