@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -58,15 +59,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Permissions()
+        public async Task<IActionResult> Permissions()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             var model = new PermissionMappingModel();
 
-            var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var permissionRecords = await _permissionService.GetAllPermissionRecords();
+            var customerRoles = await _customerService.GetAllCustomerRoles(true);
             foreach (var pr in permissionRecords)
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
@@ -93,13 +94,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public IActionResult PermissionsSave(IFormCollection form)
+        public async Task<IActionResult> PermissionsSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var permissionRecords = await _permissionService.GetAllPermissionRecords();
+            var customerRoles = await _customerService.GetAllCustomerRoles(true);
 
 
             foreach (var cr in customerRoles)
@@ -116,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) == null)
                         {
                             pr.CustomerRoles.Add(cr.Id);
-                            _permissionService.UpdatePermissionRecord(pr);
+                            await _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
                     else
@@ -124,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) != null)
                         {
                             pr.CustomerRoles.Remove(cr.Id);
-                            _permissionService.UpdatePermissionRecord(pr);
+                            await _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
                 }
