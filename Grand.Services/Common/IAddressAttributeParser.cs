@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Common;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -13,14 +14,14 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        IList<AddressAttribute> ParseAddressAttributes(string attributesXml);
+        Task<IList<AddressAttribute>> ParseAddressAttributes(string attributesXml);
 
         /// <summary>
         /// Get address attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml);
+        Task<IList<AddressAttributeValue>> ParseAddressAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected address attribute value
@@ -44,6 +45,6 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarnings(string attributesXml);
     }
 }
