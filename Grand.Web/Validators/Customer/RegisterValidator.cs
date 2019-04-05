@@ -47,14 +47,15 @@ namespace Grand.Web.Validators.Customer
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                RuleFor(x => x.StateProvinceId).Must((x, context) =>
+                RuleFor(x => x.StateProvinceId).MustAsync(async (x, y, context) =>
                 {
-                    //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
+                    //does selected country has states?
+                    var countryId = !String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "";
+                    var hasStates = (await stateProvinceService.GetStateProvincesByCountryId(countryId)).Count > 0;
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
-                        if (String.IsNullOrEmpty(x.StateProvinceId))
+                        if (String.IsNullOrEmpty(y))
                         {
                             return false;
                         }
