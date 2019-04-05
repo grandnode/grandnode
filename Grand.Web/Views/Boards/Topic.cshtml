@@ -1,6 +1,7 @@
 ﻿@model ForumTopicPageModel
 @using Grand.Web.Models.Boards;
 @using Grand.Web.Models.Common;
+@inject Grand.Services.Localization.ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
 
@@ -38,7 +39,7 @@
             }
         </div>
         @{
-            var pager = Html.Pager(new PagerModel
+            var pager = Html.Pager(localizationService, new PagerModel(localizationService)
             {
                 PageSize = Model.PostsPageSize,
                 TotalRecords = Model.PostsTotalRecords,

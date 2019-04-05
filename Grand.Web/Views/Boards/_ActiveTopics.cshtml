@@ -1,6 +1,7 @@
 ﻿@model ActiveDiscussionsModel
 @using Grand.Web.Models.Boards;
 @using Grand.Web.Models.Common;
+@inject Grand.Services.Localization.ILocalizationService localizationService
 <div class="forums-table-section topic-group active-discussions">
     <div class="forums-table-section-title">
         @if (Model.ActiveDiscussionsFeedEnabled)
@@ -10,7 +11,7 @@
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
     @{
-        var pager = Html.Pager(new PagerModel
+        var pager = Html.Pager(localizationService, new PagerModel(localizationService)
         {
             PageSize = Model.TopicPageSize,
             TotalRecords = Model.TopicTotalRecords,
@@ -22,12 +23,12 @@
         });
     }
 
-   @if (pager!=null && !String.IsNullOrEmpty(pager.ToHtmlString()))
-   {
-    <div class="pager upper">
-        @pager
-    </div>
-   }
+    @if (pager != null && !String.IsNullOrEmpty(pager.ToHtmlString()))
+    {
+        <div class="pager upper">
+            @pager
+        </div>
+    }
     <div class="forums-table-section-body">
         @if (Model.ForumTopics.Any())
         {
@@ -78,7 +79,7 @@
                                                 @if (topic.NumPosts > Model.PostsPageSize)
                                                 {
                                                     <div class="topic-pager">
-                                                        @Html.ForumTopicSmallPager(topic)
+                                                        @Html.ForumTopicSmallPager(localizationService, topic)
                                                     </div>
                                                 }
                                                 <div class="topic-starter">

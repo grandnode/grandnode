@@ -1,4 +1,5 @@
 ﻿@model ProfilePostsModel
+@inject Grand.Services.Localization.ILocalizationService localizationService
 @if (Model.Posts.Any())
 {
     <div class="latest-posts">
@@ -28,9 +29,9 @@ else
     </div>
 }
 @{
-    var pager = Html.Pager(Model.PagerModel);
+    var pager = Html.Pager(localizationService, Model.PagerModel);
 }
-@if (pager!=null)
+@if (pager != null)
 {
     <nav aria-label="Page navigation">
         @pager
