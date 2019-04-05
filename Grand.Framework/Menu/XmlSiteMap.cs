@@ -112,8 +112,7 @@ namespace Grand.Framework.Menu
 
             // Open URL in new tab
             var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            bool booleanResult;
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out booleanResult))
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out bool booleanResult))
             {
                 siteMapNode.OpenUrlInNewTab = booleanResult;
             }
