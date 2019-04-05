@@ -3,6 +3,7 @@ using Grand.Api.Services;
 using Grand.Api.Tests.Helpers;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Seo;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
@@ -14,6 +15,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Moq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Tests.ServicesTests
 {
@@ -29,8 +31,8 @@ namespace Grand.Api.Tests.ServicesTests
 
         private ILocalizationService _localizationService;
         private ICustomerActivityService _customerActivityService;
-
-
+        private ILanguageService _languageService;
+        private SeoSettings _seoSettings;
         //private IMongoCollection<CategoryDto> _category;
         private IRepository<Category> _categoryRepo;
 
@@ -64,7 +66,13 @@ namespace Grand.Api.Tests.ServicesTests
             var customerActivityService = new Mock<ICustomerActivityService>();
             _customerActivityService = customerActivityService.Object;
 
-            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService, _pictureService, _customerActivityService, _localizationService);
+            var languageService = new Mock<ILanguageService>();
+            _languageService = languageService.Object;
+            
+            var seoSettings = new Mock<SeoSettings>();
+            _seoSettings = seoSettings.Object;
+
+            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService,_languageService, _pictureService, _customerActivityService, _localizationService, _seoSettings);
 
         }
         private void InitCategoryRepo()
@@ -89,9 +97,9 @@ namespace Grand.Api.Tests.ServicesTests
         }
 
         [TestMethod()]
-        public void Can_GetById()
+        public async Task Can_GetById()
         {
-            var category = _categoryApiService.GetById(_id1);
+            var category = await _categoryApiService.GetById(_id1);
             // Assert
             Assert.IsNotNull(category);
             Assert.AreEqual("sample category 1", category.Name);
