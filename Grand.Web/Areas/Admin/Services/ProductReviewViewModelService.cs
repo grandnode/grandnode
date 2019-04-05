@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -37,7 +38,7 @@ namespace Grand.Web.Areas.Admin.Services
             _eventPublisher = eventPublisher;
         }
 
-        public virtual void PrepareProductReviewModel(ProductReviewModel model,
+        public virtual async Task PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewText)
         {
             if (model == null)
@@ -45,9 +46,9 @@ namespace Grand.Web.Areas.Admin.Services
 
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
-            var product = _productService.GetProductById(productReview.ProductId);
-            var customer = _customerService.GetCustomerById(productReview.CustomerId);
-            var store = _storeService.GetStoreById(productReview.StoreId);
+            var product = await _productService.GetProductById(productReview.ProductId);
+            var customer = await _customerService.GetCustomerById(productReview.CustomerId);
+            var store = await _storeService.GetStoreById(productReview.StoreId);
             model.Id = productReview.Id;
             model.StoreName = store != null ? store.Name : "";
             model.ProductId = productReview.ProductId;
@@ -74,17 +75,17 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual ProductReviewListModel PrepareProductReviewListModel()
+        public virtual async Task<ProductReviewListModel> PrepareProductReviewListModel()
         {
             var model = new ProductReviewListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            var stores = _storeService.GetAllStores().Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
+            var stores = (await _storeService.GetAllStores()).Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
             foreach (var selectListItem in stores)
                 model.AvailableStores.Add(selectListItem);
             return model;
         }
 
-        public virtual (IEnumerable<ProductReviewModel> productReviewModels, int totalCount) PrepareProductReviewsModel(ProductReviewListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ProductReviewModel> productReviewModels, int totalCount)> PrepareProductReviewsModel(ProductReviewListModel model, int pageIndex, int pageSize)
         {
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -92,57 +93,53 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = _productService.GetAllProductReviews("", null,
+            var productReviews = await _productService.GetAllProductReviews("", null,
                 createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
-            return (productReviews.PagedForCommand(pageIndex, pageSize).Select(x =>
-                {
-                    var m = new ProductReviewModel();
-                    PrepareProductReviewModel(m, x, false, true);
-                    return m;
-                }), productReviews.Count);
+
+            var items = new List<ProductReviewModel>();
+            foreach (var x in productReviews.PagedForCommand(pageIndex, pageSize))
+            {
+                var m = new ProductReviewModel();
+                await PrepareProductReviewModel(m, x, false, true);
+                items.Add(m);
+            }
+            return (items, productReviews.Count);
         }
 
-        public virtual ProductReview UpdateProductReview(ProductReview productReview, ProductReviewModel model)
+        public virtual async Task<ProductReview> UpdateProductReview(ProductReview productReview, ProductReviewModel model)
         {
-
             productReview = model.ToEntity(productReview);
-            //productReview.Title = model.Title;
-            //productReview.ReviewText = model.ReviewText;
-            //productReview.IsApproved = model.IsApproved;
-            //productReview.ReplyText= model.ReplyText;
-            //productReview.Signature= model.Signature;
-
-            _productService.UpdateProductReview(productReview);
+            await _productService.UpdateProductReview(productReview);
 
             //update product totals
-            var product = _productService.GetProductById(productReview.ProductId);
-            _productService.UpdateProductReviewTotals(product);
+            var product = await _productService.GetProductById(productReview.ProductId);
+            await _productService.UpdateProductReviewTotals(product);
             return productReview;
         }
 
-        public void DeleteProductReview(ProductReview productReview)
+        public virtual async Task DeleteProductReview(ProductReview productReview)
         {
-            _productService.DeleteProductReview(productReview);
+            await _productService.DeleteProductReview(productReview);
 
-            var product = _productService.GetProductById(productReview.ProductId);
+            var product = await _productService.GetProductById(productReview.ProductId);
             //update product totals
-            _productService.UpdateProductReviewTotals(product);
+            await _productService.UpdateProductReviewTotals(product);
         }
 
-        public virtual void ApproveSelected(IList<string> selectedIds)
+        public virtual async Task ApproveSelected(IList<string> selectedIds)
         {
             foreach (var id in selectedIds)
             {
                 string idReview = id.Split(':').First().ToString();
                 string idProduct = id.Split(':').Last().ToString();
-                var product = _productService.GetProductById(idProduct);
-                var productReview = _productService.GetProductReviewById(idReview);
+                var product = await _productService.GetProductById(idProduct);
+                var productReview = await _productService.GetProductReviewById(idReview);
                 if (productReview != null)
                 {
                     var previousIsApproved = productReview.IsApproved;
                     productReview.IsApproved = true;
-                    _productService.UpdateProductReview(productReview);
-                    _productService.UpdateProductReviewTotals(product);
+                    await _productService.UpdateProductReview(productReview);
+                    await _productService.UpdateProductReviewTotals(product);
 
                     //raise event (only if it wasn't approved before)
                     if (!previousIsApproved)
@@ -151,21 +148,21 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual void DisapproveSelected(IList<string> selectedIds)
+        public virtual async Task DisapproveSelected(IList<string> selectedIds)
         {
             foreach (var id in selectedIds)
             {
                 string idReview = id.Split(':').First().ToString();
                 string idProduct = id.Split(':').Last().ToString();
 
-                var product = _productService.GetProductById(idProduct);
-                var productReview = _productService.GetProductReviewById(idReview);
+                var product = await _productService.GetProductById(idProduct);
+                var productReview = await _productService.GetProductReviewById(idReview);
                 if (productReview != null)
                 {
                     productReview.IsApproved = false;
-                    _productService.UpdateProductReview(productReview);
+                    await _productService.UpdateProductReview(productReview);
                     //update product totals
-                    _productService.UpdateProductReviewTotals(product);
+                    await _productService.UpdateProductReviewTotals(product);
                 }
             }
         }
