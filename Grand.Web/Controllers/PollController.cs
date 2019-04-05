@@ -5,6 +5,7 @@ using Grand.Services.Polls;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -36,9 +37,9 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual IActionResult Vote(string pollAnswerId, string pollId)
+        public virtual async Task<IActionResult> Vote(string pollAnswerId, string pollId)
         {
-            var poll = _pollService.GetPollById(pollId); 
+            var poll = await _pollService.GetPollById(pollId); 
             if (!poll.Published)
                 return Json(new
                 {
@@ -59,7 +60,7 @@ namespace Grand.Web.Controllers
                     error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote"),
                 });
 
-            bool alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
+            bool alreadyVoted = await _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
             if (!alreadyVoted)
             {
                 //vote
@@ -68,7 +69,7 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                html = this.RenderPartialViewToString("_Poll", _pollViewModelService.PreparePoll(poll, true)),
+                html = this.RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
             });
         }
         
