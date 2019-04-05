@@ -15,6 +15,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -61,9 +62,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var contactAttributes = _contactAttributeViewModelService.PrepareContactAttributeListModel();
+            var contactAttributes = await _contactAttributeViewModelService.PrepareContactAttributeListModel();
             var gridModel = new DataSourceResult
             {
                 Data = contactAttributes.ToList(),
@@ -73,75 +74,75 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new ContactAttributeModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
             //condition
-            _contactAttributeViewModelService.PrepareConditionAttributes(model, null);
+            await _contactAttributeViewModelService.PrepareConditionAttributes(model, null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(ContactAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Create(ContactAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var contactAttribute = _contactAttributeViewModelService.InsertContactAttributeModel(model);
+                var contactAttribute = await _contactAttributeViewModelService.InsertContactAttributeModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = contactAttribute.Id }) : RedirectToAction("List");
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
-            model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(id);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = contactAttribute.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = contactAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.TextPrompt = contactAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
             //ACL
-            model.PrepareACLModel(contactAttribute, false, _customerService);
+            await model.PrepareACLModel(contactAttribute, false, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
             //condition
-            _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
+            await _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(ContactAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(ContactAttributeModel model, bool continueEditing)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(model.Id);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.Id);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                contactAttribute = _contactAttributeViewModelService.UpdateContactAttributeModel(contactAttribute, model);
+                contactAttribute = await _contactAttributeViewModelService.UpdateContactAttributeModel(contactAttribute, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Updated"));
                 if (continueEditing)
                 {
@@ -154,24 +155,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
+            await model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
             //ACL
-            model.PrepareACLModel(contactAttribute, true, _customerService);
-            _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
+            await model.PrepareACLModel(contactAttribute, true, _customerService);
+            await _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
+        public async Task<IActionResult> Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
             if (ModelState.IsValid)
             {
-                var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
-                _contactAttributeService.DeleteContactAttribute(contactAttribute);
+                var contactAttribute = await _contactAttributeService.GetContactAttributeById(id);
+                await _contactAttributeService.DeleteContactAttribute(contactAttribute);
 
                 //activity log
-                customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
+                await customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Deleted"));
                 return RedirectToAction("List");
@@ -186,9 +187,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
-        public IActionResult ValueList(string contactAttributeId, DataSourceRequest command)
+        public async Task<IActionResult> ValueList(string contactAttributeId, DataSourceRequest command)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var values = contactAttribute.ContactAttributeValues;
             var gridModel = new DataSourceResult
             {
@@ -207,20 +208,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult ValueCreatePopup(string contactAttributeId)
+        public async Task<IActionResult> ValueCreatePopup(string contactAttributeId)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var model = _contactAttributeViewModelService.PrepareContactAttributeValueModel(contactAttribute);
 
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(ContactAttributeValueModel model)
+        public async Task<IActionResult> ValueCreatePopup(ContactAttributeValueModel model)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
                 return RedirectToAction("List");
@@ -234,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _contactAttributeViewModelService.InsertContactAttributeValueModel(contactAttribute, model);
+                await _contactAttributeViewModelService.InsertContactAttributeValueModel(contactAttribute, model);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -245,9 +246,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult ValueEditPopup(string id, string contactAttributeId)
+        public async Task<IActionResult> ValueEditPopup(string id, string contactAttributeId)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
                 //No contact attribute value found with the specified id
@@ -255,7 +256,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = _contactAttributeViewModelService.PrepareContactAttributeValueModel(contactAttribute, cav);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = cav.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -264,9 +265,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(ContactAttributeValueModel model)
+        public async Task<IActionResult> ValueEditPopup(ContactAttributeValueModel model)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
 
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault();
             if (cav == null)
@@ -282,7 +283,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _contactAttributeViewModelService.UpdateContactAttributeValueModel(contactAttribute, cav, model);
+                await _contactAttributeViewModelService.UpdateContactAttributeValueModel(contactAttribute, cav, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -293,16 +294,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult ValueDelete(string id, string contactAttributeId)
+        public async Task<IActionResult> ValueDelete(string id, string contactAttributeId)
         {
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
+            var contactAttribute = await _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
                 throw new ArgumentException("No contact attribute value found with the specified id");
             if (ModelState.IsValid)
             {
                 contactAttribute.ContactAttributeValues.Remove(cav);
-                _contactAttributeService.UpdateContactAttribute(contactAttribute);
+                await _contactAttributeService.UpdateContactAttribute(contactAttribute);
 
                 return new NullJsonResult();
             }
