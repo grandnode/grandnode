@@ -3,6 +3,7 @@ using Grand.Api.Interfaces;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -40,31 +41,31 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] ManufacturerDto model)
+        public async Task<IActionResult> Post([FromBody] ManufacturerDto model)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _manufacturerApiService.InsertOrUpdateManufacturer(model);
+                model = await _manufacturerApiService.InsertOrUpdateManufacturer(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var manufacturer = _manufacturerApiService.GetById(key);
+            var manufacturer = await _manufacturerApiService.GetById(key);
             if (manufacturer == null)
             {
                 return NotFound();
             }
-            _manufacturerApiService.DeleteManufacturer(manufacturer);
+            await _manufacturerApiService.DeleteManufacturer(manufacturer);
             return Ok();
         }
     }

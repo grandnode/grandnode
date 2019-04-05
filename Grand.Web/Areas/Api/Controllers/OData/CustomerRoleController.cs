@@ -3,6 +3,7 @@ using Grand.Api.Interfaces;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -40,26 +41,26 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CustomerRoleDto model)
+        public async Task<IActionResult> Post([FromBody] CustomerRoleDto model)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _customerRoleApiService.InsertOrUpdateCustomerRole(model);
+                model = await _customerRoleApiService.InsertOrUpdateCustomerRole(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customerRole = _customerRoleApiService.GetById(key);
+            var customerRole = await _customerRoleApiService.GetById(key);
             if (customerRole == null)
             {
                 return NotFound();
@@ -68,8 +69,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 return Forbid();
             }
-
-            _customerRoleApiService.DeleteCustomerRole(customerRole);
+            await _customerRoleApiService.DeleteCustomerRole(customerRole);
             return Ok();
         }
     }

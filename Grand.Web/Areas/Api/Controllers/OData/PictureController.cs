@@ -4,6 +4,7 @@ using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -41,14 +42,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] PictureDto model)
+        public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _commonApiService.InsertPicture(model);
+                model = await _commonApiService.InsertPicture(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
