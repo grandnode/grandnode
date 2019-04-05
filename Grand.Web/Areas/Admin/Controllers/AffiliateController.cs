@@ -41,7 +41,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //list
         public IActionResult Index() => RedirectToAction("List");
 
-
         public IActionResult List()
         {
             var model = new AffiliateListModel();
@@ -61,26 +60,26 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new AffiliateModel();
-            _affiliateViewModelService.PrepareAffiliateModel(model, null, false);
+            await _affiliateViewModelService.PrepareAffiliateModel(model, null, false);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Create(AffiliateModel model, bool continueEditing)
+        public async Task<IActionResult> Create(AffiliateModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var affiliate = _affiliateViewModelService.InsertAffiliateModel(model);
+                var affiliate = await _affiliateViewModelService.InsertAffiliateModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = affiliate.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            _affiliateViewModelService.PrepareAffiliateModel(model, null, true);
+            await _affiliateViewModelService.PrepareAffiliateModel(model, null, true);
             return View(model);
 
         }
@@ -95,7 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = new AffiliateModel();
-            _affiliateViewModelService.PrepareAffiliateModel(model, affiliate, false);
+            await _affiliateViewModelService.PrepareAffiliateModel(model, affiliate, false);
             return View(model);
         }
 
@@ -123,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _affiliateViewModelService.PrepareAffiliateModel(model, affiliate, true);
+            await _affiliateViewModelService.PrepareAffiliateModel(model, affiliate, true);
             return View(model);
         }
 
@@ -152,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            var affiliateOrders = _affiliateViewModelService.PrepareAffiliatedOrderList(affiliate, model, command.Page, command.PageSize);
+            var affiliateOrders = await _affiliateViewModelService.PrepareAffiliatedOrderList(affiliate, model, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -171,7 +170,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            var affiliateCustomers = _affiliateViewModelService.PrepareAffiliatedCustomerList(affiliate, command.Page, command.PageSize);
+            var affiliateCustomers = await _affiliateViewModelService.PrepareAffiliatedCustomerList(affiliate, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
