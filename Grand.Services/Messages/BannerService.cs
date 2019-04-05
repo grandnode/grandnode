@@ -4,6 +4,9 @@ using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver.Linq;
+using MongoDB.Driver;
 
 namespace Grand.Services.Messages
 {
@@ -28,12 +31,12 @@ namespace Grand.Services.Messages
         /// Inserts a banner
         /// </summary>
         /// <param name="banner">Banner</param>        
-        public virtual void InsertBanner(Banner banner)
+        public virtual async Task InsertBanner(Banner banner)
         {
             if (banner == null)
                 throw new ArgumentNullException("banner");
 
-            _bannerRepository.Insert(banner);
+            await _bannerRepository.InsertAsync(banner);
 
             //event notification
             _eventPublisher.EntityInserted(banner);
@@ -43,12 +46,12 @@ namespace Grand.Services.Messages
         /// Updates a banner
         /// </summary>
         /// <param name="banner">Banner</param>
-        public virtual void UpdateBanner(Banner banner)
+        public virtual async Task UpdateBanner(Banner banner)
         {
             if (banner == null)
                 throw new ArgumentNullException("banner");
 
-            _bannerRepository.Update(banner);
+            await _bannerRepository.UpdateAsync(banner);
 
             //event notification
             _eventPublisher.EntityUpdated(banner);
@@ -58,12 +61,12 @@ namespace Grand.Services.Messages
         /// Deleted a banner
         /// </summary>
         /// <param name="banner">Banner</param>
-        public virtual void DeleteBanner(Banner banner)
+        public virtual async Task DeleteBanner(Banner banner)
         {
             if (banner == null)
                 throw new ArgumentNullException("banner");
 
-            _bannerRepository.Delete(banner);
+            await _bannerRepository.DeleteAsync(banner);
 
             //event notification
             _eventPublisher.EntityDeleted(banner);
@@ -74,24 +77,22 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="bannerId">Banner identifier</param>
         /// <returns>Banner</returns>
-        public virtual Banner GetBannerById(string bannerId)
+        public virtual Task<Banner> GetBannerById(string bannerId)
         {
-            return _bannerRepository.GetById(bannerId);
+            return _bannerRepository.GetByIdAsync(bannerId);
         }
 
         /// <summary>
         /// Gets all banners
         /// </summary>
         /// <returns>Banners</returns>
-        public virtual IList<Banner> GetAllBanners()
+        public virtual async Task<IList<Banner>> GetAllBanners()
         {
 
             var query = from c in _bannerRepository.Table
                         orderby c.CreatedOnUtc
                         select c;
-            var banners = query.ToList();
-
-            return banners;
+            return await query.ToListAsync();
         }
 
     }
