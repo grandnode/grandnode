@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -72,7 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
+        protected async Task<DataSourceResult> GetBestsellersBriefReportModel(int pageIndex,
             int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
@@ -86,21 +87,24 @@ namespace Grand.Web.Areas.Admin.Controllers
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 showHidden: true);
+            var result = new List<BestsellersReportLineModel>();
+            foreach (var x in items)
+            {
+                var m = new BestsellersReportLineModel
+                {
+                    ProductId = x.ProductId,
+                    TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
+                    TotalQuantity = x.TotalQuantity,
+                };
+                var product = await _productService.GetProductById(x.ProductId);
+                if (product != null)
+                    m.ProductName = product.Name;
+                result.Add(m);
+            }
+
             var gridModel = new DataSourceResult
             {
-                Data = items.Select(x =>
-                {
-                    var m = new BestsellersReportLineModel
-                    {
-                        ProductId = x.ProductId,
-                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
-                        TotalQuantity = x.TotalQuantity,
-                    };
-                    var product = _productService.GetProductById(x.ProductId);
-                    if (product != null)
-                        m.ProductName = product.Name;
-                    return m;
-                }),
+                Data = result,
                 Total = items.TotalCount
             };
             return gridModel;
@@ -147,40 +151,42 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
+        public async Task<IActionResult> BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
+            var gridModel = await GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 1);
 
             return Json(gridModel);
         }
         [HttpPost]
-        public IActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
+        public async Task<IActionResult> BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
+            var gridModel = await GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 2);
 
             return Json(gridModel);
         }
 
-        public IActionResult BestsellersReport()
+        public async Task<IActionResult> BestsellersReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var model = new BestsellersReportModel();
-            //vendor
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new BestsellersReportModel
+            {
+                //vendor
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //order statuses
@@ -192,7 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //billing countries
-            foreach (var c in _countryService.GetAllCountriesForBilling(showHidden: true))
+            foreach (var c in await _countryService.GetAllCountriesForBilling(showHidden: true))
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             }
@@ -200,14 +206,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            var vendors = _vendorService.GetAllVendors(showHidden: true);
+            var vendors = await _vendorService.GetAllVendors(showHidden: true);
             foreach (var v in vendors)
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             return View(model);
         }
         [HttpPost]
-        public IActionResult BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
+        public async Task<IActionResult> BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -239,21 +245,24 @@ namespace Grand.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true,
                 storeId: model.StoreId);
+
+            var result = new List<BestsellersReportLineModel>();
+            foreach (var x in items)
+            {
+                var m = new BestsellersReportLineModel
+                {
+                    ProductId = x.ProductId,
+                    TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
+                    TotalQuantity = x.TotalQuantity,
+                };
+                var product = await _productService.GetProductById(x.ProductId);
+                if (product != null)
+                    m.ProductName = product.Name;
+                result.Add(m);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = items.Select(x =>
-                {
-                    var m = new BestsellersReportLineModel
-                    {
-                        ProductId = x.ProductId,
-                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
-                        TotalQuantity = x.TotalQuantity,
-                    };
-                    var product = _productService.GetProductById(x.ProductId);
-                    if (product != null)
-                        m.ProductName = product.Name;
-                    return m;
-                }),
+                Data = result,
                 Total = items.TotalCount
             };
 
@@ -343,11 +352,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("");
 
 
-            var report = new List<OrderAverageReportLineSummary>();
-            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Pending));
-            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Processing));
-            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Complete));
-            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Cancelled));
+            var report = new List<OrderAverageReportLineSummary>
+            {
+                _orderReportService.OrderAverageReport("", OrderStatus.Pending),
+                _orderReportService.OrderAverageReport("", OrderStatus.Processing),
+                _orderReportService.OrderAverageReport("", OrderStatus.Complete),
+                _orderReportService.OrderAverageReport("", OrderStatus.Cancelled)
+            };
             var model = report.Select(x => new OrderAverageReportLineSummaryModel
             {
                 OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -368,7 +379,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportLatestOrder(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public async Task<IActionResult> ReportLatestOrder(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -379,34 +390,35 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             //load orders
-            var orders = _orderService.SearchOrders(
+            var orders = await _orderService.SearchOrders(
                 createdFromUtc: startDate,
                 createdToUtc: endDate,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
+
+            var items = new List<OrderModel>();
+            foreach (var x in orders)
+            {
+                var store = await _storeService.GetStoreById(x.StoreId);
+                items.Add(new OrderModel
+                {
+                    Id = x.Id,
+                    OrderNumber = x.OrderNumber,
+                    StoreName = store != null ? store.Name : "Unknown",
+                    OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                    OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    CustomerEmail = x.BillingAddress.Email,
+                    CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                });
+            }
             var gridModel = new DataSourceResult
             {
-                Data = orders.Select(x =>
-                {
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    return new OrderModel
-                    {
-                        Id = x.Id,
-                        OrderNumber = x.OrderNumber,
-                        StoreName = store != null ? store.Name : "Unknown",
-                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
-                        OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        CustomerEmail = x.BillingAddress.Email,
-                        CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                    };
-                }),
+                Data = items,
                 Total = orders.TotalCount
             };
-
-
             return Json(gridModel);
         }
 
@@ -463,10 +475,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return AccessDeniedView();
 
-            var model = new CountryReportModel();
+            var model = new CountryReportModel
+            {
 
-            //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+                //order statuses
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+            };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
@@ -477,7 +491,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
+        public async Task<IActionResult> CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return Content("");
@@ -496,19 +510,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ps: paymentStatus,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue);
+            var result = new List<CountryReportLineModel>();
+            foreach (var x in items)
+            {
+                var country = await _countryService.GetCountryById(!String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "");
+                var m = new CountryReportLineModel
+                {
+                    CountryName = country != null ? country.Name : "Unknown",
+                    SumOrders = _priceFormatter.FormatPrice(x.SumOrders, true, false),
+                    TotalOrders = x.TotalOrders,
+                };
+                result.Add(m);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = items.Select(x =>
-                {
-                    var country = _countryService.GetCountryById(!String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "");
-                    var m = new CountryReportLineModel
-                    {
-                        CountryName = country != null ? country.Name : "Unknown",
-                        SumOrders = _priceFormatter.FormatPrice(x.SumOrders, true, false),
-                        TotalOrders = x.TotalOrders,
-                    };
-                    return m;
-                }),
+                Data = result,
                 Total = items.Count
             };
 
@@ -525,7 +541,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult LowStockReportList(DataSourceRequest command)
+        public async Task<IActionResult> LowStockReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -535,9 +551,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            IList<Product> products;
-            IList<ProductAttributeCombination> combinations;
-            _productService.GetLowStockProducts(vendorId, out products, out combinations);
+            _productService.GetLowStockProducts(vendorId, out IList<Product> products, out IList<ProductAttributeCombination> combinations);
 
             var models = new List<LowStockProductModel>();
             //products
@@ -556,12 +570,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             //combinations
             foreach (var combination in combinations)
             {
-                var product = _productService.GetProductById(combination.ProductId);
+                var product = await _productService.GetProductById(combination.ProductId);
                 var lowStockModel = new LowStockProductModel
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    Attributes = await _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                     ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
                     StockQuantity = combination.StockQuantity,
                     Published = product.Published
@@ -580,12 +594,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         [HttpPost]
-        public IActionResult PopularSearchTermsReport(DataSourceRequest command)
+        public async Task<IActionResult> PopularSearchTermsReport(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
+            var searchTermRecordLines = await _searchTermService.GetStats(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = searchTermRecordLines.Select(x => new SearchTermReportLineModel
