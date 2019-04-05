@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -36,13 +37,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogList(DataSourceRequest command, LogListModel model)
+        public async Task<IActionResult> LogList(DataSourceRequest command, LogListModel model)
         {
-            var logItems = _logViewModelService.PrepareLogModel(model, command.Page, command.PageSize);
+            var (logModels, totalCount) = await _logViewModelService.PrepareLogModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = logItems.logModels.ToList(),
-                Total = logItems.totalCount
+                Data = logModels.ToList(),
+                Total = totalCount
             };
 
             return Json(gridModel);
@@ -50,53 +51,53 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("clearall")]
-        public IActionResult ClearAll()
+        public async Task<IActionResult> ClearAll()
         {
-            _logger.ClearLog();
+            await _logger.ClearLog();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.Log.Cleared"));
             return RedirectToAction("List");
         }
 
-        public new IActionResult View(string id)
+        public new async Task<IActionResult> View(string id)
         {
-            var log = _logger.GetLogById(id);
+            var log = await _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
                 return RedirectToAction("List");
 
-            var model = _logViewModelService.PrepareLogModel(log);
+            var model = await _logViewModelService.PrepareLogModel(log);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var log = _logger.GetLogById(id);
+            var log = await _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _logger.DeleteLog(log);
+                await _logger.DeleteLog(log);
                 SuccessNotification(_localizationService.GetResource("Admin.System.Log.Deleted"));
                 return RedirectToAction("List");
             }
             ErrorNotification(ModelState);
-            return this.View(id);
+            return RedirectToAction("View", id);
         }
 
         [HttpPost]
-        public IActionResult DeleteSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
         {
             if (ModelState.IsValid)
             {
                 if (selectedIds != null)
                 {
-                    var logItems = _logger.GetLogByIds(selectedIds.ToArray());
+                    var logItems = await _logger.GetLogByIds(selectedIds.ToArray());
                     foreach (var logItem in logItems)
-                        _logger.DeleteLog(logItem);
+                        await _logger.DeleteLog(logItem);
                 }
                 return Json(new { Result = true });
             }
