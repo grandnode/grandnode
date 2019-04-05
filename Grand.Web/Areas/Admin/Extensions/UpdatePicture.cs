@@ -1,17 +1,17 @@
 ﻿using Grand.Services.Media;
-
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
     public static class UpdatePicture
     {
-        public static void UpdatePictureSeoNames(this IPictureService pictureService, string pictureId, string name)
+        public static async Task UpdatePictureSeoNames(this IPictureService pictureService, string pictureId, string name)
         {
             if (!string.IsNullOrEmpty(pictureId))
             {
-                var picture = pictureService.GetPictureById(pictureId);
+                var picture = await pictureService.GetPictureById(pictureId);
                 if (picture != null)
-                    pictureService.SetSeoFilename(picture.Id, pictureService.GetPictureSeName(name));
+                    await pictureService.SetSeoFilename(picture.Id, pictureService.GetPictureSeName(name));
             }
         }
     }

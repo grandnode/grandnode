@@ -3,16 +3,17 @@ using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Customers;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
     public static class AclMappingExtension
     {
-        public static void PrepareACLModel<T>(this T baseGrandEntityModel, IAclSupported aclMapping, bool excludeProperties, ICustomerService customerService)
+        public static async Task PrepareACLModel<T>(this T baseGrandEntityModel, IAclSupported aclMapping, bool excludeProperties, ICustomerService customerService)
             where T : BaseGrandEntityModel, IAclMappingModel
         {
-            baseGrandEntityModel.AvailableCustomerRoles = customerService
-               .GetAllCustomerRoles(true)
+            baseGrandEntityModel.AvailableCustomerRoles = (await customerService
+               .GetAllCustomerRoles(true))
                .Select(s => new CustomerRoleModel { Id = s.Id, Name = s.Name })
                .ToList();
             if (!excludeProperties)

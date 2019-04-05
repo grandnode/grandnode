@@ -3,6 +3,7 @@ using Grand.Services.Common;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
@@ -11,7 +12,7 @@ namespace Grand.Web.Areas.Admin.Extensions
     /// </summary>
     public static class AttributeParserHelper
     {
-        public static string ParseCustomAddressAttributes(this IFormCollection form,
+        public static async Task<string> ParseCustomAddressAttributes(this IFormCollection form,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService)
         {
@@ -19,7 +20,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                 throw new ArgumentNullException("form");
 
             string attributesXml = "";
-            var attributes = addressAttributeService.GetAllAddressAttributes();
+            var attributes = await addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
                 string controlId = string.Format("address_attribute_{0}", attribute.Id);

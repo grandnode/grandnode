@@ -2,11 +2,13 @@
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using Grand.Framework.Localization;
+using Grand.Services.Localization;
 using Grand.Services.Seo;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
@@ -42,8 +44,8 @@ namespace Grand.Web.Areas.Admin.Extensions
             }
             return local;
         }
-        public static List<LocalizedProperty> ToLocalizedProperty<T, E>(this IList<T> list, E entity, Expression<Func<T, string>> keySelector,
-            IUrlRecordService _urlRecordService) where T : ILocalizedModelLocal where E : BaseEntity, ISlugSupported
+        public static async Task<List<LocalizedProperty>> ToLocalizedProperty<T, E>(this IList<T> list, E entity, Expression<Func<T, string>> keySelector,
+            SeoSettings _seoSettings, IUrlRecordService _urlRecordService, ILanguageService _languageService) where T : ILocalizedModelLocal where E : BaseEntity, ISlugSupported
         {
             var local = new List<LocalizedProperty>();
             foreach (var item in list)
@@ -81,18 +83,18 @@ namespace Grand.Web.Areas.Admin.Extensions
                             {
                                 var name = value.ToString();
                                 var itemvalue = prop.GetValue(item) ?? "";
-                                var seName = entity.ValidateSeName(itemvalue.ToString(), name, false);
+                                var seName = await entity.ValidateSeName(itemvalue.ToString(), name, false, _seoSettings, _urlRecordService, _languageService );
                                 prop.SetValue(item, seName);
-                                _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
+                                await _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
                             }
                             else
                             {
                                 var itemvalue = prop.GetValue(item) ?? "";
                                 if (itemvalue != null && !string.IsNullOrEmpty(itemvalue.ToString()))
                                 {
-                                    var seName = entity.ValidateSeName(itemvalue.ToString(), "", false);
+                                    var seName = await entity.ValidateSeName(itemvalue.ToString(), "", false, _seoSettings, _urlRecordService, _languageService);
                                     prop.SetValue(item, seName);
-                                    _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
+                                    await _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
                                 }
                                 else
                                     insert = false;

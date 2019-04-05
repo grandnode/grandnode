@@ -3,12 +3,13 @@ using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
     public static class ProductList
     {
-        public static IPagedList<Product> PrepareProductList(this IProductService productService, string searchCategoryId, 
+        public static async Task<IPagedList<Product>> PrepareProductList(this IProductService productService, string searchCategoryId, 
             string searchManufacturerId, string searchStoreId, string searchVendorId, int productTypeId,
             string searchProductName, int pageIndex, int pageSize)
         {
@@ -16,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             if (!String.IsNullOrEmpty(searchCategoryId))
                 searchCategoryIds.Add(searchCategoryId);
 
-            var products = productService.SearchProducts(
+            var products = (await productService.SearchProducts(
                 categoryIds: searchCategoryIds,
                 manufacturerId: searchManufacturerId,
                 storeId: searchStoreId,
@@ -26,7 +27,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize,
                 showHidden: true
-                );
+                )).products;
 
             return products;
         }

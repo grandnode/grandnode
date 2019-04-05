@@ -53,6 +53,7 @@ using Grand.Web.Areas.Admin.Models.Templates;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Models.Vendors;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
@@ -880,19 +881,19 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-        public static string CountryName(this Address model)
+        public static async Task<string> CountryName(this Address model)
         {
-            var country = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.ICountryService>().GetCountryById(model.CountryId);
+            var country = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.ICountryService>().GetCountryById(model.CountryId);
             return country?.Name;
         }
 
-        public static string StateProvinceName(this Address model)
+        public static async Task<string> StateProvinceName(this Address model)
         {
-            var state = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.IStateProvinceService>().GetStateProvinceById(model.StateProvinceId);
+            var state = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.IStateProvinceService>().GetStateProvinceById(model.StateProvinceId);
             return state?.Name;
         }
 
-        public static void PrepareCustomAddressAttributes(this AddressModel model,
+        public static async Task PrepareCustomAddressAttributes(this AddressModel model,
             Address address,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser)
@@ -904,7 +905,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             if (addressAttributeParser == null)
                 throw new ArgumentNullException("addressAttributeParser");
 
-            var attributes = addressAttributeService.GetAllAddressAttributes();
+            var attributes = await addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddressModel.AddressAttributeModel
@@ -946,7 +947,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                var selectedValues = await addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     if (attributeModel.Id == attributeValue.AddressAttributeId)
                                         foreach (var item in attributeModel.Values)
