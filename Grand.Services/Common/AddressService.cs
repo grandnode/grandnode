@@ -5,6 +5,9 @@ using Grand.Services.Directory;
 using Grand.Services.Events;
 using System;
 using System.Linq;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -78,7 +81,7 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByCountryId(string countryId)
+        public virtual async Task<int> GetAddressTotalByCountryId(string countryId)
         {
             if (String.IsNullOrEmpty(countryId))
                 return 0;
@@ -86,7 +89,7 @@ namespace Grand.Services.Common
             var query = from a in _addressRepository.Table
                         where a.CountryId == countryId
                         select a;
-            return query.Count();
+            return await query.CountAsync();
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByStateProvinceId(string stateProvinceId)
+        public virtual async Task<int> GetAddressTotalByStateProvinceId(string stateProvinceId)
         {
             if (String.IsNullOrEmpty(stateProvinceId))
                 return 0;
@@ -102,7 +105,7 @@ namespace Grand.Services.Common
             var query = from a in _addressRepository.Table
                         where a.StateProvinceId == stateProvinceId
                         select a;
-            return query.Count();
+            return await query.CountAsync();
         }
 
         /// <summary>
@@ -110,26 +113,26 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        public virtual Address GetAddressByIdSettings(string addressId)
+        public virtual async Task<Address> GetAddressByIdSettings(string addressId)
         {
             if (String.IsNullOrEmpty(addressId))
                 return null;
 
             string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
+            return await _cacheManager.Get(key, () => _addressRepository.GetByIdAsync(addressId));
         }
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void InsertAddressSettings(Address address)
+        public virtual async Task InsertAddressSettings(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
             
             address.CreatedOnUtc = DateTime.UtcNow;
-            _addressRepository.Insert(address);
+            await _addressRepository.InsertAsync(address);
 
             //cache
             _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
@@ -142,12 +145,12 @@ namespace Grand.Services.Common
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void UpdateAddressSettings(Address address)
+        public virtual async Task UpdateAddressSettings(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
 
-            _addressRepository.Update(address);
+            await _addressRepository.UpdateAsync(address);
 
             //cache
             _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
@@ -161,7 +164,7 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        public virtual bool IsAddressValid(Address address)
+        public virtual async Task<bool> IsAddressValid(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
@@ -207,13 +210,13 @@ namespace Grand.Services.Common
                 if (String.IsNullOrEmpty(address.CountryId))
                     return false;
 
-                var country = _countryService.GetCountryById(address.CountryId);
+                var country = await _countryService.GetCountryById(address.CountryId);
                 if (country == null)
                     return false;
 
                 if (_addressSettings.StateProvinceEnabled)
                 {
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
+                    var states = await _stateProvinceService.GetStateProvincesByCountryId(country.Id);
                     if (states.Any())
                     {
                         if (String.IsNullOrEmpty(address.StateProvinceId))
@@ -241,7 +244,7 @@ namespace Grand.Services.Common
                 String.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            var attributes = await _addressAttributeService.GetAllAddressAttributes();
             if (attributes.Any(x => x.IsRequired))
                 return false;
 
