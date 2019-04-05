@@ -60,10 +60,7 @@ namespace Grand.Services.Affiliates
         /// <param name="friendlyUrlName">Friendly url name</param>
         /// <returns>Affiliate</returns>
         public virtual Task<Affiliate> GetAffiliateByFriendlyUrlName(string friendlyUrlName)
-        {
-            if (String.IsNullOrWhiteSpace(friendlyUrlName))
-                return null;
-
+        {           
             var query = from a in _affiliateRepository.Table
                         orderby a.Id
                         where a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower())
