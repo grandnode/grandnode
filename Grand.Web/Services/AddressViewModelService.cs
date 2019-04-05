@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -27,6 +28,7 @@ namespace Grand.Web.Services
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IWorkContext _workContext;
+        private readonly IGenericAttributeService _genericAttributeService;
 
         private readonly AddressSettings _addressSettings;
 
@@ -37,6 +39,7 @@ namespace Grand.Web.Services
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
             IWorkContext workContext,
+            IGenericAttributeService genericAttributeService,
             AddressSettings addressSettings
             )
         {
@@ -47,7 +50,7 @@ namespace Grand.Web.Services
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._workContext = workContext;
-
+            this._genericAttributeService = genericAttributeService;
             this._addressSettings = addressSettings;
         }
 
@@ -66,7 +69,7 @@ namespace Grand.Web.Services
         /// <param name="loadCountries">A function to load countries  (used to prepare a select list). null to don't prepare the list.</param>
         /// <param name="prePopulateWithCustomerFields">A value indicating whether to pre-populate an address with customer fields entered during registration. It's used only when "address" parameter is set to "null"</param>
         /// <param name="customer">Customer record which will be used to pre-populate address. Used only when "prePopulateWithCustomerFields" is "true".</param>
-        public virtual void PrepareModel(AddressModel model,
+        public virtual async Task PrepareModel(AddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
@@ -74,17 +77,17 @@ namespace Grand.Web.Services
             string overrideAttributesXml = "")
         {
             //prepare address model
-            PrepareAddressModel(model, address, excludeProperties, loadCountries, prePopulateWithCustomerFields, customer, _addressSettings);
+            await PrepareAddressModel(model, address, excludeProperties, loadCountries, prePopulateWithCustomerFields, customer, _addressSettings);
 
             //customer attribute services
-            PrepareCustomAddressAttributes(model, address, overrideAttributesXml);
+            await PrepareCustomAddressAttributes(model, address, overrideAttributesXml);
             if (address != null)
             {
-                model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+                model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
             }
         }
 
-        public virtual void PrepareAddressModel(AddressModel model,
+        public virtual async Task PrepareAddressModel(AddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
@@ -105,14 +108,14 @@ namespace Grand.Web.Services
                 model.CountryId = address.CountryId;
                 Country country = null;
                 if (!String.IsNullOrEmpty(address.CountryId))
-                    country = _countryService.GetCountryById(address.CountryId);
-                model.CountryName = country != null ? country.GetLocalized(x => x.Name) : null;
+                    country = await _countryService.GetCountryById(address.CountryId);
+                model.CountryName = country != null ? country.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : null;
 
                 model.StateProvinceId = address.StateProvinceId;
                 StateProvince state = null;
                 if (!String.IsNullOrEmpty(address.StateProvinceId))
-                    state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId);
-                model.StateProvinceName = state != null ? state.GetLocalized(x => x.Name) : null;
+                    state = await _stateProvinceService.GetStateProvinceById(address.StateProvinceId);
+                model.StateProvinceName = state != null ? state.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : null;
 
                 model.City = address.City;
                 model.Address1 = address.Address1;
@@ -127,18 +130,18 @@ namespace Grand.Web.Services
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-                model.Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
-                model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                model.FirstName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName);
+                model.LastName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName);
+                model.Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company);
+                model.VatNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.VatNumber);
+                model.Address1 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.City);
+                model.CountryId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StateProvinceId);
+                model.PhoneNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
             }
 
             //countries and states
@@ -150,7 +153,7 @@ namespace Grand.Web.Services
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -159,9 +162,9 @@ namespace Grand.Web.Services
                 if (addressSettings.StateProvinceEnabled)
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
-                    var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId)
-                        .ToList();
+                    var states = await _stateProvinceService
+                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId);
+                        
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
@@ -170,7 +173,7 @@ namespace Grand.Web.Services
                         {
                             model.AvailableStates.Add(new SelectListItem
                             {
-                                Text = s.GetLocalized(x => x.Name),
+                                Text = s.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                                 Value = s.Id.ToString(),
                                 Selected = (s.Id == model.StateProvinceId)
                             });
@@ -209,7 +212,7 @@ namespace Grand.Web.Services
             model.FaxRequired = addressSettings.FaxRequired;
         }
 
-        public virtual void PrepareVendorAddressModel(VendorAddressModel model,
+        public virtual async Task PrepareVendorAddressModel(VendorAddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
@@ -225,14 +228,14 @@ namespace Grand.Web.Services
                 model.CountryId = address.CountryId;
                 Country country = null;
                 if (!String.IsNullOrEmpty(address.CountryId))
-                    country = _countryService.GetCountryById(address.CountryId);
-                model.CountryName = country != null ? country.GetLocalized(x => x.Name) : null;
+                    country = await _countryService.GetCountryById(address.CountryId);
+                model.CountryName = country != null ? country.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : null;
 
                 model.StateProvinceId = address.StateProvinceId;
                 StateProvince state = null;
                 if (!String.IsNullOrEmpty(address.StateProvinceId))
-                    state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId);
-                model.StateProvinceName = state != null ? state.GetLocalized(x => x.Name) : null;
+                    state = await _stateProvinceService.GetStateProvinceById(address.StateProvinceId);
+                model.StateProvinceName = state != null ? state.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : null;
 
                 model.City = address.City;
                 model.Address1 = address.Address1;
@@ -246,19 +249,19 @@ namespace Grand.Web.Services
             {
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                model.Company = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Company);
+                model.Address1 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.City);
+                model.PhoneNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Fax);
 
                 if(vendorSettings.CountryEnabled)
-                    model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+                    model.CountryId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CountryId);
 
                 if (vendorSettings.StateProvinceEnabled)
-                    model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
+                    model.StateProvinceId = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.StateProvinceId);
             }
 
             //countries and states
@@ -269,7 +272,7 @@ namespace Grand.Web.Services
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = c.GetLocalized(x => x.Name),
+                        Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -278,9 +281,8 @@ namespace Grand.Web.Services
                 if (vendorSettings.StateProvinceEnabled)
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
-                    var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId)
-                        .ToList();
+                    var states = await _stateProvinceService
+                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId);
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
@@ -289,7 +291,7 @@ namespace Grand.Web.Services
                         {
                             model.AvailableStates.Add(new SelectListItem
                             {
-                                Text = s.GetLocalized(x => x.Name),
+                                Text = s.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                                 Value = s.Id.ToString(),
                                 Selected = (s.Id == model.StateProvinceId)
                             });
@@ -327,18 +329,18 @@ namespace Grand.Web.Services
         }
 
 
-        public virtual void PrepareCustomAddressAttributes(AddressModel model,
+        public virtual async Task PrepareCustomAddressAttributes(AddressModel model,
             Address address,
             string overrideAttributesXml = "")
         {
             
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            var attributes = await _addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddressAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
+                    Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -352,7 +354,7 @@ namespace Grand.Web.Services
                         var attributeValueModel = new AddressAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(attributeValueModel);
@@ -377,7 +379,7 @@ namespace Grand.Web.Services
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                var selectedValues = await _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     if (attributeModel.Id == attributeValue.AddressAttributeId)
                                         foreach (var item in attributeModel.Values)
@@ -416,13 +418,13 @@ namespace Grand.Web.Services
             }
         }
 
-        public string ParseCustomAddressAttributes(IFormCollection form)
+        public virtual async Task<string> ParseCustomAddressAttributes(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
             string attributesXml = "";
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            var attributes = await _addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
                 string controlId = string.Format("address_attribute_{0}", attribute.Id);
@@ -492,9 +494,9 @@ namespace Grand.Web.Services
             return attributesXml;
         }
 
-        public virtual IList<string> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
         {
-            return _addressAttributeParser.GetAttributeWarnings(attributesXml);
+            return await _addressAttributeParser.GetAttributeWarnings(attributesXml);
         }
 
     }
