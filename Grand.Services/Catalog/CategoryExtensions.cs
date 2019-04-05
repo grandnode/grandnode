@@ -5,6 +5,7 @@ using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -51,13 +52,13 @@ namespace Grand.Services.Catalog
         /// <param name="separator">Separator</param>
         /// <param name="languageId">Language identifier for localization</param>
         /// <returns>Formatted breadcrumb</returns>
-        public static string GetFormattedBreadCrumb(this Category category,
+        public static async Task<string> GetFormattedBreadCrumb(this Category category,
             ICategoryService categoryService,
             string separator = ">>", string languageId = "")
         {
             string result = string.Empty;
 
-            var breadcrumb = GetCategoryBreadCrumb(category, categoryService, null, null, true);
+            var breadcrumb = await GetCategoryBreadCrumb(category, categoryService, null, null, true);
             for (int i = 0; i <= breadcrumb.Count - 1; i++)
             {
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
@@ -105,7 +106,7 @@ namespace Grand.Services.Catalog
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>Category breadcrumb </returns>
-        public static IList<Category> GetCategoryBreadCrumb(this Category category,
+        public static async Task<IList<Category>> GetCategoryBreadCrumb(this Category category,
             ICategoryService categoryService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -129,7 +130,7 @@ namespace Grand.Services.Catalog
 
                 alreadyProcessedCategoryIds.Add(category.Id);
 
-                category = categoryService.GetCategoryById(category.ParentCategoryId);
+                category = await categoryService.GetCategoryById(category.ParentCategoryId);
             }
             result.Reverse();
             return result;
