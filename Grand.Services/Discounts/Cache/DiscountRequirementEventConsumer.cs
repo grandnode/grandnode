@@ -1,8 +1,9 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Events;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Grand.Services.Discounts.Cache
 {
@@ -26,9 +27,9 @@ namespace Grand.Services.Discounts.Cache
 
         private readonly ICacheManager _cacheManager;
 
-        public DiscountRequirementEventConsumer()
+        public DiscountRequirementEventConsumer(IServiceProvider serviceProvider)
         {
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //discounts
