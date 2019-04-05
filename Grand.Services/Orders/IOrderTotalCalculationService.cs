@@ -2,6 +2,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Discounts;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -19,26 +20,10 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
-        void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
-            bool includingTax,
-            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
-            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
-
-        /// <summary>
-        /// Gets shopping cart subtotal
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
-        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <param name="taxRates">Tax rates (of order sub total)</param>
-        void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
-            bool includingTax,
-            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
-            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
-            out SortedDictionary<decimal, decimal> taxRates);
+        Task<(decimal discountAmount, List<AppliedDiscount> appliedDiscounts, decimal subTotalWithoutDiscount, decimal subTotalWithDiscount, SortedDictionary<decimal, decimal> taxRates)> 
+            GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
+            bool includingTax);
 
         /// <summary>
         /// Adjust shipping rate (free shipping, additional charges, discounts)
@@ -47,47 +32,28 @@ namespace Grand.Services.Orders
         /// <param name="cart">Cart</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Adjusted shipping rate</returns>
-        decimal AdjustShippingRate(decimal shippingRate,
-            IList<ShoppingCartItem> cart, out List<AppliedDiscount> appliedDiscounts);
-        
+        Task<(decimal shippingRate, List<AppliedDiscount> appliedDiscounts)> AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart);
+
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Additional shipping charge</returns>
-        decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
+        Task<decimal> GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets a value indicating whether shipping is free
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>A value indicating whether shipping is free</returns>
-        bool IsFreeShipping(IList<ShoppingCartItem> cart);
+        Task<bool> IsFreeShipping(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="taxRate">Applied tax rate</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
-            out decimal taxRate);
+        Task<(decimal? shoppingCartShippingTotal, decimal taxRate, List<AppliedDiscount> appliedDiscounts)> GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets shopping cart shipping total
@@ -97,18 +63,9 @@ namespace Grand.Services.Orders
         /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
-            out decimal taxRate, out List<AppliedDiscount> appliedDiscounts);
+        Task<(decimal? shoppingCartShippingTotal, decimal taxRate, List<AppliedDiscount> appliedDiscounts)> GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax);
 
-
-        /// <summary>
-        /// Gets tax
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
-        /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
-
+        
         /// <summary>
         /// Gets tax
         /// </summary>
@@ -116,17 +73,7 @@ namespace Grand.Services.Orders
         /// <param name="taxRates">Tax rates</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates, 
-            bool usePaymentMethodAdditionalFee = true);
-
-        /// <summary>
-        /// Gets shopping cart total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
-        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
-        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool? useRewardPoints = null,
-            bool usePaymentMethodAdditionalFee = true);
+        Task<(decimal taxtotal, SortedDictionary<decimal, decimal> taxRates)> GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Gets shopping cart total
@@ -140,18 +87,16 @@ namespace Grand.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
-            out List<AppliedGiftCard> appliedGiftCards,
-            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
-            bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true);
+        Task<(decimal? shoppingCartTotal, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, List<AppliedGiftCard> appliedGiftCards,
+            int redeemedRewardPoints, decimal redeemedRewardPointsAmount)> 
+            GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Converts existing reward points to amount
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
-        decimal ConvertRewardPointsToAmount(int rewardPoints);
+        Task<decimal> ConvertRewardPointsToAmount(int rewardPoints);
 
         /// <summary>
         /// Converts an amount to reward points
