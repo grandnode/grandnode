@@ -1,11 +1,13 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
+using Grand.Core.Domain.Seo;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -27,7 +29,7 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreMappingService _storeMappingService;
-
+        private readonly SeoSettings _seoSettings;
         #endregion
 
         #region Ctor
@@ -42,7 +44,8 @@ namespace Grand.Services.Catalog
             IDownloadService downloadService,
             IProductAttributeParser productAttributeParser,
             IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            SeoSettings seoSettings)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -55,6 +58,7 @@ namespace Grand.Services.Catalog
             this._productAttributeParser = productAttributeParser;
             this._urlRecordService = urlRecordService;
             this._storeMappingService = storeMappingService;
+            this._seoSettings = seoSettings;
         }
 
         #endregion
@@ -70,7 +74,7 @@ namespace Grand.Services.Catalog
         /// <param name="copyImages">A value indicating whether the product images should be copied</param>
         /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
         /// <returns>Product copy</returns>
-        public virtual Product CopyProduct(Product product, string newName,
+        public virtual async Task<Product> CopyProduct(Product product, string newName,
             bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
         {
             if (product == null)
@@ -84,7 +88,7 @@ namespace Grand.Services.Catalog
             string sampleDownloadId = product.SampleDownloadId;
             if (product.IsDownload)
             {
-                var download = _downloadService.GetDownloadById(product.DownloadId);
+                var download = await _downloadService.GetDownloadById(product.DownloadId);
                 if (download != null)
                 {
                     var downloadCopy = new Download
@@ -98,13 +102,13 @@ namespace Grand.Services.Catalog
                         Extension = download.Extension,
                         IsNew = download.IsNew,
                     };
-                    _downloadService.InsertDownload(downloadCopy);
+                    await _downloadService.InsertDownload(downloadCopy);
                     downloadId = downloadCopy.Id;
                 }
 
                 if (product.HasSampleDownload)
                 {
-                    var sampleDownload = _downloadService.GetDownloadById(product.SampleDownloadId);
+                    var sampleDownload = await _downloadService.GetDownloadById(product.SampleDownloadId);
                     if (sampleDownload != null)
                     {
                         var sampleDownloadCopy = new Download
@@ -118,7 +122,7 @@ namespace Grand.Services.Catalog
                             Extension = sampleDownload.Extension,
                             IsNew = sampleDownload.IsNew
                         };
-                        _downloadService.InsertDownload(sampleDownloadCopy);
+                        await _downloadService.InsertDownload(sampleDownloadCopy);
                         sampleDownloadId = sampleDownloadCopy.Id;
                     }
                 }
@@ -291,17 +295,16 @@ namespace Grand.Services.Catalog
                 
             }
 
-
             //validate search engine name
-            _productService.InsertProduct(productCopy);
+            await _productService.InsertProduct(productCopy);
 
             //search engine name
-            string seName = productCopy.ValidateSeName("", productCopy.Name, true);
+            string seName = await productCopy.ValidateSeName("", productCopy.Name, true, _seoSettings, _urlRecordService, _languageService);
             productCopy.SeName = seName;
-            _productService.UpdateProduct(productCopy);
-            _urlRecordService.SaveSlug(productCopy, seName, "");
+            await _productService.UpdateProduct(productCopy);
+            await _urlRecordService.SaveSlug(productCopy, seName, "");
 
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguages(true);
 
             //product pictures
             //variable to store original and new picture identifiers
@@ -311,15 +314,15 @@ namespace Grand.Services.Catalog
             {
                 foreach (var productPicture in product.ProductPictures)
                 {
-                    var picture = _pictureService.GetPictureById(productPicture.PictureId);
-                    var pictureCopy = _pictureService.InsertPicture(
-                        _pictureService.LoadPictureBinary(picture),
+                    var picture = await _pictureService.GetPictureById(productPicture.PictureId);
+                    var pictureCopy = await _pictureService.InsertPicture(
+                        await _pictureService.LoadPictureBinary(picture),
                         picture.MimeType,
                         _pictureService.GetPictureSeName(newName),
                         picture.AltAttribute,
                         picture.TitleAttribute);
 
-                    _productService.InsertProductPicture(new ProductPicture
+                    await _productService.InsertProductPicture(new ProductPicture
                     {
                         ProductId = productCopy.Id,
                         PictureId = pictureCopy.Id,
