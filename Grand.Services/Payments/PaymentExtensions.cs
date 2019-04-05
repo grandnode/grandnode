@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -49,7 +50,7 @@ namespace Grand.Services.Payments
         /// <param name="fee">Fee value</param>
         /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
         /// <returns>Result</returns>
-        public static decimal CalculateAdditionalFee(this IPaymentMethod paymentMethod, 
+        public static async Task<decimal> CalculateAdditionalFee(this IPaymentMethod paymentMethod, 
             IOrderTotalCalculationService orderTotalCalculationService, IList<ShoppingCartItem> cart,
             decimal fee, bool usePercentage)
         {
@@ -62,9 +63,8 @@ namespace Grand.Services.Payments
             if (usePercentage)
             {
                 //percentage
-                orderTotalCalculationService.GetShoppingCartSubTotal(cart, true, out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
-                    out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
-                result = (decimal)((((float)subTotalWithDiscount) * ((float)fee)) / 100f);
+                var shoppingCartSubTotal = await orderTotalCalculationService.GetShoppingCartSubTotal(cart, true);
+                result = (decimal)((((float)shoppingCartSubTotal.subTotalWithDiscount) * ((float)fee)) / 100f);
             }
             else
             {
