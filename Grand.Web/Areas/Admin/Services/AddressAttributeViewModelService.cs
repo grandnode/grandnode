@@ -7,6 +7,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -24,9 +25,9 @@ namespace Grand.Web.Areas.Admin.Services
             _workContext = workContext;
         }
 
-        public virtual (IEnumerable<AddressAttributeModel> addressAttributes, int totalCount) PrepareAddressAttributes()
+        public virtual async Task<(IEnumerable<AddressAttributeModel> addressAttributes, int totalCount)> PrepareAddressAttributes()
         {
-            var addressAttributes = _addressAttributeService.GetAllAddressAttributes();
+            var addressAttributes = await _addressAttributeService.GetAllAddressAttributes();
             return (addressAttributes.Select(x =>
                 {
                     var attributeModel = x.ToModel();
@@ -45,23 +46,23 @@ namespace Grand.Web.Areas.Admin.Services
             var model = addressAttribute.ToModel();
             return model;
         }
-        public virtual AddressAttribute InsertAddressAttributeModel(AddressAttributeModel model)
+        public virtual async Task<AddressAttribute> InsertAddressAttributeModel(AddressAttributeModel model)
         {
             var addressAttribute = model.ToEntity();
-            _addressAttributeService.InsertAddressAttribute(addressAttribute);
+            await _addressAttributeService.InsertAddressAttribute(addressAttribute);
 
             return addressAttribute;
         }
-        public virtual AddressAttribute UpdateAddressAttributeModel(AddressAttributeModel model, AddressAttribute addressAttribute)
+        public virtual async Task<AddressAttribute> UpdateAddressAttributeModel(AddressAttributeModel model, AddressAttribute addressAttribute)
         {
             addressAttribute = model.ToEntity(addressAttribute);
-            _addressAttributeService.UpdateAddressAttribute(addressAttribute);
+            await _addressAttributeService.UpdateAddressAttribute(addressAttribute);
             return addressAttribute;
         }
 
-        public virtual (IEnumerable<AddressAttributeValueModel> addressAttributeValues, int totalCount) PrepareAddressAttributeValues(string addressAttributeId)
+        public virtual async Task<(IEnumerable<AddressAttributeValueModel> addressAttributeValues, int totalCount)> PrepareAddressAttributeValues(string addressAttributeId)
         {
-            var values = _addressAttributeService.GetAddressAttributeById(addressAttributeId).AddressAttributeValues;
+            var values = (await _addressAttributeService.GetAddressAttributeById(addressAttributeId)).AddressAttributeValues;
             return (values.Select(x => x.ToModel()), values.Count());
         }
 
@@ -72,10 +73,10 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual AddressAttributeValue InsertAddressAttributeValueModel(AddressAttributeValueModel model)
+        public virtual async Task<AddressAttributeValue> InsertAddressAttributeValueModel(AddressAttributeValueModel model)
         {
             var addressAttributeValue = model.ToEntity();
-            _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
+            await _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
             return addressAttributeValue;
         }
         public virtual AddressAttributeValueModel PrepareAddressAttributeValueModel(AddressAttributeValue addressAttributeValue)
@@ -84,10 +85,10 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual AddressAttributeValue UpdateAddressAttributeValueModel(AddressAttributeValueModel model, AddressAttributeValue addressAttributeValue)
+        public virtual async Task<AddressAttributeValue> UpdateAddressAttributeValueModel(AddressAttributeValueModel model, AddressAttributeValue addressAttributeValue)
         {
             addressAttributeValue = model.ToEntity(addressAttributeValue);
-            _addressAttributeService.UpdateAddressAttributeValue(addressAttributeValue);
+            await _addressAttributeService.UpdateAddressAttributeValue(addressAttributeValue);
             return addressAttributeValue;
         }
 
