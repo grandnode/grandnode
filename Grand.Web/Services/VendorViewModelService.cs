@@ -14,7 +14,9 @@ using Grand.Services.Seo;
 using Grand.Services.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Vendors;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -27,6 +29,7 @@ namespace Grand.Web.Services
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly VendorSettings _vendorSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
@@ -40,6 +43,7 @@ namespace Grand.Web.Services
             ICacheManager cacheManager,
             IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService,
+            IServiceProvider serviceProvider,
             VendorSettings vendorSettings,
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings,
@@ -53,7 +57,7 @@ namespace Grand.Web.Services
             this._vendorService = vendorService;
             this._dateTimeHelper = dateTimeHelper;
             this._workflowMessageService = workflowMessageService;
-
+            this._serviceProvider = serviceProvider;
             this._vendorSettings = vendorSettings;
             this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
@@ -76,7 +80,7 @@ namespace Grand.Web.Services
             return VendorReview;
         }
 
-        public virtual void PrepareVendorReviewsModel(VendorReviewsModel model, Vendor vendor)
+        public virtual async Task PrepareVendorReviewsModel(VendorReviewsModel model, Vendor vendor)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
@@ -85,18 +89,18 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("model");
 
             model.VendorId = vendor.Id;
-            model.VendorName = vendor.GetLocalized(x => x.Name);
-            model.VendorSeName = vendor.GetSeName();
+            model.VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+            model.VendorSeName = vendor.GetSeName(_workContext.WorkingLanguage.Id);
 
-            var vendorReviews = _vendorService.GetAllVendorReviews("", true, null, null, "", vendor.Id);
+            var vendorReviews = await _vendorService.GetAllVendorReviews("", true, null, null, "", vendor.Id);
             foreach (var pr in vendorReviews)
             {
-                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);
+                var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(pr.CustomerId);
                 model.Items.Add(new VendorReviewModel
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
-                    CustomerName = customer.FormatUserName(),
+                    CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
@@ -116,7 +120,7 @@ namespace Grand.Web.Services
             model.AddVendorReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnVendorReviewPage;
         }
 
-        public virtual VendorReview InsertVendorReview(Vendor vendor, VendorReviewsModel model)
+        public virtual async Task<VendorReview> InsertVendorReview(Vendor vendor, VendorReviewsModel model)
         {
             //save review
             int rating = model.AddVendorReview.Rating;
@@ -136,19 +140,19 @@ namespace Grand.Web.Services
                 IsApproved = isApproved,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _vendorService.InsertVendorReview(vendorReview);
+            await _vendorService.InsertVendorReview(vendorReview);
 
             if (!_workContext.CurrentCustomer.HasContributions)
             {
-                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
+                await _serviceProvider.GetRequiredService<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
             }
 
             //update vendor totals
-            _vendorService.UpdateVendorReviewTotals(vendor);
+            await _vendorService.UpdateVendorReviewTotals(vendor);
 
             //notify store owner
             if (_vendorSettings.NotifyVendorAboutNewVendorReviews)
-                _workflowMessageService.SendVendorReviewNotificationMessage(vendorReview, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendVendorReviewNotificationMessage(vendorReview, _localizationSettings.DefaultAdminLanguageId);
 
             return vendorReview;
         }
