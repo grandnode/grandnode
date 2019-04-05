@@ -1,14 +1,15 @@
 ﻿using Grand.Core.Domain.Topics;
 using Grand.Web.Models.Topics;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface ITopicViewModelService
     {
         TopicModel PrepareTopicModel(Topic topic);
-        TopicModel TopicDetails(string topicId);
-        TopicModel TopicDetailsPopup(string systemName);
-        TopicModel TopicBlock(string systemName);
-        string PrepareTopicTemplateViewPath(string templateId);
+        Task<TopicModel> TopicDetails(string topicId);
+        Task<TopicModel> TopicDetailsPopup(string systemName);
+        Task<TopicModel> TopicBlock(string systemName);
+        Task<string> PrepareTopicTemplateViewPath(string templateId);
     }
 }
