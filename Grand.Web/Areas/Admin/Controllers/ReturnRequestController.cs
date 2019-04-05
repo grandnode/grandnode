@@ -8,10 +8,11 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -51,9 +52,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, ReturnReqestListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, ReturnReqestListModel model)
         {
-            var returnRequestModels = _returnRequestViewModelService.PrepareReturnRequestModel(model, command.Page, command.PageSize);
+            var returnRequestModels = await _returnRequestViewModelService.PrepareReturnRequestModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = returnRequestModels.returnRequestModels,
@@ -65,12 +66,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-returnrequest")]
-        public IActionResult GoToId(ReturnReqestListModel model)
+        public async Task<IActionResult> GoToId(ReturnReqestListModel model)
         {
+            if (model.GoDirectlyToId == null)
+                return RedirectToAction("List", "ReturnRequest");
+
             int id = int.Parse(model.GoDirectlyToId);
 
             //try to load a product entity
-            var returnRequest = _returnRequestService.GetReturnRequestById(id);
+            var returnRequest = await _returnRequestService.GetReturnRequestById(id);
             if (returnRequest != null)
                 return RedirectToAction("Edit", "ReturnRequest", new { id = returnRequest.Id });
 
@@ -79,9 +83,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductsForReturnRequest(string returnRequestId, DataSourceRequest command)
+        public async Task<IActionResult> ProductsForReturnRequest(string returnRequestId, DataSourceRequest command)
         {
-            var items = _returnRequestViewModelService.PrepareReturnRequestItemModel(returnRequestId);
+            var items = await _returnRequestViewModelService.PrepareReturnRequestItemModel(returnRequestId);
             var gridModel = new DataSourceResult
             {
                 Data = items,
@@ -92,27 +96,27 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var returnRequest = _returnRequestService.GetReturnRequestById(id);
+            var returnRequest = await _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
 
             var model = new ReturnRequestModel();
-            _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
+            await _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(ReturnRequestModel model, bool continueEditing, IFormCollection form,
+        public async Task<IActionResult> Edit(ReturnRequestModel model, bool continueEditing, IFormCollection form,
             [FromServices] IAddressAttributeService addressAttributeService,
             [FromServices] IAddressAttributeParser addressAttributeParser,
             [FromServices] OrderSettings orderSettings
             )
         {
-            var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
+            var returnRequest = await _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
@@ -120,8 +124,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customAddressAttributes = string.Empty;
             if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
             {
-                customAddressAttributes = form.ParseCustomAddressAttributes(addressAttributeParser, addressAttributeService);
-                var customAddressAttributeWarnings = addressAttributeParser.GetAttributeWarnings(customAddressAttributes);
+                customAddressAttributes = await form.ParseCustomAddressAttributes(addressAttributeParser, addressAttributeService);
+                var customAddressAttributeWarnings = await addressAttributeParser.GetAttributeWarnings(customAddressAttributes);
                 foreach (var error in customAddressAttributeWarnings)
                 {
                     ModelState.AddModelError("", error);
@@ -129,28 +133,28 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                returnRequest = _returnRequestViewModelService.UpdateReturnRequestModel(returnRequest, model, customAddressAttributes);
+                returnRequest = await _returnRequestViewModelService.UpdateReturnRequestModel(returnRequest, model, customAddressAttributes);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
+            await _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var returnRequest = _returnRequestService.GetReturnRequestById(id);
+            var returnRequest = await _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _returnRequestViewModelService.DeleteReturnRequest(returnRequest);
+                await _returnRequestViewModelService.DeleteReturnRequest(returnRequest);
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
                 return RedirectToAction("List");
             }
