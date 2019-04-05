@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -22,7 +23,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)]
-        public virtual IActionResult AsyncUpload()
+        public virtual async Task<IActionResult> AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
@@ -83,14 +84,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var picture = _pictureService.InsertPicture(fileBinary, contentType, null);
+            var picture = await _pictureService.InsertPicture(fileBinary, contentType, null);
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100)
+                imageUrl = await _pictureService.GetPictureUrl(picture, 100)
             });
         }
     }
