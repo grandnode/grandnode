@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Stores;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Stores
 {
@@ -12,38 +13,38 @@ namespace Grand.Services.Stores
         /// Deletes a store
         /// </summary>
         /// <param name="store">Store</param>
-        void DeleteStore(Store store);
+        Task DeleteStore(Store store);
 
         /// <summary>
         /// Gets all stores
         /// </summary>
         /// <returns>Stores</returns>
-        IList<Store> GetAllStores();
+        Task<IList<Store>> GetAllStores();
 
         /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        Store GetStoreById(string storeId);
+        Task<Store> GetStoreById(string storeId);
 
         /// <summary>
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        void InsertStore(Store store);
+        Task InsertStore(Store store);
 
         /// <summary>
         /// Updates the store
         /// </summary>
         /// <param name="store">Store</param>
-        void UpdateStore(Store store);
+        Task UpdateStore(Store store);
 
         /// <summary>
         /// Gets a store mapping 
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>store mapping</returns>
-        IList<Store> GetAllStoresByDiscount(string discountId);
+        Task<IList<Store>> GetAllStoresByDiscount(string discountId);
     }
 }
