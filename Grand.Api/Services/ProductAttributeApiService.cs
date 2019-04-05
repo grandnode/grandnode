@@ -8,6 +8,7 @@ using Grand.Services.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Services
 {
@@ -30,57 +31,55 @@ namespace Grand.Api.Services
 
             _productAttribute = _mongoDBContext.Database().GetCollection<ProductAttributeDto>(typeof(Core.Domain.Catalog.ProductAttribute).Name);
         }
-        public virtual ProductAttributeDto GetById(string id)
+        public virtual Task<ProductAttributeDto> GetById(string id)
         {
-            return _productAttribute.AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _productAttribute.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
         public virtual IMongoQueryable<ProductAttributeDto> GetProductAttributes()
         {
             return _productAttribute.AsQueryable();
         }
-        public virtual ProductAttributeDto InsertOrUpdateProductAttribute(ProductAttributeDto model)
+        public virtual async Task<ProductAttributeDto> InsertOrUpdateProductAttribute(ProductAttributeDto model)
         {
             if (string.IsNullOrEmpty(model.Id))
-                model = InsertProductAttribute(model);
+                model = await InsertProductAttribute(model);
             else
-                model = UpdateProductAttribute(model);
+                model = await UpdateProductAttribute(model);
 
             return model;
         }
-        public virtual ProductAttributeDto InsertProductAttribute(ProductAttributeDto model)
+        public virtual async Task<ProductAttributeDto> InsertProductAttribute(ProductAttributeDto model)
         {
             var productAttribute = model.ToEntity();
-            _productAttributeService.InsertProductAttribute(productAttribute);
+            await _productAttributeService.InsertProductAttribute(productAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
+            await _customerActivityService.InsertActivity("AddNewProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
 
             return productAttribute.ToModel();
         }
 
-        public virtual ProductAttributeDto UpdateProductAttribute(ProductAttributeDto model)
+        public virtual async Task<ProductAttributeDto> UpdateProductAttribute(ProductAttributeDto model)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(model.Id);
             productAttribute = model.ToEntity(productAttribute);
-            _productAttributeService.UpdateProductAttribute(productAttribute);
+            await _productAttributeService.UpdateProductAttribute(productAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("EditProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
+            await _customerActivityService.InsertActivity("EditProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
 
             return productAttribute.ToModel();
         }
-        public virtual void DeleteProductAttribute(ProductAttributeDto model)
+        public virtual async Task DeleteProductAttribute(ProductAttributeDto model)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute != null)
             {
-                _productAttributeService.DeleteProductAttribute(productAttribute);
+                await _productAttributeService.DeleteProductAttribute(productAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
+                await _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
             }
         }
-
-
     }
 }
