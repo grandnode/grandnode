@@ -3,6 +3,7 @@ using Grand.Core.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Configuration
 {
@@ -19,10 +20,17 @@ namespace Grand.Services.Configuration
         Setting GetSettingById(string settingId);
 
         /// <summary>
+        /// Gets a setting by identifier
+        /// </summary>
+        /// <param name="settingId">Setting identifier</param>
+        /// <returns>Setting</returns>
+        Task<Setting> GetSettingByIdAsync(string settingId);
+
+        /// <summary>
         /// Deletes a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        void DeleteSetting(Setting setting);
+        Task DeleteSetting(Setting setting);
 
         /// <summary>
         /// Get setting by key
@@ -53,7 +61,7 @@ namespace Grand.Services.Configuration
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        void SetSetting<T>(string key, T value, string storeId = "", bool clearCache = true);
+        Task SetSetting<T>(string key, T value, string storeId = "", bool clearCache = true);
 
         /// <summary>
         /// Gets all settings
@@ -95,7 +103,7 @@ namespace Grand.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier</param>
         /// <param name="settings">Setting instance</param>
-        void SaveSetting<T>(T settings, string storeId = "") where T : ISettings, new();
+        Task SaveSetting<T>(T settings, string storeId = "") where T : ISettings, new();
         
         /// <summary>
         /// Save settings object
@@ -106,7 +114,7 @@ namespace Grand.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        void SaveSetting<T, TPropType>(T settings,
+        Task SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
             string storeId = "", bool clearCache = true) where T : ISettings, new();
 
@@ -114,7 +122,7 @@ namespace Grand.Services.Configuration
         /// Delete all settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        void DeleteSetting<T>() where T : ISettings, new();
+        Task DeleteSetting<T>() where T : ISettings, new();
         
         /// <summary>
         /// Delete settings object
@@ -124,7 +132,7 @@ namespace Grand.Services.Configuration
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store ID</param>
-        void DeleteSetting<T, TPropType>(T settings,
+        Task DeleteSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector, string storeId = "") where T : ISettings, new();
 
         /// <summary>
