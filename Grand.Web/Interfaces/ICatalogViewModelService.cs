@@ -8,56 +8,56 @@ namespace Grand.Web.Interfaces
 {
     public partial interface ICatalogViewModelService
     {
-        Category GetCategoryById(string categoryId);
-        List<string> GetChildCategoryIds(string parentCategoryId);
+        Task<Category> GetCategoryById(string categoryId);
+        Task<List<string>> GetChildCategoryIds(string parentCategoryId);
         void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
         void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
 
         void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize);
 
-        List<CategorySimpleModel> PrepareCategorySimpleModels();
-        List<CategorySimpleModel> PrepareCategorySimpleModels(string rootCategoryId,
+        Task<List<CategorySimpleModel>> PrepareCategorySimpleModels();
+        Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(string rootCategoryId,
             bool loadSubCategories = true, IList<Category> allCategories = null);
 
-        CategoryNavigationModel PrepareCategoryNavigation(string currentCategoryId, string currentProductId);
+        Task<CategoryNavigationModel> PrepareCategoryNavigation(string currentCategoryId, string currentProductId);
 
-        string PrepareCategoryTemplateViewPath(string templateId);
+        Task<string> PrepareCategoryTemplateViewPath(string templateId);
 
-        CategoryModel PrepareCategory(Category category, CatalogPagingFilteringModel command);
+        Task<CategoryModel> PrepareCategory(Category category, CatalogPagingFilteringModel command);
 
-        TopMenuModel PrepareTopMenu();
+        Task<TopMenuModel> PrepareTopMenu();
 
-        List<CategoryModel> PrepareHomepageCategory();
-        List<CategoryModel> PrepareCategoryFeaturedProducts();
+        Task<List<CategoryModel>> PrepareHomepageCategory();
+        Task<List<CategoryModel>> PrepareCategoryFeaturedProducts();
 
-        Manufacturer GetManufacturerById(string manufacturerId);
-        string PrepareManufacturerTemplateViewPath(string templateId);
-        ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command);
-        List<ManufacturerModel> PrepareManufacturerFeaturedProducts();
-        List<ManufacturerModel> PrepareManufacturerAll();
+        Task<Manufacturer> GetManufacturerById(string manufacturerId);
+        Task<string> PrepareManufacturerTemplateViewPath(string templateId);
+        Task<ManufacturerModel> PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command);
+        Task<List<ManufacturerModel>> PrepareManufacturerFeaturedProducts();
+        Task<List<ManufacturerModel>> PrepareManufacturerAll();
 
-        List<ManufacturerModel> PrepareHomepageManufacturers();
+        Task<List<ManufacturerModel>> PrepareHomepageManufacturers();
 
-        ManufacturerNavigationModel PrepareManufacturerNavigation(string currentManufacturerId);
+        Task<ManufacturerNavigationModel> PrepareManufacturerNavigation(string currentManufacturerId);
 
-        VendorModel PrepareVendor(Vendor vendor, CatalogPagingFilteringModel command);
+        Task<VendorModel> PrepareVendor(Vendor vendor, CatalogPagingFilteringModel command);
 
-        List<VendorModel> PrepareVendorAll();
+        Task<List<VendorModel>> PrepareVendorAll();
 
-        VendorNavigationModel PrepareVendorNavigation();
+        Task<VendorNavigationModel> PrepareVendorNavigation();
 
-        ProductsByTagModel PrepareProductsByTag(ProductTag productTag, CatalogPagingFilteringModel command);
+        Task<ProductsByTagModel> PrepareProductsByTag(ProductTag productTag, CatalogPagingFilteringModel command);
 
-        PopularProductTagsModel PreparePopularProductTags();
+        Task<PopularProductTagsModel> PreparePopularProductTags();
 
-        PopularProductTagsModel PrepareProductTagsAll();
+        Task<PopularProductTagsModel> PrepareProductTagsAll();
 
         Task<IList<SearchAutoCompleteModel>> PrepareSearchAutoComplete(string term, string categoryId);
 
-        SearchBoxModel PrepareSearchBox();
+        Task<SearchBoxModel> PrepareSearchBox();
 
-        SearchModel PrepareSearch(SearchModel model, CatalogPagingFilteringModel command);
+        Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command);
 
 
     }
