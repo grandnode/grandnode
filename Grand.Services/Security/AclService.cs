@@ -7,6 +7,7 @@ using Grand.Core.Domain.Security;
 using Grand.Services.Events;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Security
 {
@@ -73,12 +74,12 @@ namespace Grand.Services.Security
         /// Deletes an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        public virtual void DeleteAclRecord(AclRecord aclRecord)
+        public virtual async Task DeleteAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
                 throw new ArgumentNullException("aclRecord");
 
-            _aclRecordRepository.Delete(aclRecord);
+            await _aclRecordRepository.DeleteAsync(aclRecord);
 
             //cache
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
@@ -92,12 +93,9 @@ namespace Grand.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        public virtual AclRecord GetAclRecordById(string aclRecordId)
+        public virtual Task<AclRecord> GetAclRecordById(string aclRecordId)
         {
-            if (String.IsNullOrEmpty(aclRecordId))
-                return null;
-
-            return _aclRecordRepository.GetById(aclRecordId);
+            return _aclRecordRepository.GetByIdAsync(aclRecordId);
         }
 
         
@@ -105,12 +103,12 @@ namespace Grand.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        public virtual void InsertAclRecord(AclRecord aclRecord)
+        public virtual async Task InsertAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
                 throw new ArgumentNullException("aclRecord");
 
-            _aclRecordRepository.Insert(aclRecord);
+            await _aclRecordRepository.InsertAsync(aclRecord);
 
             //cache
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
@@ -123,12 +121,12 @@ namespace Grand.Services.Security
         /// Updates the ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        public virtual void UpdateAclRecord(AclRecord aclRecord)
+        public virtual async Task UpdateAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
                 throw new ArgumentNullException("aclRecord");
 
-            _aclRecordRepository.Update(aclRecord);
+            await _aclRecordRepository.UpdateAsync(aclRecord);
 
             //cache
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
