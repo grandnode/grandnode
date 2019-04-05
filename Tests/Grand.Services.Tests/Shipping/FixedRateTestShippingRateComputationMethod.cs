@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tests.Shipping
 {
@@ -24,7 +25,7 @@ namespace Grand.Services.Tests.Shipping
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
@@ -43,7 +44,7 @@ namespace Grand.Services.Tests.Shipping
                 Rate = GetRate()
             });
 
-            return response;
+            return await Task.FromResult(response);
         }
 
         /// <summary>
@@ -51,12 +52,12 @@ namespace Grand.Services.Tests.Shipping
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            return GetRate();
+            return await Task.FromResult(GetRate());
         }
 
         /// <summary>
@@ -64,13 +65,11 @@ namespace Grand.Services.Tests.Shipping
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        public async Task<bool> HideShipmentMethods(IList<ShoppingCartItem> cart)
         {
-            //you can put any logic here
-            //for example, hide this shipping methods if all products in the cart are downloadable
-            //or hide this shipping methods if current customer is from certain country
-            return false;
+            return await Task.FromResult(false);
         }
+
         public Type GetControllerType()
         {
             return typeof(Controller);
@@ -103,9 +102,9 @@ namespace Grand.Services.Tests.Shipping
             routeValues = null;
         }
 
-        public IList<string> ValidateShippingForm(IFormCollection form)
+        public async Task<IList<string>> ValidateShippingForm(IFormCollection form)
         {
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
         public void GetPublicViewComponent(out string viewComponentName)

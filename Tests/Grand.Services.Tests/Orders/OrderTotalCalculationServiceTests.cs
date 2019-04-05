@@ -27,7 +27,9 @@ using Grand.Services.Vendors;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -72,6 +74,7 @@ namespace Grand.Services.Orders.Tests
         private IStoreService _storeService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
+        private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -100,6 +103,7 @@ namespace Grand.Services.Orders.Tests
             _vendorService = new Mock<IVendorService>().Object;
             _storeService = new Mock<IStoreService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -147,7 +151,8 @@ namespace Grand.Services.Orders.Tests
                 _eventPublisher,
                 _shoppingCartSettings,
                 cacheManager,
-                null);
+                null,
+                _serviceProvider);
 
 
             _paymentService = new Mock<IPaymentService>().Object;
@@ -169,12 +174,12 @@ namespace Grand.Services.Orders.Tests
             var tempAddressService = new Mock<IAddressService>();
             {
                 tempAddressService.Setup(x => x.GetAddressByIdSettings(_taxSettings.DefaultTaxAddressId))
-                    .Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
+                    .ReturnsAsync(new Address { Id = _taxSettings.DefaultTaxAddressId });
                 _addressService = tempAddressService.Object;
             }
 
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger, _customerSettings, _addressSettings);
+                pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
@@ -188,13 +193,13 @@ namespace Grand.Services.Orders.Tests
 
 
         [TestMethod()]
-        public void Can_convert_reward_points_to_amount()
+        public async Task Can_convert_reward_points_to_amount()
         {
             //when ExchangeRate is e.g. 512, then ConvertRewardPoints(44) will return 22528 (simple multyplying)
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 512M;
 
-            Assert.AreEqual(22528, _orderTotalCalcService.ConvertRewardPointsToAmount(44));
+            Assert.AreEqual(22528, await _orderTotalCalcService.ConvertRewardPointsToAmount(44));
         }
 
         [TestMethod()]

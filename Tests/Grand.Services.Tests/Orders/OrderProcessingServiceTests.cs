@@ -34,6 +34,7 @@ using Moq;
 using Grand.Services.Stores;
 using Grand.Core.Tests.Caching;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -98,6 +99,7 @@ namespace Grand.Services.Orders.Tests
         private Store _store;
         private IProductReservationService _productReservationService;
         private IAuctionService _auctionService;
+        private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -130,6 +132,7 @@ namespace Grand.Services.Orders.Tests
             _productReservationService = new Mock<IProductReservationService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
             _auctionService = new Mock<IAuctionService>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
@@ -172,9 +175,9 @@ namespace Grand.Services.Orders.Tests
                 _eventPublisher,
                 _shoppingCartSettings,
                 cacheManager,
-                null);
+                null,
+                _serviceProvider);
             _shipmentService = new Mock<IShipmentService>().Object;
-
 
             tempPaymentService = new Mock<IPaymentService>();
             {
@@ -200,12 +203,12 @@ namespace Grand.Services.Orders.Tests
             var tempAddressService = new Mock<IAddressService>();
             {
                 tempAddressService.Setup(x => x.GetAddressByIdSettings(_taxSettings.DefaultTaxAddressId))
-                    .Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
+                    .ReturnsAsync(new Address { Id = _taxSettings.DefaultTaxAddressId });
                 _addressService = tempAddressService.Object;
             }
 
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger, _customerSettings, _addressSettings);
+                pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
@@ -254,7 +257,7 @@ namespace Grand.Services.Orders.Tests
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService,
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService,
+                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService, _genericAttributeService, _serviceProvider,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
@@ -306,11 +309,11 @@ namespace Grand.Services.Orders.Tests
         }
 
         [TestMethod()]
-        public void Ensure_order_can_only_be_captured_when_orderStatus_is_not_cancelled_or_pending_and_paymentstatus_is_authorized_and_paymentModule_supports_capture()
+        public async Task Ensure_order_can_only_be_captured_when_orderStatus_is_not_cancelled_or_pending_and_paymentstatus_is_authorized_and_paymentModule_supports_capture()
         {
             //Property SupportCapture should be returning true (if supports) or false (if dosen't support)
-            tempPaymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Returns(true);
-            tempPaymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Returns(false);
+            tempPaymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).ReturnsAsync(true);
+            tempPaymentService.Setup(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).ReturnsAsync(false);
             var order = new Order();
 
             //if
@@ -333,9 +336,9 @@ namespace Grand.Services.Orders.Tests
 
                         if ((os != OrderStatus.Cancelled && os != OrderStatus.Pending)
                             && (ps == PaymentStatus.Authorized))
-                            Assert.IsTrue(_orderProcessingService.CanCapture(order));
+                            Assert.IsTrue(await _orderProcessingService.CanCapture(order));
                         else
-                            Assert.IsFalse(_orderProcessingService.CanCapture(order));
+                            Assert.IsFalse(await _orderProcessingService.CanCapture(order));
                     }
 
             //in this case always: CanCapture() == false
@@ -348,12 +351,12 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanCapture(order));
+                        Assert.IsFalse(await _orderProcessingService.CanCapture(order));
                     }
         }
 
         [TestMethod()]
-        public void Ensure_order_cannot_be_marked_as_paid_when_orderStatus_is_cancelled_or_paymentStatus_is_paid_or_refunded_or_voided()
+        public async Task Ensure_order_cannot_be_marked_as_paid_when_orderStatus_is_cancelled_or_paymentStatus_is_paid_or_refunded_or_voided()
         {
             var order = new Order();
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
@@ -365,21 +368,21 @@ namespace Grand.Services.Orders.Tests
                         order.ShippingStatus = ss;
                         if (os == OrderStatus.Cancelled
                             || (ps == PaymentStatus.Paid || ps == PaymentStatus.Refunded || ps == PaymentStatus.Voided))
-                            Assert.IsFalse(_orderProcessingService.CanMarkOrderAsPaid(order));
+                            Assert.IsFalse(await _orderProcessingService.CanMarkOrderAsPaid(order));
                         else
                             //even if it is Unpaid - it can be marked as paid
                             //even if it is Unrefunded - it can be marked as paid
                             //the only "can't" is when order status is: Cancelled
-                            Assert.IsTrue(_orderProcessingService.CanMarkOrderAsPaid(order));
+                            Assert.IsTrue(await _orderProcessingService.CanMarkOrderAsPaid(order));
                     }
         }
 
         [TestMethod()]
-        public void Ensure_order_can_only_be_refunded_when_paymentstatus_is_paid_and_paymentModule_supports_refund()
+        public async Task Ensure_order_can_only_be_refunded_when_paymentstatus_is_paid_and_paymentModule_supports_refund()
         {
             //method SupportRefund() is expected to return true or false - it depends on string
-            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Returns(true);
-            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Returns(false);
+            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).ReturnsAsync(true);
+            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).ReturnsAsync(false);
 
             var order = new Order();
             order.OrderTotal = 1;
@@ -395,9 +398,9 @@ namespace Grand.Services.Orders.Tests
 
                         //if product is paid - you can take cost refund
                         if (ps == PaymentStatus.Paid)
-                            Assert.IsTrue(_orderProcessingService.CanRefund(order));
+                            Assert.IsTrue(await _orderProcessingService.CanRefund(order));
                         else
-                            Assert.IsFalse(_orderProcessingService.CanRefund(order));
+                            Assert.IsFalse(await _orderProcessingService.CanRefund(order));
                     }
 
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_refund";
@@ -410,14 +413,14 @@ namespace Grand.Services.Orders.Tests
                         order.ShippingStatus = ss;
 
                         //but you can't take refund, when it is not supported
-                        Assert.IsFalse(_orderProcessingService.CanRefund(order));
+                        Assert.IsFalse(await _orderProcessingService.CanRefund(order));
                     }
         }
 
         [TestMethod()]
-        public void Ensure_order_cannot_be_refunded_when_orderTotal_is_zero()
+        public async Task Ensure_order_cannot_be_refunded_when_orderTotal_is_zero()
         {
-            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Returns(true);
+            tempPaymentService.Setup(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).ReturnsAsync(true);
             var order = new Order();
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
 
@@ -430,7 +433,7 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanRefund(order));
+                        Assert.IsFalse(await _orderProcessingService.CanRefund(order));
                     }
         }
 
@@ -478,10 +481,10 @@ namespace Grand.Services.Orders.Tests
         }
 
         [TestMethod()]
-        public void Ensure_order_can_only_be_voided_when_paymentstatus_is_authorized_and_paymentModule_supports_void()
+        public async Task Ensure_order_can_only_be_voided_when_paymentstatus_is_authorized_and_paymentModule_supports_void()
         {
-            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Returns(true);
-            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Returns(false);
+            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).ReturnsAsync(true);
+            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).ReturnsAsync(false);
 
             var order = new Order();
             order.OrderTotal = 1;
@@ -496,9 +499,9 @@ namespace Grand.Services.Orders.Tests
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Authorized)
-                            Assert.IsTrue(_orderProcessingService.CanVoid(order));
+                            Assert.IsTrue(await _orderProcessingService.CanVoid(order));
                         else
-                            Assert.IsFalse(_orderProcessingService.CanVoid(order));
+                            Assert.IsFalse(await _orderProcessingService.CanVoid(order));
                     }
 
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_void";
@@ -510,14 +513,14 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanVoid(order));
+                        Assert.IsFalse(await _orderProcessingService.CanVoid(order));
                     }
         }
 
         [TestMethod()]
-        public void Ensure_order_cannot_be_voided_when_orderTotal_is_zero()
+        public async Task Ensure_order_cannot_be_voided_when_orderTotal_is_zero()
         {
-            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Returns(true);
+            tempPaymentService.Setup(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).ReturnsAsync(true);
             var order = new Order(); //nothing inside OrderTotal !
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
 
@@ -529,7 +532,7 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanVoid(order));
+                        Assert.IsFalse(await _orderProcessingService.CanVoid(order));
                     }
         }
 
@@ -575,11 +578,11 @@ namespace Grand.Services.Orders.Tests
         }
 
         [TestMethod()]
-        public void Ensure_order_can_only_be_partially_refunded_when_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
+        public async Task Ensure_order_can_only_be_partially_refunded_when_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
         {
             //SupportPartiallyRefund()
-            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Returns(true);
-            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Returns(false);
+            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).ReturnsAsync(true);
+            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).ReturnsAsync(false);
             var order = new Order();
             order.OrderTotal = 100;
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
@@ -593,9 +596,9 @@ namespace Grand.Services.Orders.Tests
                         order.ShippingStatus = ss;
                         //when paid and partiallyrefund -> you can get partially refund 
                         if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
-                            Assert.IsTrue(_orderProcessingService.CanPartiallyRefund(order, 10));
+                            Assert.IsTrue(await _orderProcessingService.CanPartiallyRefund(order, 10));
                         else
-                            Assert.IsFalse(_orderProcessingService.CanPartiallyRefund(order, 10));
+                            Assert.IsFalse(await _orderProcessingService.CanPartiallyRefund(order, 10));
                     }
 
             //this string shouldn't allow you in any case permit to have partial refund
@@ -608,14 +611,14 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanPartiallyRefund(order, 10));
+                        Assert.IsFalse(await _orderProcessingService.CanPartiallyRefund(order, 10));
                     }
         }
 
         [TestMethod()]
-        public void Ensure_order_cannot_be_partially_refunded_when_amountToRefund_is_greater_than_amount_that_can_be_refunded()
+        public async Task Ensure_order_cannot_be_partially_refunded_when_amountToRefund_is_greater_than_amount_that_can_be_refunded()
         {
-            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Returns(true);
+            tempPaymentService.Setup(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).ReturnsAsync(true);
 
             var order = new Order
             {
@@ -632,7 +635,7 @@ namespace Grand.Services.Orders.Tests
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        Assert.IsFalse(_orderProcessingService.CanPartiallyRefund(order, 80));
+                        Assert.IsFalse(await _orderProcessingService.CanPartiallyRefund(order, 80));
                     }
         }
 

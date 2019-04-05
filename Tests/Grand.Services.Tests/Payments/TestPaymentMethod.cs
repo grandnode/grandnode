@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tests.Payments
 {
@@ -18,20 +19,21 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Paid;
-            return result;
+            result.NewPaymentStatus = PaymentStatus.Pending;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        public Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //nothing
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -39,12 +41,12 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
+        public async Task<bool> HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
             //you can put any logic here
             //for example, hide this payment method if all products in the cart are downloadable
             //or hide this payment method if current customer is from certain country
-            return false;
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -52,9 +54,9 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
+        public async Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return decimal.Zero;
+            return await Task.FromResult(decimal.Zero);
         }
 
         /// <summary>
@@ -62,11 +64,11 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        public async Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest)
         {
             var result = new CapturePaymentResult();
             result.AddError("Capture method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -74,11 +76,11 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        public async Task<RefundPaymentResult> Refund(RefundPaymentRequest refundPaymentRequest)
         {
             var result = new RefundPaymentResult();
             result.AddError("Refund method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -86,11 +88,11 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        public async Task<VoidPaymentResult> Void(VoidPaymentRequest voidPaymentRequest)
         {
             var result = new VoidPaymentResult();
             result.AddError("Void method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -98,11 +100,11 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
-            result.AddError("Recurring method not supported");
-            return result;
+            result.AddError("Recurring payment not supported");
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -110,11 +112,11 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        public async Task<CancelRecurringPaymentResult> CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             var result = new CancelRecurringPaymentResult();
-            result.AddError("Cancelling recurring orders not supported");
-            return result;
+            result.AddError("Recurring payment not supported");
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -122,13 +124,13 @@ namespace Grand.Services.Tests.Payments
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public bool CanRePostProcessPayment(Order order)
+        public async Task<bool> CanRePostProcessPayment(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             //it's not a redirection payment method. So we always return false
-            return false;
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -162,14 +164,14 @@ namespace Grand.Services.Tests.Payments
             return typeof(TestPaymentMethod);
         }
 
-        public IList<string> ValidatePaymentForm(IFormCollection form)
+        public async Task<IList<string>> ValidatePaymentForm(IFormCollection form)
         {
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
-        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        public async Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form)
         {
-            return new ProcessPaymentRequest();
+            return await Task.FromResult(new ProcessPaymentRequest());
         }
 
         public void GetPublicViewComponent(out string viewComponentName)
@@ -184,45 +186,33 @@ namespace Grand.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
+        public async Task<bool> SupportCapture()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
+        public async Task<bool> SupportPartiallyRefund()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
+        public async Task<bool> SupportRefund()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
+        public async Task<bool> SupportVoid()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -252,20 +242,14 @@ namespace Grand.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
+        public async Task<bool> SkipPaymentInfo()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
-        public string PaymentMethodDescription
+        public async Task<string> PaymentMethodDescription()
         {
-            get
-            {
-                return "";
-            }
+            return await Task.FromResult("");
         }
 
         #endregion

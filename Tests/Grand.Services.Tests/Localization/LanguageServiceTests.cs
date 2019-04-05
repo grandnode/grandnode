@@ -9,6 +9,7 @@ using Grand.Services.Tests;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Localization.Tests
 {
@@ -60,9 +61,9 @@ namespace Grand.Services.Localization.Tests
         }
 
         [TestMethod()]
-        public void Can_get_all_languages()
+        public async Task Can_get_all_languages()
         {
-            var languages = _languageService.GetAllLanguages();
+            var languages = await _languageService.GetAllLanguages();
             Assert.IsNotNull(languages);
             Assert.IsTrue(languages.Count > 0);
         }
