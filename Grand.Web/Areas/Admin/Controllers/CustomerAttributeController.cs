@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -53,9 +54,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customerAttributes = _customerAttributeViewModelService.PrepareCustomerAttributes();
+            var customerAttributes = await _customerAttributeViewModelService.PrepareCustomerAttributes();
             var gridModel = new DataSourceResult
             {
                 Data = customerAttributes.ToList(),
@@ -65,20 +66,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = _customerAttributeViewModelService.PrepareCustomerAttributeModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CustomerAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CustomerAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var customerAttribute = _customerAttributeViewModelService.InsertCustomerAttributeModel(model);
+                var customerAttribute = await _customerAttributeViewModelService.InsertCustomerAttributeModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerAttribute.Id }) : RedirectToAction("List");
             }
@@ -87,16 +88,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(id);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = _customerAttributeViewModelService.PrepareCustomerAttributeModel(customerAttribute);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = customerAttribute.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -104,16 +105,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CustomerAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CustomerAttributeModel model, bool continueEditing)
         {
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.Id);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(model.Id);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                customerAttribute = _customerAttributeViewModelService.UpdateCustomerAttributeModel(model, customerAttribute);
+                customerAttribute = await _customerAttributeViewModelService.UpdateCustomerAttributeModel(model, customerAttribute);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Updated"));
                 if (continueEditing)
@@ -132,9 +133,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            _customerAttributeViewModelService.DeleteCustomerAttribute(id);
+            await _customerAttributeViewModelService.DeleteCustomerAttribute(id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
             return RedirectToAction("List");
@@ -146,9 +147,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
-        public IActionResult ValueList(string customerAttributeId, DataSourceRequest command)
+        public async Task<IActionResult> ValueList(string customerAttributeId, DataSourceRequest command)
         {
-            var values = _customerAttributeViewModelService.PrepareCustomerAttributeValues(customerAttributeId);
+            var values = await _customerAttributeViewModelService.PrepareCustomerAttributeValues(customerAttributeId);
             var gridModel = new DataSourceResult
             {
                 Data = values.ToList(),
@@ -158,30 +159,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult ValueCreatePopup(string customerAttributeId)
+        public async Task<IActionResult> ValueCreatePopup(string customerAttributeId)
         {
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = _customerAttributeViewModelService.PrepareCustomerAttributeValueModel(customerAttributeId);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(CustomerAttributeValueModel model)
+        public async Task<IActionResult> ValueCreatePopup(CustomerAttributeValueModel model)
         {
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _customerAttributeViewModelService.InsertCustomerAttributeValueModel(model);
+                await _customerAttributeViewModelService.InsertCustomerAttributeValueModel(model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -191,9 +192,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult ValueEditPopup(string id, string customerAttributeId)
+        public async Task<IActionResult> ValueEditPopup(string id, string customerAttributeId)
         {
-            var av = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
+            var av = await _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             var cav = av.CustomerAttributeValues.FirstOrDefault(x => x.Id == id);
             if (cav == null)
                 //No customer attribute value found with the specified id
@@ -201,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = _customerAttributeViewModelService.PrepareCustomerAttributeValueModel(cav);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = cav.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -210,9 +211,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(CustomerAttributeValueModel model)
+        public async Task<IActionResult> ValueEditPopup(CustomerAttributeValueModel model)
         {
-            var av = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
+            var av = await _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             var cav = av.CustomerAttributeValues.FirstOrDefault(x => x.Id == model.Id);
             if (cav == null)
                 //No customer attribute value found with the specified id
@@ -220,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _customerAttributeViewModelService.UpdateCustomerAttributeValueModel(model, cav);
+                await _customerAttributeViewModelService.UpdateCustomerAttributeValueModel(model, cav);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -232,9 +233,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult ValueDelete(CustomerAttributeValueModel model)
+        public async Task<IActionResult> ValueDelete(CustomerAttributeValueModel model)
         {
-            _customerAttributeViewModelService.DeleteCustomerAttributeValue(model);
+            await _customerAttributeViewModelService.DeleteCustomerAttributeValue(model);
 
             return new NullJsonResult();
         }
