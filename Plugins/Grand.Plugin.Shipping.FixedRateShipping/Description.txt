@@ -1,7 +1,7 @@
 ﻿Group: Shipping rate computation
 FriendlyName: Fixed Rate Shipping
 SystemName: Shipping.FixedRate
-Version: 2.0
+Version: 2.1
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

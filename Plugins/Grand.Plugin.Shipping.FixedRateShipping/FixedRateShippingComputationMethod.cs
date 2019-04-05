@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.FixedRateShipping
 {
@@ -23,17 +24,22 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         private readonly ISettingService _settingService;
         private readonly IShippingService _shippingService;
         private readonly IWebHelper _webHelper;
-
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IWorkContext _workContext;
         #endregion
 
         #region Ctor
         public FixedRateShippingComputationMethod(ISettingService settingService,
             IShippingService shippingService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IServiceProvider serviceProvider,
+            IWorkContext workContext)
         {
             this._settingService = settingService;
             this._shippingService = shippingService;
             this._webHelper = webHelper;
+            this._serviceProvider = serviceProvider;
+            this._workContext = workContext;
         }
         #endregion
 
@@ -62,7 +68,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
@@ -76,13 +82,15 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             }
 
             string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
-            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId, getShippingOptionRequest.Customer);
+            var shippingMethods = await _shippingService.GetAllShippingMethods(restrictByCountryId, getShippingOptionRequest.Customer);
             foreach (var shippingMethod in shippingMethods)
             {
-                var shippingOption = new ShippingOption();
-                shippingOption.Name = shippingMethod.GetLocalized(x => x.Name);
-                shippingOption.Description = shippingMethod.GetLocalized(x => x.Description);
-                shippingOption.Rate = GetRate(shippingMethod.Id);
+                var shippingOption = new ShippingOption
+                {
+                    Name = shippingMethod.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                    Description = shippingMethod.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
+                    Rate = GetRate(shippingMethod.Id)
+                };
                 response.ShippingOptions.Add(shippingOption);
             }
 
@@ -94,13 +102,13 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
             string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
-            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
+            var shippingMethods = await _shippingService.GetAllShippingMethods(restrictByCountryId);
 
             var rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
@@ -120,26 +128,26 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName", "Shipping method");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.Rate", "Rate");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName", "Shipping method");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.Rate", "Rate");
 
-            base.Install();
+            await base.Install();
         }
 
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName");
-            this.DeletePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.Rate");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.FixedRateShipping.Fields.Rate");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         /// <summary>
@@ -147,12 +155,12 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        public async Task<bool> HideShipmentMethods(IList<ShoppingCartItem> cart)
         {
             //you can put any logic here
             //for example, hide this shipping methods if all products in the cart are downloadable
             //or hide this shipping methods if current customer is from certain country
-            return false;
+            return await Task.FromResult(false);
         }
 
         public Type GetControllerType()
@@ -187,10 +195,10 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             }
         }
 
-        public IList<string> ValidateShippingForm(IFormCollection form)
+        public async Task<IList<string>> ValidateShippingForm(IFormCollection form)
         {
             //you can implement here any validation logic
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
         public JsonResult GetFormPartialView(string shippingOption)
