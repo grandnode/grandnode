@@ -38,6 +38,7 @@ using Grand.Web.Models.Topics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -72,6 +73,8 @@ namespace Grand.Web.Services
         private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IServiceProvider _serviceProvider;
+
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
@@ -109,6 +112,7 @@ namespace Grand.Web.Services
             IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
             IHostingEnvironment hostingEnvironment,
+            IServiceProvider serviceProvider,
             StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings,
@@ -147,7 +151,7 @@ namespace Grand.Web.Services
             this._contactAttributeService = contactAttributeService;
             this._contactAttributeParser = contactAttributeParser;
             this._hostingEnvironment = hostingEnvironment;
-
+            this._serviceProvider = serviceProvider;
             this._storeInformationSettings = storeInformationSettings;
             this._localizationSettings = localizationSettings;
             this._taxSettings = taxSettings;
@@ -163,7 +167,7 @@ namespace Grand.Web.Services
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
-        protected HeaderLinksModel prepareHeaderLinks(Customer customer)
+        protected async Task<HeaderLinksModel> prepareHeaderLinks(Customer customer)
         {
             var isRegister = customer.IsRegistered();
             var model = new HeaderLinksModel
@@ -178,18 +182,18 @@ namespace Grand.Web.Services
                 //performance optimization (use "HasShoppingCartItems" property)
                 ShoppingCartItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                         .Sum(x => x.Quantity) : 0,
 
                 WishlistItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                         .Sum(x => x.Quantity) : 0
             };
 
             if (_forumSettings.AllowPrivateMessages)
             {
-                var unreadMessageCount = GetUnreadPrivateMessages();
+                var unreadMessageCount = await GetUnreadPrivateMessages();
                 var unreadMessage = string.Empty;
                 var alertMessage = string.Empty;
                 if (unreadMessageCount > 0)
@@ -198,9 +202,9 @@ namespace Grand.Web.Services
 
                     //notifications here
                     if (_forumSettings.ShowAlertForPM &&
-                        !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
+                        !customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
                     {
-                        EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
+                        await _serviceProvider.GetRequiredService<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
                         alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                     }
                 }
@@ -211,21 +215,21 @@ namespace Grand.Web.Services
         }
 
 
-        public virtual LogoModel PrepareLogo()
+        public virtual async Task<LogoModel> PrepareLogo()
         {
             var model = new LogoModel
             {
-                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
+                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
 
             var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
-            model.LogoPath = _cacheManager.Get(cacheKey, () =>
+            model.LogoPath = await _cacheManager.Get(cacheKey, async () =>
             {
                 var logo = "";
                 var logoPictureId = _storeInformationSettings.LogoPictureId;
                 if (!String.IsNullOrEmpty(logoPictureId))
                 {
-                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                    logo = await _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
                 }
                 if (String.IsNullOrEmpty(logo))
                 {
@@ -237,12 +241,12 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual LanguageSelectorModel PrepareLanguageSelector()
+        public virtual async Task<LanguageSelectorModel> PrepareLanguageSelector()
         {
-            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
+            var availableLanguages = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
             {
-                var result = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                var result = (await _languageService
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     .Select(x => new LanguageModel
                     {
                         Id = x.Id,
@@ -262,21 +266,22 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual void SetLanguage(string langid)
+        public virtual async Task SetLanguage(string langid)
         {
-            var language = _languageService.GetLanguageById(langid);
+            var language = await _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
             {
                 _workContext.WorkingLanguage = language;
             }
         }
 
-        public virtual CurrencySelectorModel PrepareCurrencySelector()
+        public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
+            var availableCurrencies = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), 
+                async () =>
             {
-                var result = _currencyService
-                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
+                var result = (await _currencyService
+                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id))
                     .Select(x =>
                     {
                         //currency char
@@ -289,7 +294,7 @@ namespace Grand.Web.Services
                         var currencyModel = new CurrencyModel
                         {
                             Id = x.Id,
-                            Name = x.GetLocalized(y => y.Name),
+                            Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                             CurrencyCode = x.CurrencyCode,
                             CurrencySymbol = currencySymbol
                         };
@@ -308,9 +313,9 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual void SetCurrency(string customerCurrency)
+        public virtual async Task SetCurrency(string customerCurrency)
         {
-            var currency = _currencyService.GetCurrencyById(customerCurrency);
+            var currency = await _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
                 _workContext.WorkingCurrency = currency;
 
@@ -333,14 +338,14 @@ namespace Grand.Web.Services
             _workContext.TaxDisplayType = taxDisplayType;
         }
 
-        public virtual StoreSelectorModel PrepareStoreSelector()
+        public virtual async Task<StoreSelectorModel> PrepareStoreSelector()
         {
             if (!_commonSettings.AllowToSelectStore)
                 return null;
 
-            var availableStores = _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, () =>
+            var availableStores = await _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, async () =>
             {
-                var result = _storeService.GetAllStores()
+                var result = (await _storeService.GetAllStores())
                     .Select(x => new StoreModel
                     {
                         Id = x.Id,
@@ -359,23 +364,23 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual void SetStore(string storeid)
+        public virtual async Task SetStore(string storeid)
         {
             if (_commonSettings.AllowToSelectStore)
             {
-                var store = _storeService.GetStoreById(storeid);
+                var store = await _storeService.GetStoreById(storeid);
                 if (store != null)
                     _storeContext.CurrentStore = store;
             }
         }
 
-        public virtual int GetUnreadPrivateMessages()
+        public virtual async Task<int> GetUnreadPrivateMessages()
         {
             var result = 0;
             var customer = _workContext.CurrentCustomer;
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
-                var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+                var privateMessages = await _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                     "", customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.Any())
@@ -388,7 +393,7 @@ namespace Grand.Web.Services
         }
         public virtual Task<HeaderLinksModel> PrepareHeaderLinks(Customer customer)
         {
-            return Task.FromResult(prepareHeaderLinks(customer));
+            return prepareHeaderLinks(customer);
         }
 
         public virtual Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer)
@@ -402,21 +407,21 @@ namespace Grand.Web.Services
             });
             return model;
         }
-        public virtual FooterModel PrepareFooter()
+        public virtual async Task<FooterModel> PrepareFooter()
         {
             //footer topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
-                _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+            var cachedTopicModel = await _cacheManager.Get(topicCacheKey, async () =>
+                (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
                 .Select(t => new FooterModel.FooterTopicModel
                 {
                     Id = t.Id,
-                    Name = t.GetLocalized(x => x.Title),
-                    SeName = t.GetSeName(),
+                    Name = t.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
+                    SeName = t.GetSeName(_workContext.WorkingLanguage.Id),
                     IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
                     IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
                     IncludeInFooterColumn3 = t.IncludeInFooterColumn3
@@ -428,7 +433,7 @@ namespace Grand.Web.Services
             var currentstore = _storeContext.CurrentStore;
             var model = new FooterModel
             {
-                StoreName = currentstore.GetLocalized(x => x.Name),
+                StoreName = currentstore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 CompanyEmail = currentstore.CompanyEmail,
                 CompanyAddress = currentstore.CompanyAddress,
                 CompanyPhone = currentstore.CompanyPhoneNumber,
@@ -461,14 +466,14 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual string ParseContactAttributes(IFormCollection form)
+        public virtual async Task<string> ParseContactAttributes(IFormCollection form)
         {
 
             if (form == null)
                 throw new ArgumentNullException("form");
 
             string attributesXml = "";
-            var checkoutAttributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            var checkoutAttributes = await _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
             foreach (var attribute in checkoutAttributes)
             {
                 string controlId = string.Format("contact_attribute_{0}", attribute.Id);
@@ -548,8 +553,8 @@ namespace Grand.Web.Services
                         {
                             Guid downloadGuid;
                             Guid.TryParse(form[controlId], out downloadGuid);
-                            var _downloadService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IDownloadService>();
-                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            var _downloadService = _serviceProvider.GetRequiredService<IDownloadService>();
+                            var download = await _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
                                 attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
@@ -566,7 +571,7 @@ namespace Grand.Web.Services
             //validate conditional attributes (if specified)
             foreach (var attribute in checkoutAttributes)
             {
-                var conditionMet = _contactAttributeParser.IsConditionMet(attribute, attributesXml);
+                var conditionMet = await _contactAttributeParser.IsConditionMet(attribute, attributesXml);
                 if (conditionMet.HasValue && !conditionMet.Value)
                     attributesXml = _contactAttributeParser.RemoveContactAttribute(attributesXml, attribute);
             }
@@ -574,15 +579,15 @@ namespace Grand.Web.Services
             return attributesXml;
         }
 
-        public virtual IList<string> GetContactAttributesWarnings(string contactAttributesXml)
+        public virtual async Task<IList<string>> GetContactAttributesWarnings(string contactAttributesXml)
         {
             var warnings = new List<string>();
 
             //selected attributes
-            var attributes1 = _contactAttributeParser.ParseContactAttributes(contactAttributesXml);
+            var attributes1 = await _contactAttributeParser.ParseContactAttributes(contactAttributesXml);
 
             //existing checkout attributes
-            var attributes2 = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            var attributes2 = await _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -606,10 +611,10 @@ namespace Grand.Web.Services
                     //if not found
                     if (!found)
                     {
-                        if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt)))
-                            warnings.Add(a2.GetLocalized(a => a.TextPrompt));
+                        if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt, _workContext.WorkingLanguage.Id)))
+                            warnings.Add(a2.GetLocalized(a => a.TextPrompt, _workContext.WorkingLanguage.Id));
                         else
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.SelectAttribute"), a2.GetLocalized(a => a.Name)));
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.SelectAttribute"), a2.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)));
                     }
                 }
             }
@@ -630,7 +635,7 @@ namespace Grand.Web.Services
 
                         if (ca.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMinLength.Value));
                         }
                     }
                 }
@@ -647,7 +652,7 @@ namespace Grand.Web.Services
 
                         if (ca.ValidationMaxLength.Value < enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMaxLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), ca.ValidationMaxLength.Value));
                         }
                     }
                 }
@@ -656,18 +661,18 @@ namespace Grand.Web.Services
             return warnings;
         }
 
-        public virtual IList<ContactUsModel.ContactAttributeModel> PrepareContactAttributeModel(string selectedContactAttributes)
+        public virtual async Task<IList<ContactUsModel.ContactAttributeModel>> PrepareContactAttributeModel(string selectedContactAttributes)
         {
             var model = new List<ContactUsModel.ContactAttributeModel>();
 
-            var contactAttributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            var contactAttributes = await _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
             foreach (var attribute in contactAttributes)
             {
                 var attributeModel = new ContactUsModel.ContactAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
-                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
+                    Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt, _workContext.WorkingLanguage.Id),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = attribute.DefaultValue
@@ -688,7 +693,7 @@ namespace Grand.Web.Services
                         var attributeValueModel = new ContactUsModel.ContactAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
+                            Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
                             IsPreSelected = attributeValue.IsPreSelected,
                             DisplayOrder = attributeValue.DisplayOrder,
@@ -712,7 +717,7 @@ namespace Grand.Web.Services
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = _contactAttributeParser.ParseContactAttributeValues(selectedContactAttributes);
+                                var selectedValues = await _contactAttributeParser.ParseContactAttributeValues(selectedContactAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     if (attributeModel.Id == attributeValue.ContactAttributeId)
                                         foreach (var item in attributeModel.Values)
@@ -764,7 +769,7 @@ namespace Grand.Web.Services
                                 var downloadGuidStr = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id).FirstOrDefault();
                                 Guid downloadGuid;
                                 Guid.TryParse(downloadGuidStr, out downloadGuid);
-                                var download = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IDownloadService>().GetDownloadByGuid(downloadGuid);
+                                var download = await _serviceProvider.GetRequiredService<IDownloadService>().GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                     attributeModel.DefaultValue = download.DownloadGuid.ToString();
                             }
@@ -780,7 +785,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual ContactUsModel PrepareContactUs()
+        public virtual async Task<ContactUsModel> PrepareContactUs()
         {
             var model = new ContactUsModel
             {
@@ -789,25 +794,25 @@ namespace Grand.Web.Services
                 SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage
             };
-            model.ContactAttributes = PrepareContactAttributeModel("");
+            model.ContactAttributes = await PrepareContactAttributeModel("");
             return model;
         }
 
-        public virtual ContactUsModel SendContactUs(ContactUsModel model)
+        public virtual async Task<ContactUsModel> SendContactUs(ContactUsModel model)
         {
             string email = model.Email.Trim();
             string fullName = model.FullName;
             string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
             string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-            _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
+            await _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
 
             model.SuccessfullySent = true;
             model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
             return model;
         }
-        public virtual ContactVendorModel PrepareContactVendor(Vendor vendor)
+        public virtual async Task<ContactVendorModel> PrepareContactVendor(Vendor vendor)
         {
             var model = new ContactVendorModel
             {
@@ -816,30 +821,30 @@ namespace Grand.Web.Services
                 SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
                 VendorId = vendor.Id,
-                VendorName = vendor.GetLocalized(x => x.Name)
+                VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
-            return model;
+            return await Task.FromResult(model);
         }
 
-        public virtual ContactVendorModel SendContactVendor(ContactVendorModel model, Vendor vendor)
+        public virtual async Task<ContactVendorModel> SendContactVendor(ContactVendorModel model, Vendor vendor)
         {
             string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
             string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-            _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, vendor, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body);
+            await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, vendor, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body);
 
             model.SuccessfullySent = true;
             model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
             return model;
         }
 
-        public virtual SitemapModel PrepareSitemap()
+        public virtual async Task<SitemapModel> PrepareSitemap()
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new SitemapModel
                 {
@@ -851,34 +856,35 @@ namespace Grand.Web.Services
                 //categories
                 if (_commonSettings.SitemapIncludeCategories)
                 {
-                    var categories = _categoryService.GetAllCategories();
-                    model.Categories = categories.Select(x => x.ToModel()).ToList();
+                    var categories = await _categoryService.GetAllCategories();
+                    model.Categories = categories.Select(x => x.ToModel(_workContext.WorkingLanguage)).ToList();
                 }
                 //manufacturers
                 if (_commonSettings.SitemapIncludeManufacturers)
                 {
-                    var manufacturers = _manufacturerService.GetAllManufacturers();
-                    model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
+                    var manufacturers = await _manufacturerService.GetAllManufacturers();
+                    model.Manufacturers = manufacturers.Select(x => x.ToModel(_workContext.WorkingLanguage)).ToList();
                 }
                 //products
                 if (_commonSettings.SitemapIncludeProducts)
                 {
                     //limit product to 200 until paging is supported on this page
-                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
+                    var products = (await _productService.SearchProducts( 
+                        storeId: _storeContext.CurrentStore.Id,
                         visibleIndividuallyOnly: true,
-                        pageSize: 200);
+                        pageSize: 200)).products;
                     model.Products = products.Select(product => new ProductOverviewModel
                     {
                         Id = product.Id,
-                        Name = product.GetLocalized(x => x.Name),
-                        ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                        FullDescription = product.GetLocalized(x => x.FullDescription),
-                        SeName = product.GetSeName(),
+                        Name = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        ShortDescription = product.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
+                        FullDescription = product.GetLocalized(x => x.FullDescription, _workContext.WorkingLanguage.Id),
+                        SeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                     }).ToList();
                 }
 
                 //topics
-                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                var topics = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                     .Where(t => t.IncludeInSitemap)
                     .ToList();
                 model.Topics = topics.Select(topic => new TopicModel
@@ -887,20 +893,20 @@ namespace Grand.Web.Services
                     SystemName = topic.SystemName,
                     IncludeInSitemap = topic.IncludeInSitemap,
                     IsPasswordProtected = topic.IsPasswordProtected,
-                    Title = topic.GetLocalized(x => x.Title),
+                    Title = topic.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
                 })
                 .ToList();
                 return model;
             });
             return cachedModel;
         }
-        public virtual string SitemapXml(int? id, IUrlHelper url)
+        public virtual async Task<string> SitemapXml(int? id, IUrlHelper url)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id));
+            var siteMap = await _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
             return siteMap;
         }
         public virtual StoreThemeSelectorModel PrepareStoreThemeSelector()
@@ -940,7 +946,7 @@ namespace Grand.Web.Services
             model.FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName;
             return model;
         }
-        public virtual string PrepareRobotsTextFile()
+        public virtual async Task<string> PrepareRobotsTextFile()
         {
             var sb = new StringBuilder();
 
@@ -1040,7 +1046,7 @@ namespace Grand.Web.Services
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     //URLs are localizable. Append SEO code
-                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                    foreach (var language in await _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     {
                         sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
                         sb.Append(newLine);
@@ -1071,7 +1077,7 @@ namespace Grand.Web.Services
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     //URLs are localizable. Append SEO code
-                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                    foreach (var language in await _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     {
                         foreach (var path in localizableDisallowPaths)
                         {

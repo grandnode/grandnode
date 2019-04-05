@@ -10,30 +10,30 @@ namespace Grand.Web.Interfaces
 {
     public partial interface ICommonViewModelService
     {
-        LogoModel PrepareLogo();
-        LanguageSelectorModel PrepareLanguageSelector();
-        void SetLanguage(string langid);
-        CurrencySelectorModel PrepareCurrencySelector();
-        void SetCurrency(string customerCurrency);
+        Task<LogoModel> PrepareLogo();
+        Task<LanguageSelectorModel> PrepareLanguageSelector();
+        Task SetLanguage(string langid);
+        Task<CurrencySelectorModel> PrepareCurrencySelector();
+        Task SetCurrency(string customerCurrency);
         TaxTypeSelectorModel PrepareTaxTypeSelector();
         void SetTaxType(int customerTaxType);
-        StoreSelectorModel PrepareStoreSelector();
-        void SetStore(string storeid);
-        int GetUnreadPrivateMessages();
+        Task<StoreSelectorModel> PrepareStoreSelector();
+        Task SetStore(string storeid);
+        Task<int> GetUnreadPrivateMessages();
         Task<HeaderLinksModel> PrepareHeaderLinks(Customer customer);
         Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer);
-        FooterModel PrepareFooter();
-        ContactUsModel PrepareContactUs();
-        ContactUsModel SendContactUs(ContactUsModel model);
-        ContactVendorModel PrepareContactVendor(Vendor vendor);
-        ContactVendorModel SendContactVendor(ContactVendorModel model, Vendor vendor);
-        SitemapModel PrepareSitemap();
-        string SitemapXml(int? id, IUrlHelper url);
+        Task<FooterModel> PrepareFooter();
+        Task<ContactUsModel> PrepareContactUs();
+        Task<ContactUsModel> SendContactUs(ContactUsModel model);
+        Task<ContactVendorModel> PrepareContactVendor(Vendor vendor);
+        Task<ContactVendorModel> SendContactVendor(ContactVendorModel model, Vendor vendor);
+        Task<SitemapModel> PrepareSitemap();
+        Task<string> SitemapXml(int? id, IUrlHelper url);
         StoreThemeSelectorModel PrepareStoreThemeSelector();
         FaviconModel PrepareFavicon();
-        string PrepareRobotsTextFile();
-        string ParseContactAttributes(IFormCollection form);
-        IList<string> GetContactAttributesWarnings(string contactAttributesXml);
-        IList<ContactUsModel.ContactAttributeModel> PrepareContactAttributeModel(string selectedContactAttributes);
+        Task<string> PrepareRobotsTextFile();
+        Task<string> ParseContactAttributes(IFormCollection form);
+        Task<IList<string>> GetContactAttributesWarnings(string contactAttributesXml);
+        Task<IList<ContactUsModel.ContactAttributeModel>> PrepareContactAttributeModel(string selectedContactAttributes);
     }
 }
