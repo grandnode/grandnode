@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Seo;
 using Grand.Services.Blogs;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
@@ -27,9 +28,12 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IPictureService _pictureService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
+        private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService)
+            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService,
+            ILanguageService languageService, SeoSettings seoSettings)
         {
             _blogService = blogService;
             _dateTimeHelper = dateTimeHelper;
@@ -39,6 +43,8 @@ namespace Grand.Web.Areas.Admin.Services
             _pictureService = pictureService;
             _customerService = customerService;
             _localizationService = localizationService;
+            _languageService = languageService;
+            _seoSettings = seoSettings;
         }
 
         public virtual async Task<(IEnumerable<BlogPostModel> blogPosts, int totalCount)> PrepareBlogPostsModel(int pageIndex, int pageSize)
@@ -57,79 +63,79 @@ namespace Grand.Web.Areas.Admin.Services
                     return m;
                 }), blogPosts.TotalCount);
         }
-        public virtual BlogPostModel PrepareBlogPostModel()
+        public virtual async Task<BlogPostModel> PrepareBlogPostModel()
         {
             var model = new BlogPostModel();
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.AllowComments = true;
             //locales
             return model;
         }
 
-        public virtual BlogPostModel PrepareBlogPostModel(BlogPostModel blogPostmodel)
+        public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel)
         {
-            blogPostmodel.PrepareStoresMappingModel(null, true, _storeService);
+            await blogPostmodel.PrepareStoresMappingModel(null, true, _storeService);
             return blogPostmodel;
         }
-        public virtual BlogPostModel PrepareBlogPostModel(BlogPostModel blogPostmodel, BlogPost blogPost)
+        public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel, BlogPost blogPost)
         {
             //Store
-            blogPostmodel.PrepareStoresMappingModel(blogPost, true, _storeService);
+            await blogPostmodel.PrepareStoresMappingModel(blogPost, true, _storeService);
             return blogPostmodel;
         }
 
-        public virtual BlogPostModel PrepareBlogPostModel(BlogPost blogPost)
+        public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPost blogPost)
         {
             var model = blogPost.ToModel();
             //Store
-            model.PrepareStoresMappingModel(blogPost, false, _storeService);
+            await model.PrepareStoresMappingModel(blogPost, false, _storeService);
             return model;
         }
 
-        public virtual BlogPost InsertBlogPostModel(BlogPostModel model)
+        public virtual async Task<BlogPost> InsertBlogPostModel(BlogPostModel model)
         {
             var blogPost = model.ToEntity();
             blogPost.CreatedOnUtc = DateTime.UtcNow;
-            _blogService.InsertBlogPost(blogPost);
+            await _blogService.InsertBlogPost(blogPost);
 
             //search engine name
-            var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+            var seName = await blogPost.ValidateSeName(model.SeName, model.Title, true, _seoSettings, _urlRecordService, _languageService);
             blogPost.SeName = seName;
-            blogPost.Locales = model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _urlRecordService);
-            _blogService.UpdateBlogPost(blogPost);
-            _urlRecordService.SaveSlug(blogPost, seName, "");
+            blogPost.Locales = await model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _seoSettings, _urlRecordService, _languageService);
+            await _blogService.UpdateBlogPost(blogPost);
+            await _urlRecordService.SaveSlug(blogPost, seName, "");
 
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
+            await _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
 
             return blogPost;
         }
 
-        public virtual BlogPost UpdateBlogPostModel(BlogPostModel model, BlogPost blogPost)
+        public virtual async Task<BlogPost> UpdateBlogPostModel(BlogPostModel model, BlogPost blogPost)
         {
             string prevPictureId = blogPost.PictureId;
             blogPost = model.ToEntity(blogPost);
-            _blogService.UpdateBlogPost(blogPost);
+            await _blogService.UpdateBlogPost(blogPost);
 
             //search engine name
-            var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+            var seName = await blogPost.ValidateSeName(model.SeName, model.Title, true, _seoSettings, _urlRecordService, _languageService);
             blogPost.SeName = seName;
-            blogPost.Locales = model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _urlRecordService);
-            _blogService.UpdateBlogPost(blogPost);
-            _urlRecordService.SaveSlug(blogPost, seName, "");
+            blogPost.Locales = await model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _seoSettings, _urlRecordService, _languageService);
+            await _blogService.UpdateBlogPost(blogPost);
+            await _urlRecordService.SaveSlug(blogPost, seName, "");
 
             //delete an old picture (if deleted or updated)
             if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != blogPost.PictureId)
             {
-                var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                var prevPicture = await _pictureService.GetPictureById(prevPictureId);
                 if (prevPicture != null)
-                    _pictureService.DeletePicture(prevPicture);
+                    await _pictureService.DeletePicture(prevPicture);
             }
 
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
+            await _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
 
             return blogPost;
         }
@@ -147,20 +153,23 @@ namespace Grand.Web.Areas.Admin.Services
                 //load all blog comments
                 comments = await _blogService.GetAllComments("");
             }
-
-            return (comments.Skip((pageIndex - 1) * pageSize).Take(pageSize).Select(blogComment =>
+            var commentsList = new List<BlogCommentModel>();
+            foreach (var blogComment in comments.Skip((pageIndex - 1) * pageSize).Take(pageSize))
+            {
+                var commentModel = new BlogCommentModel
                 {
-                    var commentModel = new BlogCommentModel();
-                    commentModel.Id = blogComment.Id;
-                    commentModel.BlogPostId = blogComment.BlogPostId;
-                    commentModel.BlogPostTitle = blogComment.BlogPostTitle;
-                    commentModel.CustomerId = blogComment.CustomerId;
-                    var customer = _customerService.GetCustomerById(blogComment.CustomerId);
-                    commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-                    commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
-                    return commentModel;
-                }), comments.Count);
+                    Id = blogComment.Id,
+                    BlogPostId = blogComment.BlogPostId,
+                    BlogPostTitle = blogComment.BlogPostTitle,
+                    CustomerId = blogComment.CustomerId
+                };
+                var customer = await _customerService.GetCustomerById(blogComment.CustomerId);
+                commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
+                commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                commentsList.Add(commentModel);
+            }
+            return (commentsList, comments.Count);
         }
     }
 }
