@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Cash On Delivery (COD)
 SystemName: Payments.CashOnDelivery
-Version: 1.14
+Version: 1.15
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

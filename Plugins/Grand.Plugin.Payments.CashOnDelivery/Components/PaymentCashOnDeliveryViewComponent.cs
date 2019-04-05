@@ -3,6 +3,7 @@ using Grand.Plugin.Payments.CashOnDelivery.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.CashOnDelivery.Components
 {
@@ -22,16 +23,15 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Components
 
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var cashOnDeliveryPaymentSettings = _settingService.LoadSetting<CashOnDeliveryPaymentSettings>(_storeContext.CurrentStore.Id);
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(x=>x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
-
-            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", await Task.FromResult(model));
         }
     }
 }
