@@ -203,8 +203,8 @@ input {
 
 /* body ready */
 
-body:not(.is-ready) .navUp {
-    opacity: 0;
+body:not(.is-ready) .mat {
+    display: none;
 }
  
 /* Default Buttons */
