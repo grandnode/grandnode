@@ -1,23 +1,24 @@
 ﻿using Grand.Core;
 using Grand.Plugin.Shipping.ByWeight.Domain;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ByWeight.Services
 {
     public partial interface IShippingByWeightService
     {
-        void DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
+        Task DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
 
-        IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<ShippingByWeightRecord>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
 
-        ShippingByWeightRecord FindRecord(string shippingMethodId,
+        Task<ShippingByWeightRecord> FindRecord(string shippingMethodId,
             string storeId, string warehouseId,
             string countryId, string stateProvinceId, string zip, decimal weight);
 
-        ShippingByWeightRecord GetById(string shippingByWeightRecordId);
+        Task<ShippingByWeightRecord> GetById(string shippingByWeightRecordId);
 
-        void InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
+        Task InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
 
-        void UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
+        Task UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
     }
 
 }
