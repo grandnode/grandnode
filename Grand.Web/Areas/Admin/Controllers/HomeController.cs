@@ -7,6 +7,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
+using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -14,9 +15,11 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Areas.Admin.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -34,6 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -50,7 +54,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IOrderReportService orderReportService,
             ICustomerService customerService,
             IRepository<Product> productRepository,
-            IRepository<ReturnRequest> returnRequestRepository)
+            IRepository<ReturnRequest> returnRequestRepository,
+            IServiceProvider serviceProvider)
         {
             this._localizationService = localizationService;
             this._storeContext = storeContext;
@@ -63,13 +68,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._productRepository = productRepository;
             this._returnRequestRepository = returnRequestRepository;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
 
         #region Utiliti
 
-        private DashboardActivityModel PrepareActivityModel()
+        private async Task<DashboardActivityModel> PrepareActivityModel()
         {
             var model = new DashboardActivityModel();
             string vendorId = "";
@@ -77,17 +83,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             model.OrdersPending = _orderReportService.GetOrderAverageReportLine(os: Core.Domain.Orders.OrderStatus.Pending).CountOrders;
-            model.AbandonedCarts = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1).TotalCount;
+            model.AbandonedCarts = (await _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
 
-            IList<Product> products;
-            IList<ProductAttributeCombination> combinations;
-            Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Catalog.IProductService>()
-                .GetLowStockProducts(vendorId, out products, out combinations);
+            _serviceProvider.GetRequiredService<IProductService>()
+                .GetLowStockProducts(vendorId, out IList<Product> products, out IList<ProductAttributeCombination> combinations);
 
             model.LowStockProducts = products.Count + combinations.Count;
 
             model.ReturnRequests = (int)_returnRequestRepository.Table.Where(x=>x.ReturnRequestStatusId == 0).Count();
-            model.TodayRegisteredCustomers = _customerService.GetAllCustomers(customerRoleIds: new string[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;
+            model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;
             return model;
 
         }
@@ -98,8 +102,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var model = new DashboardModel();
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new DashboardModel
+            {
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
             if (string.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || 
                 string.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
                 string.IsNullOrEmpty(_googleAnalyticsSettings.gaviewID))
@@ -110,20 +116,22 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Statistics()
         {
-            var model = new DashboardModel();
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new DashboardModel
+            {
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
             return View(model);
         }
 
-        public IActionResult DashboardActivity()
+        public async Task<IActionResult> DashboardActivity()
         {
-            var model = PrepareActivityModel();
+            var model = await PrepareActivityModel();
             return PartialView(model);
         }
 
-        public IActionResult SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
+        public async Task<IActionResult> SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
         {
-            var language = languageService.GetLanguageById(langid);
+            var language = await languageService.GetLanguageById(langid);
             if (language != null)
             {
                 _workContext.WorkingLanguage = language;
@@ -138,15 +146,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
         [AcceptVerbs("Get")]
-        public IActionResult GetStatesByCountryId([FromServices] ICountryService countryService, [FromServices] IStateProvinceService stateProvinceService,
+        public async Task<IActionResult> GetStatesByCountryId([FromServices] ICountryService countryService, [FromServices] IStateProvinceService stateProvinceService,
             string countryId, bool? addSelectStateItem, bool? addAsterisk)
         {
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
                 return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
 
-            var country = countryService.GetCountryById(countryId);
-            var states = country != null ? stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
+            var country = await countryService.GetCountryById(countryId);
+            var states = country != null ? await stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true) : new List<StateProvince>();
             var result = (from s in states
                           select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
