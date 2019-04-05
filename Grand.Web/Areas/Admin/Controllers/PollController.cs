@@ -14,6 +14,7 @@ using Grand.Web.Areas.Admin.Models.Polls;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -51,9 +52,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var polls = _pollService.GetPolls("", false, command.Page - 1, command.PageSize, true);
+            var polls = await _pollService.GetPolls("", false, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = polls.Select(x =>
@@ -67,29 +68,31 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            var model = new PollModel();
-            //default values
-            model.Published = true;
-            model.ShowOnHomePage = true;
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
+            var model = new PollModel
+            {
+                //default values
+                Published = true,
+                ShowOnHomePage = true
+            };
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(PollModel model, bool continueEditing)
+        public async Task<IActionResult> Create(PollModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity();                
-                _pollService.InsertPoll(poll);
+                var poll = model.ToEntity();
+                await _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = poll.Id }) : RedirectToAction("List");
@@ -98,40 +101,40 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //ACL
-            model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var poll = _pollService.GetPollById(id);
+            var poll = await _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = poll.ToModel();
             //Store
-            model.PrepareStoresMappingModel(poll, false, _storeService);
+            await model.PrepareStoresMappingModel(poll, false, _storeService);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
             //ACL
-            model.PrepareACLModel(poll, false, _customerService);
+            await model.PrepareACLModel(poll, false, _customerService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(PollModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(PollModel model, bool continueEditing)
         {
-            var poll = _pollService.GetPollById(model.Id);
+            var poll = await _pollService.GetPollById(model.Id);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
@@ -139,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 poll = model.ToEntity(poll);
-                _pollService.UpdatePoll(poll);
+                await _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
 
@@ -157,11 +160,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Store
-            model.PrepareStoresMappingModel(poll, true, _storeService);
+            await model.PrepareStoresMappingModel(poll, true, _storeService);
             //ACL
-            model.PrepareACLModel(poll, true, _customerService);
+            await model.PrepareACLModel(poll, true, _customerService);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -170,15 +173,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var poll = _pollService.GetPollById(id);
+            var poll = await _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _pollService.DeletePoll(poll);
+                await _pollService.DeletePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
                 return RedirectToAction("List");
@@ -192,9 +195,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Poll answer
         
         [HttpPost]
-        public IActionResult PollAnswers(string pollId, DataSourceRequest command)
+        public async Task<IActionResult> PollAnswers(string pollId, DataSourceRequest command)
         {
-            var poll = _pollService.GetPollById(pollId);
+            var poll = await _pollService.GetPollById(pollId);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "pollId");
 
@@ -209,20 +212,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
         //create
-        public IActionResult PollAnswerCreatePopup(string pollId)
+        public async Task<IActionResult> PollAnswerCreatePopup(string pollId)
         {
-            var model = new PollAnswerModel();
-            model.PollId = pollId;
+            var model = new PollAnswerModel
+            {
+                PollId = pollId
+            };
 
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult PollAnswerCreatePopup(PollAnswerModel model)
+        public async Task<IActionResult> PollAnswerCreatePopup(PollAnswerModel model)
         {
-            var poll = _pollService.GetPollById(model.PollId);
+            var poll = await _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
@@ -231,7 +236,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var pa = model.ToEntity();
                 poll.PollAnswers.Add(pa);
-                _pollService.UpdatePoll(poll);
+                await _pollService.UpdatePoll(poll);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -241,16 +246,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult PollAnswerEditPopup(string id, string pollId)
+        public async Task<IActionResult> PollAnswerEditPopup(string id, string pollId)
         {
-            var pollAnswer = _pollService.GetPollById(pollId).PollAnswers.Where(x => x.Id == id).FirstOrDefault();
+            var pollAnswer = (await _pollService.GetPollById(pollId)).PollAnswers.Where(x => x.Id == id).FirstOrDefault();
             if (pollAnswer == null)
                 //No poll answer found with the specified id
                 return RedirectToAction("List");
 
             var model = pollAnswer.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = pollAnswer.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -259,9 +264,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PollAnswerEditPopup(PollAnswerModel model)
+        public async Task<IActionResult> PollAnswerEditPopup(PollAnswerModel model)
         {
-            var poll = _pollService.GetPollById(model.PollId);
+            var poll = await _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
@@ -274,7 +279,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 pollAnswer = model.ToEntity(pollAnswer);
-                _pollService.UpdatePoll(poll);
+                await _pollService.UpdatePoll(poll);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -285,16 +290,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PollAnswerDelete(PollAnswer answer)
+        public async Task<IActionResult> PollAnswerDelete(PollAnswer answer)
         {
-            var pol = _pollService.GetPollById(answer.PollId);
+            var pol = await _pollService.GetPollById(answer.PollId);
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");
             if (ModelState.IsValid)
             {
                 pol.PollAnswers.Remove(pollAnswer);
-                _pollService.UpdatePoll(pol);
+                await _pollService.UpdatePoll(pol);
 
                 return new NullJsonResult();
             }
