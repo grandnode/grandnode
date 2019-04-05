@@ -5,6 +5,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -34,7 +35,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        int GetRegisteredCustomersReport(int days);
+        Task<int> GetRegisteredCustomersReport(int days);
 
         /// <summary>
         /// Get "customer by time" report
@@ -42,7 +43,7 @@ namespace Grand.Services.Customers
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        IList<CustomerByTimeReportLine> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+        Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null);
     }
 }
