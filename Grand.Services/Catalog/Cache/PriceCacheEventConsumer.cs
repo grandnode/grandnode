@@ -4,8 +4,9 @@ using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Events;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Grand.Services.Catalog.Cache
 {
@@ -35,7 +36,7 @@ namespace Grand.Services.Catalog.Cache
         IConsumer<EntityInserted<ProductManufacturer>>,
         IConsumer<EntityUpdated<ProductManufacturer>>,
         IConsumer<EntityDeleted<ProductManufacturer>>,
-        
+
         //products
         IConsumer<EntityInserted<Product>>,
         IConsumer<EntityUpdated<Product>>,
@@ -109,10 +110,10 @@ namespace Grand.Services.Catalog.Cache
 
         private readonly ICacheManager _cacheManager;
 
-        public PriceCacheEventConsumer()
+        public PriceCacheEventConsumer(IServiceProvider serviceProvider)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //settings
