@@ -5,14 +5,16 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
-    public partial class MessageTemplateService: IMessageTemplateService
+    public partial class MessageTemplateService : IMessageTemplateService
     {
         #region Constants
 
@@ -84,12 +86,12 @@ namespace Grand.Services.Messages
         /// Delete a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void DeleteMessageTemplate(MessageTemplate messageTemplate)
+        public virtual async Task DeleteMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
 
-            _messageTemplateRepository.Delete(messageTemplate);
+            await _messageTemplateRepository.DeleteAsync(messageTemplate);
 
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
@@ -101,12 +103,12 @@ namespace Grand.Services.Messages
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void InsertMessageTemplate(MessageTemplate messageTemplate)
+        public virtual async Task InsertMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
 
-            _messageTemplateRepository.Insert(messageTemplate);
+            await _messageTemplateRepository.InsertAsync(messageTemplate);
 
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
@@ -118,12 +120,12 @@ namespace Grand.Services.Messages
         /// Updates a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void UpdateMessageTemplate(MessageTemplate messageTemplate)
+        public virtual async Task UpdateMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
 
-            _messageTemplateRepository.Update(messageTemplate);
+            await _messageTemplateRepository.UpdateAsync(messageTemplate);
 
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
@@ -136,9 +138,9 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateById(string messageTemplateId)
+        public virtual Task<MessageTemplate> GetMessageTemplateById(string messageTemplateId)
         {
-            return _messageTemplateRepository.GetById(messageTemplateId);
+            return _messageTemplateRepository.GetByIdAsync(messageTemplateId);
         }
 
         /// <summary>
@@ -147,19 +149,19 @@ namespace Grand.Services.Messages
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, string storeId)
+        public virtual async Task<MessageTemplate> GetMessageTemplateByName(string messageTemplateName, string storeId)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException("messageTemplateName");
 
             string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
                 var query = _messageTemplateRepository.Table;
 
                 query = query.Where(t => t.Name == messageTemplateName);
                 query = query.OrderBy(t => t.Id);
-                var templates = query.ToList();
+                var templates = await query.ToListAsync();
 
                 //store mapping
                 if (!String.IsNullOrEmpty(storeId))
@@ -179,10 +181,10 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <returns>Message template list</returns>
-        public virtual IList<MessageTemplate> GetAllMessageTemplates(string storeId)
+        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplates(string storeId)
         {
             string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
 
@@ -196,8 +198,7 @@ namespace Grand.Services.Messages
                             select p;
                     query = query.OrderBy(t => t.Name);
                 }
-
-                return query.ToList();
+                return query.ToListAsync();
             });
         }
 
@@ -206,7 +207,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <returns>Message template copy</returns>
-        public virtual MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate)
+        public virtual async Task<MessageTemplate> CopyMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
@@ -227,7 +228,7 @@ namespace Grand.Services.Messages
                 DelayPeriod = messageTemplate.DelayPeriod
             };
 
-            InsertMessageTemplate(mtCopy);
+            await InsertMessageTemplate(mtCopy);
 
             return mtCopy;
         }
