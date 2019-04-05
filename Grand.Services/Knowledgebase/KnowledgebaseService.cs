@@ -7,9 +7,11 @@ using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Knowledgebase
 {
@@ -130,14 +132,14 @@ namespace Grand.Services.Knowledgebase
         /// Deletes knowledgebase category
         /// </summary>
         /// <param name="id"></param>
-        public virtual void DeleteKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual async Task DeleteKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
-            var children = _knowledgebaseCategoryRepository.Table.Where(x => x.ParentCategoryId == kc.Id).ToList();
-            _knowledgebaseCategoryRepository.Delete(kc);
+            var children = await _knowledgebaseCategoryRepository.Table.Where(x => x.ParentCategoryId == kc.Id).ToListAsync();
+            await _knowledgebaseCategoryRepository.DeleteAsync(kc);
             foreach (var child in children)
             {
                 child.ParentCategoryId = "";
-                UpdateKnowledgebaseCategory(child);
+                await UpdateKnowledgebaseCategory(child);
             }
 
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -150,10 +152,10 @@ namespace Grand.Services.Knowledgebase
         /// Edits knowledgebase category
         /// </summary>
         /// <param name="kc"></param>
-        public virtual void UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual async Task UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             kc.UpdatedOnUtc = DateTime.UtcNow;
-            _knowledgebaseCategoryRepository.Update(kc);
+            await _knowledgebaseCategoryRepository.UpdateAsync(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityUpdated(kc);
@@ -164,9 +166,9 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase category</returns>
-        public virtual KnowledgebaseCategory GetKnowledgebaseCategory(string id)
+        public virtual Task<KnowledgebaseCategory> GetKnowledgebaseCategory(string id)
         {
-            return _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefault();
+            return _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -174,11 +176,11 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase category</returns>
-        public virtual KnowledgebaseCategory GetPublicKnowledgebaseCategory(string id)
+        public virtual async Task<KnowledgebaseCategory> GetPublicKnowledgebaseCategory(string id)
         {
             string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -199,7 +201,7 @@ namespace Grand.Services.Knowledgebase
                 }
 
                 var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter);
-                return toReturn.FirstOrDefault();
+                return toReturn.FirstOrDefaultAsync();
             });
         }
 
@@ -207,11 +209,11 @@ namespace Grand.Services.Knowledgebase
         /// Inserts knowledgebase category
         /// </summary>
         /// <param name="kc"></param>
-        public virtual void InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual async Task InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             kc.CreatedOnUtc = DateTime.UtcNow;
             kc.UpdatedOnUtc = DateTime.UtcNow;
-            _knowledgebaseCategoryRepository.Insert(kc);
+            await _knowledgebaseCategoryRepository.InsertAsync(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityInserted(kc);
@@ -221,9 +223,10 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase categories
         /// </summary>
         /// <returns>List of knowledgebase categories</returns>
-        public virtual List<KnowledgebaseCategory> GetKnowledgebaseCategories()
+        public virtual async Task<List<KnowledgebaseCategory>> GetKnowledgebaseCategories()
         {
-            return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.ParentCategoryId).ThenBy(x => x.DisplayOrder).ToList().SortCategoriesForTree();
+            var categories = await _knowledgebaseCategoryRepository.Table.OrderBy(x => x.ParentCategoryId).ThenBy(x => x.DisplayOrder).ToListAsync();
+            return categories.SortCategoriesForTree();
         }
 
         /// <summary>
@@ -231,29 +234,29 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase article</returns>
-        public virtual KnowledgebaseArticle GetKnowledgebaseArticle(string id)
+        public virtual Task<KnowledgebaseArticle> GetKnowledgebaseArticle(string id)
         {
-            return _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefault();
+            return _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Gets knowledgebase articles
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
-        public virtual List<KnowledgebaseArticle> GetKnowledgebaseArticles()
+        public virtual Task<List<KnowledgebaseArticle>> GetKnowledgebaseArticles()
         {
-            return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
+            return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToListAsync();
         }
 
         /// <summary>
         /// Inserts knowledgebase article
         /// </summary>
         /// <param name="ka"></param>
-        public virtual void InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual async Task InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             ka.CreatedOnUtc = DateTime.UtcNow;
             ka.UpdatedOnUtc = DateTime.UtcNow;
-            _knowledgebaseArticleRepository.Insert(ka);
+            await _knowledgebaseArticleRepository.InsertAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityInserted(ka);
@@ -263,10 +266,10 @@ namespace Grand.Services.Knowledgebase
         /// Edits knowledgebase article
         /// </summary>
         /// <param name="ka"></param>
-        public virtual void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual async Task UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             ka.UpdatedOnUtc = DateTime.UtcNow;
-            _knowledgebaseArticleRepository.Update(ka);
+            await _knowledgebaseArticleRepository.UpdateAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityUpdated(ka);
@@ -276,9 +279,9 @@ namespace Grand.Services.Knowledgebase
         /// Deletes knowledgebase article
         /// </summary>
         /// <param name="id"></param>
-        public virtual void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual async Task DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
-            _knowledgebaseArticleRepository.Delete(ka);
+            await _knowledgebaseArticleRepository.DeleteAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityDeleted(ka);
@@ -289,9 +292,9 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public virtual IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<KnowledgebaseArticle>> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).OrderBy(x => x.DisplayOrder).ToList();
+            var articles = await _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).OrderBy(x => x.DisplayOrder).ToListAsync();
             return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
         }
 
@@ -299,11 +302,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase categories
         /// </summary>
         /// <returns>List of public knowledgebase categories</returns>
-        public virtual List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
+        public virtual async Task<List<KnowledgebaseCategory>> GetPublicKnowledgebaseCategories()
         {
             var key = string.Format(CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -324,7 +327,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -332,11 +335,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
+        public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticles()
         {
             var key = string.Format(ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -357,7 +360,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -365,11 +368,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase article if it is published etc
         /// </summary>
         /// <returns>knowledgebase article</returns>
-        public virtual KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
+        public virtual async Task<KnowledgebaseArticle> GetPublicKnowledgebaseArticle(string id)
         {
             var key = string.Format(ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -389,8 +392,7 @@ namespace Grand.Services.Knowledgebase
                     filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
-                var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).FirstOrDefault();
-                return toReturn;
+                return _knowledgebaseArticleRepository.Collection.Find(filter).FirstOrDefaultAsync();
             });
         }
 
@@ -398,11 +400,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles for category id
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
+        public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
             var key = string.Format(ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -424,7 +426,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -432,11 +434,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles for keyword
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
+        public virtual async Task<List<KnowledgebaseArticle>> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
         {
             var key = string.Format(ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -470,7 +472,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -478,11 +480,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase categories for keyword
         /// </summary>
         /// <returns>List of public knowledgebase categories</returns>
-        public virtual List<KnowledgebaseCategory> GetPublicKnowledgebaseCategoriesByKeyword(string keyword)
+        public virtual async Task<List<KnowledgebaseCategory>> GetPublicKnowledgebaseCategoriesByKeyword(string keyword)
         {
             var key = string.Format(CATEGORIES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -516,7 +518,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -524,11 +526,11 @@ namespace Grand.Services.Knowledgebase
         /// Gets homepage knowledgebase articles
         /// </summary>
         /// <returns>List of homepage knowledgebase articles</returns>
-        public virtual List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles()
+        public virtual async Task<List<KnowledgebaseArticle>> GetHomepageKnowledgebaseArticles()
         {
             var key = string.Format(HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -550,7 +552,7 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
-                return toReturn.ToList();
+                return toReturn.ToListAsync();
             });
         }
 
@@ -559,7 +561,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public virtual IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<KnowledgebaseArticle>> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var builder = Builders<KnowledgebaseArticle>.Filter;
             var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -583,9 +585,9 @@ namespace Grand.Services.Knowledgebase
             }
 
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
-            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+            var toReturn = await _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort).ToListAsync();
 
-            return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
+            return new PagedList<KnowledgebaseArticle>(toReturn, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -593,14 +595,14 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public virtual IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<KnowledgebaseArticle>> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var article = GetKnowledgebaseArticle(articleId);
+            var article = await GetKnowledgebaseArticle(articleId);
             List<KnowledgebaseArticle> toReturn = new List<KnowledgebaseArticle>();
 
             foreach (var id in article.RelatedArticles)
             {
-                var relatedArticle = GetKnowledgebaseArticle(id);
+                var relatedArticle = await GetKnowledgebaseArticle(id);
                 if (relatedArticle != null)
                     toReturn.Add(relatedArticle);
             }
@@ -612,12 +614,12 @@ namespace Grand.Services.Knowledgebase
         /// Inserts an article comment
         /// </summary>
         /// <param name="articleComment">Article comment</param>
-        public void InsertArticleComment(KnowledgebaseArticleComment articleComment)
+        public virtual async Task InsertArticleComment(KnowledgebaseArticleComment articleComment)
         {
             if (articleComment == null)
                 throw new ArgumentNullException("articleComment");
 
-            _articleCommentRepository.Insert(articleComment);
+            await _articleCommentRepository.InsertAsync(articleComment);
 
             //event notification
             _eventPublisher.EntityInserted(articleComment);
@@ -628,14 +630,13 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
-        public IList<KnowledgebaseArticleComment> GetAllComments(string customerId)
+        public virtual async Task<IList<KnowledgebaseArticleComment>> GetAllComments(string customerId)
         {
             var query = from c in _articleCommentRepository.Table
                         orderby c.CreatedOnUtc
                         where (customerId == "" || c.CustomerId == customerId)
                         select c;
-            var content = query.ToList();
-            return content;
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -643,9 +644,9 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="articleId">Article identifier</param>
         /// <returns>Article comment</returns>
-        public KnowledgebaseArticleComment GetArticleCommentById(string articleId)
+        public virtual Task<KnowledgebaseArticleComment> GetArticleCommentById(string articleId)
         {
-            return _articleCommentRepository.GetById(articleId);
+            return _articleCommentRepository.GetByIdAsync(articleId);
         }
 
         /// <summary>
@@ -653,7 +654,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="commentIds"Article comment identifiers</param>
         /// <returns>Article comments</returns>
-        public IList<KnowledgebaseArticleComment> GetArticleCommentsByIds(string[] commentIds)
+        public virtual async Task<IList<KnowledgebaseArticleComment>> GetArticleCommentsByIds(string[] commentIds)
         {
             if (commentIds == null || commentIds.Length == 0)
                 return new List<KnowledgebaseArticleComment>();
@@ -661,7 +662,7 @@ namespace Grand.Services.Knowledgebase
             var query = from bc in _articleCommentRepository.Table
                         where commentIds.Contains(bc.Id)
                         select bc;
-            var comments = query.ToList();
+            var comments = await query.ToListAsync();
             //sort by passed identifiers
             var sortedComments = new List<KnowledgebaseArticleComment>();
             foreach (string id in commentIds)
@@ -670,26 +671,24 @@ namespace Grand.Services.Knowledgebase
                 if (comment != null)
                     sortedComments.Add(comment);
             }
-
             return sortedComments;
         }
 
-        public IList<KnowledgebaseArticleComment> GetArticleCommentsByArticleId(string articleId)
+        public virtual async Task<IList<KnowledgebaseArticleComment>> GetArticleCommentsByArticleId(string articleId)
         {
             var query = from c in _articleCommentRepository.Table
                         where c.ArticleId == articleId
                         orderby c.CreatedOnUtc
                         select c;
-            var content = query.ToList();
-            return content;
+            return await query.ToListAsync();
         }
 
-        public void DeleteArticleComment(KnowledgebaseArticleComment articleComment)
+        public virtual async Task DeleteArticleComment(KnowledgebaseArticleComment articleComment)
         {
             if (articleComment == null)
                 throw new ArgumentNullException("articleComment");
 
-            _articleCommentRepository.Delete(articleComment);
+            await _articleCommentRepository.DeleteAsync(articleComment);
         }
     }
 }
