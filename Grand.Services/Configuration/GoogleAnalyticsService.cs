@@ -7,6 +7,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Configuration
 {
@@ -110,7 +111,7 @@ namespace Grand.Services.Configuration
 
         #endregion
 
-        public GoogleAnalyticsResult GetDataByGeneral(DateTime startDate, DateTime endDate)
+        public virtual async Task<GoogleAnalyticsResult> GetDataByGeneral(DateTime startDate, DateTime endDate)
         {
             if(_analyticsReportingService==null)
             {
@@ -158,11 +159,11 @@ namespace Grand.Services.Configuration
             GetReportsRequest reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
-            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+            var response = await _analyticsReportingService.Reports.BatchGet(reportsRequest).ExecuteAsync();
 
             return ParseResponse(response, startDate, endDate);
         }
-        public GoogleAnalyticsResult GetDataByLocalization(DateTime startDate, DateTime endDate)
+        public virtual async Task<GoogleAnalyticsResult> GetDataByLocalization(DateTime startDate, DateTime endDate)
         {
             if (_analyticsReportingService == null)
             {
@@ -203,12 +204,12 @@ namespace Grand.Services.Configuration
             GetReportsRequest reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
-            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+            var response = await _analyticsReportingService.Reports.BatchGet(reportsRequest).ExecuteAsync();
 
             return ParseResponse(response, startDate, endDate);
 
         }
-        public GoogleAnalyticsResult GetDataBySource(DateTime startDate, DateTime endDate)
+        public virtual async Task<GoogleAnalyticsResult> GetDataBySource(DateTime startDate, DateTime endDate)
         {
             if (_analyticsReportingService == null)
             {
@@ -248,12 +249,12 @@ namespace Grand.Services.Configuration
             GetReportsRequest reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
-            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+            var response = await _analyticsReportingService.Reports.BatchGet(reportsRequest).ExecuteAsync();
 
             return ParseResponse(response, startDate, endDate);
 
         }
-        public GoogleAnalyticsResult GetDataByExit(DateTime startDate, DateTime endDate)
+        public virtual async Task<GoogleAnalyticsResult> GetDataByExit(DateTime startDate, DateTime endDate)
         {
             if (_analyticsReportingService == null)
             {
@@ -293,12 +294,12 @@ namespace Grand.Services.Configuration
             GetReportsRequest reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
-            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+            var response = await _analyticsReportingService.Reports.BatchGet(reportsRequest).ExecuteAsync();
 
             return ParseResponse(response, startDate, endDate);
 
         }
-        public GoogleAnalyticsResult GetDataByDevice(DateTime startDate, DateTime endDate)
+        public virtual async Task<GoogleAnalyticsResult> GetDataByDevice(DateTime startDate, DateTime endDate)
         {
             if (_analyticsReportingService == null)
             {
@@ -338,11 +339,9 @@ namespace Grand.Services.Configuration
             GetReportsRequest reportsRequest = new GetReportsRequest();
             reportsRequest.ReportRequests = requests;
 
-            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+            var response = await _analyticsReportingService.Reports.BatchGet(reportsRequest).ExecuteAsync();
 
             return ParseResponse(response, startDate, endDate);
-            
-
         }
     }
 }
