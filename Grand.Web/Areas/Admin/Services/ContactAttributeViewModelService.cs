@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -38,12 +39,12 @@ namespace Grand.Web.Areas.Admin.Services
 
         #region Utilities
 
-        protected virtual void SaveConditionAttributes(ContactAttribute contactAttribute, ContactAttributeModel model)
+        protected virtual async Task SaveConditionAttributes(ContactAttribute contactAttribute, ContactAttributeModel model)
         {
             string attributesXml = null;
             if (model.ConditionModel.EnableCondition)
             {
-                var attribute = _contactAttributeService.GetContactAttributeById(model.ConditionModel.SelectedAttributeId);
+                var attribute = await _contactAttributeService.GetContactAttributeById(model.ConditionModel.SelectedAttributeId);
                 if (attribute != null)
                 {
                     switch (attribute.AttributeControlType)
@@ -89,9 +90,9 @@ namespace Grand.Web.Areas.Admin.Services
         }
         #endregion
          
-        public virtual IEnumerable<ContactAttributeModel> PrepareContactAttributeListModel()
+        public virtual async Task<IEnumerable<ContactAttributeModel>> PrepareContactAttributeListModel()
         {
-            var contactAttributes = _contactAttributeService.GetAllContactAttributes();
+            var contactAttributes = await _contactAttributeService.GetAllContactAttributes();
             return contactAttributes.Select(x =>
             {
                 var attributeModel = x.ToModel();
@@ -100,7 +101,7 @@ namespace Grand.Web.Areas.Admin.Services
             });
         }
 
-        public virtual void PrepareConditionAttributes(ContactAttributeModel model, ContactAttribute contactAttribute)
+        public virtual async Task PrepareConditionAttributes(ContactAttributeModel model, ContactAttribute contactAttribute)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -111,14 +112,14 @@ namespace Grand.Web.Areas.Admin.Services
             if (contactAttribute == null)
                 return;
 
-            var selectedAttribute = _contactAttributeParser.ParseContactAttributes(contactAttribute.ConditionAttributeXml).FirstOrDefault();
-            var selectedValues = _contactAttributeParser.ParseContactAttributeValues(contactAttribute.ConditionAttributeXml);
+            var selectedAttribute = (await _contactAttributeParser.ParseContactAttributes(contactAttribute.ConditionAttributeXml)).FirstOrDefault();
+            var selectedValues = await _contactAttributeParser.ParseContactAttributeValues(contactAttribute.ConditionAttributeXml);
 
             model.ConditionModel = new ConditionModel()
             {
                 EnableCondition = !string.IsNullOrEmpty(contactAttribute.ConditionAttributeXml),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = _contactAttributeService.GetAllContactAttributes()
+                ConditionAttributes = (await _contactAttributeService.GetAllContactAttributes())
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != contactAttribute.Id && x.CanBeUsedAsCondition())
                     .Select(x =>
@@ -138,23 +139,23 @@ namespace Grand.Web.Areas.Admin.Services
             };
         }
 
-        public virtual ContactAttribute InsertContactAttributeModel(ContactAttributeModel model)
+        public virtual async Task<ContactAttribute> InsertContactAttributeModel(ContactAttributeModel model)
         {
             var contactAttribute = model.ToEntity();
-            _contactAttributeService.InsertContactAttribute(contactAttribute);
+            await _contactAttributeService.InsertContactAttribute(contactAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewContactAttribute"), contactAttribute.Name);
+            await _customerActivityService.InsertActivity("AddNewContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewContactAttribute"), contactAttribute.Name);
             return contactAttribute;
         }
-        public virtual ContactAttribute UpdateContactAttributeModel(ContactAttribute contactAttribute, ContactAttributeModel model)
+        public virtual async Task<ContactAttribute> UpdateContactAttributeModel(ContactAttribute contactAttribute, ContactAttributeModel model)
         {
             contactAttribute = model.ToEntity(contactAttribute);
-            SaveConditionAttributes(contactAttribute, model);
-            _contactAttributeService.UpdateContactAttribute(contactAttribute);
+            await SaveConditionAttributes(contactAttribute, model);
+            await _contactAttributeService.UpdateContactAttribute(contactAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("EditContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.EditContactAttribute"), contactAttribute.Name);
+            await _customerActivityService.InsertActivity("EditContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.EditContactAttribute"), contactAttribute.Name);
             return contactAttribute;
         }
 
@@ -174,18 +175,18 @@ namespace Grand.Web.Areas.Admin.Services
             model.DisplayColorSquaresRgb = contactAttribute.AttributeControlType == AttributeControlType.ColorSquares;
             return model;
         }
-        public virtual ContactAttributeValue InsertContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValueModel model)
+        public virtual async Task<ContactAttributeValue> InsertContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValueModel model)
         {
             var cav = model.ToEntity();
             contactAttribute.ContactAttributeValues.Add(cav);
-            _contactAttributeService.UpdateContactAttribute(contactAttribute);
+            await _contactAttributeService.UpdateContactAttribute(contactAttribute);
             return cav;
         }
 
-        public virtual ContactAttributeValue UpdateContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValue contactAttributeValue, ContactAttributeValueModel model)
+        public virtual async Task<ContactAttributeValue> UpdateContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValue contactAttributeValue, ContactAttributeValueModel model)
         {
             contactAttributeValue = model.ToEntity(contactAttributeValue);
-            _contactAttributeService.UpdateContactAttribute(contactAttribute);
+            await _contactAttributeService.UpdateContactAttribute(contactAttribute);
             return contactAttributeValue;
         }
     }
