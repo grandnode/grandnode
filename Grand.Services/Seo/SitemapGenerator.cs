@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Services.Seo
@@ -130,7 +131,7 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>List of URL for the sitemap</returns>
-        protected virtual IList<SitemapUrl> GenerateUrls(IUrlHelper urlHelper)
+        protected virtual async Task<IList<SitemapUrl>> GenerateUrls(IUrlHelper urlHelper, string language)
         {
             var sitemapUrls = new List<SitemapUrl>();
 
@@ -176,18 +177,18 @@ namespace Grand.Services.Seo
 
             //categories
             if (_commonSettings.SitemapIncludeCategories)
-                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, ""));
+                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, "", language));
 
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
-                sitemapUrls.AddRange(GetManufacturerUrls(urlHelper));
+                sitemapUrls.AddRange(await GetManufacturerUrls(urlHelper, language));
 
             //products
             if (_commonSettings.SitemapIncludeProducts)
-                sitemapUrls.AddRange(GetProductUrls(urlHelper));
+                sitemapUrls.AddRange(await GetProductUrls(urlHelper, language));
 
             //topics
-            sitemapUrls.AddRange(GetTopicUrls(urlHelper));
+            sitemapUrls.AddRange(await GetTopicUrls(urlHelper, language));
 
             //custom URLs
             sitemapUrls.AddRange(GetCustomUrls());
@@ -201,14 +202,14 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="sitemapUrls">Current list of URL</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(IUrlHelper urlHelper, string parentCategoryId)
+        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(IUrlHelper urlHelper, string parentCategoryId, string language)
         {
-            return _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId: parentCategoryId).SelectMany(category =>
+            return _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId: parentCategoryId).GetAwaiter().GetResult().SelectMany(category =>
             {
                 var sitemapUrls = new List<SitemapUrl>();
-                var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName(language) }, GetHttpProtocol());
                 sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
-                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, category.Id));
+                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, category.Id, language));
                 return sitemapUrls;
             });
         }
@@ -218,11 +219,12 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetManufacturerUrls(IUrlHelper urlHelper)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrls(IUrlHelper urlHelper, string language)
         {
-            return _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id).Select(manufacturer =>
+            var manuf = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+            return manuf.Select(manufacturer =>
             {
-                var url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Manufacturer", new { SeName = manufacturer.GetSeName(language) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, manufacturer.UpdatedOnUtc);
             });
         }
@@ -232,12 +234,14 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetProductUrls(IUrlHelper urlHelper)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrls(IUrlHelper urlHelper, string language)
         {
-            return _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
-                visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn).Select(product =>
+            var search = await _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn);
+
+            return search.products.Select(product =>
                 {
-                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName() }, GetHttpProtocol());
+                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language)}, GetHttpProtocol());
                     return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
                 });
         }
@@ -247,11 +251,12 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetTopicUrls(IUrlHelper urlHelper)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrls(IUrlHelper urlHelper, string language)
         {
-            return _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(t => t.IncludeInSitemap).Select(topic =>
+            var topics = await _topicService.GetAllTopics(_storeContext.CurrentStore.Id);
+            return topics.Where(t => t.IncludeInSitemap).Select(topic =>
             {
-                var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName(language) }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
@@ -333,7 +338,7 @@ namespace Grand.Services.Seo
                 writer.WriteStartElement("urlset");
                 writer.WriteAttributeString("urlset", "xmlns", null, "http://www.sitemaps.org/schemas/sitemap/0.9");
                 writer.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xsi", "schemaLocation", null ,"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                writer.WriteAttributeString("xsi", "schemaLocation", null, "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
                 //write URLs from list to the sitemap
                 foreach (var url in sitemapUrls)
@@ -363,11 +368,11 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        public virtual string Generate(IUrlHelper urlHelper, int? id)
+        public virtual async Task<string> Generate(IUrlHelper urlHelper, int? id, string language)
         {
             using (var stream = new MemoryStream())
             {
-                Generate(urlHelper, stream, id);
+                await Generate(urlHelper, stream, id, language);
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
@@ -379,10 +384,10 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        public virtual void Generate(IUrlHelper urlHelper, Stream stream, int? id)
+        public virtual async Task Generate(IUrlHelper urlHelper, Stream stream, int? id, string language)
         {
             //generate all URLs for the sitemap
-            var sitemapUrls = GenerateUrls(urlHelper);
+            var sitemapUrls = await GenerateUrls(urlHelper, language);
 
             //split URLs into separate lists based on the max size 
             var sitemaps = sitemapUrls.Select((url, index) => new { Index = index, Value = url })
