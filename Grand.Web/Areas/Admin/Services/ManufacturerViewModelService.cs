@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -38,6 +40,8 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILanguageService _languageService;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
@@ -55,7 +59,9 @@ namespace Grand.Web.Areas.Admin.Services
             IDiscountService discountService,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            ILanguageService languageService,
+            SeoSettings seoSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerTemplateService = manufacturerTemplateService;
@@ -70,16 +76,18 @@ namespace Grand.Web.Areas.Admin.Services
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
             this._dateTimeHelper = dateTimeHelper;
+            this._languageService = languageService;
+            this._seoSettings = seoSettings;
         }
 
         #endregion
 
-        public virtual void PrepareTemplatesModel(ManufacturerModel model)
+        public virtual async Task PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            var templates = _manufacturerTemplateService.GetAllManufacturerTemplates();
+            var templates = await _manufacturerTemplateService.GetAllManufacturerTemplates();
             foreach (var template in templates)
             {
                 model.AvailableManufacturerTemplates.Add(new SelectListItem
@@ -91,13 +99,13 @@ namespace Grand.Web.Areas.Admin.Services
         }
 
 
-        public virtual void PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        public virtual async Task PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true)
+            model.AvailableDiscounts = (await _discountService
+                .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true))
                 .Select(d => d.ToModel())
                 .ToList();
 
@@ -107,44 +115,44 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual Manufacturer InsertManufacturerModel(ManufacturerModel model)
+        public virtual async Task<Manufacturer> InsertManufacturerModel(ManufacturerModel model)
         {
             var manufacturer = model.ToEntity();
             manufacturer.CreatedOnUtc = DateTime.UtcNow;
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
             //discounts
-            var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     manufacturer.AppliedDiscounts.Add(discount.Id);
             }
 
-            _manufacturerService.InsertManufacturer(manufacturer);
+            await _manufacturerService.InsertManufacturer(manufacturer);
             //search engine name
-            manufacturer.Locales = model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _urlRecordService);
-            model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+            manufacturer.Locales = await model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true, _seoSettings, _urlRecordService, _languageService);
             manufacturer.SeName = model.SeName;
-            _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturer(manufacturer);
 
-            _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
+            await _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
 
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
+            await _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
+            await _customerActivityService.InsertActivity("AddNewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
             return manufacturer;
         }
 
-        public virtual Manufacturer UpdateManufacturerModel(Manufacturer manufacturer, ManufacturerModel model)
+        public virtual async Task<Manufacturer> UpdateManufacturerModel(Manufacturer manufacturer, ManufacturerModel model)
         {
             string prevPictureId = manufacturer.PictureId;
             manufacturer = model.ToEntity(manufacturer);
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-            manufacturer.Locales = model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _urlRecordService);
+            manufacturer.Locales = await model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _seoSettings, _urlRecordService, _languageService);
             //discounts
-            var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -160,57 +168,57 @@ namespace Grand.Web.Areas.Admin.Services
                         manufacturer.AppliedDiscounts.Remove(discount.Id);
                 }
             }
-            model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+            model.SeName = await manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true, _seoSettings, _urlRecordService, _languageService);
             manufacturer.SeName = model.SeName;
 
-            _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturer(manufacturer);
             //search engine name
-            _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
+            await _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
 
             //delete an old picture (if deleted or updated)
             if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != manufacturer.PictureId)
             {
-                var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                var prevPicture = await _pictureService.GetPictureById(prevPictureId);
                 if (prevPicture != null)
-                    _pictureService.DeletePicture(prevPicture);
+                    await _pictureService.DeletePicture(prevPicture);
             }
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
+            await _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
 
             //activity log
-            _customerActivityService.InsertActivity("EditManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
+            await _customerActivityService.InsertActivity("EditManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
             return manufacturer;
         }
-        public virtual void DeleteManufacturer(Manufacturer manufacturer)
-        {
-            _manufacturerService.DeleteManufacturer(manufacturer);
-            //activity log
-            _customerActivityService.InsertActivity("DeleteManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name);
 
+        public virtual async Task DeleteManufacturer(Manufacturer manufacturer)
+        {
+            await _manufacturerService.DeleteManufacturer(manufacturer);
+            //activity log
+            await _customerActivityService.InsertActivity("DeleteManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name);
         }
 
-        public virtual ManufacturerModel.AddManufacturerProductModel PrepareAddManufacturerProductModel()
+        public virtual async Task<ManufacturerModel.AddManufacturerProductModel> PrepareAddManufacturerProductModel()
         {
             var model = new ManufacturerModel.AddManufacturerProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -219,30 +227,34 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(ManufacturerModel.AddManufacturerProductModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ManufacturerModel.AddManufacturerProductModel model, int pageIndex, int pageSize)
         {
-            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
 
-        public virtual (IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount) PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize)
         {
-            var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
+            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
                 pageIndex - 1, pageSize, true);
-
-            return (productManufacturers.Select(x => new ManufacturerModel.ManufacturerProductModel
+            var items = new List<ManufacturerModel.ManufacturerProductModel>();
+            foreach (var x in productManufacturers)
             {
-                Id = x.Id,
-                ManufacturerId = x.ManufacturerId,
-                ProductId = x.ProductId,
-                ProductName = _productService.GetProductById(x.ProductId).Name,
-                IsFeaturedProduct = x.IsFeaturedProduct,
-                DisplayOrder = x.DisplayOrder
-            }), productManufacturers.TotalCount);
+                items.Add(new ManufacturerModel.ManufacturerProductModel
+                {
+                    Id = x.Id,
+                    ManufacturerId = x.ManufacturerId,
+                    ProductId = x.ProductId,
+                    ProductName = (await _productService.GetProductById(x.ProductId)).Name,
+                    IsFeaturedProduct = x.IsFeaturedProduct,
+                    DisplayOrder = x.DisplayOrder
+                });
+            }
+            return (items, productManufacturers.TotalCount);
         }
-        public virtual void ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
+        public virtual async Task ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -253,11 +265,11 @@ namespace Grand.Web.Areas.Admin.Services
             productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
             productManufacturer.DisplayOrder = model.DisplayOrder;
             productManufacturer.ProductId = model.ProductId;
-            _manufacturerService.UpdateProductManufacturer(productManufacturer);
+            await _manufacturerService.UpdateProductManufacturer(productManufacturer);
         }
-        public virtual void ProductDelete(string id, string productId)
+        public virtual async Task ProductDelete(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -267,19 +279,19 @@ namespace Grand.Web.Areas.Admin.Services
 
             productManufacturer.ProductId = productId;
 
-            _manufacturerService.DeleteProductManufacturer(productManufacturer);
+            await _manufacturerService.DeleteProductManufacturer(productManufacturer);
         }
-        public virtual void InsertManufacturerProductModel(ManufacturerModel.AddManufacturerProductModel model)
+        public virtual async Task InsertManufacturerProductModel(ManufacturerModel.AddManufacturerProductModel model)
         {
             foreach (string id in model.SelectedProductIds)
             {
-                var product = _productService.GetProductById(id);
+                var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
                     var existingProductmanufacturers = product.ProductManufacturers;
                     if (product.ProductManufacturers.Where(x => x.ManufacturerId == model.ManufacturerId).Count() == 0)
                     {
-                        _manufacturerService.InsertProductManufacturer(
+                        await _manufacturerService.InsertProductManufacturer(
                             new ProductManufacturer
                             {
                                 ManufacturerId = model.ManufacturerId,
@@ -291,24 +303,25 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
         }
-        public virtual (IEnumerable<ManufacturerModel.ActivityLogModel> activityLogModels, int totalCount) PrepareActivityLogModel(string manufacturerId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ManufacturerModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareActivityLogModel(string manufacturerId, int pageIndex, int pageSize)
         {
-            var activityLog = _customerActivityService.GetManufacturerActivities(null, null, manufacturerId, pageIndex - 1, pageSize);
-            return (activityLog.Select(x =>
+            var activityLog = await _customerActivityService.GetManufacturerActivities(null, null, manufacturerId, pageIndex - 1, pageSize);
+            var items = new List<ManufacturerModel.ActivityLogModel>();
+            foreach (var x in activityLog)
             {
-                var customer = _customerService.GetCustomerById(x.CustomerId);
+                var customer = await _customerService.GetCustomerById(x.CustomerId);
                 var m = new ManufacturerModel.ActivityLogModel
                 {
                     Id = x.Id,
-                    ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
+                    ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId))?.Name,
                     Comment = x.Comment,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     CustomerEmail = customer != null ? customer.Email : "null"
                 };
-                return m;
-
-            }), activityLog.TotalCount);
+                items.Add(m);
+            }
+            return (items, activityLog.TotalCount);
         }
     }
 }
