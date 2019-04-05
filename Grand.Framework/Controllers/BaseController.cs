@@ -321,14 +321,14 @@ namespace Grand.Framework.Controllers
         /// <param name="storeService">Store service</param>
         /// <param name="workContext">Work context</param>
         /// <returns>Store ID; 0 if we are in a shared mode</returns>
-        protected virtual string GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
+        protected virtual async Task<string> GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
         {
             //ensure that we have 2 (or more) stores
-            if (storeService.GetAllStores().Count < 2)
+            if ((await storeService.GetAllStores()).Count < 2)
                 return "";
 
-            var storeId = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = storeService.GetStoreById(storeId);
+            var storeId = workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+            var store = await storeService.GetStoreById(storeId);
 
             return store != null ? store.Id : "";
         }
@@ -343,10 +343,10 @@ namespace Grand.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
         {
-            AddLocales(languageService, locales, null);
+            await AddLocales(languageService, locales, null);
         }
 
         /// <summary>
@@ -356,10 +356,10 @@ namespace Grand.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, string> configure) where TLocalizedModelLocal : ILocalizedModelLocal
         {
-            foreach (var language in languageService.GetAllLanguages(true))
+            foreach (var language in await languageService.GetAllLanguages(true))
             {
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
                 locale.LanguageId = language.Id;
