@@ -8,6 +8,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -40,7 +41,6 @@ namespace Grand.Services.Customers
 
         #endregion
 
-
         #region Methods
         
         /// <summary>
@@ -48,9 +48,9 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="id">Customer action identifier</param>
         /// <returns>Customer Action</returns>
-        public virtual CustomerAction GetCustomerActionById(string id)
+        public virtual Task<CustomerAction> GetCustomerActionById(string id)
         {
-            return _customerActionRepository.GetById(id);
+            return _customerActionRepository.GetByIdAsync(id);
         }
 
 
@@ -58,22 +58,22 @@ namespace Grand.Services.Customers
         /// Gets all customer actions
         /// </summary>
         /// <returns>Customer actions</returns>
-        public virtual IList<CustomerAction> GetCustomerActions()
+        public virtual async Task<IList<CustomerAction>> GetCustomerActions()
         {
             var query = _customerActionRepository.Table;
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// Inserts a customer action
         /// </summary>
         /// <param name="CustomerAction">Customer action</param>
-        public virtual void InsertCustomerAction(CustomerAction customerAction)
+        public virtual async Task InsertCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
                 throw new ArgumentNullException("customerAction");
 
-            _customerActionRepository.Insert(customerAction);
+            await _customerActionRepository.InsertAsync(customerAction);
 
             //event notification
             _eventPublisher.EntityInserted(customerAction);
@@ -84,12 +84,12 @@ namespace Grand.Services.Customers
         /// Delete a customer action
         /// </summary>
         /// <param name="customerAction">Customer action</param>
-        public virtual void DeleteCustomerAction(CustomerAction customerAction)
+        public virtual async Task DeleteCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
                 throw new ArgumentNullException("customerAction"); 
 
-            _customerActionRepository.Delete(customerAction);
+            await _customerActionRepository.DeleteAsync(customerAction);
 
             //event notification
             _eventPublisher.EntityDeleted(customerAction);
@@ -100,12 +100,12 @@ namespace Grand.Services.Customers
         /// Updates the customer action
         /// </summary>
         /// <param name="customerTag">Customer tag</param>
-        public virtual void UpdateCustomerAction(CustomerAction customerAction)
+        public virtual async Task UpdateCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
                 throw new ArgumentNullException("customerAction");
 
-            _customerActionRepository.Update(customerAction);
+            await _customerActionRepository.UpdateAsync(customerAction);
 
             //event notification
             _eventPublisher.EntityUpdated(customerAction);
@@ -115,32 +115,31 @@ namespace Grand.Services.Customers
 
         #region Condition Type
 
-        public virtual IList<CustomerActionType> GetCustomerActionType()
+        public virtual async Task<IList<CustomerActionType>> GetCustomerActionType()
         {
             var query = _customerActionTypeRepository.Table;
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
-        public virtual IPagedList<CustomerActionHistory> GetAllCustomerActionHistory(string customerActionId, int pageIndex = 0, int pageSize = 2147483647)
+        public virtual async Task<IPagedList<CustomerActionHistory>> GetAllCustomerActionHistory(string customerActionId, int pageIndex = 0, int pageSize = 2147483647)
         {
             var query = from h in _customerActionHistoryRepository.Table
                         where h.CustomerActionId == customerActionId
                         select h;
-            var history = new PagedList<CustomerActionHistory>(query, pageIndex, pageSize);
-            return history;
+            return await Task.FromResult(new PagedList<CustomerActionHistory>(query, pageIndex, pageSize));
         }
 
-        public virtual CustomerActionType GetCustomerActionTypeById(string id)
+        public virtual async Task<CustomerActionType> GetCustomerActionTypeById(string id)
         {
-            return _customerActionTypeRepository.GetById(id);
+            return await _customerActionTypeRepository.GetByIdAsync(id);
         }
 
-        public virtual void UpdateCustomerActionType(CustomerActionType customerActionType)
+        public virtual async Task UpdateCustomerActionType(CustomerActionType customerActionType)
         {
             if (customerActionType == null)
                 throw new ArgumentNullException("customerActionType");
 
-            _customerActionTypeRepository.Update(customerActionType);
+            await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
             _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
