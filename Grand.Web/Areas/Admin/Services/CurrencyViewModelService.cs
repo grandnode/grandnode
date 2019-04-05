@@ -5,6 +5,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Directory;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -37,21 +38,21 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual Currency InsertCurrencyModel(CurrencyModel model)
+        public virtual async Task<Currency> InsertCurrencyModel(CurrencyModel model)
         {
             var currency = model.ToEntity();
             currency.CreatedOnUtc = DateTime.UtcNow;
             currency.UpdatedOnUtc = DateTime.UtcNow;
-            _currencyService.InsertCurrency(currency);
+            await _currencyService.InsertCurrency(currency);
 
             return currency;
         }
 
-        public virtual Currency UpdateCurrencyModel(Currency currency, CurrencyModel model)
+        public virtual async Task<Currency> UpdateCurrencyModel(Currency currency, CurrencyModel model)
         {
             currency = model.ToEntity(currency);
             currency.UpdatedOnUtc = DateTime.UtcNow;
-            _currencyService.UpdateCurrency(currency);
+            await _currencyService.UpdateCurrency(currency);
             return currency;
         }
     }
