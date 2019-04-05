@@ -5,6 +5,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
@@ -15,6 +16,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
+using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages.DotLiquidDrops;
@@ -22,10 +24,12 @@ using Grand.Services.Orders;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -45,6 +49,7 @@ namespace Grand.Services.Messages
         private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -61,7 +66,8 @@ namespace Grand.Services.Messages
             EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings,
             IEventPublisher eventPublisher,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IServiceProvider serviceProvider)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -75,15 +81,16 @@ namespace Grand.Services.Messages
             this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
             this._httpContextAccessor = httpContextAccessor;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, string storeId)
+        protected virtual async Task<MessageTemplate> GetEmailAccountOfMessageTemplate(string messageTemplateName, string storeId)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
 
             //no template found
             if (messageTemplate == null)
@@ -97,37 +104,37 @@ namespace Grand.Services.Messages
             return messageTemplate;
         }
 
-        protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, string languageId)
+        protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, string languageId)
         {
             var emailAccounId = messageTemplate.GetLocalized(mt => mt.EmailAccountId, languageId);
-            var emailAccount = _emailAccountService.GetEmailAccountById(emailAccounId);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(emailAccounId);
             if (emailAccount == null)
-                emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                emailAccount = await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (emailAccount == null)
-                emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                emailAccount = (await _emailAccountService.GetAllEmailAccounts()).FirstOrDefault();
             return emailAccount;
 
         }
 
-        protected virtual string EnsureLanguageIsActive(string languageId, string storeId)
+        protected virtual async Task<Language> EnsureLanguageIsActive(string languageId, string storeId)
         {
             //load language by specified ID
-            var language = _languageService.GetLanguageById(languageId);
+            var language = await _languageService.GetLanguageById(languageId);
 
             if (language == null || !language.Published)
             {
                 //load any language from the specified store
-                language = _languageService.GetAllLanguages(storeId: storeId).FirstOrDefault();
+                language = (await _languageService.GetAllLanguages(storeId: storeId)).FirstOrDefault();
             }
             if (language == null || !language.Published)
             {
                 //load any language
-                language = _languageService.GetAllLanguages().FirstOrDefault();
+                language = (await _languageService.GetAllLanguages()).FirstOrDefault();
             }
 
             if (language == null)
                 throw new Exception("No active language could be loaded");
-            return language.Id;
+            return language;
         }
 
         #endregion
@@ -142,31 +149,31 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerRegisteredNotificationMessage(Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerRegisteredNotificationMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewCustomer.Notification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewCustomer.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -177,31 +184,31 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerWelcomeMessage(Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerWelcomeMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.WelcomeMessage", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.WelcomeMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -212,31 +219,31 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerEmailValidationMessage(Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerEmailValidationMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.EmailValidationMessage", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.EmailValidationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -247,31 +254,31 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerPasswordRecoveryMessage(Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerPasswordRecoveryMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.PasswordRecovery", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.PasswordRecovery", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -282,30 +289,32 @@ namespace Grand.Services.Messages
         /// <param name="customerNote">Customer note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId)
+        public virtual async Task<int> SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId)
         {
             if (customerNote == null)
                 throw new ArgumentNullException("customerNote");
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.NewCustomerNote", "");
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewCustomerNote", "");
             if (messageTemplate == null)
                 return 0;
+            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerNote.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(customerNote.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
-            var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
-            return SendNotification(messageTemplate, emailAccount,
+            var toName = string.Format("{0} {1}", customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName));
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -321,7 +330,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId)
+        public virtual async Task<int> SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -329,29 +338,32 @@ namespace Grand.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            LiquidObject liquidObject = new LiquidObject();
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.VendorNotification", store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+           
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
-            //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
-            LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendorId: vendor.Id);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
+            
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+
+
             var toEmail = vendor.Email;
             var toName = vendor.Name;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -362,34 +374,37 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedStoreOwnerNotification(Order order, string languageId)
+        public virtual async Task<int> SendOrderPlacedStoreOwnerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
+
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -400,35 +415,37 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidStoreOwnerNotification(Order order, string languageId)
+        public virtual async Task<int> SendOrderPaidStoreOwnerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
-
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+            
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
+
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -442,36 +459,38 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidCustomerNotification(Order order, string languageId,
+        public virtual async Task<int> SendOrderPaidCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
+
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
@@ -486,7 +505,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId)
+        public virtual async Task<int> SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -494,30 +513,31 @@ namespace Grand.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPaid.VendorNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendorId: vendor.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -530,36 +550,37 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedCustomerNotification(Order order, string languageId,
+        public virtual async Task<int> SendOrderPlacedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
@@ -573,39 +594,41 @@ namespace Grand.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendShipmentSentCustomerNotification(Shipment shipment, string languageId)
+        public virtual async Task<int> SendShipmentSentCustomerNotification(Shipment shipment, string languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
 
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
+            var order = await _serviceProvider.GetRequiredService<IOrderService>().GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, order, store, language);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -616,39 +639,42 @@ namespace Grand.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId)
+        public virtual async Task<int> SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
 
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
+            var order = await _serviceProvider.GetRequiredService<IOrderService>().GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, order, store, language);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
+
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -662,36 +688,37 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCompletedCustomerNotification(Order order, string languageId,
+        public virtual async Task<int> SendOrderCompletedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
@@ -705,35 +732,36 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCancelledCustomerNotification(Order order, string languageId)
+        public virtual async Task<int> SendOrderCancelledCustomerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -744,35 +772,36 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCancelledStoreOwnerNotification(Order order, string languageId)
+        public virtual async Task<int> SendOrderCancelledStoreOwnerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderCancelled.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderCancelled.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -783,34 +812,36 @@ namespace Grand.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId)
+        public virtual async Task<int> SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, refundedAmount: refundedAmount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, refundedAmount: refundedAmount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -821,35 +852,36 @@ namespace Grand.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId)
+        public virtual async Task<int> SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("OrderRefunded.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderRefunded.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, refundedAmount: refundedAmount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, refundedAmount: refundedAmount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -860,37 +892,38 @@ namespace Grand.Services.Messages
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId)
+        public virtual async Task<int> SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId)
         {
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
 
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderNote.OrderId);
+            var order = await _serviceProvider.GetRequiredService<IOrderService>().GetOrderById(orderNote.OrderId);
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.NewOrderNote", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewOrderNote", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(order.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, orderNote);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, orderNote);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -901,28 +934,29 @@ namespace Grand.Services.Messages
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId)
+        public virtual async Task<int> SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
 
-            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(recurringPayment.InitialOrder.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(recurringPayment.InitialOrder.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, recurringPayment.InitialOrder, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, recurringPayment.InitialOrder, customer, store);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             _messageTokenProvider.AddRecurringPaymentTokens(liquidObject, recurringPayment);
 
@@ -931,7 +965,7 @@ namespace Grand.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -946,32 +980,32 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
+        public virtual async Task<int> SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
             string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(subscription.StoreId);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, store);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = subscription.Email;
             var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -982,32 +1016,32 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
+        public virtual async Task<int> SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
             string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(subscription.StoreId);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewsLetterSubscription.DeactivationMessage", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewsLetterSubscription.DeactivationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, store);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = subscription.Email;
             var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1026,7 +1060,7 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendProductEmailAFriendMessage(Customer customer, string languageId,
+        public virtual async Task<int> SendProductEmailAFriendMessage(Customer customer, string languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1036,19 +1070,19 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("product");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Service.EmailAFriend", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
             liquidObject.EmailAFriend = new LiquidEmailAFriend(personalMessage, customerEmail);
 
             //event notification
@@ -1056,7 +1090,7 @@ namespace Grand.Services.Messages
 
             var toEmail = friendsEmail;
             var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1070,33 +1104,33 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendWishlistEmailAFriendMessage(Customer customer, string languageId,
+        public virtual async Task<int> SendWishlistEmailAFriendMessage(Customer customer, string languageId,
              string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Wishlist.EmailAFriend", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Wishlist.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, personalMessage, customerEmail);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language, personalMessage, customerEmail);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = friendsEmail;
             var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1112,7 +1146,7 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendProductQuestionMessage(Customer customer, string languageId,
+        public virtual async Task<int> SendProductQuestionMessage(Customer customer, string languageId,
             Product product, string customerEmail, string fullName, string phone, string message)
         {
             if (customer == null)
@@ -1122,19 +1156,19 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("product");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Service.AskQuestion", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.AskQuestion", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
             liquidObject.AskQuestion = new LiquidAskQuestion(message, customerEmail, fullName, phone);
 
             //event notification
@@ -1160,15 +1194,15 @@ namespace Grand.Services.Messages
                     Subject = subjectReplaced,
                     Enquiry = bodyReplaced,
                     EmailAccountId = emailAccount.Id,
-                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                    IpAddress = _serviceProvider.GetRequiredService<IWebHelper>().GetCurrentIpAddress()
                 };
 
-                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+                await _serviceProvider.GetRequiredService<IContactUsService>().InsertContactUs(contactus);
             }
 
             var toEmail = emailAccount.Email;
             var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1184,34 +1218,36 @@ namespace Grand.Services.Messages
         /// <param name="orderItem">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId)
+        public virtual async Task<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(returnRequest.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1223,27 +1259,29 @@ namespace Grand.Services.Messages
         /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
+        public virtual async Task<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(returnRequest.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1254,7 +1292,7 @@ namespace Grand.Services.Messages
             var toName = customer.IsGuest() ?
                 order.BillingAddress.FirstName :
                 customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1266,28 +1304,30 @@ namespace Grand.Services.Messages
         /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
+        public virtual async Task<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(returnRequest.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
+            await _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1298,7 +1338,7 @@ namespace Grand.Services.Messages
             var toName = customer.IsGuest() ?
                 order.BillingAddress.FirstName :
                 customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1315,7 +1355,7 @@ namespace Grand.Services.Messages
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewForumTopicMessage(Customer customer,
+        public virtual async Task<int> SendNewForumTopicMessage(Customer customer,
             ForumTopic forumTopic, Forum forum, string languageId)
         {
             if (customer == null)
@@ -1323,18 +1363,19 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("customer");
             }
             var store = _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumTopic", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumTopic", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddForumTokens(liquidObject, customer, store, forum, forumTopic);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1342,7 +1383,7 @@ namespace Grand.Services.Messages
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         /// <summary>
@@ -1355,7 +1396,7 @@ namespace Grand.Services.Messages
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewForumPostMessage(Customer customer,
+        public virtual async Task<int> SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, string languageId)
         {
@@ -1365,20 +1406,20 @@ namespace Grand.Services.Messages
             }
 
             var store = _storeContext.CurrentStore;
-
-            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumPost", store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumPost", store.Id);
             if (messageTemplate == null)
             {
                 return 0;
             }
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddForumTokens(liquidObject, customer, store, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1386,7 +1427,7 @@ namespace Grand.Services.Messages
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         /// <summary>
@@ -1395,30 +1436,34 @@ namespace Grand.Services.Messages
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId)
+        public virtual async Task<int> SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId)
         {
             if (privateMessage == null)
             {
                 throw new ArgumentNullException("privateMessage");
             }
 
-            var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
+            var store = await _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.NewPM", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.NewPM", store.Id);
             if (messageTemplate == null)
             {
                 return 0;
             }
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             _messageTokenProvider.AddPrivateMessageTokens(liquidObject, privateMessage);
-            var tocustomer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(privateMessage.ToCustomerId);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var tocustomer = await customerService.GetCustomerById(privateMessage.ToCustomerId);
+
             if (tocustomer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, tocustomer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, tocustomer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1426,7 +1471,7 @@ namespace Grand.Services.Messages
             var toEmail = tocustomer.Email;
             var toName = tocustomer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         #endregion
@@ -1439,7 +1484,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId)
+        public virtual async Task<int> SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1448,26 +1493,26 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("vendor");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddVendorTokens(liquidObject, vendor, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1478,24 +1523,24 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendVendorInformationChangeNotification(Vendor vendor, string languageId)
+        public virtual async Task<int> SendVendorInformationChangeNotification(Vendor vendor, string languageId)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddVendorTokens(liquidObject, vendor, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1503,7 +1548,7 @@ namespace Grand.Services.Messages
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
 
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
 
@@ -1513,38 +1558,38 @@ namespace Grand.Services.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendGiftCardNotification(GiftCard giftCard, string languageId)
+        public virtual async Task<int> SendGiftCardNotification(GiftCard giftCard, string languageId)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
 
             Store store = null;
             var order = giftCard.PurchasedWithOrderItem != null ?
-                EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id) :
+                await _serviceProvider.GetRequiredService<IOrderService>().GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id) :
                 null;
             if (order != null)
-                store = _storeService.GetStoreById(order.StoreId);
+                store = await _storeService.GetStoreById(order.StoreId);
             if (store == null)
                 store = _storeContext.CurrentStore;
 
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("GiftCard.Notification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("GiftCard.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             _messageTokenProvider.AddGiftCardTokens(liquidObject, giftCard);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
             var toEmail = giftCard.RecipientEmail;
             var toName = giftCard.RecipientName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1555,35 +1600,37 @@ namespace Grand.Services.Messages
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendProductReviewNotificationMessage(ProductReview productReview,
+        public virtual async Task<int> SendProductReviewNotificationMessage(Product product, ProductReview productReview,
             string languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Product.ProductReview", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Product.ProductReview", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(productReview.CustomerId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var customer = await customerService.GetCustomerById(productReview.CustomerId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddProductReviewTokens(liquidObject, productReview);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddProductReviewTokens(liquidObject, product, productReview);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1595,38 +1642,39 @@ namespace Grand.Services.Messages
         /// <param name="vendorReview">Vendor review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendVendorReviewNotificationMessage(VendorReview vendorReview,
+        public virtual async Task<int> SendVendorReviewNotificationMessage(VendorReview vendorReview,
             string languageId)
         {
             if (vendorReview == null)
                 throw new ArgumentNullException("vendorReview");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Vendor.VendorReview", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Vendor.VendorReview", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(vendorReview.CustomerId);
-            var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(vendorReview.CustomerId);
+            var vendor = await _serviceProvider.GetRequiredService<IVendorService>().GetVendorById(vendorReview.VendorId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddVendorReviewTokens(liquidObject, vendorReview);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddVendorReviewTokens(liquidObject, vendor, vendorReview);
 
-            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+
+            await _messageTokenProvider.AddVendorTokens(liquidObject, vendor, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1637,31 +1685,31 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(Product product, string languageId)
+        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, string languageId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1672,34 +1720,32 @@ namespace Grand.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, string languageId)
+        public virtual async Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, ProductAttributeCombination combination, string languageId)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
-            var product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
-            _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, combination, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
+            await _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, customer, product, combination);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1712,25 +1758,25 @@ namespace Grand.Services.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
+        public virtual async Task<int> SendNewVatSubmittedStoreOwnerNotification(Customer customer,
             string vatName, string vatAddress, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
             liquidObject.VatValidationResult = new LiquidVatValidationResult(vatName, vatAddress);
 
             //event notification
@@ -1738,7 +1784,7 @@ namespace Grand.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1751,29 +1797,29 @@ namespace Grand.Services.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("CustomerDelete.StoreOwnerNotification", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("CustomerDelete.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1784,35 +1830,35 @@ namespace Grand.Services.Messages
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendBlogCommentNotificationMessage(BlogComment blogComment, string languageId)
+        public virtual async Task<int> SendBlogCommentNotificationMessage(BlogPost blogPost, BlogComment blogComment, string languageId)
         {
             if (blogComment == null)
                 throw new ArgumentNullException("blogComment");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Blog.BlogComment", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Blog.BlogComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddBlogCommentTokens(store.Id, liquidObject, blogComment);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddBlogCommentTokens(liquidObject, blogPost, blogComment, store, language);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(blogComment.CustomerId);
             if (customer != null && customer.IsRegistered())
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1823,35 +1869,35 @@ namespace Grand.Services.Messages
         /// <param name="articleComment">Article comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendArticleCommentNotificationMessage(KnowledgebaseArticleComment articleComment, string languageId)
+        public virtual async Task<int> SendArticleCommentNotificationMessage(KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, string languageId)
         {
             if (articleComment == null)
                 throw new ArgumentNullException("articleComment");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Knowledgebase.ArticleComment", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Knowledgebase.ArticleComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddArticleCommentTokens(store.Id, liquidObject, articleComment);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddArticleCommentTokens(liquidObject, article, articleComment, store, language);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(articleComment.CustomerId);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(articleComment.CustomerId);
             if (customer != null && customer.IsRegistered())
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1862,34 +1908,34 @@ namespace Grand.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsCommentNotificationMessage(NewsComment newsComment, string languageId)
+        public virtual async Task<int> SendNewsCommentNotificationMessage(NewsItem newsItem, NewsComment newsComment, string languageId)
         {
             if (newsComment == null)
                 throw new ArgumentNullException("newsComment");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("News.NewsComment", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("News.NewsComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddNewsCommentTokens(store.Id, liquidObject, newsComment);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(newsComment.CustomerId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddNewsCommentTokens(liquidObject, newsItem, newsComment, store, language);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(newsComment.CustomerId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1900,35 +1946,34 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendBackInStockNotification(BackInStockSubscription subscription, string languageId)
+        public virtual async Task<int> SendBackInStockNotification(Customer customer, Product product, BackInStockSubscription subscription, string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Customer.BackInStock", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.BackInStock", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(subscription.CustomerId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
-            _messageTokenProvider.AddBackInStockTokens(liquidObject, subscription);
+            _messageTokenProvider.AddBackInStockTokens(liquidObject, product, subscription, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -1942,18 +1987,18 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendContactUsMessage(Customer customer, string languageId, string senderEmail,
+        public virtual async Task<int> SendContactUsMessage(Customer customer, string languageId, string senderEmail,
             string senderName, string subject, string body, string attrInfo, string attrXml)
         {
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Service.ContactUs", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.ContactUs", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             string fromEmail;
             string fromName;
@@ -1972,8 +2017,8 @@ namespace Grand.Services.Messages
             }
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
             liquidObject.ContactUs = new LiquidContactUs(senderEmail, senderName, body, attrInfo);
 
             //event notification
@@ -1996,16 +2041,13 @@ namespace Grand.Services.Messages
                     Subject = String.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
                     Enquiry = body,
                     EmailAccountId = emailAccount.Id,
-                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress(),
+                    IpAddress = _serviceProvider.GetRequiredService<IWebHelper>().GetCurrentIpAddress(),
                     ContactAttributeDescription = attrInfo,
                     ContactAttributesXml = attrXml
                 };
-                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+                await _serviceProvider.GetRequiredService<IContactUsService>().InsertContactUs(contactus);
             }
-
-
-
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
                 fromEmail: fromEmail,
                 fromName: fromName,
                 subject: subject,
@@ -2023,21 +2065,21 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail,
+        public virtual async Task<int> SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail,
             string senderName, string subject, string body)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetActiveMessageTemplate("Service.ContactVendor", store.Id);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.ContactVendor", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             string fromEmail;
             string fromName;
@@ -2058,8 +2100,8 @@ namespace Grand.Services.Messages
             }
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
             liquidObject.ContactUs = new LiquidContactUs(senderEmail, senderName, body, "");
 
             //event notification
@@ -2082,12 +2124,12 @@ namespace Grand.Services.Messages
                     Subject = String.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
                     Enquiry = body,
                     EmailAccountId = emailAccount.Id,
-                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                    IpAddress = _serviceProvider.GetRequiredService<IWebHelper>().GetCurrentIpAddress()
                 };
-                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+                await _serviceProvider.GetRequiredService<IContactUsService>().InsertContactUs(contactus);
             }
 
-            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
+            return await SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
                 fromEmail: fromEmail,
                 fromName: fromName,
                 subject: subject,
@@ -2095,7 +2137,7 @@ namespace Grand.Services.Messages
                 replyToName: senderName);
         }
 
-        public virtual int SendNotification(MessageTemplate messageTemplate,
+        public virtual async Task<int> SendNotification(MessageTemplate messageTemplate,
             EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
@@ -2147,7 +2189,7 @@ namespace Grand.Services.Messages
                      : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
             };
 
-            _queuedEmailService.InsertQueuedEmail(email);
+            await _queuedEmailService.InsertQueuedEmail(email);
             return 1;
         }
 
@@ -2159,20 +2201,21 @@ namespace Grand.Services.Messages
         /// <param name="liquidObject">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendTestEmail(string messageTemplateId, string sendToEmail,
+        public virtual async Task<int> SendTestEmail(string messageTemplateId, string sendToEmail,
             LiquidObject liquidObject, string languageId)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(messageTemplateId);
             if (messageTemplate == null)
                 throw new ArgumentException("Template cannot be loaded");
+            var language = await EnsureLanguageIsActive(languageId, "");
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 sendToEmail, null);
         }
@@ -2189,25 +2232,25 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer)
+        public virtual async Task<int> SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer)
         {
             if (cartItem == null)
                 throw new ArgumentNullException("cartItem");
 
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            var product = EngineContext.Current.Resolve<IProductService>().GetProductById(cartItem.ProductId);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            var product = await _serviceProvider.GetRequiredService<IProductService>().GetProductById(cartItem.ProductId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2218,7 +2261,7 @@ namespace Grand.Services.Messages
             if (!String.IsNullOrEmpty(toEmail))
                 toEmail = emailAccount.Email;
 
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -2231,25 +2274,25 @@ namespace Grand.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId)
+        public virtual async Task<int> SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store =  await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2271,7 +2314,7 @@ namespace Grand.Services.Messages
                 }
             }
 
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
 
@@ -2284,21 +2327,21 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer)
+        public virtual async Task<int> SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer)
         {
             var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
             if (messageTemplate == null)
                 return 0;
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2309,7 +2352,7 @@ namespace Grand.Services.Messages
             if (!String.IsNullOrEmpty(toEmail))
                 toEmail = emailAccount.Email;
 
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -2318,17 +2361,17 @@ namespace Grand.Services.Messages
 
         #region Auction notification
 
-        public virtual int SendAuctionEndedCustomerNotificationWin(Product product, string languageId, Bid bid)
+        public virtual async Task<int> SendAuctionEndedCustomerNotificationWin(Product product, string languageId, Bid bid)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(bid.CustomerId);
             if (customer != null)
             {
                 if (string.IsNullOrEmpty(languageId))
                 {
-                    languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                    languageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
                 }
 
                 string storeId = bid.StoreId;
@@ -2336,39 +2379,39 @@ namespace Grand.Services.Messages
                 {
                     storeId = _storeContext.CurrentStore.Id;
                 }
+                var store = await _storeService.GetStoreById(storeId);
+                var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-                languageId = EnsureLanguageIsActive(languageId, storeId);
-
-                var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
+                var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
                 if (messageTemplate == null)
                     return 0;
 
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
                 LiquidObject liquidObject = new LiquidObject();
-                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
-                _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+                await _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
+                _messageTokenProvider.AddStoreTokens(liquidObject, await _storeService.GetStoreById(storeId), language, emailAccount);
 
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
                 var toEmail = customer.Email;
                 var toName = customer.GetFullName();
-                return SendNotification(messageTemplate, emailAccount,
+                return await SendNotification(messageTemplate, emailAccount,
                     languageId, liquidObject,
                     toEmail, toName);
             }
             return 0;
         }
 
-        public virtual int SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid)
+        public virtual async Task<int> SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customerwin = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+            var customerwin = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(bid.CustomerId);
             if (customerwin != null)
             {
                 string storeId = bid.StoreId;
@@ -2376,38 +2419,39 @@ namespace Grand.Services.Messages
                 {
                     storeId = _storeContext.CurrentStore.Id;
                 }
+                var language = await EnsureLanguageIsActive(languageId, storeId);
 
-                var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
+                var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
                 if (messageTemplate == null)
                     return 0;
 
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-                var store = _storeService.GetStoreById(storeId);
+                var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+                var store = await _storeService.GetStoreById(storeId);
 
                 LiquidObject liquidObject = new LiquidObject();
-                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
-                _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+                await _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
+                _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
 
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(bid.ProductId).Where(x => x.CustomerId != bid.CustomerId).GroupBy(x => x.CustomerId);
+                var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+                var bids = (await _serviceProvider.GetRequiredService<IAuctionService>().GetBidsByProductId(bid.ProductId)).Where(x => x.CustomerId != bid.CustomerId).GroupBy(x => x.CustomerId);
                 foreach (var item in bids)
                 {
-                    var customer = customerService.GetCustomerById(item.Key);
+                    var customer = await customerService.GetCustomerById(item.Key);
 
                     if (string.IsNullOrEmpty(languageId))
                     {
-                        languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                        languageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
                     }
 
-                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
                     //event notification
                     _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
                     var toEmail = customer.Email;
                     var toName = customer.GetFullName();
-                    SendNotification(messageTemplate, emailAccount,
+                    await SendNotification(messageTemplate, emailAccount,
                         languageId, liquidObject,
                         toEmail, toName);
                 }
@@ -2415,7 +2459,7 @@ namespace Grand.Services.Messages
             return 0;
         }
 
-        public virtual int SendAuctionEndedCustomerNotificationBin(Product product, string customerId, string languageId, string storeId)
+        public virtual async Task<int> SendAuctionEndedCustomerNotificationBin(Product product, string customerId, string languageId, string storeId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -2425,37 +2469,38 @@ namespace Grand.Services.Messages
                 storeId = _storeContext.CurrentStore.Id;
             }
 
-            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationBin", storeId);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.CustomerNotificationBin", storeId);
             if (messageTemplate == null)
                 return 0;
 
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var store = _storeService.GetStoreById(storeId);
+            var store = await _storeService.GetStoreById(storeId);
+            var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
 
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(product.Id).Where(x => x.CustomerId != customerId).GroupBy(x => x.CustomerId);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            var bids = (await _serviceProvider.GetRequiredService<IAuctionService>().GetBidsByProductId(product.Id)).Where(x => x.CustomerId != customerId).GroupBy(x => x.CustomerId);
             foreach (var item in bids)
             {
-                var customer = customerService.GetCustomerById(item.Key);
+                var customer = await customerService.GetCustomerById(item.Key);
                 if (customer != null)
                 {
                     if (string.IsNullOrEmpty(languageId))
                     {
-                        languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                        languageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
                     }
 
-                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
                     //event notification
                     _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
                     var toEmail = customer.Email;
                     var toName = customer.GetFullName();
-                    SendNotification(messageTemplate, emailAccount,
+                    await SendNotification(messageTemplate, emailAccount,
                         languageId, liquidObject,
                         toEmail, toName);
                 }
@@ -2463,7 +2508,7 @@ namespace Grand.Services.Messages
 
             return 0;
         }
-        public virtual int SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid)
+        public virtual async Task<int> SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -2474,11 +2519,11 @@ namespace Grand.Services.Messages
 
             if (bid != null)
             {
-                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+                var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(bid.CustomerId);
 
                 if (string.IsNullOrEmpty(languageId))
                 {
-                    languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                    languageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
                 }
 
                 string storeId = bid.StoreId;
@@ -2486,26 +2531,34 @@ namespace Grand.Services.Messages
                 {
                     storeId = _storeContext.CurrentStore.Id;
                 }
+                var store = await _storeService.GetStoreById(storeId);
 
-                languageId = EnsureLanguageIsActive(languageId, storeId);
+                var language = await EnsureLanguageIsActive(languageId, store.Id);
 
-                messageTemplate = GetActiveMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
+                messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
                 if (messageTemplate == null)
                     return 0;
 
-                emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-                _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+                emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+                await _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+                _messageTokenProvider.AddStoreTokens(liquidObject, await _storeService.GetStoreById(storeId), language, emailAccount);
             }
             else
             {
-                messageTemplate = GetActiveMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
+                string storeId = bid.StoreId;
+                if (string.IsNullOrEmpty(storeId))
+                {
+                    storeId = _storeContext.CurrentStore.Id;
+                }
+                var store = await _storeService.GetStoreById(storeId);
+                var language = await EnsureLanguageIsActive(languageId, store.Id);
+                messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
                 if (messageTemplate == null)
                     return 0;
 
-                emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, "", "");
+                emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, language, store);
             }
 
             //event notification
@@ -2514,7 +2567,7 @@ namespace Grand.Services.Messages
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
 
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }
@@ -2527,16 +2580,16 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOutBidCustomerNotification(Product product, string languageId, Bid bid)
+        public virtual async Task<int> SendOutBidCustomerNotification(Product product, string languageId, Bid bid)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(bid.CustomerId);
 
             if (string.IsNullOrEmpty(languageId))
             {
-                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                languageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
             }
 
             string storeId = bid.StoreId;
@@ -2544,26 +2597,26 @@ namespace Grand.Services.Messages
             {
                 storeId = _storeContext.CurrentStore.Id;
             }
+            var store = await _storeService.GetStoreById(storeId);
+            var language = await EnsureLanguageIsActive(languageId, storeId);
 
-            languageId = EnsureLanguageIsActive(languageId, storeId);
-
-            var messageTemplate = GetActiveMessageTemplate("BidUp.CustomerNotification", storeId);
+            var messageTemplate = await GetEmailAccountOfMessageTemplate("BidUp.CustomerNotification", storeId);
             if (messageTemplate == null)
                 return 0;
 
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+            await _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            _messageTokenProvider.AddStoreTokens(liquidObject, await _storeService.GetStoreById(storeId), language, emailAccount);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
+            return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
         }

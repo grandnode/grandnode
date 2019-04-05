@@ -9,6 +9,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Vendors;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -22,7 +23,7 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerRegisteredNotificationMessage(Customer customer, string languageId);
+        Task<int> SendCustomerRegisteredNotificationMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
@@ -30,7 +31,7 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerWelcomeMessage(Customer customer, string languageId);
+        Task<int> SendCustomerWelcomeMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends an email validation message to a customer
@@ -38,7 +39,7 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerEmailValidationMessage(Customer customer, string languageId);
+        Task<int> SendCustomerEmailValidationMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends password recovery message to a customer
@@ -46,7 +47,7 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerPasswordRecoveryMessage(Customer customer, string languageId);
+        Task<int> SendCustomerPasswordRecoveryMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends a new customer note added notification to a customer
@@ -54,7 +55,7 @@ namespace Grand.Services.Messages
         /// <param name="CustomerNote">Customer note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId);
+        Task<int> SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId);
 
         #endregion
 
@@ -67,7 +68,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId);
+        Task<int> SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends an order placed notification to a store owner
@@ -75,7 +76,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedStoreOwnerNotification(Order order, string languageId);
+        Task<int> SendOrderPlacedStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order paid notification to a store owner
@@ -83,7 +84,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidStoreOwnerNotification(Order order, string languageId);
+        Task<int> SendOrderPaidStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order paid notification to a customer
@@ -94,7 +95,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidCustomerNotification(Order order, string languageId,
+        Task<int> SendOrderPaidCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId);
+        Task<int> SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends an order placed notification to a customer
@@ -115,7 +116,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedCustomerNotification(Order order, string languageId,
+        Task<int> SendOrderPlacedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Grand.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendShipmentSentCustomerNotification(Shipment shipment, string languageId);
+        Task<int> SendShipmentSentCustomerNotification(Shipment shipment, string languageId);
 
         /// <summary>
         /// Sends a shipment delivered notification to a customer
@@ -132,7 +133,7 @@ namespace Grand.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId);
+        Task<int> SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId);
 
         /// <summary>
         /// Sends an order completed notification to a customer
@@ -143,7 +144,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCompletedCustomerNotification(Order order, string languageId,
+        Task<int> SendOrderCompletedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCancelledCustomerNotification(Order order, string languageId);
+        Task<int> SendOrderCancelledCustomerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order cancelled notification to a store owner
@@ -160,7 +161,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCancelledStoreOwnerNotification(Order order, string languageId);
+        Task<int> SendOrderCancelledStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order refunded notification to a store owner
@@ -169,7 +170,7 @@ namespace Grand.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId);
+        Task<int> SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId);
 
         /// <summary>
         /// Sends an order refunded notification to a customer
@@ -178,7 +179,7 @@ namespace Grand.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId);
+        Task<int> SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId);
 
         /// <summary>
         /// Sends a new order note added notification to a customer
@@ -186,7 +187,7 @@ namespace Grand.Services.Messages
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId);
+        Task<int> SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId);
 
         /// <summary>
         /// Sends a "Recurring payment cancelled" notification to a store owner
@@ -194,7 +195,7 @@ namespace Grand.Services.Messages
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId);
+        Task<int> SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId);
 
         #endregion
 
@@ -206,7 +207,7 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
+        Task<int> SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
             string languageId);
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
+        Task<int> SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
             string languageId);
 
         #endregion
@@ -232,7 +233,7 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        int SendProductEmailAFriendMessage(Customer customer, string languageId,
+        Task<int> SendProductEmailAFriendMessage(Customer customer, string languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage);
 
         /// <summary>
@@ -244,7 +245,7 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        int SendWishlistEmailAFriendMessage(Customer customer, string languageId,
+        Task<int> SendWishlistEmailAFriendMessage(Customer customer, string languageId,
              string customerEmail, string friendsEmail, string personalMessage);
 
 
@@ -258,7 +259,7 @@ namespace Grand.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        int SendProductQuestionMessage(Customer customer, string languageId,
+        Task<int> SendProductQuestionMessage(Customer customer, string languageId,
             Product product, string customerEmail, string fullName, string phone, string message);
         #endregion
 
@@ -271,7 +272,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId);
+        Task<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId);
 
 
         /// <summary>
@@ -281,7 +282,7 @@ namespace Grand.Services.Messages
         /// <param name="order">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
+        Task<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
 
         /// <summary>
         /// Sends 'New Return Request' message to a customer
@@ -290,7 +291,7 @@ namespace Grand.Services.Messages
         /// <param name="order"></param>
         /// <param name="languageId"></param>
         /// <returns></returns>
-        int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
+        Task<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
 
         #endregion
 
@@ -304,7 +305,7 @@ namespace Grand.Services.Messages
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewForumTopicMessage(Customer customer,
+        Task<int> SendNewForumTopicMessage(Customer customer,
             ForumTopic forumTopic, Forum forum, string languageId);
 
         /// <summary>
@@ -317,7 +318,7 @@ namespace Grand.Services.Messages
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewForumPostMessage(Customer customer,
+        Task<int> SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex,
             string languageId);
@@ -328,7 +329,7 @@ namespace Grand.Services.Messages
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId);
+        Task<int> SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId);
 
         #endregion
 
@@ -341,7 +342,7 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId);
+        Task<int> SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId);
 
 
         /// <summary>
@@ -350,15 +351,16 @@ namespace Grand.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendVendorInformationChangeNotification(Vendor vendor, string languageId);
+        Task<int> SendVendorInformationChangeNotification(Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends a product review notification message to a store owner
         /// </summary>
+        /// <param name="product">Product</param>
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendProductReviewNotificationMessage(ProductReview productReview, string languageId);
+        Task<int> SendProductReviewNotificationMessage(Product product, ProductReview productReview, string languageId);
 
         /// <summary>
         /// Sends a vendor review notification message to a store owner
@@ -366,7 +368,7 @@ namespace Grand.Services.Messages
         /// <param name="vendorReview">Vendor review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendVendorReviewNotificationMessage(VendorReview vendorReview, string languageId);
+        Task<int> SendVendorReviewNotificationMessage(VendorReview vendorReview, string languageId);
 
         /// <summary>
         /// Sends a gift card notification
@@ -374,7 +376,7 @@ namespace Grand.Services.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendGiftCardNotification(GiftCard giftCard, string languageId);
+        Task<int> SendGiftCardNotification(GiftCard giftCard, string languageId);
 
 
         /// <summary>
@@ -383,7 +385,7 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendQuantityBelowStoreOwnerNotification(Product product, string languageId);
+        Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, string languageId);
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -391,7 +393,7 @@ namespace Grand.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, string languageId);
+        Task<int> SendQuantityBelowStoreOwnerNotification(Customer customer, Product product, ProductAttributeCombination combination, string languageId);
 
         /// <summary>
         /// Sends a "new VAT sumitted" notification to a store owner
@@ -401,7 +403,7 @@ namespace Grand.Services.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, string languageId);
+        Task<int> SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, string languageId);
 
         /// <summary>
         /// Sends a "customer delete" notification to a store owner
@@ -409,7 +411,7 @@ namespace Grand.Services.Messages
         /// <param name="customer">Customer</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId);
+        Task<int> SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId);
 
         /// <summary>
         /// Sends a blog comment notification message to a store owner
@@ -417,7 +419,7 @@ namespace Grand.Services.Messages
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendBlogCommentNotificationMessage(BlogComment blogComment, string languageId);
+        Task<int> SendBlogCommentNotificationMessage(BlogPost blogPost, BlogComment blogComment, string languageId);
 
         /// <summary>
         /// Sends an article comment notification message to a store owner
@@ -425,7 +427,7 @@ namespace Grand.Services.Messages
         /// <param name="articleComment">Article comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendArticleCommentNotificationMessage(KnowledgebaseArticleComment articleComment, string languageId);
+        Task<int> SendArticleCommentNotificationMessage(KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, string languageId);
 
         /// <summary>
         /// Sends a news comment notification message to a store owner
@@ -433,7 +435,7 @@ namespace Grand.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewsCommentNotificationMessage(NewsComment newsComment, string languageId);
+        Task<int> SendNewsCommentNotificationMessage(NewsItem newsItem, NewsComment newsComment, string languageId);
 
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer
@@ -441,7 +443,7 @@ namespace Grand.Services.Messages
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendBackInStockNotification(BackInStockSubscription subscription, string languageId);
+        Task<int> SendBackInStockNotification(Customer customer, Product product, BackInStockSubscription subscription, string languageId);
 
 
         /// <summary>
@@ -453,7 +455,7 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, string attrXml);
+        Task<int> SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, string attrXml);
 
         /// <summary>
         /// Sends "contact vendor" message
@@ -465,7 +467,7 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        int SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail, string senderName, string subject, string body);
+        Task<int> SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail, string senderName, string subject, string body);
 
         /// <summary>
         /// Sends a customer action event - Add to cart notification to a customer
@@ -475,7 +477,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer);
+        Task<int> SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer);
 
 
         /// <summary>
@@ -485,7 +487,7 @@ namespace Grand.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId);
+        Task<int> SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId);
 
 
         /// <summary>
@@ -495,7 +497,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
+        Task<int> SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
 
         /// <summary>
         /// Sends auction ended notification to a customer (winner)
@@ -504,7 +506,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        int SendAuctionEndedCustomerNotificationWin(Product product, string languageId, Bid bid);
+        Task<int> SendAuctionEndedCustomerNotificationWin(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Sends auction ended notification to a customer (loser)
@@ -513,7 +515,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        int SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid);
+        Task<int> SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Sends auction ended notification to a customer (loser - bin)
@@ -523,7 +525,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendAuctionEndedCustomerNotificationBin(Product product, string customerId, string languageId, string storeId);
+        Task<int> SendAuctionEndedCustomerNotificationBin(Product product, string customerId, string languageId, string storeId);
 
         /// <summary>
         /// Sends auction ended notification to a store owner
@@ -532,7 +534,7 @@ namespace Grand.Services.Messages
         /// <param name="product">Auction</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        int SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid);
+        Task<int> SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Send outbid notification to a customer
@@ -541,7 +543,7 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        int SendOutBidCustomerNotification(Product product, string languageId, Bid bid);
+        Task<int> SendOutBidCustomerNotification(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Send notification
@@ -562,7 +564,7 @@ namespace Grand.Services.Messages
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        int SendNotification(MessageTemplate messageTemplate,
+        Task<int> SendNotification(MessageTemplate messageTemplate,
             EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
@@ -578,7 +580,7 @@ namespace Grand.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendTestEmail(string messageTemplateId, string sendToEmail, LiquidObject liquidObject, string languageId);
+        Task<int> SendTestEmail(string messageTemplateId, string sendToEmail, LiquidObject liquidObject, string languageId);
 
         #endregion
     }
