@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -14,35 +15,35 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Updates a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Deletes a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription identifier
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionById(string newsLetterSubscriptionId);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionById(string newsLetterSubscriptionId);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription GUID
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid);
 
         /// <summary>
         /// Gets a newsletter subscription by email and store ID
@@ -50,7 +51,7 @@ namespace Grand.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId);
 
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByCustomerId(string customerId);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByCustomerId(string customerId);
 
         /// <summary>
         /// Gets the newsletter subscription list
@@ -70,7 +71,7 @@ namespace Grand.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
-        IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+        Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptions(string email = null,
             string storeId = "", bool? isActive = null, string[] categoryIds = null, int pageIndex = 0, int pageSize = int.MaxValue);
     }
 }
