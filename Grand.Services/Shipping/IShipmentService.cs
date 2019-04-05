@@ -3,6 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Shipping;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Shipping
 {
@@ -15,7 +16,7 @@ namespace Grand.Services.Shipping
         /// Deletes a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        void DeleteShipment(Shipment shipment);
+        Task DeleteShipment(Shipment shipment);
 
         /// <summary>
         /// Search shipments
@@ -32,7 +33,7 @@ namespace Grand.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        IPagedList<Shipment> GetAllShipments(string vendorId = "", string warehouseId = "",
+        Task<IPagedList<Shipment>> GetAllShipments(string vendorId = "", string warehouseId = "",
             string shippingCountryId = "",
             int shippingStateId = 0,
             string shippingCity = null,
@@ -40,33 +41,34 @@ namespace Grand.Services.Shipping
             bool loadNotShipped = false,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
-        
+
         /// <summary>
         /// Get shipment by identifiers
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
         /// <returns>Shipments</returns>
-        IList<Shipment> GetShipmentsByIds(string[] shipmentIds);
-        IList<Shipment> GetShipmentsByOrder(string orderId);
+        Task<IList<Shipment>> GetShipmentsByIds(string[] shipmentIds);
+
+        Task<IList<Shipment>> GetShipmentsByOrder(string orderId);
 
         /// <summary>
         /// Gets a shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
         /// <returns>Shipment</returns>
-        Shipment GetShipmentById(string shipmentId);
+        Task<Shipment> GetShipmentById(string shipmentId);
 
         /// <summary>
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        void InsertShipment(Shipment shipment);
+        Task InsertShipment(Shipment shipment);
 
         /// <summary>
         /// Updates the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        void UpdateShipment(Shipment shipment);
+        Task UpdateShipment(Shipment shipment);
 
         /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped
@@ -76,7 +78,7 @@ namespace Grand.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        int GetQuantityInShipments(Product product, string attributexml, string warehouseId,
+        Task<int> GetQuantityInShipments(Product product, string attributexml, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
     }
 }
