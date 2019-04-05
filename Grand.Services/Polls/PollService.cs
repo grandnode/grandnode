@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Polls
 {
@@ -47,9 +48,9 @@ namespace Grand.Services.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollById(string pollId)
+        public virtual Task<Poll> GetPollById(string pollId)
         {
-            return _pollRepository.GetById(pollId);
+            return _pollRepository.GetByIdAsync(pollId);
         }
 
         /// <summary>
@@ -58,11 +59,8 @@ namespace Grand.Services.Polls
         /// <param name="systemKeyword">The poll system keyword</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollBySystemKeyword(string systemKeyword, string storeId)
+        public virtual Task<Poll> GetPollBySystemKeyword(string systemKeyword, string storeId)
         {
-            if (String.IsNullOrWhiteSpace(systemKeyword))
-                return null;
-
             var query = from p in _pollRepository.Table
                         where p.SystemKeyword == systemKeyword 
                         select p;
@@ -72,8 +70,7 @@ namespace Grand.Services.Polls
                 query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
             }
 
-            var poll = query.FirstOrDefault();
-            return poll;
+            return query.FirstOrDefaultAsync();
         }
         
         /// <summary>
@@ -85,7 +82,7 @@ namespace Grand.Services.Polls
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(string storeId = "", bool loadShownOnHomePageOnly = false,
+        public virtual async Task<IPagedList<Poll>> GetPolls(string storeId = "", bool loadShownOnHomePageOnly = false,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _pollRepository.Table;
@@ -119,20 +116,19 @@ namespace Grand.Services.Polls
             }
             query = query.OrderBy(p => p.DisplayOrder);
 
-            var polls = new PagedList<Poll>(query, pageIndex, pageSize);
-            return polls;
+            return await Task.FromResult(new PagedList<Poll>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Deletes a poll
         /// </summary>
         /// <param name="poll">The poll</param>
-        public virtual void DeletePoll(Poll poll)
+        public virtual async Task DeletePoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException("poll");
 
-            _pollRepository.Delete(poll);
+            await _pollRepository.DeleteAsync(poll);
 
             //event notification
             _eventPublisher.EntityDeleted(poll);
@@ -142,12 +138,12 @@ namespace Grand.Services.Polls
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual void InsertPoll(Poll poll)
+        public virtual async Task InsertPoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException("poll");
 
-            _pollRepository.Insert(poll);
+            await _pollRepository.InsertAsync(poll);
 
             //event notification
             _eventPublisher.EntityInserted(poll);
@@ -157,12 +153,12 @@ namespace Grand.Services.Polls
         /// Updates the poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual void UpdatePoll(Poll poll)
+        public virtual async Task UpdatePoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException("poll");
 
-            _pollRepository.Update(poll);
+            await _pollRepository.UpdateAsync(poll);
 
             //event notification
             _eventPublisher.EntityUpdated(poll);
@@ -176,7 +172,7 @@ namespace Grand.Services.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual bool AlreadyVoted(string pollId, string customerId)
+        public virtual async Task<bool> AlreadyVoted(string pollId, string customerId)
         {
             if (String.IsNullOrEmpty(pollId) || String.IsNullOrEmpty(customerId))
                 return false;
@@ -184,7 +180,7 @@ namespace Grand.Services.Polls
             var builder = Builders<Poll>.Filter;
             var filter = builder.Where(x => x.Id == pollId);
             filter = filter & builder.Where(x => x.PollAnswers.Any(y => y.PollVotingRecords.Any(z => z.CustomerId == customerId)));
-            var query = _pollRepository.Collection.Find(filter).ToListAsync().Result;
+            var query = await _pollRepository.Collection.Find(filter).ToListAsync();
 
             var result = (query.Count() > 0);            
 
