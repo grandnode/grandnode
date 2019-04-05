@@ -10,6 +10,7 @@ using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -36,9 +37,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var storeModels = _storeService.GetAllStores()
+            var storeModels = (await _storeService.GetAllStores())
                 .Select(x => x.ToModel())
                 .ToList();
 
@@ -51,51 +52,51 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = _storeViewModelService.PrepareStoreModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //languages
-            _storeViewModelService.PrepareLanguagesModel(model);
+            await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
-            _storeViewModelService.PrepareWarehouseModel(model);
+            await _storeViewModelService.PrepareWarehouseModel(model);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(StoreModel model, bool continueEditing)
+        public async Task<IActionResult> Create(StoreModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var store = _storeViewModelService.InsertStoreModel(model);
+                var store = await _storeViewModelService.InsertStoreModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
             //languages
-            _storeViewModelService.PrepareLanguagesModel(model);
+            await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
-            _storeViewModelService.PrepareWarehouseModel(model);
+            await _storeViewModelService.PrepareWarehouseModel(model);
 
             //If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var store = _storeService.GetStoreById(id);
+            var store = await _storeService.GetStoreById(id);
             if (store == null)
                 //No store found with the specified id
                 return RedirectToAction("List");
 
             var model = store.ToModel();
             //languages
-            _storeViewModelService.PrepareLanguagesModel(model);
+            await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
-            _storeViewModelService.PrepareWarehouseModel(model);
+            await _storeViewModelService.PrepareWarehouseModel(model);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = store.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -104,40 +105,40 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(StoreModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(StoreModel model, bool continueEditing)
         {
-            var store = _storeService.GetStoreById(model.Id);
+            var store = await _storeService.GetStoreById(model.Id);
             if (store == null)
                 //No store found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                store = _storeViewModelService.UpdateStoreModel(store, model);
+                store = await _storeViewModelService.UpdateStoreModel(store, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //languages
-            _storeViewModelService.PrepareLanguagesModel(model);
+            await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
-            _storeViewModelService.PrepareWarehouseModel(model);
+            await _storeViewModelService.PrepareWarehouseModel(model);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var store = _storeService.GetStoreById(id);
+            var store = await _storeService.GetStoreById(id);
             if (store == null)
                 //No store found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _storeViewModelService.DeleteStore(store);
+                await _storeViewModelService.DeleteStore(store);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Deleted"));
                 return RedirectToAction("List");
             }
