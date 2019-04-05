@@ -3,6 +3,7 @@ using Grand.Framework.Components;
 using Grand.Services.Configuration;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -19,7 +20,7 @@ namespace Grand.Web.Areas.Admin.Components
             this._catalogSettings = catalogSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
             //default setting
@@ -27,7 +28,7 @@ namespace Grand.Web.Areas.Admin.Components
             if (!enabled)
             {
                 //overridden settings
-                var stores = _storeService.GetAllStores();
+                var stores = await _storeService.GetAllStores();
                 foreach (var store in stores)
                 {
                     if (!enabled)
