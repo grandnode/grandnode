@@ -1,22 +1,23 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface ICustomerAttributeViewModelService
     {
-        IEnumerable<CustomerAttributeModel> PrepareCustomerAttributes();
+        Task<IEnumerable<CustomerAttributeModel>> PrepareCustomerAttributes();
         CustomerAttributeModel PrepareCustomerAttributeModel();
         CustomerAttributeModel PrepareCustomerAttributeModel(CustomerAttribute customerAttribute);
-        CustomerAttribute InsertCustomerAttributeModel(CustomerAttributeModel model);
-        CustomerAttribute UpdateCustomerAttributeModel(CustomerAttributeModel model, CustomerAttribute customerAttribute);
-        void DeleteCustomerAttribute(string id);
-        void DeleteCustomerAttributeValue(CustomerAttributeValueModel model);
-        IEnumerable<CustomerAttributeValueModel> PrepareCustomerAttributeValues(string customerAttributeId);
+        Task<CustomerAttribute> InsertCustomerAttributeModel(CustomerAttributeModel model);
+        Task<CustomerAttribute> UpdateCustomerAttributeModel(CustomerAttributeModel model, CustomerAttribute customerAttribute);
+        Task DeleteCustomerAttribute(string id);
+        Task DeleteCustomerAttributeValue(CustomerAttributeValueModel model);
+        Task<IEnumerable<CustomerAttributeValueModel>> PrepareCustomerAttributeValues(string customerAttributeId);
         CustomerAttributeValueModel PrepareCustomerAttributeValueModel(string customerAttributeId);
-        CustomerAttributeValue InsertCustomerAttributeValueModel(CustomerAttributeValueModel model);
+        Task<CustomerAttributeValue> InsertCustomerAttributeValueModel(CustomerAttributeValueModel model);
         CustomerAttributeValueModel PrepareCustomerAttributeValueModel(CustomerAttributeValue customerAttributeValue);
-        CustomerAttributeValue UpdateCustomerAttributeValueModel(CustomerAttributeValueModel model, CustomerAttributeValue customerAttributeValue);
+        Task<CustomerAttributeValue> UpdateCustomerAttributeValueModel(CustomerAttributeValueModel model, CustomerAttributeValue customerAttributeValue);
     }
 }
