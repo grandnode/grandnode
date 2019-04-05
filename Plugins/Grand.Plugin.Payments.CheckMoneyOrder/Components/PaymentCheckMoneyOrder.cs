@@ -4,6 +4,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
 {
@@ -30,17 +31,17 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
             this._localizationService = localizationService;
             this._languageService = languageService;
         }
-        
-        public IViewComponentResult Invoke()
+
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(_storeContext.CurrentStore.Id);
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(_settingService, x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", await Task.FromResult(model));
         }
     }
 }
