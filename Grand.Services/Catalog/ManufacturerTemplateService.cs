@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -20,7 +20,7 @@ namespace Grand.Services.Catalog
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
-        
+
         #region Ctor
 
         /// <summary>
@@ -43,12 +43,12 @@ namespace Grand.Services.Catalog
         /// Delete manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException("manufacturerTemplate");
 
-            _manufacturerTemplateRepository.Delete(manufacturerTemplate);
+            await _manufacturerTemplateRepository.DeleteAsync(manufacturerTemplate);
 
             //event notification
             _eventPublisher.EntityDeleted(manufacturerTemplate);
@@ -58,9 +58,9 @@ namespace Grand.Services.Catalog
         /// Gets all manufacturer templates
         /// </summary>
         /// <returns>Manufacturer templates</returns>
-        public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
+        public virtual async Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplates()
         {
-            return _manufacturerTemplateRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
+            return await _manufacturerTemplateRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
         }
 
         /// <summary>
@@ -68,21 +68,21 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
         /// <returns>Manufacturer template</returns>
-        public virtual ManufacturerTemplate GetManufacturerTemplateById(string manufacturerTemplateId)
+        public virtual async Task<ManufacturerTemplate> GetManufacturerTemplateById(string manufacturerTemplateId)
         {
-            return _manufacturerTemplateRepository.GetById(manufacturerTemplateId);
+            return await _manufacturerTemplateRepository.GetByIdAsync(manufacturerTemplateId);
         }
 
         /// <summary>
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException("manufacturerTemplate");
 
-            _manufacturerTemplateRepository.Insert(manufacturerTemplate);
+            await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplate);
 
             //event notification
             _eventPublisher.EntityInserted(manufacturerTemplate);
@@ -92,17 +92,17 @@ namespace Grand.Services.Catalog
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException("manufacturerTemplate");
 
-            _manufacturerTemplateRepository.Update(manufacturerTemplate);
+            await _manufacturerTemplateRepository.UpdateAsync(manufacturerTemplate);
 
             //event notification
             _eventPublisher.EntityUpdated(manufacturerTemplate);
         }
-        
+
         #endregion
     }
 }
