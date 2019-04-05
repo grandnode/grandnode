@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -15,7 +16,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
-        SpecificationAttribute GetSpecificationAttributeById(string specificationAttributeId);
+        Task<SpecificationAttribute> GetSpecificationAttributeById(string specificationAttributeId);
 
         /// <summary>
         /// Gets specification attributes
@@ -23,25 +24,25 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Specification attributes</returns>
-        IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute);
+        Task DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute);
 
         /// <summary>
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute);
+        Task InsertSpecificationAttribute(SpecificationAttribute specificationAttribute);
 
         /// <summary>
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute);
+        Task UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute);
 
         #endregion
 
@@ -52,13 +53,13 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         /// <returns>Specification attribute option</returns>
-        SpecificationAttribute GetSpecificationAttributeByOptionId(string specificationAttributeOption);
+        Task<SpecificationAttribute> GetSpecificationAttributeByOptionId(string specificationAttributeOption);
 
         /// <summary>
         /// Deletes a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
+        Task DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
 
         #endregion
 
@@ -68,19 +69,19 @@ namespace Grand.Services.Catalog
         /// Deletes a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute</param>
-        void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
+        Task DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
 
         /// <summary>
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
+        Task InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
 
         /// <summary>
         /// Updates the product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
+        Task UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
 
         /// <summary>
         /// Gets a count of product specification attribute mapping records
