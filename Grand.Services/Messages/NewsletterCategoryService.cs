@@ -4,6 +4,9 @@ using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Messages
 {
@@ -30,12 +33,12 @@ namespace Grand.Services.Messages
         /// Inserts a newsletter category
         /// </summary>
         /// <param name="NewsletterCategory">NewsletterCategory</param>        
-        public void InsertNewsletterCategory(NewsletterCategory newslettercategory)
+        public virtual async Task InsertNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
                 throw new ArgumentNullException("newslettercategory");
 
-            _newsletterCategoryRepository.Insert(newslettercategory);
+            await _newsletterCategoryRepository.InsertAsync(newslettercategory);
 
             //event notification
             _eventPublisher.EntityInserted(newslettercategory);
@@ -45,12 +48,12 @@ namespace Grand.Services.Messages
         /// Updates a newsletter category
         /// </summary>
         /// <param name="NewsletterCategory">NewsletterCategory</param>
-        public void UpdateNewsletterCategory(NewsletterCategory newslettercategory)
+        public virtual async Task UpdateNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
                 throw new ArgumentNullException("newslettercategory");
 
-            _newsletterCategoryRepository.Update(newslettercategory);
+            await _newsletterCategoryRepository.UpdateAsync(newslettercategory);
 
             //event notification
             _eventPublisher.EntityUpdated(newslettercategory);
@@ -61,12 +64,12 @@ namespace Grand.Services.Messages
         /// Deleted a newsletter category
         /// </summary>
         /// <param name="NewsletterCategory">NewsletterCategory</param>
-        public void DeleteNewsletterCategory(NewsletterCategory newslettercategory)
+        public virtual async Task DeleteNewsletterCategory(NewsletterCategory newslettercategory)
         {
             if (newslettercategory == null)
                 throw new ArgumentNullException("newslettercategory");
 
-            _newsletterCategoryRepository.Delete(newslettercategory);
+            await _newsletterCategoryRepository.DeleteAsync(newslettercategory);
 
             //event notification
             _eventPublisher.EntityDeleted(newslettercategory);
@@ -78,38 +81,32 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="Id">newsletter category</param>
         /// <returns>Banner</returns>
-        public NewsletterCategory GetNewsletterCategoryById(string id)
+        public virtual Task<NewsletterCategory> GetNewsletterCategoryById(string id)
         {
-
-            if (id == null)
-                throw new ArgumentNullException("id");
-
-            return _newsletterCategoryRepository.Table.FirstOrDefault(x => x.Id == id);
+            return _newsletterCategoryRepository.GetByIdAsync(id);
         }
 
         /// <summary>
         /// Gets all newsletter categories
         /// </summary>
         /// <returns>NewsletterCategories</returns>
-        public IList<NewsletterCategory> GetAllNewsletterCategory()
+        public virtual async Task<IList<NewsletterCategory>> GetAllNewsletterCategory()
         {
-            return _newsletterCategoryRepository.Table.ToList();
+            return await _newsletterCategoryRepository.Table.ToListAsync();
         }
 
         /// <summary>
         /// Gets all newsletter categories by store
         /// </summary>
         /// <returns>NewsletterCategories</returns>
-        public IList<NewsletterCategory> GetNewsletterCategoriesByStore(string storeId)
+        public virtual async Task<IList<NewsletterCategory>> GetNewsletterCategoriesByStore(string storeId)
         {
             var query = from p in _newsletterCategoryRepository.Table
                         where !p.LimitedToStores || p.Stores.Contains(storeId)
                         orderby p.DisplayOrder
                         select p;
-            return query.ToList();
+            return await query.ToListAsync();
         }
-
         #endregion
-
     }
 }
