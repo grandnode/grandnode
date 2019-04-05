@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -15,7 +16,7 @@ namespace Grand.Services.Catalog
         /// Deletes a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        void DeleteProductAttribute(ProductAttribute productAttribute);
+        Task DeleteProductAttribute(ProductAttribute productAttribute);
 
         /// <summary>
         /// Gets all product attributes
@@ -23,26 +24,26 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Product attributes</returns>
-        IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<ProductAttribute>> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a product attribute 
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
-        ProductAttribute GetProductAttributeById(string productAttributeId);
+        Task<ProductAttribute> GetProductAttributeById(string productAttributeId);
 
         /// <summary>
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        void InsertProductAttribute(ProductAttribute productAttribute);
+        Task InsertProductAttribute(ProductAttribute productAttribute);
 
         /// <summary>
         /// Updates the product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        void UpdateProductAttribute(ProductAttribute productAttribute);
+        Task UpdateProductAttribute(ProductAttribute productAttribute);
 
         #endregion
 
@@ -52,19 +53,19 @@ namespace Grand.Services.Catalog
         /// Deletes a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
-        void DeleteProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
+        Task DeleteProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
         /// Inserts a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
+        Task InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
         /// Updates the product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        void UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
+        Task UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         #endregion
 
@@ -74,19 +75,19 @@ namespace Grand.Services.Catalog
         /// Deletes a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">Product attribute value</param>
-        void DeleteProductAttributeValue(ProductAttributeValue productAttributeValue);
+        Task DeleteProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         /// <summary>
         /// Inserts a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        void InsertProductAttributeValue(ProductAttributeValue productAttributeValue);
+        Task InsertProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         /// <summary>
         /// Updates the product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        void UpdateProductAttributeValue(ProductAttributeValue productAttributeValue);
+        Task UpdateProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         #endregion
 
@@ -97,7 +98,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">The product attribute identifier</param>
         /// <returns>Product attribute mapping collection</returns>
-        IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(string productAttributeId);
+        Task<IList<PredefinedProductAttributeValue>> GetPredefinedProductAttributeValues(string productAttributeId);
 
 
         #endregion
@@ -108,19 +109,19 @@ namespace Grand.Services.Catalog
         /// Deletes a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        void DeleteProductAttributeCombination(ProductAttributeCombination combination);
+        Task DeleteProductAttributeCombination(ProductAttributeCombination combination);
 
         /// <summary>
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        void InsertProductAttributeCombination(ProductAttributeCombination combination);
+        Task InsertProductAttributeCombination(ProductAttributeCombination combination);
 
         /// <summary>
         /// Updates a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        void UpdateProductAttributeCombination(ProductAttributeCombination combination);
+        Task UpdateProductAttributeCombination(ProductAttributeCombination combination);
 
         #endregion
     }
