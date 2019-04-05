@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -57,9 +58,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var model = _campaignViewModelService.PrepareCampaignModels();
+            var model = await _campaignViewModelService.PrepareCampaignModels();
             var gridModel = new DataSourceResult
             {
                 Data = model.campaignModels,
@@ -69,10 +70,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Customers(string campaignId, DataSourceRequest command)
+        public async Task<IActionResult> Customers(string campaignId, DataSourceRequest command)
         {
-            var campaign = _campaignService.GetCampaignById(campaignId);
-            var customers = _campaignService.CustomerSubscriptions(campaign, command.Page - 1, command.PageSize);
+            var campaign = await _campaignService.GetCampaignById(campaignId);
+            var customers = await _campaignService.CustomerSubscriptions(campaign, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -83,10 +84,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult History(string campaignId, DataSourceRequest command)
+        public async Task<IActionResult> History(string campaignId, DataSourceRequest command)
         {
-            var campaign = _campaignService.GetCampaignById(campaignId);
-            var history = _campaignService.GetCampaignHistory(campaign, command.Page - 1, command.PageSize);
+            var campaign = await _campaignService.GetCampaignById(campaignId);
+            var history = await _campaignService.GetCampaignHistory(campaign, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -100,12 +101,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult ExportCsv(string campaignId)
+        public async Task<IActionResult> ExportCsv(string campaignId)
         {
             try
             {
-                var campaign = _campaignService.GetCampaignById(campaignId);
-                var customers = _campaignService.CustomerSubscriptions(campaign);
+                var campaign = await _campaignService.GetCampaignById(campaignId);
+                var customers = await _campaignService.CustomerSubscriptions(campaign);
                 string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x => x.Email).ToList());
 
                 string fileName = String.Format("newsletter_emails_campaign_{0}_{1}.txt", campaign.Name, CommonHelper.GenerateRandomDigitCode(4));
@@ -118,91 +119,91 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = _campaignViewModelService.PrepareCampaignModel();
+            var model = await _campaignViewModelService.PrepareCampaignModel();
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CampaignModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CampaignModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var campaign = _campaignViewModelService.InsertCampaignModel(model);
+                var campaign = await _campaignViewModelService.InsertCampaignModel(model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
-            model = _campaignViewModelService.PrepareCampaignModel(model);
+            model = await _campaignViewModelService.PrepareCampaignModel(model);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var campaign = _campaignService.GetCampaignById(id);
+            var campaign = await _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            var model = _campaignViewModelService.PrepareCampaignModel(campaign);
+            var model = await _campaignViewModelService.PrepareCampaignModel(campaign);
             return View(model);
         }
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(CampaignModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CampaignModel model, bool continueEditing)
         {
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                campaign = _campaignViewModelService.UpdateCampaignModel(campaign, model);
+                campaign = await _campaignViewModelService.UpdateCampaignModel(campaign, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 //selected tab
                 SaveSelectedTabIndex();
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
-            model = _campaignViewModelService.PrepareCampaignModel(model);
+            model = await _campaignViewModelService.PrepareCampaignModel(model);
             return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-test-email")]
-        public IActionResult SendTestEmail(CampaignModel model)
+        public async Task<IActionResult> SendTestEmail(CampaignModel model)
         {
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            model = _campaignViewModelService.PrepareCampaignModel(model);
+            model = await _campaignViewModelService.PrepareCampaignModel(model);
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                var emailAccount = await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
                     throw new GrandException("Email account could not be loaded");
 
 
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
+                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
                     //there's a subscription. let's use it
                     var subscriptions = new List<NewsLetterSubscription>();
                     subscriptions.Add(subscription);
-                    _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
+                    await _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 }
                 else
                 {
                     //no subscription found
-                    _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
+                    await _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
                 }
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"), false);
@@ -219,27 +220,27 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-mass-email")]
-        public IActionResult SendMassEmail(CampaignModel model)
+        public async Task<IActionResult> SendMassEmail(CampaignModel model)
         {
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            model = _campaignViewModelService.PrepareCampaignModel(model);
+            model = await _campaignViewModelService.PrepareCampaignModel(model);
             model.CustomerTags = campaign.CustomerTags.ToList();
             model.CustomerRoles = campaign.CustomerRoles.ToList();
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(campaign.EmailAccountId);
+                var emailAccount = await _emailAccountService.GetEmailAccountById(campaign.EmailAccountId);
                 if (emailAccount == null)
                     throw new GrandException("Email account could not be loaded");
 
                 //subscribers of certain store?
-                var store = _storeService.GetStoreById(campaign.StoreId);
+                var store = await _storeService.GetStoreById(campaign.StoreId);
                 var storeId = store != null ? store.Id : "";
-                var subscriptions = _campaignService.CustomerSubscriptions(campaign);
-                var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
+                var subscriptions = await _campaignService.CustomerSubscriptions(campaign);
+                var totalEmailsSent = await _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);
             }
@@ -253,16 +254,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var campaign = _campaignService.GetCampaignById(id);
+            var campaign = await _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _campaignService.DeleteCampaign(campaign);
+                await _campaignService.DeleteCampaign(campaign);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
                 return RedirectToAction("List");
             }
