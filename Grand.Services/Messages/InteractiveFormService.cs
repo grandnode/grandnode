@@ -4,6 +4,9 @@ using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Messages
 {
@@ -28,12 +31,12 @@ namespace Grand.Services.Messages
         /// Inserts a form
         /// </summary>
         /// <param name="InteractiveForm">InteractiveForm</param>        
-        public virtual void InsertForm(InteractiveForm form)
+        public virtual async Task InsertForm(InteractiveForm form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            _formRepository.Insert(form);
+            await _formRepository.InsertAsync(form);
             //event notification
             _eventPublisher.EntityInserted(form);
         }
@@ -42,12 +45,12 @@ namespace Grand.Services.Messages
         /// Updates a form
         /// </summary>
         /// <param name="Form">Form</param>
-        public virtual void UpdateForm(InteractiveForm form)
+        public virtual async Task UpdateForm(InteractiveForm form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            _formRepository.Update(form);
+            await _formRepository.UpdateAsync(form);
 
             //event notification
             _eventPublisher.EntityUpdated(form);
@@ -57,12 +60,12 @@ namespace Grand.Services.Messages
         /// Deleted a banner
         /// </summary>
         /// <param name="banner">Banner</param>
-        public virtual void DeleteForm(InteractiveForm form)
+        public virtual async Task DeleteForm(InteractiveForm form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            _formRepository.Delete(form);
+            await _formRepository.DeleteAsync(form);
             //event notification
             _eventPublisher.EntityDeleted(form);
         }
@@ -72,24 +75,22 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="formId">Form identifier</param>
         /// <returns>Banner</returns>
-        public virtual InteractiveForm GetFormById(string formId)
+        public virtual Task<InteractiveForm> GetFormById(string formId)
         {
-            return _formRepository.GetById(formId);
+            return _formRepository.GetByIdAsync(formId);
         }
 
         /// <summary>
         /// Gets all banners
         /// </summary>
         /// <returns>Banners</returns>
-        public virtual IList<InteractiveForm> GetAllForms()
+        public virtual async Task<IList<InteractiveForm>> GetAllForms()
         {
 
             var query = from c in _formRepository.Table
                         orderby c.CreatedOnUtc
                         select c;
-            var forms = query.ToList();
-
-            return forms;
+            return await query.ToListAsync();
         }
 
     }
