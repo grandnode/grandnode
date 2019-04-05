@@ -12,12 +12,14 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Catalog;
+using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -73,9 +75,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customeractions = _customerReminderService.GetCustomerReminders();
+            var customeractions = await _customerReminderService.GetCustomerReminders();
             var gridModel = new DataSourceResult
             {
                 Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, Rule = x.ReminderRule.ToString() }),
@@ -91,11 +93,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CustomerReminderModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CustomerReminderModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var customerreminder = _customerReminderViewModelService.InsertCustomerReminderModel(model);
+                var customerreminder = await _customerReminderViewModelService.InsertCustomerReminderModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerreminder.Id }) : RedirectToAction("List");
             }
@@ -103,9 +105,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(id);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
             var model = customerReminder.ToModel();
@@ -114,16 +116,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CustomerReminderModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CustomerReminderModel model, bool continueEditing)
         {
-            var customerreminder = _customerReminderService.GetCustomerReminderById(model.Id);
+            var customerreminder = await _customerReminderService.GetCustomerReminderById(model.Id);
             if (customerreminder == null)
                 return RedirectToAction("List");
             try
             {
                 if (ModelState.IsValid)
                 {
-                    customerreminder = _customerReminderViewModelService.UpdateCustomerReminderModel(customerreminder, model);
+                    customerreminder = await _customerReminderViewModelService.UpdateCustomerReminderModel(customerreminder, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customerreminder.Id }) : RedirectToAction("List");
                 }
@@ -137,28 +139,28 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Run(string Id)
+        public async Task<IActionResult> Run(string Id)
         {
-            var reminder = _customerReminderService.GetCustomerReminderById(Id);
+            var reminder = await _customerReminderService.GetCustomerReminderById(Id);
             if (reminder == null)
                 return RedirectToAction("List");
 
-            _customerReminderViewModelService.RunReminder(reminder);
+            await _customerReminderViewModelService.RunReminder(reminder);
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Run"));
             return RedirectToAction("Edit", new { id = Id });
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(id);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _customerReminderViewModelService.DeleteCustomerReminder(customerReminder);
+                    await _customerReminderViewModelService.DeleteCustomerReminder(customerReminder);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Deleted"));
                     return RedirectToAction("List");
                 }
@@ -175,18 +177,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult History(DataSourceRequest command, string customerReminderId)
+        public async Task<IActionResult> History(DataSourceRequest command, string customerReminderId)
         {
             //we use own own binder for searchCustomerRoleIds property 
-            var history = _customerReminderService.GetAllCustomerReminderHistory(customerReminderId,
+            var history = await _customerReminderService.GetAllCustomerReminderHistory(customerReminderId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
+            var items = new List<SerializeCustomerReminderHistoryModel>();
+            foreach (var item in history)
+            {
+                items.Add(await _customerReminderViewModelService.PrepareHistoryModelForList(item));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = history.Select(x => _customerReminderViewModelService.PrepareHistoryModelForList(x)),
+                Data = items,
                 Total = history.TotalCount
             };
-
             return Json(gridModel);
         }
 
@@ -195,9 +201,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition
 
         [HttpPost]
-        public IActionResult Conditions(string customerReminderId)
+        public async Task<IActionResult> Conditions(string customerReminderId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
                 Data = customerReminder.Conditions.Select(x => new
@@ -207,9 +213,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult AddCondition(string customerReminderId)
+        public async Task<IActionResult> AddCondition(string customerReminderId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("Edit", new { id = customerReminderId });
 
@@ -219,16 +225,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult AddCondition(CustomerReminderModel.ConditionModel model, bool continueEditing)
+        public async Task<IActionResult> AddCondition(CustomerReminderModel.ConditionModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
+                var customerReminder = await _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
                 if (customerReminder == null)
                 {
                     return RedirectToAction("List");
                 }
-                var condition = _customerReminderViewModelService.InsertConditionModel(customerReminder, model);
+                var condition = await _customerReminderViewModelService.InsertConditionModel(customerReminder, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Condition.Added"));
 
                 return continueEditing ? RedirectToAction("EditCondition", new { customerReminderId = customerReminder.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
@@ -237,9 +243,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult EditCondition(string customerReminderId, string cid)
+        public async Task<IActionResult> EditCondition(string customerReminderId, string cid)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("List");
 
@@ -251,9 +257,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditCondition(string customerReminderId, string cid, CustomerReminderModel.ConditionModel model, bool continueEditing)
+        public async Task<IActionResult> EditCondition(string customerReminderId, string cid, CustomerReminderModel.ConditionModel model, bool continueEditing)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("List");
 
@@ -264,7 +270,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    condition = _customerReminderViewModelService.UpdateConditionModel(customerReminder, condition, model);
+                    condition = await _customerReminderViewModelService.UpdateConditionModel(customerReminder, condition, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderCondition.Updated"));
                     return continueEditing ? RedirectToAction("EditCondition", new { customerReminderId = customerReminder.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
                 }
@@ -278,11 +284,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionDelete(string Id, string customerReminderId)
+        public async Task<IActionResult> ConditionDelete(string Id, string customerReminderId)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.ConditionDelete(Id, customerReminderId);
+                await _customerReminderViewModelService.ConditionDelete(Id, customerReminderId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -290,11 +296,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionDeletePosition(string id, string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionDeletePosition(string id, string customerReminderId, string conditionId)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.ConditionDeletePosition(id, customerReminderId, conditionId);
+                await _customerReminderViewModelService.ConditionDeletePosition(id, customerReminderId, conditionId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -303,14 +309,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Category
 
         [HttpPost]
-        public IActionResult ConditionCategory(string customerReminderId, string conditionId, [FromServices] ICategoryService categoryService)
+        public async Task<IActionResult> ConditionCategory(string customerReminderId, string conditionId, [FromServices] ICategoryService categoryService)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CategoryName)>();
+            foreach (var item in condition.Categories)
+            {
+                var category = await categoryService.GetCategoryById(item);
+                items.Add((item, category?.Name));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = categoryService.GetCategoryById(z) != null ? categoryService.GetCategoryById(z).Name : "" }) : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -318,25 +329,29 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string customerReminderId, string conditionId)
         {
-            var model = new CustomerReminderModel.ConditionModel.AddCategoryConditionModel();
-            model.ConditionId = conditionId;
-            model.CustomerReminderId = customerReminderId;
+            var model = new CustomerReminderModel.ConditionModel.AddCategoryConditionModel
+            {
+                ConditionId = conditionId,
+                CustomerReminderId = customerReminderId
+            };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model, [FromServices] ICategoryService categoryService)
+        public async Task<IActionResult> CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model, [FromServices] ICategoryService categoryService)
         {
-            var categories = categoryService.GetAllCategories(model.SearchCategoryName,
+            var categories = await categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
+            var items = new List<CategoryModel>();
+            foreach (var item in categories)
+            {
+                var categoryModel = item.ToModel();
+                categoryModel.Breadcrumb = await item.GetFormattedBreadCrumb(categoryService);
+                items.Add(categoryModel);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = categories.Select(x =>
-                {
-                    var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(categoryService);
-                    return categoryModel;
-                }),
+                Data = items,
                 Total = categories.TotalCount
             };
 
@@ -345,11 +360,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CategoryAddPopup(CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
+        public async Task<IActionResult> CategoryAddPopup(CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
         {
             if (model.SelectedCategoryIds != null)
             {
-                _customerReminderViewModelService.InsertCategoryConditionModel(model);
+                await _customerReminderViewModelService.InsertCategoryConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
@@ -359,14 +374,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Condition Manufacturer
         [HttpPost]
-        public IActionResult ConditionManufacturer(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionManufacturer(string customerReminderId, string conditionId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string ManufacturerName)>();
+            foreach (var item in condition.Manufacturers)
+            {
+                var manuf = await _manufacturerService.GetManufacturerById(item);
+                items.Add((item, manuf?.Name));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z) != null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -374,16 +394,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ManufacturerAddPopup(string customerReminderId, string conditionId)
         {
-            var model = new CustomerReminderModel.ConditionModel.AddManufacturerConditionModel();
-            model.ConditionId = conditionId;
-            model.CustomerReminderId = customerReminderId;
+            var model = new CustomerReminderModel.ConditionModel.AddManufacturerConditionModel
+            {
+                ConditionId = conditionId,
+                CustomerReminderId = customerReminderId
+            };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
+        public async Task<IActionResult> ManufacturerAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
+            var manufacturers = await _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -396,46 +418,49 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ManufacturerAddPopup(CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
+        public async Task<IActionResult> ManufacturerAddPopup(CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
             if (model.SelectedManufacturerIds != null)
             {
-                _customerReminderViewModelService.InsertManufacturerConditionModel(model);
+                await _customerReminderViewModelService.InsertManufacturerConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
         }
-
-
         #endregion
 
         #region Condition Product
 
         [HttpPost]
-        public IActionResult ConditionProduct(string customerReminderId, string conditionId, [FromServices] IProductService productService)
+        public async Task<IActionResult> ConditionProduct(string customerReminderId, string conditionId, [FromServices] IProductService productService)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string ProductName)>();
+            foreach (var item in condition.Products)
+            {
+                var prod = await productService.GetProductById(item);
+                items.Add((item, prod?.Name));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = productService.GetProductById(z) != null ? productService.GetProductById(z).Name : "" }) : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
-        public IActionResult ProductAddPopup(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ProductAddPopup(string customerReminderId, string conditionId)
         {
-            var model = _customerReminderViewModelService.PrepareProductToConditionModel(customerReminderId, conditionId);
+            var model = await _customerReminderViewModelService.PrepareProductToConditionModel(customerReminderId, conditionId);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
+        public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
             var gridModel = new DataSourceResult();
-            var products = _customerReminderViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var products = await _customerReminderViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             gridModel.Data = products.products.ToList();
             gridModel.Total = products.totalCount;
 
@@ -444,11 +469,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
+        public async Task<IActionResult> ProductAddPopup(CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _customerReminderViewModelService.InsertProductToConditionModel(model);
+                await _customerReminderViewModelService.InsertProductToConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
@@ -460,24 +485,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Customer Tags
 
         [HttpPost]
-        public IActionResult ConditionCustomerTag(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerTag(string customerReminderId, string conditionId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
+            var items = new List<(string Id, string CustomerTag)>();
+            foreach (var item in condition.CustomerTags)
+            {
+                var tag = await _customerTagService.GetCustomerTagById(item);
+                items.Add((item, tag?.Name));
+            }
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z) != null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
         [HttpPost]
-        public IActionResult ConditionCustomerTagInsert(CustomerReminderModel.ConditionModel.AddCustomerTagConditionModel model)
+        public async Task<IActionResult> ConditionCustomerTagInsert(CustomerReminderModel.ConditionModel.AddCustomerTagConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.InsertCustomerTagConditionModel(model);
+                await _customerReminderViewModelService.InsertCustomerTagConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -485,9 +516,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult CustomerTags()
+        public async Task<IActionResult> CustomerTags()
         {
-            var customerTag = _customerTagService.GetAllCustomerTags().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerTag = (await _customerTagService.GetAllCustomerTags()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerTag);
         }
         #endregion
@@ -495,35 +526,39 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Customer role
 
         [HttpPost]
-        public IActionResult ConditionCustomerRole(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerRole(string customerReminderId, string conditionId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CustomerRole)>();
+            foreach (var item in condition.CustomerRoles)
+            {
+                var role = await _customerService.GetCustomerRoleById(item);
+                items.Add((item, role?.Name));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ? _customerService.GetCustomerRoleById(z).Name : "" }) : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomerRoleInsert(CustomerReminderModel.ConditionModel.AddCustomerRoleConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRoleInsert(CustomerReminderModel.ConditionModel.AddCustomerRoleConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.InsertCustomerRoleConditionModel(model);
+                await _customerReminderViewModelService.InsertCustomerRoleConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
-
         [HttpGet]
-        public IActionResult CustomerRoles()
+        public async Task<IActionResult> CustomerRoles()
         {
-            var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerRole = (await _customerService.GetAllCustomerRoles()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
 
@@ -531,9 +566,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Condition Customer Register
         [HttpPost]
-        public IActionResult ConditionCustomerRegister(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerRegister(string customerReminderId, string conditionId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
@@ -551,21 +586,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomerRegisterInsert(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRegisterInsert(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.InsertCustomerRegisterConditionModel(model);
+                await _customerReminderViewModelService.InsertCustomerRegisterConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
         [HttpPost]
-        public IActionResult ConditionCustomerRegisterUpdate(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRegisterUpdate(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.UpdateCustomerRegisterConditionModel(model);
+                await _customerReminderViewModelService.UpdateCustomerRegisterConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -592,13 +627,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Condition Custom Customer Attribute
 
-        private string CustomerAttribute(string registerField)
+        private async Task<string> CustomerAttribute(string registerField)
         {
             string _field = registerField;
             var _rf = registerField.Split(':');
             if (_rf.Count() > 1)
             {
-                var ca = _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
+                var ca = await _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
                 if (ca != null)
                 {
                     _field = ca.Name;
@@ -614,52 +649,49 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttribute(string customerReminderId, string conditionId)
+        public async Task<IActionResult> ConditionCustomCustomerAttribute(string customerReminderId, string conditionId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CustomerAttributeId, string CustomerAttributeName, string CustomerAttributeValue)>();
+            foreach (var item in condition.CustomCustomerAttributes)
+            {
+                items.Add((item.Id, await CustomerAttribute(item.RegisterField), item.RegisterField, item.RegisterValue));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomCustomerAttributes.Select(z => new
-                {
-                    Id = z.Id,
-                    CustomerAttributeId = CustomerAttribute(z.RegisterField),
-                    CustomerAttributeName = z.RegisterField,
-                    CustomerAttributeValue = z.RegisterValue
-                })
-                    : null,
+                Data = items,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttributeInsert(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public async Task<IActionResult> ConditionCustomCustomerAttributeInsert(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.InsertCustomCustomerAttributeConditionModel(model);
+                await _customerReminderViewModelService.InsertCustomCustomerAttributeConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttributeUpdate(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public async Task<IActionResult> ConditionCustomCustomerAttributeUpdate(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
+                await _customerReminderViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpGet]
-        public IActionResult CustomCustomerAttributeFields()
+        public async Task<IActionResult> CustomCustomerAttributeFields()
         {
             var list = new List<Tuple<string, string>>();
-            foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
+            foreach (var item in await _customerAttributeService.GetAllCustomerAttributes())
             {
                 if (item.AttributeControlType == AttributeControlType.Checkboxes ||
                     item.AttributeControlType == AttributeControlType.DropdownList ||
@@ -681,9 +713,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Levels
 
         [HttpPost]
-        public IActionResult Levels(string customerReminderId)
+        public async Task<IActionResult> Levels(string customerReminderId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
                 Data = customerReminder.Levels.Select(x => new
@@ -693,19 +725,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult AddLevel(string customerReminderId)
+        public async Task<IActionResult> AddLevel(string customerReminderId)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             var model = new CustomerReminderModel.ReminderLevelModel();
             model.CustomerReminderId = customerReminderId;
-            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
+            await _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult AddLevel(CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
+        public async Task<IActionResult> AddLevel(CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
             if (customerReminder == null)
             {
                 return RedirectToAction("List");
@@ -721,13 +753,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderLevel.Added"));
                 return continueEditing ? RedirectToAction("EditLevel", new { customerReminderId = customerReminder.Id, cid = level.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
             }
-            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
+            await _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
-        public IActionResult EditLevel(string customerReminderId, string cid)
+        public async Task<IActionResult> EditLevel(string customerReminderId, string cid)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
             {
                 return RedirectToAction("List");
@@ -739,14 +771,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = level.ToModel();
             model.CustomerReminderId = customerReminderId;
-            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
+            await _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditLevel(string customerReminderId, string cid, CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
+        public async Task<IActionResult> EditLevel(string customerReminderId, string cid, CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
         {
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            var customerReminder = await _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("List");
 
@@ -765,11 +797,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    level = _customerReminderViewModelService.UpdateReminderLevel(customerReminder, level, model);
+                    level = await _customerReminderViewModelService.UpdateReminderLevel(customerReminder, level, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderLevel.Updated"));
                     return continueEditing ? RedirectToAction("EditLevel", new { customerReminderId = customerReminder.Id, cid = level.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
                 }
-                _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
+                await _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
                 return View(model);
             }
             catch (Exception exc)
@@ -780,11 +812,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteLevel(string Id, string customerReminderId)
+        public async Task<IActionResult> DeleteLevel(string Id, string customerReminderId)
         {
             if (ModelState.IsValid)
             {
-                _customerReminderViewModelService.DeleteLevel(Id, customerReminderId);
+                await _customerReminderViewModelService.DeleteLevel(Id, customerReminderId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
