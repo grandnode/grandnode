@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Customers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -12,49 +13,49 @@ namespace Grand.Services.Customers
         /// Deletes a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void DeleteCustomerAttribute(CustomerAttribute customerAttribute);
+        Task DeleteCustomerAttribute(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Gets all customer attributes
         /// </summary>
         /// <returns>Customer attributes</returns>
-        IList<CustomerAttribute> GetAllCustomerAttributes();
+        Task<IList<CustomerAttribute>> GetAllCustomerAttributes();
 
         /// <summary>
         /// Gets a customer attribute 
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        CustomerAttribute GetCustomerAttributeById(string customerAttributeId);
+        Task<CustomerAttribute> GetCustomerAttributeById(string customerAttributeId);
 
         /// <summary>
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void InsertCustomerAttribute(CustomerAttribute customerAttribute);
+        Task InsertCustomerAttribute(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Updates the customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void UpdateCustomerAttribute(CustomerAttribute customerAttribute);
+        Task UpdateCustomerAttribute(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Deletes a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
 
         /// <summary>
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
 
         /// <summary>
         /// Updates the customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
     }
 }

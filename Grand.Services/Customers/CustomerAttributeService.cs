@@ -4,9 +4,11 @@ using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -86,12 +88,12 @@ namespace Grand.Services.Customers
         /// Deletes a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task DeleteCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException("customerAttribute");
 
-            _customerAttributeRepository.Delete(customerAttribute);
+            await _customerAttributeRepository.DeleteAsync(customerAttribute);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -104,15 +106,15 @@ namespace Grand.Services.Customers
         /// Gets all customer attributes
         /// </summary>
         /// <returns>Customer attributes</returns>
-        public virtual IList<CustomerAttribute> GetAllCustomerAttributes()
+        public virtual async Task<IList<CustomerAttribute>> GetAllCustomerAttributes()
         {
             string key = CUSTOMERATTRIBUTES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = from ca in _customerAttributeRepository.Table
                             orderby ca.DisplayOrder
                             select ca;
-                return query.ToList();
+                return query.ToListAsync();
             });
         }
 
@@ -121,22 +123,22 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        public virtual CustomerAttribute GetCustomerAttributeById(string customerAttributeId)
+        public virtual Task<CustomerAttribute> GetCustomerAttributeById(string customerAttributeId)
         {
             string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
-            return _cacheManager.Get(key, () => _customerAttributeRepository.GetById(customerAttributeId));
+            return _cacheManager.Get(key, () => _customerAttributeRepository.GetByIdAsync(customerAttributeId));
         }
 
         /// <summary>
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task InsertCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException("customerAttribute");
 
-            _customerAttributeRepository.Insert(customerAttribute);
+            await _customerAttributeRepository.InsertAsync(customerAttribute);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -149,12 +151,12 @@ namespace Grand.Services.Customers
         /// Updates the customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task UpdateCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException("customerAttribute");
 
-            _customerAttributeRepository.Update(customerAttribute);
+            await _customerAttributeRepository.UpdateAsync(customerAttribute);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -167,14 +169,14 @@ namespace Grand.Services.Customers
         /// Deletes a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual void DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
                 throw new ArgumentNullException("customerAttributeValue");
 
             var updatebuilder = Builders<CustomerAttribute>.Update;
             var update = updatebuilder.Pull(p => p.CustomerAttributeValues, customerAttributeValue);
-            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
+            await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -187,14 +189,14 @@ namespace Grand.Services.Customers
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
                 throw new ArgumentNullException("customerAttributeValue");
 
             var updatebuilder = Builders<CustomerAttribute>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerAttributeValues, customerAttributeValue);
-            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
+            await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -207,7 +209,7 @@ namespace Grand.Services.Customers
         /// Updates the customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual void UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
                 throw new ArgumentNullException("customerAttributeValue");
@@ -221,7 +223,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.CustomerAttributeValues.ElementAt(-1).Locales, customerAttributeValue.Locales)
                 .Set(x => x.CustomerAttributeValues.ElementAt(-1).Name, customerAttributeValue.Name);
 
-            var result = _customerAttributeRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _customerAttributeRepository.Collection.UpdateManyAsync(filter, update);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
