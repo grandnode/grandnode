@@ -1,4 +1,5 @@
 using Grand.Core;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -7,7 +8,7 @@ namespace Grand.Services.Common
     /// </summary>
     public partial interface IGenericAttributeService
     {
-        void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, string storeId = "");
-        TPropType GetAttributesForEntity<TPropType>(BaseEntity entity, string key, string storeId = "");
+        Task SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, string storeId = "");
+        Task<TPropType> GetAttributesForEntity<TPropType>(BaseEntity entity, string key, string storeId = "");
     }
 }
