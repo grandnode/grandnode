@@ -9,6 +9,7 @@ using Grand.Services.Logging;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,24 +23,29 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IServiceProvider _serviceProvider;
 
         public LogViewModelService(ILogger logger, IWorkContext workContext,
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper)
+            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
+            IServiceProvider serviceProvider)
         {
             this._logger = logger;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
+            this._serviceProvider = serviceProvider;
         }
 
         public virtual LogListModel PrepareLogListModel()
         {
-            var model = new LogListModel();
-            model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
+            var model = new LogListModel
+            {
+                AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList()
+            };
             model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }
-        public virtual (IEnumerable<LogModel> logModels, int totalCount) PrepareLogModel(LogListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<LogModel> logModels, int totalCount)> PrepareLogModel(LogListModel model, int pageIndex, int pageSize)
         {
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -50,7 +56,7 @@ namespace Grand.Web.Areas.Admin.Services
             LogLevel? logLevel = model.LogLevelId > 0 ? (LogLevel?)(model.LogLevelId) : null;
 
 
-            var logItems = _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,
+            var logItems = await _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,
                 logLevel, pageIndex - 1, pageSize);
             return (logItems.Select(x => new LogModel
             {
@@ -72,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Services
             }), logItems.TotalCount);
 
         }
-        public virtual LogModel PrepareLogModel(Log log)
+        public virtual async Task<LogModel> PrepareLogModel(Log log)
         {
             var model = new LogModel
             {
@@ -82,7 +88,7 @@ namespace Grand.Web.Areas.Admin.Services
                 FullMessage = log.FullMessage,
                 IpAddress = log.IpAddress,
                 CustomerId = log.CustomerId,
-                CustomerEmail = !String.IsNullOrEmpty(log.CustomerId) ? EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(log.CustomerId)?.Email : "",
+                CustomerEmail = !String.IsNullOrEmpty(log.CustomerId) ? (await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(log.CustomerId))?.Email : "",
                 PageUrl = log.PageUrl,
                 ReferrerUrl = log.ReferrerUrl,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)
