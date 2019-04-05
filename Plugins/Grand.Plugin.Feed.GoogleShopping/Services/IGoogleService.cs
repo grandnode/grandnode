@@ -1,22 +1,23 @@
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Feed.GoogleShopping.Services
 {
     public partial interface IGoogleService
     {
-        void DeleteGoogleProduct(GoogleProductRecord googleProductRecord);
+        Task DeleteGoogleProduct(GoogleProductRecord googleProductRecord);
 
-        IList<GoogleProductRecord> GetAll();
+        Task<IList<GoogleProductRecord>> GetAll();
 
-        GoogleProductRecord GetById(string googleProductRecordId);
+        Task<GoogleProductRecord> GetById(string googleProductRecordId);
 
-        GoogleProductRecord GetByProductId(string productId);
+        Task<GoogleProductRecord> GetByProductId(string productId);
 
-        void InsertGoogleProductRecord(GoogleProductRecord googleProductRecord);
+        Task InsertGoogleProductRecord(GoogleProductRecord googleProductRecord);
 
-        void UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord);
+        Task UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord);
 
-        IList<string> GetTaxonomyList();
+        Task<IList<string>> GetTaxonomyList();
     }
 }

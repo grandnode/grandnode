@@ -1,10 +1,12 @@
 using Grand.Core.Data;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Feed.GoogleShopping.Services
 {
@@ -40,55 +42,53 @@ namespace Grand.Plugin.Feed.GoogleShopping.Services
 
         #region Methods
 
-        public virtual void DeleteGoogleProduct(GoogleProductRecord googleProductRecord)
+        public virtual async Task DeleteGoogleProduct(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
                 throw new ArgumentNullException("googleProductRecord");
 
-            _gpRepository.Delete(googleProductRecord);
+            await _gpRepository.DeleteAsync(googleProductRecord);
         }
 
-        public virtual IList<GoogleProductRecord> GetAll()
+        public virtual async Task<IList<GoogleProductRecord>> GetAll()
         {
             var query = from gp in _gpRepository.Table
                         orderby gp.Id
                         select gp;
-            var records = query.ToList();
-            return records;
+            return await query.ToListAsync();
         }
 
-        public virtual GoogleProductRecord GetById(string googleProductRecordId)
+        public virtual Task<GoogleProductRecord> GetById(string googleProductRecordId)
         {
-            return _gpRepository.GetById(googleProductRecordId);
+            return _gpRepository.GetByIdAsync(googleProductRecordId);
         }
 
-        public virtual GoogleProductRecord GetByProductId(string productId)
+        public virtual async Task<GoogleProductRecord> GetByProductId(string productId)
         {
             var query = from gp in _gpRepository.Table
                         where gp.ProductId == productId
                         orderby gp.Id
                         select gp;
-            var record = query.FirstOrDefault();
-            return record;
+            return await query.FirstOrDefaultAsync();
         }
 
-        public virtual void InsertGoogleProductRecord(GoogleProductRecord googleProductRecord)
+        public virtual async Task InsertGoogleProductRecord(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
                 throw new ArgumentNullException("googleProductRecord");
 
-            _gpRepository.Insert(googleProductRecord);
+            await _gpRepository.InsertAsync(googleProductRecord);
         }
 
-        public virtual void UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord)
+        public virtual async Task UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
                 throw new ArgumentNullException("googleProductRecord");
 
-            _gpRepository.Update(googleProductRecord);
+            await _gpRepository.UpdateAsync(googleProductRecord);
         }
 
-        public virtual IList<string> GetTaxonomyList()
+        public virtual async Task<IList<string>> GetTaxonomyList()
         {
             var fileContent = GetEmbeddedFileContent("taxonomy.txt");
             if (String.IsNullOrEmpty((fileContent)))
@@ -96,7 +96,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Services
 
             //parse the file
             var result = fileContent.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            return result;
+            return await Task.FromResult(result);
         }
 
         #endregion
