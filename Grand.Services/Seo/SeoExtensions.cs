@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Seo
 {
@@ -27,24 +28,13 @@ namespace Grand.Services.Seo
         /// Gets product tag SE (search engine) name
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        /// <returns>Product tag SE (search engine) name</returns>
-        public static string GetSeName(this ProductTag productTag)
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(productTag, workContext.WorkingLanguage.Id);
-        }
-
-        /// <summary>
-        /// Gets product tag SE (search engine) name
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Product tag SE (search engine) name</returns>
         public static string GetSeName(this ProductTag productTag, string languageId)
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
-            string seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId));
+            string seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId), false, false);
             return seName;
         }
 
@@ -61,7 +51,7 @@ namespace Grand.Services.Seo
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
-            string seName = GetSeName(forumGroup.Name);
+            string seName = GetSeName(forumGroup.Name, false, false);
             return seName;
         }
 
@@ -74,7 +64,7 @@ namespace Grand.Services.Seo
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
-            string seName = GetSeName(forum.Name);
+            string seName = GetSeName(forum.Name, false, false);
             return seName;
         }
 
@@ -87,7 +77,7 @@ namespace Grand.Services.Seo
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
-            string seName = GetSeName(forumTopic.Subject);
+            string seName = GetSeName(forumTopic.Subject, false, false);
 
             // Trim SE name to avoid URLs that are too long
             var maxLength = 100;
@@ -102,19 +92,6 @@ namespace Grand.Services.Seo
         #endregion
 
         #region General
-
-        /// <summary>
-        /// Get search engine friendly name (slug)
-        /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Search engine  name (slug)</returns>
-        public static string GetSeName<T>(this T entity)
-            where T : BaseEntity, ISlugSupported, ILocalizedEntity
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(entity, workContext.WorkingLanguage.Id);
-        }
 
         /// <summary>
         ///  Get search engine friendly name (slug)
@@ -159,7 +136,7 @@ namespace Grand.Services.Seo
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Search engine  name (slug)</returns>
-        public static string GetSeName(string entityId, string entityName, string languageId, bool returnDefaultValue = true,
+        public static async Task<string> GetSeName(string entityId, string entityName, string languageId, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true)
         {
             string result = string.Empty;
@@ -172,19 +149,19 @@ namespace Grand.Services.Seo
                 if (ensureTwoPublishedLanguages)
                 {
                     var lService = EngineContext.Current.Resolve<ILanguageService>();
-                    var totalPublishedLanguages = lService.GetAllLanguages().Count;
+                    var totalPublishedLanguages = (await lService.GetAllLanguages()).Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
                 //localized value
                 if (loadLocalizedValue)
                 {
-                    result = urlRecordService.GetActiveSlug(entityId, entityName, languageId);
+                    result = await urlRecordService.GetActiveSlug(entityId, entityName, languageId);
                 }
             }
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
             {
-                result = urlRecordService.GetActiveSlug(entityId, entityName, "");
+                result = await urlRecordService.GetActiveSlug(entityId, entityName, "");
             }
 
             return result;
@@ -198,7 +175,8 @@ namespace Grand.Services.Seo
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensreu that sename is not empty</param>
         /// <returns>Valid sename</returns>
-        public static string ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty)
+        public static async Task<string> ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty, 
+            SeoSettings seoSettings, IUrlRecordService urlRecordService, ILanguageService languageService)
              where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
@@ -209,7 +187,7 @@ namespace Grand.Services.Seo
                 seName = name;
             
             //validation
-            seName = GetSeName(seName);
+            seName = GetSeName(seName, seoSettings);
 
             //max length
             //For long URLs we can get the following error:
@@ -233,19 +211,16 @@ namespace Grand.Services.Seo
 
             //ensure this sename is not reserved yet
             string entityName = typeof(T).Name;
-            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
-            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
             int i = 2;
             var tempSeName = seName;
             while (true)
             {
                 //check whether such slug already exists (and that is not the current entity)
-                var urlRecord = urlRecordService.GetBySlug(tempSeName);
+                var urlRecord = await urlRecordService.GetBySlug(tempSeName);
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.OrdinalIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.OrdinalIgnoreCase);
-                var reserved3 = languageService.GetAllLanguages(true).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.OrdinalIgnoreCase));
+                var reserved3 = (await languageService.GetAllLanguages(true)).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.OrdinalIgnoreCase));
                 if (!reserved1 && !reserved2 && !reserved3)
                     break;
 
@@ -263,9 +238,8 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="name">Name</param>
         /// <returns>Result</returns>
-        public static string GetSeName(string name)
+        public static string GetSeName(string name, SeoSettings seoSettings)
         {
-            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
             return GetSeName(name, seoSettings.ConvertNonWesternChars, seoSettings.AllowUnicodeCharsInUrls);
         }
 
