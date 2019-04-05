@@ -9,8 +9,9 @@
 @using Grand.Services.Tax
 @inject IPluginFinder pluginFinder
 @inject IWebHelper webHelper
+@inject IServiceProvider serviceProvider    
 @{
-    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo.AsType()).Instance();
+    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo.AsType()).Instance(serviceProvider);
 
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;

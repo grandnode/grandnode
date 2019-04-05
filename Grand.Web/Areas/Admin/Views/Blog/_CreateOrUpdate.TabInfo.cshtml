@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
         @{
-        var blogTags = blogService.GetAllBlogPostTags("", true);
+        var blogTags = await blogService.GetAllBlogPostTags("", true);
         var blogTagsSb = new StringBuilder();
         blogTagsSb.Append("var initialBlogTags = [");
         for (int i = 0; i < blogTags.Count; i++)

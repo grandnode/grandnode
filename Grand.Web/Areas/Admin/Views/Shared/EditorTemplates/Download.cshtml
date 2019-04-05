@@ -10,7 +10,7 @@
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
     var downloadService = EngineContext.Current.Resolve<Grand.Services.Media.IDownloadService>();
-    var download = downloadService.GetDownloadById(Model);
+    var download = await downloadService.GetDownloadById(Model);
 
     var disableUrl = Convert.ToBoolean(ViewData["Grand.DownloadEditor.DisableUrl"] ?? false);
 }
