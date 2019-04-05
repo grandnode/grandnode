@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Plugin.Shipping.ShippingPoint.Domain;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Services
 {
@@ -15,38 +16,38 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Pickup points</returns>
-        IPagedList<Domain.ShippingPoints> GetAllStoreShippingPoint(string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<ShippingPoints>> GetAllStoreShippingPoint(string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="pointName"></param>
         /// <returns></returns>
-        Domain.ShippingPoints GetStoreShippingPointByPointName(string pointName);
+        Task<ShippingPoints> GetStoreShippingPointByPointName(string pointName);
 
         /// <summary>
         /// Gets a pickup point
         /// </summary>
         /// <param name="ShippingPointId">Pickup point identifier</param>
         /// <returns>Pickup point</returns>
-        Domain.ShippingPoints GetStoreShippingPointById(string ShippingPointId);
+        Task<ShippingPoints> GetStoreShippingPointById(string ShippingPointId);
 
         /// <summary>
         /// Inserts a pickup point
         /// </summary>
         /// <param name="ShippingPoint">Pickup point</param>
-        void InsertStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
+        Task InsertStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
 
         /// <summary>
         /// Updates a pickup point
         /// </summary>
         /// <param name="ShippingPoint">Pickup point</param>
-        void UpdateStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
+        Task UpdateStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
 
         /// <summary>
         /// Deletes a pickup point
         /// </summary>
         /// <param name="ShippingPoint">Pickup point</param>
-        void DeleteStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
+        Task DeleteStoreShippingPoint(Domain.ShippingPoints ShippingPoint);
     }
 }

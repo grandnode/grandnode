@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Plugin.Shipping.ShippingPoint.Models;
 using Grand.Plugin.Shipping.ShippingPoint.Services;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Components
 {
@@ -30,13 +30,13 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Components
             this._countryService = countryService;
             this._priceFormatter = priceFormatter;
         }
-        public IViewComponentResult Invoke(string shippingOption)
+        public async Task<IViewComponentResult> InvokeAsync(string shippingOption)
         {
             var parameter = shippingOption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0];
 
             if (parameter == _localizationService.GetResource("Plugins.Shipping.ShippingPoint.PluginName"))
             {
-                var shippingPoints = _shippingPointService.GetAllStoreShippingPoint(_storeContext.CurrentStore.Id);
+                var shippingPoints = await _shippingPointService.GetAllStoreShippingPoint(_storeContext.CurrentStore.Id);
 
                 var shippingPointsModel = new List<SelectListItem>();
                 shippingPointsModel.Add(new SelectListItem() { Value = "", Text = _localizationService.GetResource("Plugins.Shipping.ShippingPoint.SelectShippingOption") });

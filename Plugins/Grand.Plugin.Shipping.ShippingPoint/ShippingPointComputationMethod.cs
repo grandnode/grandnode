@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Grand.Plugin.Shipping.ShippingPoint
@@ -34,6 +35,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Ctor
@@ -46,7 +48,8 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
-            IWebHelper webHelper
+            IWebHelper webHelper,
+            IServiceProvider serviceProvider
             )
         {
             this._shippingService = shippingService;
@@ -59,6 +62,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
             this._webHelper = webHelper;
+            this._serviceProvider = serviceProvider;
         }
         #endregion
 
@@ -69,7 +73,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
@@ -85,7 +89,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
                 ShippingRateComputationMethodSystemName = "Shipping.ShippingPoint"
             });
 
-            return response;
+            return await Task.FromResult(response);
         }
 
         /// <summary>
@@ -93,101 +97,101 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
-            return null;
+            return Task.FromResult(default(decimal?));
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //locales       
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.PluginName", "Shipping Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.PluginDescription", "Choose a place where you can pick up your order");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ShippingPointName", "Point Name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint", "Simple Name For Your Collection Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Description", "Description");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Description.Hint", "Information That Isn't Provided By Other Fields");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.PickupFee", "Pickup Fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint", "Price For Using Given Collection Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.OpeningHours", "Open Between");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint", "Opening Hours");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Store", "Store Name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Store.Hint", "Which Store/Stores Can Use This Collection Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.City", "City");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.City.hint", "City");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Address1", "Address 1");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Address1.hint", "Address 1");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode", "Zip postal code");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint", "Zip postal code");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Country", "Country");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Country.hint", "Country Name");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginName", "Shipping Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginDescription", "Choose a place where you can pick up your order");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName", "Point Name");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint", "Simple Name For Your Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description.Hint", "Information That Isn't Provided By Other Fields");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee", "Pickup Fee");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint", "Price For Using Given Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours", "Open Between");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint", "Opening Hours");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store", "Store Name");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint", "Which Store/Stores Can Use This Collection Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City", "City");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City.hint", "City");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1", "Address 1");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint", "Address 1");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode", "Zip postal code");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint", "Zip postal code");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country", "Country");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country.hint", "Country Name");
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.ShippingPointName", "Point Name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Address", "Address");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.MethodAndFee", "{0} ({1})");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ShippingPointName", "Point Name");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Address", "Address");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.MethodAndFee", "{0} ({1})");
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.AddNew", "Add New Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredShippingPointName", "Shipping Point Name Is Required");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredDescription", "Description Is Required");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredOpeningHours", "Opening Hours Are Required");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectShippingOption", "Select Shipping Option");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.ChooseShippingPoint", "Choose Shipping Point");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectBeforeProceed", "Select Shipping Option Before Proceed");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.AddNew", "Add New Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName", "Shipping Point Name Is Required");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredDescription", "Description Is Required");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours", "Opening Hours Are Required");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectShippingOption", "Select Shipping Option");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint", "Choose Shipping Point");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed", "Select Shipping Option Before Proceed");
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.PluginName");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.PluginDescription");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ShippingPointName");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Description");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Descriptio.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.PickupFee");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.OpeningHours");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Store");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Store.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.AddNew");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredShippingPointName");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredDescription");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredOpeningHours");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectShippingOption");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.ChooseShippingPoint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectBeforeProceed");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.PluginDescription");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ShippingPointName.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Description");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Descriptio.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.PickupFee.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.OpeningHours.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Store.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.AddNew");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredShippingPointName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredDescription");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.RequiredOpeningHours");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectShippingOption");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ChooseShippingPoint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.SelectBeforeProceed");
 
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.City");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.City.hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Address1");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Address1.hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Country");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Fields.Country.hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.City.hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Address1.hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.ZipPostalCode.hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Fields.Country.hint");
 
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.ShippingPointName");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.Address");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ShippingPoint.MethodAndFee");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.ShippingPointName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.Address");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Shipping.ShippingPoint.MethodAndFee");
 
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
-        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        public async Task<bool> HideShipmentMethods(IList<ShoppingCartItem> cart)
         {
-            return false;
+            return await Task.FromResult(false);
         }
 
-        public IList<string> ValidateShippingForm(IFormCollection form)
+        public async Task<IList<string>> ValidateShippingForm(IFormCollection form)
         {
             var shippingMethodName = form["shippingoption"].ToString().Replace("___", "_").Split(new[] { '_' })[0];
             var shippingOptionId = form["selectedShippingOption"].ToString();
@@ -198,15 +202,15 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             if (shippingMethodName != _localizationService.GetResource("Plugins.Shipping.ShippingPoint.PluginName"))
                 throw new ArgumentException("shippingMethodName");
 
-            var chosenShippingOption = _shippingPointService.GetStoreShippingPointById(shippingOptionId);
+            var chosenShippingOption = await _shippingPointService.GetStoreShippingPointById(shippingOptionId);
             if (chosenShippingOption == null)
                 return new List<string>() { _localizationService.GetResource("Plugins.Shipping.ShippingPoint.SelectBeforeProceed") };
 
             //override price 
-            var offeredShippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
+            var offeredShippingOptions = await _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(_genericAttributeService, SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
             offeredShippingOptions.Find(x => x.Name == shippingMethodName).Rate = chosenShippingOption.PickupFee;
 
-            _genericAttributeService.SaveAttribute(
+            await _genericAttributeService.SaveAttribute(
                 _workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.OfferedShippingOptions,
                 offeredShippingOptions,
@@ -218,7 +222,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
                 _localizationService.GetResource("Plugins.Shipping.ShippingPoint.Fields.Description"), chosenShippingOption.Description
             );
 
-            _genericAttributeService.SaveAttribute(
+            await _genericAttributeService.SaveAttribute(
                 _workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ShippingOptionAttributeDescription,
                 forCustomer,
@@ -231,7 +235,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
                 Description = chosenShippingOption.Description,
                 OpeningHours = chosenShippingOption.OpeningHours,
                 PickupFee = chosenShippingOption.PickupFee,
-                Country = _countryService.GetCountryById(chosenShippingOption.CountryId)?.Name,
+                Country = (await _countryService.GetCountryById(chosenShippingOption.CountryId))?.Name,
                 City = chosenShippingOption.City,
                 Address1 = chosenShippingOption.Address1,
                 ZipPostalCode = chosenShippingOption.ZipPostalCode,
@@ -247,7 +251,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
                 serializedAttribute = stringBuilder.ToString();
             }
 
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+            await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ShippingOptionAttributeXml,
                     serializedAttribute,
                     _storeContext.CurrentStore.Id);

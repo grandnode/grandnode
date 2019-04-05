@@ -5,6 +5,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 {
@@ -26,12 +27,12 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             this._countryService = countryService;
             this._priceFormatter = priceFormatter;
         }
-        public IActionResult Get(string shippingOptionId)
+        public async Task<IActionResult> Get(string shippingOptionId)
         {
-            var shippingPoint = _shippingPointService.GetStoreShippingPointById(shippingOptionId);
+            var shippingPoint = await _shippingPointService.GetStoreShippingPointById(shippingOptionId);
             if (shippingPoint != null)
             {
-                var countryName = _countryService.GetCountryById(shippingPoint.CountryId);
+                var countryName = await _countryService.GetCountryById(shippingPoint.CountryId);
 
                 var viewModel = new PointModel()
                 {
@@ -41,7 +42,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                     OpeningHours = shippingPoint.OpeningHours,
                     Address1 = shippingPoint.Address1,
                     City = shippingPoint.City,
-                    CountryName = _countryService.GetCountryById(shippingPoint.CountryId)?.Name,
+                    CountryName = (await _countryService.GetCountryById(shippingPoint.CountryId))?.Name,
                     ZipPostalCode = shippingPoint.ZipPostalCode,
                 };
                 return View("~/Plugins/Shipping.ShippingPoint/Views/FormShippingOption.cshtml", viewModel);
