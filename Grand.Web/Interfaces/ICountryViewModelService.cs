@@ -1,8 +1,10 @@
-﻿namespace Grand.Web.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Grand.Web.Interfaces
 {
     public partial interface ICountryViewModelService
     {
-        dynamic PrepareModel(string countryId, bool addSelectStateItem);
+        Task<dynamic> PrepareModel(string countryId, bool addSelectStateItem);
 
     }
 }
