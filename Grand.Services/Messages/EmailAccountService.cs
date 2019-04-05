@@ -5,6 +5,9 @@ using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Messages
 {
@@ -29,7 +32,7 @@ namespace Grand.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void InsertEmailAccount(EmailAccount emailAccount)
+        public virtual async Task InsertEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
@@ -52,7 +55,7 @@ namespace Grand.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Insert(emailAccount);
+            await _emailAccountRepository.InsertAsync(emailAccount);
 
             //event notification
             _eventPublisher.EntityInserted(emailAccount);
@@ -62,7 +65,7 @@ namespace Grand.Services.Messages
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void UpdateEmailAccount(EmailAccount emailAccount)
+        public virtual async Task UpdateEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
@@ -85,7 +88,7 @@ namespace Grand.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Update(emailAccount);
+            await _emailAccountRepository.UpdateAsync(emailAccount);
 
             //event notification
             _eventPublisher.EntityUpdated(emailAccount);
@@ -95,15 +98,15 @@ namespace Grand.Services.Messages
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void DeleteEmailAccount(EmailAccount emailAccount)
+        public virtual async Task DeleteEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
-
-            if (GetAllEmailAccounts().Count == 1)
+            var emailAccounts = await GetAllEmailAccounts();
+            if (emailAccounts.Count == 1)
                 throw new GrandException("You cannot delete this email account. At least one account is required.");
 
-            _emailAccountRepository.Delete(emailAccount);
+            await _emailAccountRepository.DeleteAsync(emailAccount);
 
             //event notification
             _eventPublisher.EntityDeleted(emailAccount);
@@ -114,22 +117,21 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        public virtual EmailAccount GetEmailAccountById(string emailAccountId)
+        public virtual Task<EmailAccount> GetEmailAccountById(string emailAccountId)
         {
-            return _emailAccountRepository.GetById(emailAccountId);
+            return _emailAccountRepository.GetByIdAsync(emailAccountId);
         }
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts list</returns>
-        public virtual IList<EmailAccount> GetAllEmailAccounts()
+        public virtual async Task<IList<EmailAccount>> GetAllEmailAccounts()
         {
             var query = from ea in _emailAccountRepository.Table
                         orderby ea.Id
                         select ea;
-            var emailAccounts = query.ToList();
-            return emailAccounts;
+            return await query.ToListAsync();
         }
     }
 }
