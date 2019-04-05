@@ -12,12 +12,14 @@ using Grand.Web.Infrastructure.Installation;
 using Grand.Web.Models.Install;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -28,16 +30,19 @@ namespace Grand.Web.Controllers
         private readonly IInstallationLocalizationService _locService;
         private readonly GrandConfig _config;
         private readonly ICacheManager _cacheManager;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, GrandConfig config, ICacheManager cacheManager)
+        public InstallController(IInstallationLocalizationService locService, GrandConfig config, ICacheManager cacheManager,
+            IServiceProvider serviceProvider)
         {
             this._locService = locService;
             this._config = config;
             this._cacheManager = cacheManager;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -92,7 +97,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Index(InstallModel model)
+        public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -155,7 +160,7 @@ namespace Grand.Web.Controllers
             else
                 ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
 
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var webHelper = _serviceProvider.GetRequiredService<IWebHelper>();
 
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
@@ -181,21 +186,21 @@ namespace Grand.Web.Controllers
                     };
                     settingsManager.SaveSettings(settings);
 
-                    var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
+                    var dataProviderInstance = _serviceProvider.GetRequiredService<BaseDataProviderManager>().LoadDataProvider();
                     dataProviderInstance.InitDatabase();
 
                     var dataSettingsManager = new DataSettingsManager();
                     var dataProviderSettings = dataSettingsManager.LoadSettings(reloadSettings: true);
 
-                    var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
+                    var installationService = _serviceProvider.GetRequiredService<IInstallationService>();
+                    await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
-                    var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+                    var pluginFinder = _serviceProvider.GetRequiredService<IPluginFinder>();
                     var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
                         .ToList()
                         .OrderBy(x => x.PluginDescriptor.Group)
@@ -216,12 +221,12 @@ namespace Grand.Web.Controllers
 
                         try
                         {
-                            plugin.Install();
+                            await plugin.Install();
                         }
                         catch (Exception ex)
                         {
-                            var _logger = EngineContext.Current.Resolve<ILogger>();
-                            _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error during installing plugin " + plugin.PluginDescriptor.SystemName,
+                            var _logger = _serviceProvider.GetRequiredService<ILogger>();
+                            await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error during installing plugin " + plugin.PluginDescriptor.SystemName,
                                 ex.Message + " " + ex.InnerException?.Message);
                         }
                     }
@@ -232,7 +237,7 @@ namespace Grand.Web.Controllers
                     foreach (var providerType in permissionProviders)
                     {
                         var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                        EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                        await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
                     }
 
                     //restart application
@@ -301,7 +306,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //restart application
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var webHelper = _serviceProvider.GetRequiredService<IWebHelper>();
             webHelper.RestartAppDomain();
 
             //Redirect to home page
