@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -49,63 +50,63 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
+        public async Task<IActionResult> GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
-            var giftCards = _giftCardViewModelService.PrepareGiftCardModel(model, command.Page, command.PageSize);
+            var (giftCardModels, totalCount) = await _giftCardViewModelService.PrepareGiftCardModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = giftCards.giftCardModels.ToList(),
-                Total = giftCards.totalCount
+                Data = giftCardModels.ToList(),
+                Total = totalCount
             };
 
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = _giftCardViewModelService.PrepareGiftCardModel();
+            var model = await _giftCardViewModelService.PrepareGiftCardModel();
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(GiftCardModel model, bool continueEditing)
+        public async Task<IActionResult> Create(GiftCardModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var giftCard = _giftCardViewModelService.InsertGiftCardModel(model);
+                var giftCard = await _giftCardViewModelService.InsertGiftCardModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            model = _giftCardViewModelService.PrepareGiftCardModel(model);
+            model = await _giftCardViewModelService.PrepareGiftCardModel(model);
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var giftCard = _giftCardService.GetGiftCardById(id);
+            var giftCard = await _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
                 //No gift card found with the specified id
                 return RedirectToAction("List");
 
-            var model = _giftCardViewModelService.PrepareGiftCardModel(giftCard);
+            var model = await _giftCardViewModelService.PrepareGiftCardModel(giftCard);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(GiftCardModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(GiftCardModel model, bool continueEditing)
         {
-            var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            var giftCard = await _giftCardService.GetGiftCardById(model.Id);
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            _giftCardViewModelService.FillGiftCardModel(giftCard, model);
+            await _giftCardViewModelService.FillGiftCardModel(giftCard, model);
 
             if (ModelState.IsValid)
             {
-                giftCard = _giftCardViewModelService.UpdateGiftCardModel(giftCard, model);
+                giftCard = await _giftCardViewModelService.UpdateGiftCardModel(giftCard, model);
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
                 if (continueEditing)
@@ -130,9 +131,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notifyRecipient")]
-        public IActionResult NotifyRecipient(GiftCardModel model)
+        public async Task<IActionResult> NotifyRecipient(GiftCardModel model)
         {
-            var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            var giftCard = await _giftCardService.GetGiftCardById(model.Id);
 
             if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
                 ModelState.AddModelError("", "Recipient email is not valid");
@@ -143,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _giftCardViewModelService.NotifyRecipient(giftCard, model);
+                    await _giftCardViewModelService.NotifyRecipient(giftCard, model);
                 }
                 else
                     ErrorNotification(ModelState);
@@ -157,15 +158,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var giftCard = _giftCardService.GetGiftCardById(id);
+            var giftCard = await _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
                 //No gift card found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _giftCardViewModelService.DeleteGiftCard(giftCard);
+                await _giftCardViewModelService.DeleteGiftCard(giftCard);
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
                 return RedirectToAction("List");
             }
@@ -175,17 +176,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //Gif card usage history
         [HttpPost]
-        public IActionResult UsageHistoryList(string giftCardId, DataSourceRequest command)
+        public async Task<IActionResult> UsageHistoryList(string giftCardId, DataSourceRequest command)
         {
-            var giftCard = _giftCardService.GetGiftCardById(giftCardId);
+            var giftCard = await _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
                 throw new ArgumentException("No gift card found with the specified id");
 
-            var usageHistoryModel = _giftCardViewModelService.PrepareGiftCardUsageHistoryModels(giftCard, command.Page, command.PageSize);
+            var (giftCardUsageHistoryModels, totalCount) = await _giftCardViewModelService.PrepareGiftCardUsageHistoryModels(giftCard, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = usageHistoryModel.giftCardUsageHistoryModels.ToList(),
-                Total = usageHistoryModel.totalCount
+                Data = giftCardUsageHistoryModels.ToList(),
+                Total = totalCount
             };
 
             return Json(gridModel);
