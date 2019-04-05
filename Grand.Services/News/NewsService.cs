@@ -8,6 +8,8 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace Grand.Services.News
 {
@@ -46,12 +48,12 @@ namespace Grand.Services.News
         /// Deletes a news
         /// </summary>
         /// <param name="newsItem">News item</param>
-        public virtual void DeleteNews(NewsItem newsItem)
+        public virtual async Task DeleteNews(NewsItem newsItem)
         {
             if (newsItem == null)
                 throw new ArgumentNullException("newsItem");
 
-            _newsItemRepository.Delete(newsItem);
+            await _newsItemRepository.DeleteAsync(newsItem);
             
             //event notification
             _eventPublisher.EntityDeleted(newsItem);
@@ -62,9 +64,9 @@ namespace Grand.Services.News
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        public virtual NewsItem GetNewsById(string newsId)
+        public virtual Task<NewsItem> GetNewsById(string newsId)
         {
-            return _newsItemRepository.GetById(newsId);
+            return _newsItemRepository.GetByIdAsync(newsId);
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace Grand.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="newsTitle">News title</param>
         /// <returns>News items</returns>
-        public virtual IPagedList<NewsItem> GetAllNews(string storeId = "",
+        public virtual async Task<IPagedList<NewsItem>> GetAllNews(string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false, string newsTitle = "")
         {
             var query = _newsItemRepository.Table;
@@ -113,20 +115,19 @@ namespace Grand.Services.News
             }
             query = query.OrderByDescending(n => n.CreatedOnUtc);
 
-            var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
-            return news;
+            return await Task.FromResult(new PagedList<NewsItem>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        public virtual void InsertNews(NewsItem news)
+        public virtual async Task InsertNews(NewsItem news)
         {
             if (news == null)
                 throw new ArgumentNullException("news");
 
-            _newsItemRepository.Insert(news);
+            await _newsItemRepository.InsertAsync(news);
 
             //event notification
             _eventPublisher.EntityInserted(news);
@@ -136,12 +137,12 @@ namespace Grand.Services.News
         /// Updates the news item
         /// </summary>
         /// <param name="news">News item</param>
-        public virtual void UpdateNews(NewsItem news)
+        public virtual async Task UpdateNews(NewsItem news)
         {
             if (news == null)
                 throw new ArgumentNullException("news");
 
-            _newsItemRepository.Update(news);
+            await _newsItemRepository.UpdateAsync(news);
             
             //event notification
             _eventPublisher.EntityUpdated(news);
@@ -152,7 +153,7 @@ namespace Grand.Services.News
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<NewsComment> GetAllComments(string customerId)
+        public virtual async Task<IList<NewsComment>> GetAllComments(string customerId)
         {
             var query = from n in _newsItemRepository.Table
                         from c in n.NewsComments
@@ -163,10 +164,8 @@ namespace Grand.Services.News
                          where (customerId == "" || c.CustomerId == customerId)
                          select c;
 
-            var content = query2.ToList();
-            return content;
+            return await query2.ToListAsync();
         }
-
        
         #endregion
     }

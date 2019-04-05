@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.News;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.News
 {
@@ -13,14 +14,14 @@ namespace Grand.Services.News
         /// Deletes a news
         /// </summary>
         /// <param name="newsItem">News item</param>
-        void DeleteNews(NewsItem newsItem);
+        Task DeleteNews(NewsItem newsItem);
 
         /// <summary>
         /// Gets a news
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        NewsItem GetNewsById(string newsId);
+        Task<NewsItem> GetNewsById(string newsId);
 
         /// <summary>
         /// Gets all news
@@ -32,27 +33,27 @@ namespace Grand.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="newsTitle">News title</param>
         /// <returns>News items</returns>
-        IPagedList<NewsItem> GetAllNews(string storeId = "",
+        Task<IPagedList<NewsItem>> GetAllNews(string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false, string newsTitle = "");
 
         /// <summary>
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        void InsertNews(NewsItem news);
+        Task InsertNews(NewsItem news);
 
         /// <summary>
         /// Updates the news item
         /// </summary>
         /// <param name="news">News item</param>
-        void UpdateNews(NewsItem news);
+        Task UpdateNews(NewsItem news);
 
         /// <summary>
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
-        IList<NewsComment> GetAllComments(string customerId);
+        Task<IList<NewsComment>> GetAllComments(string customerId);
 
         
         
