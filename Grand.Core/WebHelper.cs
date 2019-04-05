@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -30,7 +31,7 @@ namespace Grand.Core
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
         private readonly IApplicationLifetime _applicationLifetime;
-
+        private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Constructor
@@ -39,11 +40,12 @@ namespace Grand.Core
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IApplicationLifetime applicationLifetime)
+        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
         {
             this._hostingConfig = hostingConfig;
             this._httpContextAccessor = httpContextAccessor;
             this._applicationLifetime = applicationLifetime;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -244,7 +246,7 @@ namespace Grand.Core
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
             if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
             {
-                var currentStore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
+                var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
                 if (currentStore != null)
                     storeLocation = currentStore.Url;
                 else
