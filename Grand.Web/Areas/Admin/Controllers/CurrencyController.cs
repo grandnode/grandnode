@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -64,17 +65,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List(bool liveRates = false)
+        public async Task<IActionResult> List(bool liveRates = false)
         {
             if (liveRates)
             {
                 try
                 {
-                    var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    var primaryExchangeCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
                     if (primaryExchangeCurrency == null)
                         throw new GrandException("Primary exchange rate currency is not set");
 
-                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
+                    ViewBag.Rates = await _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
                 }
                 catch (Exception exc)
                 {
@@ -98,18 +99,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult List(IFormCollection formValues)
+        public async Task<IActionResult> List(IFormCollection formValues)
         {
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
             _currencySettings.AutoUpdateEnabled = !formValues["autoUpdateEnabled"].Equals("false");
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSetting(_currencySettings);
             return RedirectToAction("List", "Currency");
         }
 
         [HttpPost]
-        public IActionResult ListGrid(DataSourceRequest command)
+        public async Task<IActionResult> ListGrid(DataSourceRequest command)
         {
-            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
+            var currenciesModel = (await _currencyService.GetAllCurrencies(true)).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
             foreach (var currency in currenciesModel)
@@ -124,33 +125,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApplyRate(string currencyCode, string rate)
+        public async Task<IActionResult> ApplyRate(string currencyCode, string rate)
         {
             var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
             {
                 currency.Rate = _rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.UpdateCurrency(currency);
+                await _currencyService.UpdateCurrency(currency);
             }
             return Json(new { result = true });
         }
 
         [HttpPost]
-        public IActionResult MarkAsPrimaryExchangeRateCurrency(string id)
+        public async Task<IActionResult> MarkAsPrimaryExchangeRateCurrency(string id)
         {
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSetting(_currencySettings);
 
             return Json(new { result = true });
         }
 
         [HttpPost]
-        public IActionResult MarkAsPrimaryStoreCurrency(string id)
+        public async Task<IActionResult> MarkAsPrimaryStoreCurrency(string id)
         {
             _currencySettings.PrimaryStoreCurrencyId = id;
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSetting(_currencySettings);
             return Json(new { result = true });
         }
 
@@ -158,37 +159,37 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = _currencyViewModelService.PrepareCurrencyModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CurrencyModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CurrencyModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var currency = _currencyViewModelService.InsertCurrencyModel(model);
+                var currency = await _currencyViewModelService.InsertCurrencyModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
         
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = await _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -196,20 +197,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = currency.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = currency.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            model.PrepareStoresMappingModel(currency, false, _storeService);
+            await model.PrepareStoresMappingModel(currency, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CurrencyModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CurrencyModel model, bool continueEditing)
         {
-            var currency = _currencyService.GetCurrencyById(model.Id);
+            var currency = await _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -217,14 +218,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allCurrencies = _currencyService.GetAllCurrencies();
+                var allCurrencies = await _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id &&
                     !model.Published)
                 {
                     ErrorNotification("At least one published currency is required.");
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
-                currency = _currencyViewModelService.UpdateCurrencyModel(currency, model);
+                currency = await _currencyViewModelService.UpdateCurrencyModel(currency, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
                 if (continueEditing)
                 {
@@ -239,14 +240,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             //Stores
-            model.PrepareStoresMappingModel(currency, true, _storeService);
+            await model.PrepareStoresMappingModel(currency, true, _storeService);
             return View(model);
         }
         
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = await _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -260,7 +261,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     throw new GrandException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 //ensure we have at least one published currency
-                var allCurrencies = _currencyService.GetAllCurrencies();
+                var allCurrencies = await _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
                     ErrorNotification("At least one published currency is required.");
@@ -268,7 +269,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    _currencyService.DeleteCurrency(currency);
+                    await _currencyService.DeleteCurrency(currency);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
                     return RedirectToAction("List");
