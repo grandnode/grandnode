@@ -3,6 +3,7 @@ using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
+using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
@@ -35,10 +36,11 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly SeoSettings _seoSettings;
 
         public AffiliateViewModelService(IWebHelper webHelper, IWorkContext workContext, ICountryService countryService, IStateProvinceService stateProvinceService,
             IPriceFormatter priceFormatter, IAffiliateService affiliateService,
-            ICustomerService customerService, IOrderService orderService, ILocalizationService localizationService, IDateTimeHelper dateTimeHelper)
+            ICustomerService customerService, IOrderService orderService, ILocalizationService localizationService, IDateTimeHelper dateTimeHelper, SeoSettings seoSettings)
         {
             _webHelper = webHelper;
             _workContext = workContext;
@@ -50,9 +52,10 @@ namespace Grand.Web.Areas.Admin.Services
             _orderService = orderService;
             _localizationService = localizationService;
             _dateTimeHelper = dateTimeHelper;
+            _seoSettings = seoSettings;
         }
 
-        public virtual void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
+        public virtual async Task PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
             bool prepareEntireAddressModel = true)
         {
             if (model == null)
@@ -95,10 +98,10 @@ namespace Grand.Web.Areas.Admin.Services
 
                 //address
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-                foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                foreach (var c in await _countryService.GetAllCountries(showHidden: true))
                     model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
 
-                var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+                var states = !String.IsNullOrEmpty(model.Address.CountryId) ? await _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true) : new List<StateProvince>();
                 if (states.Count > 0)
                 {
                     foreach (var s in states)
@@ -116,12 +119,14 @@ namespace Grand.Web.Areas.Admin.Services
                model.LoadOnlyWithOrders, model.OrdersCreatedFromUtc, model.OrdersCreatedToUtc,
                pageIndex - 1, pageSize, true);
 
-            return (affiliates.Select(x =>
-                {
-                    var m = new AffiliateModel();
-                    PrepareAffiliateModel(m, x, false, false);
-                    return m;
-                }), affiliates.TotalCount);
+            var affiliateModels = new List<AffiliateModel>();
+            foreach (var x in affiliates)
+            {
+                var m = new AffiliateModel();
+                await PrepareAffiliateModel(m, x, false, false);
+                affiliateModels.Add(m);
+            }
+            return (affiliateModels, affiliates.TotalCount);
         }
         public virtual async Task<Affiliate> InsertAffiliateModel(AffiliateModel model)
         {
@@ -129,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Services
             affiliate.Active = model.Active;
             affiliate.AdminComment = model.AdminComment;
             //validate friendly URL name
-            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(_affiliateService, _seoSettings, model.FriendlyUrlName);
             affiliate.FriendlyUrlName = friendlyUrlName;
             affiliate.Address = model.Address.ToEntity();
             affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
@@ -142,13 +147,13 @@ namespace Grand.Web.Areas.Admin.Services
             affiliate.Active = model.Active;
             affiliate.AdminComment = model.AdminComment;
             //validate friendly URL name
-            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(_affiliateService, _seoSettings, model.FriendlyUrlName);
             affiliate.FriendlyUrlName = friendlyUrlName;
             affiliate.Address = model.Address.ToEntity(affiliate.Address);
             await _affiliateService.UpdateAffiliate(affiliate);
             return affiliate;
         }
-        public virtual (IEnumerable<AffiliateModel.AffiliatedOrderModel> affiliateOrderModels, int totalCount) PrepareAffiliatedOrderList(Affiliate affiliate, AffiliatedOrderListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<AffiliateModel.AffiliatedOrderModel> affiliateOrderModels, int totalCount)> PrepareAffiliatedOrderList(Affiliate affiliate, AffiliatedOrderListModel model, int pageIndex, int pageSize)
         {
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -160,7 +165,7 @@ namespace Grand.Web.Areas.Admin.Services
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var orders = _orderService.SearchOrders(
+            var orders = await _orderService.SearchOrders(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 os: orderStatus,
@@ -184,9 +189,9 @@ namespace Grand.Web.Areas.Admin.Services
                 }), orders.TotalCount);
         }
 
-        public virtual (IEnumerable<AffiliateModel.AffiliatedCustomerModel> affiliateCustomerModels, int totalCount) PrepareAffiliatedCustomerList(Affiliate affiliate, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<AffiliateModel.AffiliatedCustomerModel> affiliateCustomerModels, int totalCount)> PrepareAffiliatedCustomerList(Affiliate affiliate, int pageIndex, int pageSize)
         {
-            var customers = _customerService.GetAllCustomers(
+            var customers = await _customerService.GetAllCustomers(
                 affiliateId: affiliate.Id,
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize);
