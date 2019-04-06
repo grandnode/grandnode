@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -29,7 +29,7 @@ namespace Grand.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that saves last visited page by customer
         /// </summary>
-        private class SaveLastVisitedPageFilter : IActionFilter
+        private class SaveLastVisitedPageFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -44,7 +44,7 @@ namespace Grand.Framework.Mvc.Filters
 
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
-                IWebHelper webHelper, 
+                IWebHelper webHelper,
                 IWorkContext workContext,
                 ICustomerActivityService customerActivityService)
             {
@@ -63,8 +63,10 @@ namespace Grand.Framework.Mvc.Filters
             /// Called before the action executes, after model binding is complete
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
+                await next();
+
                 if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
                     return;
 
@@ -88,13 +90,13 @@ namespace Grand.Framework.Mvc.Filters
                 var pageUrl = _webHelper.GetThisPageUrl(true);
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
-                
+
                 //get previous last page
-                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastVisitedPage).GetAwaiter().GetResult();
+                var previousPageUrl = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastVisitedPage);
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.OrdinalIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
+                    await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
 
                 if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers[HeaderNames.Referer]))
                     if (!context.HttpContext.Request.Headers[HeaderNames.Referer].ToString().Contains(context.HttpContext.Request.Host.ToString()))
@@ -103,7 +105,7 @@ namespace Grand.Framework.Mvc.Filters
                         var actualUrlReferrer = context.HttpContext.Request.Headers[HeaderNames.Referer];
                         if (previousUrlReferrer != actualUrlReferrer)
                         {
-                            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastUrlReferrer, actualUrlReferrer);
+                            await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastUrlReferrer, actualUrlReferrer);
                         }
                     }
 
@@ -111,20 +113,9 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     if (!_workContext.CurrentCustomer.IsSearchEngineAccount())
                     {
-                        _customerActivityService.InsertActivityAsync("PublicStore.Url", pageUrl, pageUrl, _workContext.CurrentCustomer.Id, _webHelper.GetCurrentIpAddress());
+                        await _customerActivityService.InsertActivityAsync("PublicStore.Url", pageUrl, pageUrl, _workContext.CurrentCustomer.Id, _webHelper.GetCurrentIpAddress());
                     }
                 }
-
-
-            }
-
-            /// <summary>
-            /// Called after the action executes, before the action result
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
-            {
-                //do nothing
             }
 
             #endregion
