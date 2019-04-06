@@ -177,7 +177,7 @@ namespace Grand.Services.Seo
 
             //categories
             if (_commonSettings.SitemapIncludeCategories)
-                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, "", language));
+                sitemapUrls.AddRange(await GetCategoryUrls(urlHelper, "", language));
 
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
@@ -202,16 +202,18 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="sitemapUrls">Current list of URL</param>
         /// <returns>Collection of sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCategoryUrls(IUrlHelper urlHelper, string parentCategoryId, string language)
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrls(IUrlHelper urlHelper, string parentCategoryId, string language)
         {
-            return _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId: parentCategoryId).GetAwaiter().GetResult().SelectMany(category =>
+            var allCategoriesByParentCategoryId = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId: parentCategoryId);
+            var categories = new List<SitemapUrl>();
+            foreach (var category in allCategoriesByParentCategoryId)
             {
                 var sitemapUrls = new List<SitemapUrl>();
                 var url = urlHelper.RouteUrl("Category", new { SeName = category.GetSeName(language) }, GetHttpProtocol());
-                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
-                sitemapUrls.AddRange(GetCategoryUrls(urlHelper, category.Id, language));
-                return sitemapUrls;
-            });
+                categories.Add(new SitemapUrl(url, UpdateFrequency.Weekly, category.UpdatedOnUtc));
+                categories.AddRange(await GetCategoryUrls(urlHelper, category.Id, language));
+            }
+            return categories;
         }
 
         /// <summary>
