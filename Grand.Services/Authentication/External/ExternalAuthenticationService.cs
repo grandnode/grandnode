@@ -191,7 +191,7 @@ namespace Grand.Services.Authentication.External
             //authenticate
             if (registrationIsApproved)
             {
-                _authenticationService.SignIn(_workContext.CurrentCustomer, false);
+                await _authenticationService.SignIn(_workContext.CurrentCustomer, false);
                 await _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
@@ -227,7 +227,7 @@ namespace Grand.Services.Authentication.External
             await _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, user, true);
 
             //authenticate
-            _authenticationService.SignIn(user, false);
+            await _authenticationService.SignIn(user, false);
 
             //raise event       
             _eventPublisher.Publish(new CustomerLoggedinEvent(user));

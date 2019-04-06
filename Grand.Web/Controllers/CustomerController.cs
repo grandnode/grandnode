@@ -174,7 +174,7 @@ namespace Grand.Web.Controllers
                             await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                             //sign in new customer
-                            _authenticationService.SignIn(customer, model.RememberMe);
+                            await _authenticationService.SignIn(customer, model.RememberMe);
 
                             //raise event       
                             _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
@@ -238,7 +238,7 @@ namespace Grand.Web.Controllers
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.Logout", "", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
-            _authenticationService.SignOut();
+            await _authenticationService.SignOut();
 
             //EU Cookie
             if (storeInformationSettings.DisplayEuCookieLawWarning)
@@ -391,7 +391,7 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentCustomer.IsRegistered())
             {
                 //Already registered customer. 
-                _authenticationService.SignOut();
+                await _authenticationService.SignOut();
 
                 //Save a new record
                 _workContext.CurrentCustomer = await _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
@@ -530,7 +530,7 @@ namespace Grand.Web.Controllers
 
                     //login customer now
                     if (isApproved)
-                        _authenticationService.SignIn(customer, true);
+                        await _authenticationService.SignIn(customer, true);
 
                     //insert default address (if possible)
                     var defaultAddress = new Address
@@ -757,7 +757,7 @@ namespace Grand.Web.Controllers
                             await _customerRegistrationService.SetUsername(customer, model.Username.Trim());
                             //re-authenticate
                             if (_workContext.OriginalCustomerIfImpersonated == null)
-                                _authenticationService.SignIn(customer, true);
+                                await _authenticationService.SignIn(customer, true);
                         }
                     }
                     //email
@@ -771,7 +771,7 @@ namespace Grand.Web.Controllers
                         {
                             //re-authenticate (if usernames are disabled)
                             if (!_customerSettings.UsernamesEnabled)
-                                _authenticationService.SignIn(customer, true);
+                                await _authenticationService.SignIn(customer, true);
                         }
                     }
 
@@ -1216,7 +1216,7 @@ namespace Grand.Web.Controllers
                             await _customerViewModelService.DeleteAccount(customer);
 
                             //standard logout 
-                            _authenticationService.SignOut();
+                            await _authenticationService.SignOut();
 
                             return RedirectToRoute("HomePage");
                         }

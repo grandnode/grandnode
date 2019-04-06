@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Customers;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
@@ -12,17 +13,17 @@ namespace Grand.Services.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="createPersistentCookie">A value indicating whether to create a persistent cookie</param>
-        void SignIn(Customer customer, bool createPersistentCookie);
+        Task SignIn(Customer customer, bool createPersistentCookie);
 
         /// <summary>
         /// Sign out
         /// </summary>
-        void SignOut();
+        Task SignOut();
 
         /// <summary>
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        Customer GetAuthenticatedCustomer();
+        Task<Customer> GetAuthenticatedCustomer();
     }
 }
