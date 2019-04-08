@@ -65,7 +65,7 @@ namespace Grand.Framework.Localization
         {
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return base.RouteAsync(context);
-
+            var ll = context.HttpContext.Features.Get<Grand.Services.Localization.ILanguageService>();
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
             if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))

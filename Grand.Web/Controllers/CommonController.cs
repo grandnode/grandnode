@@ -128,7 +128,7 @@ namespace Grand.Web.Controllers
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out language))
+                if (await returnUrl.IsLocalizedUrlAsync(languageService, this.Request.PathBase, true))
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, true);
 
                 //and add code of passed language
