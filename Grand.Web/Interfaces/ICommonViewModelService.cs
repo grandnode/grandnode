@@ -12,11 +12,10 @@ namespace Grand.Web.Interfaces
     {
         Task<LogoModel> PrepareLogo();
         Task<LanguageSelectorModel> PrepareLanguageSelector();
-        Task SetLanguage(string langid);
         Task<CurrencySelectorModel> PrepareCurrencySelector();
         Task SetCurrency(string customerCurrency);
         TaxTypeSelectorModel PrepareTaxTypeSelector();
-        void SetTaxType(int customerTaxType);
+        Task SetTaxType(int customerTaxType);
         Task<StoreSelectorModel> PrepareStoreSelector();
         Task SetStore(string storeid);
         Task<int> GetUnreadPrivateMessages();

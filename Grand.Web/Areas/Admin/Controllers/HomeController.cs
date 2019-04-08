@@ -128,13 +128,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = await PrepareActivityModel();
             return PartialView(model);
         }
-
+        
         public async Task<IActionResult> SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
         {
             var language = await languageService.GetLanguageById(langid);
             if (language != null)
             {
-                _workContext.WorkingLanguage = language;
+                await _workContext.SetWorkingLanguage(language);
             }
 
             //home page
@@ -145,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
+        
         [AcceptVerbs("Get")]
         public async Task<IActionResult> GetStatesByCountryId([FromServices] ICountryService countryService, [FromServices] IStateProvinceService stateProvinceService,
             string countryId, bool? addSelectStateItem, bool? addAsterisk)

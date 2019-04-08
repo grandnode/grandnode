@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Framework.Infrastructure
 {
-    public class StoreMiddleware
+    public class WorkContextMiddleware
     {
         #region Fields
 
@@ -18,7 +18,7 @@ namespace Grand.Framework.Infrastructure
         /// Ctor
         /// </summary>
         /// <param name="next">Next</param>
-        public StoreMiddleware(RequestDelegate next)
+        public WorkContextMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -32,9 +32,14 @@ namespace Grand.Framework.Infrastructure
         /// </summary>
         /// <param name="context">HTTP context</param>
         /// <returns>Task</returns>
-        public async Task InvokeAsync(HttpContext context, IStoreContext storeContext)
+        public async Task InvokeAsync(HttpContext context, IWorkContext workContext)
         {
-            await storeContext.SetCurrentStore();
+            //set current customer
+            var customer = await workContext.SetCurrentCustomer();
+            var vendor = await workContext.SetCurrentVendor(customer);
+            var language = await workContext.SetWorkingLanguage(customer);
+            var currency = await workContext.SetWorkingCurrency(customer);
+            var taxtype = await workContext.SetTaxDisplayType(customer);
 
             //call the next middleware in the request pipeline
             await _next(context);

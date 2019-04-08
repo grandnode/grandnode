@@ -56,6 +56,10 @@ namespace Grand.Framework
 
         }
 
+        /// <summary>
+        /// Set the current store by Middleware
+        /// </summary>
+        /// <returns></returns>
         public virtual async Task<Store> SetCurrentStore()
         {
 
@@ -86,7 +90,7 @@ namespace Grand.Framework
                 else
                     _cachedStore = stores.FirstOrDefault();
             }
-            return _cachedStore = _cachedStore ?? throw new Exception("No store could be loaded");
+            return _cachedStore ?? throw new Exception("No store could be loaded");
         }
         /// <summary>
         /// Set store cookie

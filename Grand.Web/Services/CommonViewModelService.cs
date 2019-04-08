@@ -266,14 +266,6 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual async Task SetLanguage(string langid)
-        {
-            var language = await _languageService.GetLanguageById(langid);
-            if (language != null && language.Published)
-            {
-                _workContext.WorkingLanguage = language;
-            }
-        }
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
@@ -317,7 +309,7 @@ namespace Grand.Web.Services
         {
             var currency = await _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
-                _workContext.WorkingCurrency = currency;
+                await _workContext.SetWorkingCurrency(currency);
 
         }
         public virtual TaxTypeSelectorModel PrepareTaxTypeSelector()
@@ -332,10 +324,10 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual void SetTaxType(int customerTaxType)
+        public virtual async Task SetTaxType(int customerTaxType)
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
-            _workContext.TaxDisplayType = taxDisplayType;
+            await _workContext.SetTaxDisplayType(taxDisplayType);
         }
 
         public virtual async Task<StoreSelectorModel> PrepareStoreSelector()

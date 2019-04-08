@@ -135,7 +135,7 @@ namespace Grand.Web.Controllers
                 returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
             }
 
-            _workContext.WorkingLanguage = language;
+            await _workContext.SetWorkingLanguage(language);
 
             return Redirect(returnUrl);
         }
@@ -223,9 +223,9 @@ namespace Grand.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult SetTaxType(int customerTaxType, string returnUrl = "")
+        public virtual async Task<IActionResult> SetTaxType(int customerTaxType, string returnUrl = "")
         {
-            _commonViewModelService.SetTaxType(customerTaxType);
+            await _commonViewModelService.SetTaxType(customerTaxType);
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
