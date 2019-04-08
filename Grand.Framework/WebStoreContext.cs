@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework
 {
@@ -45,39 +46,6 @@ namespace Grand.Framework
         {
             get
             {
-                if (_cachedStore != null)
-                    return _cachedStore;
-
-                //try to determine the current store by HOST header
-                string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
-
-                var allStores = _storeService.GetAllStores().GetAwaiter().GetResult();
-                var stores = allStores.Where(s => s.ContainsHostValue(host));
-                if (stores.Count() == 0)
-                {
-                    _cachedStore = allStores.FirstOrDefault();
-                }
-                else if (stores.Count() == 1)
-                {
-                    _cachedStore = stores.FirstOrDefault();
-                }
-                else if (stores.Count() > 1)
-                {
-                    var cookie = GetStoreCookie();
-                    if (!string.IsNullOrEmpty(cookie))
-                    {
-                        var storecookie = stores.FirstOrDefault(x => x.Id == cookie);
-                        if (storecookie != null)
-                            _cachedStore = storecookie;
-                        else
-                            _cachedStore = stores.FirstOrDefault();
-                    }
-                    else
-                        _cachedStore = stores.FirstOrDefault();
-                }
-
-                _cachedStore = _cachedStore ?? throw new Exception("No store could be loaded");
-
                 return _cachedStore;
             }
             set
@@ -88,6 +56,38 @@ namespace Grand.Framework
 
         }
 
+        public virtual async Task<Store> SetCurrentStore()
+        {
+
+            //try to determine the current store by HOST header
+            string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
+
+            var allStores = await _storeService.GetAllStores();
+            var stores = allStores.Where(s => s.ContainsHostValue(host));
+            if (stores.Count() == 0)
+            {
+                _cachedStore = allStores.FirstOrDefault();
+            }
+            else if (stores.Count() == 1)
+            {
+                _cachedStore = stores.FirstOrDefault();
+            }
+            else if (stores.Count() > 1)
+            {
+                var cookie = GetStoreCookie();
+                if (!string.IsNullOrEmpty(cookie))
+                {
+                    var storecookie = stores.FirstOrDefault(x => x.Id == cookie);
+                    if (storecookie != null)
+                        _cachedStore = storecookie;
+                    else
+                        _cachedStore = stores.FirstOrDefault();
+                }
+                else
+                    _cachedStore = stores.FirstOrDefault();
+            }
+            return _cachedStore = _cachedStore ?? throw new Exception("No store could be loaded");
+        }
         /// <summary>
         /// Set store cookie
         /// </summary>

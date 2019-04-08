@@ -56,7 +56,7 @@ namespace Grand.Framework.Infrastructure
         public int Order
         {
             //task handlers should be loaded last
-            get { return 500; }
+            get { return 1010; }
         }
     }
 }

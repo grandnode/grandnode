@@ -38,6 +38,8 @@ namespace Grand.Framework.Infrastructure
             //configure authentication
             application.UseGrandAuthentication();
 
+            application.UseMiddleware<StoreMiddleware>();
+
             application.UseMiddleware<CultureMiddleware>();
 
         }
