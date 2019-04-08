@@ -13,7 +13,10 @@ namespace Grand.Core
         /// </summary>
         Store CurrentStore { get; set; }
 
-
+        /// <summary>
+        /// Set the current store by Middleware
+        /// </summary>
+        /// <returns></returns>
         Task<Store> SetCurrentStore();
     }
 }
