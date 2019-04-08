@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -35,7 +36,7 @@ namespace Grand.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that confirms access to closed store
         /// </summary>
-        private class CheckAccessClosedStoreFilter : IActionFilter
+        private class CheckAccessClosedStoreFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -70,25 +71,37 @@ namespace Grand.Framework.Mvc.Filters
             /// Called before the action executes, after model binding is complete
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
-                    return;
 
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                {
+                    await next();
+                    return;
+                }
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(f => f.Scope == FilterScope.Action)
                     .Select(f => f.Filter).OfType<CheckAccessClosedStoreAttribute>().FirstOrDefault();
 
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                {
+                    await next();
                     return;
+                }
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
+                {
+                    await next();
                     return;
+                }
 
                 //store isn't closed
                 if (!_storeInformationSettings.StoreClosed)
+                {
+                    await next();
                     return;
+                }
 
                 //get action and controller names
                 var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
@@ -96,38 +109,38 @@ namespace Grand.Framework.Mvc.Filters
                 var controllerName = actionDescriptor?.ControllerName;
 
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
+                {
+                    await next();
                     return;
+                }
 
                 //topics accessible when a store is closed
                 if (controllerName.Equals("Topic", StringComparison.OrdinalIgnoreCase) &&
                     actionName.Equals("TopicDetails", StringComparison.OrdinalIgnoreCase))
                 {
                     //get identifiers of topics are accessible when a store is closed
-                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).GetAwaiter().GetResult()
+                    var allowedTopicIds = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                         .Where(topic => topic.AccessibleWhenStoreClosed).Select(topic => topic.Id);
 
                     //check whether requested topic is allowed
                     var requestedTopicId = context.RouteData.Values["topicId"] as string;
                     if (!string.IsNullOrEmpty(requestedTopicId) && allowedTopicIds.Contains(requestedTopicId))
+                    {
+                        await next();
                         return;
+                    }
                 }
 
                 //check whether current customer has access to a closed store
                 if (_permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
+                {
+                    await next();
                     return;
-
+                }
+                
                 //store is closed and no access, so redirect to 'StoreClosed' page
                 var storeClosedUrl = new UrlHelper(context).RouteUrl("StoreClosed");
                 context.Result = new RedirectResult(storeClosedUrl);
-            }
-
-            /// <summary>
-            /// Called after the action executes, before the action result
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
-            {
-                //do nothing
             }
 
             #endregion

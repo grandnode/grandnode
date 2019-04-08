@@ -201,7 +201,7 @@ namespace Grand.Framework
                 if (_httpContextAccessor.HttpContext == null)
                 {
                     //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask).GetAwaiter().GetResult();
+                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask).Result;
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active)

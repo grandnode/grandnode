@@ -6,6 +6,7 @@ using Grand.Services.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -26,7 +27,7 @@ namespace Grand.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that checks and updates affiliate of customer
         /// </summary>
-        private class CheckAffiliateFilter : IActionFilter
+        private class CheckAffiliateFilter : IAsyncActionFilter
         {
             #region Constants
 
@@ -62,7 +63,7 @@ namespace Grand.Framework.Mvc.Filters
             /// Set the affiliate identifier of current customer
             /// </summary>
             /// <param name="affiliate">Affiliate</param>
-            protected void SetCustomerAffiliateId(Affiliate affiliate)
+            protected async Task SetCustomerAffiliateId(Affiliate affiliate)
             {
                 if (affiliate == null || affiliate.Deleted || !affiliate.Active)
                     return;
@@ -72,7 +73,7 @@ namespace Grand.Framework.Mvc.Filters
 
                 //update affiliate identifier
                 _workContext.CurrentCustomer.AffiliateId = affiliate.Id;
-                _customerService.UpdateAffiliate(_workContext.CurrentCustomer);
+                await _customerService.UpdateAffiliate(_workContext.CurrentCustomer);
             }
 
             #endregion
@@ -83,8 +84,10 @@ namespace Grand.Framework.Mvc.Filters
             /// Called before the action executes, after model binding is complete
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public async void OnActionExecuting(ActionExecutingContext context)
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
+                await next();
+
                 if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
                     return;
 
@@ -102,7 +105,7 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     string affiliateId = affiliateIds.FirstOrDefault();
                     if(!string.IsNullOrEmpty(affiliateId))
-                        SetCustomerAffiliateId(await _affiliateService.GetAffiliateById(affiliateId));
+                        await SetCustomerAffiliateId(await _affiliateService.GetAffiliateById(affiliateId));
                     return;
                 }
 
@@ -112,17 +115,8 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     var affiliateName = affiliateNames.FirstOrDefault();
                     if (!string.IsNullOrEmpty(affiliateName))
-                        SetCustomerAffiliateId(await _affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
+                        await SetCustomerAffiliateId(await _affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
                 }
-            }
-
-            /// <summary>
-            /// Called after the action executes, before the action result
-            /// </summary>
-            /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
-            {
-                //do nothing
             }
 
             #endregion
