@@ -88,4 +88,4 @@ GrandNode open source edition is licensed under GrandNode Public License Version
 
 ## Additional tools ##
 Cross-browser support is tested by ![Browserstack Logo](https://grandnode.com/content/images/uploaded/browserstack-logo-small.png)  
-Install GrandNode with one click on DigitalOcean [![DigitalOcean](https://grandnode.com/content/images/uploaded/digitalocean.png)](https://do.co/2uGlDv8)
+Install GrandNode with one click on [DigitalOcean](https://marketplace.digitalocean.com/apps/grandnode) ![DigitalOcean_Logo](https://grandnode.com/content/images/uploaded/digitalocean1.png)
