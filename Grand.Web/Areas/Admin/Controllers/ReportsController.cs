@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var items = _orderReportService.BestSellersReport(
+            var items = await _orderReportService.BestSellersReport(
                 vendorId: vendorId,
                 orderBy: orderBy,
                 pageIndex: pageIndex,
@@ -111,10 +111,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual IList<OrderPeriodReportLineModel> GetReportOrderPeriodModel()
+        protected virtual async Task<IList<OrderPeriodReportLineModel>> GetReportOrderPeriodModel()
         {
             var report = new List<OrderPeriodReportLineModel>();
-            var reportperiod7days = _orderReportService.GetOrderPeriodReport(7);
+            var reportperiod7days = await _orderReportService.GetOrderPeriodReport(7);
             report.Add(new OrderPeriodReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.SalesReport.Period.7days"),
@@ -122,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Amount = reportperiod7days.Amount
             });
 
-            var reportperiod14days = _orderReportService.GetOrderPeriodReport(14);
+            var reportperiod14days = await _orderReportService.GetOrderPeriodReport(14);
             report.Add(new OrderPeriodReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.SalesReport.Period.14days"),
@@ -130,7 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Amount = reportperiod14days.Amount
             });
 
-            var reportperiodmonth = _orderReportService.GetOrderPeriodReport(30);
+            var reportperiodmonth = await _orderReportService.GetOrderPeriodReport(30);
             report.Add(new OrderPeriodReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.SalesReport.Period.month"),
@@ -138,7 +138,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Amount = reportperiodmonth.Amount
             });
 
-            var reportperiodyear = _orderReportService.GetOrderPeriodReport(365);
+            var reportperiodyear = await _orderReportService.GetOrderPeriodReport(365);
             report.Add(new OrderPeriodReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.SalesReport.Period.year"),
@@ -233,7 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
-            var items = _orderReportService.BestSellersReport(
+            var items = await _orderReportService.BestSellersReport(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 os: orderStatus,
@@ -281,7 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = GetReportOrderPeriodModel();
+            var model = await GetReportOrderPeriodModel();
             var gridModel = new DataSourceResult
             {
                 Data = model,
@@ -297,7 +297,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = _orderReportService.GetOrderByTimeReport(startDate, endDate);
+            var model = await _orderReportService.GetOrderByTimeReport(startDate, endDate);
             var gridModel = new DataSourceResult
             {
                 Data = model
@@ -330,7 +330,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var items = _orderReportService.ProductsNeverSold(vendorId,
+            var items = await _orderReportService.ProductsNeverSold(vendorId,
                 startDateValue, endDateValue,
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -360,10 +360,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var report = new List<OrderAverageReportLineSummary>
             {
-                _orderReportService.OrderAverageReport("", OrderStatus.Pending),
-                _orderReportService.OrderAverageReport("", OrderStatus.Processing),
-                _orderReportService.OrderAverageReport("", OrderStatus.Complete),
-                _orderReportService.OrderAverageReport("", OrderStatus.Cancelled)
+                await _orderReportService.OrderAverageReport("", OrderStatus.Pending),
+                await _orderReportService.OrderAverageReport("", OrderStatus.Processing),
+                await _orderReportService.OrderAverageReport("", OrderStatus.Complete),
+                await _orderReportService.OrderAverageReport("", OrderStatus.Cancelled)
             };
             var model = report.Select(x => new OrderAverageReportLineSummaryModel
             {
@@ -440,7 +440,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
+            var psPending = await _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -449,7 +449,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
+            var ssPending = await _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -458,7 +458,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
+            var osPending = await _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
@@ -511,7 +511,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
-            var items = _orderReportService.GetCountryReport(
+            var items = await _orderReportService.GetCountryReport(
                 os: orderStatus,
                 ps: paymentStatus,
                 startTimeUtc: startDateValue,

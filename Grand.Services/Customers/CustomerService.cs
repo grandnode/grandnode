@@ -272,11 +272,11 @@ namespace Grand.Services.Customers
         }
 
 
-        public virtual int GetCountOnlineShoppingCart(DateTime lastActivityFromUtc)
+        public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc)
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
-            return query.Count();
+            return query.CountAsync();
         }
 
 

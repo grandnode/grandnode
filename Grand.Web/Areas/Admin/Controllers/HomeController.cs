@@ -82,7 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            model.OrdersPending = _orderReportService.GetOrderAverageReportLine(os: Core.Domain.Orders.OrderStatus.Pending).CountOrders;
+            model.OrdersPending = (await _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending)).CountOrders;
             model.AbandonedCarts = (await _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
 
             _serviceProvider.GetRequiredService<IProductService>()

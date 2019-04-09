@@ -1652,12 +1652,12 @@ namespace Grand.Web.Services
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
         {
             //load and cache report
-            var orderReportService = _serviceProvider.GetRequiredService<Grand.Services.Orders.IOrderReportService>();
-            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
-                () => orderReportService.BestSellersReport(
+            var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
+            var report = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
+                async () => await orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
-                        .ToList());
+                        );
 
             //load products
             var products = await _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());

@@ -279,7 +279,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //summary report
             //currently we do not support productId and warehouseId parameters for this report
-            var reportSummary = _orderReportService.GetOrderAverageReportLine(
+            var reportSummary = await _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
                 orderId: "",
@@ -293,7 +293,7 @@ namespace Grand.Web.Areas.Admin.Services
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId
                 );
-            var profit = _orderReportService.ProfitReport(
+            var profit = await _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
@@ -485,7 +485,7 @@ namespace Grand.Web.Areas.Admin.Services
             //profit (hide for vendors)
             if (_workContext.CurrentVendor == null)
             {
-                var profit = _orderReportService.ProfitReport(orderId: order.Id);
+                var profit = await _orderReportService.ProfitReport(orderId: order.Id);
                 model.Profit = _priceFormatter.FormatPrice(profit, true, false);
             }
 

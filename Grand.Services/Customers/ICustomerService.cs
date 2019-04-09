@@ -64,7 +64,7 @@ namespace Grand.Services.Customers
         Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
             string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
 
-        int GetCountOnlineShoppingCart(DateTime lastActivityFromUtc);
+        Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc);
 
         /// <summary>
         /// Delete a customer
