@@ -204,7 +204,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> Cart(bool checkoutAttributes)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -220,7 +220,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -277,7 +277,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> ClearCart()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -298,7 +298,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteCartItem(string id, bool shoppingcartpage = false)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var item = _workContext.CurrentCustomer.ShoppingCartItems
@@ -595,7 +595,7 @@ namespace Grand.Web.Controllers
 
         public virtual async Task<IActionResult> Wishlist(Guid? customerGuid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             Customer customer = customerGuid.HasValue ?
@@ -616,7 +616,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("updatecart")]
         public virtual async Task<IActionResult> UpdateWishlist(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             var customer = _workContext.CurrentCustomer;
@@ -686,10 +686,10 @@ namespace Grand.Web.Controllers
         [FormValueRequired("addtocartbutton")]
         public virtual async Task<IActionResult> AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             var pageCustomer = customerGuid.HasValue
@@ -761,9 +761,9 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual IActionResult EmailWishlist([FromServices] CaptchaSettings captchaSettings)
+        public virtual async Task<IActionResult> EmailWishlist([FromServices] CaptchaSettings captchaSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -790,7 +790,7 @@ namespace Grand.Web.Controllers
             [FromServices] IWorkflowMessageService workflowMessageService,
             [FromServices] CaptchaSettings captchaSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems

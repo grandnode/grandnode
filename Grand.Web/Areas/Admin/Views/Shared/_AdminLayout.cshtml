@@ -87,7 +87,7 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = await permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
 
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)

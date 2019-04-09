@@ -38,7 +38,7 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
         [HttpPost]
         public async Task<IActionResult> Configure(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRateModels = new List<FixedTaxRateModel>();
@@ -61,7 +61,7 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
         [HttpPost]
         public async Task<IActionResult> TaxRateUpdate(FixedTaxRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             string taxCategoryId = model.TaxCategoryId;

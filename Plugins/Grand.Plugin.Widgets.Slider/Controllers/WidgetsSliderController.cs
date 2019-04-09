@@ -92,9 +92,9 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             }
         }
 
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             return View("~/Plugins/Widgets.Slider/Views/List.cshtml");
@@ -102,7 +102,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var sliders = await _sliderService.GetPictureSliders();
@@ -128,7 +128,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
 
         public async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var model = new SlideModel();
@@ -145,7 +145,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Create(SlideModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -172,7 +172,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         }
         public async Task<IActionResult> Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var slide = await _sliderService.GetById(id);
@@ -200,7 +200,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(SlideModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var pictureSlider = await _sliderService.GetById(model.Id);
@@ -229,7 +229,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var pictureSlider = await _sliderService.GetById(id);

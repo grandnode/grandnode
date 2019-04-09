@@ -18,9 +18,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
             var manufacturer = _manufacturerApiService.GetById(key);
@@ -32,9 +32,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
             return Ok(_manufacturerApiService.GetManufacturers());
@@ -43,7 +43,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ManufacturerDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
             var manufacturer = await _manufacturerApiService.GetById(key);

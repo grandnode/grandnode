@@ -81,7 +81,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var records = await _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
@@ -128,7 +128,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> RateUpdate(TaxRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRate = await _taxRateService.GetTaxRateById(model.Id);
@@ -143,7 +143,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> RateDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRate = await _taxRateService.GetTaxRateById(id);
@@ -157,7 +157,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> AddTaxRate(TaxRateListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRate = new TaxRate

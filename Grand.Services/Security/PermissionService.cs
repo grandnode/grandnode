@@ -81,15 +81,15 @@ namespace Grand.Services.Security
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customerRole">Customer role</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
+        protected virtual async Task<bool> Authorize(string permissionRecordSystemName, CustomerRole customerRole)
         {
             if (String.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
-                var permissionRecord = _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToList();
+                var permissionRecord = await _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToListAsync();
                 if (permissionRecord.Any())
                     return true;
 
@@ -133,7 +133,7 @@ namespace Grand.Services.Security
         public virtual async Task<PermissionRecord> GetPermissionRecordBySystemName(string systemName)
         {
             if (String.IsNullOrWhiteSpace(systemName))
-                return null;
+                return await Task.FromResult<PermissionRecord>(null);
 
             var query = from pr in _permissionRecordRepository.Table
                         where  pr.SystemName == systemName
@@ -267,9 +267,9 @@ namespace Grand.Services.Security
         /// </summary>
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(PermissionRecord permission)
+        public virtual async Task<bool> Authorize(PermissionRecord permission)
         {
-            return Authorize(permission, _workContext.CurrentCustomer);
+            return await Authorize(permission, _workContext.CurrentCustomer);
         }
 
         /// <summary>
@@ -278,16 +278,15 @@ namespace Grand.Services.Security
         /// <param name="permission">Permission record</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(PermissionRecord permission, Customer customer)
+        public virtual async Task<bool> Authorize(PermissionRecord permission, Customer customer)
         {
             if (permission == null)
                 return false;
 
             if (customer == null)
                 return false;
-
            
-            return Authorize(permission.SystemName, customer);
+            return await Authorize(permission.SystemName, customer);
         }
 
         /// <summary>
@@ -295,9 +294,9 @@ namespace Grand.Services.Security
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName)
+        public virtual async Task<bool> Authorize(string permissionRecordSystemName)
         {
-            return Authorize(permissionRecordSystemName, _workContext.CurrentCustomer);
+            return await Authorize(permissionRecordSystemName, _workContext.CurrentCustomer);
         }
 
         /// <summary>
@@ -306,14 +305,14 @@ namespace Grand.Services.Security
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName, Customer customer)
+        public virtual async Task<bool> Authorize(string permissionRecordSystemName, Customer customer)
         {
             if (String.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);            
             foreach (var role in customerRoles)
-                if (Authorize(permissionRecordSystemName, role))
+                if (await Authorize(permissionRecordSystemName, role))
                     //yes, we have such permission
                     return true;
 

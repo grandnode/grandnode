@@ -32,7 +32,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);
@@ -63,7 +63,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, decimal spentAmount)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);

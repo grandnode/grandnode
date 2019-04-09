@@ -19,9 +19,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             var picture = _commonApiService.GetPictures().FirstOrDefault(x => x.Id == key);
@@ -33,9 +33,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             return Ok(_commonApiService.GetPictures());
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -56,9 +56,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             var picture = _commonApiService.GetPictures().FirstOrDefault(x => x.Id == key);
@@ -66,7 +66,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 return NotFound();
             }
-            _commonApiService.DeletePicture(picture);
+            await _commonApiService.DeletePicture(picture);
             return Ok();
         }
     }

@@ -36,7 +36,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);
@@ -73,7 +73,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);

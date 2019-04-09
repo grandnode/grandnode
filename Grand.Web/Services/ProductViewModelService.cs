@@ -143,9 +143,9 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("products");
 
             var currentCustomer = _workContext.CurrentCustomer;
-            var displayPrices = _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
-            var enableShoppingCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
-            var enableWishlist = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
+            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
+            var enableShoppingCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
+            var enableWishlist = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
             var currentCurrency = _workContext.WorkingCurrency;
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguage = _workContext.WorkingLanguage;
@@ -844,9 +844,10 @@ namespace Grand.Web.Services
             #endregion
 
             #region Product price
+            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
 
             model.ProductPrice.ProductId = product.Id;
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (displayPrices)
             {
                 model.ProductPrice.HidePrices = false;
                 if (product.CustomerEntersPrice)
@@ -960,9 +961,9 @@ namespace Grand.Web.Services
                 model.AddToCart.MinimumQuantityNotification = string.Format(_localizationService.GetResource("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
             }
             //'add to cart', 'add to wishlist' buttons
-            model.AddToCart.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-            model.AddToCart.DisableWishlistButton = product.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
-            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            model.AddToCart.DisableBuyButton = product.DisableBuyButton || !await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+            model.AddToCart.DisableWishlistButton = product.DisableWishlistButton || !await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+            if (!await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.AddToCart.DisableBuyButton = true;
                 model.AddToCart.DisableWishlistButton = true;
@@ -1065,7 +1066,7 @@ namespace Grand.Web.Services
                         attributeModel.Values.Add(valueModel);
 
                         //display price if allowed
-                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        if (displayPrices)
                         {
                             decimal attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
                             var productprice = await _taxService.GetProductPrice(product, attributeValuePriceAdjustment);
@@ -1225,7 +1226,7 @@ namespace Grand.Web.Services
             #endregion
 
             #region Tier prices
-            if (product.TierPrices.Any() && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (product.TierPrices.Any() && await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
 
                 foreach(var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
@@ -1351,7 +1352,7 @@ namespace Grand.Web.Services
                             Gtin = p1.Gtin,
                             Quantity = bundle.Quantity
                         };
-                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        if (displayPrices)
                         {
                             var productprice = await _taxService.GetProductPrice(p1, (await _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice);
                             decimal taxRateBundle = productprice.taxRate;
@@ -1529,7 +1530,7 @@ namespace Grand.Web.Services
             model.Mpn = product.FormatMpn(attributeXml, _productAttributeParser);
             model.Gtin = product.FormatGtin(attributeXml, _productAttributeParser);
 
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice && product.ProductType != ProductType.Auction)
+            if (await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice && product.ProductType != ProductType.Auction)
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 var unitprice = await _priceCalculationService.GetUnitPrice(product,

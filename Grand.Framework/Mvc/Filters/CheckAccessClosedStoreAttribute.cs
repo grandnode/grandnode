@@ -132,7 +132,7 @@ namespace Grand.Framework.Mvc.Filters
                 }
 
                 //check whether current customer has access to a closed store
-                if (_permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
+                if (await _permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
                 {
                     await next();
                     return;

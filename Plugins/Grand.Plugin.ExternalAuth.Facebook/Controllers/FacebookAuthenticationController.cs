@@ -59,7 +59,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         [Area("Admin")]
         public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
@@ -87,7 +87,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         [Area("Admin")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)

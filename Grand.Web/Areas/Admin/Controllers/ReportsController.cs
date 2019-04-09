@@ -153,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var gridModel = await GetBestsellersBriefReportModel(command.Page - 1,
@@ -164,7 +164,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var gridModel = await GetBestsellersBriefReportModel(command.Page - 1,
@@ -175,7 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> BestsellersReport()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             var model = new BestsellersReportModel
@@ -215,7 +215,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             //a vendor should have access only to his products
@@ -270,9 +270,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportOrderPeriodList(DataSourceRequest command)
+        public async Task<IActionResult> ReportOrderPeriodList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var model = GetReportOrderPeriodModel();
@@ -286,9 +286,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportOrderTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public async Task<IActionResult> ReportOrderTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var model = _orderReportService.GetOrderByTimeReport(startDate, endDate);
@@ -299,18 +299,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult NeverSoldReport()
+        public async Task<IActionResult> NeverSoldReport()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             var model = new NeverSoldReportModel();
             return View(model);
         }
         [HttpPost]
-        public IActionResult NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
+        public async Task<IActionResult> NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             //a vendor should have access only to his products
@@ -342,9 +342,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderAverageReportList(DataSourceRequest command)
+        public async Task<IActionResult> OrderAverageReportList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             //a vendor does have access to this report
@@ -381,7 +381,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ReportLatestOrder(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             //a vendor does have access to this report
@@ -423,9 +423,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderIncompleteReportList(DataSourceRequest command)
+        public async Task<IActionResult> OrderIncompleteReportList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             //a vendor does have access to this report
@@ -470,9 +470,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CountryReport()
+        public async Task<IActionResult> CountryReport()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return AccessDeniedView();
 
             var model = new CountryReportModel
@@ -493,7 +493,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return Content("");
 
             DateTime? startDateValue = (model.StartDate == null) ? null
@@ -533,9 +533,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Low stock reports
 
-        public IActionResult LowStockReport()
+        public async Task<IActionResult> LowStockReport()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             return View();
@@ -543,7 +543,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> LowStockReportList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             string vendorId = "";
@@ -596,7 +596,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> PopularSearchTermsReport(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var searchTermRecordLines = await _searchTermService.GetStats(command.Page - 1, command.PageSize);

@@ -112,7 +112,7 @@ namespace Grand.Web.Controllers
 
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a category before publishing
-            if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
+            if (!category.Published && !await _permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
                 return InvokeHttp404();
 
             //ACL (access control list)
@@ -127,7 +127,7 @@ namespace Grand.Web.Controllers
             await SaveLastContinueShoppingPage(customer);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = "Admin" }));
 
             //activity log
@@ -156,7 +156,7 @@ namespace Grand.Web.Controllers
 
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a manufacturer before publishing
-            if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
+            if (!manufacturer.Published && !await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 return InvokeHttp404();
 
             //ACL (access control list)
@@ -171,7 +171,7 @@ namespace Grand.Web.Controllers
             await SaveLastContinueShoppingPage(customer);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = "Admin" }));
 
             //activity log
@@ -213,7 +213,7 @@ namespace Grand.Web.Controllers
             await SaveLastContinueShoppingPage(customer);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             var model = await _catalogViewModelService.PrepareVendor(vendor, command);

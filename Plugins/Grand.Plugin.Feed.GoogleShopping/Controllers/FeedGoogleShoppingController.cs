@@ -171,7 +171,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> GoogleProductList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
 
             var products = (await _productService.SearchProducts(pageIndex: command.Page - 1,
@@ -212,7 +212,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> GoogleProductUpdate(FeedGoogleShoppingModel.GoogleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
 
             var googleProduct = await _googleService.GetByProductId(model.ProductId);

@@ -55,7 +55,7 @@ namespace Grand.Web.Controllers
             var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = "Admin" }));
 
             return View(templateViewPath, model);

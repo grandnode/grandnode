@@ -281,7 +281,7 @@ namespace Grand.Web.Services
                         attributeModel.Values.Add(attributeValueModel);
 
                         //display price if allowed
-                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        if (await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attributeValue)).checkoutPrice;
                             decimal priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
@@ -633,7 +633,7 @@ namespace Grand.Web.Services
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
             model.IsEditable = isEditable;
-            model.DisplayAddToCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+            model.DisplayAddToCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoWishlist;
 
             if (!cart.Any())

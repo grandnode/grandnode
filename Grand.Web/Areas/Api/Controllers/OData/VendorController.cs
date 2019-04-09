@@ -2,6 +2,7 @@
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -17,9 +18,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
             var vendor = _customerApiService.GetVendorById(key);
@@ -31,9 +32,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Vendors))
+            if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
             return Ok(_customerApiService.GetVendors());

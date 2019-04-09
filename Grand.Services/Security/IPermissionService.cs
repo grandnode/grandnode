@@ -65,7 +65,7 @@ namespace Grand.Services.Security
         /// </summary>
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(PermissionRecord permission);
+        Task<bool> Authorize(PermissionRecord permission);
 
         /// <summary>
         /// Authorize permission
@@ -73,14 +73,14 @@ namespace Grand.Services.Security
         /// <param name="permission">Permission record</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(PermissionRecord permission, Customer customer);
+        Task<bool> Authorize(PermissionRecord permission, Customer customer);
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(string permissionRecordSystemName);
+        Task<bool> Authorize(string permissionRecordSystemName);
 
         /// <summary>
         /// Authorize permission
@@ -88,6 +88,6 @@ namespace Grand.Services.Security
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(string permissionRecordSystemName, Customer customer);
+        Task<bool> Authorize(string permissionRecordSystemName, Customer customer);
     }
 }

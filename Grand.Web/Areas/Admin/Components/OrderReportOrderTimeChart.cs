@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -13,10 +14,10 @@ namespace Grand.Web.Areas.Admin.Components
             this._permissionService = permissionService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             return View();

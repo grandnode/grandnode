@@ -174,8 +174,8 @@ namespace Grand.Web.Services
             {
                 IsAuthenticated = isRegister,
                 CustomerEmailUsername = isRegister ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
-                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
                 MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
 
@@ -388,15 +388,15 @@ namespace Grand.Web.Services
             return prepareHeaderLinks(customer);
         }
 
-        public virtual Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer)
+        public virtual async Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer)
         {
-            var model = Task.FromResult(new AdminHeaderLinksModel
+            var model = new AdminHeaderLinksModel
             {
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
-                DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                DisplayAdminLink = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
-            });
+            };
             return model;
         }
         public virtual async Task<FooterModel> PrepareFooter()
@@ -430,8 +430,8 @@ namespace Grand.Web.Services
                 CompanyAddress = currentstore.CompanyAddress,
                 CompanyPhone = currentstore.CompanyPhoneNumber,
                 CompanyHours = currentstore.CompanyHours,
-                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 WorkingLanguageId = _workContext.WorkingLanguage.Id,
                 FacebookLink = _storeInformationSettings.FacebookLink,

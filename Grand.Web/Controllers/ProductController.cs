@@ -109,7 +109,7 @@ namespace Grand.Web.Controllers
             {
                 //Check whether the current user has a "Manage catalog" permission
                 //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
+                if (!product.Published && !await _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
                     return InvokeHttp404();
             }
 
@@ -165,8 +165,8 @@ namespace Grand.Web.Controllers
             await _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) &&
-                _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) &&
+                await _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
             {
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)
@@ -318,7 +318,7 @@ namespace Grand.Web.Controllers
             {
                 //Check whether the current user has a "Manage catalog" permission
                 //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
+                if (!product.Published && !await _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
                     return Json(new
                     {
                         success = false,

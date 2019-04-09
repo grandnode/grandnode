@@ -95,7 +95,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var records = await _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
@@ -168,7 +168,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> RateDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var sbw = await _shippingByWeightService.GetById(id);
@@ -180,7 +180,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
         public async Task<IActionResult> AddPopup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var model = new ShippingByWeightModel();
@@ -217,7 +217,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> AddPopup(ShippingByWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var sbw = new ShippingByWeightRecord
@@ -245,7 +245,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         //edit
         public async Task<IActionResult> EditPopup(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var sbw = await _shippingByWeightService.GetById(id);
@@ -309,7 +309,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> EditPopup(ShippingByWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var sbw = await _shippingByWeightService.GetById(model.Id);

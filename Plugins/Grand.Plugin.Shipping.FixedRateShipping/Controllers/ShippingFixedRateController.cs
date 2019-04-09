@@ -38,7 +38,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         [HttpPost]
         public async Task<IActionResult> Configure(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var rateModels = new List<FixedShippingRateModel>();
@@ -62,7 +62,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> ShippingRateUpdate(FixedShippingRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             string shippingMethodId = model.ShippingMethodId;

@@ -52,7 +52,7 @@ namespace Grand.Api.Tests.ControllerTests
             }
             var tempPermissionService = new Mock<IPermissionService>();
             {
-                tempPermissionService.Setup(instance => instance.Authorize(PermissionSystemName.Categories)).Returns(true);
+                tempPermissionService.Setup(instance => instance.Authorize(PermissionSystemName.Categories)).ReturnsAsync(true);
                 _permissionService = tempPermissionService.Object;
             }
             _categoryController = new CategoryController(_categoryApiService, _permissionService);
@@ -100,9 +100,9 @@ namespace Grand.Api.Tests.ControllerTests
         }
 
         [TestMethod()]
-        public void Can_get_categories()
+        public async Task Can_get_categories()
         {
-            IActionResult result = _categoryController.Get();
+            IActionResult result = await _categoryController.Get();
 
             // Assert
             var okObjectResult = result as OkObjectResult;

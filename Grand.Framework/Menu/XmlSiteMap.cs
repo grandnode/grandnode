@@ -103,7 +103,7 @@ namespace Grand.Framework.Menu
             {
                 var permissionService = EngineContext.Current.Resolve<IPermissionService>();
                 siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
+                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
             }
             else
             {

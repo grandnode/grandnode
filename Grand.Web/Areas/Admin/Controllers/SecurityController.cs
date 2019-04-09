@@ -61,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Permissions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             var model = new PermissionMappingModel();
@@ -96,7 +96,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Permissions")]
         public async Task<IActionResult> PermissionsSave(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             var permissionRecords = await _permissionService.GetAllPermissionRecords();

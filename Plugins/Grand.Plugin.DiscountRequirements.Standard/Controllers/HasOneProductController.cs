@@ -63,7 +63,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Controllers
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);
@@ -94,7 +94,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string productIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             var discount = await _discountService.GetDiscountById(discountId);
@@ -127,7 +127,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Controllers
 
         public async Task<IActionResult> ProductAddPopup(string btnId, string productIdsInput)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("Access denied");
 
             var model = new RequirementModel.AddProductModel();
@@ -170,7 +170,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Controllers
         [AdminAntiForgery]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, RequirementModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("Access denied");
 
             //a vendor should have access only to his products
@@ -212,7 +212,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Controllers
         {
             var result = "";
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return new JsonResult(new { Text = result });
 
             if (!String.IsNullOrWhiteSpace(productIds))

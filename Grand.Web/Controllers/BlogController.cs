@@ -144,7 +144,7 @@ namespace Grand.Web.Controllers
             await _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
 
             //display "edit" (manage) link
-            if (permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
 
             return View(model);

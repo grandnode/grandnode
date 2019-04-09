@@ -29,9 +29,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var customer = _customerApiService.GetByEmail(key);
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CustomerDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var customer = await _customerApiService.GetByEmail(key);
@@ -73,7 +73,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> AddAddress(string key, [FromBody] AddressDto address)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (!ModelState.IsValid)
@@ -91,7 +91,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (!ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var addressId = parameters.FirstOrDefault(x => x.Key == "addressId").Value;
@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> SetPassword(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var password = parameters.FirstOrDefault(x => x.Key == "password").Value;

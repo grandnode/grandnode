@@ -28,7 +28,7 @@ namespace Grand.Framework.Security.Authorization
             var customer = await _customerService.GetCustomerByEmail(email.Value);
             if (customer != null)
             {
-                if (!_permissionService.Authorize(requirement.Permission, customer))
+                if (!await _permissionService.Authorize(requirement.Permission, customer))
                 {
                     var redirectContext = context.Resource as AuthorizationFilterContext;
                     var httpContext = _contextAccessor.HttpContext;

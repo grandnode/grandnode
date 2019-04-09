@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,7 @@ namespace Grand.Services.Localization
 {
     public static class LocalizationExtensions
     {
-        
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -27,14 +26,14 @@ namespace Grand.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public static string GetLocalized<T>(this T entity, 
-            Expression<Func<T, string>> keySelector, string languageId, 
-            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true) 
-            where T : ParentEntity,  ILocalizedEntity
+        public static string GetLocalized<T>(this T entity,
+            Expression<Func<T, string>> keySelector, string languageId,
+            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
+            where T : ParentEntity, ILocalizedEntity
         {
             return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
-        
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -47,7 +46,7 @@ namespace Grand.Services.Localization
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static TPropType GetLocalized<T, TPropType>(this T entity,
-            Expression<Func<T, TPropType>> keySelector, string languageId, 
+            Expression<Func<T, TPropType>> keySelector, string languageId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ParentEntity, ILocalizedEntity
         {
@@ -96,11 +95,11 @@ namespace Grand.Services.Localization
             {
                 result = (TPropType)(propInfo.GetValue(entity));
             }
-            
+
             return result;
         }
 
-        
+
         /// <summary>
         /// Get localized property of setting
         /// </summary>
@@ -159,7 +158,7 @@ namespace Grand.Services.Localization
             if (!typeof(T).GetTypeInfo().IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            string resourceName = string.Format("Enums.{0}.{1}", 
+            string resourceName = string.Format("Enums.{0}.{1}",
                 typeof(T),
                 enumValue.ToString());
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
@@ -196,7 +195,7 @@ namespace Grand.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized value</returns>
-        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord, 
+        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord,
             ILocalizationService localizationService, string languageId)
         {
             if (permissionRecord == null)
@@ -352,8 +351,8 @@ namespace Grand.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin, 
-            ILocalizationService localizationService, ILanguageService languageService, 
+        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin,
+            ILocalizationService localizationService, ILanguageService languageService,
             string resourceName, string resourceValue, string languageCulture = null)
         {
             //actually plugin instance is not required
@@ -400,10 +399,10 @@ namespace Grand.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <returns>Localized value</returns>
-        public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService, 
+        public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService,
             string languageId, bool returnDefaultValue = true)
             where T : IPlugin
-        {   
+        {
             if (localizationService == null)
                 throw new ArgumentNullException("localizationService");
 
@@ -433,7 +432,7 @@ namespace Grand.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        public static async Task SaveLocalizedFriendlyName<T>(this T plugin, 
+        public static async Task SaveLocalizedFriendlyName<T>(this T plugin,
             ILocalizationService localizationService, string languageId,
             string localizedFriendlyName)
             where T : IPlugin

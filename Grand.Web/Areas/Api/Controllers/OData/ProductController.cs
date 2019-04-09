@@ -19,9 +19,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = _productApiService.GetById(key);
@@ -33,9 +33,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             return Ok(_productApiService.GetProducts());
@@ -44,7 +44,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -76,7 +76,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public async Task<IActionResult> UpdateStock(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -109,7 +109,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productCategory == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -135,7 +135,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productCategory == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -162,7 +162,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -198,7 +198,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productManufacturer == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -224,7 +224,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productManufacturer == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -251,7 +251,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -287,7 +287,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productPicture == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -313,7 +313,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productPicture == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -339,7 +339,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -375,7 +375,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productSpecification == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -401,7 +401,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (productSpecification == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
@@ -427,7 +427,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = await _productApiService.GetById(key);
