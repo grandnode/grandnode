@@ -1,7 +1,7 @@
 ﻿@using Grand.Core.Infrastructure;
+@inject IThemeContext themeContext
 @{
-    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-    var logoPath = "~/Themes/" + currentThemeName + "/Content/images/ie_warning.jpg";
+    var logoPath = "~/Themes/" + themeContext.WorkingThemeName + "/Content/images/ie_warning.jpg";
 
 }
 <!--[if lte IE 9]>

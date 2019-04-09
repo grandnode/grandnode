@@ -1,8 +1,7 @@
 ﻿@using Grand.Core.Infrastructure
 @using Grand.Services.Helpers
-@{
-    var dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
-}
+@inject IDateTimeHelper dateTimeHelper
+
 <div class="forums-header generalMarginSupporter">
         <div class="row d-flex justify-content-end">
             <div class="col-12 col-md-6 current-time">
