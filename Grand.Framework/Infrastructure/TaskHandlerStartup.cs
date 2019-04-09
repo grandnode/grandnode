@@ -32,7 +32,8 @@ namespace Grand.Framework.Infrastructure
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var logger = EngineContext.Current.Resolve<ILogger>();
+                var serviceProvider = application.ApplicationServices;
+                var logger = serviceProvider.GetRequiredService<ILogger>();
                 //database is already installed, so start scheduled tasks
                 try
                 {

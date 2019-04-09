@@ -68,7 +68,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 //log application start
-                var logger = EngineContext.Current.Resolve<ILogger>();
+                var logger = serviceProvider.GetRequiredService<ILogger>();
                 logger.Information("Application started", null, null);
             }
 
