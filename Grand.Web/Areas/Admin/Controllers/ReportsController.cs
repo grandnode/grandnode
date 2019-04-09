@@ -258,7 +258,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var product = await _productService.GetProductById(x.ProductId);
                 if (product != null)
                     m.ProductName = product.Name;
-                result.Add(m);
+                if (_workContext.CurrentVendor != null)
+                {
+                    if(product.VendorId == _workContext.CurrentVendor.Id)
+                        result.Add(m);
+                }
+                else
+                    result.Add(m);
             }
             var gridModel = new DataSourceResult
             {
