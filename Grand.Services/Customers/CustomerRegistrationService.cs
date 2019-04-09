@@ -224,7 +224,7 @@ namespace Grand.Services.Customers
             }
 
             //event notification
-            _eventPublisher.CustomerRegistrationEvent(result, request);
+            await _eventPublisher.CustomerRegistrationEvent(result, request);
 
             //return if exist errors
             if (result.Errors.Any())

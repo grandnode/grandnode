@@ -73,7 +73,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(stateProvince);
+            await _eventPublisher.EntityDeleted(stateProvince);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(stateProvince);
+            await _eventPublisher.EntityInserted(stateProvince);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(stateProvince);
+            await _eventPublisher.EntityUpdated(stateProvince);
         }
 
         #endregion

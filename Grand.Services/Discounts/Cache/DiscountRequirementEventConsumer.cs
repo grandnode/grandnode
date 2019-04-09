@@ -4,6 +4,7 @@ using Grand.Core.Events;
 using Grand.Services.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Discounts.Cache
 {
@@ -33,13 +34,15 @@ namespace Grand.Services.Discounts.Cache
         }
 
         //discounts
-        public void HandleEvent(EntityUpdated<Discount> eventMessage)
+        public Task HandleEvent(EntityUpdated<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Discount> eventMessage)
+        public Task HandleEvent(EntityDeleted<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
     }

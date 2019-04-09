@@ -96,7 +96,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(messageTemplate);
+            await _eventPublisher.EntityDeleted(messageTemplate);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(messageTemplate);
+            await _eventPublisher.EntityInserted(messageTemplate);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(messageTemplate);
+            await _eventPublisher.EntityUpdated(messageTemplate);
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.DeleteAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityDeleted(shipment);
+            await _eventPublisher.EntityDeleted(shipment);
         }
         
         /// <summary>
@@ -161,7 +161,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.InsertAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityInserted(shipment);
+            await _eventPublisher.EntityInserted(shipment);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.UpdateAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityUpdated(shipment);
+            await _eventPublisher.EntityUpdated(shipment);
         }
 
         /// <summary>

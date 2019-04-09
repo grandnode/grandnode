@@ -52,7 +52,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.DeleteAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityDeleted(topicTemplate);
+            await _eventPublisher.EntityDeleted(topicTemplate);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.InsertAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityInserted(topicTemplate);
+            await _eventPublisher.EntityInserted(topicTemplate);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.UpdateAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityUpdated(topicTemplate);
+            await _eventPublisher.EntityUpdated(topicTemplate);
         }
         
         #endregion

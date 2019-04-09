@@ -85,7 +85,7 @@ namespace Grand.Services.Security
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(aclRecord);
+            await _eventPublisher.EntityDeleted(aclRecord);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Grand.Services.Security
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(aclRecord);
+            await _eventPublisher.EntityInserted(aclRecord);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Grand.Services.Security
             _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(aclRecord);
+            await _eventPublisher.EntityUpdated(aclRecord);
         }
 
         /// <summary>

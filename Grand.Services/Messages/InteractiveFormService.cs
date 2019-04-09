@@ -38,7 +38,7 @@ namespace Grand.Services.Messages
 
             await _formRepository.InsertAsync(form);
             //event notification
-            _eventPublisher.EntityInserted(form);
+            await _eventPublisher.EntityInserted(form);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Grand.Services.Messages
             await _formRepository.UpdateAsync(form);
 
             //event notification
-            _eventPublisher.EntityUpdated(form);
+            await _eventPublisher.EntityUpdated(form);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Grand.Services.Messages
 
             await _formRepository.DeleteAsync(form);
             //event notification
-            _eventPublisher.EntityDeleted(form);
+            await _eventPublisher.EntityDeleted(form);
         }
 
         /// <summary>

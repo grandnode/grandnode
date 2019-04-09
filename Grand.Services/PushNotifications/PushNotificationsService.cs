@@ -44,7 +44,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task InsertPushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.InsertAsync(registration);
-            _eventPublisher.EntityInserted(registration);
+            await _eventPublisher.EntityInserted(registration);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task DeletePushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.DeleteAsync(registration);
-            _eventPublisher.EntityDeleted(registration);
+            await _eventPublisher.EntityDeleted(registration);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task UpdatePushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.UpdateAsync(registration);
-            _eventPublisher.EntityUpdated(registration);
+            await _eventPublisher.EntityUpdated(registration);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task InsertPushMessage(PushMessage message)
         {
             await _pushMessagesRepository.InsertAsync(message);
-            _eventPublisher.EntityInserted(message);
+            await _eventPublisher.EntityInserted(message);
         }
 
         /// <summary>

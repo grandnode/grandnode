@@ -1662,7 +1662,7 @@ namespace Grand.Web.Services
                     }
 
                     //event
-                    _eventPublisher.Publish(new ProductSearchEvent
+                    await _eventPublisher.Publish(new ProductSearchEvent
                     {
                         SearchTerm = searchTerms,
                         SearchInDescriptions = searchInDescriptions,

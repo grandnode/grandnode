@@ -88,7 +88,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(country);
+            await _eventPublisher.EntityDeleted(country);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(country);
+            await _eventPublisher.EntityInserted(country);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(country);
+            await _eventPublisher.EntityUpdated(country);
         }
 
         #endregion

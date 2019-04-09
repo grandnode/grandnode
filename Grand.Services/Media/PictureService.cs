@@ -617,7 +617,7 @@ namespace Grand.Services.Media
             await _pictureRepository.DeleteAsync(picture);
 
             //event notification
-            _eventPublisher.EntityDeleted(picture);
+            await _eventPublisher.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -700,7 +700,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            _eventPublisher.EntityInserted(picture);
+            await _eventPublisher.EntityInserted(picture);
 
             return picture;
         }
@@ -750,7 +750,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            _eventPublisher.EntityUpdated(picture);
+            await _eventPublisher.EntityUpdated(picture);
 
             return picture;
         }

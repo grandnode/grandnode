@@ -289,7 +289,7 @@ namespace Grand.Web.Controllers
 
                 //raise event
                 if (vendorReview.IsApproved)
-                    eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
+                    await eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
 
                 await _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
                 model.AddVendorReview.Title = null;

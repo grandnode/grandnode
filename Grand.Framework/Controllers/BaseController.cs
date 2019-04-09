@@ -399,20 +399,13 @@ namespace Grand.Framework.Controllers
 
         #endregion
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             // do something before the action executes
             // event notification
-            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);
+            await EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);
+            await next();
         }
-
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            // do something after the action executes
-            // event notification
-            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutedContext>(context);
-        }
-
 
     }
 }

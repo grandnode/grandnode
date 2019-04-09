@@ -39,7 +39,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.InsertAsync(banner);
 
             //event notification
-            _eventPublisher.EntityInserted(banner);
+            await _eventPublisher.EntityInserted(banner);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.UpdateAsync(banner);
 
             //event notification
-            _eventPublisher.EntityUpdated(banner);
+            await _eventPublisher.EntityUpdated(banner);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.DeleteAsync(banner);
 
             //event notification
-            _eventPublisher.EntityDeleted(banner);
+            await _eventPublisher.EntityDeleted(banner);
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Grand.Services.Events
+﻿using System.Threading.Tasks;
+
+namespace Grand.Services.Events
 {
     /// <summary>
     /// Evnt publisher
@@ -10,6 +12,6 @@
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        void Publish<T>(T eventMessage);
+        Task Publish<T>(T eventMessage);
     }
 }

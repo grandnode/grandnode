@@ -42,7 +42,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productReservation");
 
             await _productReservationRepository.DeleteAsync(productReservation);
-            _eventPublisher.EntityDeleted(productReservation);
+            await _eventPublisher.EntityDeleted(productReservation);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.InsertAsync(productReservation);
-            _eventPublisher.EntityInserted(productReservation);
+            await _eventPublisher.EntityInserted(productReservation);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.UpdateAsync(productReservation);
-            _eventPublisher.EntityInserted(productReservation);
+            await _eventPublisher.EntityInserted(productReservation);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.UpdateAsync(crh);
-            _eventPublisher.EntityInserted(crh);
+            await _eventPublisher.EntityInserted(crh);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.DeleteAsync(crh);
-            _eventPublisher.EntityDeleted(crh);
+            await _eventPublisher.EntityDeleted(crh);
         }
 
 

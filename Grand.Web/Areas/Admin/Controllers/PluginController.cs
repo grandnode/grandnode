@@ -334,7 +334,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult UploadPlugin(IFormFile zippedFile)
+        public async Task<IActionResult> UploadPlugin(IFormFile zippedFile)
         {
             if (zippedFile == null || zippedFile.Length == 0)
             {
@@ -360,10 +360,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 descriptor = (PluginDescriptor)UploadSingleItem(zipFilePath);
 
-                _customerActivityService.InsertActivity("UploadNewPlugin", "",
+                await _customerActivityService.InsertActivity("UploadNewPlugin", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
 
-                _eventPublisher.Publish(new PluginUploadedEvent(descriptor));
+                await _eventPublisher.Publish(new PluginUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Plugins.Uploaded");
                 SuccessNotification(message);
@@ -382,7 +382,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadTheme(IFormFile zippedFile)
+        public async Task<IActionResult> UploadTheme(IFormFile zippedFile)
         {
             if (zippedFile == null || zippedFile.Length == 0)
             {
@@ -411,10 +411,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var configs = _themeProvider.GetThemeConfigurations();
                 var b = _themeProvider.ThemeConfigurationExists(descriptor.FriendlyName);
 
-                _customerActivityService.InsertActivity("UploadNewTheme", "",
+                await _customerActivityService.InsertActivity("UploadNewTheme", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
 
-                _eventPublisher.Publish(new ThemeUploadedEvent(descriptor));
+                await _eventPublisher.Publish(new ThemeUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Themes.Uploaded");
                 SuccessNotification(message);

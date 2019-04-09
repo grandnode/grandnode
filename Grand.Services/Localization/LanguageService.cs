@@ -111,7 +111,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(language);
+            await _eventPublisher.EntityDeleted(language);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(language);
+            await _eventPublisher.EntityInserted(language);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(language);
+            await _eventPublisher.EntityUpdated(language);
         }
 
         #endregion

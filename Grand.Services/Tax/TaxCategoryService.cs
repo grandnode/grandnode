@@ -95,7 +95,7 @@ namespace Grand.Services.Tax
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
+            await _eventPublisher.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Grand.Services.Tax
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(taxCategory);
+            await _eventPublisher.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Grand.Services.Tax
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
+            await _eventPublisher.EntityUpdated(taxCategory);
         }
         #endregion
     }

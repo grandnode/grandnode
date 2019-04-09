@@ -4,6 +4,7 @@ using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
 {
@@ -31,17 +32,20 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         }
 
         //tax rates
-        public void HandleEvent(EntityInserted<TaxRate> eventMessage)
+        public Task HandleEvent(EntityInserted<TaxRate> eventMessage)
         {
             _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<TaxRate> eventMessage)
+        public Task HandleEvent(EntityUpdated<TaxRate> eventMessage)
         {
             _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<TaxRate> eventMessage)
+        public Task HandleEvent(EntityDeleted<TaxRate> eventMessage)
         {
             _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
     }
 }

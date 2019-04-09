@@ -102,7 +102,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.InsertAsync(vendor);
 
             //event notification
-            _eventPublisher.EntityInserted(vendor);
+            await _eventPublisher.EntityInserted(vendor);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.UpdateAsync(vendor);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendor);
+            await _eventPublisher.EntityUpdated(vendor);
         }
 
 
@@ -147,7 +147,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorNote);
+            await _eventPublisher.EntityInserted(vendorNote);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorNote);
+            await _eventPublisher.EntityDeleted(vendorNote);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(filter, update);
            
             //event notification
-            _eventPublisher.EntityUpdated(vendor);
+            await _eventPublisher.EntityUpdated(vendor);
         }
 
         public virtual async Task UpdateVendorReview(VendorReview vendorreview)
@@ -297,7 +297,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.Collection.UpdateManyAsync(filter, update);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendorreview);
+            await _eventPublisher.EntityUpdated(vendorreview);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.UpdateAsync(vendorReview);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorReview);
+            await _eventPublisher.EntityInserted(vendorReview);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.DeleteAsync(vendorReview);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorReview);
+            await _eventPublisher.EntityDeleted(vendorReview);
         }
 
         /// <summary>

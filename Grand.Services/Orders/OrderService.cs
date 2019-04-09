@@ -290,7 +290,7 @@ namespace Grand.Services.Orders
             await _orderRepository.InsertAsync(order);
 
             //event notification
-            _eventPublisher.EntityInserted(order);
+            await _eventPublisher.EntityInserted(order);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Grand.Services.Orders
             await _orderRepository.UpdateAsync(order);
 
             //event notification
-            _eventPublisher.EntityUpdated(order);
+            await _eventPublisher.EntityUpdated(order);
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace Grand.Services.Orders
             await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
             //event notification
-            _eventPublisher.EntityDeleted(orderItem);
+            await _eventPublisher.EntityDeleted(orderItem);
         }
 
         #endregion
@@ -492,7 +492,7 @@ namespace Grand.Services.Orders
             await _orderNoteRepository.DeleteAsync(orderNote);
 
             //event notification
-            _eventPublisher.EntityDeleted(orderNote);
+            await _eventPublisher.EntityDeleted(orderNote);
         }
 
         /// <summary>
@@ -507,7 +507,7 @@ namespace Grand.Services.Orders
             await _orderNoteRepository.InsertAsync(orderNote);
 
             //event notification
-            _eventPublisher.EntityInserted(orderNote);
+            await _eventPublisher.EntityInserted(orderNote);
         }
 
         public virtual async Task<IList<OrderNote>> GetOrderNotes(string orderId)
@@ -570,7 +570,7 @@ namespace Grand.Services.Orders
             await _recurringPaymentRepository.InsertAsync(recurringPayment);
 
             //event notification
-            _eventPublisher.EntityInserted(recurringPayment);
+            await _eventPublisher.EntityInserted(recurringPayment);
         }
 
         /// <summary>
@@ -585,7 +585,7 @@ namespace Grand.Services.Orders
             await _recurringPaymentRepository.UpdateAsync(recurringPayment);
 
             //event notification
-            _eventPublisher.EntityUpdated(recurringPayment);
+            await _eventPublisher.EntityUpdated(recurringPayment);
         }
 
         /// <summary>

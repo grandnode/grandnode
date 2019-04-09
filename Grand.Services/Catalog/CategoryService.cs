@@ -174,7 +174,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(category);
+            await _eventPublisher.EntityDeleted(category);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(category);
+            await _eventPublisher.EntityInserted(category);
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(category);
+            await _eventPublisher.EntityUpdated(category);
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(productCategory);
+            await _eventPublisher.EntityDeleted(productCategory);
 
         }
 
@@ -518,7 +518,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(productCategory);
+            await _eventPublisher.EntityInserted(productCategory);
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(productCategory);
+            await _eventPublisher.EntityUpdated(productCategory);
         }
         #endregion
 

@@ -438,7 +438,7 @@ namespace Grand.Services.Customers
             await _customerRepository.InsertAsync(customer);
 
             //event notification
-            _eventPublisher.EntityInserted(customer);
+            await _eventPublisher.EntityInserted(customer);
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace Grand.Services.Customers
             await _customerHistoryPasswordProductRepository.InsertAsync(chp);
 
             //event notification
-            _eventPublisher.EntityInserted(chp);
+            await _eventPublisher.EntityInserted(chp);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
 
             //event notification
-            _eventPublisher.EntityUpdated(customer);
+            await _eventPublisher.EntityUpdated(customer);
         }
         /// <summary>
         /// Updates the customer - last activity date
@@ -556,7 +556,7 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
 
             //event notification
-            _eventPublisher.EntityUpdated(customer);
+            await _eventPublisher.EntityUpdated(customer);
         }
         /// <summary>
         /// Updates the customer - last activity date
@@ -615,7 +615,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
             //event notification
-            _eventPublisher.EntityUpdated(customer);
+            await _eventPublisher.EntityUpdated(customer);
 
         }
         public virtual async Task UpdateFreeShipping(string customerId, bool freeShipping)
@@ -832,7 +832,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerRole);
+            await _eventPublisher.EntityDeleted(customerRole);
         }
 
         /// <summary>
@@ -892,7 +892,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(customerRole);
+            await _eventPublisher.EntityInserted(customerRole);
         }
 
         /// <summary>
@@ -916,7 +916,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerRole);
+            await _eventPublisher.EntityUpdated(customerRole);
         }
 
         #endregion
@@ -965,7 +965,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerRoleProduct);
+            await _eventPublisher.EntityDeleted(customerRoleProduct);
         }
 
 
@@ -985,7 +985,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(customerRoleProduct);
+            await _eventPublisher.EntityInserted(customerRoleProduct);
         }
 
         /// <summary>
@@ -1008,7 +1008,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerRoleProduct);
+            await _eventPublisher.EntityUpdated(customerRoleProduct);
         }
 
 
@@ -1086,7 +1086,7 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);
 
             //event notification
-            _eventPublisher.EntityInserted(address);
+            await _eventPublisher.EntityInserted(address);
         }
 
         public virtual async Task UpdateAddress(Address address)
@@ -1115,7 +1115,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
             //event notification
-            _eventPublisher.EntityUpdated(address);
+            await _eventPublisher.EntityUpdated(address);
         }
 
 
@@ -1168,7 +1168,7 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             //event notification
-            _eventPublisher.EntityDeleted(shoppingCartItem);
+            await _eventPublisher.EntityDeleted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1201,7 +1201,7 @@ namespace Grand.Services.Customers
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             //event notification
-            _eventPublisher.EntityInserted(shoppingCartItem);
+            await _eventPublisher.EntityInserted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1234,7 +1234,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
             //event notification
-            _eventPublisher.EntityUpdated(shoppingCartItem);
+            await _eventPublisher.EntityUpdated(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
@@ -1287,7 +1287,7 @@ namespace Grand.Services.Customers
             await _customerProductPriceRepository.InsertAsync(customerProductPrice);
 
             //event notification
-            _eventPublisher.EntityInserted(customerProductPrice);
+            await _eventPublisher.EntityInserted(customerProductPrice);
         }
 
         /// <summary>
@@ -1302,7 +1302,7 @@ namespace Grand.Services.Customers
             await _customerProductPriceRepository.UpdateAsync(customerProductPrice);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerProductPrice);
+            await _eventPublisher.EntityUpdated(customerProductPrice);
         }
 
         /// <summary>
@@ -1317,7 +1317,7 @@ namespace Grand.Services.Customers
             await _customerProductPriceRepository.DeleteAsync(customerProductPrice);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerProductPrice);
+            await _eventPublisher.EntityDeleted(customerProductPrice);
         }
 
         public virtual async Task<IPagedList<CustomerProductPrice>> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
@@ -1376,7 +1376,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
-            _eventPublisher.EntityInserted(customerProduct);
+            await _eventPublisher.EntityInserted(customerProduct);
         }
 
         /// <summary>
@@ -1394,7 +1394,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
-            _eventPublisher.EntityUpdated(customerProduct);
+            await _eventPublisher.EntityUpdated(customerProduct);
         }
 
         /// <summary>
@@ -1412,7 +1412,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
-            _eventPublisher.EntityDeleted(customerProduct);
+            await _eventPublisher.EntityDeleted(customerProduct);
         }
 
         public virtual async Task<IPagedList<CustomerProduct>> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
@@ -1451,7 +1451,7 @@ namespace Grand.Services.Customers
             await _customerNoteRepository.DeleteAsync(customerNote);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerNote);
+            await _eventPublisher.EntityDeleted(customerNote);
         }
 
         /// <summary>
@@ -1466,7 +1466,7 @@ namespace Grand.Services.Customers
             await _customerNoteRepository.InsertAsync(customerNote);
 
             //event notification
-            _eventPublisher.EntityInserted(customerNote);
+            await _eventPublisher.EntityInserted(customerNote);
         }
 
         /// <summary>

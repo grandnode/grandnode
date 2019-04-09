@@ -46,7 +46,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
-    eventPublisher.Publish(eventMessage);
+    await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

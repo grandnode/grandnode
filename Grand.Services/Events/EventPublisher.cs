@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Events
 {
@@ -25,14 +26,14 @@ namespace Grand.Services.Events
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        public virtual void Publish<T>(T eventMessaget)
+        public virtual async Task Publish<T>(T eventMessaget)
         {
             var consumers = _serviceProvider.GetServices<IConsumer<T>>().ToList();
             foreach (var consumer in consumers)
             {
                 try
                 {
-                    consumer.HandleEvent(eventMessaget);
+                    await consumer.HandleEvent(eventMessaget);
                 }
                 catch (Exception exception)
                 {

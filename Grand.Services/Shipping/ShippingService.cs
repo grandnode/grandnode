@@ -207,7 +207,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(shippingMethod);
+            await _eventPublisher.EntityDeleted(shippingMethod);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(shippingMethod);
+            await _eventPublisher.EntityInserted(shippingMethod);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(shippingMethod);
+            await _eventPublisher.EntityUpdated(shippingMethod);
         }
 
         #endregion
@@ -308,7 +308,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(deliveryDate);
+            await _eventPublisher.EntityDeleted(deliveryDate);
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.InsertAsync(deliveryDate);
 
             //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
+            await _eventPublisher.EntityInserted(deliveryDate);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
 
             //event notification
-            _eventPublisher.EntityUpdated(deliveryDate);
+            await _eventPublisher.EntityUpdated(deliveryDate);
         }
 
         #endregion
@@ -393,7 +393,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(warehouse);
+            await _eventPublisher.EntityDeleted(warehouse);
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(warehouse);
+            await _eventPublisher.EntityInserted(warehouse);
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(warehouse);
+            await _eventPublisher.EntityUpdated(warehouse);
         }
 
         #endregion
@@ -512,7 +512,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(pickupPoint);
+            await _eventPublisher.EntityInserted(pickupPoint);
         }
 
         /// <summary>
@@ -530,7 +530,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(pickupPoint);
+            await _eventPublisher.EntityUpdated(pickupPoint);
         }
 
         /// <summary>
@@ -546,7 +546,7 @@ namespace Grand.Services.Shipping
             _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(pickupPoint);
+            await _eventPublisher.EntityDeleted(pickupPoint);
         }
 
 

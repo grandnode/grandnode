@@ -52,7 +52,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.DeleteAsync(giftCard);
 
             //event notification
-            _eventPublisher.EntityDeleted(giftCard);
+            await _eventPublisher.EntityDeleted(giftCard);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.InsertAsync(giftCard);
 
             //event notification
-            _eventPublisher.EntityInserted(giftCard);
+            await _eventPublisher.EntityInserted(giftCard);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.UpdateAsync(giftCard);
 
             //event notification
-            _eventPublisher.EntityUpdated(giftCard);
+            await _eventPublisher.EntityUpdated(giftCard);
         }
 
         /// <summary>

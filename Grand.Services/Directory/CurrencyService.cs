@@ -111,7 +111,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(currency);
+            await _eventPublisher.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(currency);
+            await _eventPublisher.EntityInserted(currency);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(currency);
+            await _eventPublisher.EntityUpdated(currency);
         }
 
 

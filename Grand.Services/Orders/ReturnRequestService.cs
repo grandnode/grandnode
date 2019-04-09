@@ -61,7 +61,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.DeleteAsync(returnRequest);
 
             //event notification
-            _eventPublisher.EntityDeleted(returnRequest);
+            await _eventPublisher.EntityDeleted(returnRequest);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.DeleteAsync(returnRequestAction);
 
             //event notification
-            _eventPublisher.EntityDeleted(returnRequestAction);
+            await _eventPublisher.EntityDeleted(returnRequestAction);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.InsertAsync(returnRequestAction);
 
             //event notification
-            _eventPublisher.EntityInserted(returnRequestAction);
+            await _eventPublisher.EntityInserted(returnRequestAction);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.InsertAsync(returnRequest);
 
             //event notification
-            _eventPublisher.EntityInserted(returnRequest);
+            await _eventPublisher.EntityInserted(returnRequest);
         }
         /// <summary>
         /// Updates the  return request action
@@ -200,7 +200,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.UpdateAsync(returnRequestAction);
 
             //event notification
-            _eventPublisher.EntityUpdated(returnRequestAction);
+            await _eventPublisher.EntityUpdated(returnRequestAction);
         }
 
 
@@ -218,7 +218,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.DeleteAsync(returnRequestReason);
 
             //event notification
-            _eventPublisher.EntityDeleted(returnRequestReason);
+            await _eventPublisher.EntityDeleted(returnRequestReason);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.InsertAsync(returnRequestReason);
 
             //event notification
-            _eventPublisher.EntityInserted(returnRequestReason);
+            await _eventPublisher.EntityInserted(returnRequestReason);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.UpdateAsync(returnRequestReason);
 
             //event notification
-            _eventPublisher.EntityUpdated(returnRequestReason);
+            await _eventPublisher.EntityUpdated(returnRequestReason);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.UpdateAsync(returnRequest);
 
             //event notification
-            _eventPublisher.EntityUpdated(returnRequest);
+            await _eventPublisher.EntityUpdated(returnRequest);
         }
         #endregion
     }

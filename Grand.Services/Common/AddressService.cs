@@ -138,7 +138,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(address);
+            await _eventPublisher.EntityInserted(address);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(address);
+            await _eventPublisher.EntityUpdated(address);
         }
 
         /// <summary>

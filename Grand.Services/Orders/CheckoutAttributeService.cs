@@ -116,7 +116,7 @@ namespace Grand.Services.Orders
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(checkoutAttribute);
+            await _eventPublisher.EntityDeleted(checkoutAttribute);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Grand.Services.Orders
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(checkoutAttribute);
+            await _eventPublisher.EntityInserted(checkoutAttribute);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Grand.Services.Orders
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(checkoutAttribute);
+            await _eventPublisher.EntityUpdated(checkoutAttribute);
         }
 
         #endregion

@@ -63,7 +63,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.DeleteAsync(subscription);
 
             //event notification
-            _eventPublisher.EntityDeleted(subscription);
+            await _eventPublisher.EntityDeleted(subscription);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
 
             //event notification
-            _eventPublisher.EntityInserted(subscription);
+            await _eventPublisher.EntityInserted(subscription);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.UpdateAsync(subscription);
 
             //event notification
-            _eventPublisher.EntityUpdated(subscription);
+            await _eventPublisher.EntityUpdated(subscription);
         }
 
         /// <summary>

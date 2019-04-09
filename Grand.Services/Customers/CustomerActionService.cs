@@ -76,7 +76,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.InsertAsync(customerAction);
 
             //event notification
-            _eventPublisher.EntityInserted(customerAction);
+            await _eventPublisher.EntityInserted(customerAction);
 
         }
 
@@ -92,7 +92,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.DeleteAsync(customerAction);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerAction);
+            await _eventPublisher.EntityDeleted(customerAction);
 
         }
 
@@ -108,7 +108,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.UpdateAsync(customerAction);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerAction);
+            await _eventPublisher.EntityUpdated(customerAction);
         }
 
         #endregion
@@ -144,7 +144,7 @@ namespace Grand.Services.Customers
             //clear cache
             _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
             //event notification
-            _eventPublisher.EntityUpdated(customerActionType);
+            await _eventPublisher.EntityUpdated(customerActionType);
         }
 
         #endregion

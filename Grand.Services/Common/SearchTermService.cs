@@ -47,7 +47,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.DeleteAsync(searchTerm);
 
             //event notification
-            _eventPublisher.EntityDeleted(searchTerm);
+            await _eventPublisher.EntityDeleted(searchTerm);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.InsertAsync(searchTerm);
 
             //event notification
-            _eventPublisher.EntityInserted(searchTerm);
+            await _eventPublisher.EntityInserted(searchTerm);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.UpdateAsync(searchTerm);
 
             //event notification
-            _eventPublisher.EntityUpdated(searchTerm);
+            await _eventPublisher.EntityUpdated(searchTerm);
         }
         
         #endregion

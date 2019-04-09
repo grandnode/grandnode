@@ -51,7 +51,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.DeleteAsync(bid);
-            _eventPublisher.EntityDeleted(bid);
+            await _eventPublisher.EntityDeleted(bid);
 
             var productToUpdate = await _productService.GetProductById(bid.ProductId);
             var _bid = await GetBidsByProductId(bid.ProductId);
@@ -93,7 +93,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.InsertAsync(bid);
-            _eventPublisher.EntityInserted(bid);
+            await _eventPublisher.EntityInserted(bid);
         }
 
         public virtual async Task UpdateBid(Bid bid)
@@ -102,7 +102,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.UpdateAsync(bid);
-            _eventPublisher.EntityUpdated(bid);
+            await _eventPublisher.EntityUpdated(bid);
         }
 
         public virtual async Task UpdateHighestBid(Product product, decimal bid, string highestBidder)
@@ -113,7 +113,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            _eventPublisher.EntityUpdated(product);
+            await _eventPublisher.EntityUpdated(product);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
@@ -137,7 +137,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            _eventPublisher.EntityUpdated(product);
+            await _eventPublisher.EntityUpdated(product);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 

@@ -98,7 +98,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(addressAttribute);
+            await _eventPublisher.EntityDeleted(addressAttribute);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(addressAttribute);
+            await _eventPublisher.EntityInserted(addressAttribute);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(addressAttribute);
+            await _eventPublisher.EntityUpdated(addressAttribute);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(addressAttributeValue);
+            await _eventPublisher.EntityDeleted(addressAttributeValue);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(addressAttributeValue);
+            await _eventPublisher.EntityInserted(addressAttributeValue);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Grand.Services.Common
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(addressAttributeValue);
+            await _eventPublisher.EntityUpdated(addressAttributeValue);
         }
         
         #endregion

@@ -172,7 +172,7 @@ namespace Grand.Services.Orders
             }
 
             //event notification
-            _eventPublisher.EntityDeleted(shoppingCartItem);
+            await _eventPublisher.EntityDeleted(shoppingCartItem);
         }
 
 
@@ -879,7 +879,7 @@ namespace Grand.Services.Orders
                 warnings.AddRange(await GetReservationProductWarnings(customer, product, shoppingCartItem));
 
             //event notification
-            _eventPublisher.ShoppingCartItemWarningsAdded(warnings, customer, shoppingCartItem, product);
+            await _eventPublisher.ShoppingCartItemWarningsAdded(warnings, customer, shoppingCartItem, product);
 
             return warnings;
         }
@@ -1014,7 +1014,7 @@ namespace Grand.Services.Orders
             }
 
             //event notification
-            _eventPublisher.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
+            await _eventPublisher.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
 
             return warnings;
         }
@@ -1225,7 +1225,7 @@ namespace Grand.Services.Orders
                     await _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                     //event notification
-                    _eventPublisher.EntityUpdated(shoppingCartItem);
+                    await _eventPublisher.EntityUpdated(shoppingCartItem);
                 }
             }
             else
@@ -1288,7 +1288,7 @@ namespace Grand.Services.Orders
 
                     await _customerActionEventService.AddToCart(shoppingCartItem, product, customer);
                     //event notification
-                    _eventPublisher.EntityInserted(shoppingCartItem);
+                    await _eventPublisher.EntityInserted(shoppingCartItem);
                 }
             }
 
@@ -1378,7 +1378,7 @@ namespace Grand.Services.Orders
                         await _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                         //event notification
-                        _eventPublisher.EntityUpdated(shoppingCartItem);
+                        await _eventPublisher.EntityUpdated(shoppingCartItem);
                     }
                 }
                 else

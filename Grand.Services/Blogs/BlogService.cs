@@ -58,7 +58,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.DeleteAsync(blogPost);
 
             //event notification
-            _eventPublisher.EntityDeleted(blogPost);
+            await _eventPublisher.EntityDeleted(blogPost);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.InsertAsync(blogPost);
 
             //event notification
-            _eventPublisher.EntityInserted(blogPost);
+            await _eventPublisher.EntityInserted(blogPost);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace Grand.Services.Blogs
             await _blogCommentRepository.InsertAsync(blogComment);
 
             //event notification
-            _eventPublisher.EntityInserted(blogComment);
+            await _eventPublisher.EntityInserted(blogComment);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.UpdateAsync(blogPost);
 
             //event notification
-            _eventPublisher.EntityUpdated(blogPost);
+            await _eventPublisher.EntityUpdated(blogPost);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.InsertAsync(blogCategory);
 
             //event notification
-            _eventPublisher.EntityInserted(blogCategory);
+            await _eventPublisher.EntityInserted(blogCategory);
 
             return blogCategory;
         }
@@ -368,7 +368,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.UpdateAsync(blogCategory);
 
             //event notification
-            _eventPublisher.EntityUpdated(blogCategory);
+            await _eventPublisher.EntityUpdated(blogCategory);
 
             return blogCategory;
         }
@@ -385,7 +385,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.DeleteAsync(blogCategory);
 
             //event notification
-            _eventPublisher.EntityDeleted(blogCategory);
+            await _eventPublisher.EntityDeleted(blogCategory);
         }
 
         #endregion

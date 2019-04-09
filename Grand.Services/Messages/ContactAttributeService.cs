@@ -117,7 +117,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(contactAttribute);
+            await _eventPublisher.EntityDeleted(contactAttribute);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(contactAttribute);
+            await _eventPublisher.EntityInserted(contactAttribute);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Grand.Services.Messages
             _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(contactAttribute);
+            await _eventPublisher.EntityUpdated(contactAttribute);
         }
 
         #endregion

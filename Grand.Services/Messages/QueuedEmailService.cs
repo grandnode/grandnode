@@ -50,7 +50,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.InsertAsync(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityInserted(queuedEmail);
+            await _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.UpdateAsync(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityUpdated(queuedEmail);
+            await _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.DeleteAsync(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityDeleted(queuedEmail);
+            await _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>

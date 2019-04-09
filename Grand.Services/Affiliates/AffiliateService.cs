@@ -43,7 +43,7 @@ namespace Grand.Services.Affiliates
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets an affiliate by affiliate identifier
         /// </summary>
@@ -53,14 +53,14 @@ namespace Grand.Services.Affiliates
         {
             return _affiliateRepository.GetByIdAsync(affiliateId);
         }
-        
+
         /// <summary>
         /// Gets an affiliate by friendly url name
         /// </summary>
         /// <param name="friendlyUrlName">Friendly url name</param>
         /// <returns>Affiliate</returns>
         public virtual Task<Affiliate> GetAffiliateByFriendlyUrlName(string friendlyUrlName)
-        {           
+        {
             var query = from a in _affiliateRepository.Table
                         orderby a.Id
                         where a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower())
@@ -105,11 +105,11 @@ namespace Grand.Services.Affiliates
             var query = _affiliateRepository.Table;
 
             if (!String.IsNullOrWhiteSpace(friendlyUrlName))
-                query = query.Where(a => a.FriendlyUrlName!=null && a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower()));
+                query = query.Where(a => a.FriendlyUrlName != null && a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower()));
             if (!String.IsNullOrWhiteSpace(firstName))
-                query = query.Where(a => a.Address.FirstName!=null && a.Address.FirstName.ToLower().Contains(firstName.ToLower()));
+                query = query.Where(a => a.Address.FirstName != null && a.Address.FirstName.ToLower().Contains(firstName.ToLower()));
             if (!String.IsNullOrWhiteSpace(lastName))
-                query = query.Where(a => a.Address.LastName!=null && a.Address.LastName.ToLower().Contains(lastName.ToLower()));
+                query = query.Where(a => a.Address.LastName != null && a.Address.LastName.ToLower().Contains(lastName.ToLower()));
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
@@ -140,10 +140,10 @@ namespace Grand.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
 
-           await _affiliateRepository.InsertAsync(affiliate);
+            await _affiliateRepository.InsertAsync(affiliate);
 
             //event notification
-            _eventPublisher.EntityInserted(affiliate);
+            await _eventPublisher.EntityInserted(affiliate);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Grand.Services.Affiliates
             await _affiliateRepository.UpdateAsync(affiliate);
 
             //event notification
-            _eventPublisher.EntityUpdated(affiliate);
+            await _eventPublisher.EntityUpdated(affiliate);
         }
 
         #endregion

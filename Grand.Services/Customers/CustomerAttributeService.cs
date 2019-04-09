@@ -99,7 +99,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerAttribute);
+            await _eventPublisher.EntityDeleted(customerAttribute);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(customerAttribute);
+            await _eventPublisher.EntityInserted(customerAttribute);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerAttribute);
+            await _eventPublisher.EntityUpdated(customerAttribute);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerAttributeValue);
+            await _eventPublisher.EntityDeleted(customerAttributeValue);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(customerAttributeValue);
+            await _eventPublisher.EntityInserted(customerAttributeValue);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerAttributeValue);
+            await _eventPublisher.EntityUpdated(customerAttributeValue);
         }
         
         #endregion

@@ -91,7 +91,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.DeleteAsync(customerTag);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerTag);
+            await _eventPublisher.EntityDeleted(customerTag);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.InsertAsync(customerTag);
 
             //event notification
-            _eventPublisher.EntityInserted(customerTag);
+            await _eventPublisher.EntityInserted(customerTag);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.UpdateAsync(customerTag);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerTag);
+            await _eventPublisher.EntityUpdated(customerTag);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
-            _eventPublisher.EntityInserted(customerTagProduct);
+            await _eventPublisher.EntityInserted(customerTagProduct);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerTagProduct);
+            await _eventPublisher.EntityUpdated(customerTagProduct);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Grand.Services.Customers
             _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
             _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
             //event notification
-            _eventPublisher.EntityDeleted(customerTagProduct);
+            await _eventPublisher.EntityDeleted(customerTagProduct);
         }
 
         #endregion

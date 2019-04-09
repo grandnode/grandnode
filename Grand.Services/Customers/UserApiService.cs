@@ -49,7 +49,7 @@ namespace Grand.Services.Customers
             await _userRepository.InsertAsync(userApi);
 
             //event notification
-            _eventPublisher.EntityInserted(userApi);
+            await _eventPublisher.EntityInserted(userApi);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Grand.Services.Customers
             await _userRepository.UpdateAsync(userApi);
 
             //event notification
-            _eventPublisher.EntityUpdated(userApi);
+            await _eventPublisher.EntityUpdated(userApi);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Grand.Services.Customers
             await _userRepository.DeleteAsync(userApi);
 
             //event notification
-            _eventPublisher.EntityDeleted(userApi);
+            await _eventPublisher.EntityDeleted(userApi);
 
         }
 

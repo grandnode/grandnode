@@ -51,7 +51,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
 
             //event notification
-            _eventPublisher.EntityDeleted(categoryTemplate);
+            await _eventPublisher.EntityDeleted(categoryTemplate);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.InsertAsync(categoryTemplate);
 
             //event notification
-            _eventPublisher.EntityInserted(categoryTemplate);
+            await _eventPublisher.EntityInserted(categoryTemplate);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.UpdateAsync(categoryTemplate);
 
             //event notification
-            _eventPublisher.EntityUpdated(categoryTemplate);
+            await _eventPublisher.EntityUpdated(categoryTemplate);
         }
         
         #endregion

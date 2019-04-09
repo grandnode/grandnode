@@ -56,7 +56,7 @@ namespace Grand.Services.News
             await _newsItemRepository.DeleteAsync(newsItem);
             
             //event notification
-            _eventPublisher.EntityDeleted(newsItem);
+            await _eventPublisher.EntityDeleted(newsItem);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Grand.Services.News
             await _newsItemRepository.InsertAsync(news);
 
             //event notification
-            _eventPublisher.EntityInserted(news);
+            await _eventPublisher.EntityInserted(news);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Grand.Services.News
             await _newsItemRepository.UpdateAsync(news);
             
             //event notification
-            _eventPublisher.EntityUpdated(news);
+            await _eventPublisher.EntityUpdated(news);
         }
         
         /// <summary>

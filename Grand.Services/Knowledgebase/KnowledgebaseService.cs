@@ -145,7 +145,7 @@ namespace Grand.Services.Knowledgebase
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
-            _eventPublisher.EntityDeleted(kc);
+            await _eventPublisher.EntityDeleted(kc);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseCategoryRepository.UpdateAsync(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _eventPublisher.EntityUpdated(kc);
+            await _eventPublisher.EntityUpdated(kc);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _eventPublisher.EntityInserted(kc);
+            await _eventPublisher.EntityInserted(kc);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.InsertAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _eventPublisher.EntityInserted(ka);
+            await _eventPublisher.EntityInserted(ka);
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.UpdateAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _eventPublisher.EntityUpdated(ka);
+            await _eventPublisher.EntityUpdated(ka);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.DeleteAsync(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _eventPublisher.EntityDeleted(ka);
+            await _eventPublisher.EntityDeleted(ka);
         }
 
         /// <summary>
@@ -622,7 +622,7 @@ namespace Grand.Services.Knowledgebase
             await _articleCommentRepository.InsertAsync(articleComment);
 
             //event notification
-            _eventPublisher.EntityInserted(articleComment);
+            await _eventPublisher.EntityInserted(articleComment);
         }
 
         /// <summary>

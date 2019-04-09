@@ -49,17 +49,17 @@ namespace Grand.Services.Messages
         /// <param name="email">The email.</param>
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
+        private async Task PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
         {
             if (publishSubscriptionEvents)
             {
                 if (isSubscribe)
                 {
-                    _eventPublisher.PublishNewsletterSubscribe(email);
+                    await _eventPublisher.PublishNewsletterSubscribe(email);
                 }
                 else
                 {
-                    _eventPublisher.PublishNewsletterUnsubscribe(email);
+                    await _eventPublisher.PublishNewsletterUnsubscribe(email);
                 }
             }
         }
@@ -88,14 +88,14 @@ namespace Grand.Services.Messages
             //Publish the subscription event 
             if (newsLetterSubscription.Active)
             {
-                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+                await PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
             }
 
             //save history
             await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            _eventPublisher.EntityInserted(newsLetterSubscription);
+            await _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Grand.Services.Messages
             await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            _eventPublisher.EntityUpdated(newsLetterSubscription);
+            await _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -135,10 +135,10 @@ namespace Grand.Services.Messages
             await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
 
             //Publish the unsubscribe event 
-            PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
+            await PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
 
             //event notification
-            _eventPublisher.EntityDeleted(newsLetterSubscription);
+            await _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>

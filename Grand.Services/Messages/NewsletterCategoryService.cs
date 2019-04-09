@@ -41,7 +41,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.InsertAsync(newslettercategory);
 
             //event notification
-            _eventPublisher.EntityInserted(newslettercategory);
+            await _eventPublisher.EntityInserted(newslettercategory);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.UpdateAsync(newslettercategory);
 
             //event notification
-            _eventPublisher.EntityUpdated(newslettercategory);
+            await _eventPublisher.EntityUpdated(newslettercategory);
 
         }
 
@@ -72,7 +72,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.DeleteAsync(newslettercategory);
 
             //event notification
-            _eventPublisher.EntityDeleted(newslettercategory);
+            await _eventPublisher.EntityDeleted(newslettercategory);
 
         }
 

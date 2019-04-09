@@ -137,7 +137,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(productTag);
+            await _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(productTag);
+            await _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(productTag);
+            await _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>

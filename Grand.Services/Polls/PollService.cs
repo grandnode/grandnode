@@ -131,7 +131,7 @@ namespace Grand.Services.Polls
             await _pollRepository.DeleteAsync(poll);
 
             //event notification
-            _eventPublisher.EntityDeleted(poll);
+            await _eventPublisher.EntityDeleted(poll);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Grand.Services.Polls
             await _pollRepository.InsertAsync(poll);
 
             //event notification
-            _eventPublisher.EntityInserted(poll);
+            await _eventPublisher.EntityInserted(poll);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Grand.Services.Polls
             await _pollRepository.UpdateAsync(poll);
 
             //event notification
-            _eventPublisher.EntityUpdated(poll);
+            await _eventPublisher.EntityUpdated(poll);
         }
         
         

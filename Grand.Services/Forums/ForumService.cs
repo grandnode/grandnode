@@ -290,7 +290,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumGroup);
+            await _eventPublisher.EntityDeleted(forumGroup);
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumGroup);
+            await _eventPublisher.EntityInserted(forumGroup);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumGroup);
+            await _eventPublisher.EntityUpdated(forumGroup);
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                _eventPublisher.EntityDeleted(fs);
+                await _eventPublisher.EntityDeleted(fs);
             }
 
             //delete forum subscriptions (forum)
@@ -396,7 +396,7 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs2);
                 //event notification
-                _eventPublisher.EntityDeleted(fs2);
+                await _eventPublisher.EntityDeleted(fs2);
             }
 
             //delete forum
@@ -406,7 +406,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forum);
+            await _eventPublisher.EntityDeleted(forum);
         }
 
         /// <summary>
@@ -454,7 +454,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forum);
+            await _eventPublisher.EntityInserted(forum);
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forum);
+            await _eventPublisher.EntityUpdated(forum);
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                _eventPublisher.EntityDeleted(fs);
+                await _eventPublisher.EntityDeleted(fs);
             }
 
             //update stats
@@ -521,7 +521,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumTopic);
+            await _eventPublisher.EntityDeleted(forumTopic);
         }
 
         /// <summary>
@@ -669,7 +669,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumTopic);
+            await _eventPublisher.EntityInserted(forumTopic);
 
             //send notifications
             if (sendNotifications)
@@ -712,7 +712,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumTopic);
+            await _eventPublisher.EntityUpdated(forumTopic);
         }
 
         /// <summary>
@@ -795,7 +795,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumPost);
+            await _eventPublisher.EntityDeleted(forumPost);
 
         }
 
@@ -891,7 +891,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumPost);
+            await _eventPublisher.EntityInserted(forumPost);
 
             //notifications
             if (sendNotifications)
@@ -940,7 +940,7 @@ namespace Grand.Services.Forums
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumPost);
+            await _eventPublisher.EntityUpdated(forumPost);
         }
 
         /// <summary>
@@ -957,7 +957,7 @@ namespace Grand.Services.Forums
             await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
 
             //event notification
-            _eventPublisher.EntityDeleted(privateMessage);
+            await _eventPublisher.EntityDeleted(privateMessage);
         }
 
         /// <summary>
@@ -1025,7 +1025,7 @@ namespace Grand.Services.Forums
             await _forumPrivateMessageRepository.InsertAsync(privateMessage);
 
             //event notification
-            _eventPublisher.EntityInserted(privateMessage);
+            await _eventPublisher.EntityInserted(privateMessage);
 
             var customerTo = await _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
@@ -1056,13 +1056,13 @@ namespace Grand.Services.Forums
             {
                 await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
                 //event notification
-                _eventPublisher.EntityDeleted(privateMessage);
+                await _eventPublisher.EntityDeleted(privateMessage);
             }
             else
             {
                 await _forumPrivateMessageRepository.UpdateAsync(privateMessage);
                 //event notification
-                _eventPublisher.EntityUpdated(privateMessage);
+                await _eventPublisher.EntityUpdated(privateMessage);
             }
         }
 
@@ -1080,7 +1080,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.DeleteAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumSubscription);
+            await _eventPublisher.EntityDeleted(forumSubscription);
         }
 
         /// <summary>
@@ -1135,7 +1135,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.InsertAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityInserted(forumSubscription);
+            await _eventPublisher.EntityInserted(forumSubscription);
         }
 
         /// <summary>
@@ -1152,7 +1152,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.UpdateAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumSubscription);
+            await _eventPublisher.EntityUpdated(forumSubscription);
         }
 
         /// <summary>
@@ -1507,7 +1507,7 @@ namespace Grand.Services.Forums
             await UpdatePost(post);
 
             //event notification
-            _eventPublisher.EntityInserted(postVote);
+            await _eventPublisher.EntityInserted(postVote);
         }
 
         /// <summary>
@@ -1522,7 +1522,7 @@ namespace Grand.Services.Forums
             await _forumPostVoteRepository.UpdateAsync(postVote);
 
             //event notification
-            _eventPublisher.EntityUpdated(postVote);
+            await _eventPublisher.EntityUpdated(postVote);
         }
 
         /// <summary>
@@ -1542,7 +1542,7 @@ namespace Grand.Services.Forums
             await UpdatePost(post);
 
             //event notification
-            _eventPublisher.EntityDeleted(postVote);
+            await _eventPublisher.EntityDeleted(postVote);
         }
 
         #endregion

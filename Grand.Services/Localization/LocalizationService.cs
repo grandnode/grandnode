@@ -105,7 +105,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(localeStringResource);
+            await _eventPublisher.EntityDeleted(localeStringResource);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(localeStringResource);
+            await _eventPublisher.EntityInserted(localeStringResource);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Grand.Services.Localization
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(localeStringResource);
+            await _eventPublisher.EntityUpdated(localeStringResource);
         }
 
         /// <summary>

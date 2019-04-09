@@ -74,7 +74,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.InsertAsync(campaign);
 
             //event notification
-            _eventPublisher.EntityInserted(campaign);
+            await _eventPublisher.EntityInserted(campaign);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.UpdateAsync(campaign);
 
             //event notification
-            _eventPublisher.EntityUpdated(campaign);
+            await _eventPublisher.EntityUpdated(campaign);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.DeleteAsync(campaign);
 
             //event notification
-            _eventPublisher.EntityDeleted(campaign);
+            await _eventPublisher.EntityDeleted(campaign);
         }
 
         /// <summary>
@@ -312,11 +312,11 @@ namespace Grand.Services.Messages
                     continue;
 
                 LiquidObject liquidObject = new LiquidObject();
-                _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
-                _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, _storeContext.CurrentStore);
+                await _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
+                await _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription, _storeContext.CurrentStore);
                 if (customer != null)
                 {
-                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
+                    await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
                     await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, _storeContext.CurrentStore, language);
                 }
 
@@ -364,11 +364,11 @@ namespace Grand.Services.Messages
 
             var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
+            await _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, language, emailAccount);
             var customer = await _customerService.GetCustomerByEmail(email);
             if (customer != null)
             {
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
+                await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, _storeContext.CurrentStore, language);
                 await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, _storeContext.CurrentStore, language);
             }
 

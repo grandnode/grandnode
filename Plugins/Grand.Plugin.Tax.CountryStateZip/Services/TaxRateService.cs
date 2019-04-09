@@ -62,7 +62,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(taxRate);
+            await _eventPublisher.EntityDeleted(taxRate);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(taxRate);
+            await _eventPublisher.EntityInserted(taxRate);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(taxRate);
+            await _eventPublisher.EntityUpdated(taxRate);
         }
         #endregion
     }

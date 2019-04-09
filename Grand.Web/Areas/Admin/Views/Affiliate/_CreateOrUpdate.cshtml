@@ -1,4 +1,5 @@
 ﻿@model AffiliateModel
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <script>
@@ -44,7 +45,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

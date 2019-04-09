@@ -159,7 +159,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(productAttribute);
+            await _eventPublisher.EntityDeleted(productAttribute);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(productAttribute);
+            await _eventPublisher.EntityInserted(productAttribute);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(productAttribute);
+            await _eventPublisher.EntityUpdated(productAttribute);
         }
 
         #endregion
@@ -254,7 +254,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(productAttributeMapping);
+            await _eventPublisher.EntityDeleted(productAttributeMapping);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(productAttributeMapping);
+            await _eventPublisher.EntityInserted(productAttributeMapping);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(productAttributeMapping);
+            await _eventPublisher.EntityUpdated(productAttributeMapping);
         }
 
         #endregion
@@ -347,7 +347,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(productAttributeValue);
+            await _eventPublisher.EntityDeleted(productAttributeValue);
         }
 
 
@@ -373,7 +373,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(productAttributeValue);
+            await _eventPublisher.EntityInserted(productAttributeValue);
         }
 
         /// <summary>
@@ -424,7 +424,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(productAttributeValue);
+            await _eventPublisher.EntityUpdated(productAttributeValue);
         }
 
         #endregion
@@ -469,7 +469,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(combination);
+            await _eventPublisher.EntityDeleted(combination);
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(combination);
+            await _eventPublisher.EntityInserted(combination);
         }
 
         /// <summary>
@@ -523,7 +523,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(combination);
+            await _eventPublisher.EntityUpdated(combination);
         }
 
         #endregion

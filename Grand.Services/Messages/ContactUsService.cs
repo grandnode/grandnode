@@ -36,7 +36,7 @@ namespace Grand.Services.Messages
             await _contactusRepository.DeleteAsync(contactus);
 
             //event notification
-            _eventPublisher.EntityDeleted(contactus);
+            await _eventPublisher.EntityDeleted(contactus);
 
         }
 
@@ -110,7 +110,7 @@ namespace Grand.Services.Messages
             await _contactusRepository.InsertAsync(contactus);
 
             //event notification
-            _eventPublisher.EntityInserted(contactus);
+            await _eventPublisher.EntityInserted(contactus);
 
         }
 

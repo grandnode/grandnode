@@ -134,7 +134,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(measureDimension);
+            await _eventPublisher.EntityDeleted(measureDimension);
         }
         
         /// <summary>
@@ -195,7 +195,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(measure);
+            await _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(measure);
+            await _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(measureWeight);
+            await _eventPublisher.EntityDeleted(measureWeight);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(measure);
+            await _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(measure);
+            await _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(measureUnit);
+            await _eventPublisher.EntityDeleted(measureUnit);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(measure);
+            await _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -554,7 +554,7 @@ namespace Grand.Services.Directory
             _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(measure);
+            await _eventPublisher.EntityUpdated(measure);
         }
         #endregion
 

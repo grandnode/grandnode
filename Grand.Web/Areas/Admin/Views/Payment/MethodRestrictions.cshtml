@@ -59,7 +59,7 @@
                     @{
                         //custom tabs
                         var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
-                        eventPublisher.Publish(eventMessage);
+                        await eventPublisher.Publish(eventMessage);
                         foreach (var eventBlock in eventMessage.BlocksToRender)
                         {
                             @eventBlock

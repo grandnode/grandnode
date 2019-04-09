@@ -825,7 +825,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             //raise event
-            _eventPublisher.Publish(new OrderPaidEvent(order));
+            await _eventPublisher.Publish(new OrderPaidEvent(order));
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1038,7 +1038,7 @@ namespace Grand.Services.Orders
                 var details = await PreparePlaceOrderDetails(processPaymentRequest);
 
                 // event notification
-                _eventPublisher.PlaceOrderDetailsEvent(result, details);
+                await _eventPublisher.PlaceOrderDetailsEvent(result, details);
 
                 //return if exist errors
                 if (result.Errors.Any())
@@ -1780,7 +1780,7 @@ namespace Grand.Services.Orders
                     //Update field last update cart
                     await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
                     //raise event       
-                    _eventPublisher.Publish(new OrderPlacedEvent(order));
+                    await _eventPublisher.Publish(new OrderPlacedEvent(order));
                     await _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
@@ -2139,7 +2139,7 @@ namespace Grand.Services.Orders
             }
 
             //event
-            _eventPublisher.PublishShipmentSent(shipment);
+            await _eventPublisher.PublishShipmentSent(shipment);
 
             //check order status
             await CheckOrderStatus(order);
@@ -2199,7 +2199,7 @@ namespace Grand.Services.Orders
             }
 
             //event
-            _eventPublisher.PublishShipmentDelivered(shipment);
+            await _eventPublisher.PublishShipmentDelivered(shipment);
 
             //check order status
             await CheckOrderStatus(order);
@@ -2288,7 +2288,7 @@ namespace Grand.Services.Orders
             //cancel discount
             await _discountService.CancelDiscount(order.Id);
 
-            _eventPublisher.Publish(new OrderCancelledEvent(order));
+            await _eventPublisher.Publish(new OrderCancelledEvent(order));
 
         }
 
@@ -2599,7 +2599,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
+                    await _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
             }
@@ -2727,7 +2727,7 @@ namespace Grand.Services.Orders
             }
 
             //raise event       
-            _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2836,7 +2836,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+                    await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2962,7 +2962,7 @@ namespace Grand.Services.Orders
                 });
             }
             //raise event       
-            _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
 

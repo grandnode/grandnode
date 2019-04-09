@@ -176,10 +176,10 @@ namespace Grand.Services.Authentication.External
                 return Error(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
-            _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
+            await _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
 
             //raise vustomer registered event
-            _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
+            await _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
@@ -230,7 +230,7 @@ namespace Grand.Services.Authentication.External
             await _authenticationService.SignIn(user, false);
 
             //raise event       
-            _eventPublisher.Publish(new CustomerLoggedinEvent(user));
+            await _eventPublisher.Publish(new CustomerLoggedinEvent(user));
 
             // activity log
             await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);

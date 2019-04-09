@@ -42,7 +42,7 @@ namespace Grand.Services.Messages
             await _popupActiveRepository.InsertAsync(popup);
 
             //event notification
-            _eventPublisher.EntityInserted(popup);
+            await _eventPublisher.EntityInserted(popup);
         }
 
 

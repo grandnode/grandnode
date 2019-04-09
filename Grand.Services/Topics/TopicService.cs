@@ -94,7 +94,7 @@ namespace Grand.Services.Topics
             //cache
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
-            _eventPublisher.EntityDeleted(topic);
+            await _eventPublisher.EntityDeleted(topic);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Grand.Services.Topics
             //cache
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
-            _eventPublisher.EntityInserted(topic);
+            await _eventPublisher.EntityInserted(topic);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Grand.Services.Topics
             _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(topic);
+            await _eventPublisher.EntityUpdated(topic);
         }
 
         #endregion

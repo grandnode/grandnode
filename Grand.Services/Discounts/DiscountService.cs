@@ -203,7 +203,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(discount);
+            await _eventPublisher.EntityDeleted(discount);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(discount);
+            await _eventPublisher.EntityInserted(discount);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(discount);
+            await _eventPublisher.EntityUpdated(discount);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(discountRequirement);
+            await _eventPublisher.EntityDeleted(discountRequirement);
         }
 
         /// <summary>
@@ -762,7 +762,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(discountUsageHistory);
+            await _eventPublisher.EntityInserted(discountUsageHistory);
         }
 
 
@@ -780,7 +780,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(discountUsageHistory);
+            await _eventPublisher.EntityUpdated(discountUsageHistory);
         }
 
         /// <summary>
@@ -797,7 +797,7 @@ namespace Grand.Services.Discounts
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(discountUsageHistory);
+            await _eventPublisher.EntityDeleted(discountUsageHistory);
         }
 
         /// <summary>

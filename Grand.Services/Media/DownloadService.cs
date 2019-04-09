@@ -102,7 +102,7 @@ namespace Grand.Services.Media
 
             await _downloadRepository.DeleteAsync(download);
 
-            _eventPubisher.EntityDeleted(download);
+            await _eventPubisher.EntityDeleted(download);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Grand.Services.Media
             download.DownloadBinary = null;
             await _downloadRepository.InsertAsync(download);
 
-            _eventPubisher.EntityInserted(download);
+            await _eventPubisher.EntityInserted(download);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Grand.Services.Media
 
             await _downloadRepository.UpdateAsync(download);
 
-            _eventPubisher.EntityUpdated(download);
+            await _eventPubisher.EntityUpdated(download);
         }
 
         /// <summary>

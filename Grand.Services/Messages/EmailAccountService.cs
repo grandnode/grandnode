@@ -58,7 +58,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.InsertAsync(emailAccount);
 
             //event notification
-            _eventPublisher.EntityInserted(emailAccount);
+            await _eventPublisher.EntityInserted(emailAccount);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.UpdateAsync(emailAccount);
 
             //event notification
-            _eventPublisher.EntityUpdated(emailAccount);
+            await _eventPublisher.EntityUpdated(emailAccount);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.DeleteAsync(emailAccount);
 
             //event notification
-            _eventPublisher.EntityDeleted(emailAccount);
+            await _eventPublisher.EntityDeleted(emailAccount);
         }
 
         /// <summary>

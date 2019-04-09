@@ -96,7 +96,7 @@ namespace Grand.Services.Orders
             await _rphRepository.InsertAsync(rewardPointsHistory);
 
             //event notification
-            _eventPublisher.EntityInserted(rewardPointsHistory);
+            await _eventPublisher.EntityInserted(rewardPointsHistory);
 
             return rewardPointsHistory;
         }

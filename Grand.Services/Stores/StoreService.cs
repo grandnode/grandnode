@@ -87,7 +87,7 @@ namespace Grand.Services.Stores
             _cacheManager.Clear();
 
             //event notification
-            _eventPublisher.EntityDeleted(store);
+            await _eventPublisher.EntityDeleted(store);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Grand.Services.Stores
             _cacheManager.Clear();
 
             //event notification
-            _eventPublisher.EntityInserted(store);
+            await _eventPublisher.EntityInserted(store);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Grand.Services.Stores
             _cacheManager.Clear();
 
             //event notification
-            _eventPublisher.EntityUpdated(store);
+            await _eventPublisher.EntityUpdated(store);
         }
 
         /// <summary>

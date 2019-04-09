@@ -97,8 +97,8 @@ namespace Grand.Services.Customers
             var bcc = reminderLevel.BccEmailAddresses;
             var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
             await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
 
             var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
@@ -143,8 +143,8 @@ namespace Grand.Services.Customers
             var bcc = reminderLevel.BccEmailAddresses;
             var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
+            await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
+            await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
             await _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, store, language);
             await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, await _storeService.GetStoreById(order.StoreId));
 
@@ -601,7 +601,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.InsertAsync(customerReminder);
 
             //event notification
-            _eventPublisher.EntityInserted(customerReminder);
+            await _eventPublisher.EntityInserted(customerReminder);
 
         }
 
@@ -617,7 +617,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.DeleteAsync(customerReminder);
 
             //event notification
-            _eventPublisher.EntityDeleted(customerReminder);
+            await _eventPublisher.EntityDeleted(customerReminder);
 
         }
 
@@ -633,7 +633,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.UpdateAsync(customerReminder);
 
             //event notification
-            _eventPublisher.EntityUpdated(customerReminder);
+            await _eventPublisher.EntityUpdated(customerReminder);
         }
 
 
