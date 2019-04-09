@@ -10,7 +10,6 @@
                 $(document).ready(function () {
                     $("#shipping-rate-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("Configure", "ShippingFixedRate"))",
