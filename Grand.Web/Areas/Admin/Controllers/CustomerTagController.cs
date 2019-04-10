@@ -54,11 +54,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             var items = new List<(string Id, string Name, int Count)>();
             foreach (var item in customertags)
             {
-                items.Add((item.Id, item.Name, await _customerTagService.GetCustomerCount(item.Id)));
+                items.Add((Id : item.Id, Name : item.Name, Count : await _customerTagService.GetCustomerCount(item.Id)));
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, Name = x.Name, Count = x.Count }),
                 Total = customertags.Count()
             };
             return Json(gridModel);

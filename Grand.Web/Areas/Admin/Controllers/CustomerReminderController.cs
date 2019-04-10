@@ -321,7 +321,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CategoryName = x.CategoryName }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -386,7 +386,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, ManufacturerName = x.ManufacturerName }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -444,7 +444,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, ProductName = x.ProductName }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -498,7 +498,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CustomerTag = x.CustomerTag }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -538,7 +538,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CustomerRole = x.CustomerRole }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -660,7 +660,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CustomerAttributeId = x.CustomerAttributeId, CustomerAttributeName = x.CustomerAttributeName, CustomerAttributeValue = x.CustomerAttributeValue }),
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);

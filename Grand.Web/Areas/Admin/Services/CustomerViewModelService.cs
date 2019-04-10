@@ -1351,7 +1351,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (cart != null)
             {
                 await _serviceProvider.GetRequiredService<IShoppingCartService>()
-                    .DeleteShoppingCartItem(_workContext.CurrentCustomer, cart, ensureOnlyActiveCheckoutAttributes: true);
+                    .DeleteShoppingCartItem(customer, cart, ensureOnlyActiveCheckoutAttributes: true);
                 await _customerService.UpdateCustomerinAdminPanel(customer);
             }
         }
@@ -1442,7 +1442,7 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                     else
                     {
-                        if (_customerService.GetCustomerProduct(customerId, id) == null)
+                        if (await _customerService.GetCustomerProduct(customerId, id) == null)
                         {
                             await _customerService.InsertCustomerProduct(new CustomerProduct() { CustomerId = customerId, ProductId = id, DisplayOrder = 0 });
                         }

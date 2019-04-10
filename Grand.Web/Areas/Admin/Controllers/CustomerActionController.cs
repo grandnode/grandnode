@@ -332,7 +332,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x=>new { Id = x.Id, ProductName = x.ProductName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -384,7 +384,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CategoryName = x.CategoryName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -448,10 +448,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var manufacturer = (await _manufacturerService.GetManufacturerById(item))?.Name;
                 items.Add((item, manufacturer));
             }
-
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, ManufacturerName = x.ManufacturerName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -541,7 +540,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, CustomerRole = x.CustomerRole }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -585,7 +584,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data = items,
+                Data = items.Select(x => new { Id = x.Id, Store = x.Store }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -615,7 +614,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data =  items,
+                Data = items.Select(x => new { Id = x.Id, CustomerTag = x.CustomerTag }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -651,7 +650,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             var gridModel = new DataSourceResult
             {
-                Data =  items,
+                Data = items.Select(x => new { Id = x.Id, ProductAttributeId = x.ProductAttributeId, ProductAttributeName = x.ProductAttributeName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
