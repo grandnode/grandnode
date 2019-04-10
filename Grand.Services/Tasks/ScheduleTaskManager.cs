@@ -17,7 +17,7 @@ namespace Grand.Services.Tasks
         {
             var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
             var tasks = scheduleTaskService
-                .GetAllTasks()
+                .GetAllTasks().GetAwaiter().GetResult()
                 .ToList();
 
             List<IScheduleTask> interfaceCollection = new List<IScheduleTask>();

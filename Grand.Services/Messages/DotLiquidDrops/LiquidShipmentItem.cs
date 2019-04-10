@@ -1,13 +1,10 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
 using Grand.Services.Localization;
-using Grand.Services.Orders;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -19,63 +16,35 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Product _product;
         private Order _order;
         private OrderItem _orderItem;
-        private string _languageId;
+        private Language _language;
 
-        private readonly IProductService _productService;
-        private readonly IOrderService _orderService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly CatalogSettings _catalogSettings;
-
-        public LiquidShipmentItem(ShipmentItem shipmentItem, Shipment shipment, string languageId)
+        public LiquidShipmentItem(ShipmentItem shipmentItem, Shipment shipment, Order order, OrderItem orderItem, Product product, Language language)
         {
-            this._productService = EngineContext.Current.Resolve<IProductService>();
-            this._orderService = EngineContext.Current.Resolve<IOrderService>();
-            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
-            this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-
             this._shipmentItem = shipmentItem;
-            this._languageId = languageId;
+            this._language = language;
             this._shipment = shipment;
-            this._order = _orderService.GetOrderById(_shipment.OrderId);
-            this._orderItem = _order.OrderItems.Where(x => x.Id == _shipmentItem.OrderItemId).FirstOrDefault();
-            this._product = _productService.GetProductById(_orderItem.ProductId);
+            this._order = order;
+            this._orderItem = orderItem;
+            this._product = product;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public bool ShowSkuOnProductDetailsPage
-        {
-            get
-            {
-                return _catalogSettings.ShowSkuOnProductDetailsPage;
-            }
-        }
+        public bool ShowSkuOnProductDetailsPage { get; set; }
 
         public string ProductName
         {
             get
             {
                 string name = "";
-
                 if (_product != null)
-                    name = WebUtility.HtmlEncode(_product.GetLocalized(x => x.Name, _languageId));
+                    name = WebUtility.HtmlEncode(_product.GetLocalized(x => x.Name, _language.Id));
 
                 return name;
             }
         }
 
-        public string ProductSku
-        {
-            get
-            {
-                string sku = "";
-
-                if (_product != null)
-                    sku = _product.FormatSku(_orderItem.AttributesXml, _productAttributeParser);
-
-                return WebUtility.HtmlEncode(sku);
-            }
-        }
+        public string ProductSku { get; set; }
 
         public string AttributeDescription
         {

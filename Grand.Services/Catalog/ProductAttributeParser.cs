@@ -669,25 +669,28 @@ namespace Grand.Services.Catalog
 
             try
             {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributesXml);
+                if (!string.IsNullOrEmpty(attributesXml))
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributesXml);
 
-                var recipientNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientName");
-                var recipientEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientEmail");
-                var senderNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderName");
-                var senderEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderEmail");
-                var messageElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/Message");
+                    var recipientNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientName");
+                    var recipientEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/RecipientEmail");
+                    var senderNameElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderName");
+                    var senderEmailElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/SenderEmail");
+                    var messageElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes/GiftCardInfo/Message");
 
-                if (recipientNameElement != null)
-                    recipientName = recipientNameElement.InnerText;
-                if (recipientEmailElement != null)
-                    recipientEmail = recipientEmailElement.InnerText;
-                if (senderNameElement != null)
-                    senderName = senderNameElement.InnerText;
-                if (senderEmailElement != null)
-                    senderEmail = senderEmailElement.InnerText;
-                if (messageElement != null)
-                    giftCardMessage = messageElement.InnerText;
+                    if (recipientNameElement != null)
+                        recipientName = recipientNameElement.InnerText;
+                    if (recipientEmailElement != null)
+                        recipientEmail = recipientEmailElement.InnerText;
+                    if (senderNameElement != null)
+                        senderName = senderNameElement.InnerText;
+                    if (senderEmailElement != null)
+                        senderEmail = senderEmailElement.InnerText;
+                    if (messageElement != null)
+                        giftCardMessage = messageElement.InnerText;
+                }
             }
             catch (Exception exc)
             {

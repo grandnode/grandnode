@@ -1,7 +1,8 @@
-﻿using Grand.Core.Infrastructure;
-using Grand.Services.Logging;
+﻿using Grand.Services.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Events
 {
@@ -10,11 +11,13 @@ namespace Grand.Services.Events
     /// </summary>
     public class EventPublisher : IEventPublisher
     {
+        private readonly IServiceProvider _serviceProvider;
         /// <summary>
         /// Ctor
         /// </summary>
-        public EventPublisher()
+        public EventPublisher(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
         }
         #region Methods
 
@@ -23,26 +26,25 @@ namespace Grand.Services.Events
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        public virtual void Publish<T>(T eventMessaget)
+        public virtual async Task Publish<T>(T eventMessaget)
         {
-            //get all event consumers
-            var consumers = EngineContext.Current.ResolveAll<IConsumer<T>>().ToList();
-
+            var consumers = _serviceProvider.GetServices<IConsumer<T>>().ToList();
             foreach (var consumer in consumers)
             {
                 try
                 {
-                    consumer.HandleEvent(eventMessaget);
+                    await consumer.HandleEvent(eventMessaget);
                 }
                 catch (Exception exception)
                 {
                     try
                     {
-                        EngineContext.Current.Resolve<ILogger>()?.Error(exception.Message, exception);
+                        _serviceProvider.GetRequiredService<ILogger>()?.Error(exception.Message, exception);
                     }
                     catch { }
                 }
             }
+
         }
 
         #endregion

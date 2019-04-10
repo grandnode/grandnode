@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -42,8 +43,9 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandExceptionHandler(this IApplicationBuilder application)
         {
-            var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
-            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            var serviceProvider = application.ApplicationServices;
+            var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();
+            var hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
             bool useDetailedExceptionPage = grandConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
@@ -78,10 +80,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                         if (DataSettingsHelper.DatabaseIsInstalled())
                         {
                             //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                            var currentCustomer = serviceProvider.GetRequiredService<IWorkContext>().CurrentCustomer;
 
                             //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            serviceProvider.GetRequiredService<ILogger>().Error(exception.Message, exception, currentCustomer);
                         }
                     }
                     finally
@@ -99,6 +101,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UsePageNotFound(this IApplicationBuilder application)
         {
+            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(async context =>
             {
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
@@ -107,7 +110,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //handle 404 Not Found
                 if (!apirequest && context.HttpContext.Response.StatusCode == 404)
                 {
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    var webHelper = serviceProvider.GetRequiredService<IWebHelper>();
                     if (!webHelper.IsStaticResource())
                     {
                         //get original path and query
@@ -149,13 +152,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
+            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(context =>
             {
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
-                    var logger = EngineContext.Current.Resolve<ILogger>();
-                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    var logger = serviceProvider.GetRequiredService<ILogger>();
+                    var workContext = serviceProvider.GetRequiredService<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
 
@@ -246,8 +250,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
+            var serviceProvider = application.ApplicationServices;
             //whether MiniProfiler should be displayed
-            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (serviceProvider.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
                 application.UseMiniProfiler();
             }

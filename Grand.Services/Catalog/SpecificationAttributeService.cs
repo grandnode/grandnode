@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -86,9 +87,9 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
-        public virtual SpecificationAttribute GetSpecificationAttributeById(string specificationAttributeId)
+        public virtual Task<SpecificationAttribute> GetSpecificationAttributeById(string specificationAttributeId)
         {
-            return _specificationAttributeRepository.GetById(specificationAttributeId);
+            return _specificationAttributeRepository.GetByIdAsync(specificationAttributeId);
         }
 
         /// <summary>
@@ -97,20 +98,20 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Specification attributes</returns>
-        public virtual IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
                         select sa;
-            var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
-            return specificationAttributes;
+            
+            return await Task.FromResult(new PagedList<SpecificationAttribute>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public virtual void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual async Task DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
@@ -118,49 +119,49 @@ namespace Grand.Services.Catalog
 
             var builder = Builders<Product>.Update;
             var updatefilter = builder.PullFilter(x => x.ProductSpecificationAttributes, y => y.SpecificationAttributeId == specificationAttribute.Id);
-            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            _specificationAttributeRepository.Delete(specificationAttribute);
+            await _specificationAttributeRepository.DeleteAsync(specificationAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(specificationAttribute);
+            await _eventPublisher.EntityDeleted(specificationAttribute);
         }
 
         /// <summary>
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public virtual void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual async Task InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
 
-            _specificationAttributeRepository.Insert(specificationAttribute);
+            await _specificationAttributeRepository.InsertAsync(specificationAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(specificationAttribute);
+            await _eventPublisher.EntityInserted(specificationAttribute);
         }
 
         /// <summary>
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public virtual void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual async Task UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
 
-            _specificationAttributeRepository.Update(specificationAttribute);
+            await _specificationAttributeRepository.UpdateAsync(specificationAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(specificationAttribute);
+            await _eventPublisher.EntityUpdated(specificationAttribute);
         }
 
         #endregion
@@ -172,7 +173,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier</param>
         /// <returns>Specification attribute option</returns>
-        public virtual SpecificationAttribute GetSpecificationAttributeByOptionId(string specificationAttributeOptionId)
+        public virtual async Task<SpecificationAttribute> GetSpecificationAttributeByOptionId(string specificationAttributeOptionId)
         {
             if (string.IsNullOrEmpty(specificationAttributeOptionId))
                 return null;
@@ -181,14 +182,14 @@ namespace Grand.Services.Catalog
                         where p.SpecificationAttributeOptions.Any(x => x.Id == specificationAttributeOptionId)
                         select p;
 
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Deletes a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public virtual void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        public virtual async Task DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -196,21 +197,21 @@ namespace Grand.Services.Catalog
             var builder = Builders<Product>.Update;
             var updatefilter = builder.PullFilter(x => x.ProductSpecificationAttributes,
                 y => y.SpecificationAttributeOptionId == specificationAttributeOption.Id);
-            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            var specificationAttribute = GetSpecificationAttributeByOptionId(specificationAttributeOption.Id);
+            var specificationAttribute = await GetSpecificationAttributeByOptionId(specificationAttributeOption.Id);
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == specificationAttributeOption.Id).FirstOrDefault();
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id");
 
             specificationAttribute.SpecificationAttributeOptions.Remove(sao);
-            UpdateSpecificationAttribute(specificationAttribute);
+            await UpdateSpecificationAttribute(specificationAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(specificationAttributeOption);
+            await _eventPublisher.EntityDeleted(specificationAttributeOption);
         }
 
 
@@ -222,49 +223,49 @@ namespace Grand.Services.Catalog
         /// Deletes a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute</param>
-        public virtual void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual async Task DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductSpecificationAttributes, productSpecificationAttribute);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(productSpecificationAttribute);
+            await _eventPublisher.EntityDeleted(productSpecificationAttribute);
         }
 
         /// <summary>
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public virtual void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual async Task InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductSpecificationAttributes, productSpecificationAttribute);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(productSpecificationAttribute);
+            await _eventPublisher.EntityInserted(productSpecificationAttribute);
         }
 
         /// <summary>
         /// Updates the product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public virtual void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual async Task UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -281,14 +282,14 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ProductSpecificationAttributes.ElementAt(-1).SpecificationAttributeOptionId, productSpecificationAttribute.SpecificationAttributeOptionId)
                 .Set(x => x.ProductSpecificationAttributes.ElementAt(-1).AllowFiltering, productSpecificationAttribute.AllowFiltering);
 
-            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(productSpecificationAttribute);
+            await _eventPublisher.EntityUpdated(productSpecificationAttribute);
         }
 
         /// <summary>

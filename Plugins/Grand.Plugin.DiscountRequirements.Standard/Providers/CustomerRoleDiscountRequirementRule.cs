@@ -1,10 +1,9 @@
-using Grand.Core.Infrastructure;
-using Grand.Core.Plugins;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
-using Grand.Services.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.DiscountRequirements.CustomerRoles
 {
@@ -12,9 +11,9 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
     {
         private readonly ISettingService _settingService;
 
-        public CustomerRoleDiscountRequirementRule(ISettingService settingService)
+        public CustomerRoleDiscountRequirementRule(IServiceProvider serviceProvider)
         {
-            this._settingService = settingService;
+            this._settingService = serviceProvider.GetRequiredService<ISettingService>();
         }
 
         /// <summary>
@@ -22,7 +21,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
         /// <returns>true - requirement is met; otherwise, false</returns>
-        public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
+        public async Task<DiscountRequirementValidationResult> CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -46,7 +45,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
                     return result;
                 }
 
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>

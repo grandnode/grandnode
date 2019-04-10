@@ -16,6 +16,8 @@ using Grand.Services.Stores;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers.Tests
 {
@@ -45,7 +47,7 @@ namespace Grand.Services.Customers.Tests
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
         private CommonSettings _commonSettings;
-
+        private IServiceProvider _serviceProvider;
         //this method just help to get rid of repetitive code below
         private void AddCustomerToRegisteredRole(Customer customer)
         {
@@ -153,12 +155,12 @@ namespace Grand.Services.Customers.Tests
             _localizationService = new Mock<ILocalizationService>().Object;
             _rewardPointsService = new Mock<IRewardPointsService>().Object;
             _customerRoleProductRepo = new Mock<IRepository<CustomerRoleProduct>>().Object;
-
+            _serviceProvider = new Mock<IServiceProvider>().Object;
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
             _customerService = new CustomerService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _customerRepo, _customerRoleRepo, _customerProductRepo, _customerProductPriceRepo,
                 _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, _orderRepo, _forumPostRepo, _forumTopicRepo, null, null, _genericAttributeService, null,
-                _eventPublisher, _customerSettings, _commonSettings);
+                _eventPublisher, _serviceProvider, _customerSettings, _commonSettings);
 
             _customerRegistrationService = new CustomerRegistrationService(
                 _customerService,
@@ -173,15 +175,15 @@ namespace Grand.Services.Customers.Tests
         }
 
         [TestMethod()]
-        public void Ensure_only_registered_customers_can_login()
+        public async Task Ensure_only_registered_customers_can_login()
         {
             Assert.AreEqual(
                 CustomerLoginResults.Successful,
-                _customerRegistrationService.ValidateCustomer("registered@test.com", "password"));
+                await _customerRegistrationService.ValidateCustomer("registered@test.com", "password"));
 
             Assert.AreEqual(
                 CustomerLoginResults.NotRegistered,
-                _customerRegistrationService.ValidateCustomer("notregistered@test.com", "password"));
+                await _customerRegistrationService.ValidateCustomer("notregistered@test.com", "password"));
         }
     }
 }

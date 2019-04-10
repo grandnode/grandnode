@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Models.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -66,10 +67,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
             //get all tasks and then change their type inside PrepareSCheduleTaskModel and return as List<ScheduleTaskModel>
-            var models = _scheduleTaskService.GetAllTasks()
+            var models = (await _scheduleTaskService.GetAllTasks())
                 .Select(PrepareScheduleTaskModel)
                 .ToList();
             var gridModel = new DataSourceResult
@@ -81,9 +82,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditScheduler(string id)
+        public async Task<IActionResult> EditScheduler(string id)
         {
-            var task = _scheduleTaskService.GetTaskById(id);
+            var task = await _scheduleTaskService.GetTaskById(id);
             var model = new ScheduleTaskModel();
             {
                 model.Id = task.Id;
@@ -107,9 +108,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditScheduler(ScheduleTaskModel model)
+        public async Task<IActionResult> EditScheduler(ScheduleTaskModel model)
         {
-            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
+            var scheduleTask = await _scheduleTaskService.GetTaskById(model.Id);
             if (ModelState.IsValid)
             {
                 scheduleTask.Enabled = model.Enabled;
@@ -122,8 +123,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 scheduleTask.DayOfWeek = (DayOfWeek)model.DayOfWeek;
                 scheduleTask.MonthOptionChoice = (MonthOptionChoice)model.MonthOptionChoice;
                 scheduleTask.DayOfMonth = model.DayOfMonth;
-                _scheduleTaskService.UpdateTask(scheduleTask);
-                return EditScheduler(model.Id);
+                await _scheduleTaskService.UpdateTask(scheduleTask);
+                return await EditScheduler(model.Id);
             }
             model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
             model.Type = scheduleTask.Type;
@@ -131,11 +132,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult RunNow(string id)
+        public async Task<IActionResult> RunNow(string id)
         {
             try
             {
-                var scheduleTask = _scheduleTaskService.GetTaskById(id);
+                var scheduleTask = await _scheduleTaskService.GetTaskById(id);
                 if (scheduleTask == null) throw new Exception("Schedule task cannot be loaded");
                 RegistryGrandNode.RunTaskNow(scheduleTask);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));

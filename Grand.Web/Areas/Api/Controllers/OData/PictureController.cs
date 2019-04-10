@@ -4,6 +4,7 @@ using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -18,9 +19,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             var picture = _commonApiService.GetPictures().FirstOrDefault(x => x.Id == key);
@@ -32,32 +33,32 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             return Ok(_commonApiService.GetPictures());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] PictureDto model)
+        public async Task<IActionResult> Post([FromBody] PictureDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _commonApiService.InsertPicture(model);
+                model = await _commonApiService.InsertPicture(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Files))
+            if (!await _permissionService.Authorize(PermissionSystemName.Files))
                 return Forbid();
 
             var picture = _commonApiService.GetPictures().FirstOrDefault(x => x.Id == key);
@@ -65,7 +66,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 return NotFound();
             }
-            _commonApiService.DeletePicture(picture);
+            await _commonApiService.DeletePicture(picture);
             return Ok();
         }
     }

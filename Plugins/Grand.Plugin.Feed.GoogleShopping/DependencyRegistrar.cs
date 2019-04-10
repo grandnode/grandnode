@@ -11,6 +11,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerLifetimeScope();
+            builder.RegisterType<GoogleShoppingService>().InstancePerLifetimeScope();
         }
 
         public int Order

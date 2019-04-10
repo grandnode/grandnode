@@ -44,18 +44,18 @@ namespace Grand.Services.Tasks
         {
             lock (_lock)
             {
-                var auctionsToEnd = _auctionService.GetAuctionsToEnd();
+                var auctionsToEnd = _auctionService.GetAuctionsToEnd().GetAwaiter().GetResult();
                 foreach (var auctionToEnd in auctionsToEnd)
                 {
-                    var bid = _auctionService.GetBidsByProductId(auctionToEnd.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
+                    var bid = _auctionService.GetBidsByProductId(auctionToEnd.Id).GetAwaiter().GetResult().OrderByDescending(x => x.Amount).FirstOrDefault();
                     if (bid == null)
                     {
                         _auctionService.UpdateAuctionEnded(auctionToEnd, true);
                         _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, null);
                         continue;
                     }
-                    var warnings = _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
-                        bid.StoreId, customerEnteredPrice: bid.Amount);
+                    var warnings = _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId).GetAwaiter().GetResult(), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
+                        bid.StoreId, customerEnteredPrice: bid.Amount).GetAwaiter().GetResult();
 
                     if (!warnings.Any())
                     {

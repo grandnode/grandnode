@@ -3,6 +3,8 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -72,6 +74,7 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the currency rate
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal CurrencyRate { get; set; }
 
         /// <summary>
@@ -112,41 +115,49 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderSubtotalInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderSubtotalExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderSubTotalDiscountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderSubTotalDiscountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderShippingInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderShippingExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal PaymentMethodAdditionalFeeInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
         /// <summary>
@@ -157,21 +168,25 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order tax
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order discount (applied to order total)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderDiscount { get; set; }
 
         /// <summary>
         /// Gets or sets the order total
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OrderTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the refunded amount
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal RefundedAmount { get; set; }
 
         /// <summary>

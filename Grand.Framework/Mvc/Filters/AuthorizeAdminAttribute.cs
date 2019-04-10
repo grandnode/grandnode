@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -31,7 +32,7 @@ namespace Grand.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that confirms access to the admin panel
         /// </summary>
-        private class AuthorizeAdminFilter : IAuthorizationFilter
+        private class AuthorizeAdminFilter : IAsyncAuthorizationFilter
         {
             #region Fields
 
@@ -56,7 +57,7 @@ namespace Grand.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="filterContext">Authorization filter context</param>
-            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            public async Task OnAuthorizationAsync(AuthorizationFilterContext filterContext)
             {
                 
                 if (filterContext == null)
@@ -78,7 +79,7 @@ namespace Grand.Framework.Mvc.Filters
                 if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))
                 {
                     //authorize permission of access to the admin area
-                    if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+                    if (!await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
                         filterContext.Result = new ChallengeResult();
                 }
             }

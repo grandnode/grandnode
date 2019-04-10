@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Grand.Services.Common
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace Grand.Services.Common
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml,
+        Task<string> FormatAttributes(string attributesXml,
             string serapator = "<br />", 
             bool htmlEncode = true);
     }

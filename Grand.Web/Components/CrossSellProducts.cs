@@ -34,7 +34,7 @@ namespace Grand.Web.Components
             if (_shoppingCartSettings.CrossSellsNumber == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsCrossSell(productThumbPictureSize, _shoppingCartSettings.CrossSellsNumber));
+            var model = await _productViewModelService.PrepareProductsCrossSell(productThumbPictureSize, _shoppingCartSettings.CrossSellsNumber);
             if (!model.Any())
                 return Content("");
 

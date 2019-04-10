@@ -24,7 +24,7 @@ namespace Grand.Web.ViewComponents
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _catalogViewModelService.PrepareManufacturerNavigation(currentManufacturerId));
+            var model = await _catalogViewModelService.PrepareManufacturerNavigation(currentManufacturerId);
             if (!model.Manufacturers.Any())
                 return Content("");
 

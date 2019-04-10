@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -54,7 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, VendorReviewListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, VendorReviewListModel model)
         {
             var vendorId = string.Empty;
             //vendor
@@ -71,62 +72,62 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             model.SearchVendorId = vendorId;
-            var vendorReviews = _vendorViewModelService.PrepareVendorReviewModel(model, command.Page, command.PageSize);
+            var (vendorReviewModels, totalCount) = await _vendorViewModelService.PrepareVendorReviewModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = vendorReviews.vendorReviewModels.ToList(),
-                Total = vendorReviews.totalCount,
+                Data = vendorReviewModels.ToList(),
+                Total = totalCount,
             };
 
             return Json(gridModel);
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var vendorReview = _vendorService.GetVendorReviewById(id);
+            var vendorReview = await _vendorService.GetVendorReviewById(id);
 
             if (vendorReview == null)
                 //No vendor review found with the specified id
                 return RedirectToAction("List");
 
             var model = new VendorReviewModel();
-            _vendorViewModelService.PrepareVendorReviewModel(model, vendorReview, false, false);
+            await _vendorViewModelService.PrepareVendorReviewModel(model, vendorReview, false, false);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(VendorReviewModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(VendorReviewModel model, bool continueEditing)
         {
-            var vendorReview = _vendorService.GetVendorReviewById(model.Id);
+            var vendorReview = await _vendorService.GetVendorReviewById(model.Id);
             if (vendorReview == null)
                 //No vendor review found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                vendorReview = _vendorViewModelService.UpdateVendorReviewModel(vendorReview, model);
+                vendorReview = await _vendorViewModelService.UpdateVendorReviewModel(vendorReview, model);
                 SuccessNotification(_localizationService.GetResource("Admin.VendorReviews.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = vendorReview.Id, VendorId = vendorReview.VendorId }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            _vendorViewModelService.PrepareVendorReviewModel(model, vendorReview, true, false);
+            await _vendorViewModelService.PrepareVendorReviewModel(model, vendorReview, true, false);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var vendorReview = _vendorService.GetVendorReviewById(id);
+            var vendorReview = await _vendorService.GetVendorReviewById(id);
             if (vendorReview == null)
                 //No vendor review found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _vendorViewModelService.DeleteVendorReview(vendorReview);
+                await _vendorViewModelService.DeleteVendorReview(vendorReview);
 
                 SuccessNotification(_localizationService.GetResource("Admin.VendorReviews.Deleted"));
                 return RedirectToAction("List");
@@ -136,33 +137,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> ApproveSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                _vendorViewModelService.ApproveVendorReviews(selectedIds.ToList());
+                await _vendorViewModelService.ApproveVendorReviews(selectedIds.ToList());
             }
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public IActionResult DisapproveSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> DisapproveSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                _vendorViewModelService.DisapproveVendorReviews(selectedIds.ToList());
+                await _vendorViewModelService.DisapproveVendorReviews(selectedIds.ToList());
             }
 
             return Json(new { Result = true });
         }
 
-        public IActionResult VendorSearchAutoComplete(string term)
+        public async Task<IActionResult> VendorSearchAutoComplete(string term)
         {
             const int searchTermMinimumLength = 3;
             if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
                 return Content("");
 
-            var vendors = _vendorService.SearchVendors(
+            var vendors = await _vendorService.SearchVendors(
                 keywords: term);
 
             var result = (from p in vendors

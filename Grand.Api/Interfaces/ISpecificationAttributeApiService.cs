@@ -1,15 +1,16 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Interfaces
 {
     public interface ISpecificationAttributeApiService
     {
-        SpecificationAttributeDto GetById(string id);
+        Task<SpecificationAttributeDto> GetById(string id);
         IMongoQueryable<SpecificationAttributeDto> GetSpecificationAttributes();
-        SpecificationAttributeDto InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model);
-        SpecificationAttributeDto InsertSpecificationAttribute(SpecificationAttributeDto model);
-        SpecificationAttributeDto UpdateSpecificationAttribute(SpecificationAttributeDto model);
-        void DeleteSpecificationAttribute(SpecificationAttributeDto model);
+        Task<SpecificationAttributeDto> InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model);
+        Task<SpecificationAttributeDto> InsertSpecificationAttribute(SpecificationAttributeDto model);
+        Task<SpecificationAttributeDto> UpdateSpecificationAttribute(SpecificationAttributeDto model);
+        Task DeleteSpecificationAttribute(SpecificationAttributeDto model);
     }
 }

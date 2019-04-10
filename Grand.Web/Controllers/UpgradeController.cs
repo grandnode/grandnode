@@ -35,7 +35,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Index(UpgradeModel m)
+        public virtual IActionResult Index(UpgradeModel m, [FromServices] IWebHelper webHelper)
         {
             var model = new UpgradeModel();
             model.ApplicationVersion = GrandVersion.CurrentVersion;
@@ -47,7 +47,6 @@ namespace Grand.Web.Controllers
             }
 
             //restart application
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();
 
             //Redirect to home page

@@ -5,11 +5,13 @@ using Grand.Framework.Components;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;
+using Grand.Services.Localization;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.PrivateMessages;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -22,9 +24,11 @@ namespace Grand.Web.ViewComponents
         private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
+
         public PrivateMessagesSentItemsViewComponent(ForumSettings forumSettings, IForumService forumService,
             IWorkContext workContext, IStoreContext storeContext, ICustomerService customerService,
-            CustomerSettings customerSettings, IDateTimeHelper dateTimeHelper)
+            CustomerSettings customerSettings, IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
             this._forumSettings = forumSettings;
             this._forumService = forumService;
@@ -33,9 +37,10 @@ namespace Grand.Web.ViewComponents
             this._customerService = customerService;
             this._customerSettings = customerSettings;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
         }
 
-        public IViewComponentResult Invoke(int pageNumber, string tab)
+        public async Task<IViewComponentResult> InvokeAsync(int pageNumber, string tab)
         {
             if (pageNumber > 0)
             {
@@ -44,24 +49,24 @@ namespace Grand.Web.ViewComponents
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
-            var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+            var list = await _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                 _workContext.CurrentCustomer.Id, "", null, false, null, string.Empty, pageNumber, pageSize);
 
             var sentItems = new List<PrivateMessageModel>();
 
             foreach (var pm in list)
             {
-                var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
-                var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
+                var fromCustomer = await _customerService.GetCustomerById(pm.FromCustomerId);
+                var toCustomer = await _customerService.GetCustomerById(pm.ToCustomerId);
 
                 sentItems.Add(new PrivateMessageModel
                 {
                     Id = pm.Id,
                     FromCustomerId = fromCustomer.Id,
-                    CustomerFromName = fromCustomer.FormatUserName(),
+                    CustomerFromName = fromCustomer.FormatUserName(_customerSettings.CustomerNameFormat),
                     AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && fromCustomer != null && !fromCustomer.IsGuest(),
                     ToCustomerId = toCustomer.Id,
-                    CustomerToName = toCustomer.FormatUserName(),
+                    CustomerToName = toCustomer.FormatUserName(_customerSettings.CustomerNameFormat),
                     AllowViewingToProfile = _customerSettings.AllowViewingProfiles && toCustomer != null && !toCustomer.IsGuest(),
                     Subject = pm.Subject,
                     Message = pm.Text,
@@ -70,7 +75,7 @@ namespace Grand.Web.ViewComponents
                 });
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

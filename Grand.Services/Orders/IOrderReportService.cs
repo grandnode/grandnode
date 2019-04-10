@@ -5,6 +5,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -23,7 +24,7 @@ namespace Grand.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        IList<OrderByCountryReportLine> GetCountryReport(string storeId = "", OrderStatus? os = null,
+        Task<IList<OrderByCountryReportLine>> GetCountryReport(string storeId = "", OrderStatus? os = null,
             PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
 
@@ -34,7 +35,7 @@ namespace Grand.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        IList<OrderByTimeReportLine> GetOrderByTimeReport(DateTime? startTimeUtc = null, 
+        Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(DateTime? startTimeUtc = null, 
             DateTime? endTimeUtc = null);
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Grand.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(string storeId = "", string vendorId = "",
+        Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -69,7 +70,7 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        OrderAverageReportLineSummary OrderAverageReport(string storeId, OrderStatus os);
+        Task<OrderAverageReportLineSummary> OrderAverageReport(string storeId, OrderStatus os);
         
         /// <summary>
         /// Get best sellers report
@@ -89,7 +90,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        IPagedList<BestsellersReportLine> BestSellersReport(            
+        Task<IPagedList<BestsellersReportLine>> BestSellersReport(            
             string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
@@ -104,7 +105,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="days">Orders in the last days</param>
         /// <returns>ReportPeriodOrder</returns>
-        ReportPeriodOrder GetOrderPeriodReport(int days);
+        Task<ReportPeriodOrder> GetOrderPeriodReport(int days);
 
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
@@ -114,7 +115,7 @@ namespace Grand.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        string[] GetAlsoPurchasedProductsIds(string storeId, string productId,
+        Task<string[]> GetAlsoPurchasedProductsIds(string storeId, string productId,
             int recordsToReturn = 5, bool showHidden = false);
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        IPagedList<Product> ProductsNeverSold(string vendorId = "",
+        Task<IPagedList<Product>> ProductsNeverSold(string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
@@ -147,7 +148,7 @@ namespace Grand.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(string storeId = "", string vendorId = "",
+        Task<decimal> ProfitReport(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,

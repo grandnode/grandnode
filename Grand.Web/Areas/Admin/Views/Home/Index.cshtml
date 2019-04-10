@@ -8,12 +8,12 @@
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
 
-    var canManageOrders = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
-    var customersOnline = customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1).TotalCount;
-    var customersShoppingCart = customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
-    var ordersToday = orderReportService.GetOrderPeriodReport(0);
+    var canManageOrders = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
+    var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1)).TotalCount;
+    var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
+    var ordersToday = await orderReportService.GetOrderPeriodReport(0);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
 <antiforgery-token />

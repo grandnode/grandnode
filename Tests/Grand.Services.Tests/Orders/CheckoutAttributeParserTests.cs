@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
 using Moq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -112,9 +113,9 @@ namespace Grand.Services.Orders.Tests
                 IMongoCollection.InsertOne(ca2);
                 IMongoCollection.InsertOne(ca3);
                 tempCheckoutAttributeRepo.Setup(x => x.Table).Returns(IMongoCollection.AsQueryable());
-                tempCheckoutAttributeRepo.Setup(x => x.GetById(ca1.Id)).Returns(ca1);
-                tempCheckoutAttributeRepo.Setup(x => x.GetById(ca2.Id)).Returns(ca2);
-                tempCheckoutAttributeRepo.Setup(x => x.GetById(ca3.Id)).Returns(ca3);
+                tempCheckoutAttributeRepo.Setup(x => x.GetByIdAsync(ca1.Id)).ReturnsAsync(ca1);
+                tempCheckoutAttributeRepo.Setup(x => x.GetByIdAsync(ca2.Id)).ReturnsAsync(ca2);
+                tempCheckoutAttributeRepo.Setup(x => x.GetByIdAsync(ca3.Id)).ReturnsAsync(ca3);
                 _checkoutAttributeRepo = tempCheckoutAttributeRepo.Object;
             }
 
@@ -161,7 +162,7 @@ namespace Grand.Services.Orders.Tests
         }
 
         [TestMethod()]
-        public void Can_add_and_parse_checkoutAttributes() {
+        public async Task Can_add_and_parse_checkoutAttributes() {
             string attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
@@ -171,7 +172,7 @@ namespace Grand.Services.Orders.Tests
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "absolutely any value");
 
-            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
+            var parsed_attributeValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
             Assert.IsTrue(parsed_attributeValues.Contains(cav1_1));
             Assert.IsFalse(parsed_attributeValues.Contains(cav1_2)); //not inserted
             Assert.IsTrue(parsed_attributeValues.Contains(cav2_1));

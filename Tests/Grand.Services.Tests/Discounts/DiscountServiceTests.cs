@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
@@ -14,6 +15,8 @@ using Grand.Services.Tests;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Discounts.Tests
 {
@@ -27,6 +30,9 @@ namespace Grand.Services.Discounts.Tests
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
+        private IServiceProvider _serviceProvider;
+
+        private ShoppingCartSettings _shoppingCartSettings;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -65,6 +71,7 @@ namespace Grand.Services.Discounts.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
             _storeContext = new Mock<IStoreContext>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>().Object;
             _discountCouponRepo = new Mock<IRepository<DiscountCoupon>>().Object;
@@ -76,15 +83,17 @@ namespace Grand.Services.Discounts.Tests
 
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
+            _shoppingCartSettings = new Mock<ShoppingCartSettings>().Object;
 
             _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
-                new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null));
+                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null),
+                _shoppingCartSettings);
         }
 
         [TestMethod()]
-        public void Can_get_all_discount() {
-            var discounts = _discountService.GetAllDiscounts(null);
+        public async Task Can_get_all_discount() {
+            var discounts = await _discountService.GetAllDiscounts(null);
             Assert.IsNotNull(discounts);
             Assert.AreEqual(2, discounts.Count);
         }

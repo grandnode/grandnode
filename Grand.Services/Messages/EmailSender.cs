@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -45,7 +45,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
-        public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
+        public virtual async Task SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bccAddresses = null, IEnumerable<string> ccAddresses = null,
@@ -113,7 +113,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var attachedDownloadId in attachedDownloads)
                 {
-                    var download = _downloadService.GetDownloadById(attachedDownloadId);
+                    var download = await _downloadService.GetDownloadById(attachedDownloadId);
                     if (download != null)
                     {
                         //we do not support URLs as attachments
@@ -145,10 +145,10 @@ namespace Grand.Services.Messages
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => emailAccount.UseServerCertificateValidation;
-                smtpClient.Connect(emailAccount.Host, emailAccount.Port, (SecureSocketOptions)emailAccount.SecureSocketOptionsId);
-                smtpClient.Authenticate(emailAccount.Username, emailAccount.Password);
-                smtpClient.Send(message);
-                smtpClient.Disconnect(true);
+                await smtpClient.ConnectAsync(emailAccount.Host, emailAccount.Port, (SecureSocketOptions)emailAccount.SecureSocketOptionsId);
+                await smtpClient.AuthenticateAsync(emailAccount.Username, emailAccount.Password);
+                await smtpClient.SendAsync(message);
+                await smtpClient.DisconnectAsync(true);
             }
 
         }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -30,9 +31,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Upload()
+        public virtual async Task<IActionResult> Upload()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
             {
                 ViewData["resultCode"] = "failed";
                 ViewData["result"] = "No access to this functionality";

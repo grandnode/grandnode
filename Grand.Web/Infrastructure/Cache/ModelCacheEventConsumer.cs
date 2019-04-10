@@ -15,6 +15,9 @@ using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
 using Grand.Core.Infrastructure;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Infrastructure.Cache
 {
@@ -800,14 +803,14 @@ namespace Grand.Web.Infrastructure.Cache
 
         private readonly ICacheManager _cacheManager;
 
-        public ModelCacheEventConsumer()
+        public ModelCacheEventConsumer(IServiceProvider serviceProvider)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //languages
-        public void HandleEvent(EntityInserted<Language> eventMessage)
+        public Task HandleEvent(EntityInserted<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -821,8 +824,9 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Language> eventMessage)
+        public Task HandleEvent(EntityUpdated<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -836,8 +840,9 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Language> eventMessage)
+        public Task HandleEvent(EntityDeleted<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -851,39 +856,46 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //currencies
-        public void HandleEvent(EntityInserted<Currency> eventMessage)
+        public Task HandleEvent(EntityInserted<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Currency> eventMessage)
+        public Task HandleEvent(EntityUpdated<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Currency> eventMessage)
+        public Task HandleEvent(EntityDeleted<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //stores
-        public void HandleEvent(EntityInserted<Store> eventMessage)
+        public Task HandleEvent(EntityInserted<Store> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Store> eventMessage)
+        public Task HandleEvent(EntityUpdated<Store> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Store> eventMessage)
+        public Task HandleEvent(EntityDeleted<Store> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+            return Task.CompletedTask;
         }
 
 
         //settings
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public Task HandleEvent(EntityUpdated<Setting> eventMessage)
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY); //depends on CatalogSettings.NumberOfProductTags
@@ -898,63 +910,73 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
             _cacheManager.RemoveByPattern(WIDGET_PATTERN_KEY); //depends on WidgetSettings and certain settings of widgets
             _cacheManager.RemoveByPattern(STORE_LOGO_PATH_PATTERN_KEY); //depends on StoreInformationSettings.LogoPictureId
+            return Task.CompletedTask;
         }
 
         //vendors
-        public void HandleEvent(EntityInserted<Vendor> eventMessage)
+        public Task HandleEvent(EntityInserted<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public Task HandleEvent(EntityUpdated<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public Task HandleEvent(EntityDeleted<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //product manufacturers
-        public void HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public Task HandleEvent(EntityInserted<Category> eventMessage)
         {
             
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -963,10 +985,10 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
 
-            
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public Task HandleEvent(EntityUpdated<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -976,20 +998,24 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<KnowledgebaseCategory> eventMessage)
+        public Task HandleEvent(EntityUpdated<KnowledgebaseCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<KnowledgebaseCategory> eventMessage)
+        public Task HandleEvent(EntityDeleted<KnowledgebaseCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityInserted<KnowledgebaseCategory> eventMessage)
+        public Task HandleEvent(EntityInserted<KnowledgebaseCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public Task HandleEvent(EntityDeleted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -998,196 +1024,229 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //product categories
         
-        public void HandleEvent(EntityInserted<ProductCategory> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductCategory> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductCategory> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //products
-        public void HandleEvent(EntityInserted<Product> eventMessage)
+        public Task HandleEvent(EntityInserted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Product> eventMessage)
+        public Task HandleEvent(EntityUpdated<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Product> eventMessage)
+        public Task HandleEvent(EntityDeleted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //product tags
-        public void HandleEvent(EntityInserted<ProductTag> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductTag> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductTag> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //related products
         
-        public void HandleEvent(EntityInserted<RelatedProduct> eventMessage)
+        public Task HandleEvent(EntityInserted<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<RelatedProduct> eventMessage)
+        public Task HandleEvent(EntityUpdated<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<RelatedProduct> eventMessage)
+        public Task HandleEvent(EntityDeleted<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //bundle products
 
-        public void HandleEvent(EntityInserted<BundleProduct> eventMessage)
+        public Task HandleEvent(EntityInserted<BundleProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<BundleProduct> eventMessage)
+        public Task HandleEvent(EntityUpdated<BundleProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<BundleProduct> eventMessage)
+        public Task HandleEvent(EntityDeleted<BundleProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //specification attributes
-        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //specification attribute options
         
-        public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
+        public Task HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
+        public Task HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Product specification attribute
-        public void HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //Product attributes
-        public void HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //Product attributes
-        public void HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductAttributeMapping> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         //Product attributes
-        public void HandleEvent(EntityUpdated<ProductAttributeValue> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductAttributeValue> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //Topics
-        public void HandleEvent(EntityInserted<Topic> eventMessage)
+        public Task HandleEvent(EntityInserted<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Topic> eventMessage)
+        public Task HandleEvent(EntityUpdated<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Topic> eventMessage)
+        public Task HandleEvent(EntityDeleted<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Orders
-        public void HandleEvent(EntityInserted<Order> eventMessage)
+        public Task HandleEvent(EntityInserted<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Order> eventMessage)
+        public Task HandleEvent(EntityUpdated<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Order> eventMessage)
+        public Task HandleEvent(EntityDeleted<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Pictures
-        public void HandleEvent(EntityInserted<Picture> eventMessage)
+        public Task HandleEvent(EntityInserted<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
@@ -1198,8 +1257,9 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Picture> eventMessage)
+        public Task HandleEvent(EntityUpdated<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
@@ -1210,8 +1270,9 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Picture> eventMessage)
+        public Task HandleEvent(EntityDeleted<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
@@ -1222,201 +1283,242 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Product picture mappings
-        public void HandleEvent(EntityInserted<ProductPicture> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductPicture> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductPicture> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //Polls
-        public void HandleEvent(EntityInserted<Poll> eventMessage)
+        public Task HandleEvent(EntityInserted<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Poll> eventMessage)
+        public Task HandleEvent(EntityUpdated<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Poll> eventMessage)
+        public Task HandleEvent(EntityDeleted<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Blog posts
-        public void HandleEvent(EntityInserted<BlogPost> eventMessage)
+        public Task HandleEvent(EntityInserted<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<BlogPost> eventMessage)
+        public Task HandleEvent(EntityUpdated<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<BlogPost> eventMessage)
+        public Task HandleEvent(EntityDeleted<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //Blog post category
-        public void HandleEvent(EntityInserted<BlogCategory> eventMessage)
+        public Task HandleEvent(EntityInserted<BlogCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<BlogCategory> eventMessage)
+        public Task HandleEvent(EntityUpdated<BlogCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<BlogCategory> eventMessage)
+        public Task HandleEvent(EntityDeleted<BlogCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //News items
-        public void HandleEvent(EntityInserted<NewsItem> eventMessage)
+        public Task HandleEvent(EntityInserted<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<NewsItem> eventMessage)
+        public Task HandleEvent(EntityUpdated<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<NewsItem> eventMessage)
+        public Task HandleEvent(EntityDeleted<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //State/province
-        public void HandleEvent(EntityInserted<StateProvince> eventMessage)
+        public Task HandleEvent(EntityInserted<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<StateProvince> eventMessage)
+        public Task HandleEvent(EntityUpdated<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<StateProvince> eventMessage)
+        public Task HandleEvent(EntityDeleted<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //retunr requests
-        public void HandleEvent(EntityInserted<ReturnRequestAction> eventMessage)
+        public Task HandleEvent(EntityInserted<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ReturnRequestAction> eventMessage)
+        public Task HandleEvent(EntityUpdated<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ReturnRequestAction> eventMessage)
+        public Task HandleEvent(EntityDeleted<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityInserted<ReturnRequestReason> eventMessage)
+        public Task HandleEvent(EntityInserted<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ReturnRequestReason> eventMessage)
+        public Task HandleEvent(EntityUpdated<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ReturnRequestReason> eventMessage)
+        public Task HandleEvent(EntityDeleted<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //templates
-        public void HandleEvent(EntityInserted<CategoryTemplate> eventMessage)
+        public Task HandleEvent(EntityInserted<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<CategoryTemplate> eventMessage)
+        public Task HandleEvent(EntityUpdated<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<CategoryTemplate> eventMessage)
+        public Task HandleEvent(EntityDeleted<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityInserted<ManufacturerTemplate> eventMessage)
+        public Task HandleEvent(EntityInserted<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ManufacturerTemplate> eventMessage)
+        public Task HandleEvent(EntityUpdated<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ManufacturerTemplate> eventMessage)
+        public Task HandleEvent(EntityDeleted<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityInserted<ProductTemplate> eventMessage)
+        public Task HandleEvent(EntityInserted<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<ProductTemplate> eventMessage)
+        public Task HandleEvent(EntityUpdated<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityInserted<TopicTemplate> eventMessage)
+        public Task HandleEvent(EntityInserted<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<TopicTemplate> eventMessage)
+        public Task HandleEvent(EntityUpdated<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<TopicTemplate> eventMessage)
+        public Task HandleEvent(EntityDeleted<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //checkout attributes
-        public void HandleEvent(EntityInserted<CheckoutAttribute> eventMessage)
+        public Task HandleEvent(EntityInserted<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<CheckoutAttribute> eventMessage)
+        public Task HandleEvent(EntityUpdated<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<CheckoutAttribute> eventMessage)
+        public Task HandleEvent(EntityDeleted<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //shopping cart items        
-        public void HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
+        public Task HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            return Task.CompletedTask;
         }
         
         //product reviews
-        public void HandleEvent(EntityDeleted<ProductReview> eventMessage)
+        public Task HandleEvent(EntityDeleted<ProductReview> eventMessage)
         {
-            
+            return Task.CompletedTask;
         }
 
     }

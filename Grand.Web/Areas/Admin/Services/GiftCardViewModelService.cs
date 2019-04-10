@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -28,6 +29,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
+        private readonly LocalizationSettings _localizationSettings;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -41,6 +43,7 @@ namespace Grand.Web.Areas.Admin.Services
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper, 
             ICurrencyService currencyService, CurrencySettings currencySettings,
+            LocalizationSettings localizationSettings,
             ILocalizationService localizationService, ILanguageService languageService,
             ICustomerActivityService customerActivityService)
         {
@@ -51,6 +54,7 @@ namespace Grand.Web.Areas.Admin.Services
             _dateTimeHelper = dateTimeHelper;
             _currencyService = currencyService;
             _currencySettings = currencySettings;
+            _localizationSettings = localizationSettings;
             _localizationService = localizationService;
             _languageService = languageService;
             _customerActivityService = customerActivityService;
@@ -58,15 +62,17 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual GiftCardModel PrepareGiftCardModel()
+        public virtual async Task<GiftCardModel> PrepareGiftCardModel()
         {
-            var model = new GiftCardModel();
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            var model = new GiftCardModel
+            {
+                PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode
+            };
             return model;
         }
-        public virtual GiftCardModel PrepareGiftCardModel(GiftCardModel model)
+        public virtual async Task<GiftCardModel> PrepareGiftCardModel(GiftCardModel model)
         {
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             return model;
         }
 
@@ -90,14 +96,14 @@ namespace Grand.Web.Areas.Admin.Services
             });
             return model;
         }
-        public virtual (IEnumerable<GiftCardModel> giftCardModels, int totalCount) PrepareGiftCardModel(GiftCardListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<GiftCardModel> giftCardModels, int totalCount)> PrepareGiftCardModel(GiftCardListModel model, int pageIndex, int pageSize)
         {
             bool? isGiftCardActivated = null;
             if (model.ActivatedId == 1)
                 isGiftCardActivated = true;
             else if (model.ActivatedId == 2)
                 isGiftCardActivated = false;
-            var giftCards = _giftCardService.GetAllGiftCards(isGiftCardActivated: isGiftCardActivated,
+            var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: isGiftCardActivated,
                 giftCardCouponCode: model.CouponCode,
                 recipientName: model.RecipientName,
                 pageIndex: pageIndex - 1, pageSize: pageSize);
@@ -110,101 +116,102 @@ namespace Grand.Web.Areas.Admin.Services
                 return m;
             }), giftCards.TotalCount);
         }
-        public virtual GiftCard InsertGiftCardModel(GiftCardModel model)
+        public virtual async Task<GiftCard> InsertGiftCardModel(GiftCardModel model)
         {
             var giftCard = model.ToEntity();
             giftCard.CreatedOnUtc = DateTime.UtcNow;
-            _giftCardService.InsertGiftCard(giftCard);
+            await _giftCardService.InsertGiftCard(giftCard);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
+            await _customerActivityService.InsertActivity("AddNewGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
             return giftCard;
         }
-        public virtual Order FillGiftCardModel(GiftCard giftCard, GiftCardModel model)
+        public virtual async Task<Order> FillGiftCardModel(GiftCard giftCard, GiftCardModel model)
         {
             Order order = null;
             if (giftCard.PurchasedWithOrderItem != null)
-                order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+                order = await _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
 
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             return order;
         }
-        public virtual void NotifyRecipient(GiftCard giftCard, GiftCardModel model)
+        public virtual async Task NotifyRecipient(GiftCard giftCard, GiftCardModel model)
         {
             model = giftCard.ToModel();
-            var order = FillGiftCardModel(giftCard, model);
+            var order = await FillGiftCardModel(giftCard, model);
             var languageId = "";
             if (order != null)
             {
-                var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                var customerLang = await _languageService.GetLanguageById(order.CustomerLanguageId);
                 if (customerLang == null)
-                    customerLang = _languageService.GetAllLanguages().FirstOrDefault();
+                    customerLang = (await _languageService.GetAllLanguages()).FirstOrDefault();
                 if (customerLang != null)
                     languageId = customerLang.Id;
             }
             else
             {
-                languageId = Grand.Core.Infrastructure.EngineContext.Current.Resolve<LocalizationSettings>().DefaultAdminLanguageId;
+                languageId = _localizationSettings.DefaultAdminLanguageId;
             }
-            int queuedEmailId = _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
+            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
             if (queuedEmailId > 0)
             {
                 giftCard.IsRecipientNotified = true;
-                _giftCardService.UpdateGiftCard(giftCard);
+                await _giftCardService.UpdateGiftCard(giftCard);
                 model.IsRecipientNotified = true;
             }
 
         }
-        public virtual GiftCard UpdateGiftCardModel(GiftCard giftCard, GiftCardModel model)
+        public virtual async Task<GiftCard> UpdateGiftCardModel(GiftCard giftCard, GiftCardModel model)
         {
            
             giftCard = model.ToEntity(giftCard);
-            _giftCardService.UpdateGiftCard(giftCard);
+            await _giftCardService.UpdateGiftCard(giftCard);
             //activity log
-            _customerActivityService.InsertActivity("EditGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
+            await _customerActivityService.InsertActivity("EditGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
 
             return giftCard;
         }
-        public virtual void DeleteGiftCard(GiftCard giftCard)
+        public virtual async Task DeleteGiftCard(GiftCard giftCard)
         {
-            _giftCardService.DeleteGiftCard(giftCard);
+            await _giftCardService.DeleteGiftCard(giftCard);
             //activity log
-            _customerActivityService.InsertActivity("DeleteGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
+            await _customerActivityService.InsertActivity("DeleteGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
         }
-        public virtual GiftCardModel PrepareGiftCardModel(GiftCard giftCard)
+        public virtual async Task<GiftCardModel> PrepareGiftCardModel(GiftCard giftCard)
         {
             var model = giftCard.ToModel();
             Order order = null;
             if (giftCard.PurchasedWithOrderItem != null)
-                order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+                order = await _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
 
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order?.Id : null;
             model.PurchasedWithOrderNumber = order?.OrderNumber ?? 0;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             return model;
         }
-        public (IEnumerable<GiftCardModel.GiftCardUsageHistoryModel> giftCardUsageHistoryModels, int totalCount) PrepareGiftCardUsageHistoryModels(GiftCard giftCard, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<GiftCardModel.GiftCardUsageHistoryModel> giftCardUsageHistoryModels, int totalCount)> PrepareGiftCardUsageHistoryModels(GiftCard giftCard, int pageIndex, int pageSize)
         {
-            var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
-                .Select(x => new GiftCardModel.GiftCardUsageHistoryModel
+            var items = new List<GiftCardModel.GiftCardUsageHistoryModel>();
+            foreach (var x in giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc))
+            {
+                var order = await _orderService.GetOrderById(x.UsedWithOrderId);
+                items.Add(new GiftCardModel.GiftCardUsageHistoryModel
                 {
                     Id = x.Id,
                     OrderId = x.UsedWithOrderId,
-                    OrderNumber = _orderService.GetOrderById(x.UsedWithOrderId) != null ? _orderService.GetOrderById(x.UsedWithOrderId).OrderNumber : 0,
+                    OrderNumber = order != null ? order.OrderNumber : 0,
                     UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                })
-                .ToList();
-            return (
-                 usageHistoryModel.Skip((pageIndex - 1) * pageSize).Take(pageSize),
-                 usageHistoryModel.Count);
+                });
+            }
+            return (items.Skip((pageIndex - 1) * pageSize).Take(pageSize), items.Count);
         }
 
     }

@@ -14,6 +14,8 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -47,12 +49,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var customerRoles = await _customerService.GetAllCustomerRoles(true);
+            var items = new List<CustomerRoleModel>();
+            foreach (var item in customerRoles)
+            {
+                items.Add(await _customerRoleViewModelService.PrepareCustomerRoleModel(item));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = customerRoles.Select(x => _customerRoleViewModelService.PrepareCustomerRoleModel(x)),
+                Data = items,
                 Total = customerRoles.Count()
             };
             return Json(gridModel);
@@ -65,11 +72,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CustomerRoleModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CustomerRoleModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var customerRole = _customerRoleViewModelService.InsertCustomerRoleModel(model);
+                var customerRole = await _customerRoleViewModelService.InsertCustomerRoleModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
@@ -77,21 +84,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
         
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var customerRole = _customerService.GetCustomerRoleById(id);
+            var customerRole = await _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 //No customer role found with the specified id
                 return RedirectToAction("List");
 
-            var model = _customerRoleViewModelService.PrepareCustomerRoleModel(customerRole);
+            var model = await _customerRoleViewModelService.PrepareCustomerRoleModel(customerRole);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CustomerRoleModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CustomerRoleModel model, bool continueEditing)
         {
-            var customerRole = _customerService.GetCustomerRoleById(model.Id);
+            var customerRole = await _customerService.GetCustomerRoleById(model.Id);
             if (customerRole == null)
                 //No customer role found with the specified id
                 return RedirectToAction("List");
@@ -110,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         !String.IsNullOrEmpty(model.PurchasedWithProductId))
                         throw new GrandException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
 
-                    customerRole = _customerRoleViewModelService.UpdateCustomerRoleModel(customerRole, model);
+                    customerRole = await _customerRoleViewModelService.UpdateCustomerRoleModel(customerRole, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
                 }
@@ -126,9 +133,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var customerRole = _customerService.GetCustomerRoleById(id);
+            var customerRole = await _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 //No customer role found with the specified id
                 return RedirectToAction("List");
@@ -138,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _customerRoleViewModelService.DeleteCustomerRole(customerRole);
+                    await _customerRoleViewModelService.DeleteCustomerRole(customerRole);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
                     return RedirectToAction("List");
                 }
@@ -152,14 +159,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult AssociateProductToCustomerRolePopup()
+        public async Task<IActionResult> AssociateProductToCustomerRolePopup()
         {
-            var model = _customerRoleViewModelService.PrepareAssociateProductToCustomerRoleModel();
+            var model = await _customerRoleViewModelService.PrepareAssociateProductToCustomerRoleModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult AssociateProductToCustomerRolePopupList(DataSourceRequest command,
+        public async Task<IActionResult> AssociateProductToCustomerRolePopupList(DataSourceRequest command,
             CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IWorkContext workContext)
         {
             //a vendor should have access only to his products
@@ -167,20 +174,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.SearchVendorId = workContext.CurrentVendor.Id;
             }
-            var products = _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.products.ToList();
-            gridModel.Total = products.totalCount;
+            var products = await _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.products.ToList(),
+                Total = products.totalCount
+            };
 
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
+        public async Task<IActionResult> AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
             string productNameInput, CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IProductService productService, [FromServices] IWorkContext workContext)
         {
-            var associatedProduct = productService.GetProductById(model.AssociatedToProductId);
+            var associatedProduct = await productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
 
@@ -203,9 +212,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Products
         [HttpPost]
-        public IActionResult Products(string customerRoleId, DataSourceRequest command)
+        public async Task<IActionResult> Products(string customerRoleId, DataSourceRequest command)
         {
-            var products = _customerRoleViewModelService.PrepareCustomerRoleProductModel(customerRoleId);
+            var products = await _customerRoleViewModelService.PrepareCustomerRoleProductModel(customerRoleId);
             var gridModel = new DataSourceResult
             {
                 Data = products,
@@ -215,44 +224,44 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductDelete(string id)
+        public async Task<IActionResult> ProductDelete(string id)
         {
-            var crp = _customerService.GetCustomerRoleProductById(id);
+            var crp = await _customerService.GetCustomerRoleProductById(id);
             if (crp == null)
                 throw new ArgumentException("No found the specified id");
             if (ModelState.IsValid)
             {
-                _customerService.DeleteCustomerRoleProduct(crp);
+                await _customerService.DeleteCustomerRoleProduct(crp);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult ProductUpdate(CustomerRoleProductModel model)
+        public async Task<IActionResult> ProductUpdate(CustomerRoleProductModel model)
         {
-            var crp = _customerService.GetCustomerRoleProductById(model.Id);
+            var crp = await _customerService.GetCustomerRoleProductById(model.Id);
             if (crp == null)
                 throw new ArgumentException("No customer role product found with the specified id");
             if (ModelState.IsValid)
             {
                 crp.DisplayOrder = model.DisplayOrder;
-                _customerService.UpdateCustomerRoleProduct(crp);
+                await _customerService.UpdateCustomerRoleProduct(crp);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public IActionResult ProductAddPopup(string customerRoleId)
+        public async Task<IActionResult> ProductAddPopup(string customerRoleId)
         {
-            var model = _customerRoleViewModelService.PrepareProductModel(customerRoleId);
+            var model = await _customerRoleViewModelService.PrepareProductModel(customerRoleId);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
+        public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
         {
-            var products = _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var products = await _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = products.products,
@@ -263,11 +272,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(CustomerRoleProductModel.AddProductModel model)
+        public async Task<IActionResult> ProductAddPopup(CustomerRoleProductModel.AddProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _customerRoleViewModelService.InsertProductModel(model);
+                await _customerRoleViewModelService.InsertProductModel(model);
             }
 
             //a vendor should have access only to his products

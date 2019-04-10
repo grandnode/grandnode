@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -17,7 +18,7 @@ namespace Grand.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        IList<Product> GetComparedProducts();
+        Task<IList<Product>> GetComparedProducts();
 
         /// <summary>
         /// Removes a product from a "compare products" list

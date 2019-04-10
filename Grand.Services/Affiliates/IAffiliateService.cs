@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Affiliates
 {
@@ -14,20 +15,20 @@ namespace Grand.Services.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        Affiliate GetAffiliateById(string affiliateId);
+        Task<Affiliate> GetAffiliateById(string affiliateId);
 
         /// <summary>
         /// Gets an affiliate by friendly url name
         /// </summary>
         /// <param name="friendlyUrlName">Friendly url name</param>
         /// <returns>Affiliate</returns>
-        Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName);
+        Task<Affiliate> GetAffiliateByFriendlyUrlName(string friendlyUrlName);
 
         /// <summary>
         /// Marks affiliate as deleted 
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void DeleteAffiliate(Affiliate affiliate);
+        Task DeleteAffiliate(Affiliate affiliate);
 
         /// <summary>
         /// Gets all affiliates
@@ -42,7 +43,7 @@ namespace Grand.Services.Affiliates
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
-        IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
+        Task<IPagedList<Affiliate>> GetAllAffiliates(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
             bool loadOnlyWithOrders = false,
             DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
@@ -53,13 +54,13 @@ namespace Grand.Services.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void InsertAffiliate(Affiliate affiliate);
+        Task InsertAffiliate(Affiliate affiliate);
 
         /// <summary>
         /// Updates the affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void UpdateAffiliate(Affiliate affiliate);
+        Task UpdateAffiliate(Affiliate affiliate);
         
     }
 }

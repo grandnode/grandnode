@@ -1,6 +1,7 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -43,7 +44,7 @@ namespace Grand.Services.Catalog
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <param name="language">Language</param>
         /// <returns>Price</returns>
-        string FormatPrice(decimal price, bool showCurrency, 
+        Task<string> FormatPrice(decimal price, bool showCurrency, 
             string currencyCode, bool showTax, Language language);
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        string FormatPrice(decimal price, bool showCurrency,
+        Task<string> FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax);
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Grand.Services.Catalog
         /// <returns>Price</returns>
         string FormatShippingPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax);
-        
+
         /// <summary>
         /// Formats the shipping price
         /// </summary>
@@ -134,10 +135,8 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        string FormatShippingPrice(decimal price, bool showCurrency, 
+        Task<string> FormatShippingPrice(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax);
-
-
 
         /// <summary>
         /// Formats the payment method additional fee
@@ -181,7 +180,7 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
+        Task<string> FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax);
 
 

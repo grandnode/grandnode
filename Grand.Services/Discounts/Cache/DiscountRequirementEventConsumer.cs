@@ -1,8 +1,10 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Events;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Discounts.Cache
 {
@@ -26,19 +28,21 @@ namespace Grand.Services.Discounts.Cache
 
         private readonly ICacheManager _cacheManager;
 
-        public DiscountRequirementEventConsumer()
+        public DiscountRequirementEventConsumer(IServiceProvider serviceProvider)
         {
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //discounts
-        public void HandleEvent(EntityUpdated<Discount> eventMessage)
+        public Task HandleEvent(EntityUpdated<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Discount> eventMessage)
+        public Task HandleEvent(EntityDeleted<Discount> eventMessage)
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
     }

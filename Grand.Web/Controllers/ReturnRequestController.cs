@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -70,40 +71,40 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult CustomerReturnRequests()
+        public virtual async Task<IActionResult> CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = _returnRequestViewModelService.PrepareCustomerReturnRequests();
+            var model = await _returnRequestViewModelService.PrepareCustomerReturnRequests();
 
             return View(model);
         }
 
-        public virtual IActionResult ReturnRequest(string orderId, string errors = "")
+        public virtual async Task<IActionResult> ReturnRequest(string orderId, string errors = "")
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            if (!_orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
             var model = new SubmitReturnRequestModel();
-            model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
+            model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
             model.Error = errors;
             return View(model);
         }
 
         [HttpPost, ActionName("ReturnRequest")]
         [PublicAntiForgery]
-        public virtual IActionResult ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, IFormCollection form)
+        public virtual async Task<IActionResult> ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            if (!_orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
             string pD = form["pickupDate"];
@@ -125,8 +126,8 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
-                var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
+                var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
+                var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
                 foreach (var error in customAttributeWarnings)
                 {
                     ModelState.AddModelError("", error);
@@ -140,7 +141,7 @@ namespace Grand.Web.Controllers
             if (!ModelState.IsValid && ModelState.ErrorCount > 0)
             {
                 model.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
-                model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
+                model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
                 return View(model);
             }
 
@@ -161,7 +162,7 @@ namespace Grand.Web.Controllers
             int count = 0;
             foreach (var orderItem in order.OrderItems)
             {
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = await _productService.GetProductById(orderItem.ProductId);
                 if (!product.NotReturnable)
                 {
                     int quantity = 0; //parse quantity
@@ -188,12 +189,12 @@ namespace Grand.Web.Controllers
 
                     if (quantity > 0)
                     {
-                        var rrr = _returnRequestService.GetReturnRequestReasonById(rrrId);
-                        var rra = _returnRequestService.GetReturnRequestActionById(rraId);
+                        var rrr = await _returnRequestService.GetReturnRequestReasonById(rrrId);
+                        var rra = await _returnRequestService.GetReturnRequestActionById(rraId);
                         rr.ReturnRequestItems.Add(new ReturnRequestItem
                         {
-                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
-                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
+                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : "not available",
+                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : "not available",
                             Quantity = quantity,
                             OrderItemId = orderItem.Id
                         });
@@ -202,17 +203,17 @@ namespace Grand.Web.Controllers
                     }
                 }
             }
-            model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
+            model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
             if (count > 0)
             {
-                _returnRequestService.InsertReturnRequest(rr);
+                await _returnRequestService.InsertReturnRequest(rr);
 
                 model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = rr.Id }));
 
                 //notify store owner here (email)
-                _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, order, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, order, _localizationSettings.DefaultAdminLanguageId);
                 //notify customer
-                _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, order, order.CustomerLanguageId);
+                await _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, order, order.CustomerLanguageId);
             }
             else
             {
@@ -223,17 +224,17 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult ReturnRequestDetails(string returnRequestId)
+        public virtual async Task<IActionResult> ReturnRequestDetails(string returnRequestId)
         {
-            var rr = _returnRequestService.GetReturnRequestById(returnRequestId);
+            var rr = await _returnRequestService.GetReturnRequestById(returnRequestId);
             if (rr == null || _workContext.CurrentCustomer.Id != rr.CustomerId)
                 return Challenge();
 
-            var order = _orderService.GetOrderById(rr.OrderId);
+            var order = await _orderService.GetOrderById(rr.OrderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = _returnRequestViewModelService.PrepareReturnRequestDetails(rr, order);
+            var model = await _returnRequestViewModelService.PrepareReturnRequestDetails(rr, order);
 
             return View(model);
         }

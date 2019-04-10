@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Helpers
 {
@@ -21,7 +22,7 @@ namespace Grand.Web.Areas.Admin.Helpers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category list</returns>
-        public static List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, bool showHidden = false)
+        public static async Task<List<SelectListItem>> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (categoryService == null)
                 throw new ArgumentNullException(nameof(categoryService));
@@ -30,9 +31,9 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_LIST_KEY, showHidden);
-            var listItems = cacheManager.Get(cacheKey, () =>
+            var listItems = await cacheManager.Get(cacheKey, async () =>
             {
-                var categories = categoryService.GetAllCategories(showHidden: showHidden);
+                var categories = await categoryService.GetAllCategories(showHidden: showHidden);
                 return categories.Select(c => new SelectListItem
                 {
                     Text = c.GetFormattedBreadCrumb(categories),
@@ -61,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Helpers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer list</returns>
-        public static List<SelectListItem> GetManufacturerList(IManufacturerService manufacturerService, ICacheManager cacheManager, bool showHidden = false)
+        public static async Task<List<SelectListItem>> GetManufacturerList(IManufacturerService manufacturerService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (manufacturerService == null)
                 throw new ArgumentNullException(nameof(manufacturerService));
@@ -70,9 +71,9 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURERS_LIST_KEY, showHidden);
-            var listItems = cacheManager.Get(cacheKey, () =>
+            var listItems = await cacheManager.Get(cacheKey, async () =>
             {
-                var manufacturers = manufacturerService.GetAllManufacturers(showHidden: showHidden);
+                var manufacturers = await manufacturerService.GetAllManufacturers(showHidden: showHidden);
                 return manufacturers.Select(m => new SelectListItem
                 {
                     Text = m.Name,
@@ -101,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Helpers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendor list</returns>
-        public static List<SelectListItem> GetVendorList(IVendorService vendorService, ICacheManager cacheManager, bool showHidden = false)
+        public static  async Task<List<SelectListItem>> GetVendorList(IVendorService vendorService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (vendorService == null)
                 throw new ArgumentNullException(nameof(vendorService));
@@ -110,9 +111,9 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.VENDORS_LIST_KEY, showHidden);
-            var listItems = cacheManager.Get(cacheKey, () =>
+            var listItems = await cacheManager.Get(cacheKey, async () =>
             {
-                var vendors = vendorService.GetAllVendors(showHidden: showHidden);
+                var vendors = await vendorService.GetAllVendors(showHidden: showHidden);
                 return vendors.Select(v => new SelectListItem
                 {
                     Text = v.Name,

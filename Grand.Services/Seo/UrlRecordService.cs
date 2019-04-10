@@ -8,6 +8,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Seo
 {
@@ -95,14 +96,14 @@ namespace Grand.Services.Seo
         /// Gets all cached URL records
         /// </summary>
         /// <returns>cached URL records</returns>
-        protected virtual IList<UrlRecordForCaching> GetAllUrlRecordsCached()
+        protected virtual async Task<IList<UrlRecordForCaching>> GetAllUrlRecordsCached()
         {
             //cache
             string key = string.Format(URLRECORD_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
                 var query = _urlRecordRepository.Table;
-                var urlRecords = query.ToList();
+                var urlRecords = await query.ToListAsync();
                 var list = new List<UrlRecordForCaching>();
                 foreach (var ur in urlRecords)
                 {
@@ -136,12 +137,12 @@ namespace Grand.Services.Seo
         /// Deletes an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void DeleteUrlRecord(UrlRecord urlRecord)
+        public virtual async Task DeleteUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");
 
-            _urlRecordRepository.Delete(urlRecord);
+            await _urlRecordRepository.DeleteAsync(urlRecord);
 
             //cache
             _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
@@ -152,21 +153,21 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>
         /// <returns>URL record</returns>
-        public virtual UrlRecord GetUrlRecordById(string urlRecordId)
+        public virtual Task<UrlRecord> GetUrlRecordById(string urlRecordId)
         {
-            return _urlRecordRepository.GetById(urlRecordId);
+            return _urlRecordRepository.GetByIdAsync(urlRecordId);
         }
 
         /// <summary>
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void InsertUrlRecord(UrlRecord urlRecord)
+        public virtual async Task InsertUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");
 
-            _urlRecordRepository.Insert(urlRecord);
+            await _urlRecordRepository.InsertAsync(urlRecord);
 
             //cache
             _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
@@ -176,12 +177,12 @@ namespace Grand.Services.Seo
         /// Updates the URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void UpdateUrlRecord(UrlRecord urlRecord)
+        public virtual async Task UpdateUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");
 
-            _urlRecordRepository.Update(urlRecord);
+            await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //cache
             _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
@@ -192,7 +193,7 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
-        public virtual UrlRecord GetBySlug(string slug)
+        public virtual async Task<UrlRecord> GetBySlug(string slug)
         {
             if (String.IsNullOrEmpty(slug))
                 return null;
@@ -201,8 +202,7 @@ namespace Grand.Services.Seo
                         where ur.Slug == slug
                         orderby ur.IsActive
                         select ur;
-            var urlRecord = query.FirstOrDefault();
-            return urlRecord;
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Grand.Services.Seo
         /// </summary>
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
-        public virtual UrlRecordForCaching GetBySlugCached(string slug)
+        public virtual async Task<UrlRecordForCaching> GetBySlugCached(string slug)
         {
             if (String.IsNullOrEmpty(slug))
                 return null;
@@ -220,7 +220,7 @@ namespace Grand.Services.Seo
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
                 //load all records (we know they are cached)
-                var source = GetAllUrlRecordsCached();
+                var source = await GetAllUrlRecordsCached();
                 var query = from ur in source
                             where ur.Slug != null && ur.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase)
                             orderby ur.IsActive
@@ -231,9 +231,9 @@ namespace Grand.Services.Seo
 
             //gradual loading
             string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, async () =>
             {
-                var urlRecord = GetBySlug(slug);
+                var urlRecord = await GetBySlug(slug);
                 if (urlRecord == null)
                     return null;
 
@@ -249,7 +249,7 @@ namespace Grand.Services.Seo
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<UrlRecord>> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
 
             var query = _urlRecordRepository.Table;
@@ -258,8 +258,7 @@ namespace Grand.Services.Seo
                 query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLower()));
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = new PagedList<UrlRecord>(query, pageIndex, pageSize);
-            return urlRecords;
+            return await Task.FromResult(new PagedList<UrlRecord>(query, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -269,15 +268,15 @@ namespace Grand.Services.Seo
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Found slug</returns>
-        public virtual string GetActiveSlug(string entityId, string entityName, string languageId)
+        public virtual async Task<string> GetActiveSlug(string entityId, string entityName, string languageId)
         {
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return _cacheManager.Get(key, () =>
+                return await _cacheManager.Get(key, async () =>
                 {
                     //load all records (we know they are cached)
-                    var source = GetAllUrlRecordsCached();
+                    var source = await GetAllUrlRecordsCached();
                     var query = from ur in source
                                 where ur.EntityId == entityId &&
                                 ur.EntityName == entityName &&
@@ -321,7 +320,7 @@ namespace Grand.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveSlug<T>(T entity, string slug, string languageId) where T : BaseEntity, ISlugSupported
+        public virtual async Task SaveSlug<T>(T entity, string slug, string languageId) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -335,7 +334,7 @@ namespace Grand.Services.Seo
                         ur.LanguageId == languageId
                         select ur;
 
-            var allUrlRecords = query.ToList();
+            var allUrlRecords = await query.ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
 
             if (activeUrlRecord == null && !string.IsNullOrWhiteSpace(slug))
@@ -347,7 +346,7 @@ namespace Grand.Services.Seo
                 {
                     //mark non-active record as active
                     nonActiveRecordWithSpecifiedSlug.IsActive = true;
-                    UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+                    await UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
                 }
                 else
                 {
@@ -360,7 +359,7 @@ namespace Grand.Services.Seo
                         LanguageId = languageId,
                         IsActive = true,
                     };
-                    InsertUrlRecord(urlRecord);
+                    await InsertUrlRecord(urlRecord);
                 }
             }
 
@@ -368,7 +367,7 @@ namespace Grand.Services.Seo
             {
                 //disable the previous active URL record
                 activeUrlRecord.IsActive = false;
-                UpdateUrlRecord(activeUrlRecord);
+                await UpdateUrlRecord(activeUrlRecord);
             }
 
             if (activeUrlRecord != null && !string.IsNullOrWhiteSpace(slug))
@@ -383,11 +382,11 @@ namespace Grand.Services.Seo
                     {
                         //mark non-active record as active
                         nonActiveRecordWithSpecifiedSlug.IsActive = true;
-                        UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+                        await UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
 
                         //disable the previous active URL record
                         activeUrlRecord.IsActive = false;
-                        UpdateUrlRecord(activeUrlRecord);
+                        await UpdateUrlRecord(activeUrlRecord);
                     }
                     else
                     {
@@ -402,11 +401,11 @@ namespace Grand.Services.Seo
                             LanguageId = languageId,
                             IsActive = true,
                         };
-                        InsertUrlRecord(urlRecord);
+                        await InsertUrlRecord(urlRecord);
 
                         //disable the previous active URL record
                         activeUrlRecord.IsActive = false;
-                        UpdateUrlRecord(activeUrlRecord);
+                        await UpdateUrlRecord(activeUrlRecord);
                     }
 
                 }

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -52,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
+		public async Task<IActionResult> QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -60,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime? endDateValue = (model.SearchEndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
+            var queuedEmails = await _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
                 startDateValue, endDateValue, 
                 model.SearchLoadNotSent, false, model.SearchMaxSentTries, true,
                 command.Page - 1, command.PageSize);
@@ -86,18 +87,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
-        public IActionResult GoToEmailByNumber(QueuedEmailListModel model)
+        public async Task<IActionResult> GoToEmailByNumber(QueuedEmailListModel model)
         {
-            var queuedEmail = _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
+            var queuedEmail = await _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
             if (queuedEmail == null)
                 return List();
             
             return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
         }
 
-		public IActionResult Edit(string id)
+		public async Task<IActionResult> Edit(string id)
         {
-			var email = _queuedEmailService.GetQueuedEmailById(id);
+			var email = await _queuedEmailService.GetQueuedEmailById(id);
             if (email == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
@@ -105,7 +106,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = email.ToModel();
             model.PriorityName = email.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
-            model.EmailAccountName = _emailAccountService.GetEmailAccountById(email.EmailAccountId).DisplayName;
+            model.EmailAccountName = (await _emailAccountService.GetEmailAccountById(email.EmailAccountId)).DisplayName;
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
             if (email.DontSendBeforeDateUtc.HasValue)
@@ -118,9 +119,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(QueuedEmailModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(QueuedEmailModel model, bool continueEditing)
         {
-            var email = _queuedEmailService.GetQueuedEmailById(model.Id);
+            var email = await _queuedEmailService.GetQueuedEmailById(model.Id);
             if (email == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
@@ -130,7 +131,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 email = model.ToEntity(email);
                 email.DontSendBeforeDateUtc = (model.SendImmediately || !model.DontSendBeforeDate.HasValue) ?
                     null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
-                _queuedEmailService.UpdateQueuedEmail(email);
+                await _queuedEmailService.UpdateQueuedEmail(email);
 
                 SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
@@ -148,9 +149,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 		}
 
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
-        public IActionResult Requeue(QueuedEmailModel queuedEmailModel)
+        public async Task<IActionResult> Requeue(QueuedEmailModel queuedEmailModel)
         {
-            var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
+            var queuedEmail = await _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
             if (queuedEmail == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
@@ -176,34 +177,34 @@ namespace Grand.Web.Areas.Admin.Controllers
                 DontSendBeforeDateUtc = (queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue) ?
                     null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
             };
-            _queuedEmailService.InsertQueuedEmail(requeuedEmail);
+            await _queuedEmailService.InsertQueuedEmail(requeuedEmail);
 
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
             return RedirectToAction("Edit", new { id = requeuedEmail.Id });
         }
 
 	    [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-			var email = _queuedEmailService.GetQueuedEmailById(id);
+			var email = await _queuedEmailService.GetQueuedEmailById(id);
             if (email == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
 
-            _queuedEmailService.DeleteQueuedEmail(email);
+            await _queuedEmailService.DeleteQueuedEmail(email);
 
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));
 			return RedirectToAction("List");
 		}
 
         [HttpPost]
-        public IActionResult DeleteSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                var queuedEmails = _queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray());
+                var queuedEmails = await _queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray());
                 foreach (var queuedEmail in queuedEmails)
-                    _queuedEmailService.DeleteQueuedEmail(queuedEmail);
+                    await _queuedEmailService.DeleteQueuedEmail(queuedEmail);
             }
 
             return Json(new { Result = true });
@@ -211,12 +212,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
-        public IActionResult DeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
-            _queuedEmailService.DeleteAllEmails();
+            await _queuedEmailService.DeleteAllEmails();
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
             return RedirectToAction("List");
         }
-
 	}
 }

@@ -3,6 +3,7 @@ using Grand.Services.Messages;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Messages;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -18,36 +19,38 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual EmailAccountModel PrepareEmailAccountModel()
         {
-            var model = new EmailAccountModel();
-            //default values
-            model.Port = 25;
+            var model = new EmailAccountModel
+            {
+                //default values
+                Port = 25
+            };
             return model;
         }
-        public virtual EmailAccount InsertEmailAccountModel(EmailAccountModel model)
+        public virtual async Task<EmailAccount> InsertEmailAccountModel(EmailAccountModel model)
         {
             var emailAccount = model.ToEntity();
             //set password manually
             emailAccount.Password = model.Password;
-            _emailAccountService.InsertEmailAccount(emailAccount);
+            await _emailAccountService.InsertEmailAccount(emailAccount);
             return emailAccount;
         }
-        public virtual EmailAccount UpdateEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model)
+        public virtual async Task<EmailAccount> UpdateEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model)
         {
             emailAccount = model.ToEntity(emailAccount);
-            _emailAccountService.UpdateEmailAccount(emailAccount);
+            await _emailAccountService.UpdateEmailAccount(emailAccount);
             return emailAccount;
         }
-        public virtual EmailAccount ChangePasswordEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model)
+        public virtual async Task<EmailAccount> ChangePasswordEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model)
         {
             emailAccount.Password = model.Password;
-            _emailAccountService.UpdateEmailAccount(emailAccount);
+            await _emailAccountService.UpdateEmailAccount(emailAccount);
             return emailAccount;
         }
-        public virtual void SendTestEmail(EmailAccount emailAccount, EmailAccountModel model)
+        public virtual async Task SendTestEmail(EmailAccount emailAccount, EmailAccountModel model)
         {
             string subject = "Testing email functionality.";
             string body = "Email works fine.";
-            _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
+            await _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
         }
     }
 }

@@ -24,7 +24,8 @@ namespace Grand.Web.ViewComponents
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable));
+            var model = await _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable);
+
             return View(model);
         }
     }

@@ -10,5 +10,6 @@
         public decimal SubTotalExclTax { get; set; }
         public decimal discountAmountInclTax { get; set; }
         public decimal discountAmountExclTax { get; set; }
+        public decimal taxRate { get; set; }
     }
 }

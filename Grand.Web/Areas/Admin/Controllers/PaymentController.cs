@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -137,13 +138,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult MethodRestrictions()
+        public async Task<IActionResult> MethodRestrictions()
         {
             var model = new PaymentMethodRestrictionModel();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
-            var shippings = _shippingService.GetAllShippingMethods();
+            var countries = await _countryService.GetAllCountries(showHidden: true);
+            var customerroles = await _customerService.GetAllCustomerRoles(showHidden: true);
+            var shippings = await _shippingService.GetAllShippingMethods();
 
             foreach (var pm in paymentMethods)
             {
@@ -201,12 +202,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("MethodRestrictions")]
         [RequestFormLimits(ValueCountLimit = 2048)]
-        public IActionResult MethodRestrictionsSave(IFormCollection form)
+        public async Task<IActionResult> MethodRestrictionsSave(IFormCollection form)
         {
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
-            var shippings = _shippingService.GetAllShippingMethods();
+            var countries = await _countryService.GetAllCountries(showHidden: true);
+            var customerroles = await _customerService.GetAllCustomerRoles(showHidden: true);
+            var shippings = await _shippingService.GetAllShippingMethods();
 
             foreach (var pm in paymentMethods)
             {

@@ -1,15 +1,16 @@
 ﻿using Grand.Core.Domain.Directory;
 using Grand.Web.Areas.Admin.Models.Directory;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface ICountryViewModelService
     {
         CountryModel PrepareCountryModel();
-        Country InsertCountryModel(CountryModel model);
-        Country UpdateCountryModel(Country country, CountryModel model);
+        Task<Country> InsertCountryModel(CountryModel model);
+        Task<Country> UpdateCountryModel(Country country, CountryModel model);
         StateProvinceModel PrepareStateProvinceModel(string countryId);
-        StateProvince InsertStateProvinceModel(StateProvinceModel model);
-        StateProvince UpdateStateProvinceModel(StateProvince sp, StateProvinceModel model);
+        Task<StateProvince> InsertStateProvinceModel(StateProvinceModel model);
+        Task<StateProvince> UpdateStateProvinceModel(StateProvince sp, StateProvinceModel model);
     }
 }

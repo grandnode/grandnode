@@ -25,6 +25,13 @@ namespace Grand.Core.Data
         T GetById(string id);
 
         /// <summary>
+        /// Get async entity by identifier 
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Entity</returns>
+        Task<T> GetByIdAsync(string id);
+
+        /// <summary>
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>

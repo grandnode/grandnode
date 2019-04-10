@@ -7,7 +7,6 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
@@ -19,11 +18,13 @@ using Grand.Services.Payments;
 using Grand.Services.Stores;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -51,6 +52,7 @@ namespace Grand.Services.Common
         private readonly ISettingService _settingContext;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IDownloadService _downloadService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly CatalogSettings _catalogSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
@@ -78,6 +80,7 @@ namespace Grand.Services.Common
             ISettingService settingContext,
             IAddressAttributeFormatter addressAttributeFormatter,
             IDownloadService downloadService,
+            IServiceProvider serviceProvider,
             CatalogSettings catalogSettings,
             MeasureSettings measureSettings,
             PdfSettings pdfSettings,
@@ -99,6 +102,7 @@ namespace Grand.Services.Common
             this._storeService = storeService;
             this._storeContext = storeContext;
             this._downloadService = downloadService;
+            this._serviceProvider = serviceProvider;
             this._settingContext = settingContext;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._catalogSettings = catalogSettings;
@@ -156,7 +160,7 @@ namespace Grand.Services.Common
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <returns>A path of generated file</returns>
-        public virtual string PrintOrderToPdf(Order order, string languageId, string vendorId = "")
+        public virtual async Task<string> PrintOrderToPdf(Order order, string languageId, string vendorId = "")
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -165,9 +169,11 @@ namespace Grand.Services.Common
             string filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/content/files/exportimport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                var orders = new List<Order>();
-                orders.Add(order);
-                PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
+                var orders = new List<Order>
+                {
+                    order
+                };
+                await PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
             }
             return filePath;
         }
@@ -179,7 +185,7 @@ namespace Grand.Services.Common
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <param name="vendorId">Vendor ident</param>
         /// <returns>A download ident</returns>
-        public virtual string SaveOrderToBinary(Order order, string languageId, string vendorId = "")
+        public virtual async Task<string> SaveOrderToBinary(Order order, string languageId, string vendorId = "")
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -188,9 +194,11 @@ namespace Grand.Services.Common
             string downloadId = string.Empty;
             using (MemoryStream ms = new MemoryStream())
             {
-                var orders = new List<Order>();
-                orders.Add(order);
-                PrintOrdersToPdf(ms, orders, languageId, vendorId);
+                var orders = new List<Order>
+                {
+                    order
+                };
+                await PrintOrdersToPdf(ms, orders, languageId, vendorId);
                 var download = new Core.Domain.Media.Download
                 {
                     Filename = fileName,
@@ -198,7 +206,7 @@ namespace Grand.Services.Common
                     DownloadBinary = ms.ToArray(),
                     ContentType = "application/pdf",
                 };
-                _downloadService.InsertDownload(download);
+                await _downloadService.InsertDownload(download);
                 downloadId = download.Id;
             }
             return downloadId;
@@ -210,7 +218,7 @@ namespace Grand.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "", string vendorId = "")
+        public virtual async Task PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "", string vendorId = "")
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -249,25 +257,29 @@ namespace Grand.Services.Common
                 var pdfSettingsByStore = _settingContext.LoadSetting<PdfSettings>(order.StoreId);
 
 
-                var lang = _languageService.GetLanguageById(languageId == "" ? order.CustomerLanguageId : languageId);
+                var lang = await _languageService.GetLanguageById(languageId == "" ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)
                     lang = _workContext.WorkingLanguage;
 
                 #region Header
 
                 //logo
-                var logoPicture = _pictureService.GetPictureById(pdfSettingsByStore.LogoPictureId);
+                var logoPicture = await _pictureService.GetPictureById(pdfSettingsByStore.LogoPictureId);
                 var logoExists = logoPicture != null;
 
                 //header
-                var headerTable = new PdfPTable(logoExists ? 2 : 1);
-                headerTable.RunDirection = GetDirection(lang);
+                var headerTable = new PdfPTable(logoExists ? 2 : 1)
+                {
+                    RunDirection = GetDirection(lang)
+                };
                 headerTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 //store info
-                var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-                var anchor = new Anchor(store.Url.Trim(new[] { '/' }), font);
-                anchor.Reference = store.Url;
+                var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+                var anchor = new Anchor(store.Url.Trim(new[] { '/' }), font)
+                {
+                    Reference = store.Url
+                };
 
                 var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.OrderNumber), titleFont));
                 cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
@@ -291,13 +303,15 @@ namespace Grand.Services.Common
                 //logo               
                 if (logoExists)
                 {
-                    var logoFilePath = _pictureService.GetThumbLocalPath(logoPicture, 0, false);
+                    var logoFilePath = await _pictureService.GetThumbLocalPath(logoPicture, 0, false);
                     var logo = Image.GetInstance(logoFilePath);
                     logo.Alignment = GetAlignment(lang, true);
                     logo.ScaleToFit(65f, 65f);
 
-                    var cellLogo = new PdfPCell();
-                    cellLogo.Border = Rectangle.NO_BORDER;
+                    var cellLogo = new PdfPCell
+                    {
+                        Border = Rectangle.NO_BORDER
+                    };
                     cellLogo.AddElement(logo);
                     headerTable.AddCell(cellLogo);
                 }
@@ -334,12 +348,12 @@ namespace Grand.Services.Common
                     billingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.BillingAddress.Address2), font));
                 if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                 {
-                    var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId);
+                    var state = await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId);
                     billingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, !String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? state.GetLocalized(x => x.Name, lang.Id) : "", order.BillingAddress.ZipPostalCode), font));
                 }
                 if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.BillingAddress.CountryId))
                 {
-                    var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId);
+                    var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.BillingAddress.CountryId);
                     billingAddress.AddCell(new Paragraph("   " + String.Format("{0}", !String.IsNullOrEmpty(order.BillingAddress.CountryId) ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                 }
                 //VAT number
@@ -347,7 +361,7 @@ namespace Grand.Services.Common
                     billingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
 
                 //custom attributes
-                var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+                var customBillingAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
                 if (!String.IsNullOrEmpty(customBillingAddressAttributes))
                 {
                     //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
@@ -406,16 +420,16 @@ namespace Grand.Services.Common
                             shippingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.ShippingAddress.Address2), font));
                         if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                         {
-                            var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId);
+                            var state = await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId);
                             shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, !String.IsNullOrEmpty(order.ShippingAddress.StateProvinceId) ? state.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
                         }
                         if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.ShippingAddress.CountryId))
                         {
-                            var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId);
+                            var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.ShippingAddress.CountryId);
                             shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", !String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                         }
                         //custom attributes
-                        var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                        var customShippingAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
                         if (!String.IsNullOrEmpty(customShippingAddressAttributes))
                         {
                             //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
@@ -435,7 +449,7 @@ namespace Grand.Services.Common
                                 shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
                             if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
                             {
-                                var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                                var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
                                 if (country != null)
                                     shippingAddress.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
                             }
@@ -529,7 +543,7 @@ namespace Grand.Services.Common
                     pAttribTable.RunDirection = GetDirection(lang);
                     pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                    var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                     //a vendor should have access only to his products
                     if (!String.IsNullOrEmpty(vendorId) && product.VendorId != vendorId)
                         continue;
@@ -562,13 +576,13 @@ namespace Grand.Services.Common
                     {
                         //including tax
                         var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                        unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        unitPrice = await _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
                     }
                     else
                     {
                         //excluding tax
                         var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                        unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        unitPrice = await _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                     }
                     cellProductItem = new PdfPCell(new Phrase(unitPrice, font));
                     cellProductItem.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -585,13 +599,13 @@ namespace Grand.Services.Common
                     {
                         //including tax
                         var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
-                        subTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        subTotal = await _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
                     }
                     else
                     {
                         //excluding tax
                         var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
-                        subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        subTotal = await _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                     }
                     cellProductItem = new PdfPCell(new Phrase(subTotal, font));
                     cellProductItem.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -635,7 +649,7 @@ namespace Grand.Services.Common
                         //including tax
 
                         var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                        string orderSubtotalInclTaxStr = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        string orderSubtotalInclTaxStr = await _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
                         var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalInclTaxStr), font));
                         p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -647,7 +661,7 @@ namespace Grand.Services.Common
                         //excluding tax
 
                         var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                        string orderSubtotalExclTaxStr = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        string orderSubtotalExclTaxStr = await _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
                         var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalExclTaxStr), font));
                         p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -664,7 +678,7 @@ namespace Grand.Services.Common
                             //including tax
 
                             var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
-                            string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            string orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -676,7 +690,7 @@ namespace Grand.Services.Common
                             //excluding tax
 
                             var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
-                            string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            string orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -692,7 +706,7 @@ namespace Grand.Services.Common
                         {
                             //including tax
                             var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                            string orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            string orderShippingInclTaxStr = await _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingInclTaxStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -703,7 +717,7 @@ namespace Grand.Services.Common
                         {
                             //excluding tax
                             var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                            string orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            string orderShippingExclTaxStr = await _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingExclTaxStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -719,7 +733,7 @@ namespace Grand.Services.Common
                         {
                             //including tax
                             var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                            string paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            string paymentMethodAdditionalFeeInclTaxStr = await _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeInclTaxStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -730,7 +744,7 @@ namespace Grand.Services.Common
                         {
                             //excluding tax
                             var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                            string paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            string paymentMethodAdditionalFeeExclTaxStr = await _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeExclTaxStr), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -763,7 +777,7 @@ namespace Grand.Services.Common
                             displayTax = !displayTaxRates;
 
                             var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                            taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
+                            taxStr = await _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
                         }
                     }
                     if (displayTax)
@@ -778,7 +792,7 @@ namespace Grand.Services.Common
                         foreach (var item in taxRates)
                         {
                             string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id), _priceFormatter.FormatTaxRate(item.Key));
-                            string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
+                            string taxValue = await _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
 
                             var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font));
                             p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -791,7 +805,7 @@ namespace Grand.Services.Common
                     if (order.OrderDiscount > decimal.Zero)
                     {
                         var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                        string orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
+                        string orderDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
 
                         var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderDiscountInCustomerCurrencyStr), font));
                         p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -799,13 +813,13 @@ namespace Grand.Services.Common
                         totalsTable.AddCell(p);
                     }
 
-                    var _serviceGiftCard = EngineContext.Current.Resolve<IGiftCardService>();
+                    var _serviceGiftCard = _serviceProvider.GetRequiredService<IGiftCardService>();
                     //gift cards
-                    foreach (var gcuh in _serviceGiftCard.GetAllGiftCardUsageHistory(order.Id))
+                    foreach (var gcuh in await _serviceGiftCard.GetAllGiftCardUsageHistory(order.Id))
                     {
-                        var giftcard = EngineContext.Current.Resolve<IGiftCardService>().GetGiftCardById(gcuh.GiftCardId);
+                        var giftcard = await _serviceProvider.GetRequiredService<IGiftCardService>().GetGiftCardById(gcuh.GiftCardId);
                         string gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id), giftcard.GiftCardCouponCode);
-                        string gcAmountStr = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
+                        string gcAmountStr = await _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
 
                         var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", gcTitle, gcAmountStr), font));
                         p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -817,7 +831,7 @@ namespace Grand.Services.Common
                     if (order.RedeemedRewardPointsEntry != null)
                     {
                         string rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), -order.RedeemedRewardPointsEntry.Points);
-                        string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
+                        string rpAmount = await _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
 
                         var p = new PdfPCell(new Paragraph(String.Format("{0} {1}", rpTitle, rpAmount), font));
                         p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -827,7 +841,7 @@ namespace Grand.Services.Common
 
                     //order total
                     var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                    string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
+                    string orderTotalStr = await _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
 
 
                     var pTotal = new PdfPCell(new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.OrderTotal", lang.Id), orderTotalStr), titleFont));
@@ -844,7 +858,7 @@ namespace Grand.Services.Common
 
                 if (pdfSettingsByStore.RenderOrderNotes)
                 {
-                    var orderNotes = _orderService.GetOrderNotes(order.Id)
+                    var orderNotes = (await _orderService.GetOrderNotes(order.Id))
                         .Where(on => on.DisplayToCustomer)
                         .OrderByDescending(on => on.CreatedOnUtc)
                         .ToList();
@@ -995,7 +1009,7 @@ namespace Grand.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, string languageId = "")
+        public virtual async Task PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, string languageId = "")
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -1003,7 +1017,7 @@ namespace Grand.Services.Common
             if (shipments == null)
                 throw new ArgumentNullException("shipments");
 
-            var lang = _languageService.GetLanguageById(languageId);
+            var lang = await _languageService.GetLanguageById(languageId);
             if (lang == null)
                 throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
 
@@ -1031,12 +1045,10 @@ namespace Grand.Services.Common
 
             foreach (var shipment in shipments)
             {
-
-                var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
-
+                var order = await _serviceProvider.GetRequiredService<IOrderService>().GetOrderById(shipment.OrderId);
                 if (String.IsNullOrEmpty(languageId))
                 {
-                    lang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                    lang = await _languageService.GetLanguageById(order.CustomerLanguageId);
                     if (lang == null || !lang.Published)
                         lang = _workContext.WorkingLanguage;
                 }
@@ -1074,16 +1086,16 @@ namespace Grand.Services.Common
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                         addressTable.AddCell(new Paragraph(String.Format("{0}, {1} {2}", order.ShippingAddress.City, !String.IsNullOrEmpty(order.ShippingAddress.StateProvinceId)
-                                        ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name, lang.Id)
+                                        ? (await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId)).GetLocalized(x => x.Name, lang.Id)
                                         : "", order.ShippingAddress.ZipPostalCode), font));
 
                     if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.ShippingAddress.CountryId))
                         addressTable.AddCell(new Paragraph(String.Format("{0}", !String.IsNullOrEmpty(order.ShippingAddress.CountryId)
-                                        ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name, lang.Id)
+                                        ? (await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.ShippingAddress.CountryId)).GetLocalized(x => x.Name, lang.Id)
                                         : ""), font));
 
                     //custom attributes
-                    var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                    var customShippingAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
                     if (!String.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
@@ -1101,7 +1113,7 @@ namespace Grand.Services.Common
                             addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
                         if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
                         {
-                            var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                            var country = await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
                             if (country != null)
                                 addressTable.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
                         }
@@ -1159,7 +1171,7 @@ namespace Grand.Services.Common
                     if (orderItem == null)
                         continue;
 
-                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                    var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                     string name = product.GetLocalized(x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes
@@ -1200,7 +1212,7 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        public virtual void PrintProductsToPdf(Stream stream, IList<Product> products)
+        public virtual async Task PrintProductsToPdf(Stream stream, IList<Product> products)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -1252,14 +1264,14 @@ namespace Grand.Services.Common
                 {
                     //simple product
                     //render its properties such as price, weight, etc
-                    var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), _currencyService.GetPrimaryStoreCurrency().CurrencyCode);
+                    var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), (await _currencyService.GetPrimaryStoreCurrency()).CurrencyCode);
                     if (product.ProductType == ProductType.Reservation)
                         priceStr = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), priceStr), font));
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
 
                     if (product.IsShipEnabled && product.Weight > Decimal.Zero)
-                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), product.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
+                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), product.Weight.ToString("0.00"), (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name), font));
 
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                         productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId)), font));
@@ -1278,13 +1290,13 @@ namespace Grand.Services.Common
 
                     foreach (var pic in pictures)
                     {
-                        var pp = _pictureService.GetPictureById(pic.PictureId);
+                        var pp = await _pictureService.GetPictureById(pic.PictureId);
                         if (pp != null)
                         {
                             var picBinary = pp.PictureBinary;
                             if (picBinary != null && picBinary.Length > 0)
                             {
-                                var pictureLocalPath = _pictureService.GetThumbLocalPath(pp, 200, false);
+                                var pictureLocalPath = await _pictureService.GetThumbLocalPath(pp, 200, false);
                                 var cell = new PdfPCell(Image.GetInstance(pictureLocalPath));
                                 cell.HorizontalAlignment = Element.ALIGN_LEFT;
                                 cell.Border = Rectangle.NO_BORDER;
@@ -1309,16 +1321,17 @@ namespace Grand.Services.Common
                 {
                     //grouped product. render its associated products
                     int pvNum = 1;
-                    foreach (var associatedProduct in _productService.GetAssociatedProducts(product.Id, showHidden: true))
+                    var associatedProducts = await _productService.GetAssociatedProducts(product.Id, showHidden: true);
+                    foreach (var associatedProduct in associatedProducts)
                     {
                         productTable.AddCell(new Paragraph(String.Format("{0}-{1}. {2}", productNumber, pvNum, associatedProduct.GetLocalized(x => x.Name, lang.Id)), font));
                         productTable.AddCell(new Paragraph(" "));
 
-                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), associatedProduct.Price.ToString("0.00"), _currencyService.GetPrimaryStoreCurrency().CurrencyCode), font));
+                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), associatedProduct.Price.ToString("0.00"), (await _currencyService.GetPrimaryStoreCurrency()).CurrencyCode), font));
                         productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), associatedProduct.Sku), font));
 
                         if (associatedProduct.IsShipEnabled && associatedProduct.Weight > Decimal.Zero)
-                            productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), associatedProduct.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
+                            productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), associatedProduct.Weight.ToString("0.00"), (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name), font));
 
                         if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                             productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), associatedProduct.GetTotalStockQuantity()), font));

@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareCurrencySelector());
+            var model = await _commonViewModelService.PrepareCurrencySelector();
             if (model.AvailableCurrencies.Count == 1)
                 Content("");
 

@@ -11,6 +11,7 @@ using Grand.Services.Security;
 using Grand.Web.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -50,20 +51,20 @@ namespace Grand.Web.Controllers
             this._mediaSettings = mediaSettings;
         }
 
-        public virtual IActionResult Index(string id, int? pageNumber)
+        public virtual async Task<IActionResult> Index(string id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
                 return RedirectToRoute("HomePage");
             }
 
-            var customerId ="";
+            var customerId = "";
             if (!String.IsNullOrEmpty(id))
             {
                 customerId = id;
             }
 
-            var customer = _customerService.GetCustomerById(customerId);
+            var customer = await _customerService.GetCustomerById(customerId);
             if (customer == null || customer.IsGuest())
             {
                 return RedirectToRoute("HomePage");
@@ -78,7 +79,7 @@ namespace Grand.Web.Controllers
                 pagingPosts = true;
             }
 
-            var name = customer.FormatUserName();
+            var name = customer.FormatUserName(_customerSettings.CustomerNameFormat);
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel
@@ -91,7 +92,7 @@ namespace Grand.Web.Controllers
             };
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = "Admin" }));
 
             return View(model);

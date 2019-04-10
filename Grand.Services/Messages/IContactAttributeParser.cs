@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Messages;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -13,14 +14,14 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected contact attributes</returns>
-        IList<ContactAttribute> ParseContactAttributes(string attributesXml);
+        Task<IList<ContactAttribute>> ParseContactAttributes(string attributesXml);
 
         /// <summary>
         /// Get contact attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Contact attribute values</returns>
-        IList<ContactAttributeValue> ParseContactAttributeValues(string attributesXml);
+        Task<IList<ContactAttributeValue>> ParseContactAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected contact attribute value
@@ -45,7 +46,7 @@ namespace Grand.Services.Messages
         /// <param name="attribute">Contact attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        bool? IsConditionMet(ContactAttribute attribute, string selectedAttributesXml);
+        Task<bool?> IsConditionMet(ContactAttribute attribute, string selectedAttributesXml);
 
         /// <summary>
         /// Remove an attribute

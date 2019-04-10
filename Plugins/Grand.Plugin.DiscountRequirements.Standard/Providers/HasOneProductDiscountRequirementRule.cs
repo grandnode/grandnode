@@ -1,22 +1,23 @@
 using Grand.Core.Domain.Orders;
-using Grand.Core.Infrastructure;
-using Grand.Core.Plugins;
 using Grand.Services.Configuration;
 using Grand.Services.Discounts;
-using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.DiscountRequirements.HasOneProduct
 {
     public partial class HasOneProductDiscountRequirementRule : IDiscountRequirementRule
     {
         private readonly ISettingService _settingService;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public HasOneProductDiscountRequirementRule(ISettingService settingService)
+        public HasOneProductDiscountRequirementRule(IServiceProvider serviceProvider)
         {
-            this._settingService = settingService;
+            _settingService = serviceProvider.GetRequiredService<ISettingService>();
+            _shoppingCartSettings = serviceProvider.GetRequiredService<ShoppingCartSettings>();
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
         /// <returns>true - requirement is met; otherwise, false</returns>
-        public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
+        public async Task<DiscountRequirementValidationResult> CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -60,7 +61,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct
             //group products in the cart by product ID
             //it could be the same product with distinct product attributes
             //that's why we get the total quantity of this product
-            var cartQuery = from sci in request.Customer.ShoppingCartItems.LimitPerStore(request.Store.Id)
+            var cartQuery = from sci in request.Customer.ShoppingCartItems.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, request.Store.Id)
                             where sci.ShoppingCartType == ShoppingCartType.ShoppingCart
                             group sci by sci.ProductId into g
                             select new { ProductId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
@@ -140,7 +141,7 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct
                 return result;
             }
 
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>

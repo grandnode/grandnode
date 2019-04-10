@@ -86,11 +86,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>"recently viewed products" list</returns>
-        public virtual IList<Product> GetRecentlyViewedProducts(string customerId, int number)
+        public virtual async Task<IList<Product>> GetRecentlyViewedProducts(string customerId, int number)
         {
             var products = new List<Product>();
             var productIds = GetRecentlyViewedProductsIds(customerId, number);
-            foreach (var product in _productService.GetProductsByIds(productIds.ToArray()))
+            foreach (var product in await _productService.GetProductsByIds(productIds.ToArray()))
                 if (product.Published)
                     products.Add(product);
             return products;
@@ -100,34 +100,31 @@ namespace Grand.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void AddProductToRecentlyViewedList(string customerId, string productId)
+        public virtual async Task AddProductToRecentlyViewedList(string customerId, string productId)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return;
 
-            Task.Run(() =>
+            var recentlyViewedProducts = GetRecentlyViewedProducts(customerId);
+            var recentlyViewedProduct = recentlyViewedProducts.FirstOrDefault(x => x.ProductId == productId);
+            if (recentlyViewedProduct == null)
             {
-                var recentlyViewedProducts = GetRecentlyViewedProducts(customerId);
-                var recentlyViewedProduct = recentlyViewedProducts.FirstOrDefault(x => x.ProductId == productId);
-                if (recentlyViewedProduct == null)
-                {
-                    _recentlyViewedProducts.Insert(new RecentlyViewedProduct() { CustomerId = customerId, ProductId = productId, CreatedOnUtc = DateTime.UtcNow });
-                }
-                else
-                {
-                    recentlyViewedProduct.CreatedOnUtc = DateTime.UtcNow;
-                    _recentlyViewedProducts.Update(recentlyViewedProduct);
-                }
-                int maxProducts = _catalogSettings.RecentlyViewedProductsNumber;
-                if (maxProducts <= 0)
-                    maxProducts = 10;
+                await _recentlyViewedProducts.InsertAsync(new RecentlyViewedProduct() { CustomerId = customerId, ProductId = productId, CreatedOnUtc = DateTime.UtcNow });
+            }
+            else
+            {
+                recentlyViewedProduct.CreatedOnUtc = DateTime.UtcNow;
+                await _recentlyViewedProducts.UpdateAsync(recentlyViewedProduct);
+            }
+            int maxProducts = _catalogSettings.RecentlyViewedProductsNumber;
+            if (maxProducts <= 0)
+                maxProducts = 10;
 
-                if (recentlyViewedProducts.Count > _catalogSettings.RecentlyViewedProductsNumber)
-                {
-                    _recentlyViewedProducts.Delete(recentlyViewedProducts.OrderBy(x => x.CreatedOnUtc).Take(recentlyViewedProducts.Count - _catalogSettings.RecentlyViewedProductsNumber));
-                }
-            });
-            
+            if (recentlyViewedProducts.Count > _catalogSettings.RecentlyViewedProductsNumber)
+            {
+                await _recentlyViewedProducts.DeleteAsync(recentlyViewedProducts.OrderBy(x => x.CreatedOnUtc).Take(recentlyViewedProducts.Count - _catalogSettings.RecentlyViewedProductsNumber));
+            }
+
         }
 
         #endregion

@@ -1,40 +1,38 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Infrastructure;
-using Grand.Services.Knowledgebase;
+using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidKnowledgebase : Drop
     {
+        private KnowledgebaseArticle _article;
         private KnowledgebaseArticleComment _articleComment;
-        private string _storeId;
+        private Store _store;
+        private Language _language;
 
-        private readonly IStoreService _storeService;
-
-        public LiquidKnowledgebase(KnowledgebaseArticleComment articleComment, string storeId)
+        public LiquidKnowledgebase(KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, Store store, Language language)
         {
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._article = article;
             this._articleComment = articleComment;
-            this._storeId = storeId;
-
+            this._store = store;
+            this._language = language;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string ArticleCommentTitle
         {
-            get { return EngineContext.Current.Resolve<IKnowledgebaseService>().GetPublicKnowledgebaseArticle(_articleComment.ArticleId).Name; }
+            get { return _article.Name; }
         }
 
         public string ArticleCommentUrl
         {
             get
             {
-                var article = EngineContext.Current.Resolve<IKnowledgebaseService>().GetPublicKnowledgebaseArticle(_articleComment.ArticleId);
-                return $"{_storeService.GetStoreUrl(_storeId)}{article.GetSeName()}";
+                return $"{(_store.SslEnabled ? _store.SecureUrl : _store.Url)}{_article.GetSeName(_language.Id)}";
             }
         }
 

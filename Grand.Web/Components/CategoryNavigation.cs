@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string currentCategoryId, string currentProductId)
         {
-            var model = await Task.Run(() => _catalogViewModelService.PrepareCategoryNavigation(currentCategoryId, currentProductId));
+            var model = await _catalogViewModelService.PrepareCategoryNavigation(currentCategoryId, currentProductId);
             return View(model);
         }
     }

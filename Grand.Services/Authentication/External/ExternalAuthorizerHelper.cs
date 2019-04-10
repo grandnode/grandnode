@@ -26,22 +26,22 @@ namespace Grand.Services.Authentication.External
 
         #region Methods
 
-        public static void StoreParametersForRoundTrip(ExternalAuthenticationParameters parameters)
+        public static void StoreParametersForRoundTrip(ExternalAuthenticationParameters parameters, IHttpContextAccessor httpContextAccessor)
         {
-            EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Set(EXTERNAL_AUTHENTICATION_PARAMETERS, parameters);
+            httpContextAccessor.HttpContext?.Session?.Set(EXTERNAL_AUTHENTICATION_PARAMETERS, parameters);
         }
 
-        public static void AddErrorsToDisplay(string error)
+        public static void AddErrorsToDisplay(string error, IHttpContextAccessor httpContextAccessor)
         {
-            var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
+            var session = httpContextAccessor.HttpContext?.Session;
             var errors = session?.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS) ?? new List<string>();
             errors.Add(error);
             session?.Set(EXTERNAL_AUTHENTICATION_ERRORS, errors);
         }
 
-        public static IList<string> RetrieveErrorsToDisplay(bool removeOnRetrieval)
+        public static IList<string> RetrieveErrorsToDisplay(bool removeOnRetrieval, IHttpContextAccessor httpContextAccessor)
         {
-            var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
+            var session = httpContextAccessor.HttpContext?.Session;
             var errors = session?.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS);
 
             if (errors != null && removeOnRetrieval)

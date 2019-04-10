@@ -29,6 +29,7 @@ namespace Grand.Services.ExportImport.Tests
         private IStoreService _storeService;
         private IProductService _productService;
         private IDiscountService _discountService;
+        private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -40,11 +41,11 @@ namespace Grand.Services.ExportImport.Tests
             _productService = new Mock<IProductService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
             _discountService = new Mock<IDiscountService>().Object;
-
+            _serviceProvider = new Mock<IServiceProvider>().Object;
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService,
                 _pictureService, _newsLetterSubscriptionService,
-                _storeService, _productService, _discountService);
+                _storeService, _productService, _discountService, _serviceProvider);
         }
 
         [TestMethod()]

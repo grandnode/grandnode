@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -70,9 +71,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult CountryList(DataSourceRequest command)
+        public async Task<IActionResult> CountryList(DataSourceRequest command)
         {
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = await _countryService.GetAllCountries(showHidden: true);
             var gridModel = new DataSourceResult
             {
                 Data = countries.Select(x => x.ToModel()),
@@ -82,63 +83,63 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
         
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = _countryViewModelService.PrepareCountryModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CountryModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CountryModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var country = _countryViewModelService.InsertCountryModel(model);
+                var country = await _countryViewModelService.InsertCountryModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var country = _countryService.GetCountryById(id);
+            var country = await _countryService.GetCountryById(id);
             if (country == null)
                 //No country found with the specified id
                 return RedirectToAction("List");
 
             var model = country.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            model.PrepareStoresMappingModel(country, false, _storeService);
+            await model.PrepareStoresMappingModel(country, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CountryModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CountryModel model, bool continueEditing)
         {
-            var country = _countryService.GetCountryById(model.Id);
+            var country = await _countryService.GetCountryById(model.Id);
             if (country == null)
                 //No country found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                country = _countryViewModelService.UpdateCountryModel(country, model);
+                country = await _countryViewModelService.UpdateCountryModel(country, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
                 if (continueEditing)
                 {
@@ -151,26 +152,26 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(country, true, _storeService);
+            await model.PrepareStoresMappingModel(country, true, _storeService);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var country = _countryService.GetCountryById(id);
+            var country = await _countryService.GetCountryById(id);
             if (country == null)
                 //No country found with the specified id
                 return RedirectToAction("List");
 
             try
             {
-                if (_addressService.GetAddressTotalByCountryId(country.Id) > 0)
+                if (await _addressService.GetAddressTotalByCountryId(country.Id) > 0)
                     throw new GrandException("The country can't be deleted. It has associated addresses");
                 if (ModelState.IsValid)
                 {
-                    _countryService.DeleteCountry(country);
+                    await _countryService.DeleteCountry(country);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
                     return RedirectToAction("List");
                 }
@@ -185,30 +186,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PublishSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> PublishSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+                var countries = await _countryService.GetCountriesByIds(selectedIds.ToArray());
                 foreach (var country in countries)
                 {
                     country.Published = true;
-                    _countryService.UpdateCountry(country);
+                    await _countryService.UpdateCountry(country);
                 }
             }
 
             return Json(new { Result = true });
         }
         [HttpPost]
-        public IActionResult UnpublishSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> UnpublishSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+                var countries = await _countryService.GetCountriesByIds(selectedIds.ToArray());
                 foreach (var country in countries)
                 {
                     country.Published = false;
-                    _countryService.UpdateCountry(country);
+                    await _countryService.UpdateCountry(country);
                 }
             }
             return Json(new { Result = true });
@@ -219,9 +220,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region States / provinces
 
         [HttpPost]
-        public IActionResult States(string countryId, DataSourceRequest command)
+        public async Task<IActionResult> States(string countryId, DataSourceRequest command)
         {
-            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
+            var states = await _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
 
             var gridModel = new DataSourceResult
             {
@@ -232,25 +233,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult StateCreatePopup(string countryId)
+        public async Task<IActionResult> StateCreatePopup(string countryId)
         {
             var model = _countryViewModelService.PrepareStateProvinceModel(countryId);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult StateCreatePopup(StateProvinceModel model)
+        public async Task<IActionResult> StateCreatePopup(StateProvinceModel model)
         {
-            var country = _countryService.GetCountryById(model.CountryId);
+            var country = await _countryService.GetCountryById(model.CountryId);
             if (country == null)
                 //No country found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                var sp = _countryViewModelService.InsertStateProvinceModel(model);
+                var sp = await _countryViewModelService.InsertStateProvinceModel(model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -260,16 +261,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult StateEditPopup(string id)
+        public async Task<IActionResult> StateEditPopup(string id)
         {
-            var sp = _stateProvinceService.GetStateProvinceById(id);
+            var sp = await _stateProvinceService.GetStateProvinceById(id);
             if (sp == null)
                 //No state found with the specified id
                 return RedirectToAction("List");
 
             var model = sp.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = sp.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -278,16 +279,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult StateEditPopup(StateProvinceModel model)
+        public async Task<IActionResult> StateEditPopup(StateProvinceModel model)
         {
-            var sp = _stateProvinceService.GetStateProvinceById(model.Id);
+            var sp = await _stateProvinceService.GetStateProvinceById(model.Id);
             if (sp == null)
                 //No state found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                sp = _countryViewModelService.UpdateStateProvinceModel(sp, model);
+                sp = await _countryViewModelService.UpdateStateProvinceModel(sp, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -297,19 +298,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult StateDelete(string id)
+        public async Task<IActionResult> StateDelete(string id)
         {
-            var state = _stateProvinceService.GetStateProvinceById(id);
+            var state = await _stateProvinceService.GetStateProvinceById(id);
             if (state == null)
                 throw new ArgumentException("No state found with the specified id");
 
-            if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
+            if (await _addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
             {
                 return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
             }
             if (ModelState.IsValid)
             {
-                _stateProvinceService.DeleteStateProvince(state);
+                await _stateProvinceService.DeleteStateProvince(state);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -319,24 +320,24 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / import
 
-        public IActionResult ExportCsv()
+        public async Task<IActionResult> ExportCsv()
         {
             string fileName = String.Format("states_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
-            var states = _stateProvinceService.GetStateProvinces(true);
-            string result = _exportManager.ExportStatesToTxt(states);
+            var states = await _stateProvinceService.GetStateProvinces(true);
+            string result = await _exportManager.ExportStatesToTxt(states);
 
             return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
         }
 
         [HttpPost]
-        public IActionResult ImportCsv(IFormFile importcsvfile)
+        public async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
         {
             try
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    int count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
+                    int count = await _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
                     SuccessNotification(String.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
                     return RedirectToAction("List");
                 }

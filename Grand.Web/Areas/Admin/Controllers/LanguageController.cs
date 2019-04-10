@@ -15,6 +15,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -52,9 +53,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguages(true);
             var gridModel = new DataSourceResult
             {
                 Data = languages.Select(x => x.ToModel()),
@@ -63,13 +64,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new LanguageModel();
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //currencies
-            _languageViewModelService.PrepareCurrenciesModel(model);
+            await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
             _languageViewModelService.PrepareFlagsModel(model);
             //default values
@@ -78,38 +79,38 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(LanguageModel model, bool continueEditing)
+        public async Task<IActionResult> Create(LanguageModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var language = _languageViewModelService.InsertLanguageModel(model);
+                var language = await _languageViewModelService.InsertLanguageModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //currencies
-            _languageViewModelService.PrepareCurrenciesModel(model);
+            await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
             _languageViewModelService.PrepareFlagsModel(model);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var language = _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
 
             var model = language.ToModel();
             //Stores
-            model.PrepareStoresMappingModel(language, false, _storeService);
+            await model.PrepareStoresMappingModel(language, false, _storeService);
             //currencies
-            _languageViewModelService.PrepareCurrenciesModel(model);
+            await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
             _languageViewModelService.PrepareFlagsModel(model);
 
@@ -117,9 +118,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(LanguageModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(LanguageModel model, bool continueEditing)
         {
-            var language = _languageService.GetLanguageById(model.Id);
+            var language = await _languageService.GetLanguageById(model.Id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -127,7 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allLanguages = _languageService.GetAllLanguages();
+                var allLanguages = await _languageService.GetAllLanguages();
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
                     !model.Published)
                 {
@@ -135,7 +136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
-                language = _languageViewModelService.UpdateLanguageModel(language, model);
+                language = await _languageViewModelService.UpdateLanguageModel(language, model);
                 //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
                 if (continueEditing)
@@ -149,9 +150,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            model.PrepareStoresMappingModel(language, true, _storeService);
+            await model.PrepareStoresMappingModel(language, true, _storeService);
             //currencies
-            _languageViewModelService.PrepareCurrenciesModel(model);
+            await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
             _languageViewModelService.PrepareFlagsModel(model);
 
@@ -159,15 +160,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var language = _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
 
             //ensure we have at least one published language
-            var allLanguages = _languageService.GetAllLanguages();
+            var allLanguages = await _languageService.GetAllLanguages();
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
                 ErrorNotification("At least one published language is required.");
@@ -177,7 +178,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //delete
             if (ModelState.IsValid)
             {
-                _languageService.DeleteLanguage(language);
+                await _languageService.DeleteLanguage(language);
 
                 //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
@@ -193,57 +194,57 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [AdminAntiForgery(true)]
-        public IActionResult Resources(string languageId, DataSourceRequest command,
+        public async Task<IActionResult> Resources(string languageId, DataSourceRequest command,
             LanguageResourceFilterModel model)
         {
-            var resources = _languageViewModelService.PrepareLanguageResourceModel(model, languageId, command.Page, command.PageSize);
+            var (languageResourceModels, totalCount) = await _languageViewModelService.PrepareLanguageResourceModel(model, languageId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = resources.languageResourceModels.ToList(),
-                Total = resources.totalCount
+                Data = languageResourceModels.ToList(),
+                Total = totalCount
             };
 
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ResourceUpdate(LanguageResourceModel model)
+        public async Task<IActionResult> ResourceUpdate(LanguageResourceModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var result = _languageViewModelService.UpdateLanguageResourceModel(model);
-            if (result.error)
-                return ErrorForKendoGridJson(result.message);
+            var (error, message) = await _languageViewModelService.UpdateLanguageResourceModel(model);
+            if (error)
+                return ErrorForKendoGridJson(message);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ResourceAdd(LanguageResourceModel model)
+        public async Task<IActionResult> ResourceAdd(LanguageResourceModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
-            var result = _languageViewModelService.InsertLanguageResourceModel(model);
-            if (result.error)
+            var (error, message) = await _languageViewModelService.InsertLanguageResourceModel(model);
+            if (error)
             {
-                return ErrorForKendoGridJson(result.message);
+                return ErrorForKendoGridJson(message);
             }
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ResourceDelete(string id)
+        public async Task<IActionResult> ResourceDelete(string id)
         {
-            var resource = _localizationService.GetLocaleStringResourceById(id);
+            var resource = await _localizationService.GetLocaleStringResourceById(id);
             if (resource == null)
                 throw new ArgumentException("No resource found with the specified id");
             if (ModelState.IsValid)
             {
-                _localizationService.DeleteLocaleStringResource(resource);
+                await _localizationService.DeleteLocaleStringResource(resource);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -253,16 +254,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        public IActionResult ExportXml(string id)
+        public async Task<IActionResult> ExportXml(string id)
         {
-            var language = _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
 
             try
             {
-                var xml = _localizationService.ExportResourcesToXml(language);
+                var xml = await _localizationService.ExportResourcesToXml(language);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "language_pack.xml");
             }
             catch (Exception exc)
@@ -273,9 +274,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ImportXml(string id, IFormFile importxmlfile)
+        public async Task<IActionResult> ImportXml(string id, IFormFile importxmlfile)
         {
-            var language = _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -287,7 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
                         string content = sr.ReadToEnd();
-                        _localizationService.ImportResourcesFromXml(language, content);
+                        await _localizationService.ImportResourcesFromXml(language, content);
                     }
                 }
                 else

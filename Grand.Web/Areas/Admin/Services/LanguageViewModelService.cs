@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -47,7 +48,7 @@ namespace Grand.Web.Areas.Admin.Services
                 .ToList();
         }
 
-        public virtual void PrepareCurrenciesModel(LanguageModel model)
+        public virtual async Task PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -58,7 +59,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "---",
                 Value = ""
             });
-            var currencies = _currencyService.GetAllCurrencies(true);
+            var currencies = await _currencyService.GetAllCurrencies(true);
             foreach (var currency in currencies)
             {
                 model.AvailableCurrencies.Add(new SelectListItem
@@ -69,33 +70,33 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual Language InsertLanguageModel(LanguageModel model)
+        public virtual async Task<Language> InsertLanguageModel(LanguageModel model)
         {
             var language = model.ToEntity();
-            _languageService.InsertLanguage(language);
+            await _languageService.InsertLanguage(language);
             return language;
         }
-        public virtual Language UpdateLanguageModel(Language language, LanguageModel model)
+        public virtual async Task<Language> UpdateLanguageModel(Language language, LanguageModel model)
         {
             //update
             language = model.ToEntity(language);
-            _languageService.UpdateLanguage(language);
+            await _languageService.UpdateLanguage(language);
             return language;
         }
-        public virtual (bool error, string message) InsertLanguageResourceModel(LanguageResourceModel model)
+        public virtual async Task<(bool error, string message)> InsertLanguageResourceModel(LanguageResourceModel model)
         {
             if (model.Name != null)
                 model.Name = model.Name.Trim();
             if (model.Value != null)
                 model.Value = model.Value.Trim();
 
-            var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+            var res = await _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
             if (res == null)
             {
                 var resource = new LocaleStringResource { LanguageId = model.LanguageId };
                 resource.ResourceName = model.Name;
                 resource.ResourceValue = model.Value;
-                _localizationService.InsertLocaleStringResource(resource);
+                await _localizationService.InsertLocaleStringResource(resource);
             }
             else
             {
@@ -103,17 +104,17 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return (false, string.Empty);
         }
-        public virtual (bool error, string message) UpdateLanguageResourceModel(LanguageResourceModel model)
+        public virtual async Task<(bool error, string message)> UpdateLanguageResourceModel(LanguageResourceModel model)
         {
             if (model.Name != null)
                 model.Name = model.Name.Trim();
             if (model.Value != null)
                 model.Value = model.Value.Trim();
-            var resource = _localizationService.GetLocaleStringResourceById(model.Id);
+            var resource = await _localizationService.GetLocaleStringResourceById(model.Id);
             // if the resourceName changed, ensure it isn't being used by another resource
             if (!resource.ResourceName.Equals(model.Name, StringComparison.OrdinalIgnoreCase))
             {
-                var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+                var res = await _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
                     return (error: true, message: string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
@@ -121,12 +122,12 @@ namespace Grand.Web.Areas.Admin.Services
             }
             resource.ResourceName = model.Name;
             resource.ResourceValue = model.Value;
-            _localizationService.UpdateLocaleStringResource(resource);
+            await _localizationService.UpdateLocaleStringResource(resource);
             return (false, string.Empty);
         }
-        public virtual (IEnumerable<LanguageResourceModel> languageResourceModels, int totalCount) PrepareLanguageResourceModel(LanguageResourceFilterModel model, string languageId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<LanguageResourceModel> languageResourceModels, int totalCount)> PrepareLanguageResourceModel(LanguageResourceFilterModel model, string languageId, int pageIndex, int pageSize)
         {
-            var language = _languageService.GetLanguageById(languageId);
+            var language = await _languageService.GetLanguageById(languageId);
 
             var resources = _localizationService
                 .GetAllResources(languageId)

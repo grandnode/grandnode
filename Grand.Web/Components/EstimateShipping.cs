@@ -24,7 +24,7 @@ namespace Grand.Web.ViewComponents
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart);
 
-            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareEstimateShipping(cart));
+            var model = await _shoppingCartViewModelService.PrepareEstimateShipping(cart);
             if (!model.Enabled)
                 return Content("");
 

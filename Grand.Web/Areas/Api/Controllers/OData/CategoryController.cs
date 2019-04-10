@@ -3,6 +3,7 @@ using Grand.Api.Interfaces;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -17,12 +18,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var category = _categoryApiService.GetById(key);
+            var category = await _categoryApiService.GetById(key);
             if (category == null)
                 return NotFound();
 
@@ -31,40 +32,40 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
             return Ok(_categoryApiService.GetCategories());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CategoryDto model)
+        public async Task<IActionResult> Post([FromBody] CategoryDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _categoryApiService.InsertOrUpdateCategory(model);
+                model = await _categoryApiService.InsertOrUpdateCategory(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
 
-            var category = _categoryApiService.GetById(key);
+            var category = await _categoryApiService.GetById(key);
             if (category == null)
             {
                 return NotFound();
             }
-            _categoryApiService.DeleteCategory(category);
+            await _categoryApiService.DeleteCategory(category);
             return Ok();
         }
     }

@@ -8,6 +8,7 @@ using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -15,7 +16,9 @@ using Grand.Services.Orders;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Shipping.Tests
 {
@@ -39,6 +42,10 @@ namespace Grand.Services.Shipping.Tests
         private IProductService _productService;
         private Store _store;
         private IStoreContext _storeContext;
+        private IServiceProvider _serviceProvider;
+        private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
+        private ICurrencyService _currencyService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -57,10 +64,14 @@ namespace Grand.Services.Shipping.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_serviceProvider);
+            _countryService = new Mock<ICountryService>().Object;
+            _stateProvinceService = new Mock<IStateProvinceService>().Object;
+            _currencyService = new Mock<ICurrencyService>().Object;
             _productService = new Mock<IProductService>().Object;
 
             var tempEventPublisher = new Mock<IEventPublisher>();
@@ -82,23 +93,26 @@ namespace Grand.Services.Shipping.Tests
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository,
-                _deliveryDateRepository,
-                _warehouseRepository,
-                _pickupPointRepository,
-                _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
-                _shippingSettings,
-                pluginFinder,
-                _storeContext,
-                _eventPublisher,
-                _shoppingCartSettings,
-                cacheManager,
-                null);
+            _deliveryDateRepository,
+            _warehouseRepository,
+            null,
+            _logger,
+            _productService,
+            _productAttributeParser,
+            _checkoutAttributeParser,
+            _genericAttributeService,
+            _localizationService,
+            _addressService,
+            _countryService,
+            _stateProvinceService,
+            pluginFinder,
+            _storeContext,
+            _eventPublisher,
+            _currencyService,
+            cacheManager,
+            null,
+            _shoppingCartSettings,
+            _shippingSettings);
         }
 
         [TestMethod()]
@@ -117,9 +131,9 @@ namespace Grand.Services.Shipping.Tests
         }
 
         [TestMethod()]
-        public void Can_load_active_shippingRateComputationMethods()
+        public async Task Can_load_active_shippingRateComputationMethods()
         {
-            var srcm = _shippingService.LoadActiveShippingRateComputationMethods();
+            var srcm = await _shippingService.LoadActiveShippingRateComputationMethods();
             Assert.IsNotNull(srcm);
             Assert.IsTrue(srcm.Count > 0);
         }

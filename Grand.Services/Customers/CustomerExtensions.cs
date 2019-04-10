@@ -1,13 +1,14 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
 using Grand.Services.Common;
-using Grand.Services.Localization;
+using Grand.Services.Orders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 namespace Grand.Services.Customers
 {
@@ -22,8 +23,8 @@ namespace Grand.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-            var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+            var firstName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName);
+            var lastName = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName);
 
             string fullName = "";
             if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
@@ -45,18 +46,18 @@ namespace Grand.Services.Customers
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        public static string FormatUserName(this Customer customer, bool stripTooLong = false, int maxLength = 0)
+        public static string FormatUserName(this Customer customer, CustomerNameFormat customerNameFormat, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
                 return string.Empty;
 
             if (customer.IsGuest())
             {
-                return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
+                return "Customer.Guest";
             }
 
             string result = string.Empty;
-            switch (EngineContext.Current.Resolve<CustomerSettings>().CustomerNameFormat)
+            switch (customerNameFormat)
             {
                 case CustomerNameFormat.ShowEmails:
                     result = customer.Email;
@@ -68,7 +69,7 @@ namespace Grand.Services.Customers
                     result = customer.GetFullName();
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                    result = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.FirstName);
                     break;
                 default:
                     break;
@@ -87,12 +88,12 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Coupon codes</returns>
-        public static string[] ParseAppliedDiscountCouponCodes(this Customer customer)
+        public static async Task<string[]> ParseAppliedDiscountCouponCodes(this Customer customer, IGenericAttributeService genericAttributeService)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
+            var existingCouponCodes = await customer.GetAttribute<string>(genericAttributeService, SystemCustomerAttributeNames.DiscountCouponCode);
 
             var couponCodes = new List<string>();
             if (String.IsNullOrEmpty(existingCouponCodes))
@@ -125,16 +126,15 @@ namespace Grand.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public static void ApplyDiscountCouponCode(this Customer customer, string couponCode)
+        public static async Task ApplyDiscountCouponCode(this Customer customer, IGenericAttributeService genericAttributeService, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             string result = string.Empty;
             try
             {
-                var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
+                var existingCouponCodes = await customer.GetAttribute<string>(genericAttributeService, SystemCustomerAttributeNames.DiscountCouponCode);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -182,8 +182,7 @@ namespace Grand.Services.Customers
             }
 
             //apply new value
-            genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
-
+            await genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
         }
         /// <summary>
         /// Removes a coupon code
@@ -191,25 +190,21 @@ namespace Grand.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
         /// <returns>New coupon codes document</returns>
-        public static void RemoveDiscountCouponCode(this Customer customer, string couponCode)
+        public static async Task RemoveDiscountCouponCode(this Customer customer, IGenericAttributeService genericAttributeService, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             //get applied coupon codes
-            var existingCouponCodes = customer.ParseAppliedDiscountCouponCodes();
+            var existingCouponCodes = await customer.ParseAppliedDiscountCouponCodes(genericAttributeService);
 
             //clear them
-            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-
-            genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
+            await genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
 
             //save again except removed one
             foreach (string existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.OrdinalIgnoreCase))
-                    customer.ApplyDiscountCouponCode(existingCouponCode);
+                    await customer.ApplyDiscountCouponCode(genericAttributeService, existingCouponCode);
         }
 
 
@@ -218,12 +213,12 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Coupon codes</returns>
-        public static string[] ParseAppliedGiftCardCouponCodes(this Customer customer)
+        public static async Task<string[]> ParseAppliedGiftCardCouponCodes(this Customer customer, IGenericAttributeService genericAttributeService)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes);
+            var existingCouponCodes = await customer.GetAttribute<string>(genericAttributeService, SystemCustomerAttributeNames.GiftCardCouponCodes);
 
             var couponCodes = new List<string>();
             if (String.IsNullOrEmpty(existingCouponCodes))
@@ -251,21 +246,46 @@ namespace Grand.Services.Customers
             return couponCodes.ToArray();
         }
         /// <summary>
+        /// Get active gift cards that are applied by a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Active gift cards</returns>
+        public static async Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomer(this Customer customer, IGiftCardService giftCardService, IGenericAttributeService genericAttributeService)
+        {
+            var result = new List<GiftCard>();
+            if (customer == null)
+                return result;
+
+            string[] couponCodes = await customer.ParseAppliedGiftCardCouponCodes(genericAttributeService);
+            foreach (var couponCode in couponCodes)
+            {
+                var giftCards = await giftCardService.GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
+                foreach (var gc in giftCards)
+                {
+                    if (gc.IsGiftCardValid())
+                        result.Add(gc);
+                }
+            }
+
+            return result;
+        }
+
+
+        /// <summary>
         /// Adds a coupon code
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public static void ApplyGiftCardCouponCode(this Customer customer, string couponCode)
+        public static async Task ApplyGiftCardCouponCode(this Customer customer, IGenericAttributeService genericAttributeService, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             string result = string.Empty;
             try
             {
-                var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes);
+                var existingCouponCodes = await customer.GetAttribute<string>(genericAttributeService, SystemCustomerAttributeNames.GiftCardCouponCodes);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -313,7 +333,7 @@ namespace Grand.Services.Customers
             }
 
             //apply new value
-            genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
+            await genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
         }
         /// <summary>
         /// Removes a coupon code
@@ -321,22 +341,21 @@ namespace Grand.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
         /// <returns>New coupon codes document</returns>
-        public static void RemoveGiftCardCouponCode(this Customer customer, string couponCode)
+        public static async Task RemoveGiftCardCouponCode(this Customer customer, IGenericAttributeService genericAttributeService, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             //get applied coupon codes
-            var existingCouponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var existingCouponCodes = await customer.ParseAppliedGiftCardCouponCodes(genericAttributeService);
 
             //clear them
-            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
+            await genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
 
             //save again except removed one
             foreach (string existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.OrdinalIgnoreCase))
-                    customer.ApplyGiftCardCouponCode(existingCouponCode);
+                    await customer.ApplyGiftCardCouponCode(genericAttributeService, existingCouponCode);
         }
 
         /// <summary>
@@ -350,7 +369,7 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            var cPrt = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
             if (String.IsNullOrEmpty(cPrt))
                 return false;
 
@@ -376,8 +395,8 @@ namespace Grand.Services.Customers
 
             if (customerSettings.PasswordRecoveryLinkDaysValid == 0)
                 return false;
-            
-            var geneatedDate = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated);
+
+            var geneatedDate = customer.GetAttributeFromEntity<DateTime?>(SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated);
             if (!geneatedDate.HasValue)
                 return false;
 
@@ -412,7 +431,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if password is expired; otherwise false</returns>
-        public static bool PasswordIsExpired(this Customer customer)
+        public static bool PasswordIsExpired(this Customer customer, CustomerSettings customerSettings)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -426,7 +445,6 @@ namespace Grand.Services.Customers
                 return false;
 
             //setting disabled for all
-            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
             if (customerSettings.PasswordLifetime == 0)
                 return false;
 

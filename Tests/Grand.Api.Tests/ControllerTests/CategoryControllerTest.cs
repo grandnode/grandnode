@@ -15,6 +15,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Moq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Tests.ControllerTests
 {
@@ -44,14 +45,14 @@ namespace Grand.Api.Tests.ControllerTests
             var tempCategoryApiService = new Mock<ICategoryApiService>();
             {
                 tempCategoryApiService.Setup(instance => instance.GetCategories()).Returns(_categoryDto.AsQueryable());
-                tempCategoryApiService.Setup(instance => instance.GetById(_id1)).Returns(_categoryDto.AsQueryable().FirstOrDefault(x => x.Id == _id1));
-                tempCategoryApiService.Setup(instance => instance.InsertOrUpdateCategory(modelInsertOrUpdate)).Returns(InsertOrUpdate(modelInsertOrUpdate));
+                tempCategoryApiService.Setup(instance => instance.GetById(_id1)).ReturnsAsync(_categoryDto.AsQueryable().FirstOrDefault(x => x.Id == _id1));
+                tempCategoryApiService.Setup(instance => instance.InsertOrUpdateCategory(modelInsertOrUpdate)).ReturnsAsync(InsertOrUpdate(modelInsertOrUpdate));
 
                 _categoryApiService = tempCategoryApiService.Object;
             }
             var tempPermissionService = new Mock<IPermissionService>();
             {
-                tempPermissionService.Setup(instance => instance.Authorize(PermissionSystemName.Categories)).Returns(true);
+                tempPermissionService.Setup(instance => instance.Authorize(PermissionSystemName.Categories)).ReturnsAsync(true);
                 _permissionService = tempPermissionService.Object;
             }
             _categoryController = new CategoryController(_categoryApiService, _permissionService);
@@ -86,9 +87,9 @@ namespace Grand.Api.Tests.ControllerTests
 
 
         [TestMethod()]
-        public void Can_get_category()
+        public async Task Can_get_category()
         {
-            IActionResult result = _categoryController.Get(_id1);
+            IActionResult result = await _categoryController.Get(_id1);
 
             // Assert
             var okObjectResult = result as OkObjectResult;
@@ -99,9 +100,9 @@ namespace Grand.Api.Tests.ControllerTests
         }
 
         [TestMethod()]
-        public void Can_get_categories()
+        public async Task Can_get_categories()
         {
-            IActionResult result = _categoryController.Get();
+            IActionResult result = await _categoryController.Get();
 
             // Assert
             var okObjectResult = result as OkObjectResult;
@@ -113,18 +114,18 @@ namespace Grand.Api.Tests.ControllerTests
         }
 
         [TestMethod()]
-        public void Can_Delete()
+        public async Task Can_Delete()
         {
-            IActionResult result = _categoryController.Delete(_id1);
+            IActionResult result = await _categoryController.Delete(_id1);
             // Assert
             var okResult = result as OkResult;
             Assert.AreEqual(200, okResult.StatusCode);
         }
 
         [TestMethod()]
-        public void Can_Post()
+        public async Task Can_Post()
         {
-            var response = _categoryController.Post(modelInsertOrUpdate);
+            var response = await _categoryController.Post(modelInsertOrUpdate);
             // Assert
             var createResult = response as CreatedODataResult<CategoryDto>;
             Assert.IsNotNull(createResult);

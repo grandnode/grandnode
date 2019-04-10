@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -13,12 +14,12 @@ namespace Grand.Services.Messages
         /// Deletes a contactus item
         /// </summary>
         /// <param name="contactus">ContactUs item</param>
-        void DeleteContactUs(ContactUs contactus);
+        Task DeleteContactUs(ContactUs contactus);
 
         /// <summary>
         /// Clears table
         /// </summary>
-        void ClearTable();
+        Task ClearTable();
 
         /// <summary>
         /// Gets all contactUs items
@@ -31,7 +32,7 @@ namespace Grand.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>ContactUs items</returns>
-        IPagedList<ContactUs> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        Task<IPagedList<ContactUs>> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string email = "", string vendorId = "", string customerId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -40,14 +41,14 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="contactUsId">ContactUs item identifier</param>
         /// <returns>ContactUs item</returns>
-        ContactUs GetContactUsById(string contactUsId);
+        Task<ContactUs> GetContactUsById(string contactUsId);
 
         /// <summary>
         /// Inserts a contactus item
         /// </summary>
         /// <param name="contactus">ContactUs</param>
         /// <returns>A contactus item</returns>
-        void InsertContactUs(ContactUs contactus);
+        Task InsertContactUs(ContactUs contactus);
 
     }
 }

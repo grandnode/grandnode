@@ -13,7 +13,9 @@ using Grand.Services.Tax;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Controllers
 {
@@ -43,23 +45,23 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
             this._storeService = storeService;
         }
         
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            var taxCategories = await _taxCategoryService.GetAllTaxCategories();
             if (taxCategories.Count == 0)
                 return Content("No tax categories can be loaded");
             
             var model = new TaxRateListModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "" });
-            var stores = _storeService.GetAllStores();
+            var stores = await _storeService.GetAllStores();
             foreach (var s in stores)
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //tax categories
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString() });
             //countries
-            var countries = _countryService.GetAllCountries(showHidden:true);
+            var countries = await _countryService.GetAllCountries(showHidden:true);
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
@@ -67,7 +69,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
             var defaultCountry = countries.FirstOrDefault();
             if (defaultCountry != null)
             {
-                var states = _stateProvinceService.GetStateProvincesByCountryId(defaultCountry.Id);
+                var states = await _stateProvinceService.GetStateProvincesByCountryId(defaultCountry.Id);
                 foreach (var s in states)
                     model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             }
@@ -77,42 +79,42 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult RatesList(DataSourceRequest command)
+        public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            var records = _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
-            var taxRatesModel = records
-                .Select(x =>
+            var records = await _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
+            var taxRatesModel = new List<TaxRateModel>();
+            foreach (var x in records)
+            {
+                var m = new TaxRateModel
                 {
-                    var m = new TaxRateModel
-                    {
-                        Id = x.Id,
-                        StoreId = x.StoreId,
-                        TaxCategoryId = x.TaxCategoryId,
-                        CountryId = x.CountryId,
-                        StateProvinceId = x.StateProvinceId,
-                        Zip = x.Zip,
-                        Percentage = x.Percentage,
-                    };
-                    //store
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    m.StoreName = (store != null) ? store.Name : "*";
-                    //tax category
-                    var tc = _taxCategoryService.GetTaxCategoryById(x.TaxCategoryId);
-                    m.TaxCategoryName = (tc != null) ? tc.Name : "";
-                    //country
-                    var c = _countryService.GetCountryById(x.CountryId);
-                    m.CountryName = (c != null) ? c.Name : "Unavailable";
-                    //state
-                    var s = _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
-                    m.StateProvinceName = (s != null) ? s.Name : "*";
-                    //zip
-                    m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
-                    return m;
-                })
-                .ToList();
+                    Id = x.Id,
+                    StoreId = x.StoreId,
+                    TaxCategoryId = x.TaxCategoryId,
+                    CountryId = x.CountryId,
+                    StateProvinceId = x.StateProvinceId,
+                    Zip = x.Zip,
+                    Percentage = x.Percentage,
+                };
+                //store
+                var store = await _storeService.GetStoreById(x.StoreId);
+                m.StoreName = (store != null) ? store.Name : "*";
+                //tax category
+                var tc = await _taxCategoryService.GetTaxCategoryById(x.TaxCategoryId);
+                m.TaxCategoryName = (tc != null) ? tc.Name : "";
+                //country
+                var c = await _countryService.GetCountryById(x.CountryId);
+                m.CountryName = (c != null) ? c.Name : "Unavailable";
+                //state
+                var s = await _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
+                m.StateProvinceName = (s != null) ? s.Name : "*";
+                //zip
+                m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
+                taxRatesModel.Add(m);
+            }
+
             var gridModel = new DataSourceResult
             {
                 Data = taxRatesModel,
@@ -124,38 +126,38 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult RateUpdate(TaxRateModel model)
+        public async Task<IActionResult> RateUpdate(TaxRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            var taxRate = _taxRateService.GetTaxRateById(model.Id);
+            var taxRate = await _taxRateService.GetTaxRateById(model.Id);
             taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
-            _taxRateService.UpdateTaxRate(taxRate);
+            await _taxRateService.UpdateTaxRate(taxRate);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult RateDelete(string id)
+        public async Task<IActionResult> RateDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            var taxRate = _taxRateService.GetTaxRateById(id);
+            var taxRate = await _taxRateService.GetTaxRateById(id);
             if (taxRate != null)
-                _taxRateService.DeleteTaxRate(taxRate);
+                await _taxRateService.DeleteTaxRate(taxRate);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult AddTaxRate(TaxRateListModel model)
+        public async Task<IActionResult> AddTaxRate(TaxRateListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRate = new TaxRate
@@ -167,7 +169,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
                 Zip = model.AddZip,
                 Percentage = model.AddPercentage
             };
-            _taxRateService.InsertTaxRate(taxRate);
+            await _taxRateService.InsertTaxRate(taxRate);
 
             return Json(new { Result = true });
         }

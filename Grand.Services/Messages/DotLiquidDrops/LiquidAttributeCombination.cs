@@ -1,6 +1,7 @@
 ﻿using DotLiquid;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using System.Collections.Generic;
@@ -10,42 +11,21 @@ namespace Grand.Services.Messages.DotLiquidDrops
     public partial class LiquidAttributeCombination : Drop
     {
         private ProductAttributeCombination _combination;
-        private string _languageId;
         private Product _product;
+        private Customer _customer;
 
-        private readonly IWorkContext _workContext;
-        private readonly IProductAttributeParser _productAttributeParser;
-
-        public LiquidAttributeCombination(ProductAttributeCombination combination, string languageId)
+        public LiquidAttributeCombination(Customer customer, Product product, ProductAttributeCombination combination)
         {
-            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
-            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
-
+            this._customer = customer;
+            this._product = product;
             this._combination = combination;
-            this._languageId = languageId;
-            this._product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
-            
+
             AdditionalTokens = new Dictionary<string, string>();
         }
 
-        public string Formatted
-        {
-            get
-            {
-                var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
-                string attributes = productAttributeFormatter.FormatAttributes(_product,
-                    _combination.AttributesXml,
-                    _workContext.CurrentCustomer,
-                    renderPrices: false);
+        public string Formatted { get; set; }
 
-                return attributes;
-            }
-        }
-
-        public string SKU
-        {
-            get { return _product.FormatSku(_combination.AttributesXml, _productAttributeParser); }
-        }
+        public string SKU { get; set; }
 
         public string StockQuantity
         {

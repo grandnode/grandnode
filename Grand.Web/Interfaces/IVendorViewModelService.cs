@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Vendors;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
@@ -7,8 +8,8 @@ namespace Grand.Web.Interfaces
     {
         VendorReviewOverviewModel PrepareVendorReviewOverviewModel(Vendor vendor);
 
-        void PrepareVendorReviewsModel(VendorReviewsModel model, Vendor vendor);
+        Task PrepareVendorReviewsModel(VendorReviewsModel model, Vendor vendor);
 
-        VendorReview InsertVendorReview(Vendor vendor, VendorReviewsModel model);
+        Task<VendorReview> InsertVendorReview(Vendor vendor, VendorReviewsModel model);
     }
 }

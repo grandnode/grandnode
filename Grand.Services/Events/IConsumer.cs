@@ -1,7 +1,9 @@
-﻿namespace Grand.Services.Events
+﻿using System.Threading.Tasks;
+
+namespace Grand.Services.Events
 {
     public interface IConsumer<T>
     {
-        void HandleEvent(T eventMessage);
+        Task HandleEvent(T eventMessage);
     }
 }

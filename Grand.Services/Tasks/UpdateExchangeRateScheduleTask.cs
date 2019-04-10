@@ -29,12 +29,12 @@ namespace Grand.Services.Tasks
                 if (!_currencySettings.AutoUpdateEnabled)
                     return;
 
-                var primaryCurrencyCode = _currencyService.GetPrimaryExchangeRateCurrency().CurrencyCode;
-                var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryCurrencyCode);
+                var primaryCurrencyCode = _currencyService.GetPrimaryExchangeRateCurrency().GetAwaiter().GetResult().CurrencyCode;
+                var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryCurrencyCode).GetAwaiter().GetResult();
 
                 foreach (var exchageRate in exchangeRates)
                 {
-                    var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
+                    var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode).GetAwaiter().GetResult();
                     if (currency != null)
                     {
                         currency.Rate = exchageRate.Rate;

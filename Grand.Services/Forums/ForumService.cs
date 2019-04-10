@@ -7,10 +7,12 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Messages;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Forums
 {
@@ -122,9 +124,9 @@ namespace Grand.Services.Forums
         /// Update forum stats
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        private void UpdateForumStats(string forumId)
+        private async Task UpdateForumStats(string forumId)
         {
-            var forum = GetForumById(forumId);
+            var forum = await GetForumById(forumId);
             if (forum == null)
             {
                 return;
@@ -187,16 +189,16 @@ namespace Grand.Services.Forums
             forum.LastPostId = lastPostId;
             forum.LastPostCustomerId = lastPostCustomerId;
             forum.LastPostTime = lastPostTime;
-            UpdateForum(forum);
+            await UpdateForum(forum);
         }
 
         /// <summary>
         /// Update forum topic stats
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
-        private void UpdateForumTopicStats(string forumTopicId)
+        private async Task UpdateForumTopicStats(string forumTopicId)
         {
-            var forumTopic = GetTopicById(forumTopicId);
+            var forumTopic = await GetTopicById(forumTopicId);
             if (forumTopic == null)
             {
                 return;
@@ -234,16 +236,16 @@ namespace Grand.Services.Forums
             forumTopic.LastPostId = lastPostId;
             forumTopic.LastPostCustomerId = lastPostCustomerId;
             forumTopic.LastPostTime = lastPostTime;
-            UpdateTopic(forumTopic);
+            await UpdateTopic(forumTopic);
         }
 
         /// <summary>
         /// Update customer stats
         /// </summary>
         /// <param name="customerId">The customer identifier</param>
-        private void UpdateCustomerStats(string customerId)
+        private async Task UpdateCustomerStats(string customerId)
         {
-            var customer = _customerService.GetCustomerById(customerId);
+            var customer = await _customerService.GetCustomerById(customerId);
 
             if (customer == null)
             {
@@ -255,7 +257,7 @@ namespace Grand.Services.Forums
                         select fp.Id;
             int numPosts = query.Count();
 
-            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
+            await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
         }
 
         private bool IsForumModerator(Customer customer)
@@ -275,20 +277,20 @@ namespace Grand.Services.Forums
         /// Deletes a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public virtual void DeleteForumGroup(ForumGroup forumGroup)
+        public virtual async Task DeleteForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
             {
                 throw new ArgumentNullException("forumGroup");
             }
 
-            _forumGroupRepository.Delete(forumGroup);
+            await _forumGroupRepository.DeleteAsync(forumGroup);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumGroup);
+            await _eventPublisher.EntityDeleted(forumGroup);
         }
 
         /// <summary>
@@ -296,24 +298,24 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forum group</returns>
-        public virtual ForumGroup GetForumGroupById(string forumGroupId)
+        public virtual Task<ForumGroup> GetForumGroupById(string forumGroupId)
         {
-            return _forumGroupRepository.GetById(forumGroupId);
+            return _forumGroupRepository.GetByIdAsync(forumGroupId);
         }
 
         /// <summary>
         /// Gets all forum groups
         /// </summary>
         /// <returns>Forum groups</returns>
-        public virtual IList<ForumGroup> GetAllForumGroups()
+        public virtual async Task<IList<ForumGroup>> GetAllForumGroups()
         {
             string key = string.Format(FORUMGROUP_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = from fg in _forumGroupRepository.Table
                             orderby fg.DisplayOrder
                             select fg;
-                return query.ToList();
+                return query.ToListAsync();
             });
         }
 
@@ -321,49 +323,49 @@ namespace Grand.Services.Forums
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public virtual void InsertForumGroup(ForumGroup forumGroup)
+        public virtual async Task InsertForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
             {
                 throw new ArgumentNullException("forumGroup");
             }
 
-            _forumGroupRepository.Insert(forumGroup);
+            await _forumGroupRepository.InsertAsync(forumGroup);
 
             //cache
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumGroup);
+            await _eventPublisher.EntityInserted(forumGroup);
         }
 
         /// <summary>
         /// Updates the forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public virtual void UpdateForumGroup(ForumGroup forumGroup)
+        public virtual async Task UpdateForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
             {
                 throw new ArgumentNullException("forumGroup");
             }
 
-            _forumGroupRepository.Update(forumGroup);
+            await _forumGroupRepository.UpdateAsync(forumGroup);
 
             //cache
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumGroup);
+            await _eventPublisher.EntityUpdated(forumGroup);
         }
 
         /// <summary>
         /// Deletes a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public virtual void DeleteForum(Forum forum)
+        public virtual async Task DeleteForum(Forum forum)
         {            
             if (forum == null)
             {
@@ -371,39 +373,40 @@ namespace Grand.Services.Forums
             }
 
             //delete forum subscriptions (topics)
-            var queryTopicIds = (from ft in _forumTopicRepository.Table
-                           where ft.ForumId == forum.Id
-                           select ft.Id).ToList();
+            var queryTopicIds = await (from ft in _forumTopicRepository.Table
+                                 where ft.ForumId == forum.Id
+                                 select ft.Id).ToListAsync();
+
             var queryFs1 = from fs in _forumSubscriptionRepository.Table
                            where queryTopicIds.Contains(fs.TopicId)
                            select fs;
 
             foreach (var fs in queryFs1.ToList())
             {
-                _forumSubscriptionRepository.Delete(fs);
+                await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                _eventPublisher.EntityDeleted(fs);
+                await _eventPublisher.EntityDeleted(fs);
             }
 
             //delete forum subscriptions (forum)
             var queryFs2 = from fs in _forumSubscriptionRepository.Table
                            where fs.ForumId == forum.Id
                            select fs;
-            foreach (var fs2 in queryFs2.ToList())
+            foreach (var fs2 in await queryFs2.ToListAsync())
             {
-                _forumSubscriptionRepository.Delete(fs2);
+                await _forumSubscriptionRepository.DeleteAsync(fs2);
                 //event notification
-                _eventPublisher.EntityDeleted(fs2);
+                await _eventPublisher.EntityDeleted(fs2);
             }
 
             //delete forum
-            _forumRepository.Delete(forum);
+            await _forumRepository.DeleteAsync(forum);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forum);
+            await _eventPublisher.EntityDeleted(forum);
         }
 
         /// <summary>
@@ -411,9 +414,9 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        public virtual Forum GetForumById(string forumId)
+        public virtual Task<Forum> GetForumById(string forumId)
         {
-            return _forumRepository.GetById(forumId);
+            return _forumRepository.GetByIdAsync(forumId);
         }
 
         /// <summary>
@@ -421,17 +424,16 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forums</returns>
-        public virtual IList<Forum> GetAllForumsByGroupId(string forumGroupId)
+        public virtual async Task<IList<Forum>> GetAllForumsByGroupId(string forumGroupId)
         {
             string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = from f in _forumRepository.Table
                             orderby f.DisplayOrder
                             where f.ForumGroupId == forumGroupId
                             select f;
-                var forums = query.ToList();
-                return forums;
+                return query.ToListAsync();
             });
         }
 
@@ -439,47 +441,47 @@ namespace Grand.Services.Forums
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public virtual void InsertForum(Forum forum)
+        public virtual async Task InsertForum(Forum forum)
         {
             if (forum == null)
             {
                 throw new ArgumentNullException("forum");
             }
 
-            _forumRepository.Insert(forum);
+            await _forumRepository.InsertAsync(forum);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forum);
+            await _eventPublisher.EntityInserted(forum);
         }
 
         /// <summary>
         /// Updates the forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public virtual void UpdateForum(Forum forum)
+        public virtual async Task UpdateForum(Forum forum)
         {
             if (forum == null)
             {
                 throw new ArgumentNullException("forum");
             }
 
-            _forumRepository.Update(forum);
+            await _forumRepository.UpdateAsync(forum);
             
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forum);
+            await _eventPublisher.EntityUpdated(forum);
         }
 
         /// <summary>
         /// Deletes a forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        public virtual void DeleteTopic(ForumTopic forumTopic)
+        public virtual async Task DeleteTopic(ForumTopic forumTopic)
         {            
             if (forumTopic == null)
             {                
@@ -490,36 +492,36 @@ namespace Grand.Services.Forums
             string forumId = forumTopic.ForumId;
 
             //delete topic
-            _forumTopicRepository.Delete(forumTopic);
+            await _forumTopicRepository.DeleteAsync(forumTopic);
 
             //delete posts
             var queryPosts = _forumPostRepository.Table.Where(x => x.TopicId == forumTopic.Id).ToList();
             foreach (var post in queryPosts)
             {
-                _forumPostRepository.Delete(post);
+                await _forumPostRepository.DeleteAsync(post);
             }
 
             //delete forum subscriptions
             var queryFs = from ft in _forumSubscriptionRepository.Table
                           where ft.TopicId == forumTopic.Id
                           select ft;
-            var forumSubscriptions = queryFs.ToList();
+            var forumSubscriptions = await queryFs.ToListAsync();
             foreach (var fs in forumSubscriptions)
             {
-                _forumSubscriptionRepository.Delete(fs);
+                await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                _eventPublisher.EntityDeleted(fs);
+                await _eventPublisher.EntityDeleted(fs);
             }
 
             //update stats
-            UpdateForumStats(forumId);
-            UpdateCustomerStats(customerId);
+            await UpdateForumStats(forumId);
+            await UpdateCustomerStats(customerId);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumTopic);
+            await _eventPublisher.EntityDeleted(forumTopic);
         }
 
         /// <summary>
@@ -527,9 +529,9 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <returns>Forum Topic</returns>
-        public virtual ForumTopic GetTopicById(string forumTopicId)
+        public virtual async Task<ForumTopic> GetTopicById(string forumTopicId)
         {
-            return GetTopicById(forumTopicId, false);
+            return await GetTopicById(forumTopicId, false);
         }
 
         /// <summary>
@@ -538,16 +540,16 @@ namespace Grand.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
         /// <returns>Forum Topic</returns>
-        public virtual ForumTopic GetTopicById(string forumTopicId, bool increaseViews)
+        public virtual async Task<ForumTopic> GetTopicById(string forumTopicId, bool increaseViews)
         {
-            var forumTopic = _forumTopicRepository.GetById(forumTopicId);
+            var forumTopic = await _forumTopicRepository.GetByIdAsync(forumTopicId);
             if (forumTopic == null)
                 return null;
 
             if (increaseViews)
             {
                 forumTopic.Views = ++forumTopic.Views;
-                UpdateTopic(forumTopic);
+                await UpdateTopic(forumTopic);
             }
 
             return forumTopic;
@@ -564,7 +566,7 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetAllTopics(string forumId = "",
+        public virtual async Task<IPagedList<ForumTopic>> GetAllTopics(string forumId = "",
             string customerId = "", string keywords = "", ForumSearchType searchType = ForumSearchType.All,
             int limitDays = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -597,17 +599,17 @@ namespace Grand.Services.Forums
                 topicIds.AddRange(query1);
             }
 
-            var query2 = (from ft in _forumTopicRepository.Table
-                         where 
-                         (forumId == "" || ft.ForumId == forumId) &&
-                         (customerId == "" || ft.CustomerId == customerId) &&
-                         (
-                            !searchKeywords ||
-                            (searchTopicTitles && ft.Subject.ToLower().Contains(keywords.ToLower()))
-                         )
-                         &&
-                         (limitDate.Value <= ft.LastPostTime)
-                         select ft.Id).ToList();
+            var query2 = await (from ft in _forumTopicRepository.Table
+                                where
+                                (forumId == "" || ft.ForumId == forumId) &&
+                                (customerId == "" || ft.CustomerId == customerId) &&
+                                (
+                                   !searchKeywords ||
+                                   (searchTopicTitles && ft.Subject.ToLower().Contains(keywords.ToLower()))
+                                )
+                                &&
+                                (limitDate.Value <= ft.LastPostTime)
+                                select ft.Id).ToListAsync();
 
             topicIds.AddRange(query2);
             var _topicIds = topicIds.Distinct();
@@ -627,14 +629,14 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetActiveTopics(string forumId = "", 
+        public virtual async Task<IPagedList<ForumTopic>> GetActiveTopics(string forumId = "", 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query1 = (from ft in _forumTopicRepository.Table
-                         where
-                         (forumId == "" || ft.ForumId == forumId) &&
-                         (ft.LastPostTime.HasValue)
-                         select ft.Id).ToList();
+            var query1 = await (from ft in _forumTopicRepository.Table
+                                where
+                                (forumId == "" || ft.ForumId == forumId) &&
+                                (ft.LastPostTime.HasValue)
+                                select ft.Id).ToListAsync();
 
             var query2 = from ft in _forumTopicRepository.Table
                          where query1.Contains(ft.Id)
@@ -650,30 +652,30 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public virtual void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
+        public virtual async Task InsertTopic(ForumTopic forumTopic, bool sendNotifications)
         {
             if (forumTopic == null)
             {
                 throw new ArgumentNullException("forumTopic");
             }
 
-            _forumTopicRepository.Insert(forumTopic);
+            await _forumTopicRepository.InsertAsync(forumTopic);
 
             //update stats
-            UpdateForumStats(forumTopic.ForumId);
+            await UpdateForumStats(forumTopic.ForumId);
 
             //cache            
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumTopic);
+            await _eventPublisher.EntityInserted(forumTopic);
 
             //send notifications
             if (sendNotifications)
             {
-                var forum = _forumRepository.GetById(forumTopic.ForumId);
-                var subscriptions = GetAllSubscriptions(forumId: forum.Id);
+                var forum = await _forumRepository.GetByIdAsync(forumTopic.ForumId);
+                var subscriptions = await GetAllSubscriptions(forumId: forum.Id);
                 var languageId = _workContext.WorkingLanguage.Id;
 
                 foreach (var subscription in subscriptions)
@@ -685,8 +687,8 @@ namespace Grand.Services.Forums
 
                     if (subscription.CustomerId!="")
                     {
-                        var customer = _customerService.GetCustomerById(subscription.CustomerId);
-                        _workflowMessageService.SendNewForumTopicMessage(customer, forumTopic,
+                        var customer = await _customerService.GetCustomerById(subscription.CustomerId);
+                        await _workflowMessageService.SendNewForumTopicMessage(customer, forumTopic,
                             forum, languageId);
                     }
                 }
@@ -697,20 +699,20 @@ namespace Grand.Services.Forums
         /// Updates the forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        public virtual void UpdateTopic(ForumTopic forumTopic)
+        public virtual async Task UpdateTopic(ForumTopic forumTopic)
         {
             if (forumTopic == null)
             {
                 throw new ArgumentNullException("forumTopic");
             }
 
-            _forumTopicRepository.Update(forumTopic);
+            await _forumTopicRepository.UpdateAsync(forumTopic);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumTopic);
+            await _eventPublisher.EntityUpdated(forumTopic);
         }
 
         /// <summary>
@@ -719,16 +721,16 @@ namespace Grand.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
         /// <returns>Moved forum topic</returns>
-        public virtual ForumTopic MoveTopic(string forumTopicId, string newForumId)
+        public virtual async Task<ForumTopic> MoveTopic(string forumTopicId, string newForumId)
         {
-            var forumTopic = GetTopicById(forumTopicId);
+            var forumTopic = await GetTopicById(forumTopicId);
             if (forumTopic == null)
                 return null;
 
-            if (this.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
+            if (IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
             {
                 string previousForumId = forumTopic.ForumId;
-                var newForum = GetForumById(newForumId);
+                var newForum = await GetForumById(newForumId);
 
                 if (newForum != null)
                 {
@@ -736,11 +738,11 @@ namespace Grand.Services.Forums
                     {
                         forumTopic.ForumId = newForum.Id;
                         forumTopic.UpdatedOnUtc = DateTime.UtcNow;
-                        UpdateTopic(forumTopic);
+                        await UpdateTopic(forumTopic);
 
                         //update forum stats
-                        UpdateForumStats(previousForumId);
-                        UpdateForumStats(newForumId);
+                        await UpdateForumStats(previousForumId);
+                        await UpdateForumStats(newForumId);
                     }
                 }
             }
@@ -751,7 +753,7 @@ namespace Grand.Services.Forums
         /// Deletes a forum post
         /// </summary>
         /// <param name="forumPost">Forum post</param>
-        public virtual void DeletePost(ForumPost forumPost)
+        public virtual async Task DeletePost(ForumPost forumPost)
         {            
             if (forumPost == null)
             {
@@ -760,40 +762,40 @@ namespace Grand.Services.Forums
 
             string forumTopicId = forumPost.TopicId;
             string customerId = forumPost.CustomerId;
-            var forumTopic = this.GetTopicById(forumTopicId);
+            var forumTopic = await GetTopicById(forumTopicId);
             string forumId = forumTopic.ForumId;
 
             //delete topic if it was the first post
             bool deleteTopic = false;
-            ForumPost firstPost = forumTopic.GetFirstPost(this);
+            ForumPost firstPost = await forumTopic.GetFirstPost(this);
             if (firstPost != null && firstPost.Id == forumPost.Id)
             {
                 deleteTopic = true;
             }
 
             //delete forum post
-            _forumPostRepository.Delete(forumPost);
+            await _forumPostRepository.DeleteAsync(forumPost);
 
             //delete topic
             if (deleteTopic)
             {
-                DeleteTopic(forumTopic);
+                await DeleteTopic(forumTopic);
             }
 
             //update stats
             if (!deleteTopic)
             {
-                UpdateForumTopicStats(forumTopicId);
+                await UpdateForumTopicStats(forumTopicId);
             }
-            UpdateForumStats(forumId);
-            UpdateCustomerStats(customerId);
+            await UpdateForumStats(forumId);
+            await UpdateCustomerStats(customerId);
 
             //clear cache            
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumPost);
+            await _eventPublisher.EntityDeleted(forumPost);
 
         }
 
@@ -802,9 +804,9 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumPostId">The forum post identifier</param>
         /// <returns>Forum Post</returns>
-        public virtual ForumPost GetPostById(string forumPostId)
+        public virtual Task<ForumPost> GetPostById(string forumPostId)
         {
-            return _forumPostRepository.GetById(forumPostId);
+            return _forumPostRepository.GetByIdAsync(forumPostId);
         }
 
         /// <summary>
@@ -816,11 +818,11 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public virtual IPagedList<ForumPost> GetAllPosts(string forumTopicId = "",
+        public virtual async Task<IPagedList<ForumPost>> GetAllPosts(string forumTopicId = "",
             string customerId = "", string keywords = "", 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return GetAllPosts(forumTopicId, customerId, keywords, true,
+            return await GetAllPosts(forumTopicId, customerId, keywords, true,
                 pageIndex, pageSize);
         }
 
@@ -834,7 +836,7 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        public virtual IPagedList<ForumPost> GetAllPosts(string forumTopicId = "", string customerId = "",
+        public virtual async Task<IPagedList<ForumPost>> GetAllPosts(string forumTopicId = "", string customerId = "",
             string keywords = "", bool ascSort = false, 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -859,10 +861,7 @@ namespace Grand.Services.Forums
             {
                 query = query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
             }
-
-            var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
-
-            return forumPosts;
+            return await Task.FromResult(new PagedList<ForumPost>(query, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -870,39 +869,39 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public virtual void InsertPost(ForumPost forumPost, bool sendNotifications)
+        public virtual async Task InsertPost(ForumPost forumPost, bool sendNotifications)
         {
             if (forumPost == null)
             {
                 throw new ArgumentNullException("forumPost");
             }
 
-            _forumPostRepository.Insert(forumPost);
+            await _forumPostRepository.InsertAsync(forumPost);
 
             //update stats
             string customerId = forumPost.CustomerId;
-            var forumTopic = this.GetTopicById(forumPost.TopicId);
+            var forumTopic = await GetTopicById(forumPost.TopicId);
             string forumId = forumTopic.ForumId;
-            UpdateForumTopicStats(forumPost.TopicId);
-            UpdateForumStats(forumId);
-            UpdateCustomerStats(customerId);
+            await UpdateForumTopicStats(forumPost.TopicId);
+            await UpdateForumStats(forumId);
+            await UpdateCustomerStats(customerId);
 
             //clear cache            
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(forumPost);
+            await _eventPublisher.EntityInserted(forumPost);
 
             //notifications
             if (sendNotifications)
             {
-                var forum = _forumRepository.GetById(forumTopic.ForumId);
-                var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
+                var forum = await _forumRepository.GetByIdAsync(forumTopic.ForumId);
+                var subscriptions = await GetAllSubscriptions(topicId: forumTopic.Id);
 
                 var languageId = _workContext.WorkingLanguage.Id;
 
-                int friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
+                int friendlyTopicPageIndex = await CalculateTopicPageIndex(forumPost.TopicId,
                     _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
                     forumPost.Id) + 1;
 
@@ -915,8 +914,8 @@ namespace Grand.Services.Forums
 
                     if ((subscription.CustomerId!=""))
                     {
-                        var customer = _customerService.GetCustomerById(subscription.CustomerId);
-                        _workflowMessageService.SendNewForumPostMessage(customer, forumPost,
+                        var customer = await _customerService.GetCustomerById(subscription.CustomerId);
+                        await _workflowMessageService.SendNewForumPostMessage(customer, forumPost,
                             forumTopic, forum, friendlyTopicPageIndex, languageId);
                     }
                 }
@@ -927,7 +926,7 @@ namespace Grand.Services.Forums
         /// Updates the forum post
         /// </summary>
         /// <param name="forumPost">Forum post</param>
-        public virtual void UpdatePost(ForumPost forumPost)
+        public virtual async Task UpdatePost(ForumPost forumPost)
         {
             //validation
             if (forumPost == null)
@@ -935,30 +934,30 @@ namespace Grand.Services.Forums
                 throw new ArgumentNullException("forumPost");
             }
 
-            _forumPostRepository.Update(forumPost);
+            await _forumPostRepository.UpdateAsync(forumPost);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumPost);
+            await _eventPublisher.EntityUpdated(forumPost);
         }
 
         /// <summary>
         /// Deletes a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public virtual void DeletePrivateMessage(PrivateMessage privateMessage)
+        public virtual async Task DeletePrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
             {
                 throw new ArgumentNullException("privateMessage");
             }
 
-            _forumPrivateMessageRepository.Delete(privateMessage);
+            await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
 
             //event notification
-            _eventPublisher.EntityDeleted(privateMessage);
+            await _eventPublisher.EntityDeleted(privateMessage);
         }
 
         /// <summary>
@@ -966,9 +965,9 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="privateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        public virtual PrivateMessage GetPrivateMessageById(string privateMessageId)
+        public virtual Task<PrivateMessage> GetPrivateMessageById(string privateMessageId)
         {
-            return _forumPrivateMessageRepository.GetById(privateMessageId);
+            return _forumPrivateMessageRepository.GetByIdAsync(privateMessageId);
         }
 
         /// <summary>
@@ -984,7 +983,7 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public virtual IPagedList<PrivateMessage> GetAllPrivateMessages(string storeId, string fromCustomerId,
+        public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessages(string storeId, string fromCustomerId,
             string toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -1009,40 +1008,38 @@ namespace Grand.Services.Forums
             }
             query = query.OrderByDescending(pm => pm.CreatedOnUtc);
 
-            var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
-
-            return privateMessages;
+            return await Task.FromResult(new PagedList<PrivateMessage>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public virtual void InsertPrivateMessage(PrivateMessage privateMessage)
+        public virtual async Task InsertPrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
             {
                 throw new ArgumentNullException("privateMessage");
             }
 
-            _forumPrivateMessageRepository.Insert(privateMessage);
+            await _forumPrivateMessageRepository.InsertAsync(privateMessage);
 
             //event notification
-            _eventPublisher.EntityInserted(privateMessage);
+            await _eventPublisher.EntityInserted(privateMessage);
 
-            var customerTo = _customerService.GetCustomerById(privateMessage.ToCustomerId);
+            var customerTo = await _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
             {
                 throw new GrandException("Recipient could not be loaded");
             }
 
             //UI notification
-            _genericAttributeService.SaveAttribute(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false, privateMessage.StoreId);
+            await _genericAttributeService.SaveAttribute(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false, privateMessage.StoreId);
 
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)
             {
-                _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);                
+                await _workflowMessageService.SendPrivateMessageNotification(privateMessage, _workContext.WorkingLanguage.Id);                
             }
         }
 
@@ -1050,22 +1047,22 @@ namespace Grand.Services.Forums
         /// Updates the private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public virtual void UpdatePrivateMessage(PrivateMessage privateMessage)
+        public virtual async Task UpdatePrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
 
             if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
             {
-                _forumPrivateMessageRepository.Delete(privateMessage);
+                await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
                 //event notification
-                _eventPublisher.EntityDeleted(privateMessage);
+                await _eventPublisher.EntityDeleted(privateMessage);
             }
             else
             {
-                _forumPrivateMessageRepository.Update(privateMessage);
+                await _forumPrivateMessageRepository.UpdateAsync(privateMessage);
                 //event notification
-                _eventPublisher.EntityUpdated(privateMessage);
+                await _eventPublisher.EntityUpdated(privateMessage);
             }
         }
 
@@ -1073,17 +1070,17 @@ namespace Grand.Services.Forums
         /// Deletes a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public virtual void DeleteSubscription(ForumSubscription forumSubscription)
+        public virtual async Task DeleteSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
             {
                 throw new ArgumentNullException("forumSubscription");
             }
 
-            _forumSubscriptionRepository.Delete(forumSubscription);
+            await _forumSubscriptionRepository.DeleteAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityDeleted(forumSubscription);
+            await _eventPublisher.EntityDeleted(forumSubscription);
         }
 
         /// <summary>
@@ -1091,9 +1088,9 @@ namespace Grand.Services.Forums
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
         /// <returns>Forum subscription</returns>
-        public virtual ForumSubscription GetSubscriptionById(string forumSubscriptionId)
+        public virtual Task<ForumSubscription> GetSubscriptionById(string forumSubscriptionId)
         {
-            return _forumSubscriptionRepository.GetById(forumSubscriptionId);
+            return _forumSubscriptionRepository.GetByIdAsync(forumSubscriptionId);
         }
 
         /// <summary>
@@ -1105,15 +1102,15 @@ namespace Grand.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public virtual IPagedList<ForumSubscription> GetAllSubscriptions(string customerId = "", string forumId = "",
+        public virtual async Task<IPagedList<ForumSubscription>> GetAllSubscriptions(string customerId = "", string forumId = "",
             string topicId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var fsQuery = (from fs in _forumSubscriptionRepository.Table
-                          where
-                          (customerId == "" || fs.CustomerId == customerId) &&
-                          (forumId == "" || fs.ForumId == forumId) &&
-                          (topicId == "" || fs.TopicId == topicId) 
-                          select fs.SubscriptionGuid).ToList();
+            var fsQuery = await (from fs in _forumSubscriptionRepository.Table
+                                where
+                                (customerId == "" || fs.CustomerId == customerId) &&
+                                (forumId == "" || fs.ForumId == forumId) &&
+                                (topicId == "" || fs.TopicId == topicId)
+                                select fs.SubscriptionGuid).ToListAsync();
 
             var query = from fs in _forumSubscriptionRepository.Table
                         where fsQuery.Contains(fs.SubscriptionGuid)
@@ -1128,34 +1125,34 @@ namespace Grand.Services.Forums
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public virtual void InsertSubscription(ForumSubscription forumSubscription)
+        public virtual async Task InsertSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
             {
                 throw new ArgumentNullException("forumSubscription");
             }
 
-            _forumSubscriptionRepository.Insert(forumSubscription);
+            await _forumSubscriptionRepository.InsertAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityInserted(forumSubscription);
+            await _eventPublisher.EntityInserted(forumSubscription);
         }
 
         /// <summary>
         /// Updates the forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public virtual void UpdateSubscription(ForumSubscription forumSubscription)
+        public virtual async Task UpdateSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
             {
                 throw new ArgumentNullException("forumSubscription");
             }
             
-            _forumSubscriptionRepository.Update(forumSubscription);
+            await _forumSubscriptionRepository.UpdateAsync(forumSubscription);
 
             //event notification
-            _eventPublisher.EntityUpdated(forumSubscription);
+            await _eventPublisher.EntityUpdated(forumSubscription);
         }
 
         /// <summary>
@@ -1446,10 +1443,10 @@ namespace Grand.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
-        public virtual int CalculateTopicPageIndex(string forumTopicId, int pageSize, string postId)
+        public virtual async Task<int> CalculateTopicPageIndex(string forumTopicId, int pageSize, string postId)
         {
             int pageIndex = 0;
-            var forumPosts = GetAllPosts(forumTopicId: forumTopicId, ascSort: true);
+            var forumPosts = await GetAllPosts(forumTopicId: forumTopicId, ascSort: true);
 
             for (int i = 0; i < forumPosts.TotalCount; i++)
             {
@@ -1461,7 +1458,6 @@ namespace Grand.Services.Forums
                     }
                 }
             }
-
             return pageIndex;
         }
 
@@ -1472,12 +1468,12 @@ namespace Grand.Services.Forums
         /// <param name="postId">Post identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Post vote</returns>
-        public virtual ForumPostVote GetPostVote(string postId, string customerId)
+        public virtual async Task<ForumPostVote> GetPostVote(string postId, string customerId)
         {
             if (String.IsNullOrEmpty(customerId))
                 return null;
 
-            return _forumPostVoteRepository.Table.FirstOrDefault(pv => pv.ForumPostId == postId && pv.CustomerId == customerId);
+            return await _forumPostVoteRepository.Table.FirstOrDefaultAsync(pv => pv.ForumPostId == postId && pv.CustomerId == customerId);
         }
 
         /// <summary>
@@ -1486,67 +1482,67 @@ namespace Grand.Services.Forums
         /// <param name="customerId">Customer identifier</param>
         /// <param name="сreatedFromUtc">Date</param>
         /// <returns>Post votes count</returns>
-        public virtual int GetNumberOfPostVotes(string customerId, DateTime сreatedFromUtc)
+        public virtual async Task<int> GetNumberOfPostVotes(string customerId, DateTime сreatedFromUtc)
         {
             if (String.IsNullOrEmpty(customerId))
                 return 0;
 
-            return _forumPostVoteRepository.Table.Count(pv => pv.CustomerId == customerId && pv.CreatedOnUtc > сreatedFromUtc);
+            return await _forumPostVoteRepository.Table.CountAsync(pv => pv.CustomerId == customerId && pv.CreatedOnUtc > сreatedFromUtc);
         }
 
         /// <summary>
         /// Insert a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        public virtual void InsertPostVote(ForumPostVote postVote)
+        public virtual async Task InsertPostVote(ForumPostVote postVote)
         {
             if (postVote == null)
                 throw new ArgumentNullException("postVote");
 
-            _forumPostVoteRepository.Insert(postVote);
+            await _forumPostVoteRepository.InsertAsync(postVote);
 
             //update post
-            var post = this.GetPostById(postVote.ForumPostId);
+            var post = await GetPostById(postVote.ForumPostId);
             post.VoteCount = postVote.IsUp ? ++post.VoteCount : --post.VoteCount;
-            this.UpdatePost(post);
+            await UpdatePost(post);
 
             //event notification
-            _eventPublisher.EntityInserted(postVote);
+            await _eventPublisher.EntityInserted(postVote);
         }
 
         /// <summary>
         /// Update a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        public virtual void UpdatePostVote(ForumPostVote postVote)
+        public virtual async Task UpdatePostVote(ForumPostVote postVote)
         {
             if (postVote == null)
                 throw new ArgumentNullException("postVote");
 
-            _forumPostVoteRepository.Update(postVote);
+            await _forumPostVoteRepository.UpdateAsync(postVote);
 
             //event notification
-            _eventPublisher.EntityUpdated(postVote);
+            await _eventPublisher.EntityUpdated(postVote);
         }
 
         /// <summary>
         /// Delete a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        public virtual void DeletePostVote(ForumPostVote postVote)
+        public virtual async Task DeletePostVote(ForumPostVote postVote)
         {
             if (postVote == null)
                 throw new ArgumentNullException("postVote");
 
-            _forumPostVoteRepository.Delete(postVote);
+            await _forumPostVoteRepository.DeleteAsync(postVote);
 
             // update post
-            var post = this.GetPostById(postVote.ForumPostId);
+            var post = await GetPostById(postVote.ForumPostId);
             post.VoteCount = postVote.IsUp ? --post.VoteCount : ++post.VoteCount;
-            this.UpdatePost(post);
+            await UpdatePost(post);
 
             //event notification
-            _eventPublisher.EntityDeleted(postVote);
+            await _eventPublisher.EntityDeleted(postVote);
         }
 
         #endregion

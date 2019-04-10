@@ -3,6 +3,7 @@ using Grand.Api.Interfaces;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -17,9 +18,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
             var specificationAttribute = _specificationAttributeApiService.GetById(key);
@@ -31,40 +32,40 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
             return Ok(_specificationAttributeApiService.GetSpecificationAttributes());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] SpecificationAttributeDto model)
+        public async Task<IActionResult> Post([FromBody] SpecificationAttributeDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _specificationAttributeApiService.InsertOrUpdateSpecificationAttribute(model);
+                model = await _specificationAttributeApiService.InsertOrUpdateSpecificationAttribute(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Attributes))
+            if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var specificationAttribute = _specificationAttributeApiService.GetById(key);
+            var specificationAttribute = await _specificationAttributeApiService.GetById(key);
             if (specificationAttribute == null)
             {
                 return NotFound();
             }
-            _specificationAttributeApiService.DeleteSpecificationAttribute(specificationAttribute);
+            await _specificationAttributeApiService.DeleteSpecificationAttribute(specificationAttribute);
             return Ok();
         }
     }

@@ -1,9 +1,11 @@
-﻿using Grand.Services.Localization;
+﻿using Grand.Core;
+using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -16,6 +18,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -26,7 +29,8 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IStoreMappingService storeMappingService,
             IAclService aclService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IWorkContext workContext)
         {
             this._topicService = topicService;
             this._topicViewModelService = topicViewModelService;
@@ -34,50 +38,51 @@ namespace Grand.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._permissionService = permissionService;
+            this._workContext = workContext;
         }
 
         #endregion
 
         #region Methods
 
-        public virtual IActionResult TopicDetails(string topicId)
+        public virtual async Task<IActionResult> TopicDetails(string topicId)
         {
-            var model = _topicViewModelService.TopicDetails(topicId);
+            var model = await _topicViewModelService.TopicDetails(topicId);
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = "Admin" }));
 
             return View(templateViewPath, model);
         }
 
-        public virtual IActionResult TopicDetailsPopup(string systemName)
+        public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
-            var model = _topicViewModelService.TopicDetailsPopup(systemName);
+            var model = await _topicViewModelService.TopicDetailsPopup(systemName);
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
             ViewBag.IsPopup = true;
             return View(templateViewPath, model);
         }
 
         [HttpPost]
-        public virtual IActionResult Authenticate(string id, string password)
+        public virtual async Task<IActionResult> Authenticate(string id, string password)
         {
             var authResult = false;
             var title = string.Empty;
             var body = string.Empty;
             var error = string.Empty;
 
-            var topic = _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicById(id);
 
             if (topic != null &&
                 //password protected?
@@ -90,8 +95,8 @@ namespace Grand.Web.Controllers
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
                     authResult = true;
-                    title = topic.GetLocalized(x => x.Title);
-                    body = topic.GetLocalized(x => x.Body);
+                    title = topic.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
+                    body = topic.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id);
                 }
                 else
                 {

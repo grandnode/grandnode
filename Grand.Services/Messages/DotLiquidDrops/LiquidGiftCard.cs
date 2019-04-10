@@ -1,8 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
 using System;
 using System.Collections.Generic;
 
@@ -12,12 +10,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private GiftCard _giftCard;
 
-        private readonly IPriceFormatter _priceFormatter;
-
         public LiquidGiftCard(GiftCard giftCard)
         {
-            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
-
             this._giftCard = giftCard;
 
             AdditionalTokens = new Dictionary<string, string>();
@@ -43,10 +37,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _giftCard.RecipientEmail; }
         }
 
-        public string Amount
-        {
-            get { return _priceFormatter.FormatPrice(_giftCard.Amount, true, false); }
-        }
+        public string Amount { get; set; }
 
         public string CouponCode
         {

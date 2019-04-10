@@ -14,6 +14,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -40,9 +41,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
+            var emailAccountModels = (await _emailAccountService.GetAllEmailAccounts())
                                     .Select(x => x.ToModel())
                                     .ToList();
             foreach (var eam in emailAccountModels)
@@ -57,13 +58,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult MarkAsDefaultEmail(string id)
+        public async Task<IActionResult> MarkAsDefaultEmail(string id)
         {
-            var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
+            var defaultEmailAccount = await _emailAccountService.GetEmailAccountById(id);
             if (defaultEmailAccount != null)
             {
                 _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
-                _settingService.SaveSetting(_emailAccountSettings);
+                await _settingService.SaveSetting(_emailAccountSettings);
             }
             return RedirectToAction("List");
         }
@@ -75,11 +76,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(EmailAccountModel model, bool continueEditing)
+        public async Task<IActionResult> Create(EmailAccountModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var emailAccount = _emailAccountViewModelService.InsertEmailAccountModel(model);
+                var emailAccount = await _emailAccountViewModelService.InsertEmailAccountModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -87,9 +88,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var emailAccount = _emailAccountService.GetEmailAccountById(id);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
@@ -99,16 +100,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(EmailAccountModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(EmailAccountModel model, bool continueEditing)
         {
-            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                emailAccount = _emailAccountViewModelService.UpdateEmailAccountModel(emailAccount, model);
+                emailAccount = await _emailAccountViewModelService.UpdateEmailAccountModel(emailAccount, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
@@ -119,16 +120,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
-        public IActionResult ChangePassword(EmailAccountModel model)
+        public async Task<IActionResult> ChangePassword(EmailAccountModel model)
         {
-            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
                 //do not validate model
-                _emailAccountViewModelService.ChangePasswordEmailAccountModel(emailAccount, model);
+                await _emailAccountViewModelService.ChangePasswordEmailAccountModel(emailAccount, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
             }
             else
@@ -139,9 +140,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
-        public IActionResult SendTestEmail(EmailAccountModel model)
+        public async Task<IActionResult> SendTestEmail(EmailAccountModel model)
         {
-            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
@@ -151,7 +152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     throw new GrandException("Enter test email address");
                 if (ModelState.IsValid)
                 {
-                    _emailAccountViewModelService.SendTestEmail(emailAccount, model);
+                    await _emailAccountViewModelService.SendTestEmail(emailAccount, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
                 }
                 else
@@ -167,9 +168,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var emailAccount = _emailAccountService.GetEmailAccountById(id);
+            var emailAccount = await _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
                 //No email account found with the specified id
                 return RedirectToAction("List");
@@ -177,7 +178,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _emailAccountService.DeleteEmailAccount(emailAccount);
+                    await _emailAccountService.DeleteEmailAccount(emailAccount);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
                 }
                 else

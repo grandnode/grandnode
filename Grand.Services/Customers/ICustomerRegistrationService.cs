@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Customers;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -13,34 +14,34 @@ namespace Grand.Services.Customers
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password);
+        Task<CustomerLoginResults> ValidateCustomer(string usernameOrEmail, string password);
 
         /// <summary>
         /// Register customer
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request);
+        Task<CustomerRegistrationResult> RegisterCustomer(CustomerRegistrationRequest request);
 
         /// <summary>
         /// Change password
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        ChangePasswordResult ChangePassword(ChangePasswordRequest request);
+        Task<ChangePasswordResult> ChangePassword(ChangePasswordRequest request);
 
         /// <summary>
         /// Sets a user email
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newEmail">New email</param>
-        void SetEmail(Customer customer, string newEmail);
+        Task SetEmail(Customer customer, string newEmail);
 
         /// <summary>
         /// Sets a customer username
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newUsername">New Username</param>
-        void SetUsername(Customer customer, string newUsername);
+        Task SetUsername(Customer customer, string newUsername);
     }
 }

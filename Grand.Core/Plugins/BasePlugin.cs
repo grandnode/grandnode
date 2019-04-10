@@ -1,4 +1,6 @@
-﻿namespace Grand.Core.Plugins
+﻿using System.Threading.Tasks;
+
+namespace Grand.Core.Plugins
 {
     public abstract class BasePlugin : IPlugin
     {
@@ -18,17 +20,17 @@
         /// <summary>
         /// Install plugin
         /// </summary>
-        public virtual void Install() 
+        public virtual async Task Install() 
         {
-            PluginManager.MarkPluginAsInstalled(this.PluginDescriptor.SystemName);
+            await PluginManager.MarkPluginAsInstalled(this.PluginDescriptor.SystemName);
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public virtual void Uninstall() 
+        public virtual async Task Uninstall() 
         {
-            PluginManager.MarkPluginAsUninstalled(this.PluginDescriptor.SystemName);
+            await PluginManager.MarkPluginAsUninstalled(this.PluginDescriptor.SystemName);
         }
 
     }

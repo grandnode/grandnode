@@ -1,18 +1,19 @@
 ﻿using Grand.Core.Plugins;
 using Grand.Services.Tax;
 using Microsoft.AspNetCore.Routing;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tests.Tax
 {
     public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
     {
-        public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
+        public async Task<CalculateTaxResult> GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
             var result = new CalculateTaxResult
             {
                 TaxRate = GetTaxRate(calculateTaxRequest.TaxCategoryId)
             };
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -22,6 +23,9 @@ namespace Grand.Services.Tests.Tax
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(string taxCategoryId)
         {
+            if (string.IsNullOrEmpty(taxCategoryId))
+                return 0;
+
             decimal rate = 10;
             return rate;
         }

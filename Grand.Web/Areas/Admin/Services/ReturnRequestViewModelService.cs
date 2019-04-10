@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -86,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual ReturnRequestModel PrepareReturnRequestModel(ReturnRequestModel model,
+        public virtual async Task<ReturnRequestModel> PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
@@ -95,7 +96,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            var order = _orderService.GetOrderById(returnRequest.OrderId);
+            var order = await _orderService.GetOrderById(returnRequest.OrderId);
             decimal unitPriceInclTaxInCustomerCurrency = 0;
             foreach (var item in returnRequest.ReturnRequestItems)
             {
@@ -111,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
             model.NotifyCustomer = returnRequest.NotifyCustomer;
-            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+            var customer = await _customerService.GetCustomerById(returnRequest.CustomerId);
             if (customer != null)
                 model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             else
@@ -124,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (!excludeProperties)
             {
                 var addr = new AddressModel();
-                PrepareAddressModel(ref addr, returnRequest.PickupAddress, excludeProperties);
+                await PrepareAddressModel(addr, returnRequest.PickupAddress, excludeProperties);
                 model.PickupAddress = addr;
                 model.CustomerComments = returnRequest.CustomerComments;
                 model.StaffNotes = returnRequest.StaffNotes;
@@ -133,27 +134,27 @@ namespace Grand.Web.Areas.Admin.Services
 
             return model;
         }
-        public virtual (IList<ReturnRequestModel> returnRequestModels, int totalCount) PrepareReturnRequestModel(ReturnReqestListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ReturnRequestModel> returnRequestModels, int totalCount)> PrepareReturnRequestModel(ReturnReqestListModel model, int pageIndex, int pageSize)
         {
             string customerId = string.Empty;
             if (!string.IsNullOrEmpty(model.SearchCustomerEmail))
             {
-                var customer = _customerService.GetCustomerByEmail(model.SearchCustomerEmail.ToLowerInvariant());
+                var customer = await _customerService.GetCustomerByEmail(model.SearchCustomerEmail.ToLowerInvariant());
                 if (customer != null)
                     customerId = customer.Id;
                 else
                     customerId = "00000000-0000-0000-0000-000000000000";
             }
-            var returnRequests = _returnRequestService.SearchReturnRequests("", customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
+            var returnRequests = await _returnRequestService.SearchReturnRequests("", customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
                 var rrmodel = new ReturnRequestModel();
-                returnRequestModels.Add(PrepareReturnRequestModel(rrmodel, rr, true));
+                returnRequestModels.Add(await PrepareReturnRequestModel(rrmodel, rr, true));
             }
             return (returnRequestModels, returnRequests.TotalCount);
         }
-        public virtual void PrepareAddressModel(ref AddressModel model, Address address, bool excludeProperties)
+        public virtual async Task PrepareAddressModel(AddressModel model, Address address, bool excludeProperties)
         {
             if (address != null)
             {
@@ -192,10 +193,10 @@ namespace Grand.Web.Areas.Admin.Services
             model.FaxRequired = _addressSettings.FaxRequired;
             //countries
             model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+            foreach (var c in await _countryService.GetAllCountries(showHidden: true))
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
             //states
-            var states = !String.IsNullOrEmpty(model.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(model.CountryId) ? await _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, showHidden: true) : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
@@ -204,30 +205,31 @@ namespace Grand.Web.Areas.Admin.Services
             else
                 model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             //customer attribute services
-            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+            await model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
-        public virtual void NotifyCustomer(ReturnRequest returnRequest)
+        public virtual async Task NotifyCustomer(ReturnRequest returnRequest)
         {
-            var order = _orderService.GetOrderById(returnRequest.OrderId);
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
+            var order = await _orderService.GetOrderById(returnRequest.OrderId);
+            int queuedEmailId = await _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
 
         }
         public virtual ReturnReqestListModel PrepareReturnReqestListModel()
         {
-            var model = new ReturnReqestListModel();
-
-            //Return request status
-            model.ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList();
+            var model = new ReturnReqestListModel
+            {
+                //Return request status
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList()
+            };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 
             return model;
         }
-        public virtual IList<ReturnRequestModel.ReturnRequestItemModel> PrepareReturnRequestItemModel(string returnRequestId)
+        public virtual async Task<IList<ReturnRequestModel.ReturnRequestItemModel>> PrepareReturnRequestItemModel(string returnRequestId)
         {
-            var returnRequest = _returnRequestService.GetReturnRequestById(returnRequestId);
+            var returnRequest = await _returnRequestService.GetReturnRequestById(returnRequestId);
             List<ReturnRequestModel.ReturnRequestItemModel> items = new List<ReturnRequestModel.ReturnRequestItemModel>();
-            var order = _orderService.GetOrderById(returnRequest.OrderId);
+            var order = await _orderService.GetOrderById(returnRequest.OrderId);
 
             foreach (var item in returnRequest.ReturnRequestItems)
             {
@@ -236,7 +238,7 @@ namespace Grand.Web.Areas.Admin.Services
                 items.Add(new ReturnRequestModel.ReturnRequestItemModel
                 {
                     ProductId = orderItem.ProductId,
-                    ProductName = _productService.GetProductByIdIncludeArch(orderItem.ProductId).Name,
+                    ProductName = (await _productService.GetProductByIdIncludeArch(orderItem.ProductId)).Name,
                     Quantity = item.Quantity,
                     UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
                     ReasonForReturn = item.ReasonForReturn,
@@ -245,7 +247,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return items;
         }
-        public virtual ReturnRequest UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, string customAddressAttributes)
+        public virtual async Task<ReturnRequest> UpdateReturnRequestModel(ReturnRequest returnRequest, ReturnRequestModel model, string customAddressAttributes)
         {
             returnRequest.CustomerComments = model.CustomerComments;
             returnRequest.StaffNotes = model.StaffNotes;
@@ -260,20 +262,19 @@ namespace Grand.Web.Areas.Admin.Services
                     returnRequest.PickupAddress.CustomAttributes = customAddressAttributes;
             }
             returnRequest.NotifyCustomer = model.NotifyCustomer;
-            _returnRequestService.UpdateReturnRequest(returnRequest);
-
+            await _returnRequestService.UpdateReturnRequest(returnRequest);
             //activity log
-            _customerActivityService.InsertActivity("EditReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
+            await _customerActivityService.InsertActivity("EditReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
 
             if (model.NotifyCustomer)
-                NotifyCustomer(returnRequest);
+                await NotifyCustomer(returnRequest);
             return returnRequest;
         }
-        public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
+        public virtual async Task DeleteReturnRequest(ReturnRequest returnRequest)
         {
-            _returnRequestService.DeleteReturnRequest(returnRequest);
+            await _returnRequestService.DeleteReturnRequest(returnRequest);
             //activity log
-            _customerActivityService.InsertActivity("DeleteReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
+            await _customerActivityService.InsertActivity("DeleteReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
         }
     }
 }

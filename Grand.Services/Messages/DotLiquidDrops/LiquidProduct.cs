@@ -1,11 +1,10 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Infrastructure;
+using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Catalog;
-using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -13,22 +12,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
     public partial class LiquidProduct : Drop
     {
         private Product _product;
-        private string _languageId;
-        private string _storeId;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IStoreService _storeService;
+        private Language _language;
+        private Store _store;
 
-        public LiquidProduct(Product product, string languageId, string storeId)
+        public LiquidProduct(Product product, Language language, Store store)
         {
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
-            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
-
             this._product = product;
-            this._languageId = languageId;
-            this._storeId = storeId;
-
+            this._language = language;
+            this._store = store;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -39,12 +30,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string Name
         {
-            get { return _product.GetLocalized(x => x.Name, _languageId); }
+            get { return _product.GetLocalized(x => x.Name, _language.Id); }
         }
 
         public string ShortDescription
         {
-            get { return _product.GetLocalized(x => x.ShortDescription, _languageId); }
+            get { return _product.GetLocalized(x => x.ShortDescription, _language.Id); }
         }
 
         public string SKU
@@ -57,18 +48,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _product.GetTotalStockQuantity().ToString(); }
         }
 
-        public string Price
+        public decimal Price
         {
-            get
-            {
-                var defaultCurrency = _currencyService.GetPrimaryStoreCurrency();
-                return _priceFormatter.FormatPrice(_product.Price, true, defaultCurrency);
-            }
+            get { return _product.Price; }
         }
 
         public string ProductURLForCustomer
         {
-            get { return string.Format("{0}{1}", _storeService.GetStoreUrl(_storeId), _product.GetSeName()); }
+            get { return string.Format("{0}{1}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _product.GetSeName(_language.Id)); }
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

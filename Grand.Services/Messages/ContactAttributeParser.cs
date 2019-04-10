@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Services.Messages
@@ -56,7 +57,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected contact attributes</returns>
-        public virtual IList<ContactAttribute> ParseContactAttributes(string attributesXml)
+        public virtual async Task<IList<ContactAttribute>> ParseContactAttributes(string attributesXml)
         {
             var result = new List<ContactAttribute>();
             if (String.IsNullOrEmpty(attributesXml))
@@ -65,7 +66,7 @@ namespace Grand.Services.Messages
             var ids = ParseContactAttributeIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = _contactAttributeService.GetContactAttributeById(id);
+                var attribute = await _contactAttributeService.GetContactAttributeById(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -79,13 +80,13 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Contact attribute values</returns>
-        public virtual IList<ContactAttributeValue> ParseContactAttributeValues(string attributesXml)
+        public virtual async Task<IList<ContactAttributeValue>> ParseContactAttributeValues(string attributesXml)
         {
             var values = new List<ContactAttributeValue>();
             if (String.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseContactAttributes(attributesXml);
+            var attributes = await ParseContactAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -217,7 +218,7 @@ namespace Grand.Services.Messages
         /// <param name="attribute">Contact attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        public virtual bool? IsConditionMet(ContactAttribute attribute, string selectedAttributesXml)
+        public virtual async Task<bool?> IsConditionMet(ContactAttribute attribute, string selectedAttributesXml)
         {
             if (attribute == null)
                 throw new ArgumentNullException("attribute");
@@ -228,7 +229,7 @@ namespace Grand.Services.Messages
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = ParseContactAttributes(conditionAttributeXml).FirstOrDefault();
+            var dependOnAttribute = (await ParseContactAttributes(conditionAttributeXml)).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 

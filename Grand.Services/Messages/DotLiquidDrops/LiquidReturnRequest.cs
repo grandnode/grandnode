@@ -23,26 +23,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private ReturnRequest _returnRequest;
         private Order _order;
 
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IOrderService _orderService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ILanguageService _languageService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly MessageTemplatesSettings _templatesSettings;
-
         public LiquidReturnRequest(ReturnRequest returnRequest, Order order)
         {
-            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
-            this._orderService = EngineContext.Current.Resolve<IOrderService>();
-            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
-            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
-            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
-            this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
-            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
-
             this._returnRequest = returnRequest;
             this._order = order;
                        
@@ -51,7 +33,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string Id
         {
-            get { return _returnRequest.ReturnNumber.ToString(); }
+            get { return _returnRequest.Id; }
+        }
+
+        public int ReturnNumber
+        {
+            get { return _returnRequest.ReturnNumber; }
         }
 
         public string OrderId
@@ -69,15 +56,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return HtmlHelper.FormatText(_returnRequest.StaffNotes, false, true, false, false, false, false); }
         }
 
-        public string Status
-        {
-            get { return _returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext); }
-        }
+        public string Status { get; set; }
 
-        public string Products
-        {
-            get { return ProductListToHtmlTable(_returnRequest); }
-        }
+        public string Products { get; set; }
 
         public string PickupDate
         {
@@ -134,79 +115,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _returnRequest.PickupAddress.City; }
         }
 
-        public string PickupAddressStateProvince
-        {
-            get { return !String.IsNullOrEmpty(_returnRequest.PickupAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(_returnRequest.PickupAddress.StateProvinceId).GetLocalized(x => x.Name) : ""; }
-        }
+        public string PickupAddressStateProvince { get; set; }
 
         public string PickupAddressZipPostalCode
         {
             get { return _returnRequest.PickupAddress.ZipPostalCode; }
         }
 
-        public string PickupAddressCountry
-        {
-            get { return !String.IsNullOrEmpty(_returnRequest.PickupAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(_order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""; }
-        }
-
-        public string PickupAddressCustomAttributes
-        {
-            get { return _addressAttributeFormatter.FormatAttributes(_returnRequest.PickupAddress.CustomAttributes); }
-        }
-
-        protected virtual string ProductListToHtmlTable(ReturnRequest returnRequest)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-
-            sb.AppendLine(string.Format("<tr style=\"text-align:center;\">"));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Name")));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Price")));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity")));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnReason")));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnAction")));
-            sb.AppendLine("</tr>");
-
-            var order = _orderService.GetOrderById(returnRequest.OrderId);
-            IProductService _productService = EngineContext.Current.Resolve<IProductService>();
-
-            foreach (var rrItem in returnRequest.ReturnRequestItems)
-            {
-                var orderItem = order.OrderItems.Where(x => x.Id == rrItem.OrderItemId).First();
-
-                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
-                string productName = _productService.GetProductById(orderItem.ProductId).GetLocalized(x => x.Name, order.CustomerLanguageId);
-
-                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
-
-                sb.AppendLine("</td>");
-
-                string unitPriceStr;
-                var language = _languageService.GetLanguageById(order.CustomerLanguageId);
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
-                }
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: right;\">{0}</td>", unitPriceStr));
-
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
-
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.ReasonForReturn));
-
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.RequestedAction));
-            }
-
-            sb.AppendLine("</table>");
-            return sb.ToString();
-        }
+        public string PickupAddressCountry { get; set; }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }
     }

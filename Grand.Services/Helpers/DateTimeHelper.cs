@@ -5,6 +5,7 @@ using Grand.Services.Configuration;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Helpers
 {
@@ -156,7 +157,7 @@ namespace Grand.Services.Helpers
             {
                 string timeZoneId = string.Empty;
                 if (customer != null)
-                    timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
+                    timeZoneId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TimeZoneId);
 
                 try
                 {

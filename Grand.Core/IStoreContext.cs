@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Stores;
+using System.Threading.Tasks;
 
 namespace Grand.Core
 {
@@ -11,5 +12,11 @@ namespace Grand.Core
         /// Gets or sets the current store
         /// </summary>
         Store CurrentStore { get; set; }
+
+        /// <summary>
+        /// Set the current store by Middleware
+        /// </summary>
+        /// <returns></returns>
+        Task<Store> SetCurrentStore();
     }
 }

@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -17,7 +18,7 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        void DeleteShoppingCartItem(Customer customer, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
+        Task DeleteShoppingCartItem(Customer customer, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
 
@@ -30,7 +31,7 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
-        IList<string> GetRequiredProductWarnings(Customer customer,
+        Task<IList<string>> GetRequiredProductWarnings(Customer customer,
             ShoppingCartType shoppingCartType, Product product,
             string storeId, bool automaticallyAddRequiredProductsIfEnabled);
 
@@ -44,7 +45,7 @@ namespace Grand.Services.Orders
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
+        Task<IList<string>> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
             Product product, string attributesXml,
             decimal customerEnteredPrice, int quantity);
 
@@ -66,7 +67,7 @@ namespace Grand.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
+        Task<IList<string>> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product,
             int quantity = 1,
@@ -111,7 +112,7 @@ namespace Grand.Services.Orders
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartItem shoppingCartItem, 
+        Task<IList<string>> GetShoppingCartItemWarnings(Customer customer, ShoppingCartItem shoppingCartItem, 
             Product product, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
@@ -124,7 +125,7 @@ namespace Grand.Services.Orders
         /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
+        Task<IList<string>> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes);
 
 
@@ -135,7 +136,7 @@ namespace Grand.Services.Orders
         /// <param name="Product">product</param>
         /// <param name="shoppingCartItem">ShoppingCartItem</param>
         /// <returns>Warnings</returns>
-        IList<string> GetReservationProductWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem);
+        Task<IList<string>> GetReservationProductWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem);
 
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace Grand.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <returns>Found shopping cart item</returns>
-        ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
+        Task<ShoppingCartItem> FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             string productId,
             string attributesXml = "",
@@ -172,7 +173,7 @@ namespace Grand.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
-        IList<string> AddToCart(Customer customer, string productId,
+        Task<IList<string>> AddToCart(Customer customer, string productId,
             ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -190,7 +191,7 @@ namespace Grand.Services.Orders
         /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        IList<string> UpdateShoppingCartItem(Customer customer,
+        Task<IList<string>> UpdateShoppingCartItem(Customer customer,
             string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -202,6 +203,6 @@ namespace Grand.Services.Orders
         /// <param name="fromCustomer">From customer</param>
         /// <param name="toCustomer">To customer</param>
         /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
-        void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
+        Task MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
     }
 }

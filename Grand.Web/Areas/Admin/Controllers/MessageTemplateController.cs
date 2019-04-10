@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -64,21 +65,21 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             var model = new MessageTemplateListModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, MessageTemplateListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, MessageTemplateListModel model)
         {
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
+            var messageTemplates = await _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
 
             if (!string.IsNullOrEmpty(model.Name))
             {
@@ -86,47 +87,48 @@ namespace Grand.Web.Areas.Admin.Controllers
                     (x => x.Name.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()) ||
                     x.Subject.ToLowerInvariant().Contains(model.Name.ToLowerInvariant())).ToList();
             }
-
+            var items = new List<MessageTemplateModel>();
+            foreach (var x in messageTemplates)
+            {
+                var templateModel = x.ToModel();
+                await templateModel.PrepareStoresMappingModel(x, false, _storeService);
+                var stores =(await _storeService
+                        .GetAllStores())
+                        .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
+                        .ToList();
+                for (int i = 0; i < stores.Count; i++)
+                {
+                    templateModel.ListOfStores += stores[i].Name;
+                    if (i != stores.Count - 1)
+                        templateModel.ListOfStores += ", ";
+                }
+                items.Add(templateModel);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = messageTemplates.Select(x =>
-                {
-                    var templateModel = x.ToModel();
-                    templateModel.PrepareStoresMappingModel(x, false, _storeService);
-                    var stores = _storeService
-                            .GetAllStores()
-                            .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
-                            .ToList();
-                    for (int i = 0; i < stores.Count; i++)
-                    {
-                        templateModel.ListOfStores += stores[i].Name;
-                        if (i != stores.Count - 1)
-                            templateModel.ListOfStores += ", ";
-                    }
-                    return templateModel;
-                }),
+                Data = items,
                 Total = messageTemplates.Count
             };
 
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new MessageTemplateModel();
 
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(MessageTemplateModel model, bool continueEditing)
+        public async Task<IActionResult> Create(MessageTemplateModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
@@ -137,7 +139,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
 
-                _messageTemplateService.InsertMessageTemplate(messageTemplate);
+                await _messageTemplateService.InsertMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.AddNew"));
 
@@ -156,16 +158,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
                 //No message template found with the specified id
                 return RedirectToAction("List");
@@ -175,13 +177,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            model.PrepareStoresMappingModel(messageTemplate, false, _storeService);
+            await model.PrepareStoresMappingModel(messageTemplate, false, _storeService);
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.BccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, languageId, false, false);
                 locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false, false);
@@ -196,9 +198,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(MessageTemplateModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(MessageTemplateModel model, bool continueEditing)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 //No message template found with the specified id
                 return RedirectToAction("List");
@@ -212,7 +214,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
 
-                _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+                await _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
 
@@ -230,23 +232,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            model.PrepareStoresMappingModel(messageTemplate, true, _storeService);
+            await model.PrepareStoresMappingModel(messageTemplate, true, _storeService);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
                 //No message template found with the specified id
                 return RedirectToAction("List");
 
-            _messageTemplateService.DeleteMessageTemplate(messageTemplate);
+            await _messageTemplateService.DeleteMessageTemplate(messageTemplate);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
             return RedirectToAction("List");
@@ -254,16 +256,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("message-template-copy")]
-        public IActionResult CopyTemplate(MessageTemplateModel model)
+        public async Task<IActionResult> CopyTemplate(MessageTemplateModel model)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 //No message template found with the specified id
                 return RedirectToAction("List");
 
             try
             {
-                var newMessageTemplate = _messageTemplateService.CopyMessageTemplate(messageTemplate);
+                var newMessageTemplate = await _messageTemplateService.CopyMessageTemplate(messageTemplate);
                 SuccessNotification("The message template has been copied successfully");
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }

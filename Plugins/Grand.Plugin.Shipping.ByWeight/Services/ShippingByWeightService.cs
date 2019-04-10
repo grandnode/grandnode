@@ -5,6 +5,7 @@ using Grand.Plugin.Shipping.ByWeight.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ByWeight.Services
 {
@@ -35,31 +36,30 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
         #region Methods
 
-        public virtual void DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
+        public virtual async Task DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
                 throw new ArgumentNullException("shippingByWeightRecord");
 
-            _sbwRepository.Delete(shippingByWeightRecord);
+            await _sbwRepository.DeleteAsync(shippingByWeightRecord);
 
             _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
-        public virtual IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<ShippingByWeightRecord>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
-            //return _cacheManager.Get(key, () =>
-            //{
+            return await _cacheManager.Get(key, () =>
+            {
                 var query = from sbw in _sbwRepository.Table
                             orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
                             select sbw;
 
-                var records = new PagedList<ShippingByWeightRecord>(query, pageIndex, pageSize);
-                return records;
-            //});
+                return Task.FromResult(new PagedList<ShippingByWeightRecord>(query, pageIndex, pageSize));
+            });
         }
 
-        public virtual ShippingByWeightRecord FindRecord(string shippingMethodId,
+        public virtual async Task<ShippingByWeightRecord> FindRecord(string shippingMethodId,
             string storeId, string warehouseId,
             string countryId, string stateProvinceId, string zip, decimal weight)
         {
@@ -68,7 +68,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
             zip = zip.Trim();
 
             //filter by weight and shipping method
-            var existingRates = GetAll()
+            var existingRates = (await GetAll())
                 .Where(sbw => sbw.ShippingMethodId == shippingMethodId && weight >= sbw.From && weight <= sbw.To)
                 .ToList();
 
@@ -128,30 +128,27 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
             return matchedByZip.FirstOrDefault();
         }
 
-        public virtual ShippingByWeightRecord GetById(string shippingByWeightRecordId)
+        public virtual Task<ShippingByWeightRecord> GetById(string shippingByWeightRecordId)
         {
-            if (String.IsNullOrEmpty(shippingByWeightRecordId))
-                return null;
-
-            return _sbwRepository.GetById(shippingByWeightRecordId);
+            return _sbwRepository.GetByIdAsync(shippingByWeightRecordId);
         }
 
-        public virtual void InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
+        public virtual async Task InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
                 throw new ArgumentNullException("shippingByWeightRecord");
 
-            _sbwRepository.Insert(shippingByWeightRecord);
+            await _sbwRepository.InsertAsync(shippingByWeightRecord);
 
             _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
-        public virtual void UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
+        public virtual async Task UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
                 throw new ArgumentNullException("shippingByWeightRecord");
 
-            _sbwRepository.Update(shippingByWeightRecord);
+            await _sbwRepository.UpdateAsync(shippingByWeightRecord);
 
             _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }

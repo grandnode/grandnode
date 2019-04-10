@@ -10,7 +10,7 @@
     var language = TinyMceHelper.GetTinyMceLanguage();
 
     var allowJbimages = false;
-    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
     //TinyMCE picture browser does not work in a virtual category
     //so if you're running in a virtual directory, then uncomment the code below:
     //allowJbimages = true;

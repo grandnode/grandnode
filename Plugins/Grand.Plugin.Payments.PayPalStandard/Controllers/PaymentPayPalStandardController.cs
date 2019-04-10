@@ -18,6 +18,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 {
@@ -66,10 +67,10 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         [AuthorizeAdmin]
         [Area("Admin")]
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel();
@@ -99,13 +100,13 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area("Admin")]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             //save settings
@@ -121,49 +122,49 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
             if (model.UseSandbox_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
 
             if (model.BusinessEmail_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
 
             if (model.PdtToken_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
 
             if (model.PdtValidateOrderTotal_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
 
             if (model.AdditionalFee_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
 
             if (model.AdditionalFeePercentage_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             if (model.PassProductNamesAndTotals_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope, false);
+                await _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
+                await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
-        public IActionResult PDTHandler(IFormCollection form)
+        public async Task<IActionResult> PDTHandler(IFormCollection form)
         {
             var tx = _webHelper.QueryString<string>("tx");
             Dictionary<string, string> values;
@@ -184,7 +185,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                     orderNumberGuid = new Guid(orderNumber);
                 }
                 catch { }
-                Order order = _orderService.GetOrderByGuid(orderNumberGuid);
+                Order order = await _orderService.GetOrderByGuid(orderNumberGuid);
                 if (order != null)
                 {
                     decimal mc_gross = decimal.Zero;
@@ -236,7 +237,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine("New payment status: " + newPaymentStatus);
 
                     //order note
-                    _orderService.InsertOrderNote(new OrderNote
+                    await _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = sb.ToString(),
                         DisplayToCustomer = false,
@@ -245,7 +246,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                     });
 
                     //load settings for a chosen store scope
-                    var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                    var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
                     var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
                     //validate order total
@@ -255,7 +256,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                         _logger.Error(errorStr);
 
                         //order note
-                        _orderService.InsertOrderNote(new OrderNote
+                        await _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = errorStr,
                             OrderId = order.Id,
@@ -269,12 +270,11 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                     //mark order as paid
                     if (newPaymentStatus == PaymentStatus.Paid)
                     {
-                        if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                        if (await _orderProcessingService.CanMarkOrderAsPaid(order))
                         {
                             order.AuthorizationTransactionId = txn_id;
-                            _orderService.UpdateOrder(order);
-
-                            _orderProcessingService.MarkOrderAsPaid(order);
+                            await _orderService.UpdateOrder(order);
+                            await _orderProcessingService.MarkOrderAsPaid(order);
                         }
                     }
                 }
@@ -291,11 +291,11 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                     orderNumberGuid = new Guid(orderNumber);
                 }
                 catch { }
-                Order order = _orderService.GetOrderByGuid(orderNumberGuid);
+                Order order = await _orderService.GetOrderByGuid(orderNumberGuid);
                 if (order != null)
                 {
                     //order note
-                    _orderService.InsertOrderNote(new OrderNote
+                    await _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = "PayPal PDT failed. " + response,
                         DisplayToCustomer = false,
@@ -307,7 +307,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
-        public IActionResult IPNHandler()
+        public async Task<IActionResult> IPNHandler()
         {
             byte[] param = default(byte[]);
             using (MemoryStream ms = new MemoryStream())
@@ -388,10 +388,10 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                             {
                             }
 
-                            var initialOrder = _orderService.GetOrderByGuid(orderNumberGuid);
+                            var initialOrder = await _orderService.GetOrderByGuid(orderNumberGuid);
                             if (initialOrder != null)
                             {
-                                var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id);
+                                var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id);
                                 foreach (var rp in recurringPayments)
                                 {
                                     switch (newPaymentStatus)
@@ -410,12 +410,12 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                         CreatedOnUtc = DateTime.UtcNow
                                                     };
                                                     rp.RecurringPaymentHistory.Add(rph);
-                                                    _orderService.UpdateRecurringPayment(rp);
+                                                    await _orderService.UpdateRecurringPayment(rp);
                                                 }
                                                 else
                                                 {
                                                     //next payments
-                                                    _orderProcessingService.ProcessNextRecurringPayment(rp);
+                                                    await _orderProcessingService.ProcessNextRecurringPayment(rp);
                                                 }
                                             }
                                             break;
@@ -445,12 +445,11 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                             {
                             }
 
-                            var order = _orderService.GetOrderByGuid(orderNumberGuid);
+                            var order = await _orderService.GetOrderByGuid(orderNumberGuid);
                             if (order != null)
                             {
-
                                 //order note
-                                _orderService.InsertOrderNote(new OrderNote
+                                await _orderService.InsertOrderNote(new OrderNote
                                 {
                                     Note = sb.ToString(),
                                     DisplayToCustomer = false,
@@ -472,7 +471,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 //valid
                                                 if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
                                                 {
-                                                    _orderProcessingService.MarkAsAuthorized(order);
+                                                    await _orderProcessingService.MarkAsAuthorized(order);
                                                 }
                                             }
                                             else
@@ -482,7 +481,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                _orderService.InsertOrderNote(new OrderNote
+                                                await _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
@@ -498,12 +497,11 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                             if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
                                                 //valid
-                                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                                if (await _orderProcessingService.CanMarkOrderAsPaid(order))
                                                 {
                                                     order.AuthorizationTransactionId = txn_id;
-                                                    _orderService.UpdateOrder(order);
-
-                                                    _orderProcessingService.MarkOrderAsPaid(order);
+                                                    await _orderService.UpdateOrder(order);
+                                                    await _orderProcessingService.MarkOrderAsPaid(order);
                                                 }
                                             }
                                             else
@@ -513,7 +511,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                _orderService.InsertOrderNote(new OrderNote
+                                                await _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
@@ -531,7 +529,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 //refund
                                                 if (_orderProcessingService.CanRefundOffline(order))
                                                 {
-                                                    _orderProcessingService.RefundOffline(order);
+                                                    await _orderProcessingService.RefundOffline(order);
                                                 }
                                             }
                                             else
@@ -539,7 +537,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                                 //partial refund
                                                 if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
                                                 {
-                                                    _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                                                    await _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
                                                 }
                                             }
                                         }
@@ -548,7 +546,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                         {
                                             if (_orderProcessingService.CanVoidOffline(order))
                                             {
-                                                _orderProcessingService.VoidOffline(order);
+                                                await _orderProcessingService.VoidOffline(order);
                                             }
                                         }
                                         break;
@@ -574,10 +572,10 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             return Content("");
         }
 
-        public IActionResult CancelOrder(IFormCollection form)
+        public async Task<IActionResult> CancelOrder(IFormCollection form)
         {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            var order = (await _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)).FirstOrDefault();
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });
 

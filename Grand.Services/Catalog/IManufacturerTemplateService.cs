@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -12,31 +13,31 @@ namespace Grand.Services.Catalog
         /// Delete manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
 
         /// <summary>
         /// Gets all manufacturer templates
         /// </summary>
         /// <returns>Manufacturer templates</returns>
-        IList<ManufacturerTemplate> GetAllManufacturerTemplates();
+        Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplates();
 
         /// <summary>
         /// Gets a manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
         /// <returns>Manufacturer template</returns>
-        ManufacturerTemplate GetManufacturerTemplateById(string manufacturerTemplateId);
+        Task<ManufacturerTemplate> GetManufacturerTemplateById(string manufacturerTemplateId);
 
         /// <summary>
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
 
         /// <summary>
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
     }
 }

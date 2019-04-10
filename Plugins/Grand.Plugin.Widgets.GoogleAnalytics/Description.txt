@@ -1,7 +1,7 @@
 ﻿Group: Widgets
 FriendlyName: Google Analytics or Universal Analytics
 SystemName: Widgets.GoogleAnalytics
-Version: 2.01
+Version: 2.02
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

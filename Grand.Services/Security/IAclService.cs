@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Security;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Security
 {
@@ -13,26 +14,26 @@ namespace Grand.Services.Security
         /// Deletes an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        void DeleteAclRecord(AclRecord aclRecord);
+        Task DeleteAclRecord(AclRecord aclRecord);
 
         /// <summary>
         /// Gets an ACL record
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        AclRecord GetAclRecordById(string aclRecordId);
-        
+        Task<AclRecord> GetAclRecordById(string aclRecordId);
+
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        void InsertAclRecord(AclRecord aclRecord);
-        
+        Task InsertAclRecord(AclRecord aclRecord);
+
         /// <summary>
         /// Updates the ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        void UpdateAclRecord(AclRecord aclRecord);
+        Task UpdateAclRecord(AclRecord aclRecord);
 
         /// <summary>
         /// Authorize ACL permission

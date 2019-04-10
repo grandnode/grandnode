@@ -3,30 +3,31 @@ using Grand.Web.Models.Customer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface ICustomerViewModelService
     {
-        void DeleteAccount(Customer customer);
-        IList<CustomerAttributeModel> PrepareCustomAttributes(Customer customer,
+        Task DeleteAccount(Customer customer);
+        Task<IList<CustomerAttributeModel>> PrepareCustomAttributes(Customer customer,
             string overrideAttributesXml = "");
-        CustomerInfoModel PrepareInfoModel(CustomerInfoModel model, Customer customer,
+        Task<CustomerInfoModel> PrepareInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
-        RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties,
+        Task<RegisterModel> PrepareRegisterModel(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "");
-        string ParseCustomAttributes(IFormCollection form);
+        Task<string> ParseCustomAttributes(IFormCollection form);
 
         LoginModel PrepareLogin(bool? checkoutAsGuest);
         PasswordRecoveryModel PreparePasswordRecovery();
-        PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel(Customer customer, string token);
-        void PasswordRecoverySend(PasswordRecoveryModel model, Customer customer);
-        CustomerNavigationModel PrepareNavigation(int selectedTabId = 0);
-        CustomerAddressListModel PrepareAddressList(Customer customer);
-        CustomerDownloadableProductsModel PrepareDownloadableProducts(string customerId);
-        UserAgreementModel PrepareUserAgreement(Guid orderItemId);
-        CustomerAvatarModel PrepareAvatar(Customer customer);
-        CustomerAuctionsModel PrepareAuctions(Customer customer);
-        CustomerNotesModel PrepareNotes(Customer customer);
+        Task<PasswordRecoveryConfirmModel> PreparePasswordRecoveryConfirmModel(Customer customer, string token);
+        Task PasswordRecoverySend(PasswordRecoveryModel model, Customer customer);
+        Task<CustomerNavigationModel> PrepareNavigation(int selectedTabId = 0);
+        Task<CustomerAddressListModel> PrepareAddressList(Customer customer);
+        Task<CustomerDownloadableProductsModel> PrepareDownloadableProducts(string customerId);
+        Task<UserAgreementModel> PrepareUserAgreement(Guid orderItemId);
+        Task<CustomerAvatarModel> PrepareAvatar(Customer customer);
+        Task<CustomerAuctionsModel> PrepareAuctions(Customer customer);
+        Task<CustomerNotesModel> PrepareNotes(Customer customer);
     }
 }

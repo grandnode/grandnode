@@ -11,6 +11,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.PushNotifications
 {
@@ -38,90 +41,90 @@ namespace Grand.Services.PushNotifications
         /// Inserts push receiver
         /// </summary>
         /// <param name="model"></param>
-        public virtual void InsertPushReceiver(PushRegistration registration)
+        public virtual async Task InsertPushReceiver(PushRegistration registration)
         {
-            _pushRegistratiosnRepository.Insert(registration);
-            _eventPublisher.EntityInserted(registration);
+            await _pushRegistratiosnRepository.InsertAsync(registration);
+            await _eventPublisher.EntityInserted(registration);
         }
 
         /// <summary>
         /// Deletes push receiver
         /// </summary>
         /// <param name="model"></param>
-        public virtual void DeletePushReceiver(PushRegistration registration)
+        public virtual async Task DeletePushReceiver(PushRegistration registration)
         {
-            _pushRegistratiosnRepository.Delete(registration);
-            _eventPublisher.EntityDeleted(registration);
+            await _pushRegistratiosnRepository.DeleteAsync(registration);
+            await _eventPublisher.EntityDeleted(registration);
         }
 
         /// <summary>
         /// Gets push receiver
         /// </summary>
         /// <param name="CustomerId"></param>
-        public virtual PushRegistration GetPushReceiverByCustomerId(string CustomerId)
+        public virtual async Task<PushRegistration> GetPushReceiverByCustomerId(string CustomerId)
         {
-            return _pushRegistratiosnRepository.Table.Where(x => x.CustomerId == CustomerId).FirstOrDefault();
+            return await _pushRegistratiosnRepository.Table.Where(x => x.CustomerId == CustomerId).FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Updates push receiver
         /// </summary>
         /// <param name="registration"></param>
-        public virtual void UpdatePushReceiver(PushRegistration registration)
+        public virtual async Task UpdatePushReceiver(PushRegistration registration)
         {
-            _pushRegistratiosnRepository.Update(registration);
-            _eventPublisher.EntityUpdated(registration);
+            await _pushRegistratiosnRepository.UpdateAsync(registration);
+            await _eventPublisher.EntityUpdated(registration);
         }
 
         /// <summary>
         /// Gets all push receivers
         /// </summary>
-        public virtual List<PushRegistration> GetPushReceivers()
+        public virtual async Task<List<PushRegistration>> GetPushReceivers()
         {
-            return _pushRegistratiosnRepository.Table.Where(x => x.Allowed).ToList();
+            return await _pushRegistratiosnRepository.Table.Where(x => x.Allowed).ToListAsync();
         }
 
         /// <summary>
         /// Gets number of customers that accepted push notifications permission popup
         /// </summary>
-        public virtual int GetAllowedReceivers()
+        public virtual Task<int> GetAllowedReceivers()
         {
-            return _pushRegistratiosnRepository.Table.Where(x => x.Allowed).Count();
+            return _pushRegistratiosnRepository.Table.Where(x => x.Allowed).CountAsync();
         }
 
         /// <summary>
         /// Gets number of customers that denied push notifications permission popup
         /// </summary>
-        public virtual int GetDeniedReceivers()
+        public virtual Task<int> GetDeniedReceivers()
         {
-            return _pushRegistratiosnRepository.Table.Where(x => !x.Allowed).Count();
+            return _pushRegistratiosnRepository.Table.Where(x => !x.Allowed).CountAsync();
         }
 
         /// <summary>
         /// Inserts push message
         /// </summary>
         /// <param name="registration"></param>
-        public virtual void InsertPushMessage(PushMessage message)
+        public virtual async Task InsertPushMessage(PushMessage message)
         {
-            _pushMessagesRepository.Insert(message);
-            _eventPublisher.EntityInserted(message);
+            await _pushMessagesRepository.InsertAsync(message);
+            await _eventPublisher.EntityInserted(message);
         }
 
         /// <summary>
         /// Gets all push messages
         /// </summary>
-        public virtual IPagedList<PushMessage> GetPushMessages(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PushMessage>> GetPushMessages(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var allMessages = _pushMessagesRepository.Table.OrderByDescending(x => x.SentOn).ToList();
+            var allMessages = await _pushMessagesRepository.Table.OrderByDescending(x => x.SentOn).ToListAsync();
             return new PagedList<PushMessage>(allMessages.Skip(pageIndex * pageSize).Take(pageSize).ToList(), pageIndex, pageSize, allMessages.Count);
         }
 
         /// <summary>
         /// Gets all push receivers
         /// </summary>
-        public virtual IPagedList<PushRegistration> GetPushReceivers(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PushRegistration>> GetPushReceivers(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var allReceivers = _pushRegistratiosnRepository.Table.OrderByDescending(x => x.RegisteredOn).ToList();
+            var allReceivers = await _pushRegistratiosnRepository.Table.OrderByDescending(x => x.RegisteredOn).ToListAsync();
             return new PagedList<PushRegistration>(allReceivers.Skip(pageIndex * pageSize).Take(pageSize).ToList(), pageIndex, pageSize, allReceivers.Count);
         }
 
@@ -134,7 +137,7 @@ namespace Grand.Services.PushNotifications
         /// <param name="registrationIds"></param>
         /// <param name="clickUrl"></param>
         /// <returns>Bool indicating whether message was sent successfully and string result to display</returns>
-        public virtual Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string clickUrl, List<string> registrationIds = null)
+        public virtual async Task<(bool, string)> SendPushNotification(string title, string text, string pictureUrl, string clickUrl, List<string> registrationIds = null)
         {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
@@ -148,10 +151,10 @@ namespace Grand.Services.PushNotifications
             }
             else
             {
-                var receivers = GetPushReceivers();
+                var receivers = await GetPushReceivers();
                 if (!receivers.Any())
                 {
-                    return new Tuple<bool, string>(false, _localizationService.GetResource("PushNotifications.Error.NoReceivers"));
+                    return (false, _localizationService.GetResource("PushNotifications.Error.NoReceivers"));
                 }
 
                 foreach (var receiver in receivers)
@@ -194,10 +197,10 @@ namespace Grand.Services.PushNotifications
 
                                 if (response.failure > 0)
                                 {
-                                    _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error occured while sending push notification.", sResponseFromServer);
+                                    await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error occured while sending push notification.", sResponseFromServer);
                                 }
 
-                                InsertPushMessage(new PushMessage
+                                await InsertPushMessage(new PushMessage
                                 {
                                     NumberOfReceivers = response.success,
                                     SentOn = DateTime.UtcNow,
@@ -205,8 +208,7 @@ namespace Grand.Services.PushNotifications
                                     Title = title
                                 });
 
-                                return new Tuple<bool, string>(true, string.Format(_localizationService.GetResource("PushNotifications.MessageSent"),
-                                response.success, response.failure));
+                                return (true, string.Format(_localizationService.GetResource("PushNotifications.MessageSent"), response.success, response.failure));
                             }
                         }
                     }
@@ -214,7 +216,7 @@ namespace Grand.Services.PushNotifications
             }
             catch (Exception ex)
             {
-                return new Tuple<bool, string>(false, ex.Message);
+                return (false, ex.Message);
             }
         }
 
@@ -227,18 +229,18 @@ namespace Grand.Services.PushNotifications
         /// <param name="customerId"></param>
         /// <param name="clickUrl"></param>
         /// <returns>Bool indicating whether message was sent successfully and string result to display</returns>
-        public virtual Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string customerId, string clickUrl)
+        public virtual async Task<(bool, string)> SendPushNotification(string title, string text, string pictureUrl, string customerId, string clickUrl)
         {
-            return SendPushNotification(title, text, pictureUrl, clickUrl, new List<string> { GetPushReceiverByCustomerId(customerId).Id.ToString() });
+            return await SendPushNotification(title, text, pictureUrl, clickUrl, new List<string> { GetPushReceiverByCustomerId(customerId).Id.ToString() });
         }
 
         /// <summary>
         /// Gets all push receivers
         /// </summary>
         /// <param name="Id"></param>
-        public virtual PushRegistration GetPushReceiver(string Id)
+        public virtual Task<PushRegistration> GetPushReceiver(string Id)
         {
-            return _pushRegistratiosnRepository.Table.Where(x => x.Id == Id).FirstOrDefault();
+            return _pushRegistratiosnRepository.Table.Where(x => x.Id == Id).FirstOrDefaultAsync();
         }
     }
 }

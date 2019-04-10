@@ -1,23 +1,24 @@
 ﻿using Grand.Core;
 using Grand.Core.Events;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Events
 {
     public static class EventPublisherExtensions
     {
-        public static void EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
+        public static async Task EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            eventPublisher.Publish(new EntityInserted<T>(entity));
+            await eventPublisher.Publish(new EntityInserted<T>(entity));
         }
 
-        public static void EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
+        public static async Task EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            eventPublisher.Publish(new EntityUpdated<T>(entity));
+            await eventPublisher.Publish(new EntityUpdated<T>(entity));
         }
 
-        public static void EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
+        public static async Task EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            eventPublisher.Publish(new EntityDeleted<T>(entity));
+            await eventPublisher.Publish(new EntityDeleted<T>(entity));
         }
 
     }

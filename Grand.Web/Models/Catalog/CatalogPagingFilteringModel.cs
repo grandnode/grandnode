@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Models.Catalog
 {
@@ -286,7 +287,7 @@ namespace Grand.Web.Models.Catalog
                 return result;
             }
 
-            public virtual void PrepareSpecsFilters(IList<string> alreadyFilteredSpecOptionIds,
+            public virtual async Task PrepareSpecsFilters(IList<string> alreadyFilteredSpecOptionIds,
                 IList<string> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService,
                 IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
@@ -296,12 +297,12 @@ namespace Grand.Web.Models.Catalog
                     ? string.Join(",", filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds)) : string.Empty;
                 var cacheKey = string.Format(ModelCacheEventConsumer.SPECS_FILTER_MODEL_KEY, optionIds, workContext.WorkingLanguage.Id);
 
-                var allFilters = cacheManager.Get(cacheKey, () =>
+                var allFilters = await cacheManager.Get(cacheKey, async () =>
                 {
                     var _allFilters = new List<SpecificationAttributeOptionFilter>();
                     foreach (var sao in filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds))
                     {
-                        var sa = specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
+                        var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
                         if (sa != null)
                         {
                             _allFilters.Add(new SpecificationAttributeOptionFilter

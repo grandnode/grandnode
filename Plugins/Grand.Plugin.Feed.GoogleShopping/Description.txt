@@ -1,7 +1,7 @@
 ﻿Group: Promotion feeds
 FriendlyName: Google Shopping - Google Product Search
 SystemName: PromotionFeed.GoogleShopping
-Version: 1.76
+Version: 1.77
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

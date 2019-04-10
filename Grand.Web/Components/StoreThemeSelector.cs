@@ -17,14 +17,12 @@ namespace Grand.Web.ViewComponents
             this._storeInformationSettings = storeInformationSettings;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
-            var model = await Task.Run(() => _commonViewModelService.PrepareStoreThemeSelector());
+            var model = _commonViewModelService.PrepareStoreThemeSelector();
             return View(model);
-
-
         }
     }
 }

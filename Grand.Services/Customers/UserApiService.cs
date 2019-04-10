@@ -4,6 +4,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -25,51 +26,55 @@ namespace Grand.Services.Customers
         /// Get user api by id
         /// </summary>
         /// <param name="id">id</param>
-        public virtual UserApi GetUserById(string id)
+        public virtual Task<UserApi> GetUserById(string id)
         {
-            return _userRepository.GetById(id);
+            return _userRepository.GetByIdAsync(id);
         }
 
         /// <summary>
         /// Get user api by email
         /// </summary>
         /// <param name="id">id</param>
-        public virtual UserApi GetUserByEmail(string email)
+        public virtual Task<UserApi> GetUserByEmail(string email)
         {
-            return _userRepository.Table.Where(x => x.Email == email.ToLowerInvariant()).FirstOrDefault();
+            return _userRepository.Table.Where(x => x.Email == email.ToLowerInvariant()).FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Insert user api
         /// </summary>
         /// <param name="userApi">User api</param>
-        public virtual void InsertUserApi(UserApi userApi)
+        public virtual async Task InsertUserApi(UserApi userApi)
         {
-            _userRepository.Insert(userApi);
+            await _userRepository.InsertAsync(userApi);
 
             //event notification
-            _eventPublisher.EntityInserted(userApi);
+            await _eventPublisher.EntityInserted(userApi);
         }
 
         /// <summary>
         /// Update user api
         /// </summary>
         /// <param name="userApi">User api</param>
-        public virtual void UpdateUserApi(UserApi userApi)
+        public virtual async Task UpdateUserApi(UserApi userApi)
         {
-            _userRepository.Update(userApi);
+            await _userRepository.UpdateAsync(userApi);
 
             //event notification
-            _eventPublisher.EntityUpdated(userApi);
+            await _eventPublisher.EntityUpdated(userApi);
         }
 
         /// <summary>
         /// Delete user api
         /// </summary>
         /// <param name="userApi">User api</param>
-        public virtual void DeleteUserApi(UserApi userApi)
+        public virtual async Task DeleteUserApi(UserApi userApi)
         {
-            _userRepository.Delete(userApi);
+            await _userRepository.DeleteAsync(userApi);
+
+            //event notification
+            await _eventPublisher.EntityDeleted(userApi);
+
         }
 
         /// <summary>
@@ -79,14 +84,13 @@ namespace Grand.Services.Customers
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns>PagedList<UserApi></returns>
-        public virtual IPagedList<UserApi> GetUsers(string email = "", int pageIndex = 0, int pageSize = 2147483647)
+        public virtual async Task<IPagedList<UserApi>> GetUsers(string email = "", int pageIndex = 0, int pageSize = 2147483647)
         {
             var query = _userRepository.Table;
             if (!string.IsNullOrEmpty(email))
                 query = query.Where(x => x.Email.Contains(email.ToLowerInvariant()));
 
-            var users = new PagedList<UserApi>(query, pageIndex, pageSize);
-            return users;
+            return await Task.FromResult(new PagedList<UserApi>(query, pageIndex, pageSize));
         }
     }
 }

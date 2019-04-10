@@ -7,6 +7,7 @@ using Grand.Services.Localization;
 using Grand.Services.Tax;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.CountryStateZip
 {
@@ -19,16 +20,19 @@ namespace Grand.Plugin.Tax.CountryStateZip
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
 
         public CountryStateZipTaxProvider(ITaxRateService taxRateService,
             IStoreContext storeContext,
             ICacheManager cacheManager,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IServiceProvider serviceProvider)
         {
             this._taxRateService = taxRateService;
             this._storeContext = storeContext;
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
+            this._serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace Grand.Plugin.Tax.CountryStateZip
         /// </summary>
         /// <param name="calculateTaxRequest">Tax calculation request</param>
         /// <returns>Tax</returns>
-        public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
+        public async Task<CalculateTaxResult> GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
             var result = new CalculateTaxResult();
 
@@ -55,10 +59,10 @@ namespace Grand.Plugin.Tax.CountryStateZip
             }
 
             const string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
-            var allTaxRates = _cacheManager.Get(cacheKey, () =>
-                _taxRateService
-                    .GetAllTaxRates()
-                    .Select(x => new TaxRateForCaching
+            var allTaxRates = await _cacheManager.Get(cacheKey, async () =>
+                {
+                    var taxes = await _taxRateService.GetAllTaxRates();
+                    return taxes.Select(x => new TaxRateForCaching
                     {
                         Id = x.Id,
                         StoreId = x.StoreId,
@@ -67,10 +71,8 @@ namespace Grand.Plugin.Tax.CountryStateZip
                         StateProvinceId = x.StateProvinceId,
                         Zip = x.Zip,
                         Percentage = x.Percentage
-                    }
-                    )
-                    .ToList()
-                );
+                    });
+                });
 
             var storeId = _storeContext.CurrentStore.Id;
             var taxCategoryId = calculateTaxRequest.TaxCategoryId;
@@ -112,49 +114,49 @@ namespace Grand.Plugin.Tax.CountryStateZip
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Store", "Store");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country", "Country");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country.Hint", "The country.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince", "State / province");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint", "If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip", "Zip");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory", "Tax category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint", "The tax category.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage", "Percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint", "The tax rate.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord", "Add tax rate");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint", "Adding a new tax rate");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Store", "Store");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Country", "Country");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Country.Hint", "The country.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince", "State / province");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint", "If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip", "Zip");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory", "Tax category");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint", "The tax category.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage", "Percentage");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage.Hint", "The tax rate.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.AddRecord", "Add tax rate");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.AddRecord.Hint", "Adding a new tax rate");
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Store");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Store.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord");
-            this.DeletePluginLocaleResource("Plugins.Tax.CountryStateZip.AddRecord.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Store");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Store.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Country");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Country.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.AddRecord");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.AddRecord.Hint");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
     }
 }

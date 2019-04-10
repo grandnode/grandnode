@@ -25,6 +25,7 @@ using Grand.Web.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -71,7 +72,7 @@ namespace Grand.Web.Controllers
             this._pictureService = pictureService;
         }
 
-        public IActionResult List()
+        public virtual IActionResult List()
         {
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -81,43 +82,39 @@ namespace Grand.Web.Controllers
             return View("List", model);
         }
 
-        public IActionResult ArticlesByCategory(string categoryId)
+        public virtual async Task<IActionResult> ArticlesByCategory(string categoryId)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var category = _knowledgebaseService.GetPublicKnowledgebaseCategory(categoryId);
+            var category = await _knowledgebaseService.GetPublicKnowledgebaseCategory(categoryId);
             if (category == null)
                 return RedirectToAction("List");
 
             var model = new KnowledgebaseHomePageModel();
-            var articles = _knowledgebaseService.GetPublicKnowledgebaseArticlesByCategory(categoryId);
+            var articles = await _knowledgebaseService.GetPublicKnowledgebaseArticlesByCategory(categoryId);
             var allCategories = _knowledgebaseService.GetPublicKnowledgebaseCategories();
             articles.ForEach(x => model.Items.Add(new KnowledgebaseItemModel
             {
-                Name = x.GetLocalized(y => y.Name),
+                Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                 Id = x.Id,
-                SeName = x.GetLocalized(y => y.SeName),
+                SeName = x.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
                 IsArticle = true
             }));
 
             model.CurrentCategoryId = categoryId;
 
-            model.CurrentCategoryDescription = category.GetLocalized(y => y.Description);
-            model.CurrentCategoryMetaDescription = category.GetLocalized(y => y.MetaDescription);
-            model.CurrentCategoryMetaKeywords = category.GetLocalized(y => y.MetaKeywords);
-            model.CurrentCategoryMetaTitle = category.GetLocalized(y => y.MetaTitle);
-            model.CurrentCategoryName = category.GetLocalized(y => y.Name);
-            model.CurrentCategorySeName = category.GetLocalized(y => y.SeName);
+            model.CurrentCategoryDescription = category.GetLocalized(y => y.Description, _workContext.WorkingLanguage.Id);
+            model.CurrentCategoryMetaDescription = category.GetLocalized(y => y.MetaDescription, _workContext.WorkingLanguage.Id);
+            model.CurrentCategoryMetaKeywords = category.GetLocalized(y => y.MetaKeywords, _workContext.WorkingLanguage.Id);
+            model.CurrentCategoryMetaTitle = category.GetLocalized(y => y.MetaTitle, _workContext.WorkingLanguage.Id);
+            model.CurrentCategoryName = category.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id);
+            model.CurrentCategorySeName = category.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id);
 
-            string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY,
-            category.Id,
-            string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-            _storeContext.CurrentStore.Id,
-            _workContext.WorkingLanguage.Id);
-            model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
-                category
-                .GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService)
+            string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY, category.Id,
+            string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id);
+            model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                 .Select(catBr => new KnowledgebaseCategoryModel
                 {
                     Id = catBr.Id,
@@ -130,7 +127,7 @@ namespace Grand.Web.Controllers
             return View("List", model);
         }
 
-        public IActionResult ItemsByKeyword(string keyword)
+        public virtual async Task<IActionResult> ItemsByKeyword(string keyword)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -139,42 +136,45 @@ namespace Grand.Web.Controllers
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                var categories = _knowledgebaseService.GetPublicKnowledgebaseCategoriesByKeyword(keyword);
-                var allCategories = _knowledgebaseService.GetPublicKnowledgebaseCategories();
+                var categories = await _knowledgebaseService.GetPublicKnowledgebaseCategoriesByKeyword(keyword);
+                var allCategories = await _knowledgebaseService.GetPublicKnowledgebaseCategories();
                 categories.ForEach(x => model.Items.Add(new KnowledgebaseItemModel
                 {
-                    Name = x.GetLocalized(y => y.Name),
+                    Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                     Id = x.Id,
-                    SeName = x.GetLocalized(y => y.SeName),
+                    SeName = x.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
                     IsArticle = false,
                     FormattedBreadcrumbs = x.GetFormattedBreadCrumb(allCategories, ">")
                 }));
 
-                var articles = _knowledgebaseService.GetPublicKnowledgebaseArticlesByKeyword(keyword);
-                articles.ForEach(x => model.Items.Add(new KnowledgebaseItemModel
+                var articles = await _knowledgebaseService.GetPublicKnowledgebaseArticlesByKeyword(keyword);
+                foreach (var item in articles)
                 {
-                    Name = x.GetLocalized(y => y.Name),
-                    Id = x.Id,
-                    SeName = x.GetLocalized(y => y.SeName),
-                    IsArticle = true,
-                    FormattedBreadcrumbs = _knowledgebaseService.GetPublicKnowledgebaseCategory(x.ParentCategoryId)?.GetFormattedBreadCrumb(allCategories, ">") +
-                    " > " + x.GetLocalized(y => y.Name)
-                }));
+                    var kbm = new KnowledgebaseItemModel
+                    {
+                        Name = item.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
+                        Id = item.Id,
+                        SeName = item.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
+                        IsArticle = true,
+                        FormattedBreadcrumbs = (await _knowledgebaseService.GetPublicKnowledgebaseCategory(item.ParentCategoryId))?.GetFormattedBreadCrumb(allCategories, ">") +
+                                        " > " + item.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id)
+                    };
+                    model.Items.Add(kbm);
+                }
             }
-
             model.CurrentCategoryId = "[NONE]";
             model.SearchKeyword = keyword;
 
             return View("List", model);
         }
 
-        public IActionResult KnowledgebaseArticle(string articleId)
+        public virtual async Task<IActionResult> KnowledgebaseArticle(string articleId, [FromServices] ICustomerService customerService)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
             var customer = _workContext.CurrentCustomer;
-            var article = _knowledgebaseService.GetKnowledgebaseArticle(articleId);
+            var article = await _knowledgebaseService.GetKnowledgebaseArticle(articleId);
             if (article == null)
                 return RedirectToAction("List");
 
@@ -188,36 +188,36 @@ namespace Grand.Web.Controllers
 
             var model = new KnowledgebaseArticleModel();
 
-            PrepareKnowledgebaseArticleModel(model, article);
+            await PrepareKnowledgebaseArticleModel(model, article, customerService);
             return View("Article", model);
         }
 
-        private void PrepareKnowledgebaseArticleModel(KnowledgebaseArticleModel model, KnowledgebaseArticle article)
+        private async Task PrepareKnowledgebaseArticleModel(KnowledgebaseArticleModel model, KnowledgebaseArticle article, ICustomerService customerService)
         {
-            model.Content = article.GetLocalized(y => y.Content);
-            model.Name = article.GetLocalized(y => y.Name);
+            model.Content = article.GetLocalized(y => y.Content, _workContext.WorkingLanguage.Id);
+            model.Name = article.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id);
             model.Id = article.Id;
             model.ParentCategoryId = article.ParentCategoryId;
-            model.SeName = article.GetLocalized(y => y.SeName);
+            model.SeName = article.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id);
             model.AllowComments = article.AllowComments;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnArticleCommentPage;
-            var articleComments = _knowledgebaseService.GetArticleCommentsByArticleId(article.Id);
+            var articleComments = await _knowledgebaseService.GetArticleCommentsByArticleId(article.Id);
             foreach (var ac in articleComments)
             {
-                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(ac.CustomerId);
+                var customer = await customerService.GetCustomerById(ac.CustomerId);
                 var commentModel = new KnowledgebaseArticleCommentModel
                 {
                     Id = ac.Id,
                     CustomerId = ac.CustomerId,
-                    CustomerName = customer.FormatUserName(),
+                    CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
                     CommentText = ac.CommentText,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(ac.CreatedOnUtc, DateTimeKind.Utc),
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                 };
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
-                    commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                    commentModel.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
+                        customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
@@ -228,7 +228,7 @@ namespace Grand.Web.Controllers
 
             foreach (var id in article.RelatedArticles)
             {
-                var a = _knowledgebaseService.GetPublicKnowledgebaseArticle(id);
+                var a = await _knowledgebaseService.GetPublicKnowledgebaseArticle(id);
                 if (a != null)
                     model.RelatedArticles.Add(new KnowledgebaseArticleModel
                     {
@@ -238,7 +238,7 @@ namespace Grand.Web.Controllers
                     });
             }
 
-            var category = _knowledgebaseService.GetKnowledgebaseCategory(article.ParentCategoryId);
+            var category = await _knowledgebaseService.GetKnowledgebaseCategory(article.ParentCategoryId);
             if (category != null)
             {
                 string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY,
@@ -246,9 +246,8 @@ namespace Grand.Web.Controllers
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id);
-                model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
-                    category
-                    .GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService)
+                model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                    (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                     .Select(catBr => new KnowledgebaseCategoryModel
                     {
                         Id = catBr.Id,
@@ -264,13 +263,13 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
-        public virtual IActionResult ArticleCommentAdd(string articleId, KnowledgebaseArticleModel model, bool captchaValid,
-               [FromServices] IWorkContext workContext)
+        public virtual async Task<IActionResult> ArticleCommentAdd(string articleId, KnowledgebaseArticleModel model, bool captchaValid,
+               [FromServices] IWorkContext workContext, [FromServices] ICustomerService customerService)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var article = _knowledgebaseService.GetPublicKnowledgebaseArticle(articleId);
+            var article = await _knowledgebaseService.GetPublicKnowledgebaseArticle(articleId);
             if (article == null || !article.AllowComments)
                 return RedirectToRoute("HomePage");
 
@@ -296,28 +295,28 @@ namespace Grand.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                     ArticleTitle = article.Name,
                 };
-                _knowledgebaseService.InsertArticleComment(comment);
+                await _knowledgebaseService.InsertArticleComment(comment);
 
                 if (!customer.HasContributions)
                 {
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);
+                    await customerService.UpdateContributions(customer);
                 }
 
                 //notify a store owner
                 if (_knowledgebaseSettings.NotifyAboutNewArticleComments)
-                    _workflowMessageService.SendArticleCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendArticleCommentNotificationMessage(article, comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddArticleComment", comment.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddArticleComment"));
+                await _customerActivityService.InsertActivity("PublicStore.AddArticleComment", comment.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddArticleComment"));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.knowledgebase.addarticlecomment.result"] = _localizationService.GetResource("Knowledgebase.Article.Comments.SuccessfullyAdded");
-                return RedirectToRoute("KnowledgebaseArticle", new { SeName = article.GetSeName() });
+                return RedirectToRoute("KnowledgebaseArticle", new { SeName = article.GetSeName(_workContext.WorkingLanguage.Id) });
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareKnowledgebaseArticleModel(model, article);
+            await PrepareKnowledgebaseArticleModel(model, article, customerService);
             return View("Article", model);
         }
     }

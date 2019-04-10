@@ -3,6 +3,7 @@ using Grand.Framework.Components;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
@@ -28,12 +29,12 @@ namespace Grand.Web.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke(int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
             if (!_catalogSettings.RecommendedProductsEnabled)
                 return Content("");
 
-            var model = _productViewModelService.PrepareProductsRecommended(productThumbPictureSize);
+            var model = await _productViewModelService.PrepareProductsRecommended(productThumbPictureSize);
             if (!model.Any())
                 return Content("");
 

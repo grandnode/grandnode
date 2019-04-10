@@ -2,6 +2,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -12,9 +13,9 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="email">The email.</param>
-        public static void PublishNewsletterSubscribe(this IEventPublisher eventPublisher, string email)
+        public static async Task PublishNewsletterSubscribe(this IEventPublisher eventPublisher, string email)
         {
-            eventPublisher.Publish(new EmailSubscribedEvent(email));
+            await eventPublisher.Publish(new EmailSubscribedEvent(email));
         }
 
         /// <summary>
@@ -22,19 +23,19 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="email">The email.</param>
-        public static void PublishNewsletterUnsubscribe(this IEventPublisher eventPublisher, string email)
+        public static async Task PublishNewsletterUnsubscribe(this IEventPublisher eventPublisher, string email)
         {
-            eventPublisher.Publish(new EmailUnsubscribedEvent(email));
+            await eventPublisher.Publish(new EmailUnsubscribedEvent(email));
         }
 
-        public static void EntityTokensAdded<T>(this IEventPublisher eventPublisher, T entity, Drop liquidDrop, LiquidObject liquidObject) where T : ParentEntity
+        public static async Task EntityTokensAdded<T>(this IEventPublisher eventPublisher, T entity, Drop liquidDrop, LiquidObject liquidObject) where T : ParentEntity
         {
-            eventPublisher.Publish(new EntityTokensAddedEvent<T>(entity, liquidDrop, liquidObject));
+            await eventPublisher.Publish(new EntityTokensAddedEvent<T>(entity, liquidDrop, liquidObject));
         }
 
-        public static void MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, LiquidObject liquidObject)
+        public static async Task MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, LiquidObject liquidObject)
         {
-            eventPublisher.Publish(new MessageTokensAddedEvent(message, liquidObject));
+            await eventPublisher.Publish(new MessageTokensAddedEvent(message, liquidObject));
         }
     }
 }

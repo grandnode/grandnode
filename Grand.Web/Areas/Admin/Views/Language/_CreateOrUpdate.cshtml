@@ -40,7 +40,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "language-edit");
-    eventPublisher.Publish(eventMessage);
+    await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

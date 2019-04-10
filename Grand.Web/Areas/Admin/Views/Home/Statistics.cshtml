@@ -4,9 +4,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard.Statistics").Text;
-    var canManageOrders = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
+    var canManageOrders = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
 }
 <antiforgery-token />
 <div class="page-bar" style="height:43px;">

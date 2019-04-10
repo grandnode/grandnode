@@ -1,4 +1,6 @@
-﻿namespace Grand.Services.Customers
+﻿using System.Threading.Tasks;
+
+namespace Grand.Services.Customers
 {
     public partial interface ICustomerAttributeFormatter
     {
@@ -9,6 +11,6 @@
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml, string serapator = "<br />", bool htmlEncode = true);
+        Task<string> FormatAttributes(string attributesXml, string serapator = "<br />", bool htmlEncode = true);
     }
 }

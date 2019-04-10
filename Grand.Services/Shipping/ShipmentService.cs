@@ -8,6 +8,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Shipping
 {
@@ -45,15 +46,15 @@ namespace Grand.Services.Shipping
         /// Deletes a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void DeleteShipment(Shipment shipment)
+        public virtual async Task DeleteShipment(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
 
-            _shipmentRepository.Delete(shipment);
+            await _shipmentRepository.DeleteAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityDeleted(shipment);
+            await _eventPublisher.EntityDeleted(shipment);
         }
         
         /// <summary>
@@ -71,7 +72,7 @@ namespace Grand.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(string vendorId = "", string warehouseId = "",
+        public virtual async Task<IPagedList<Shipment>> GetAllShipments(string vendorId = "", string warehouseId = "",
             string shippingCountryId = "",
             int shippingStateId = 0,
             string shippingCity = null,
@@ -101,9 +102,7 @@ namespace Grand.Services.Shipping
             var builderSort = Builders<Shipment>.Sort.Descending(x => x.CreatedOnUtc);
 
             var query = _shipmentRepository.Collection;
-            var shipments = new PagedList<Shipment>(query, filter, builderSort, pageIndex, pageSize);
-
-            return shipments;
+            return await Task.FromResult(new PagedList<Shipment>(query, filter, builderSort, pageIndex, pageSize));
             
         }
 
@@ -112,7 +111,7 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
         /// <returns>Shipments</returns>
-        public virtual IList<Shipment> GetShipmentsByIds(string[] shipmentIds)
+        public virtual async Task<IList<Shipment>> GetShipmentsByIds(string[] shipmentIds)
         {
             if (shipmentIds == null || shipmentIds.Length == 0)
                 return new List<Shipment>();
@@ -120,7 +119,8 @@ namespace Grand.Services.Shipping
             var query = from o in _shipmentRepository.Table
                         where shipmentIds.Contains(o.Id)
                         select o;
-            var shipments = query.ToList();
+            var shipments = await query.ToListAsync();
+
             //sort by passed identifiers
             var sortedOrders = new List<Shipment>();
             foreach (string id in shipmentIds)
@@ -133,9 +133,9 @@ namespace Grand.Services.Shipping
         }
 
 
-        public virtual IList<Shipment> GetShipmentsByOrder(string orderId)
+        public virtual async Task<IList<Shipment>> GetShipmentsByOrder(string orderId)
         {
-            return _shipmentRepository.Collection.Find(x => x.OrderId == orderId).ToListAsync().Result;
+            return await _shipmentRepository.Collection.Find(x => x.OrderId == orderId).ToListAsync();
         }
 
         /// <summary>
@@ -143,40 +143,40 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
         /// <returns>Shipment</returns>
-        public virtual Shipment GetShipmentById(string shipmentId)
+        public virtual Task<Shipment> GetShipmentById(string shipmentId)
         {
-            return _shipmentRepository.GetById(shipmentId);
+            return _shipmentRepository.GetByIdAsync(shipmentId);
         }
 
         /// <summary>
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void InsertShipment(Shipment shipment)
+        public virtual async Task InsertShipment(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
             var shipmentExists = _shipmentRepository.Table.FirstOrDefault();
             shipment.ShipmentNumber = shipmentExists != null ? _shipmentRepository.Table.Max(x=>x.ShipmentNumber) + 1 : 1;
-            _shipmentRepository.Insert(shipment);
+            await _shipmentRepository.InsertAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityInserted(shipment);
+            await _eventPublisher.EntityInserted(shipment);
         }
 
         /// <summary>
         /// Updates the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void UpdateShipment(Shipment shipment)
+        public virtual async Task UpdateShipment(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
 
-            _shipmentRepository.Update(shipment);
+            await _shipmentRepository.UpdateAsync(shipment);
 
             //event notification
-            _eventPublisher.EntityUpdated(shipment);
+            await _eventPublisher.EntityUpdated(shipment);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Grand.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        public virtual int GetQuantityInShipments(Product product, string attributexml, string warehouseId,
+        public virtual async Task<int> GetQuantityInShipments(Product product, string attributexml, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered)
         {
             if (product == null)
@@ -211,7 +211,7 @@ namespace Grand.Services.Shipping
             if(!string.IsNullOrEmpty(attributexml))
                 query = query.Where(si => si.ShipmentItems.Any(x => x.AttributeXML == attributexml));
 
-            var result = query.SelectMany(x => x.ShipmentItems).Where(x => x.ProductId == product.Id).Sum(x => x.Quantity);
+            var result = await query.SelectMany(x => x.ShipmentItems).Where(x => x.ProductId == product.Id).SumAsync(x => x.Quantity);
 
             return result;
         }

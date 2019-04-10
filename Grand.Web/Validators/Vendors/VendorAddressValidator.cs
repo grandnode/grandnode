@@ -25,15 +25,15 @@ namespace Grand.Web.Validators.Common
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
-                RuleFor(x => x.StateProvinceId).Must((x, context) =>
+                RuleFor(x => x.StateProvinceId).MustAsync(async (x, y, context) =>
                 {
                     //does selected country has states?
                     var countryId = !String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "";
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
+                    var hasStates = (await stateProvinceService.GetStateProvincesByCountryId(countryId)).Count > 0;
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
-                        if (String.IsNullOrEmpty(x.StateProvinceId))
+                        if (String.IsNullOrEmpty(y))
                         {
                             return false;
                         }

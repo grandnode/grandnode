@@ -3,9 +3,11 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Logging
 {
@@ -64,20 +66,20 @@ namespace Grand.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        public virtual void DeleteLog(Log log)
+        public virtual async Task DeleteLog(Log log)
         {
             if (log == null)
                 throw new ArgumentNullException("log");
 
-            _logRepository.Delete(log);
+            await _logRepository.DeleteAsync(log);
         }
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        public virtual void ClearLog()
+        public virtual async Task ClearLog()
         {
-            _logRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
+            await _logRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
         }
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual async Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null, 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -112,9 +114,8 @@ namespace Grand.Services.Logging
 
             var builderSort = Builders<Log>.Sort.Descending(x => x.CreatedOnUtc);
             var query = _logRepository.Collection;
-            var log = new PagedList<Log>(query, filter, builderSort, pageIndex, pageSize);
-
-            return log;
+            
+            return await Task.FromResult(new PagedList<Log>(query, filter, builderSort, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -122,9 +123,9 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual Log GetLogById(string logId)
+        public virtual Task<Log> GetLogById(string logId)
         {
-            return _logRepository.GetById(logId);
+            return _logRepository.GetByIdAsync(logId);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        public virtual IList<Log> GetLogByIds(string[] logIds)
+        public virtual async Task<IList<Log>> GetLogByIds(string[] logIds)
         {
             if (logIds == null || logIds.Length == 0)
                 return new List<Log>();
@@ -141,7 +142,7 @@ namespace Grand.Services.Logging
                         where logIds.Contains(l.Id)
                         select l;
 
-            var logItems = query.ToList();
+            var logItems = await query.ToListAsync();
             //sort by passed identifiers
             var sortedLogItems = new List<Log>();
             foreach (string id in logIds)
@@ -161,7 +162,7 @@ namespace Grand.Services.Logging
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
+        public virtual async Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             var log = new Log
             {
@@ -175,7 +176,7 @@ namespace Grand.Services.Logging
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            _logRepository.Insert(log);
+            await _logRepository.InsertAsync(log);
 
             return log;
         }

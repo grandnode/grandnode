@@ -14,6 +14,7 @@ namespace Grand.Web.ViewComponents
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
+
         public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IShoppingCartService shoppingCartService, IStoreContext storeContext)
         {
             _shoppingCartViewModelService = shoppingCartViewModelService;
@@ -30,9 +31,9 @@ namespace Grand.Web.ViewComponents
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var model = new ShoppingCartModel();
-            await Task.Run(() => _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
                 isEditable: false,
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault()));
+                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return View(model);
 
         }

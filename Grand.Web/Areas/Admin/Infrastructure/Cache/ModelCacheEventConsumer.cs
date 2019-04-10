@@ -3,6 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
 using Grand.Services.Events;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Cache
 {
@@ -70,59 +71,71 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Cache
         }
 
         //specification attributes
-        public void HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public Task HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public Task HandleEvent(EntityInserted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public Task HandleEvent(EntityUpdated<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public Task HandleEvent(EntityDeleted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
 
         //vendors
-        public void HandleEvent(EntityInserted<Vendor> eventMessage)
+        public Task HandleEvent(EntityInserted<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public Task HandleEvent(EntityUpdated<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
-        public void HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public Task HandleEvent(EntityDeleted<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
+            return Task.CompletedTask;
         }
     }
 }

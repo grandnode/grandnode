@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -62,7 +63,7 @@ namespace Grand.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderByCountryReportLine> GetCountryReport(string storeId, OrderStatus? os,
+        public virtual async Task<IList<OrderByCountryReportLine>> GetCountryReport(string storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
             int? orderStatusId = null;
@@ -108,11 +109,9 @@ namespace Grand.Services.Orders
                            CountryId = r.CountryId,
                            TotalOrders = r.TotalOrders,
                            SumOrders = r.SumOrders
-                       })
+                       });
 
-                       .ToList();
-
-            return report;
+            return await report.ToListAsync();
         }
 
 
@@ -122,7 +121,7 @@ namespace Grand.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderByTimeReportLine> GetOrderByTimeReport(DateTime? startTimeUtc = null,
+        public virtual async Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null)
         {
             List<OrderByTimeReportLine> report = new List<OrderByTimeReportLine>();
@@ -141,9 +140,9 @@ namespace Grand.Services.Orders
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
             if(daydiff > 31)
             {
-                var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
+                var query = await _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
-                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x=>x.Period).ToList();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x=>x.Period).ToListAsync();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine()
@@ -156,9 +155,9 @@ namespace Grand.Services.Orders
             }
             else
             {
-                var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x=>
+                var query = await _orderRepository.Collection.Aggregate().Match(filter).Group(x=>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
-                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Period).ToList();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Period).ToListAsync();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine()
@@ -192,7 +191,7 @@ namespace Grand.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(string storeId = "",
+        public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLine(string storeId = "",
             string vendorId = "", string billingCountryId = "", 
             string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
@@ -259,7 +258,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(billingLastName))
                 filter = filter & builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
 
-            var query = _orderRepository.Collection
+            var query = await _orderRepository.Collection
                     .Aggregate()
                     .Match(filter)
                     .Group(x => 1, g => new OrderAverageReportLine
@@ -268,7 +267,7 @@ namespace Grand.Services.Orders
                         SumShippingExclTax = g.Sum(o => o.OrderShippingExclTax),
                         SumTax = g.Sum(o => o.OrderTax),
                         SumOrders = g.Sum(o => o.OrderTotal)
-                    }).ToListAsync().Result;
+                    }).ToListAsync();
 
 
             var item2 = query.Count() > 0 ? query.FirstOrDefault() : new OrderAverageReportLine
@@ -287,7 +286,7 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLineSummary OrderAverageReport(string storeId, OrderStatus os)
+        public virtual async Task<OrderAverageReportLineSummary> OrderAverageReport(string storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary();
             item.OrderStatus = os;
@@ -300,7 +299,7 @@ namespace Grand.Services.Orders
             if (!timeZone.IsInvalidTime(t1))
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-                var todayResult = GetOrderAverageReportLine(storeId: storeId,
+                var todayResult = await GetOrderAverageReportLine(storeId: storeId,
                     os: os, 
                     startTimeUtc: startTime1);
                 item.SumTodayOrders = todayResult.SumOrders;
@@ -313,7 +312,7 @@ namespace Grand.Services.Orders
             if (!timeZone.IsInvalidTime(t2))
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-                var weekResult = GetOrderAverageReportLine(storeId: storeId,
+                var weekResult = await GetOrderAverageReportLine(storeId: storeId,
                     os: os,
                     startTimeUtc: startTime2);
                 item.SumThisWeekOrders = weekResult.SumOrders;
@@ -324,7 +323,7 @@ namespace Grand.Services.Orders
             if (!timeZone.IsInvalidTime(t3))
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-                var monthResult = GetOrderAverageReportLine(storeId: storeId,
+                var monthResult = await GetOrderAverageReportLine(storeId: storeId,
                     os: os,
                     startTimeUtc: startTime3);
                 item.SumThisMonthOrders = monthResult.SumOrders;
@@ -335,14 +334,14 @@ namespace Grand.Services.Orders
             if (!timeZone.IsInvalidTime(t4))
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-                var yearResult = GetOrderAverageReportLine(storeId: storeId,
+                var yearResult = await GetOrderAverageReportLine(storeId: storeId,
                     os: os,
                     startTimeUtc: startTime4);
                 item.SumThisYearOrders = yearResult.SumOrders;
                 item.CountThisYearOrders = yearResult.CountOrders;
             }
             //all time
-            var allTimeResult = GetOrderAverageReportLine(storeId: storeId, os: os);
+            var allTimeResult = await GetOrderAverageReportLine(storeId: storeId, os: os);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -367,7 +366,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual IPagedList<BestsellersReportLine> BestSellersReport(
+        public virtual async Task<IPagedList<BestsellersReportLine>> BestSellersReport(
             string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
@@ -443,7 +442,7 @@ namespace Grand.Services.Orders
                 query = query.SortByDescending(x => x.TotalAmount);
             }
 
-            var query2 = query.ToListAsync().Result;
+            var query2 = await query.ToListAsync();
             var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
             return result;
 
@@ -455,7 +454,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="days">Orders in the last days</param>
         /// <returns>ReportPeriodOrder</returns>
-        public virtual ReportPeriodOrder GetOrderPeriodReport(int days)
+        public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days)
         {
             DateTime date = days != 0 ? _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days).Date : _dateTimeHelper.ConvertToUserTime(DateTime.Now).Date ;
 
@@ -464,7 +463,7 @@ namespace Grand.Services.Orders
                         o.CreatedOnUtc >= date
                         group o by 1 into g
                         select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
-            var report = query.ToList()?.FirstOrDefault();
+            var report = (await query.ToListAsync())?.FirstOrDefault();
             if (report == null)
                 report = new ReportPeriodOrder();
             report.Date = date;
@@ -481,7 +480,7 @@ namespace Grand.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual string[] GetAlsoPurchasedProductsIds(string storeId, string productId,
+        public virtual async Task<string[]> GetAlsoPurchasedProductsIds(string storeId, string productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
             var product = from p in _productAlsoPurchasedRepository.Table
@@ -496,7 +495,7 @@ namespace Grand.Services.Orders
             if (recordsToReturn > 0)
                 product = product.Take(recordsToReturn);
 
-            var report = product.ToList();
+            var report = await product.ToListAsync();
             var ids = new List<string>();
             foreach (var reportLine in report)
                 ids.Add(reportLine.ProductId);
@@ -514,7 +513,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> ProductsNeverSold(string vendorId = "",
+        public virtual async Task<IPagedList<Product>> ProductsNeverSold(string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -522,13 +521,13 @@ namespace Grand.Services.Orders
             createdFromUtc = !createdFromUtc.HasValue ? DateTime.MinValue : createdFromUtc;
             createdToUtc = !createdToUtc.HasValue ? DateTime.MaxValue: createdToUtc;
 
-            var query = (from order in _orderRepository.Table
+            var query = (await (from order in _orderRepository.Table
                          where
                          (createdFromUtc.Value <= order.CreatedOnUtc) &&
                          (createdToUtc.Value >= order.CreatedOnUtc) &&
                          (!order.Deleted)
                          from orderItem in order.OrderItems
-                         select new { orderItem.ProductId }).Distinct().ToList().Select(x=>x.ProductId);
+                         select new { orderItem.ProductId }).ToListAsync()).Distinct().Select(x=>x.ProductId);
 
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
@@ -562,7 +561,7 @@ namespace Grand.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(string storeId = "", string vendorId = "",
+        public virtual async Task<decimal> ProfitReport(string storeId = "", string vendorId = "",
             string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -618,9 +617,9 @@ namespace Grand.Services.Orders
                     select p;
 
 
-            var productCost = query2.Sum(orderItem => orderItem.OriginalProductCost * orderItem.Quantity);
+            var productCost = await query2.SumAsync(orderItem => orderItem.OriginalProductCost * orderItem.Quantity);
 
-            var reportSummary = GetOrderAverageReportLine(
+            var reportSummary = await GetOrderAverageReportLine(
                 storeId: storeId,
                 vendorId: vendorId,
                 billingCountryId: billingCountryId,
@@ -633,7 +632,7 @@ namespace Grand.Services.Orders
                 endTimeUtc: endTimeUtc,
                 billingEmail: billingEmail
                 );
-            var profit = Convert.ToDecimal( reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost);
+            var profit = Convert.ToDecimal(reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost);
             return profit;
         }
 

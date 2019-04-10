@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Knowledgebase;
+﻿using Grand.Core;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Framework.Components;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
@@ -6,26 +7,29 @@ using Grand.Web.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
     public class KnowledgebaseCategories : BaseViewComponent
     {
         private readonly IKnowledgebaseService _knowledgebaseService;
+        private readonly IWorkContext _workContext;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
 
-        public KnowledgebaseCategories(IKnowledgebaseService knowledgebaseService, KnowledgebaseSettings knowledgebaseSettings)
+        public KnowledgebaseCategories(IKnowledgebaseService knowledgebaseService, IWorkContext workContext, KnowledgebaseSettings knowledgebaseSettings)
         {
             this._knowledgebaseService = knowledgebaseService;
+            this._workContext = workContext;
             this._knowledgebaseSettings = knowledgebaseSettings;
         }
 
-        public IViewComponentResult Invoke(KnowledgebaseHomePageModel model)
+        public async Task<IViewComponentResult> InvokeAsync(KnowledgebaseHomePageModel model)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return Content("");
 
-            var categories = _knowledgebaseService.GetPublicKnowledgebaseCategories();
+            var categories = await _knowledgebaseService.GetPublicKnowledgebaseCategories();
 
             foreach (var category in categories)
             {
@@ -34,10 +38,10 @@ namespace Grand.Web.ViewComponents
                     var newNode = new KnowledgebaseCategoryModel
                     {
                         Id = category.Id,
-                        Name = category.GetLocalized(y => y.Name),
+                        Name = category.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                         Children = new List<KnowledgebaseCategoryModel>(),
                         IsCurrent = model.CurrentCategoryId == category.Id,
-                        SeName = category.GetLocalized(y => y.SeName)
+                        SeName = category.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id)
                     };
 
                     FillChildNodes(newNode, categories, model.CurrentCategoryId);
@@ -57,10 +61,10 @@ namespace Grand.Web.ViewComponents
                 var newNode = new KnowledgebaseCategoryModel
                 {
                     Id = child.Id,
-                    Name = child.GetLocalized(y => y.Name),
+                    Name = child.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                     Children = new List<KnowledgebaseCategoryModel>(),
                     IsCurrent = currentCategoryId == child.Id,
-                    SeName = child.GetLocalized(y => y.SeName),
+                    SeName = child.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
                     Parent = parentNode
                 };
 

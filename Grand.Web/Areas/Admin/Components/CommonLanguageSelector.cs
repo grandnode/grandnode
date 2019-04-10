@@ -6,6 +6,7 @@ using Grand.Web.Areas.Admin.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -26,12 +27,12 @@ namespace Grand.Web.Areas.Admin.Components
             this._storeContext = storeContext;
         }
 
-        public IViewComponentResult Invoke()//original Action name: LanguageSelector
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+            model.AvailableLanguages = (await _languageService
+                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                 .Select(x => x.ToModel())
                 .ToList();
             return View(model);

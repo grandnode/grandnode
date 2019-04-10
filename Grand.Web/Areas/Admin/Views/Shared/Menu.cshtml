@@ -30,7 +30,7 @@
                 var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
                 if (pluginNode != null && pluginNode.Visible)
                 {
-                    var hasManagePluginsPermission = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManagePlugins);
+                    var hasManagePluginsPermission = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManagePlugins);
                     pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
                 }
             }

@@ -8,6 +8,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Vendors
 {
@@ -48,22 +49,22 @@ namespace Grand.Services.Vendors
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Vendor</returns>
-        public virtual Vendor GetVendorById(string vendorId)
+        public virtual Task<Vendor> GetVendorById(string vendorId)
         {
-            return _vendorRepository.GetById(vendorId);
+            return _vendorRepository.GetByIdAsync(vendorId);
         }
 
         /// <summary>
         /// Delete a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void DeleteVendor(Vendor vendor)
+        public virtual async Task DeleteVendor(Vendor vendor)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
             vendor.Deleted = true;
-            UpdateVendor(vendor);
+            await UpdateVendor(vendor);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Grand.Services.Vendors
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        public virtual IPagedList<Vendor> GetAllVendors(string name = "",
+        public virtual async Task<IPagedList<Vendor>> GetAllVendors(string name = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _vendorRepository.Table;
@@ -86,38 +87,37 @@ namespace Grand.Services.Vendors
             query = query.Where(v => !v.Deleted);
             query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
 
-            var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
-            return vendors;
+            return await Task.FromResult(new PagedList<Vendor>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void InsertVendor(Vendor vendor)
+        public virtual async Task InsertVendor(Vendor vendor)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
-            _vendorRepository.Insert(vendor);
+            await _vendorRepository.InsertAsync(vendor);
 
             //event notification
-            _eventPublisher.EntityInserted(vendor);
+            await _eventPublisher.EntityInserted(vendor);
         }
 
         /// <summary>
         /// Updates the vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void UpdateVendor(Vendor vendor)
+        public virtual async Task UpdateVendor(Vendor vendor)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
 
-            _vendorRepository.Update(vendor);
+            await _vendorRepository.UpdateAsync(vendor);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendor);
+            await _eventPublisher.EntityUpdated(vendor);
         }
 
 
@@ -126,45 +126,45 @@ namespace Grand.Services.Vendors
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>
-        public virtual VendorNote GetVendorNoteById(string vendorId, string vendorNoteId)
+        public virtual async Task<VendorNote> GetVendorNoteById(string vendorId, string vendorNoteId)
         {
             if (String.IsNullOrEmpty(vendorNoteId))
                 return null;
-            var vendor = _vendorRepository.GetById(vendorId);
+            var vendor =  await _vendorRepository.GetByIdAsync(vendorId);
             if(vendor == null)
                 return null;
 
             return vendor.VendorNotes.FirstOrDefault(x => x.Id == vendorNoteId);
         }
 
-        public virtual void InsertVendorNote(VendorNote vendorNote)
+        public virtual async Task InsertVendorNote(VendorNote vendorNote)
         {
             if (vendorNote == null)
                 throw new ArgumentNullException("vendorNote");
 
             var updatebuilder = Builders<Vendor>.Update;
             var update = updatebuilder.AddToSet(p => p.VendorNotes, vendorNote);
-            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
+            await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorNote);
+            await _eventPublisher.EntityInserted(vendorNote);
         }
 
         /// <summary>
         /// Deletes a vendor note
         /// </summary>
         /// <param name="vendorNote">The vendor note</param>
-        public virtual void DeleteVendorNote(VendorNote vendorNote)
+        public virtual async Task DeleteVendorNote(VendorNote vendorNote)
         {
             if (vendorNote == null)
                 throw new ArgumentNullException("vendorNote");
 
             var updatebuilder = Builders<Vendor>.Update;
             var update = updatebuilder.Pull(p => p.VendorNotes, vendorNote);
-            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
+            await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorNote);
+            await _eventPublisher.EntityDeleted(vendorNote);
         }
 
         /// <summary>
@@ -172,13 +172,12 @@ namespace Grand.Services.Vendors
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>vendor mapping</returns>
-        public virtual IList<Vendor> GetAllVendorsByDiscount(string discountId)
+        public virtual async Task<IList<Vendor>> GetAllVendorsByDiscount(string discountId)
         {
             var query = from c in _vendorRepository.Table
                         where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
-            var vendors = query.ToList();
-            return vendors;
+            return await query.ToListAsync();
         }
 
         #region Vendor reviews
@@ -192,7 +191,7 @@ namespace Grand.Services.Vendors
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <returns>Reviews</returns>
-        public virtual IPagedList<VendorReview> GetAllVendorReviews(string customerId, bool? approved,
+        public virtual async Task<IPagedList<VendorReview>> GetAllVendorReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, string vendorId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -213,28 +212,26 @@ namespace Grand.Services.Vendors
                 query = query.Where(c => c.VendorId == vendorId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            var content = new PagedList<VendorReview>(query, pageIndex, pageSize);
-            return content;
-
+            return await Task.FromResult(new PagedList<VendorReview>(query, pageIndex, pageSize));
         }
 
-        public virtual int RatingSumVendor(string vendorId, string storeId)
+        public virtual async Task<int> RatingSumVendor(string vendorId, string storeId)
         {
             var query = from p in _vendorReviewRepository.Table
                         where p.VendorId == vendorId && p.IsApproved
                         group p by true into g
                         select new { Sum = g.Sum(x => x.Rating) };
-            var content = query.ToListAsync().Result;
+            var content = await query.ToListAsync();
             return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
         }
 
-        public virtual int TotalReviewsVendor(string vendorId, string storeId)
+        public virtual async Task<int> TotalReviewsVendor(string vendorId, string storeId)
         {
             var query = from p in _vendorReviewRepository.Table
                         where p.VendorId == vendorId && p.IsApproved 
                         group p by true into g
                         select new { Count = g.Count() };
-            var content = query.ToListAsync().Result;
+            var content = await query.ToListAsync();
             return content.Count > 0 ? content.FirstOrDefault().Count : 0;
         }
 
@@ -243,7 +240,7 @@ namespace Grand.Services.Vendors
         /// Update vendor review totals
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void UpdateVendorReviewTotals(Vendor vendor)
+        public virtual async Task UpdateVendorReviewTotals(Vendor vendor)
         {
             if (vendor == null)
                 throw new ArgumentNullException("vendor");
@@ -279,13 +276,13 @@ namespace Grand.Services.Vendors
                     .Set(x => x.ApprovedTotalReviews, vendor.ApprovedTotalReviews)
                     .Set(x => x.NotApprovedTotalReviews, vendor.NotApprovedTotalReviews);
 
-            _vendorRepository.Collection.UpdateOneAsync(filter, update);
+            await _vendorRepository.Collection.UpdateOneAsync(filter, update);
            
             //event notification
-            _eventPublisher.EntityUpdated(vendor);
+            await _eventPublisher.EntityUpdated(vendor);
         }
 
-        public virtual void UpdateVendorReview(VendorReview vendorreview)
+        public virtual async Task UpdateVendorReview(VendorReview vendorreview)
         {
             if (vendorreview == null)
                 throw new ArgumentNullException("vendorreview");
@@ -297,40 +294,40 @@ namespace Grand.Services.Vendors
                 .Set(x => x.ReviewText, vendorreview.ReviewText)
                 .Set(x => x.IsApproved, vendorreview.IsApproved);
 
-            var result = _vendorReviewRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _vendorReviewRepository.Collection.UpdateManyAsync(filter, update);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendorreview);
+            await _eventPublisher.EntityUpdated(vendorreview);
         }
 
         /// <summary>
         /// Inserts a vendor review
         /// </summary>
         /// <param name="vendorPicture">Vendor picture</param>
-        public virtual void InsertVendorReview(VendorReview vendorReview)
+        public virtual async Task InsertVendorReview(VendorReview vendorReview)
         {
             if (vendorReview == null)
                 throw new ArgumentNullException("vendorPicture");
 
-            _vendorReviewRepository.Insert(vendorReview);
+            await _vendorReviewRepository.UpdateAsync(vendorReview);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorReview);
+            await _eventPublisher.EntityInserted(vendorReview);
         }
 
         /// <summary>
         /// Deletes a vendor review
         /// </summary>
         /// <param name="vendorReview">Vendor review</param>
-        public virtual void DeleteVendorReview(VendorReview vendorReview)
+        public virtual async Task DeleteVendorReview(VendorReview vendorReview)
         {
             if (vendorReview == null)
                 throw new ArgumentNullException("vendorReview");
 
-            _vendorReviewRepository.Delete(vendorReview);
+            await _vendorReviewRepository.DeleteAsync(vendorReview);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorReview);
+            await _eventPublisher.EntityDeleted(vendorReview);
         }
 
         /// <summary>
@@ -338,9 +335,9 @@ namespace Grand.Services.Vendors
         /// </summary>
         /// <param name="vendorReviewId">Vendor review identifier</param>
         /// <returns>Vendor review</returns>
-        public virtual VendorReview GetVendorReviewById(string vendorReviewId)
+        public virtual Task<VendorReview> GetVendorReviewById(string vendorReviewId)
         {
-            return _vendorReviewRepository.GetById(vendorReviewId);
+            return _vendorReviewRepository.GetByIdAsync(vendorReviewId);
         }
 
 
@@ -350,7 +347,7 @@ namespace Grand.Services.Vendors
         /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <returns>Vendors</returns>
-        public virtual IList<Vendor> SearchVendors(
+        public virtual async Task<IList<Vendor>> SearchVendors(
             string vendorId = "",
             string keywords = null
             )
@@ -375,8 +372,7 @@ namespace Grand.Services.Vendors
                 filter = filter & builder.Where(x => x.Id == vendorId);
             }
             var vendors = _vendorRepository.FindByFilterDefinition(filter);
-
-            return vendors;
+            return await Task.FromResult(vendors);
         }
 
         #endregion

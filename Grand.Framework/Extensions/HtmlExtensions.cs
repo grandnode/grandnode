@@ -36,7 +36,7 @@ namespace Grand.Framework
             if (ignoreIfSeveralStores)
             {
                 var storeService = EngineContext.Current.Resolve<IStoreService>();
-                if (storeService.GetAllStores().Count >= 2)
+                if (storeService.GetAllStores().GetAwaiter().GetResult().Count >= 2)
                 {
                     localizationSupported = false;
                 }
@@ -55,7 +55,7 @@ namespace Grand.Framework
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+                    var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId).GetAwaiter().GetResult();
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);

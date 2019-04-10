@@ -7,10 +7,12 @@ using Grand.Services.Directory;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
 {
@@ -25,6 +27,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
         private readonly ILogger _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IServiceProvider _serviceProvider;
 
         public WidgetsGoogleAnalyticsViewComponent(IWorkContext workContext,
             IStoreContext storeContext,
@@ -33,7 +36,8 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             ILogger logger,
             ICategoryService categoryService,
             IProductService productService,
-            IProductAttributeParser productAttributeParser
+            IProductAttributeParser productAttributeParser,
+            IServiceProvider serviceProvider
             )
         {
             this._workContext = workContext;
@@ -44,9 +48,10 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             this._logger = logger;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
+            this._serviceProvider = serviceProvider;
         }
 
-        public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             string globalScript = "";
             var routeData = Url.ActionContext.RouteData;
@@ -63,8 +68,8 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                 if (controller.ToString().Equals("checkout", StringComparison.OrdinalIgnoreCase) &&
                     action.ToString().Equals("completed", StringComparison.OrdinalIgnoreCase))
                 {
-                    var lastOrder = GetLastOrder();
-                    globalScript += GetEcommerceScript(lastOrder);
+                    var lastOrder = await GetLastOrder();
+                    globalScript += await GetEcommerceScript(lastOrder);
                 }
                 else
                 {
@@ -73,16 +78,16 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             }
             catch (Exception ex)
             {
-                _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
+                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", globalScript);
         }
 
-        private Order GetLastOrder()
+        private async Task<Order> GetLastOrder()
         {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            var order = (await _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)).FirstOrDefault();
             return order;
         }
 
@@ -95,7 +100,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             return analyticsTrackingScript;
         }
 
-        private string GetEcommerceScript(Order order)
+        private async Task<string> GetEcommerceScript(Order order)
         {
             var GoogleAnalyticsEcommerceSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(_storeContext.CurrentStore.Id);
             var usCulture = new CultureInfo("en-US");
@@ -113,19 +118,19 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                 var orderShipping = GoogleAnalyticsEcommerceSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).Name));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.CountryId) ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId)).Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.CountryId) ? "" : FixIllegalJavaScriptChars((await _serviceProvider.GetRequiredService<ICountryService>().GetCountryById(order.BillingAddress.CountryId)).Name));
 
                 var sb = new StringBuilder();
                 foreach (var item in order.OrderItems)
                 {
-                    var product = _productService.GetProductById(item.ProductId);
+                    var product = await _productService.GetProductById(item.ProductId);
                     string analyticsEcommerceDetailScript = GoogleAnalyticsEcommerceSettings.EcommerceDetailScript;
                     //get category
                     string category = "";
                     if (product.ProductCategories.FirstOrDefault() != null)
                     {
-                        var defaultProductCategory = _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
+                        var defaultProductCategory = await _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
                         if (defaultProductCategory != null)
                             category = defaultProductCategory.Name;
                     }

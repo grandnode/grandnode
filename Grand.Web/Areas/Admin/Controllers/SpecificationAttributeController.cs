@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -49,9 +50,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var specificationAttributes = _specificationAttributeService
+            var specificationAttributes = await _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -63,23 +64,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new SpecificationAttributeModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(SpecificationAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Create(SpecificationAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
-                _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
+                await _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 //activity log
-                _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
+                await _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
             }
@@ -89,16 +90,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = specificationAttribute.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -107,9 +108,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(SpecificationAttributeModel model, bool continueEditing)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
                 return RedirectToAction("List");
@@ -117,9 +118,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
-                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
+                await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
                 //activity log
-                _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
+                await _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
 
@@ -139,18 +140,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
+                await _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
+                await _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
                 return RedirectToAction("List");
@@ -165,9 +166,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
-        public IActionResult OptionList(string specificationAttributeId, DataSourceRequest command)
+        public async Task<IActionResult> OptionList(string specificationAttributeId, DataSourceRequest command)
         {
-            var options = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId).SpecificationAttributeOptions;
+            var options = (await _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId)).SpecificationAttributeOptions;
             var gridModel = new DataSourceResult
             {
                 Data = options.Select(x =>
@@ -185,19 +186,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult OptionCreatePopup(string specificationAttributeId)
+        public async Task<IActionResult> OptionCreatePopup(string specificationAttributeId)
         {
-            var model = new SpecificationAttributeOptionModel();
-            model.SpecificationAttributeId = specificationAttributeId;
+            var model = new SpecificationAttributeOptionModel
+            {
+                SpecificationAttributeId = specificationAttributeId
+            };
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult OptionCreatePopup(SpecificationAttributeOptionModel model)
+        public async Task<IActionResult> OptionCreatePopup(SpecificationAttributeOptionModel model)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
                 return RedirectToAction("List");
@@ -210,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     sao.ColorSquaresRgb = null;
 
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
-                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
+                await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -221,9 +224,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult OptionEditPopup(string id)
+        public async Task<IActionResult> OptionEditPopup(string id)
         {
-            var sao = _specificationAttributeService.GetSpecificationAttributeByOptionId(id).SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
+            var sao = (await _specificationAttributeService.GetSpecificationAttributeByOptionId(id)).SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
                 return RedirectToAction("List");
@@ -231,7 +234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = sao.ToModel();
             model.EnableColorSquaresRgb = !String.IsNullOrEmpty(sao.ColorSquaresRgb);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = sao.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -240,9 +243,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
+        public async Task<IActionResult> OptionEditPopup(SpecificationAttributeOptionModel model)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeByOptionId(model.Id);
+            var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByOptionId(model.Id);
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == model.Id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
@@ -255,7 +258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
 
-                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
+                await _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -267,16 +270,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult OptionDelete(string id)
+        public async Task<IActionResult> OptionDelete(string id)
         {
             if (ModelState.IsValid)
             {
-                var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeByOptionId(id);
+                var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByOptionId(id);
                 var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
                 if (sao == null)
                     throw new ArgumentException("No specification attribute option found with the specified id");
 
-                _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
+                await _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
                 return new NullJsonResult();
             }

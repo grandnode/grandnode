@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Common;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -12,14 +13,14 @@ namespace Grand.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void DeleteSearchTerm(SearchTerm searchTerm);
+        Task DeleteSearchTerm(SearchTerm searchTerm);
 
         /// <summary>
         /// Gets a search term record by identifier
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermById(string searchTermId);
+        Task<SearchTerm> GetSearchTermById(string searchTermId);
 
         /// <summary>
         /// Gets a search term record by keyword
@@ -27,7 +28,7 @@ namespace Grand.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermByKeyword(string keyword, string storeId);
+        Task<SearchTerm> GetSearchTermByKeyword(string keyword, string storeId);
 
         /// <summary>
         /// Gets a search term statistics
@@ -35,18 +36,18 @@ namespace Grand.Services.Common
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>A list search term report lines</returns>
-        IPagedList<SearchTermReportLine> GetStats(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<SearchTermReportLine>> GetStats(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void InsertSearchTerm(SearchTerm searchTerm);
+        Task InsertSearchTerm(SearchTerm searchTerm);
 
         /// <summary>
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-         void UpdateSearchTerm(SearchTerm searchTerm);
+        Task UpdateSearchTerm(SearchTerm searchTerm);
     }
 }

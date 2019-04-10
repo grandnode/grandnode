@@ -15,7 +15,7 @@ using Grand.Services.Tests;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog.Tests
 {
@@ -250,7 +250,7 @@ namespace Grand.Services.Catalog.Tests
         }
 
         [TestMethod()]
-        public void Can_render_virtual_gift_cart() {
+        public async Task Can_render_virtual_gift_cart() {
             string attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
@@ -260,7 +260,7 @@ namespace Grand.Services.Catalog.Tests
                 GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+            string formattedAttributes = await _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             Assert.AreEqual(
                 "From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>",
@@ -268,7 +268,7 @@ namespace Grand.Services.Catalog.Tests
         }
 
         [TestMethod()]
-        public void Can_render_physical_gift_cart() {
+        public async Task Can_render_physical_gift_cart() {
             string attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
@@ -278,7 +278,7 @@ namespace Grand.Services.Catalog.Tests
                 GiftCardType = GiftCardType.Physical,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+            string formattedAttributes = await _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             Assert.AreEqual("From: senderName 1<br />For: recipientName 1", formattedAttributes);
         }

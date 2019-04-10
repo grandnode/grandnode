@@ -10,6 +10,7 @@ using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -34,9 +35,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var banners = _bannerService.GetAllBanners();
+            var banners = await _bannerService.GetAllBanners();
             var gridModel = new DataSourceResult
             {
                 Data = banners.Select(x =>
@@ -50,22 +51,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new BannerModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(BannerModel model, bool continueEditing)
+        public async Task<IActionResult> Create(BannerModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var banner = model.ToEntity();
                 banner.CreatedOnUtc = DateTime.UtcNow;
-                _bannerService.InsertBanner(banner);
+                await _bannerService.InsertBanner(banner);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = banner.Id }) : RedirectToAction("List");
@@ -74,16 +75,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var banner = _bannerService.GetBannerById(id);
+            var banner = await _bannerService.GetBannerById(id);
             if (banner == null)
                 return RedirectToAction("List");
 
             var model = banner.ToModel();
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = banner.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Body = banner.GetLocalized(x => x.Body, languageId, false, false);
@@ -95,16 +96,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(BannerModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(BannerModel model, bool continueEditing)
         {
-            var banner = _bannerService.GetBannerById(model.Id);
+            var banner = await _bannerService.GetBannerById(model.Id);
             if (banner == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 banner = model.ToEntity(banner);
-                _bannerService.UpdateBanner(banner);
+                await _bannerService.UpdateBanner(banner);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = banner.Id }) : RedirectToAction("List");
             }
@@ -113,15 +114,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var banner = _bannerService.GetBannerById(id);
+            var banner = await _bannerService.GetBannerById(id);
             if (banner == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _bannerService.DeleteBanner(banner);
+                await _bannerService.DeleteBanner(banner);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Deleted"));
                 return RedirectToAction("List");
             }

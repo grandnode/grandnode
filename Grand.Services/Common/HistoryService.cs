@@ -3,6 +3,9 @@ using Grand.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Common
 {
@@ -18,7 +21,7 @@ namespace Grand.Services.Common
             _historyRepository = historyRepository;
         }
 
-        public virtual void SaveObject<T>(T entity) where T : BaseEntity
+        public virtual async Task SaveObject<T>(T entity) where T : BaseEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -27,25 +30,24 @@ namespace Grand.Services.Common
                 CreatedOnUtc = DateTime.UtcNow,
                 Object = entity
             };
-            _historyRepository.Insert(history);
-
+            await _historyRepository.InsertAsync(history);
         }
 
-        public virtual IList<T> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity
+        public virtual async Task<IList<T>> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var history = _historyRepository.Table.Where(x => x.Object.Id == entity.Id).Select(x => (T)x.Object).ToList();
+            var history = await _historyRepository.Table.Where(x => x.Object.Id == entity.Id).Select(x => (T)x.Object).ToListAsync();
             return history;
         }
 
-        public virtual IList<HistoryObject> GetHistoryObjectForEntity(BaseEntity entity)
+        public virtual async Task<IList<HistoryObject>> GetHistoryObjectForEntity(BaseEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var history = _historyRepository.Table.Where(x => x.Object.Id == entity.Id).ToList();
+            var history = await _historyRepository.Table.Where(x => x.Object.Id == entity.Id).ToListAsync();
             return history;
         }
     }

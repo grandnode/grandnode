@@ -12,6 +12,8 @@ using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
+using Grand.Core;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -25,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
+        private readonly IWorkContext _workContext;
         #endregion Fields
 
         #region Constructors
@@ -35,7 +38,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IWorkContext workContext)
         {
             this._topicViewModelService = topicViewModelService;
             this._topicService = topicService;
@@ -43,6 +47,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._storeService = storeService;
             this._customerService = customerService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -51,16 +56,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var model = _topicViewModelService.PrepareTopicListModel();
+            var model = await _topicViewModelService.PrepareTopicListModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, TopicListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, TopicListModel model)
         {
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
+            var topicModels = (await _topicService.GetAllTopics(model.SearchStoreId, true))
                 .Select(x => x.ToModel())
                 .ToList();
 
@@ -88,17 +93,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new TopicModel();
             //templates
-            _topicViewModelService.PrepareTemplatesModel(model);
+            await _topicViewModelService.PrepareTemplatesModel(model);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
             //default values
             model.DisplayOrder = 1;
 
@@ -106,42 +111,42 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(TopicModel model, bool continueEditing)
+        public async Task<IActionResult> Create(TopicModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var topic = _topicViewModelService.InsertTopicModel(model);
+                var topic = await _topicViewModelService.InsertTopicModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //templates
-            _topicViewModelService.PrepareTemplatesModel(model);
+            await _topicViewModelService.PrepareTemplatesModel(model);
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
-            model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareACLModel(null, true, _customerService);
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var topic = _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicById(id);
             if (topic == null)
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
             var model = topic.ToModel();
-            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
+            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName(_workContext.WorkingLanguage.Id) }, "http");
             //templates
-            _topicViewModelService.PrepareTemplatesModel(model);
+            await _topicViewModelService.PrepareTemplatesModel(model);
             //ACL
-            model.PrepareACLModel(topic, false, _customerService);
+            await model.PrepareACLModel(topic, false, _customerService);
             //Store
-            model.PrepareStoresMappingModel(topic, false, _storeService);
+            await model.PrepareStoresMappingModel(topic, false, _storeService);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Title = topic.GetLocalized(x => x.Title, languageId, false, false);
                 locale.Body = topic.GetLocalized(x => x.Body, languageId, false, false);
@@ -154,16 +159,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(TopicModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(TopicModel model, bool continueEditing)
         {
-            var topic = _topicService.GetTopicById(model.Id);
+            var topic = await _topicService.GetTopicById(model.Id);
             if (topic == null)
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                topic = _topicViewModelService.UpdateTopicModel(topic, model);
+                topic = await _topicViewModelService.UpdateTopicModel(topic, model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
                 if (continueEditing)
                 {
@@ -176,27 +181,27 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
+            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName(_workContext.WorkingLanguage.Id) }, "http");
             //templates
-            _topicViewModelService.PrepareTemplatesModel(model);
+            await _topicViewModelService.PrepareTemplatesModel(model);
             //Store
-            model.PrepareStoresMappingModel(topic, true, _storeService);
+            await model.PrepareStoresMappingModel(topic, true, _storeService);
             //ACL
-            model.PrepareACLModel(topic, true, _customerService);
+            await model.PrepareACLModel(topic, true, _customerService);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var topic = _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicById(id);
             if (topic == null)
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _topicViewModelService.DeleteTopic(topic);
+                await _topicViewModelService.DeleteTopic(topic);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
                 return RedirectToAction("List");
             }

@@ -2,6 +2,7 @@
 using Grand.Api.Extensions;
 using Grand.Api.Interfaces;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Seo;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
@@ -13,6 +14,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Services
 {
@@ -28,12 +30,14 @@ namespace Grand.Api.Services
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
-
+        private readonly ILanguageService _languageService;
         private readonly IMongoCollection<ProductDto> _product;
+        private readonly SeoSettings _seoSettings;
 
         public ProductApiService(IMongoDBContext mongoDBContext, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             IPictureService pictureService, ISpecificationAttributeService specificationAttributeService, IUrlRecordService urlRecordService,
-            IBackInStockSubscriptionService backInStockSubscriptionService, ICustomerActivityService customerActivityService, ILocalizationService localizationService)
+            IBackInStockSubscriptionService backInStockSubscriptionService, ICustomerActivityService customerActivityService, ILocalizationService localizationService,
+            ILanguageService languageService, SeoSettings seoSettings)
         {
             _mongoDBContext = mongoDBContext;
             _productService = productService;
@@ -45,11 +49,12 @@ namespace Grand.Api.Services
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
-
+            _languageService = languageService;
             _product = _mongoDBContext.Database().GetCollection<ProductDto>(typeof(Core.Domain.Catalog.Product).Name);
+            _seoSettings = seoSettings;
         }
 
-        protected void BackInStockNotifications(Product product, int prevStockQuantity, List<ProductWarehouseInventory> prevMultiWarehouseStock)
+        protected async Task BackInStockNotifications(Product product, int prevStockQuantity, List<ProductWarehouseInventory> prevMultiWarehouseStock)
         {
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
@@ -58,7 +63,7 @@ namespace Grand.Api.Services
                 prevStockQuantity <= 0 && !product.UseMultipleWarehouses &&
                 product.Published)
             {
-                _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
+                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
             }
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
@@ -74,7 +79,7 @@ namespace Grand.Api.Services
                         if (actualStock != null)
                         {
                             if (actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
-                                _backInStockSubscriptionService.SendNotificationsToSubscribers(product, prevstock.WarehouseId);
+                                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, prevstock.WarehouseId);
                         }
                     }
                 }
@@ -82,84 +87,83 @@ namespace Grand.Api.Services
                 {
                     if (prevMultiWarehouseStock.Sum(x => x.StockQuantity - x.ReservedQuantity) <= 0)
                     {
-                        _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
+                        await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
                     }
                 }
             }
         }
 
-        public virtual ProductDto GetById(string id)
+        public virtual Task<ProductDto> GetById(string id)
         {
-            return _product.AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _product.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
         public virtual IMongoQueryable<ProductDto> GetProducts()
         {
             return _product.AsQueryable();
         }
 
-        public virtual ProductDto InsertOrUpdateProduct(ProductDto model)
+        public virtual async Task<ProductDto> InsertOrUpdateProduct(ProductDto model)
         {
             if (string.IsNullOrEmpty(model.Id))
-                model = InsertProduct(model);
+                model = await InsertProduct(model);
             else
-                model = UpdateProduct(model);
+                model = await UpdateProduct(model);
 
             return model;
         }
 
-        public virtual ProductDto InsertProduct(ProductDto model)
+        public virtual async Task<ProductDto> InsertProduct(ProductDto model)
         {
             var product = model.ToEntity();
             product.CreatedOnUtc = DateTime.UtcNow;
             product.UpdatedOnUtc = DateTime.UtcNow;
-            _productService.InsertProduct(product);
+            await _productService.InsertProduct(product);
 
-            model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+            model.SeName = await product.ValidateSeName(model.SeName, product.Name, true, _seoSettings, _urlRecordService, _languageService);
             product.SeName = model.SeName;
             //search engine name
-            _urlRecordService.SaveSlug(product, model.SeName, "");
-            _productService.UpdateProduct(product);
+            await _urlRecordService.SaveSlug(product, model.SeName, "");
+            await _productService.UpdateProduct(product);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewProduct", product.Id, _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
+            await _customerActivityService.InsertActivity("AddNewProduct", product.Id, _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
 
             return product.ToModel();
         }
 
-        public virtual ProductDto UpdateProduct(ProductDto model)
+        public virtual async Task<ProductDto> UpdateProduct(ProductDto model)
         {
             //product
-            var product = _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductById(model.Id);
             product = model.ToEntity(product);
             product.UpdatedOnUtc = DateTime.UtcNow;
-            model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+            model.SeName = await product.ValidateSeName(model.SeName, product.Name, true, _seoSettings, _urlRecordService, _languageService);
             product.SeName = model.SeName;
             //search engine name
-            _urlRecordService.SaveSlug(product, model.SeName, "");
+            await _urlRecordService.SaveSlug(product, model.SeName, "");
             //update product
-            _productService.UpdateProduct(product);
+            await _productService.UpdateProduct(product);
 
             //activity log
-            _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+            await _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
 
             return product.ToModel();
         }
-        public virtual void DeleteProduct(ProductDto model)
+        public virtual async Task DeleteProduct(ProductDto model)
         {
-            var product = _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductById(model.Id);
             if (product != null)
             {
-                _productService.DeleteProduct(product);
+                await _productService.DeleteProduct(product);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteProduct", product.Id, _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
-
+                await _customerActivityService.InsertActivity("DeleteProduct", product.Id, _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
             }
         }
 
-        public virtual void UpdateStock(ProductDto model, string warehouseId, int stock)
+        public virtual async Task UpdateStock(ProductDto model, string warehouseId, int stock)
         {
-            var product = _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductById(model.Id);
             if (product != null)
             {
                 var prevStockQuantity = product.GetTotalStockQuantity();
@@ -168,7 +172,7 @@ namespace Grand.Api.Services
                 if (string.IsNullOrEmpty(warehouseId))
                 {
                     product.StockQuantity = stock;
-                    _productService.UpdateProduct(product);
+                    await _productService.UpdateProduct(product);
                 }
                 else
                 {
@@ -178,7 +182,7 @@ namespace Grand.Api.Services
                         if (existingPwI != null)
                         {
                             existingPwI.StockQuantity = stock;
-                            _productService.UpdateProductWarehouseInventory(existingPwI);
+                            await _productService.UpdateProductWarehouseInventory(existingPwI);
                         }
                         else
                         {
@@ -189,19 +193,19 @@ namespace Grand.Api.Services
                                 StockQuantity = stock,
                                 ReservedQuantity = 0
                             };
-                            _productService.InsertProductWarehouseInventory(newPwI);
+                            await _productService.InsertProductWarehouseInventory(newPwI);
                         }
                     }
                 }
-                BackInStockNotifications(product, prevStockQuantity, prevMultiWarehouseStock);
+                await BackInStockNotifications(product, prevStockQuantity, prevMultiWarehouseStock);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+                await _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
 
             }
         }
 
-        public virtual void InsertProductCategory(ProductDto product, ProductCategoryDto model)
+        public virtual async Task InsertProductCategory(ProductDto product, ProductCategoryDto model)
         {
             var productCategory = new ProductCategory
             {
@@ -209,11 +213,11 @@ namespace Grand.Api.Services
                 CategoryId = model.CategoryId,
                 IsFeaturedProduct = model.IsFeaturedProduct,
             };
-            _categoryService.InsertProductCategory(productCategory);
+            await _categoryService.InsertProductCategory(productCategory);
         }
-        public virtual void UpdateProductCategory(ProductDto product, ProductCategoryDto model)
+        public virtual async Task UpdateProductCategory(ProductDto product, ProductCategoryDto model)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var productCategory = productdb.ProductCategories.Where(x => x.CategoryId == model.CategoryId).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -221,19 +225,19 @@ namespace Grand.Api.Services
             productCategory.CategoryId = model.CategoryId;
             productCategory.ProductId = product.Id;
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
-            _categoryService.UpdateProductCategory(productCategory);
+            await _categoryService.UpdateProductCategory(productCategory);
         }
-        public virtual void DeleteProductCategory(ProductDto product, string categoryId)
+        public virtual async Task DeleteProductCategory(ProductDto product, string categoryId)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var productCategory = productdb.ProductCategories.Where(x => x.CategoryId == categoryId).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
             productCategory.ProductId = product.Id;
-            _categoryService.DeleteProductCategory(productCategory);
+            await _categoryService.DeleteProductCategory(productCategory);
         }
-        public virtual void InsertProductManufacturer(ProductDto product, ProductManufacturerDto model)
+        public virtual async Task InsertProductManufacturer(ProductDto product, ProductManufacturerDto model)
         {
             var productManufacturer = new ProductManufacturer
             {
@@ -241,11 +245,11 @@ namespace Grand.Api.Services
                 ManufacturerId = model.ManufacturerId,
                 IsFeaturedProduct = model.IsFeaturedProduct,
             };
-            _manufacturerService.InsertProductManufacturer(productManufacturer);
+            await _manufacturerService.InsertProductManufacturer(productManufacturer);
         }
-        public virtual void UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model)
+        public virtual async Task UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var productManufacturer = productdb.ProductManufacturers.Where(x => x.ManufacturerId == model.ManufacturerId).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
@@ -253,31 +257,31 @@ namespace Grand.Api.Services
             productManufacturer.ManufacturerId = model.ManufacturerId;
             productManufacturer.ProductId = product.Id;
             productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
-            _manufacturerService.UpdateProductManufacturer(productManufacturer);
+            await _manufacturerService.UpdateProductManufacturer(productManufacturer);
         }
-        public virtual void DeleteProductManufacturer(ProductDto product, string manufacturerId)
+        public virtual async Task DeleteProductManufacturer(ProductDto product, string manufacturerId)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var productManufacturer = productdb.ProductManufacturers.Where(x => x.ManufacturerId == manufacturerId).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
             productManufacturer.ProductId = product.Id;
-            _manufacturerService.DeleteProductManufacturer(productManufacturer);
+            await _manufacturerService.DeleteProductManufacturer(productManufacturer);
         }
 
-        public virtual void InsertProductPicture(ProductDto product, ProductPictureDto model)
+        public virtual async Task InsertProductPicture(ProductDto product, ProductPictureDto model)
         {
-            var picture = _pictureService.GetPictureById(model.PictureId);
+            var picture = await _pictureService.GetPictureById(model.PictureId);
             if (picture != null)
             {
-                _pictureService.UpdatePicture(picture.Id, _pictureService.LoadPictureBinary(picture),
+                await _pictureService.UpdatePicture(picture.Id, await _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
                 picture.SeoFilename,
                 model.AltAttribute,
                 model.TitleAttribute);
 
-                _productService.InsertProductPicture(new ProductPicture
+                await _productService.InsertProductPicture(new ProductPicture
                 {
                     PictureId = model.PictureId,
                     ProductId = product.Id,
@@ -287,19 +291,19 @@ namespace Grand.Api.Services
                     SeoFilename = model.SeoFilename,
                     TitleAttribute = model.TitleAttribute
                 });
-                _pictureService.SetSeoFilename(model.PictureId, _pictureService.GetPictureSeName(product.Name));
+                await _pictureService.SetSeoFilename(model.PictureId, _pictureService.GetPictureSeName(product.Name));
             }
         }
-        public virtual void UpdateProductPicture(ProductDto product, ProductPictureDto model)
+        public virtual async Task UpdateProductPicture(ProductDto product, ProductPictureDto model)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
 
             var productPicture = productdb.ProductPictures.Where(x => x.PictureId == model.PictureId).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
             productPicture.ProductId = product.Id;
 
-            var picture = _pictureService.GetPictureById(productPicture.PictureId);
+            var picture = await _pictureService.GetPictureById(productPicture.PictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
 
@@ -309,27 +313,27 @@ namespace Grand.Api.Services
             productPicture.AltAttribute = model.AltAttribute;
             productPicture.TitleAttribute = model.TitleAttribute;
 
-            _productService.UpdateProductPicture(productPicture);
+            await _productService.UpdateProductPicture(productPicture);
 
-            _pictureService.UpdatePicture(picture.Id,
-                _pictureService.LoadPictureBinary(picture),
+            await _pictureService.UpdatePicture(picture.Id,
+                await _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
                 model.SeoFilename,
                 model.AltAttribute,
                 model.TitleAttribute);
         }
-        public virtual void DeleteProductPicture(ProductDto product, string pictureId)
+        public virtual async Task DeleteProductPicture(ProductDto product, string pictureId)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
 
             var productPicture = productdb.ProductPictures.Where(x => x.PictureId == pictureId).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified pictureid");
             productPicture.ProductId = product.Id;
-            _productService.DeleteProductPicture(productPicture);
+            await _productService.DeleteProductPicture(productPicture);
         }
 
-        public virtual void InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
+        public virtual async Task InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
         {
             //we allow filtering only for "Option" attribute type
             if (model.AttributeType != SpecificationAttributeType.Option)
@@ -349,11 +353,11 @@ namespace Grand.Api.Services
                 ShowOnProductPage = model.ShowOnProductPage,
                 DisplayOrder = model.DisplayOrder,
             };
-            _specificationAttributeService.InsertProductSpecificationAttribute(psa);
+            await _specificationAttributeService.InsertProductSpecificationAttribute(psa);
         }
-        public virtual void UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
+        public virtual async Task UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var psa = productdb.ProductSpecificationAttributes.FirstOrDefault(x => x.Id == model.Id);
             if (psa != null)
             {
@@ -372,17 +376,17 @@ namespace Grand.Api.Services
                 psa.ShowOnProductPage = model.ShowOnProductPage;
                 psa.DisplayOrder = model.DisplayOrder;
                 psa.ProductId = product.Id;
-                _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
+                await _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
             }
         }
-        public virtual void DeleteProductSpecification(ProductDto product, string id)
+        public virtual async Task DeleteProductSpecification(ProductDto product, string id)
         {
-            var productdb = _productService.GetProductById(product.Id);
+            var productdb = await _productService.GetProductById(product.Id);
             var psa = productdb.ProductSpecificationAttributes.FirstOrDefault(x => x.Id == id);
             if (psa != null)
             {
                 psa.ProductId = product.Id;
-                _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
+                await _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
             }
         }
     }

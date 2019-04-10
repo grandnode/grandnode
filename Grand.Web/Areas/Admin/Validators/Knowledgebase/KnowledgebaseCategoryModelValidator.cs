@@ -12,16 +12,16 @@ namespace Grand.Web.Areas.Admin.Validators.Knowledgebase
         public KnowledgebaseCategoryModelValidator(ILocalizationService localizationService, IKnowledgebaseService knowledgebaseService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Name.Required"));
-            RuleFor(x => x.ParentCategoryId).Must(x =>
+            RuleFor(x => x.ParentCategoryId).MustAsync(async (x, y, context) =>
             {
-                var category = knowledgebaseService.GetKnowledgebaseCategory(x);
-                if (category != null || string.IsNullOrEmpty(x))
+                var category = await knowledgebaseService.GetKnowledgebaseCategory(x.ParentCategoryId);
+                if (category != null || string.IsNullOrEmpty(x.ParentCategoryId))
                 {
                     return true;
                 }
                 else
                 {
-                    var categories = knowledgebaseService.GetKnowledgebaseCategories();
+                    var categories = await knowledgebaseService.GetKnowledgebaseCategories();
                     if (!categories.Any())
                     {
                         return true;

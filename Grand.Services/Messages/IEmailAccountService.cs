@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Messages;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -9,31 +10,31 @@ namespace Grand.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void InsertEmailAccount(EmailAccount emailAccount);
+        Task InsertEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void UpdateEmailAccount(EmailAccount emailAccount);
+        Task UpdateEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void DeleteEmailAccount(EmailAccount emailAccount);
+        Task DeleteEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        EmailAccount GetEmailAccountById(string emailAccountId);
+        Task<EmailAccount> GetEmailAccountById(string emailAccountId);
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts list</returns>
-        IList<EmailAccount> GetAllEmailAccounts();
+        Task<IList<EmailAccount>> GetAllEmailAccounts();
     }
 }

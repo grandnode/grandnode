@@ -14,9 +14,9 @@ namespace Grand.Web.ViewComponents
             this._externalAuthenticationViewModelService = externalAuthenticationViewModelService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
-            var model = await Task.Run(() => _externalAuthenticationViewModelService.PrepereExternalAuthenticationMethodModel());
+            var model =  _externalAuthenticationViewModelService.PrepereExternalAuthenticationMethodModel();
             return View(model);
         }
     }

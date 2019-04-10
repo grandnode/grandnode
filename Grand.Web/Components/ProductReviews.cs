@@ -33,12 +33,12 @@ namespace Grand.Web.Components
         #region Invoker
         public async Task<IViewComponentResult> InvokeAsync(string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
                 return Content("");
 
             var model = new ProductReviewsModel();
-            await Task.Run(() => _productViewModelService.PrepareProductReviewsModel(model, product, _catalogSettings.NumberOfReview));
+            await _productViewModelService.PrepareProductReviewsModel(model, product, _catalogSettings.NumberOfReview);
             
             return View(model);
         }

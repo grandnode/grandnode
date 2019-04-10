@@ -10,6 +10,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -130,11 +131,11 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        public virtual int GetRegisteredCustomersReport(int days)
+        public virtual async Task<int> GetRegisteredCustomersReport(int days)
         {
             DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredCustomerRole == null)
                 return 0;
 
@@ -155,7 +156,7 @@ namespace Grand.Services.Customers
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual IList<CustomerByTimeReportLine> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+        public virtual async Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null)
 
         {
@@ -168,7 +169,8 @@ namespace Grand.Services.Customers
             var endTime = new DateTime(endTimeUtc.Value.Year, endTimeUtc.Value.Month, endTimeUtc.Value.Day, 23, 59, 00);
 
             var builder = Builders<Customer>.Filter;
-            var customerRoleRegister = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id;
+            var customerrole = await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var customerRoleRegister = customerrole.Id;
             var filter = builder.Where(o => !o.Deleted);
             filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
             filter = filter & builder.Where(o => o.CustomerRoles.Any(y => y.Id == customerRoleRegister));

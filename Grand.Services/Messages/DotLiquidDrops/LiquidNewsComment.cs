@@ -1,11 +1,8 @@
 ﻿using DotLiquid;
-using Grand.Core;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.News;
-using Grand.Core.Infrastructure;
-using Grand.Services.News;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
-using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -14,17 +11,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private NewsComment _newsComment;
         private NewsItem _newsItem;
-        private string _storeId;
+        private Store _store;
+        private Language _language;
 
-        private readonly IStoreService _storeService;
-
-        public LiquidNewsComment(NewsComment newsComment, string storeId)
+        public LiquidNewsComment(NewsItem newsItem, NewsComment newsComment, Store store, Language language)
         {
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
             this._newsComment = newsComment;
-            this._newsItem = EngineContext.Current.Resolve<INewsService>().GetNewsById(newsComment.NewsItemId);
-            this._storeId = storeId;
-                       
+            this._newsItem = newsItem;
+            this._store = store;
+            this._language = language;
+
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -45,7 +41,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string NewsURL
         {
-            get { return $"{_storeService.GetStoreUrl(_storeId)}{_newsItem.GetSeName()}"; }
+            get { return $"{(_store.SslEnabled ? _store.SecureUrl : _store.Url)}{_newsItem.GetSeName(_language.Id)}"; }
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

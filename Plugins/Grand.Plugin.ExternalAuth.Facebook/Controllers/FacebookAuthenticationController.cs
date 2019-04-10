@@ -57,13 +57,13 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
 
         [AuthorizeAdmin]
         [Area("Admin")]
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -85,37 +85,37 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         [AdminAntiForgery]
         [AuthorizeAdmin]
         [Area("Admin")]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
 
             settings.ClientKeyIdentifier = model.ClientId;
             settings.ClientSecret = model.ClientSecret;
 
             if (model.ClientId_OverrideForStore || storeScope == "")
-                _settingService.SaveSetting(settings, x => x.ClientKeyIdentifier, storeScope, false);
+                await _settingService.SaveSetting(settings, x => x.ClientKeyIdentifier, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(settings, x => x.ClientKeyIdentifier, storeScope);
+                await _settingService.DeleteSetting(settings, x => x.ClientKeyIdentifier, storeScope);
 
             if (model.ClientSecret_OverrideForStore || storeScope == "")
-                _settingService.SaveSetting(settings, x => x.ClientSecret, storeScope, false);
+                await _settingService.SaveSetting(settings, x => x.ClientSecret, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(settings, x => x.ClientSecret, storeScope);
+                await _settingService.DeleteSetting(settings, x => x.ClientSecret, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         public IActionResult Login(string returnUrl)
@@ -154,7 +154,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             };
 
             //authenticate Grand user
-            return _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
+            return await _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
         }
         public IActionResult SignInFailed(string error_code, string error_message, string state)
         {

@@ -26,7 +26,7 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string systemName)
         {
-            var model = await Task.Run(() => _topicViewModelService.TopicBlock(systemName));
+            var model = await _topicViewModelService.TopicBlock(systemName);
             if (model == null)
                 return Content("");
 

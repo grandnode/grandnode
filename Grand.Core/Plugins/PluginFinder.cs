@@ -13,8 +13,14 @@ namespace Grand.Core.Plugins
 
         private IList<PluginDescriptor> _plugins;
         private bool _arePluginsLoaded;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
+
+        public PluginFinder(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         #region Utilities
 
@@ -76,8 +82,13 @@ namespace Grand.Core.Plugins
         }
 
         #endregion
-        
+
         #region Methods
+
+        /// <summary>
+        /// Get serviceProvider from plugin finder
+        /// </summary>
+        public virtual IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
         /// Check whether the plugin is available in a certain store
@@ -117,10 +128,10 @@ namespace Grand.Core.Plugins
         /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
+        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             string storeId = "", string group = null) where T : class, IPlugin
         {
-            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>());
+            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>(_serviceProvider));
         }
 
         /// <summary>
@@ -148,7 +159,7 @@ namespace Grand.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            string storeId = "", string group = null) 
+            string storeId = "", string group = null)
             where T : class, IPlugin
         {
             return GetPluginDescriptors(loadMode, storeId, group)
@@ -180,7 +191,7 @@ namespace Grand.Core.Plugins
             return GetPluginDescriptors<T>(loadMode)
                 .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.OrdinalIgnoreCase));
         }
-        
+
         /// <summary>
         /// Reload plugins
         /// </summary>

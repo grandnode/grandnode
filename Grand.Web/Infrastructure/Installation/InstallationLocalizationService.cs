@@ -31,6 +31,12 @@ namespace Grand.Web.Infrastructure.Installation
         /// </summary>
         private IList<InstallationCollation> _availableCollation;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
         /// <summary>
         /// Get locale resource value
         /// </summary>
@@ -58,9 +64,7 @@ namespace Grand.Web.Infrastructure.Installation
         /// <returns>Current language</returns>
         public virtual InstallationLanguage GetCurrentLanguage()
         {
-
-            var httpContext = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext;
-
+            var httpContext = _httpContextAccessor.HttpContext;
             //try to get cookie
             httpContext.Request.Cookies.TryGetValue(LANGUAGE_COOKIE_NAME, out string cookieLanguageCode);
 
@@ -102,7 +106,7 @@ namespace Grand.Web.Infrastructure.Installation
         /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
-            var httpContext = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
 
             var cookieOptions = new CookieOptions
             {

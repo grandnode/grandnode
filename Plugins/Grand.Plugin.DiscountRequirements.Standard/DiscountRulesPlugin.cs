@@ -10,6 +10,8 @@ using Grand.Services.Orders;
 using System.Collections.Generic;
 using Grand.Plugin.DiscountRequirements.ShoppingCart;
 using Grand.Plugin.DiscountRequirements.CustomerRoles;
+using System.Threading.Tasks;
+using System;
 
 namespace Grand.Plugin.DiscountRequirements.Standard
 {
@@ -19,9 +21,12 @@ namespace Grand.Plugin.DiscountRequirements.Standard
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
 
-        public DiscountRequirementsPlugin(ISettingService settingService, IOrderService orderService, ILocalizationService localizationService, IWebHelper webHelper)
+        public DiscountRequirementsPlugin(ISettingService settingService, IOrderService orderService, ILocalizationService localizationService, IWebHelper webHelper,
+            IServiceProvider serviceProvider)
         {
+            this._serviceProvider = serviceProvider;
             this._settingService = settingService;
             this._orderService = orderService;
             this._localizationService = localizationService;
@@ -32,66 +37,66 @@ namespace Grand.Plugin.DiscountRequirements.Standard
         {
             var rules = new List<IDiscountRequirementRule>
             {
-                new CustomerRoleDiscountRequirementRule(_settingService),
-                new HadSpentAmountDiscountRequirementRule(_settingService,_orderService,_localizationService,_webHelper),
-                new HasAllProductsDiscountRequirementRule(_settingService),
-                new HasOneProductDiscountRequirementRule(_settingService),
-                new ShoppingCartDiscountRequirementRule(_settingService)
+                new CustomerRoleDiscountRequirementRule(_serviceProvider),
+                new HadSpentAmountDiscountRequirementRule(_serviceProvider),
+                new HasAllProductsDiscountRequirementRule(_serviceProvider),
+                new HasOneProductDiscountRequirementRule(_serviceProvider),
+                new ShoppingCartDiscountRequirementRule(_serviceProvider)
             };
             return rules;
         }
 
-        public override void Install()
+        public override async Task Install()
         {
             //CustomerRole
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole", "Required customer role");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole", "Required customer role");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
 
             //HadSpentAmount
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount", "Required spent amount");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount.Hint", "Discount will be applied if customer has spent/purchased x.xx amount.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount", "Required spent amount");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount.Hint", "Discount will be applied if customer has spent/purchased x.xx amount.");
 
             //HasAllProducts
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products", "Restricted products");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.AddNew", "Add product");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Choose", "Choose");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products", "Restricted products");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.AddNew", "Add product");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Choose", "Choose");
 
             //HasOneProduct
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products", "Restricted products");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew", "Add product");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose", "Choose");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products", "Restricted products");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew", "Add product");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose", "Choose");
 
             //Shipping cart
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShoppingCart.Fields.Amount", "Required spent amount");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShoppingCart.Fields.Amount.Hint", "Discount will be applied if the subtotal  in shopping cart is x.xx.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRules.ShoppingCart.Fields.Amount", "Required spent amount");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.DiscountRules.ShoppingCart.Fields.Amount.Hint", "Discount will be applied if the subtotal  in shopping cart is x.xx.");
 
-            base.Install();
+            await base.Install();
         }
 
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //CustomerRole
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.CustomerRoles.Fields.CustomerRole.Hint");
 
             //HadSpentAmount
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.Standard.HadSpentAmount.Fields.Amount.Hint");
 
             //HasAllProducts
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Hint");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.AddNew");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Choose");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.AddNew");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasAllProducts.Fields.Products.Choose");
 
             //HasOneProduct
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew");
-            this.DeletePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose");
-            base.Uninstall();
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose");
+            await base.Uninstall();
         }
     }
 }

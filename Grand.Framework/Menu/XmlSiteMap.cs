@@ -103,7 +103,7 @@ namespace Grand.Framework.Menu
             {
                 var permissionService = EngineContext.Current.Resolve<IPermissionService>();
                 siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
+                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
             }
             else
             {
@@ -112,8 +112,7 @@ namespace Grand.Framework.Menu
 
             // Open URL in new tab
             var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            bool booleanResult;
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out booleanResult))
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out bool booleanResult))
             {
                 siteMapNode.OpenUrlInNewTab = booleanResult;
             }

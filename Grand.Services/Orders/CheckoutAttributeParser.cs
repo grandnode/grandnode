@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Services.Orders
@@ -56,7 +57,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected checkout attributes</returns>
-        public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml)
+        public virtual async Task<IList<CheckoutAttribute>> ParseCheckoutAttributes(string attributesXml)
         {
             var result = new List<CheckoutAttribute>();
             if (String.IsNullOrEmpty(attributesXml))
@@ -65,7 +66,7 @@ namespace Grand.Services.Orders
             var ids = ParseCheckoutAttributeIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
+                var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -79,13 +80,13 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
+        public virtual async Task<IList<CheckoutAttributeValue>> ParseCheckoutAttributeValues(string attributesXml)
         {
             var values = new List<CheckoutAttributeValue>();
             if (String.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseCheckoutAttributes(attributesXml);
+            var attributes = await ParseCheckoutAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -217,7 +218,7 @@ namespace Grand.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="cart">Shopping cart items</param>
         /// <returns>Updated attributes in XML format</returns>
-        public virtual string EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart)
+        public virtual async Task<string> EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart)
         {
             if (String.IsNullOrEmpty(attributesXml))
                 return attributesXml;
@@ -229,7 +230,7 @@ namespace Grand.Services.Orders
             {
                 //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<string>();
-                var attributes = ParseCheckoutAttributes(attributesXml);
+                var attributes = await ParseCheckoutAttributes(attributesXml);
                 foreach (var ca in attributes)
                     if (ca.ShippableProductRequired)
                         checkoutAttributeIdsToRemove.Add(ca.Id);
@@ -271,7 +272,7 @@ namespace Grand.Services.Orders
         /// <param name="attribute">Checkout attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        public virtual bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
+        public virtual async Task<bool?> IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
         {
             if (attribute == null)
                 throw new ArgumentNullException("attribute");
@@ -282,7 +283,7 @@ namespace Grand.Services.Orders
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = ParseCheckoutAttributes(conditionAttributeXml).FirstOrDefault();
+            var dependOnAttribute = (await ParseCheckoutAttributes(conditionAttributeXml)).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 

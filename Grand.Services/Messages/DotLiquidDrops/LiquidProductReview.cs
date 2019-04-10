@@ -9,11 +9,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
     public partial class LiquidProductReview : Drop
     {
         private ProductReview _productReview;
+        private Product _product;
 
-        public LiquidProductReview(ProductReview productReview)
+        public LiquidProductReview(Product product, ProductReview productReview)
         {
             this._productReview = productReview;
-
+            this._product = product;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -21,8 +22,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(_productReview.ProductId);
-                return product.Name;
+                return _product.Name;
             }
         }
 

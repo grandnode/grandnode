@@ -176,7 +176,7 @@ namespace Grand.Services.Tasks
             finally
             {
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-                var taskToUpdate = scheduleTaskService.GetTaskByType(scheduleTask.Type);
+                var taskToUpdate = scheduleTaskService.GetTaskByType(scheduleTask.Type).GetAwaiter().GetResult();
 
                 taskToUpdate.Enabled = scheduleTask.Enabled;
                 taskToUpdate.LastStartUtc = scheduleTask.LastStartUtc;

@@ -1,11 +1,10 @@
 ﻿using DotLiquid;
-using Grand.Core;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
-using Grand.Core.Infrastructure;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Customers;
 using Grand.Services.Forums;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
 
@@ -16,24 +15,27 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private ForumTopic _forumTopic;
         private ForumPost _forumPost;
         private Forum _forum;
+        private Customer _customer;
+        private Store _store;
+
         private int? _friendlyForumTopicPageIndex;
         private string _appendedPostIdentifierAnchor;
-
-        private readonly IStoreService _storeService;
 
         public LiquidForums(Forum forum,
             ForumTopic forumTopic,
             ForumPost forumPost,
+            Customer customer,
+            Store store,
             int? friendlyForumTopicPageIndex = null,
             string appendedPostIdentifierAnchor = "")
         {
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
-
             this._forumTopic = forumTopic;
             this._forumPost = forumPost;
             this._forum = forum;
             this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
             this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
+            this._customer = customer;
+            this._store = store;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
@@ -44,9 +46,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
             {
                 string topicUrl;
                 if (_friendlyForumTopicPageIndex.HasValue && _friendlyForumTopicPageIndex.Value > 1)
-                    topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", _storeService.GetStoreUrl(), _forumTopic.Id, _forumTopic.GetSeName(), _friendlyForumTopicPageIndex.Value);
+                    topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _forumTopic.Id, _forumTopic.GetSeName(), _friendlyForumTopicPageIndex.Value);
                 else
-                    topicUrl = string.Format("{0}boards/topic/{1}/{2}", _storeService.GetStoreUrl(), _forumTopic.Id, _forumTopic.GetSeName());
+                    topicUrl = string.Format("{0}boards/topic/{1}/{2}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _forumTopic.Id, _forumTopic.GetSeName());
                 if (!String.IsNullOrEmpty(_appendedPostIdentifierAnchor))
                     topicUrl = string.Format("{0}#{1}", topicUrl, _appendedPostIdentifierAnchor);
 
@@ -58,8 +60,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(_forumPost.CustomerId);
-                return customer.FormatUserName();
+                return _customer.FormatUserName(CustomerNameFormat.ShowFullNames);
             }
         }
 
@@ -78,7 +79,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string ForumURL
         {
-            get { return string.Format("{0}boards/forum/{1}/{2}", _storeService.GetStoreUrl(), _forum.Id, _forum.GetSeName()); }
+            get { return string.Format("{0}boards/forum/{1}/{2}", (_store.SslEnabled ? _store.SecureUrl : _store.Url), _forum.Id, _forum.GetSeName()); }
         }
 
         public string ForumName

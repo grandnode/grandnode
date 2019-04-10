@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _newsletterViewModelService.PrepareNewsletterBox());
+            var model = await _newsletterViewModelService.PrepareNewsletterBox();
             if (model == null)
                 return Content("");
 

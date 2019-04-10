@@ -11,6 +11,7 @@ using MongoDB.Driver;
 using Moq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Directory.Tests
 {
@@ -21,6 +22,7 @@ namespace Grand.Services.Directory.Tests
         private CurrencySettings _currencySettings;
         private IEventPublisher _eventPublisher;
         private ICurrencyService _currencyService;
+        private IServiceProvider _serviceProvider;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
 
@@ -77,11 +79,15 @@ namespace Grand.Services.Directory.Tests
                 tempCurrencyRepository.Setup(x => x.GetById(currencyUSD.Id)).Returns(currencyUSD);
                 tempCurrencyRepository.Setup(x => x.GetById(currencyEUR.Id)).Returns(currencyEUR);
                 tempCurrencyRepository.Setup(x => x.GetById(currencyRUR.Id)).Returns(currencyRUR);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyUSD.Id)).ReturnsAsync(currencyUSD);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyEUR.Id)).ReturnsAsync(currencyEUR);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyRUR.Id)).ReturnsAsync(currencyRUR);
                 _currencyRepository = tempCurrencyRepository.Object;
             }
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
@@ -95,7 +101,9 @@ namespace Grand.Services.Directory.Tests
             
             _currencyService = new CurrencyService(
                 cacheManager, _currencyRepository, _storeMappingService,
-                _currencySettings, new PluginFinder(), _eventPublisher);
+                _currencySettings, new PluginFinder(_serviceProvider), _eventPublisher);
+
+            //tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
         }
 
         [TestMethod()]
@@ -129,14 +137,14 @@ namespace Grand.Services.Directory.Tests
         }
 
         [TestMethod()]
-        public void Can_convert_currency_2() {
+        public async Task Can_convert_currency_2() {
             //e.g.
             //10euro * 34.5rubleRate = 345 rubles
-            Assert.AreEqual(345M, _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR));
-            Assert.AreEqual(10.1M, _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR));
-            Assert.AreEqual(10.1M, _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR));
-            Assert.AreEqual(345M, _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR));
-            Assert.AreEqual(12M, _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD));
+            Assert.AreEqual(345M, (await _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR)));
+            Assert.AreEqual(10.1M, (await _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR)));
+            Assert.AreEqual(10.1M, (await _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR)));
+            Assert.AreEqual(345M, (await _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR)));
+            Assert.AreEqual(12M, (await _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD)));
         }
     }
 }

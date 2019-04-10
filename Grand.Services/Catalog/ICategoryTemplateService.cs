@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -12,31 +13,31 @@ namespace Grand.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void DeleteCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task DeleteCategoryTemplate(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Gets all category templates
         /// </summary>
         /// <returns>Category templates</returns>
-        IList<CategoryTemplate> GetAllCategoryTemplates();
+        Task<IList<CategoryTemplate>> GetAllCategoryTemplates();
 
         /// <summary>
         /// Gets a category template
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        CategoryTemplate GetCategoryTemplateById(string categoryTemplateId);
+        Task<CategoryTemplate> GetCategoryTemplateById(string categoryTemplateId);
 
         /// <summary>
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void InsertCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task InsertCategoryTemplate(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void UpdateCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task UpdateCategoryTemplate(CategoryTemplate categoryTemplate);
     }
 }

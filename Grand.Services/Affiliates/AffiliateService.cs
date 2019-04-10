@@ -6,6 +6,7 @@ using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Affiliates
 {
@@ -42,32 +43,29 @@ namespace Grand.Services.Affiliates
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets an affiliate by affiliate identifier
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        public virtual Affiliate GetAffiliateById(string affiliateId)
+        public virtual Task<Affiliate> GetAffiliateById(string affiliateId)
         {
-            return _affiliateRepository.GetById(affiliateId);
+            return _affiliateRepository.GetByIdAsync(affiliateId);
         }
-        
+
         /// <summary>
         /// Gets an affiliate by friendly url name
         /// </summary>
         /// <param name="friendlyUrlName">Friendly url name</param>
         /// <returns>Affiliate</returns>
-        public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
+        public virtual Task<Affiliate> GetAffiliateByFriendlyUrlName(string friendlyUrlName)
         {
-            if (String.IsNullOrWhiteSpace(friendlyUrlName))
-                return null;
-
             var query = from a in _affiliateRepository.Table
                         orderby a.Id
                         where a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower())
                         select a;
-            var affiliate = query.FirstOrDefault();
+            var affiliate = query.FirstOrDefaultAsync();
             return affiliate;
         }
 
@@ -75,13 +73,13 @@ namespace Grand.Services.Affiliates
         /// Marks affiliate as deleted 
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void DeleteAffiliate(Affiliate affiliate)
+        public virtual async Task DeleteAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
 
             affiliate.Deleted = true;
-            UpdateAffiliate(affiliate);
+            await UpdateAffiliate(affiliate);
         }
 
         /// <summary>
@@ -97,7 +95,7 @@ namespace Grand.Services.Affiliates
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
-        public virtual IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
+        public virtual async Task<IPagedList<Affiliate>> GetAllAffiliates(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
             bool loadOnlyWithOrders = false,
             DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
@@ -107,11 +105,11 @@ namespace Grand.Services.Affiliates
             var query = _affiliateRepository.Table;
 
             if (!String.IsNullOrWhiteSpace(friendlyUrlName))
-                query = query.Where(a => a.FriendlyUrlName!=null && a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower()));
+                query = query.Where(a => a.FriendlyUrlName != null && a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower()));
             if (!String.IsNullOrWhiteSpace(firstName))
-                query = query.Where(a => a.Address.FirstName!=null && a.Address.FirstName.ToLower().Contains(firstName.ToLower()));
+                query = query.Where(a => a.Address.FirstName != null && a.Address.FirstName.ToLower().Contains(firstName.ToLower()));
             if (!String.IsNullOrWhiteSpace(lastName))
-                query = query.Where(a => a.Address.LastName!=null && a.Address.LastName.ToLower().Contains(lastName.ToLower()));
+                query = query.Where(a => a.Address.LastName != null && a.Address.LastName.ToLower().Contains(lastName.ToLower()));
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
@@ -130,38 +128,37 @@ namespace Grand.Services.Affiliates
 
             query = query.OrderByDescending(a => a.Id);
 
-            var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
-            return affiliates;
+            return await Task.FromResult(new PagedList<Affiliate>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void InsertAffiliate(Affiliate affiliate)
+        public virtual async Task InsertAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
 
-            _affiliateRepository.Insert(affiliate);
+            await _affiliateRepository.InsertAsync(affiliate);
 
             //event notification
-            _eventPublisher.EntityInserted(affiliate);
+            await _eventPublisher.EntityInserted(affiliate);
         }
 
         /// <summary>
         /// Updates the affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void UpdateAffiliate(Affiliate affiliate)
+        public virtual async Task UpdateAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
 
-            _affiliateRepository.Update(affiliate);
+            await _affiliateRepository.UpdateAsync(affiliate);
 
             //event notification
-            _eventPublisher.EntityUpdated(affiliate);
+            await _eventPublisher.EntityUpdated(affiliate);
         }
 
         #endregion

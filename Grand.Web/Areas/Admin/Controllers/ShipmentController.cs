@@ -34,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -160,28 +161,33 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Shipments
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var model = _shipmentViewModelService.PrepareShipmentListModel();
+            var model = await _shipmentViewModelService.PrepareShipmentListModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
+        public async Task<IActionResult> ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
-            var shipments = _shipmentViewModelService.PrepareShipments(model, command.Page, command.PageSize);
+            var shipments = await _shipmentViewModelService.PrepareShipments(model, command.Page, command.PageSize);
+            var items = new List<ShipmentModel>();
+            foreach (var item in shipments.shipments)
+            {
+                items.Add(await _shipmentViewModelService.PrepareShipmentModel(item, false));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = shipments.shipments.Select(shipment => _shipmentViewModelService.PrepareShipmentModel(shipment, false)),
+                Data = items,
                 Total = shipments.totalCount
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ShipmentsByOrder(string orderId, DataSourceRequest command)
+        public async Task<IActionResult> ShipmentsByOrder(string orderId, DataSourceRequest command)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
@@ -191,13 +197,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //shipments
             var shipmentModels = new List<ShipmentModel>();
-            var shipments = _shipmentService.GetShipmentsByOrder(orderId)
+            var shipments = (await _shipmentService.GetShipmentsByOrder(orderId))
                 //a vendor should have access only to his products
                 .Where(s => _workContext.CurrentVendor == null || _workContext.HasAccessToShipment(order, s))
                 .OrderBy(s => s.CreatedOnUtc)
                 .ToList();
             foreach (var shipment in shipments)
-                shipmentModels.Add(_shipmentViewModelService.PrepareShipmentModel(shipment, false));
+                shipmentModels.Add(await _shipmentViewModelService.PrepareShipmentModel(shipment, false));
             
             var gridModel = new DataSourceResult
             {
@@ -208,13 +214,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ShipmentsItemsByShipmentId(string shipmentId, DataSourceRequest command)
+        public async Task<IActionResult> ShipmentsItemsByShipmentId(string shipmentId, DataSourceRequest command)
         {
-            var shipment = _shipmentService.GetShipmentById(shipmentId);
+            var shipment = await _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
                 throw new ArgumentException("No shipment found with the specified id");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
@@ -227,7 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //    return Content("");
 
             //shipments
-            var shipmentModel = _shipmentViewModelService.PrepareShipmentModel(shipment, true);
+            var shipmentModel = await _shipmentViewModelService.PrepareShipmentModel(shipment, true);
             var gridModel = new DataSourceResult
             {
                 Data = shipmentModel.Items,
@@ -237,9 +243,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult AddShipment(string orderId)
+        public async Task<IActionResult> AddShipment(string orderId)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -248,16 +254,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
                 return RedirectToAction("List");
 
-            var model = _shipmentViewModelService.PrepareShipmentModel(order);
+            var model = await _shipmentViewModelService.PrepareShipmentModel(order);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult AddShipment(string orderId, IFormCollection form, bool continueEditing)
+        public async Task<IActionResult> AddShipment(string orderId, IFormCollection form, bool continueEditing)
         {
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -272,16 +278,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 orderItems = orderItems.Where(_workContext.HasAccessToOrderItem).ToList();
             }
-            var sh = _shipmentViewModelService.PrepareShipment(order, orderItems.ToList(), form);
+            var sh = await _shipmentViewModelService.PrepareShipment(order, orderItems.ToList(), form);
             Shipment shipment = sh.shipment;
             //if we have at least one item in the shipment, then save it
             if (shipment != null && shipment.ShipmentItems.Count > 0)
             {
                 shipment.TotalWeight = sh.totalWeight;
-                _shipmentService.InsertShipment(shipment);
+                await _shipmentService.InsertShipment(shipment);
 
                 //add a note
-                _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = $"A shipment #{shipment.ShipmentNumber} has been added",
                     DisplayToCustomer = false,
@@ -289,7 +295,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     OrderId = order.Id,
                 });
 
-                _shipmentViewModelService.LogShipment(shipment.Id, $"A shipment #{shipment.ShipmentNumber} has been added");
+                await _shipmentViewModelService.LogShipment(shipment.Id, $"A shipment #{shipment.ShipmentNumber} has been added");
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                            ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
@@ -300,15 +306,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("AddShipment", new { orderId = orderId });
         }
 
-        public IActionResult ShipmentDetails(string id)
+        public async Task<IActionResult> ShipmentDetails(string id)
         {
-            var shipment = _shipmentService.GetShipmentById(id);
+            var shipment = await _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
             var orderId = shipment.OrderId;
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -317,20 +323,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
                 return RedirectToAction("List");
 
-            var model = _shipmentViewModelService.PrepareShipmentModel(shipment, true, true);
+            var model = await _shipmentViewModelService.PrepareShipmentModel(shipment, true, true);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DeleteShipment(string id)
+        public async Task<IActionResult> DeleteShipment(string id)
         {
-            var shipment = _shipmentService.GetShipmentById(id);
+            var shipment = await _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
             var orderId = shipment.OrderId;
-            var order = _orderService.GetOrderById(orderId);
+            var order = await _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -341,15 +347,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var product = _productService.GetProductById(shipmentItem.ProductId);
+                var product = await _productService.GetProductById(shipmentItem.ProductId);
                 shipmentItem.ShipmentId = shipment.Id;
                 if (product != null)
-                    _productService.ReverseBookedInventory(product, shipmentItem);
+                    await _productService.ReverseBookedInventory(product, shipmentItem);
             }
 
-            _shipmentService.DeleteShipment(shipment);
+            await _shipmentService.DeleteShipment(shipment);
             //add a note
-            _orderService.InsertOrderNote(new OrderNote
+            await _orderService.InsertOrderNote(new OrderNote
             {
                 Note = $"A shipment #{shipment.ShipmentNumber} has been deleted",
                 DisplayToCustomer = false,
@@ -357,7 +363,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 OrderId = order.Id,
             });
 
-            _shipmentViewModelService.LogShipment(shipment.Id, $"A shipment #{shipment.ShipmentNumber} has been deleted");
+            await _shipmentViewModelService.LogShipment(shipment.Id, $"A shipment #{shipment.ShipmentNumber} has been deleted");
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
 
@@ -366,14 +372,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("settrackingnumber")]
-        public IActionResult SetTrackingNumber(ShipmentModel model)
+        public async Task<IActionResult> SetTrackingNumber(ShipmentModel model)
         {
-            var shipment = _shipmentService.GetShipmentById(model.Id);
+            var shipment = await _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -383,21 +389,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
-            _shipmentService.UpdateShipment(shipment);
+            await _shipmentService.UpdateShipment(shipment);
 
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setadmincomment")]
-        public IActionResult SetShipmentAdminComment(ShipmentModel model)
+        public async Task<IActionResult> SetShipmentAdminComment(ShipmentModel model)
         {
-            var shipment = _shipmentService.GetShipmentById(model.Id);
+            var shipment = await _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -407,21 +413,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             shipment.AdminComment = model.AdminComment;
-            _shipmentService.UpdateShipment(shipment);
+            await _shipmentService.UpdateShipment(shipment);
 
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasshipped")]
-        public IActionResult SetAsShipped(string id)
+        public async Task<IActionResult> SetAsShipped(string id)
         {
-            var shipment = _shipmentService.GetShipmentById(id);
+            var shipment = await _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -432,7 +438,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                _orderProcessingService.Ship(shipment, true);
+                await _orderProcessingService.Ship(shipment, true);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -445,14 +451,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("saveshippeddate")]
-        public IActionResult EditShippedDate(ShipmentModel model)
+        public async Task<IActionResult> EditShippedDate(ShipmentModel model)
         {
-            var shipment = _shipmentService.GetShipmentById(model.Id);
+            var shipment = await _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -468,7 +474,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     throw new Exception("Enter shipped date");
                 }
                 shipment.ShippedDateUtc = model.ShippedDate.ConvertToUtcTime();
-                _shipmentService.UpdateShipment(shipment);
+                await _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -481,14 +487,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
-        public IActionResult SetAsDelivered(string id)
+        public async Task<IActionResult> SetAsDelivered(string id)
         {
-            var shipment = _shipmentService.GetShipmentById(id);
+            var shipment = await _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -499,7 +505,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                _orderProcessingService.Deliver(shipment, true);
+                await _orderProcessingService.Deliver(shipment, true);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -513,14 +519,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("savedeliverydate")]
-        public IActionResult EditDeliveryDate(ShipmentModel model)
+        public async Task<IActionResult> EditDeliveryDate(ShipmentModel model)
         {
-            var shipment = _shipmentService.GetShipmentById(model.Id);
+            var shipment = await _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -536,7 +542,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     throw new Exception("Enter delivery date");
                 }
                 shipment.DeliveryDateUtc = model.DeliveryDate.ConvertToUtcTime();
-                _shipmentService.UpdateShipment(shipment);
+                await _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -547,14 +553,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult PdfPackagingSlip(string shipmentId)
+        public async Task<IActionResult> PdfPackagingSlip(string shipmentId)
         {
-            var shipment = _shipmentService.GetShipmentById(shipmentId);
+            var shipment = await _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
                 //no shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
@@ -563,13 +569,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
                 return RedirectToAction("List");
 
-            var shipments = new List<Shipment>();
-            shipments.Add(shipment);
+            var shipments = new List<Shipment>
+            {
+                shipment
+            };
 
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                await _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
@@ -577,10 +585,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportpackagingslips-all")]
-        public IActionResult PdfPackagingSlipAll(ShipmentListModel model)
+        public async Task<IActionResult> PdfPackagingSlipAll(ShipmentListModel model)
         {
             //load shipments
-            var shipments = _shipmentViewModelService.PrepareShipments(model, 1, 100);
+            var shipments = await _shipmentViewModelService.PrepareShipments(model, 1, 100);
 
             //ensure that we at least one shipment selected
             if (shipments.totalCount == 0)
@@ -592,35 +600,39 @@ namespace Grand.Web.Areas.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments.shipments.ToList(), _workContext.WorkingLanguage.Id);
+                await _pdfService.PrintPackagingSlipsToPdf(stream, shipments.shipments.ToList(), _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
         [HttpPost]
-        public IActionResult PdfPackagingSlipSelected(string selectedIds)
+        public async Task<IActionResult> PdfPackagingSlipSelected(string selectedIds)
         {
             var shipments = new List<Shipment>();
+            var shipments_access = new List<Shipment>();
             if (selectedIds != null)
             {
                 var ids = selectedIds
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
-                shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
+                shipments.AddRange(await _shipmentService.GetShipmentsByIds(ids));
             }
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(x =>
+                foreach (var item in shipments)
                 {
-                    var order = _orderService.GetOrderById(x.OrderId);
-                    return _workContext.HasAccessToShipment(order, x);
-                })
-                .ToList();
+                    var order = await _orderService.GetOrderById(item.OrderId);
+                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    if (hasaccess)
+                        shipments_access.Add(item);
+                }
             }
+            else
+                shipments_access = shipments;
 
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)
@@ -632,35 +644,40 @@ namespace Grand.Web.Areas.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
+                await _pdfService.PrintPackagingSlipsToPdf(stream, shipments_access, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
         [HttpPost]
-        public IActionResult SetAsShippedSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> SetAsShippedSelected(ICollection<string> selectedIds)
         {
             var shipments = new List<Shipment>();
+            var shipments_access = new List<Shipment>();
             if (selectedIds != null)
             {
-                shipments.AddRange(_shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
+                shipments.AddRange(await _shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(x =>
+                foreach (var item in shipments)
                 {
-                    var order = _orderService.GetOrderById(x.OrderId);
-                    return _workContext.HasAccessToShipment(order, x);
-                }).ToList();
+                    var order = await _orderService.GetOrderById(item.OrderId);
+                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    if (hasaccess)
+                        shipments_access.Add(item);
+                }
             }
+            else
+                shipments_access = shipments;
 
-            foreach (var shipment in shipments)
+            foreach (var shipment in shipments_access)
             {
                 try
                 {
-                    _orderProcessingService.Ship(shipment, true);
+                    await _orderProcessingService.Ship(shipment, true);
                 }
                 catch
                 {
@@ -672,28 +689,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetAsDeliveredSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> SetAsDeliveredSelected(ICollection<string> selectedIds)
         {
             var shipments = new List<Shipment>();
+            var shipments_access = new List<Shipment>();
             if (selectedIds != null)
             {
-                shipments.AddRange(_shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
+                shipments.AddRange(await _shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(x =>
+                foreach (var item in shipments)
                 {
-                    var order = _orderService.GetOrderById(x.OrderId);
-                    return _workContext.HasAccessToShipment(order, x);
-                }).ToList();
+                    var order = await _orderService.GetOrderById(item.OrderId);
+                    var hasaccess = _workContext.HasAccessToShipment(order, item);
+                    if (hasaccess)
+                        shipments_access.Add(item);
+                }
             }
+            else
+                shipments_access = shipments;
 
-            foreach (var shipment in shipments)
+            foreach (var shipment in shipments_access)
             {
                 try
                 {
-                    _orderProcessingService.Deliver(shipment, true);
+                    await _orderProcessingService.Deliver(shipment, true);
                 }
                 catch
                 {

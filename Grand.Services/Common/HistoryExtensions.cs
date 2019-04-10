@@ -2,6 +2,7 @@
 using Grand.Core.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -11,25 +12,17 @@ namespace Grand.Services.Common
         /// Save an entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public static void SaveHistory<T>(this BaseEntity entity) where T : BaseEntity, IHistory
+        public static async Task SaveHistory<T>(this BaseEntity entity, IHistoryService historyService) where T : BaseEntity, IHistory
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var historyService = EngineContext.Current.Resolve<IHistoryService>();
-            historyService.SaveObject(entity);
+            await historyService.SaveObject(entity);
         }
 
-        public static IList<T> GetHistory<T>(this BaseEntity entity) where T : BaseEntity, IHistory
+        public static async Task<IList<HistoryObject>> GetHistoryObject(this BaseEntity entity, IHistoryService historyService)
         {
-            var historyService = EngineContext.Current.Resolve<IHistoryService>();
-            return historyService.GetHistoryForEntity<T>(entity);
-        }
-
-        public static IList<HistoryObject> GetHistoryObject(this BaseEntity entity)
-        {
-            var historyService = EngineContext.Current.Resolve<IHistoryService>();
-            return historyService.GetHistoryObjectForEntity(entity);
+            return await historyService.GetHistoryObjectForEntity(entity);
         }
     }
 }

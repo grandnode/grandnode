@@ -9,6 +9,7 @@ using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
 {
@@ -35,13 +36,13 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         }
 
         [HttpPost]
-        public IActionResult Configure(DataSourceRequest command)
+        public async Task<IActionResult> Configure(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             var rateModels = new List<FixedShippingRateModel>();
-            foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
+            foreach (var shippingMethod in await _shippingService.GetAllShippingMethods())
                 rateModels.Add(new FixedShippingRateModel
                 {
                     ShippingMethodId = shippingMethod.Id,
@@ -59,15 +60,15 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult ShippingRateUpdate(FixedShippingRateModel model)
+        public async Task<IActionResult> ShippingRateUpdate(FixedShippingRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             string shippingMethodId = model.ShippingMethodId;
             decimal rate = model.Rate;
 
-            _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
+            await _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
 
             return new NullJsonResult();
         }

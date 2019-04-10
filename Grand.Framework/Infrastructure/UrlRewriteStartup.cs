@@ -28,7 +28,8 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
+            var serviceProvider = application.ApplicationServices;
+            var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();
             var urlRewriteOptions = new RewriteOptions();
             var rewriteOptions = false;
             if (grandConfig.UseUrlRewrite)

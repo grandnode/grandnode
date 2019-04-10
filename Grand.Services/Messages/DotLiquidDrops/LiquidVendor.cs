@@ -15,7 +15,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public LiquidVendor(Vendor vendor)
         {
             this._vendor = vendor;
-
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -69,15 +68,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _vendor.Address?.ZipPostalCode; }
         }
 
-        public string StateProvince
-        {
-            get { return !String.IsNullOrEmpty(_vendor.Address?.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(_vendor.Address?.StateProvinceId).GetLocalized(x => x.Name) : ""; }
-        }
+        public string StateProvince { get; set; }
 
-        public string Country
-        {
-            get { return !String.IsNullOrEmpty(_vendor.Address?.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(_vendor.Address?.CountryId).GetLocalized(x => x.Name) : ""; }
-        }
+        public string Country { get; set; }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }
     }
