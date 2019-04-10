@@ -470,7 +470,6 @@ namespace Grand.Services.Tax
             var productPrice = new TaxProductPrice();
 
             //----------------------------------------------------------------------------------------------------
-            bool isTaxable = default(bool);
             var taxrates = await GetTaxRate(product, taxCategoryId, customer, 0);
             productPrice.taxRate = taxrates.taxRate;
             if (priceIncludesTax)
@@ -506,7 +505,7 @@ namespace Grand.Services.Tax
             }
             else
             {
-                if (isTaxable)
+                if (taxrates.isTaxable)
                 {
                     productPrice.UnitPriceWihoutDiscInclTax = CalculatePrice(unitPricewithoutDisc, taxrates.taxRate, true);
                     productPrice.UnitPriceWihoutDiscExclTax = unitPricewithoutDisc;
@@ -536,7 +535,7 @@ namespace Grand.Services.Tax
                 }
             }
            
-            if (!isTaxable)
+            if (!taxrates.isTaxable)
             {
                 //we return 0% tax rate in case a request is not taxable
                 taxrates.taxRate = decimal.Zero;
