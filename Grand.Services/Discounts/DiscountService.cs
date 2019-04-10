@@ -806,7 +806,7 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public decimal GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount)
+        public async Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -822,7 +822,7 @@ namespace Grand.Services.Discounts
             }
             else
             {
-                result = GetDiscountAmountProvider(discount, customer, product, amount);
+                result = await GetDiscountAmountProvider(discount, customer, product, amount);
             }
 
             //validate maximum disocunt amount
@@ -862,7 +862,7 @@ namespace Grand.Services.Discounts
             foreach (var applieddiscount in discounts)
             {
                 var discount = await GetDiscountById(applieddiscount.DiscountId);
-                decimal currentDiscountValue = GetDiscountAmount(discount, customer, product, amount);
+                decimal currentDiscountValue = await GetDiscountAmount(discount, customer, product, amount);
                 if (currentDiscountValue > discountAmount)
                 {
                     discountAmount = currentDiscountValue;
@@ -880,7 +880,7 @@ namespace Grand.Services.Discounts
                 foreach (var item in cumulativeDiscounts)
                 {
                     var discount = await GetDiscountById(item.DiscountId);
-                    cumulativeDiscountAmount += GetDiscountAmount(discount, customer, product, amount);
+                    cumulativeDiscountAmount += await GetDiscountAmount(discount, customer, product, amount);
                 }
                 if (cumulativeDiscountAmount > discountAmount)
                 {
@@ -914,12 +914,12 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public virtual decimal GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount)
+        public virtual async Task<decimal> GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount)
         {
             var discountAmountProvider = LoadDiscountAmountProviderBySystemName(discount.DiscountPluginName);
             if (discountAmountProvider == null)
                 return 0;
-            return discountAmountProvider.DiscountAmount(discount, customer, product, amount);
+            return await discountAmountProvider.DiscountAmount(discount, customer, product, amount);
         }
 
 
