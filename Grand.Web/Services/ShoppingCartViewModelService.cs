@@ -786,10 +786,7 @@ namespace Grand.Web.Services
 
             if (customer.ShoppingCartItems.Any())
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(storeId)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(storeId, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
                 model.TotalProducts = cart.Sum(x => x.Quantity);
                 if (cart.Any())
                 {
@@ -1105,10 +1102,8 @@ namespace Grand.Web.Services
                 model.Picture = PrepareCartItemPicture(product, null, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
             }
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(x => x.ShoppingCartType == cartType)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
+
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, cartType);
 
             if (cartType != ShoppingCartType.Auctions)
             {
@@ -1156,7 +1151,7 @@ namespace Grand.Web.Services
 
         }
 
-        public virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
+        public virtual void ParseAndSaveCheckoutAttributes(IList<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -1448,7 +1443,7 @@ namespace Grand.Web.Services
             }
         }
 
-        public virtual EstimateShippingResultModel PrepareEstimateShippingResult(List<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
+        public virtual EstimateShippingResultModel PrepareEstimateShippingResult(IList<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
         {
             var model = new EstimateShippingResultModel();
 

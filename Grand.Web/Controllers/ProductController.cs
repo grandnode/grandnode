@@ -42,6 +42,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly ICompareProductsService _compareProductsService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
@@ -63,6 +64,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
+            IShoppingCartService shoppingCartService,
             ICompareProductsService compareProductsService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -80,6 +82,7 @@ namespace Grand.Web.Controllers
             this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
+            this._shoppingCartService = shoppingCartService;
             this._compareProductsService = compareProductsService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
@@ -138,9 +141,7 @@ namespace Grand.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
             {
-                var cart = customer.ShoppingCartItems
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
                 if (updatecartitem == null)
@@ -866,13 +867,14 @@ namespace Grand.Web.Controllers
             }
 
             var reservations = query.ToList();
-            var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+            var inCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id)
+                .Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
             foreach (var cartItem in inCart)
             {
-                var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
-                if (matching.Any())
+                var match = reservations.FirstOrDefault(x => x.Id == cartItem.ReservationId);
+                if (match != null)
                 {
-                    reservations.Remove(matching.First());
+                    reservations.Remove(match);
                 }
             }
 
