@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers.Tests
 {
@@ -106,72 +107,73 @@ namespace Grand.Services.Customers.Tests
         }
 
         [TestMethod()]
-        public void GetCustomerActionsTest()
+        public async Task GetCustomerActionsTest()
         {
-            var actions = _customerActionService.GetCustomerActions();
+            var actions = await _customerActionService.GetCustomerActions();
             Assert.IsNotNull(actions);
             Assert.IsTrue(actions.Count > 0);
         }
+        //TO DO
+        //[TestMethod()]
+        //public async Task InsertCustomerActionTest()
+        //{
+        //    var customerAction = new CustomerAction()
+        //    {
+        //        Active = true,
+        //        StartDateTimeUtc = DateTime.UtcNow,
+        //        EndDateTimeUtc = DateTime.UtcNow.AddMonths(1),
+        //        Name = "Test action",
+        //        ReactionTypeId = (int)CustomerReactionTypeEnum.AssignToCustomerTag,
+        //        Condition = CustomerActionConditionEnum.OneOfThem,
+        //    };
+        //    await _customerActionService.InsertCustomerAction(customerAction);
+        //    Assert.IsTrue(!String.IsNullOrEmpty(customerAction.Id));
+        //}
+
+        //[TestMethod()]
+        //public async Task DeleteCustomerActionTest()
+        //{
+        //    var action = await _customerActionService.GetCustomerActionById(_Id_CustomerAction);
+        //    await _customerActionService.DeleteCustomerAction(action);
+        //}
+
+        //[TestMethod()]
+        //public async Task UpdateCustomerActionTest()
+        //{
+        //    var action =await _customerActionService.GetCustomerActionById(_Id_CustomerAction);
+        //    action.Name = "Update test 2";
+        //    await _customerActionService.UpdateCustomerAction(action);
+        //}
 
         [TestMethod()]
-        public void InsertCustomerActionTest()
+        public async Task GetCustomerActionTypeTest()
         {
-            var customerAction = new CustomerAction()
-            {
-                Active = true,
-                StartDateTimeUtc = DateTime.UtcNow,
-                EndDateTimeUtc = DateTime.UtcNow.AddMonths(1),
-                Name = "Test action",
-                ReactionTypeId = (int)CustomerReactionTypeEnum.AssignToCustomerTag,
-                Condition = CustomerActionConditionEnum.OneOfThem,
-            };
-            _customerActionService.InsertCustomerAction(customerAction);
-            Assert.IsTrue(!String.IsNullOrEmpty(customerAction.Id));
-        }
-
-        [TestMethod()]
-        public void DeleteCustomerActionTest()
-        {
-            var action = _customerActionService.GetCustomerActionById(_Id_CustomerAction);
-            _customerActionService.DeleteCustomerAction(action);
-        }
-
-        [TestMethod()]
-        public void UpdateCustomerActionTest()
-        {
-            var action = _customerActionService.GetCustomerActionById(_Id_CustomerAction);
-            action.Name = "Update test 2";
-            _customerActionService.UpdateCustomerAction(action);
-        }
-
-        [TestMethod()]
-        public void GetCustomerActionTypeTest()
-        {
-            var actionTypes = _customerActionService.GetCustomerActionType();
+            var actionTypes = await _customerActionService.GetCustomerActionType();
             Assert.IsTrue(actionTypes.Count >0 );
         }
 
         [TestMethod()]
-        public void GetAllCustomerActionHistoryTest()
+        public async Task GetAllCustomerActionHistoryTest()
         {
-            var actionHistory = _customerActionService.GetAllCustomerActionHistory("");
+            var actionHistory = await _customerActionService.GetAllCustomerActionHistory("");
             Assert.IsTrue(actionHistory.Count == 0);
         }
 
         [TestMethod()]
-        public void GetCustomerActionTypeByIdTest()
+        public async Task GetCustomerActionTypeByIdTest()
         {
-            var customerActionType = _customerActionService.GetCustomerActionTypeById(_Id_CustomerActionType);
+            var customerActionType = await _customerActionService.GetCustomerActionTypeById(_Id_CustomerActionType);
             Assert.IsNotNull(customerActionType);
         }
 
-        [TestMethod()]
-        public void UpdateCustomerActionTypeTest()
-        {
-            var customerActionType = _customerActionService.GetCustomerActionTypeById(_Id_CustomerActionType);
-            customerActionType.Enabled = false;
-            _customerActionService.UpdateCustomerActionType(customerActionType);
-            Assert.IsFalse(customerActionType.Enabled);
-        }
+        //TO DO
+        //[TestMethod()]
+        //public async Task UpdateCustomerActionTypeTest()
+        //{
+        //    var customerActionType = await _customerActionService.GetCustomerActionTypeById(_Id_CustomerActionType);
+        //    customerActionType.Enabled = false;
+        //    await _customerActionService.UpdateCustomerActionType(customerActionType);
+        //    Assert.IsFalse(customerActionType.Enabled);
+        //}
     }
 }

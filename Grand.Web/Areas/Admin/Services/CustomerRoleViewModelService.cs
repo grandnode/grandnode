@@ -16,6 +16,7 @@ using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -57,10 +58,10 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
+        public virtual async Task<CustomerRoleModel> PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
-            var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
+            var product = await _productService.GetProductById(customerRole.PurchasedWithProductId);
             if (product != null)
             {
                 model.PurchasedWithProductName = product.Name;
@@ -76,31 +77,31 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual CustomerRole InsertCustomerRoleModel(CustomerRoleModel model)
+        public virtual async Task<CustomerRole> InsertCustomerRoleModel(CustomerRoleModel model)
         {
             var customerRole = model.ToEntity();
-            _customerService.InsertCustomerRole(customerRole);
+            await _customerService.InsertCustomerRole(customerRole);
             //activity log
-            _customerActivityService.InsertActivity("AddNewCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+            await _customerActivityService.InsertActivity("AddNewCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
             return customerRole;
         }
-        public virtual CustomerRole UpdateCustomerRoleModel(CustomerRole customerRole, CustomerRoleModel model)
+        public virtual async Task<CustomerRole> UpdateCustomerRoleModel(CustomerRole customerRole, CustomerRoleModel model)
         {
             customerRole = model.ToEntity(customerRole);
-            _customerService.UpdateCustomerRole(customerRole);
+            await _customerService.UpdateCustomerRole(customerRole);
 
             //activity log
-            _customerActivityService.InsertActivity("EditCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+            await _customerActivityService.InsertActivity("EditCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
             return customerRole;
         }
-        public virtual void DeleteCustomerRole(CustomerRole customerRole)
+        public virtual async Task DeleteCustomerRole(CustomerRole customerRole)
         {
-            _customerService.DeleteCustomerRole(customerRole);
+            await _customerService.DeleteCustomerRole(customerRole);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+            await _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
         }
-        public virtual CustomerRoleModel.AssociateProductToCustomerRoleModel PrepareAssociateProductToCustomerRoleModel()
+        public virtual async Task<CustomerRoleModel.AssociateProductToCustomerRoleModel> PrepareAssociateProductToCustomerRoleModel()
         {
             var model = new CustomerRoleModel.AssociateProductToCustomerRoleModel();
             //a vendor should have access only to his products
@@ -108,23 +109,23 @@ namespace Grand.Web.Areas.Admin.Services
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -132,45 +133,51 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerRoleModel.AssociateProductToCustomerRoleModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerRoleModel.AssociateProductToCustomerRoleModel model, int pageIndex, int pageSize)
         {
-            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
-        public virtual IList<CustomerRoleProductModel> PrepareCustomerRoleProductModel(string customerRoleId)
+        public virtual async Task<IList<CustomerRoleProductModel>> PrepareCustomerRoleProductModel(string customerRoleId)
         {
-            var products = _customerService.GetCustomerRoleProducts(customerRoleId);
-            return products.Select(x => new CustomerRoleProductModel
+            var products = await _customerService.GetCustomerRoleProducts(customerRoleId);
+            var model = new List<CustomerRoleProductModel>();
+            foreach (var item in products)
             {
-                Id = x.Id,
-                Name = _productService.GetProductById(x.ProductId)?.Name,
-                ProductId = x.ProductId,
-                DisplayOrder = x.DisplayOrder
-            }).ToList();
+                var cr = new CustomerRoleProductModel
+                {
+                    Id = item.Id,
+                    Name = (await _productService.GetProductById(item.ProductId))?.Name,
+                    ProductId = item.ProductId,
+                    DisplayOrder = item.DisplayOrder
+                };
+                model.Add(cr);
+            }
+            return model;
         }
-        public virtual CustomerRoleProductModel.AddProductModel PrepareProductModel(string customerRoleId)
+        public virtual async Task<CustomerRoleProductModel.AddProductModel> PrepareProductModel(string customerRoleId)
         {
             var model = new CustomerRoleProductModel.AddProductModel();
             model.CustomerRoleId = customerRoleId;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -179,26 +186,26 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerRoleProductModel.AddProductModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerRoleProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
-            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
-        public virtual void InsertProductModel(CustomerRoleProductModel.AddProductModel model)
+        public virtual async Task InsertProductModel(CustomerRoleProductModel.AddProductModel model)
         {
             foreach (string id in model.SelectedProductIds)
             {
-                var product = _productService.GetProductById(id);
+                var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
-                    var customerRoleProduct = _customerService.GetCustomerRoleProduct(model.CustomerRoleId, id);
+                    var customerRoleProduct = await _customerService.GetCustomerRoleProduct(model.CustomerRoleId, id);
                     if (customerRoleProduct == null)
                     {
                         customerRoleProduct = new CustomerRoleProduct();
                         customerRoleProduct.CustomerRoleId = model.CustomerRoleId;
                         customerRoleProduct.ProductId = id;
                         customerRoleProduct.DisplayOrder = 0;
-                        _customerService.InsertCustomerRoleProduct(customerRoleProduct);
+                        await _customerService.InsertCustomerRoleProduct(customerRoleProduct);
                     }
                 }
             }

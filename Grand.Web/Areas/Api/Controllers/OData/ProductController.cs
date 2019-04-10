@@ -4,6 +4,7 @@ using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -18,9 +19,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             var product = _productApiService.GetById(key);
@@ -32,40 +33,40 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             return Ok(_productApiService.GetProducts());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] ProductDto model)
+        public async Task<IActionResult> Post([FromBody] ProductDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _productApiService.InsertOrUpdateProduct(model);
+                model = await _productApiService.InsertOrUpdateProduct(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
             }
-            _productApiService.DeleteProduct(product);
+            await _productApiService.DeleteProduct(product);
 
             return Ok();
         }
@@ -73,12 +74,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         //odata/Product(id)/UpdateStock
         //body: { "Stock": 10 }
         [HttpPost]
-        public IActionResult UpdateStock(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> UpdateStock(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -93,7 +94,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 if (int.TryParse(stock.ToString(), out int stockqty))
                 {
-                    _productApiService.UpdateStock(product, warehouseId?.ToString(), stockqty);
+                    await _productApiService.UpdateStock(product, warehouseId?.ToString(), stockqty);
                     return Ok(true);
                 }
             }
@@ -103,15 +104,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         #region Product category
 
         [HttpPost]
-        public IActionResult CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
+        public async Task<IActionResult> CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -123,21 +124,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.InsertProductCategory(product, productCategory);
+                await _productApiService.InsertProductCategory(product, productCategory);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
+        public async Task<IActionResult> UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
             if (productCategory == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -149,22 +150,22 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.UpdateProductCategory(product, productCategory);
+                await _productApiService.UpdateProductCategory(product, productCategory);
 
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -179,7 +180,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
                 if (ModelState.IsValid)
                 {
-                    _productApiService.DeleteProductCategory(product, categoryId.ToString());
+                    await _productApiService.DeleteProductCategory(product, categoryId.ToString());
                     return Ok(true);
                 }
                 return BadRequest(ModelState);
@@ -192,15 +193,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         #region Product manufacturer
 
         [HttpPost]
-        public IActionResult CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
+        public async Task<IActionResult> CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -212,21 +213,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.InsertProductManufacturer(product, productManufacturer);
+                await _productApiService.InsertProductManufacturer(product, productManufacturer);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
+        public async Task<IActionResult> UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
             if (productManufacturer == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -238,22 +239,22 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.UpdateProductManufacturer(product, productManufacturer);
+                await _productApiService.UpdateProductManufacturer(product, productManufacturer);
 
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -268,7 +269,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
                 if (ModelState.IsValid)
                 {
-                    _productApiService.DeleteProductManufacturer(product, manufacturerId.ToString());
+                    await _productApiService.DeleteProductManufacturer(product, manufacturerId.ToString());
                     return Ok(true);
                 }
                 return BadRequest(ModelState);
@@ -281,15 +282,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         #region Product picture
 
         [HttpPost]
-        public IActionResult CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
+        public async Task<IActionResult> CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -301,21 +302,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.InsertProductPicture(product, productPicture);
+                await _productApiService.InsertProductPicture(product, productPicture);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
+        public async Task<IActionResult> UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
         {
             if (productPicture == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -327,21 +328,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.UpdateProductPicture(product, productPicture);
+                await _productApiService.UpdateProductPicture(product, productPicture);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -356,7 +357,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
                 if (ModelState.IsValid)
                 {
-                    _productApiService.DeleteProductPicture(product, pictureId.ToString());
+                    await _productApiService.DeleteProductPicture(product, pictureId.ToString());
                     return Ok(true);
                 }
                 return BadRequest(ModelState);
@@ -369,15 +370,15 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         #region Product specification
 
         [HttpPost]
-        public IActionResult CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
+        public async Task<IActionResult> CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -389,21 +390,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.InsertProductSpecification(product, productSpecification);
+                await _productApiService.InsertProductSpecification(product, productSpecification);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
+        public async Task<IActionResult> UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
         {
             if (productSpecification == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -415,21 +416,21 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                _productApiService.UpdateProductSpecification(product, productSpecification);
+                await _productApiService.UpdateProductSpecification(product, productSpecification);
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
-        public IActionResult DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
         {
             if (parameters == null)
                 return NotFound();
 
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
             {
                 return NotFound();
@@ -444,7 +445,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
                 if (ModelState.IsValid)
                 {
-                    _productApiService.DeleteProductSpecification(product, specificationId.ToString());
+                    await _productApiService.DeleteProductSpecification(product, specificationId.ToString());
                     return Ok(true);
                 }
                 return BadRequest(ModelState);

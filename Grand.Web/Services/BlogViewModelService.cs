@@ -21,9 +21,11 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Blogs;
 using Grand.Web.Models.Media;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -41,6 +43,7 @@ namespace Grand.Web.Services
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
+        private readonly IServiceProvider _serviceProvider;
 
         private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
@@ -60,6 +63,7 @@ namespace Grand.Web.Services
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
+            IServiceProvider serviceProvider,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
             LocalizationSettings localizationSettings,
@@ -78,6 +82,7 @@ namespace Grand.Web.Services
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
+            this._serviceProvider = serviceProvider;
             this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
             this._localizationSettings = localizationSettings;
@@ -85,22 +90,22 @@ namespace Grand.Web.Services
             this._captchaSettings = captchaSettings;
         }
 
-        public HomePageBlogItemsModel PrepareHomePageBlogItems()
+        public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         null, null, 0, _blogSettings.HomePageBlogCount);
 
                 foreach (var post in blogPosts)
                 {
                     var item = new HomePageBlogItemsModel.BlogItemModel();
-                    var description = post.GetLocalized(x => x.BodyOverview);
-                    item.SeName = post.GetSeName();
-                    item.Title = post.GetLocalized(x => x.Title);
+                    var description = post.GetLocalized(x => x.BodyOverview, _workContext.WorkingLanguage.Id);
+                    item.SeName = post.GetSeName(_workContext.WorkingLanguage.Id);
+                    item.Title = post.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
                     item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage): description;
                     item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -109,13 +114,13 @@ namespace Grand.Web.Services
                     {
                         int pictureSize = _mediaSettings.BlogThumbPictureSize;
                         var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, post.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                        item.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                        item.PictureModel = await _cacheManager.Get(categoryPictureCacheKey, async () =>
                         {
-                            var picture = _pictureService.GetPictureById(post.PictureId);
+                            var picture = await _pictureService.GetPictureById(post.PictureId);
                             var pictureModel = new PictureModel
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                                ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                                ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                                 Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), post.Title),
                                 AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), post.Title)
                             };
@@ -130,22 +135,22 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
+        public async Task<BlogCommentModel> PrepareBlogPostCommentModel(BlogComment blogComment)
         {
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
+            var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(blogComment.CustomerId);
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = customer.FormatUserName(),
+                CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
             };
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
+                    customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
                     _mediaSettings.AvatarPictureSize,
                     _customerSettings.DefaultAvatarEnabled,
                     defaultPictureType: PictureType.Avatar);
@@ -154,7 +159,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
+        public async Task<BlogPostListModel> PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
                 throw new ArgumentNullException("command");
@@ -177,18 +182,18 @@ namespace Grand.Web.Services
             {
                 if (String.IsNullOrEmpty(command.Tag))
                 {
-                    blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                    blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         dateFrom, dateTo, command.PageNumber - 1, command.PageSize, blogPostName: model.SearchKeyword);
                 }
                 else
                 {
-                    blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
+                    blogPosts = await _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
                         command.Tag, command.PageNumber - 1, command.PageSize);
                 }
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         dateFrom, dateTo, command.PageNumber - 1, command.PageSize, categoryId: command.CategoryId, blogPostName: model.SearchKeyword);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
@@ -197,7 +202,7 @@ namespace Grand.Web.Services
                 .Select(x =>
                 {
                     var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModel(blogPostModel, x, false);
+                    PrepareBlogPostModel(blogPostModel, x, false).Wait();
                     return blogPostModel;
                 })
                 .ToList();
@@ -205,7 +210,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        public async Task PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
@@ -214,13 +219,13 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("model");
 
             model.Id = blogPost.Id;
-            model.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle);
-            model.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription);
-            model.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords);
-            model.SeName = blogPost.GetSeName();
-            model.Title = blogPost.GetLocalized(x => x.Title);
-            model.Body = blogPost.GetLocalized(x => x.Body);
-            model.BodyOverview = blogPost.GetLocalized(x => x.BodyOverview);
+            model.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id);
+            model.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id);
+            model.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords, _workContext.WorkingLanguage.Id);
+            model.SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id);
+            model.Title = blogPost.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
+            model.Body = blogPost.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id);
+            model.BodyOverview = blogPost.GetLocalized(x => x.BodyOverview, _workContext.WorkingLanguage.Id);
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
@@ -228,10 +233,10 @@ namespace Grand.Web.Services
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
-                var blogComments = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+                var blogComments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
                 foreach (var bc in blogComments)
                 {
-                    var commentModel = PrepareBlogPostCommentModel(bc);
+                    var commentModel = await PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);
                 }
             }
@@ -241,13 +246,13 @@ namespace Grand.Web.Services
             {
                 int pictureSize = _mediaSettings.BlogThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, blogPost.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                model.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                model.PictureModel = await _cacheManager.Get(categoryPictureCacheKey, async () =>
                 {
-                    var picture = _pictureService.GetPictureById(blogPost.PictureId);
+                    var picture = await _pictureService.GetPictureById(blogPost.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), blogPost.Title),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), blogPost.Title)
                     };
@@ -257,16 +262,16 @@ namespace Grand.Web.Services
 
         }
 
-        public BlogPostTagListModel PrepareBlogPostTagListModel()
+        public async Task<BlogPostTagListModel> PrepareBlogPostTagListModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new BlogPostTagListModel();
 
                 //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id)
-                    .OrderByDescending(x => x.BlogPostCount)
+                var tags = await _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id);
+                tags = tags.OrderByDescending(x => x.BlogPostCount)
                     .Take(_blogSettings.NumberOfTags)
                     .ToList();
                 //sorting
@@ -283,14 +288,14 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public List<BlogPostYearModel> PrepareBlogPostYearModel()
+        public async Task<List<BlogPostYearModel>> PrepareBlogPostYearModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
+                var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
@@ -341,19 +346,19 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public List<BlogPostCategoryModel> PrepareBlogPostCategoryModel()
+        public async Task<List<BlogPostCategoryModel>> PrepareBlogPostCategoryModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new List<BlogPostCategoryModel>();
-                var categories = _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
+                var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
                 foreach (var item in categories)
                 {
                     model.Add(new BlogPostCategoryModel()
                     {
                         Id = item.Id,
-                        Name = item.GetLocalized(x=>x.Name),
+                        Name = item.GetLocalized(x=>x.Name, _workContext.WorkingLanguage.Id),
                         BlogPostCount = item.BlogPosts.Count
                     });
                 }  
@@ -362,7 +367,7 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public BlogComment InsertBlogComment(BlogPostModel model, BlogPost blogPost)
+        public async Task<BlogComment> InsertBlogComment(BlogPostModel model, BlogPost blogPost)
         {
             var customer = _workContext.CurrentCustomer;
             var comment = new BlogComment
@@ -373,21 +378,22 @@ namespace Grand.Web.Services
                 CreatedOnUtc = DateTime.UtcNow,
                 BlogPostTitle = blogPost.Title,
             };
-            _blogService.InsertBlogComment(comment);
+            await _blogService.InsertBlogComment(comment);
 
             //update totals
-            blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
-            _blogService.UpdateBlogPost(blogPost);
+            var comments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+            blogPost.CommentCount = comments.Count;
+            await _blogService.UpdateBlogPost(blogPost);
             if (!customer.HasContributions)
             {
-                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);
+                await _serviceProvider.GetRequiredService<ICustomerService>().UpdateContributions(customer);
             }
             //notify a store owner
             if (_blogSettings.NotifyAboutNewBlogComments)
-                _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendBlogCommentNotificationMessage(blogPost, comment, _localizationSettings.DefaultAdminLanguageId);
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.AddBlogComment", comment.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
+            await _customerActivityService.InsertActivity("PublicStore.AddBlogComment", comment.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"));
 
             return comment;
         }

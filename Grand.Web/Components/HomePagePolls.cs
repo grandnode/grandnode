@@ -17,7 +17,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _pollViewModelService.PrepareHomePagePoll());
+            var model = await _pollViewModelService.PrepareHomePagePoll();
             if (!model.Any())
                 Content("");
             return View(model);

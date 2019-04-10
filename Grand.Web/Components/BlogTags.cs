@@ -22,7 +22,7 @@ namespace Grand.Web.ViewComponents
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = await Task.Run(() => _blogViewModelService.PrepareBlogPostTagListModel());
+            var model = await _blogViewModelService.PrepareBlogPostTagListModel();
             return View(model);
 
         }

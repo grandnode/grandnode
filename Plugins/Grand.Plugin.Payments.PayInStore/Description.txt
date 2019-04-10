@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Pay In Store
 SystemName: Payments.PayInStore
-Version: 1.07
+Version: 1.08
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

@@ -18,8 +18,10 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.News;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -35,6 +37,7 @@ namespace Grand.Web.Services
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
@@ -45,6 +48,7 @@ namespace Grand.Web.Services
         public NewsViewModelService(INewsService newsService, IWorkContext workContext, IStoreContext storeContext,
             IPictureService pictureService, IDateTimeHelper dateTimeHelper, ICacheManager cacheManager,
             IWorkflowMessageService workflowMessageService, ILocalizationService localizationService, IWebHelper webHelper,
+            IServiceProvider serviceProvider,
             CaptchaSettings captchaSettings, NewsSettings newsSettings,
             CustomerSettings customerSettings, MediaSettings mediaSettings, LocalizationSettings localizationSettings)
         {
@@ -57,7 +61,7 @@ namespace Grand.Web.Services
             this._workflowMessageService = workflowMessageService;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
-
+            this._serviceProvider = serviceProvider;
             this._captchaSettings = captchaSettings;
             this._newsSettings = newsSettings;
             this._customerSettings = customerSettings;
@@ -65,7 +69,7 @@ namespace Grand.Web.Services
             this._localizationSettings = localizationSettings;
         }
 
-        public virtual void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+        public virtual async Task PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (newsItem == null)
                 throw new ArgumentNullException("newsItem");
@@ -74,13 +78,13 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("model");
 
             model.Id = newsItem.Id;
-            model.MetaTitle = newsItem.GetLocalized(x => x.MetaTitle);
-            model.MetaDescription = newsItem.GetLocalized(x => x.MetaDescription);
-            model.MetaKeywords = newsItem.GetLocalized(x => x.MetaKeywords);
-            model.SeName = newsItem.GetSeName();
-            model.Title = newsItem.GetLocalized(x => x.Title);
-            model.Short = newsItem.GetLocalized(x => x.Short);
-            model.Full = newsItem.GetLocalized(x => x.Full);
+            model.MetaTitle = newsItem.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id);
+            model.MetaDescription = newsItem.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id);
+            model.MetaKeywords = newsItem.GetLocalized(x => x.MetaKeywords, _workContext.WorkingLanguage.Id);
+            model.SeName = newsItem.GetSeName(_workContext.WorkingLanguage.Id);
+            model.Title = newsItem.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
+            model.Short = newsItem.GetLocalized(x => x.Short, _workContext.WorkingLanguage.Id);
+            model.Full = newsItem.GetLocalized(x => x.Full, _workContext.WorkingLanguage.Id);
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.NumberOfComments = newsItem.CommentCount;
@@ -90,12 +94,12 @@ namespace Grand.Web.Services
                 var newsComments = newsItem.NewsComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var nc in newsComments)
                 {
-                    var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(nc.CustomerId);
+                    var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(nc.CustomerId);
                     var commentModel = new NewsCommentModel
                     {
                         Id = nc.Id,
                         CustomerId = nc.CustomerId,
-                        CustomerName = customer.FormatUserName(),
+                        CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
                         CommentTitle = nc.CommentTitle,
                         CommentText = nc.CommentText,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(nc.CreatedOnUtc, DateTimeKind.Utc),
@@ -103,8 +107,8 @@ namespace Grand.Web.Services
                     };
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                        commentModel.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
+                            customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AvatarPictureId),
                             _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);
@@ -117,13 +121,13 @@ namespace Grand.Web.Services
             {
                 int pictureSize = prepareComments ? _mediaSettings.NewsThumbPictureSize : _mediaSettings.NewsListThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                model.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                model.PictureModel = await _cacheManager.Get(categoryPictureCacheKey, async () =>
                 {
-                    var picture = _pictureService.GetPictureById(newsItem.PictureId);
+                    var picture = await _pictureService.GetPictureById(newsItem.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.News.ImageLinkTitleFormat"), newsItem.Title),
                         AlternateText = string.Format(_localizationService.GetResource("Media.News.ImageAlternateTextFormat"), newsItem.Title)
                     };
@@ -132,24 +136,21 @@ namespace Grand.Web.Services
             }
 
         }
-        public virtual HomePageNewsItemsModel PrepareHomePageNewsItems()
+        public virtual async Task<HomePageNewsItemsModel> PrepareHomePageNewsItems()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
-                var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
-                return new HomePageNewsItemsModel
+                var newsItems = await _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
+                var hpnitemodel = new HomePageNewsItemsModel();
+                hpnitemodel.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+                foreach (var item in newsItems)
                 {
-                    WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                    NewsItems = newsItems
-                        .Select(x =>
-                        {
-                            var newsModel = new NewsItemModel();
-                            PrepareNewsItemModel(newsModel, x, false);
-                            return newsModel;
-                        })
-                        .ToList()
-                };
+                    var newsModel = new NewsItemModel();
+                    await PrepareNewsItemModel(newsModel, item, false);
+                    hpnitemodel.NewsItems.Add(newsModel);
+                }
+                return hpnitemodel;
             });
 
             //"Comments" property of "NewsItemModel" object depends on the current customer.
@@ -161,7 +162,7 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual NewsItemListModel PrepareNewsItemList(NewsPagingFilteringModel command)
+        public virtual async Task<NewsItemListModel> PrepareNewsItemList(NewsPagingFilteringModel command)
         {
             var model = new NewsItemListModel();
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
@@ -169,22 +170,19 @@ namespace Grand.Web.Services
             if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id,
+            var newsItems = await _newsService.GetAllNews(_storeContext.CurrentStore.Id,
                 command.PageNumber - 1, command.PageSize);
             model.PagingFilteringContext.LoadPagedList(newsItems);
-
-            model.NewsItems = newsItems
-                .Select(x =>
-                {
-                    var newsModel = new NewsItemModel();
-                    PrepareNewsItemModel(newsModel, x, false);
-                    return newsModel;
-                })
-                .ToList();
+            foreach (var item in newsItems)
+            {
+                var newsModel = new NewsItemModel();
+                await PrepareNewsItemModel(newsModel, item, false);
+                model.NewsItems.Add(newsModel);
+            }
 
             return model;
         }
-        public virtual void InsertNewsComment(NewsItem newsItem, NewsItemModel model)
+        public virtual async Task InsertNewsComment(NewsItem newsItem, NewsItemModel model)
         {
             var comment = new NewsComment
             {
@@ -197,12 +195,12 @@ namespace Grand.Web.Services
             newsItem.NewsComments.Add(comment);
             //update totals
             newsItem.CommentCount = newsItem.NewsComments.Count;
-            _newsService.UpdateNews(newsItem);
-            EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
+            await _newsService.UpdateNews(newsItem);
+            await _serviceProvider.GetRequiredService<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
 
             //notify a store owner;
             if (_newsSettings.NotifyAboutNewNewsComments)
-                _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendNewsCommentNotificationMessage(newsItem, comment, _localizationSettings.DefaultAdminLanguageId);
 
         }
 

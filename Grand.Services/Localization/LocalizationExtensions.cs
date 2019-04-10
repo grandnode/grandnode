@@ -2,33 +2,20 @@ using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Localization
 {
     public static class LocalizationExtensions
     {
-        /// <summary>
-        /// Get localized property of an entity
-        /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <param name="keySelector">Key selector</param>
-        /// <returns>Localized property</returns>
-        public static string GetLocalized<T>(this T entity,
-            Expression<Func<T, string>> keySelector)
-            where T : ParentEntity, ILocalizedEntity
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
-        }
-        
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -39,14 +26,14 @@ namespace Grand.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public static string GetLocalized<T>(this T entity, 
-            Expression<Func<T, string>> keySelector, string languageId, 
-            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true) 
-            where T : ParentEntity,  ILocalizedEntity
+        public static string GetLocalized<T>(this T entity,
+            Expression<Func<T, string>> keySelector, string languageId,
+            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
+            where T : ParentEntity, ILocalizedEntity
         {
             return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
-        
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -59,7 +46,7 @@ namespace Grand.Services.Localization
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static TPropType GetLocalized<T, TPropType>(this T entity,
-            Expression<Func<T, TPropType>> keySelector, string languageId, 
+            Expression<Func<T, TPropType>> keySelector, string languageId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ParentEntity, ILocalizedEntity
         {
@@ -108,11 +95,11 @@ namespace Grand.Services.Localization
             {
                 result = (TPropType)(propInfo.GetValue(entity));
             }
-            
+
             return result;
         }
 
-        
+
         /// <summary>
         /// Get localized property of setting
         /// </summary>
@@ -123,13 +110,11 @@ namespace Grand.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public static string GetLocalizedSetting<T>(this T settings,
+        public static string GetLocalizedSetting<T>(this T settings, ISettingService settingService,
             Expression<Func<T, string>> keySelector, string languageId, string storeId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ISettings, new()
         {
-            var settingService = EngineContext.Current.Resolve<ISettingService>();
-
             string key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
@@ -173,7 +158,7 @@ namespace Grand.Services.Localization
             if (!typeof(T).GetTypeInfo().IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            string resourceName = string.Format("Enums.{0}.{1}", 
+            string resourceName = string.Format("Enums.{0}.{1}",
                 typeof(T),
                 enumValue.ToString());
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
@@ -210,7 +195,7 @@ namespace Grand.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized value</returns>
-        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord, 
+        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord,
             ILocalizationService localizationService, string languageId)
         {
             if (permissionRecord == null)
@@ -235,7 +220,7 @@ namespace Grand.Services.Localization
         /// <param name="permissionRecord">Permission record</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
-        public static void SaveLocalizedPermissionName(this PermissionRecord permissionRecord,
+        public static async Task SaveLocalizedPermissionName(this PermissionRecord permissionRecord,
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
@@ -248,9 +233,9 @@ namespace Grand.Services.Localization
             string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
             string resourceValue = permissionRecord.Name;
 
-            foreach (var lang in languageService.GetAllLanguages(true))
+            foreach (var lang in await languageService.GetAllLanguages(true))
             {
-                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -259,12 +244,12 @@ namespace Grand.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    localizationService.InsertLocaleStringResource(lsr);
+                    await localizationService.InsertLocaleStringResource(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    localizationService.UpdateLocaleStringResource(lsr);
+                    await localizationService.UpdateLocaleStringResource(lsr);
                 }
             }
         }
@@ -274,7 +259,7 @@ namespace Grand.Services.Localization
         /// <param name="permissionRecord">Permission record</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
-        public static void DeleteLocalizedPermissionName(this PermissionRecord permissionRecord,
+        public static async Task DeleteLocalizedPermissionName(this PermissionRecord permissionRecord,
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
@@ -285,11 +270,11 @@ namespace Grand.Services.Localization
                 throw new ArgumentNullException("languageService");
 
             string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
-            foreach (var lang in languageService.GetAllLanguages(true))
+            foreach (var lang in await languageService.GetAllLanguages(true))
             {
-                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    localizationService.DeleteLocaleStringResource(lsr);
+                    localizationService.DeleteLocaleStringResource(lsr).Wait();
             }
         }
 
@@ -300,13 +285,16 @@ namespace Grand.Services.Localization
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="resourceName">Resource name</param>
-        public static void DeletePluginLocaleResource(this BasePlugin plugin,
+        public static async Task DeletePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
             string resourceName)
         {
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            DeletePluginLocaleResource(plugin, localizationService,
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
+                await DeletePluginLocaleResource(plugin, localizationService,
                 languageService, resourceName.ToLowerInvariant());
+            }
         }
         /// <summary>
         /// Delete a locale resource
@@ -315,7 +303,7 @@ namespace Grand.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
         /// <param name="resourceName">Resource name</param>
-        public static void DeletePluginLocaleResource(this BasePlugin plugin,
+        public static async Task DeletePluginLocaleResource(this BasePlugin plugin,
             ILocalizationService localizationService, ILanguageService languageService,
             string resourceName)
         {
@@ -328,11 +316,11 @@ namespace Grand.Services.Localization
                 throw new ArgumentNullException("languageService");
             if (string.IsNullOrEmpty(resourceName))
                 resourceName = resourceName.ToLowerInvariant();
-            foreach (var lang in languageService.GetAllLanguages(true))
+            foreach (var lang in await languageService.GetAllLanguages(true))
             {
-                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr != null)
-                    localizationService.DeleteLocaleStringResource(lsr);
+                    await localizationService.DeleteLocaleStringResource(lsr);
             }
         }
         /// <summary>
@@ -342,13 +330,17 @@ namespace Grand.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public static void AddOrUpdatePluginLocaleResource(this BasePlugin plugin,
-            string resourceName, string resourceValue, string languageCulture = null)
+        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin, IServiceProvider serviceProvider,
+        string resourceName, string resourceValue, string languageCulture = null)
         {
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-             AddOrUpdatePluginLocaleResource(plugin, localizationService,
-                 languageService, resourceName, resourceValue, languageCulture);
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+                var languageService = scope.ServiceProvider.GetRequiredService<ILanguageService>();
+                await AddOrUpdatePluginLocaleResource(plugin, localizationService,
+                     languageService, resourceName, resourceValue, languageCulture);
+            }
+
         }
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
@@ -359,8 +351,8 @@ namespace Grand.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public static void AddOrUpdatePluginLocaleResource(this BasePlugin plugin, 
-            ILocalizationService localizationService, ILanguageService languageService, 
+        public static async Task AddOrUpdatePluginLocaleResource(this BasePlugin plugin,
+            ILocalizationService localizationService, ILanguageService languageService,
             string resourceName, string resourceValue, string languageCulture = null)
         {
             //actually plugin instance is not required
@@ -372,12 +364,12 @@ namespace Grand.Services.Localization
                 throw new ArgumentNullException("languageService");
             if (string.IsNullOrEmpty(resourceName))
                 resourceName = resourceName.ToLowerInvariant();
-            foreach (var lang in languageService.GetAllLanguages(true))
+            foreach (var lang in await languageService.GetAllLanguages(true))
             {
                 if (!String.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
                     continue;
 
-                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -386,12 +378,12 @@ namespace Grand.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    localizationService.InsertLocaleStringResource(lsr);
+                    await localizationService.InsertLocaleStringResource(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    localizationService.UpdateLocaleStringResource(lsr);
+                    await localizationService.UpdateLocaleStringResource(lsr);
                 }
             }
         }
@@ -407,10 +399,10 @@ namespace Grand.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <returns>Localized value</returns>
-        public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService, 
+        public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService,
             string languageId, bool returnDefaultValue = true)
             where T : IPlugin
-        {   
+        {
             if (localizationService == null)
                 throw new ArgumentNullException("localizationService");
 
@@ -440,7 +432,7 @@ namespace Grand.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        public static void SaveLocalizedFriendlyName<T>(this T plugin, 
+        public static async Task SaveLocalizedFriendlyName<T>(this T plugin,
             ILocalizationService localizationService, string languageId,
             string localizedFriendlyName)
             where T : IPlugin
@@ -464,20 +456,20 @@ namespace Grand.Services.Localization
             if (string.IsNullOrEmpty(resourceName))
                 resourceName = resourceName.ToLowerInvariant();
 
-            var resource = localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
+            var resource = await localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)
             {
                 if (string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //delete
-                    localizationService.DeleteLocaleStringResource(resource);
+                    localizationService.DeleteLocaleStringResource(resource).Wait();
                 }
                 else
                 {
                     //update
                     resource.ResourceValue = localizedFriendlyName;
-                    localizationService.UpdateLocaleStringResource(resource);
+                    localizationService.UpdateLocaleStringResource(resource).Wait();
                 }
             }
             else
@@ -491,7 +483,7 @@ namespace Grand.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = localizedFriendlyName,
                     };
-                    localizationService.InsertLocaleStringResource(resource);
+                    await localizationService.InsertLocaleStringResource(resource);
                 }
             }
         }

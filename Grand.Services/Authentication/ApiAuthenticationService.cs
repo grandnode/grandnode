@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
@@ -34,45 +35,45 @@ namespace Grand.Services.Authentication
         /// Valid
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual bool Valid(TokenValidatedContext context)
+        public virtual async Task<bool> Valid(TokenValidatedContext context)
         {
             _email = context.Principal.Claims.ToList().FirstOrDefault(x => x.Type == "Email")?.Value;
 
             if (string.IsNullOrEmpty(_email))
             {
                 _errorMessage = "Email not exists in the context";
-                return false;
+                return await Task.FromResult(false);
             }
-            var customer = _customerService.GetCustomerByEmail(_email);
+            var customer = await _customerService.GetCustomerByEmail(_email);
             if (customer == null || !customer.Active || customer.Deleted)
             {
                 _errorMessage = "Email not exists/or not active in the customer table";
-                return false;
+                return await Task.FromResult(false);
             }
-            var userapi = _userApiService.GetUserByEmail(_email);
+            var userapi = await _userApiService.GetUserByEmail(_email);
             if (userapi == null || !userapi.IsActive)
             {
                 _errorMessage = "User api not exists/or not active in the user api table";
-                return false;
+                return await Task.FromResult(false);
             }
-            return true;
+            return await Task.FromResult(true);
         }
 
-        public virtual void SignIn()
+        public virtual async Task SignIn()
         {
-            SignIn(_email);
+            await SignIn(_email);
         }
 
         /// <summary>
         /// Sign in
         /// </summary>
         ///<param name="email">Email</param>
-        public virtual void SignIn(string email)
+        public virtual async Task SignIn(string email)
         {
             if (string.IsNullOrEmpty(_email))
                 throw new ArgumentNullException(nameof(email));
 
-            var customer = _customerService.GetCustomerByEmail(email);
+            var customer = await _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _cachedCustomer = customer;
         }
@@ -82,16 +83,16 @@ namespace Grand.Services.Authentication
         /// Get error message
         /// </summary>
         /// <returns></returns>
-        public virtual string ErrorMessage()
+        public virtual Task<string> ErrorMessage()
         {
-            return _errorMessage;
+            return Task.FromResult(_errorMessage);
         }
 
         /// <summary>
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer GetAuthenticatedCustomer()
+        public virtual async Task<Customer> GetAuthenticatedCustomer()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
@@ -107,7 +108,7 @@ namespace Grand.Services.Authentication
             //try to get customer by email
             var emailClaim = authenticateResult.Principal.Claims.FirstOrDefault(claim => claim.Type == "Email");
             if (emailClaim != null)
-                customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                customer = await _customerService.GetCustomerByEmail(emailClaim.Value);
 
 
             //whether the found customer is available

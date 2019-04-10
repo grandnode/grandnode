@@ -17,11 +17,11 @@ namespace Grand.Web.Areas.Api.Validators.Common
 
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required");
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Email))
                 {
-                    var userapi = userApiService.GetUserByEmail(x.Email.ToLowerInvariant());
+                    var userapi = await userApiService.GetUserByEmail(x.Email.ToLowerInvariant());
                     if (userapi != null && userapi.IsActive)
                     {
                         var base64EncodedBytes = System.Convert.FromBase64String(x.Password);
@@ -32,11 +32,11 @@ namespace Grand.Web.Areas.Api.Validators.Common
                 }
                 return false;
             }).WithMessage(("User not exists or password is wrong"));
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Email))
                 {
-                    var customer = customerService.GetCustomerByEmail(x.Email.ToLowerInvariant());
+                    var customer = await customerService.GetCustomerByEmail(x.Email.ToLowerInvariant());
                     if (customer != null && customer.Active && !customer.IsSystemAccount)
                         return true;
                 }

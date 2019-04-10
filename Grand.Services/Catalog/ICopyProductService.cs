@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Catalog;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -16,7 +17,7 @@ namespace Grand.Services.Catalog
         /// <param name="copyImages">A value indicating whether the product images should be copied</param>
         /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
         /// <returns>Product copy</returns>
-        Product CopyProduct(Product product, string newName,
+        Task<Product> CopyProduct(Product product, string newName,
             bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true);
     }
 }

@@ -27,7 +27,9 @@ using Grand.Services.Vendors;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -72,6 +74,8 @@ namespace Grand.Services.Orders.Tests
         private IStoreService _storeService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
+        private IServiceProvider _serviceProvider;
+        private IStateProvinceService _stateProvinceService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -80,6 +84,7 @@ namespace Grand.Services.Orders.Tests
             new Grand.Services.Tests.ServiceTest().PluginInitializator();
 
             _workContext = new Mock<IWorkContext>().Object;
+            _stateProvinceService = new Mock<IStateProvinceService>().Object;
 
             _store = new Store { Id = "1" };
             var tempStoreContext = new Mock<IStoreContext>();
@@ -90,7 +95,7 @@ namespace Grand.Services.Orders.Tests
 
             _productService = new Mock<IProductService>().Object;
 
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_serviceProvider);
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _discountService = new Mock<IDiscountService>().Object;
@@ -100,6 +105,7 @@ namespace Grand.Services.Orders.Tests
             _vendorService = new Mock<IVendorService>().Object;
             _storeService = new Mock<IStoreService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
+            _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -130,26 +136,6 @@ namespace Grand.Services.Orders.Tests
             _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
             _logger = new NullLogger();
-            _shippingService = new ShippingService(_shippingMethodRepository,
-                _deliveryDateRepository,
-                _warehouseRepository,
-                _pickupPointRepository,
-                _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
-                _shippingSettings,
-                pluginFinder,
-                _storeContext,
-                _eventPublisher,
-                _shoppingCartSettings,
-                cacheManager,
-                null);
-
-
             _paymentService = new Mock<IPaymentService>().Object;
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _giftCardService = new Mock<IGiftCardService>().Object;
@@ -166,15 +152,39 @@ namespace Grand.Services.Orders.Tests
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
             _taxSettings.DefaultTaxAddressId = "10";
 
+            _shippingService = new ShippingService(_shippingMethodRepository,
+            _deliveryDateRepository,
+            _warehouseRepository,
+            null,
+            _logger,
+            _productService,
+            _productAttributeParser,
+            _checkoutAttributeParser,
+            _genericAttributeService,
+            _localizationService,
+            _addressService,
+            _countryService,
+            _stateProvinceService,
+            pluginFinder,
+            _storeContext,
+            _eventPublisher,
+            _currencyService,
+            cacheManager,
+            null,
+            _shoppingCartSettings,
+            _shippingSettings);
+
+
+
             var tempAddressService = new Mock<IAddressService>();
             {
                 tempAddressService.Setup(x => x.GetAddressByIdSettings(_taxSettings.DefaultTaxAddressId))
-                    .Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
+                    .ReturnsAsync(new Address { Id = _taxSettings.DefaultTaxAddressId });
                 _addressService = tempAddressService.Object;
             }
 
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger, _customerSettings, _addressSettings);
+                pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
@@ -188,13 +198,13 @@ namespace Grand.Services.Orders.Tests
 
 
         [TestMethod()]
-        public void Can_convert_reward_points_to_amount()
+        public async Task Can_convert_reward_points_to_amount()
         {
             //when ExchangeRate is e.g. 512, then ConvertRewardPoints(44) will return 22528 (simple multyplying)
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 512M;
 
-            Assert.AreEqual(22528, _orderTotalCalcService.ConvertRewardPointsToAmount(44));
+            Assert.AreEqual(22528, await _orderTotalCalcService.ConvertRewardPointsToAmount(44));
         }
 
         [TestMethod()]

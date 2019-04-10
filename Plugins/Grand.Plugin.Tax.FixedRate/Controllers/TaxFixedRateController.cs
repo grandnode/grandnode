@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using Grand.Core;
+﻿using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Filters;
 using Grand.Plugin.Tax.FixedRate.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Security;
 using Grand.Services.Tax;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.FixedRate.Controllers
 {
@@ -36,13 +36,13 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
         }
 
         [HttpPost]
-        public IActionResult Configure(DataSourceRequest command)
+        public async Task<IActionResult> Configure(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             var taxRateModels = new List<FixedTaxRateModel>();
-            foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
+            foreach (var taxCategory in await _taxCategoryService.GetAllTaxCategories())
                 taxRateModels.Add(new FixedTaxRateModel
                 {
                     TaxCategoryId = taxCategory.Id,
@@ -59,15 +59,15 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
         }
 
         [HttpPost]
-        public IActionResult TaxRateUpdate(FixedTaxRateModel model)
+        public async Task<IActionResult> TaxRateUpdate(FixedTaxRateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
             string taxCategoryId = model.TaxCategoryId;
             decimal rate = model.Rate;
 
-            _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
+            await _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
 
             return new NullJsonResult();
         }

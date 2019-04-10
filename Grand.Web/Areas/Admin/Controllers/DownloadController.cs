@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -20,9 +21,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._downloadService = downloadService;
         }
 
-        public IActionResult DownloadFile(Guid downloadGuid)
+        public async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
-            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+            var download = await _downloadService.GetDownloadByGuid(downloadGuid);
             if (download == null)
                 return Content("No download record found with the specified id");
 
@@ -47,7 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)] 
-        public IActionResult SaveDownloadUrl(string downloadUrl)
+        public async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
             if(string.IsNullOrEmpty(downloadUrl))
             {
@@ -61,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 DownloadUrl = downloadUrl,
                 IsNew = true
               };
-            _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownload(download);
 
             return Json(new { downloadId = download.Id, success = true });
         }
@@ -69,7 +70,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)]
-        public virtual IActionResult AsyncUpload()
+        public virtual async Task<IActionResult> AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
@@ -110,7 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Extension = fileExtension,
                 IsNew = true
             };
-            _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownload(download);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.

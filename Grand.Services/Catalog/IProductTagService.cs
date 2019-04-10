@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -12,46 +13,46 @@ namespace Grand.Services.Catalog
         /// Delete a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        void DeleteProductTag(ProductTag productTag);
+        Task DeleteProductTag(ProductTag productTag);
 
         /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <returns>Product tags</returns>
-        IList<ProductTag> GetAllProductTags();
+        Task<IList<ProductTag>> GetAllProductTags();
 
         /// <summary>
         /// Gets product tag
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        ProductTag GetProductTagById(string productTagId);
-        
+        Task<ProductTag> GetProductTagById(string productTagId);
+
         /// <summary>
         /// Gets product tag by name
         /// </summary>
         /// <param name="name">Product tag name</param>
         /// <returns>Product tag</returns>
-        ProductTag GetProductTagByName(string name);
+        Task<ProductTag> GetProductTagByName(string name);
 
         /// <summary>
         /// Gets product tag by sename
         /// </summary>
         /// <param name="sename">Product tag sename</param>
         /// <returns>Product tag</returns>
-        ProductTag GetProductTagBySeName(string sename);
+        Task<ProductTag> GetProductTagBySeName(string sename);
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        void InsertProductTag(ProductTag productTag);
+        Task InsertProductTag(ProductTag productTag);
 
         /// <summary>
         /// Update a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        void UpdateProductTag(ProductTag productTag);
+        Task UpdateProductTag(ProductTag productTag);
 
         /// <summary>
         /// Get number of products

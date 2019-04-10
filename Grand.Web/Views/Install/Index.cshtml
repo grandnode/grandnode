@@ -2,9 +2,9 @@
 @using Grand.Core.Infrastructure;
 @using Grand.Web.Models.Install;
 @using Grand.Web.Infrastructure.Installation;
+@inject IInstallationLocalizationService ILS
 @{
     Layout = null;
-    var ILS = EngineContext.Current.Resolve<IInstallationLocalizationService>();
 }
 <!DOCTYPE html>
 <html>

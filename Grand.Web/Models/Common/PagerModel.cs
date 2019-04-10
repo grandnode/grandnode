@@ -7,12 +7,6 @@ namespace Grand.Web.Models.Common
     {
         #region Constructors
 
-        public PagerModel()
-            : this(EngineContext.Current.Resolve<ILocalizationService>())
-        {
-
-        }
-
         public PagerModel(ILocalizationService localizationService)
         {
             this._localizationService = localizationService;

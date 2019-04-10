@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -41,11 +42,11 @@ namespace Grand.Services.Customers
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public virtual string FormatAttributes(string attributesXml, string serapator = "<br />", bool htmlEncode = true)
+        public virtual async Task<string> FormatAttributes(string attributesXml, string serapator = "<br />", bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
-            var attributes = _customerAttributeParser.ParseCustomerAttributes(attributesXml);
+            var attributes = await _customerAttributeParser.ParseCustomerAttributes(attributesXml);
             for (int i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];

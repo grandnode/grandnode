@@ -9,6 +9,7 @@ using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -50,9 +51,9 @@ namespace Grand.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        public virtual IActionResult SubscribePopup(string productId)
+        public virtual async Task<IActionResult> SubscribePopup(string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -61,12 +62,12 @@ namespace Grand.Web.Controllers
 
             var model = new BackInStockSubscribeModel();
             model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
+            model.ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+            model.ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id);
             model.IsCurrentCustomerRegistered = customer.IsRegistered();
             model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
-            model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId(customer.Id, store.Id, 0, 1)
+            model.CurrentNumberOfBackInStockSubscriptions = (await _backInStockSubscriptionService
+                .GetAllSubscriptionsByCustomerId(customer.Id, store.Id, 0, 1))
                 .TotalCount;
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
@@ -75,15 +76,15 @@ namespace Grand.Web.Controllers
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
-                model.AlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(customer.Id, product.Id, store.Id, product.UseMultipleWarehouses ? store.DefaultWarehouseId : "") != null;
+                model.AlreadySubscribed = (await _backInStockSubscriptionService
+                    .FindSubscription(customer.Id, product.Id, store.Id, product.UseMultipleWarehouses ? store.DefaultWarehouseId : "")) != null;
             }
             return View(model);
         }
         [HttpPost, ActionName("SubscribePopup")]
-        public virtual IActionResult SubscribePopupPOST(string productId)
+        public virtual async Task<IActionResult> SubscribePopupPOST(string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null )
                 throw new ArgumentException("No product found with the specified id");
 
@@ -98,20 +99,20 @@ namespace Grand.Web.Controllers
                 product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
             {
                 //out of stock
-                var subscription = _backInStockSubscriptionService
+                var subscription = await _backInStockSubscriptionService
                     .FindSubscription(customer.Id, product.Id, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
                 if (subscription != null)
                 {
                     //subscription already exists
                     //unsubscribe
-                    _backInStockSubscriptionService.DeleteSubscription(subscription);
+                    await _backInStockSubscriptionService.DeleteSubscription(subscription);
                     return Content("Unsubscribed");
                 }
 
                 //subscription does not exist
                 //subscribe
-                if (_backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerId(customer.Id, _storeContext.CurrentStore.Id, 0, 1)
+                if ((await _backInStockSubscriptionService
+                    .GetAllSubscriptionsByCustomerId(customer.Id, _storeContext.CurrentStore.Id, 0, 1))
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
                     return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
@@ -124,7 +125,7 @@ namespace Grand.Web.Controllers
                     WarehouseId = product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "",
                     CreatedOnUtc = DateTime.UtcNow
                 };
-                _backInStockSubscriptionService.InsertSubscription(subscription);
+                await _backInStockSubscriptionService.InsertSubscription(subscription);
                 return Content("Subscribed");
             }
 
@@ -134,7 +135,7 @@ namespace Grand.Web.Controllers
 
 
         // My account / Back in stock subscriptions
-        public virtual IActionResult CustomerSubscriptions(int? pageNumber)
+        public virtual async Task<IActionResult> CustomerSubscriptions(int? pageNumber)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
@@ -149,7 +150,7 @@ namespace Grand.Web.Controllers
             var pageSize = 10;
 
             var customer = _workContext.CurrentCustomer;
-            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
+            var list = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
                 _storeContext.CurrentStore.Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
@@ -157,7 +158,7 @@ namespace Grand.Web.Controllers
             foreach (var subscription in list)
             {
 
-                var product = _productService.GetProductById(subscription.ProductId);
+                var product = await _productService.GetProductById(subscription.ProductId);
 
                 if (product != null)
                 {
@@ -165,14 +166,14 @@ namespace Grand.Web.Controllers
                     {
                         Id = subscription.Id,
                         ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        SeName = product.GetSeName(),
+                        ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                     };
                     model.Subscriptions.Add(subscriptionModel);
                 }
             }
 
-            model.PagerModel = new PagerModel
+            model.PagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -186,7 +187,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public virtual IActionResult CustomerSubscriptionsPOST(IFormCollection formCollection)
+        public virtual async Task<IActionResult> CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
             {
@@ -195,10 +196,10 @@ namespace Grand.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("biss", StringComparison.OrdinalIgnoreCase))
                 {
                     var id = key.Replace("biss", "").Trim();
-                    var subscription = _backInStockSubscriptionService.GetSubscriptionById(id);
+                    var subscription = await _backInStockSubscriptionService.GetSubscriptionById(id);
                     if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
                     {
-                       _backInStockSubscriptionService.DeleteSubscription(subscription);
+                       await _backInStockSubscriptionService.DeleteSubscription(subscription);
                     }
                 }
             }

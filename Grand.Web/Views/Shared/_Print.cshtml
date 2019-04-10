@@ -1,7 +1,8 @@
 ﻿@using Grand.Core.Infrastructure
 @using Grand.Framework.Themes
+@inject IThemeContext themeContext
 @{
-    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var themeName = themeContext.WorkingThemeName;
 }
 <!DOCTYPE html>
 <html>

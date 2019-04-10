@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Services.Common
@@ -60,7 +61,7 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        public virtual IList<AddressAttribute> ParseAddressAttributes(string attributesXml)
+        public virtual async Task<IList<AddressAttribute>> ParseAddressAttributes(string attributesXml)
         {
             var result = new List<AddressAttribute>();
             if (String.IsNullOrEmpty(attributesXml))
@@ -69,7 +70,7 @@ namespace Grand.Services.Common
             var ids = ParseAddressAttributeIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = _addressAttributeService.GetAddressAttributeById(id);
+                var attribute = await _addressAttributeService.GetAddressAttributeById(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -83,13 +84,13 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        public virtual IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml)
+        public virtual async Task<IList<AddressAttributeValue>> ParseAddressAttributeValues(string attributesXml)
         {
             var values = new List<AddressAttributeValue>();
             if (String.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseAddressAttributes(attributesXml);
+            var attributes = await ParseAddressAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -220,15 +221,15 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = ParseAddressAttributes(attributesXml);
+            var attributes1 = await ParseAddressAttributes(attributesXml);
 
             //validate required address attributes (whether they're chosen/selected/entered)
-            var attributes2 = _addressAttributeService.GetAllAddressAttributes();
+            var attributes2 = await _addressAttributeService.GetAllAddressAttributes();
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -254,8 +255,7 @@ namespace Grand.Services.Common
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name));
-
+                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name, ""));
                         warnings.Add(notFoundWarning);
                     }
                 }

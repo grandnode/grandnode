@@ -1,16 +1,16 @@
 ﻿using Grand.Core.Domain.Polls;
 using Grand.Web.Models.Polls;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface IPollViewModelService
     {
-        PollModel PreparePoll(Poll poll, bool setAlreadyVotedProperty);
-        PollModel PreparePollBySystemName(string systemKeyword);
-        List<PollModel> PrepareHomePagePoll();
-
+        Task<PollModel> PreparePoll(Poll poll, bool setAlreadyVotedProperty);
+        Task<PollModel> PreparePollBySystemName(string systemKeyword);
+        Task<List<PollModel>> PrepareHomePagePoll();
         void PollVoting(Poll poll, PollAnswer pollAnswer);
-        PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty);
+        Task<PollModel> PreparePollModel(Poll poll, bool setAlreadyVotedProperty);
     }
 }

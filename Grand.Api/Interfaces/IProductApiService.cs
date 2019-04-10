@@ -1,33 +1,34 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Interfaces
 {
     public interface IProductApiService
     {
-        ProductDto GetById(string id);
+        Task<ProductDto> GetById(string id);
         IMongoQueryable<ProductDto> GetProducts();
-        ProductDto InsertOrUpdateProduct(ProductDto model);
-        ProductDto InsertProduct(ProductDto model);
-        ProductDto UpdateProduct(ProductDto model);
-        void DeleteProduct(ProductDto model);
-        void UpdateStock(ProductDto model, string warehouseId, int stock);
-        
-        void InsertProductCategory(ProductDto product, ProductCategoryDto model);
-        void UpdateProductCategory(ProductDto product, ProductCategoryDto model);
-        void DeleteProductCategory(ProductDto product, string categoryId);
+        Task<ProductDto> InsertOrUpdateProduct(ProductDto model);
+        Task<ProductDto> InsertProduct(ProductDto model);
+        Task<ProductDto> UpdateProduct(ProductDto model);
+        Task DeleteProduct(ProductDto model);
+        Task UpdateStock(ProductDto model, string warehouseId, int stock);
 
-        void InsertProductManufacturer(ProductDto product, ProductManufacturerDto model);
-        void UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model);
-        void DeleteProductManufacturer(ProductDto product, string manufacturerId);
+        Task InsertProductCategory(ProductDto product, ProductCategoryDto model);
+        Task UpdateProductCategory(ProductDto product, ProductCategoryDto model);
+        Task DeleteProductCategory(ProductDto product, string categoryId);
 
-        void InsertProductPicture(ProductDto product, ProductPictureDto model);
-        void UpdateProductPicture(ProductDto product, ProductPictureDto model);
-        void DeleteProductPicture(ProductDto product, string pictureId);
+        Task InsertProductManufacturer(ProductDto product, ProductManufacturerDto model);
+        Task UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model);
+        Task DeleteProductManufacturer(ProductDto product, string manufacturerId);
 
-        void InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
-        void UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
-        void DeleteProductSpecification(ProductDto product, string id);
+        Task InsertProductPicture(ProductDto product, ProductPictureDto model);
+        Task UpdateProductPicture(ProductDto product, ProductPictureDto model);
+        Task DeleteProductPicture(ProductDto product, string pictureId);
+
+        Task InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
+        Task UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
+        Task DeleteProductSpecification(ProductDto product, string id);
 
     }
 }

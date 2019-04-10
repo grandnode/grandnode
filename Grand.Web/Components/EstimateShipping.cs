@@ -14,21 +14,24 @@ namespace Grand.Web.ViewComponents
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public EstimateShippingViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+        public EstimateShippingViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
-            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareEstimateShipping(cart));
+            var model = await _shoppingCartViewModelService.PrepareEstimateShipping(cart);
             if (!model.Enabled)
                 return Content("");
 

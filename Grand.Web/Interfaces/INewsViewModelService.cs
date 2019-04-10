@@ -1,15 +1,16 @@
 ﻿using Grand.Core.Domain.News;
 using Grand.Web.Models.News;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface INewsViewModelService
     {
-        void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments);
-        HomePageNewsItemsModel PrepareHomePageNewsItems();
-        NewsItemListModel PrepareNewsItemList(NewsPagingFilteringModel command);
+        Task PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments);
+        Task<HomePageNewsItemsModel> PrepareHomePageNewsItems();
+        Task<NewsItemListModel> PrepareNewsItemList(NewsPagingFilteringModel command);
 
-        void InsertNewsComment(NewsItem newsItem, NewsItemModel model);
+        Task InsertNewsComment(NewsItem newsItem, NewsItemModel model);
 
     }
 }

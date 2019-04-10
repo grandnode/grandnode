@@ -3,6 +3,7 @@ using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -18,9 +19,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Maintenance))
+            if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
             var store = _commonApiService.GetProductMessageTemplate().FirstOrDefault(x => x.Id == key);
@@ -32,9 +33,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         [HttpGet]
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Maintenance))
+            if (!await _permissionService.Authorize(PermissionSystemName.Maintenance))
                 return Forbid();
 
             return Ok(_commonApiService.GetProductMessageTemplate());

@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
-using Grand.Services.Helpers;
+using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
@@ -13,7 +13,7 @@ namespace Grand.Web.Extensions
     public static class MappingExtensions
     {
         //category
-        public static CategoryModel ToModel(this Category entity)
+        public static CategoryModel ToModel(this Category entity, Language language)
         {
             if (entity == null)
                 return null;
@@ -21,12 +21,12 @@ namespace Grand.Web.Extensions
             var model = new CategoryModel
             {
                 Id = entity.Id,
-                Name = entity.GetLocalized(x => x.Name),
-                Description = entity.GetLocalized(x => x.Description),
-                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = entity.GetLocalized(x => x.MetaDescription),
-                MetaTitle = entity.GetLocalized(x => x.MetaTitle),
-                SeName = entity.GetSeName(),
+                Name = entity.GetLocalized(x => x.Name, language.Id),
+                Description = entity.GetLocalized(x => x.Description, language.Id),
+                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
+                MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
+                MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
+                SeName = entity.GetSeName(language.Id),
                 Flag = entity.Flag,
                 FlagStyle = entity.FlagStyle,
                 Icon = entity.Icon
@@ -35,7 +35,7 @@ namespace Grand.Web.Extensions
         }
 
         //manufacturer
-        public static ManufacturerModel ToModel(this Manufacturer entity)
+        public static ManufacturerModel ToModel(this Manufacturer entity, Language language)
         {
             if (entity == null)
                 return null;
@@ -43,12 +43,12 @@ namespace Grand.Web.Extensions
             var model = new ManufacturerModel
             {
                 Id = entity.Id,
-                Name = entity.GetLocalized(x => x.Name),
-                Description = entity.GetLocalized(x => x.Description),
-                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = entity.GetLocalized(x => x.MetaDescription),
-                MetaTitle = entity.GetLocalized(x => x.MetaTitle),
-                SeName = entity.GetSeName(),
+                Name = entity.GetLocalized(x => x.Name, language.Id),
+                Description = entity.GetLocalized(x => x.Description, language.Id),
+                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
+                MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
+                MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
+                SeName = entity.GetSeName(language.Id),
                 Icon = entity.Icon
             };
             return model;

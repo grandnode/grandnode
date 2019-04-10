@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareStoreSelector());
+            var model = await _commonViewModelService.PrepareStoreSelector();
             if(model == null || model.AvailableStores.Count == 1)
                 Content("");
 

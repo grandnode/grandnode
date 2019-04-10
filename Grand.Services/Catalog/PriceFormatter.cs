@@ -7,6 +7,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -139,10 +140,10 @@ namespace Grand.Services.Catalog
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <param name="language">Language</param>
         /// <returns>Price</returns>
-        public virtual string FormatPrice(decimal price, bool showCurrency,
+        public virtual async Task<string> FormatPrice(decimal price, bool showCurrency,
             string currencyCode, bool showTax, Language language)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
                 currency = new Currency();
@@ -161,10 +162,10 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual string FormatPrice(decimal price, bool showCurrency,
+        public virtual async Task<string> FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode) 
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode) 
                 ?? new Currency
                    {
                        CurrencyCode = currencyCode
@@ -283,10 +284,10 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual string FormatShippingPrice(decimal price, bool showCurrency, 
+        public virtual async Task<string> FormatShippingPrice(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode) 
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode) 
                 ?? new Currency
                    {
                        CurrencyCode = currencyCode
@@ -386,10 +387,10 @@ namespace Grand.Services.Catalog
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
-        public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
+        public virtual async Task<string> FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode)
+            var currency = await _currencyService.GetCurrencyByCode(currencyCode)
                 ?? new Currency
                    {
                        CurrencyCode = currencyCode
@@ -397,8 +398,6 @@ namespace Grand.Services.Catalog
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
         }
-
-
 
         /// <summary>
         /// Formats a tax rate

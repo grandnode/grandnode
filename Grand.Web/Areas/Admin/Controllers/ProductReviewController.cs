@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -39,71 +40,71 @@ namespace Grand.Web.Areas.Admin.Controllers
         //list
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var model = _productReviewViewModelService.PrepareProductReviewListModel();
+            var model = await _productReviewViewModelService.PrepareProductReviewListModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, ProductReviewListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, ProductReviewListModel model)
         {
-            var productReviews = _productReviewViewModelService.PrepareProductReviewsModel(model, command.Page, command.PageSize);
+            var (productReviewModels, totalCount) = await _productReviewViewModelService.PrepareProductReviewsModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = productReviews.productReviewModels.ToList(),
-                Total = productReviews.totalCount,
+                Data = productReviewModels.ToList(),
+                Total = totalCount,
             };
 
             return Json(gridModel);
         }
 
         //edit
-        public IActionResult Edit(string id, [FromServices] IProductService productService)
+        public async Task<IActionResult> Edit(string id, [FromServices] IProductService productService)
         {
-            var productReview = productService.GetProductReviewById(id);
+            var productReview = await productService.GetProductReviewById(id);
 
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
             var model = new ProductReviewModel();
-            _productReviewViewModelService.PrepareProductReviewModel(model, productReview, false, false);
+            await _productReviewViewModelService.PrepareProductReviewModel(model, productReview, false, false);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(ProductReviewModel model, bool continueEditing, [FromServices] IProductService productService)
+        public async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing, [FromServices] IProductService productService)
         {
-            var productReview = productService.GetProductReviewById(model.Id);
+            var productReview = await productService.GetProductReviewById(model.Id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                productReview = _productReviewViewModelService.UpdateProductReview(productReview, model);
+                productReview = await _productReviewViewModelService.UpdateProductReview(productReview, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id, ProductId = productReview.ProductId }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            _productReviewViewModelService.PrepareProductReviewModel(model, productReview, true, false);
+            await _productReviewViewModelService.PrepareProductReviewModel(model, productReview, true, false);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id, [FromServices] IProductService productService)
+        public async Task<IActionResult> Delete(string id, [FromServices] IProductService productService)
         {
-            var productReview = productService.GetProductReviewById(id);
+            var productReview = await productService.GetProductReviewById(id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _productReviewViewModelService.DeleteProductReview(productReview);
+                await _productReviewViewModelService.DeleteProductReview(productReview);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
                 return RedirectToAction("List");
             }
@@ -112,29 +113,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> ApproveSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                _productReviewViewModelService.ApproveSelected(selectedIds.ToList());
+                await _productReviewViewModelService.ApproveSelected(selectedIds.ToList());
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public IActionResult DisapproveSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> DisapproveSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                _productReviewViewModelService.DisapproveSelected(selectedIds.ToList());
+                await _productReviewViewModelService.DisapproveSelected(selectedIds.ToList());
             }
 
             return Json(new { Result = true });
         }
 
 
-        public IActionResult ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
+        public async Task<IActionResult> ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
         {
             const int searchTermMinimumLength = 3;
             if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
@@ -142,10 +143,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //products
             const int productNumber = 15;
-            var products = productService.SearchProducts(
+            var products = (await productService.SearchProducts(
                 keywords: term,
                 pageSize: productNumber,
-                showHidden: true);
+                showHidden: true)).products;
 
             var result = (from p in products
                           select new

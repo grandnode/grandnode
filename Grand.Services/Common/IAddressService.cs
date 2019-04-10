@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Common;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -13,39 +14,39 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Number of addresses</returns>
-        int GetAddressTotalByCountryId(string countryId);
+        Task<int> GetAddressTotalByCountryId(string countryId);
 
         /// <summary>
         /// Gets total number of addresses by state/province identifier
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <returns>Number of addresses</returns>
-        int GetAddressTotalByStateProvinceId(string stateProvinceId);
+        Task<int> GetAddressTotalByStateProvinceId(string stateProvinceId);
 
         /// <summary>
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        Address GetAddressByIdSettings(string addressId);
+        Task<Address> GetAddressByIdSettings(string addressId);
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        void InsertAddressSettings(Address address);
+        Task InsertAddressSettings(Address address);
 
         /// <summary>
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        void UpdateAddressSettings(Address address);
+        Task UpdateAddressSettings(Address address);
 
         /// <summary>
         /// Gets a value indicating whether address is valid (can be saved)
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        bool IsAddressValid(Address address);
+        Task<bool> IsAddressValid(Address address);
     }
 }

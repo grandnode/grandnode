@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _boardsViewModelService.PrepareActiveDiscussions());
+            var model = await _boardsViewModelService.PrepareActiveDiscussions();
             if (model == null)
                 return Content("");
 

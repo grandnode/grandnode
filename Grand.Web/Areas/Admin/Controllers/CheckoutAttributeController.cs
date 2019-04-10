@@ -17,6 +17,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -76,9 +77,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var checkoutAttributes = _checkoutAttributeViewModelService.PrepareCheckoutAttributeListModel();
+            var checkoutAttributes = await _checkoutAttributeViewModelService.PrepareCheckoutAttributeListModel();
             var gridModel = new DataSourceResult
             {
                 Data = checkoutAttributes.ToList(),
@@ -88,82 +89,82 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeModel();
+            var model = await _checkoutAttributeViewModelService.PrepareCheckoutAttributeModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CheckoutAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CheckoutAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var checkoutAttribute = _checkoutAttributeViewModelService.InsertCheckoutAttributeModel(model);
+                var checkoutAttribute = await _checkoutAttributeViewModelService.InsertCheckoutAttributeModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = checkoutAttribute.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             //tax categories
-            _checkoutAttributeViewModelService.PrepareTaxCategories(model, null, true);
+            await _checkoutAttributeViewModelService.PrepareTaxCategories(model, null, true);
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
-            model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(id);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = checkoutAttribute.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
 
             //tax categories
-            _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, false);
+            await _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
-            model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
 
             //condition
-            _checkoutAttributeViewModelService.PrepareConditionAttributes(model, checkoutAttribute);
+            await _checkoutAttributeViewModelService.PrepareConditionAttributes(model, checkoutAttribute);
             //ACL
-            model.PrepareACLModel(checkoutAttribute, false, _customerService);
+            await model.PrepareACLModel(checkoutAttribute, false, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CheckoutAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CheckoutAttributeModel model, bool continueEditing)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.Id);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(model.Id);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                checkoutAttribute = _checkoutAttributeViewModelService.UpdateCheckoutAttributeModel(checkoutAttribute, model);
+                checkoutAttribute = await _checkoutAttributeViewModelService.UpdateCheckoutAttributeModel(checkoutAttribute, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
                 if (continueEditing)
                 {
@@ -178,24 +179,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //tax categories
-            _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, true);
+            await _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
-            model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
             //ACL
-            model.PrepareACLModel(checkoutAttribute, true, _customerService);
+            await model.PrepareACLModel(checkoutAttribute, true, _customerService);
 
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
+        public async Task<IActionResult> Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
-            _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(id);
+            await _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
 
             //activity log
-            customerActivityService.InsertActivity("DeleteCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name);
+            await customerActivityService.InsertActivity("DeleteCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
             return RedirectToAction("List");
@@ -207,9 +208,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //list
         [HttpPost]
-        public IActionResult ValueList(string checkoutAttributeId, DataSourceRequest command)
+        public async Task<IActionResult> ValueList(string checkoutAttributeId, DataSourceRequest command)
         {
-            var checkoutAttribute = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValuesModel(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeViewModelService.PrepareCheckoutAttributeValuesModel(checkoutAttributeId);
             var gridModel = new DataSourceResult
             {
                 Data = checkoutAttribute.ToList(),
@@ -219,24 +220,24 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult ValueCreatePopup(string checkoutAttributeId)
+        public async Task<IActionResult> ValueCreatePopup(string checkoutAttributeId)
         {
-            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttributeId);
+            var model = await _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttributeId);
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(CheckoutAttributeValueModel model)
+        public async Task<IActionResult> ValueCreatePopup(CheckoutAttributeValueModel model)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
                 return RedirectToAction("List");
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
 
             if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
@@ -247,7 +248,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var cav = _checkoutAttributeViewModelService.InsertCheckoutAttributeValueModel(checkoutAttribute, model);
+                var cav = await _checkoutAttributeViewModelService.InsertCheckoutAttributeValueModel(checkoutAttribute, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -257,18 +258,18 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult ValueEditPopup(string id, string checkoutAttributeId)
+        public async Task<IActionResult> ValueEditPopup(string id, string checkoutAttributeId)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
             if (cav == null)
                 //No checkout attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttribute, cav);
+            var model = await _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttribute, cav);
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = cav.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -277,17 +278,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(CheckoutAttributeValueModel model)
+        public async Task<IActionResult> ValueEditPopup(CheckoutAttributeValueModel model)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
 
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault();
             if (cav == null)
                 //No checkout attribute value found with the specified id
                 return RedirectToAction("List");
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
 
             if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
@@ -298,7 +299,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _checkoutAttributeViewModelService.UpdateCheckoutAttributeValueModel(checkoutAttribute, cav, model);
+                await _checkoutAttributeViewModelService.UpdateCheckoutAttributeValueModel(checkoutAttribute, cav, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -309,9 +310,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult ValueDelete(string id, string checkoutAttributeId)
+        public async Task<IActionResult> ValueDelete(string id, string checkoutAttributeId)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
                 throw new ArgumentException("No checkout attribute value found with the specified id");
@@ -319,7 +320,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 checkoutAttribute.CheckoutAttributeValues.Remove(cav);
-                _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
+                await _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);

@@ -2,41 +2,42 @@
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface ICustomerActionViewModelService
     {
-        void PrepareReactObjectModel(CustomerActionModel model);
-        CustomerActionModel PrepareCustomerActionModel();
-        CustomerAction InsertCustomerActionModel(CustomerActionModel model);
-        CustomerAction UpdateCustomerActionModel(CustomerAction customeraction, CustomerActionModel model);
-        SerializeCustomerActionHistory PrepareHistoryModelForList(CustomerActionHistory history);
-        CustomerActionConditionModel PrepareCustomerActionConditionModel(string customerActionId);
-        (string customerActionId, string conditionId) InsertCustomerActionConditionModel(CustomerActionConditionModel model);
-        CustomerAction UpdateCustomerActionConditionModel(CustomerAction customeraction, CustomerAction.ActionCondition actionCondition, CustomerActionConditionModel model);
-        void ConditionDelete(string Id, string customerActionId);
-        void ConditionDeletePosition(string id, string customerActionId, string conditionId);
-        CustomerActionConditionModel.AddProductToConditionModel PrepareAddProductToConditionModel(string customerActionId, string conditionId);
-        void InsertProductToConditionModel(CustomerActionConditionModel.AddProductToConditionModel model);
-        void InsertCategoryConditionModel(CustomerActionConditionModel.AddCategoryConditionModel model);
-        void InsertManufacturerConditionModel(CustomerActionConditionModel.AddManufacturerConditionModel model);
-        void InsertCustomerRoleConditionModel(CustomerActionConditionModel.AddCustomerRoleConditionModel model);
-        void InsertStoreConditionModel(CustomerActionConditionModel.AddStoreConditionModel model);
-        void InsertVendorConditionModel(CustomerActionConditionModel.AddVendorConditionModel model);
-        void InsertCustomerTagConditionModel(CustomerActionConditionModel.AddCustomerTagConditionModel model);
-        void InsertProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model);
-        void UpdateProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model);
-        void InsertProductSpecificationConditionModel(CustomerActionConditionModel.AddProductSpecificationConditionModel model);
-        void InsertCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model);
-        void UpdateCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model);
-        void InsertCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model);
-        void UpdateCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model);
-        void InsertUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
-        void UpdateUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
-        void InsertUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
-        void UpdateUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
-        (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize);
+        Task PrepareReactObjectModel(CustomerActionModel model);
+        Task<CustomerActionModel> PrepareCustomerActionModel();
+        Task<CustomerAction> InsertCustomerActionModel(CustomerActionModel model);
+        Task<CustomerAction> UpdateCustomerActionModel(CustomerAction customeraction, CustomerActionModel model);
+        Task<SerializeCustomerActionHistory> PrepareHistoryModelForList(CustomerActionHistory history);
+        Task<CustomerActionConditionModel> PrepareCustomerActionConditionModel(string customerActionId);
+        Task<(string customerActionId, string conditionId)> InsertCustomerActionConditionModel(CustomerActionConditionModel model);
+        Task<CustomerAction> UpdateCustomerActionConditionModel(CustomerAction customeraction, CustomerAction.ActionCondition actionCondition, CustomerActionConditionModel model);
+        Task ConditionDelete(string Id, string customerActionId);
+        Task ConditionDeletePosition(string id, string customerActionId, string conditionId);
+        Task<CustomerActionConditionModel.AddProductToConditionModel> PrepareAddProductToConditionModel(string customerActionId, string conditionId);
+        Task InsertProductToConditionModel(CustomerActionConditionModel.AddProductToConditionModel model);
+        Task InsertCategoryConditionModel(CustomerActionConditionModel.AddCategoryConditionModel model);
+        Task InsertManufacturerConditionModel(CustomerActionConditionModel.AddManufacturerConditionModel model);
+        Task InsertCustomerRoleConditionModel(CustomerActionConditionModel.AddCustomerRoleConditionModel model);
+        Task InsertStoreConditionModel(CustomerActionConditionModel.AddStoreConditionModel model);
+        Task InsertVendorConditionModel(CustomerActionConditionModel.AddVendorConditionModel model);
+        Task InsertCustomerTagConditionModel(CustomerActionConditionModel.AddCustomerTagConditionModel model);
+        Task InsertProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model);
+        Task UpdateProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model);
+        Task InsertProductSpecificationConditionModel(CustomerActionConditionModel.AddProductSpecificationConditionModel model);
+        Task InsertCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model);
+        Task UpdateCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model);
+        Task InsertCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model);
+        Task UpdateCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model);
+        Task InsertUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
+        Task UpdateUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
+        Task InsertUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
+        Task UpdateUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize);
 
     }
 }

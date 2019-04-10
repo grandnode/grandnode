@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Seo
 {
@@ -15,7 +16,7 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(IUrlHelper urlHelper, int? id);
+        Task<string> Generate(IUrlHelper urlHelper, int? id, string language);
 
         /// <summary>
         /// This will build an xml sitemap for better index with search engines.
@@ -24,6 +25,6 @@ namespace Grand.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        void Generate(IUrlHelper urlHelper, Stream stream, int? id);
+        Task Generate(IUrlHelper urlHelper, Stream stream, int? id, string language);
     }
 }

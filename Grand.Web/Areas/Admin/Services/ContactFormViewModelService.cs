@@ -10,7 +10,7 @@ using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -38,18 +38,18 @@ namespace Grand.Web.Areas.Admin.Services
             this._emailAccountService = emailAccountService;
         }
 
-        public virtual ContactFormListModel PrepareContactFormListModel()
+        public virtual async Task<ContactFormListModel> PrepareContactFormListModel()
         {
             var model = new ContactFormListModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             return model;
         }
 
-        public virtual (IEnumerable<ContactFormModel> contactFormModel, int totalCount) PrepareContactFormListModel(ContactFormListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<ContactFormModel> contactFormModel, int totalCount)> PrepareContactFormListModel(ContactFormListModel model, int pageIndex, int pageSize)
         {
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -63,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Services
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            var contactform = _contactUsService.GetAllContactUs(
+            var contactform = await _contactUsService.GetAllContactUs(
                 fromUtc: startDateValue,
                 toUtc: endDateValue,
                 email: model.SearchEmail,
@@ -71,24 +71,27 @@ namespace Grand.Web.Areas.Admin.Services
                 vendorId: vendorId,
                 pageIndex: pageIndex - 1,
                 pageSize: pageSize);
+            var contactformmodelList = new List<ContactFormModel>();
+            foreach (var item in contactform)
+            {
+                var store = await _storeService.GetStoreById(item.StoreId);
+                var m = item.ToModel();
+                m.CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc);
+                m.Enquiry = "";
+                m.Email = m.FullName + " - " + m.Email;
+                m.Store = store != null ? store.Name : "-empty-";
+                contactformmodelList.Add(m);
+            }
 
-            return (contactform.Select(x => {
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    var m = x.ToModel();
-                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.Enquiry = "";
-                    m.Email = m.FullName + " - " + m.Email;
-                    m.Store = store != null ? store.Name : "-empty-";
-                    return m;
-                }),contactform.TotalCount);
+            return (contactformmodelList, contactform.TotalCount);
         }
-        public virtual ContactFormModel PrepareContactFormModel(ContactUs contactUs)
+        public virtual async Task<ContactFormModel> PrepareContactFormModel(ContactUs contactUs)
         {
             var model = contactUs.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(contactUs.CreatedOnUtc, DateTimeKind.Utc);
-            var store = _storeService.GetStoreById(contactUs.StoreId);
+            var store = await _storeService.GetStoreById(contactUs.StoreId);
             model.Store = store != null ? store.Name : "-empty-";
-            var email = _emailAccountService.GetEmailAccountById(contactUs.EmailAccountId);
+            var email = await _emailAccountService.GetEmailAccountById(contactUs.EmailAccountId);
             model.EmailAccountName = email != null ? email.DisplayName : "-empty-";
             return model;
         }

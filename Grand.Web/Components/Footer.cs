@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareFooter());
+            var model = await _commonViewModelService.PrepareFooter();
             return View(model);
 
         }

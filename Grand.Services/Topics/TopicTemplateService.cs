@@ -4,6 +4,9 @@ using Grand.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Topics
 {
@@ -41,29 +44,28 @@ namespace Grand.Services.Topics
         /// Delete topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task DeleteTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
                 throw new ArgumentNullException("topicTemplate");
 
-            _topicTemplateRepository.Delete(topicTemplate);
+            await _topicTemplateRepository.DeleteAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityDeleted(topicTemplate);
+            await _eventPublisher.EntityDeleted(topicTemplate);
         }
 
         /// <summary>
         /// Gets all topic templates
         /// </summary>
         /// <returns>Topic templates</returns>
-        public virtual IList<TopicTemplate> GetAllTopicTemplates()
+        public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplates()
         {
             var query = from pt in _topicTemplateRepository.Table
                         orderby pt.DisplayOrder
                         select pt;
 
-            var templates = query.ToList();
-            return templates;
+            return await query.ToListAsync();
         }
  
         /// <summary>
@@ -71,39 +73,39 @@ namespace Grand.Services.Topics
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>Topic template</returns>
-        public virtual TopicTemplate GetTopicTemplateById(string topicTemplateId)
+        public virtual Task<TopicTemplate> GetTopicTemplateById(string topicTemplateId)
         {
-            return _topicTemplateRepository.GetById(topicTemplateId);
+            return _topicTemplateRepository.GetByIdAsync(topicTemplateId);
         }
 
         /// <summary>
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task InsertTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
                 throw new ArgumentNullException("topicTemplate");
 
-            _topicTemplateRepository.Insert(topicTemplate);
+            await _topicTemplateRepository.InsertAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityInserted(topicTemplate);
+            await _eventPublisher.EntityInserted(topicTemplate);
         }
 
         /// <summary>
         /// Updates the topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task UpdateTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
                 throw new ArgumentNullException("topicTemplate");
 
-            _topicTemplateRepository.Update(topicTemplate);
+            await _topicTemplateRepository.UpdateAsync(topicTemplate);
 
             //event notification
-            _eventPublisher.EntityUpdated(topicTemplate);
+            await _eventPublisher.EntityUpdated(topicTemplate);
         }
         
         #endregion

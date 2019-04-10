@@ -48,7 +48,7 @@ namespace Grand.Framework.Themes
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName, _storeContext.CurrentStore.Id);
+                        theme = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.WorkingThemeName, _storeContext.CurrentStore.Id);
                 }
 
                 //default store theme

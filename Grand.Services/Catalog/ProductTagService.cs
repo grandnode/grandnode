@@ -8,6 +8,8 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Catalog
 {
@@ -119,34 +121,33 @@ namespace Grand.Services.Catalog
         /// Delete a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void DeleteProductTag(ProductTag productTag)
+        public virtual async Task DeleteProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
             var builder = Builders<Product>.Update;
             var updatefilter = builder.Pull(x => x.ProductTags, productTag.Id);
-            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            _productTagRepository.Delete(productTag);
+            await _productTagRepository.DeleteAsync(productTag);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(productTag);
+            await _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTags()
+        public virtual async Task<IList<ProductTag>> GetAllProductTags()
         {
             var query = _productTagRepository.Table;
-            var productTags = query.ToList();
-            return productTags;
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -154,9 +155,9 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagById(string productTagId)
+        public virtual Task<ProductTag> GetProductTagById(string productTagId)
         {
-            return _productTagRepository.GetById(productTagId);
+            return _productTagRepository.GetByIdAsync(productTagId);
         }
 
         /// <summary>
@@ -164,14 +165,13 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="name">Product tag name</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagByName(string name)
+        public virtual Task<ProductTag> GetProductTagByName(string name)
         {
             var query = from pt in _productTagRepository.Table
                         where pt.Name == name
                         select pt;
 
-            var productTag = query.FirstOrDefault();
-            return productTag;
+            return query.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -179,58 +179,59 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="sename">Product tag sename</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagBySeName(string sename)
+        public virtual Task<ProductTag> GetProductTagBySeName(string sename)
         {
             var query = from pt in _productTagRepository.Table
                         where pt.SeName == sename
                         select pt;
-            var productTag = query.FirstOrDefault();
-            return productTag;        
+            return query.FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void InsertProductTag(ProductTag productTag)
+        public virtual async Task InsertProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
-            _productTagRepository.Insert(productTag);
+            await _productTagRepository.InsertAsync(productTag);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(productTag);
+            await _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void UpdateProductTag(ProductTag productTag)
+        public virtual async Task UpdateProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
-            var previouse = GetProductTagById(productTag.Id);
+            var previouse = await GetProductTagById(productTag.Id);
 
-            _productTagRepository.Update(productTag);
+            await _productTagRepository.UpdateAsync(productTag);
 
             //update name on products
-            var filter = new BsonDocument();
-            filter.Add(new BsonElement("ProductTags", previouse.Name));
+            var filter = new BsonDocument
+            {
+                new BsonElement("ProductTags", previouse.Name)
+            };
             var update = Builders<Product>.Update
                 .Set(x => x.ProductTags.ElementAt(-1), productTag.Name);
-            var result = _productRepository.Collection.UpdateMany(filter, update);
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(productTag);
+            await _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>

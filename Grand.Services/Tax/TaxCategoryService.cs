@@ -4,9 +4,11 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Events;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tax
 {
@@ -76,7 +78,7 @@ namespace Grand.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void DeleteTaxCategory(TaxCategory taxCategory)
+        public virtual async Task DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
@@ -85,31 +87,30 @@ namespace Grand.Services.Tax
             var filter = builder.Eq(x => x.TaxCategoryId, taxCategory.Id);
             var update = Builders<Product>.Update
                 .Set(x => x.TaxCategoryId, "");
-            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
 
-            _taxCategoryRepository.Delete(taxCategory);
+            await _taxCategoryRepository.DeleteAsync(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
+            await _eventPublisher.EntityDeleted(taxCategory);
         }
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax categories</returns>
-        public virtual IList<TaxCategory> GetAllTaxCategories()
+        public virtual async Task<IList<TaxCategory>> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
                             orderby tc.DisplayOrder
                             select tc;
-                var taxCategories = query.ToList();
-                return taxCategories;
+                return query.ToListAsync();
             });
         }
 
@@ -118,44 +119,44 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public virtual TaxCategory GetTaxCategoryById(string taxCategoryId)
+        public virtual Task<TaxCategory> GetTaxCategoryById(string taxCategoryId)
         {
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
+            return _cacheManager.Get(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
         }
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void InsertTaxCategory(TaxCategory taxCategory)
+        public virtual async Task InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
 
-            _taxCategoryRepository.Insert(taxCategory);
+            await _taxCategoryRepository.InsertAsync(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(taxCategory);
+            await _eventPublisher.EntityInserted(taxCategory);
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void UpdateTaxCategory(TaxCategory taxCategory)
+        public virtual async Task UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
 
-            _taxCategoryRepository.Update(taxCategory);
+            await _taxCategoryRepository.UpdateAsync(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
+            await _eventPublisher.EntityUpdated(taxCategory);
         }
         #endregion
     }

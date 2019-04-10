@@ -8,6 +8,7 @@ using Grand.Web.Areas.Admin.Models.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -26,17 +27,17 @@ namespace Grand.Web.Areas.Admin.Services
             _workContext = workContext;
         }
 
-        public virtual CustomerAttribute InsertCustomerAttributeModel(CustomerAttributeModel model)
+        public virtual async Task<CustomerAttribute> InsertCustomerAttributeModel(CustomerAttributeModel model)
         {
             var customerAttribute = model.ToEntity();
-            _customerAttributeService.InsertCustomerAttribute(customerAttribute);
+            await _customerAttributeService.InsertCustomerAttribute(customerAttribute);
             return customerAttribute;
         }
 
-        public virtual CustomerAttributeValue InsertCustomerAttributeValueModel(CustomerAttributeValueModel model)
+        public virtual async Task<CustomerAttributeValue> InsertCustomerAttributeValueModel(CustomerAttributeValueModel model)
         {
             var cav = model.ToEntity();
-            _customerAttributeService.InsertCustomerAttributeValue(cav);
+            await _customerAttributeService.InsertCustomerAttributeValue(cav);
             return cav;
         }
 
@@ -52,9 +53,9 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual IEnumerable<CustomerAttributeModel> PrepareCustomerAttributes()
+        public virtual async Task<IEnumerable<CustomerAttributeModel>> PrepareCustomerAttributes()
         {
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
             return customerAttributes.Select(x =>
             {
                 var attributeModel = x.ToModel();
@@ -76,9 +77,9 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual IEnumerable<CustomerAttributeValueModel> PrepareCustomerAttributeValues(string customerAttributeId)
+        public virtual async Task<IEnumerable<CustomerAttributeValueModel>> PrepareCustomerAttributeValues(string customerAttributeId)
         {
-            var values = _customerAttributeService.GetCustomerAttributeById(customerAttributeId).CustomerAttributeValues;
+            var values = (await _customerAttributeService.GetCustomerAttributeById(customerAttributeId)).CustomerAttributeValues;
             return values.Select(x => new CustomerAttributeValueModel
             {
                 Id = x.Id,
@@ -89,33 +90,33 @@ namespace Grand.Web.Areas.Admin.Services
             });
         }
 
-        public virtual CustomerAttribute UpdateCustomerAttributeModel(CustomerAttributeModel model, CustomerAttribute customerAttribute)
+        public virtual async Task<CustomerAttribute> UpdateCustomerAttributeModel(CustomerAttributeModel model, CustomerAttribute customerAttribute)
         {
             customerAttribute = model.ToEntity(customerAttribute);
-            _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
+            await _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
             return customerAttribute;
         }
 
-        public virtual CustomerAttributeValue UpdateCustomerAttributeValueModel(CustomerAttributeValueModel model, CustomerAttributeValue customerAttributeValue)
+        public virtual async Task<CustomerAttributeValue> UpdateCustomerAttributeValueModel(CustomerAttributeValueModel model, CustomerAttributeValue customerAttributeValue)
         {
             customerAttributeValue = model.ToEntity(customerAttributeValue);
-            _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
+            await _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
             return customerAttributeValue;
         }
 
-        public virtual void DeleteCustomerAttribute(string id)
+        public virtual async Task DeleteCustomerAttribute(string id)
         {
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
-            _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(id);
+            await _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
         }
 
-        public virtual void DeleteCustomerAttributeValue(CustomerAttributeValueModel model)
+        public virtual async Task DeleteCustomerAttributeValue(CustomerAttributeValueModel model)
         {
-            var av = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
+            var av = await _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             var cav = av.CustomerAttributeValues.FirstOrDefault(x => x.Id == model.Id);
             if (cav == null)
                 throw new ArgumentException("No customer attribute value found with the specified id");
-            _customerAttributeService.DeleteCustomerAttributeValue(cav);
+            await _customerAttributeService.DeleteCustomerAttributeValue(cav);
         }
     }
 }

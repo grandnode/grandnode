@@ -1,7 +1,7 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
+using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System.Collections.Generic;
@@ -12,13 +12,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private readonly BackInStockSubscription _backInStockSubscription;
         private readonly Product _product;
-        private readonly IStoreService _storeService;
+        private readonly Store _store;
+        private readonly Language _language;
 
-        public LiquidBackInStockSubscription(BackInStockSubscription backInStockSubscription)
+        public LiquidBackInStockSubscription(Product product, BackInStockSubscription backInStockSubscription, Store store, Language language)
         {
-            this._storeService = EngineContext.Current.Resolve<IStoreService>();
             this._backInStockSubscription = backInStockSubscription;
-            this._product = EngineContext.Current.Resolve<IProductService>().GetProductById(_backInStockSubscription.ProductId);
+            this._product = product;
+            this._store = store;
+            this._language = language;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
@@ -30,7 +32,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string ProductUrl
         {
-            get { return string.Format("{0}{1}", _storeService.GetStoreUrl(_backInStockSubscription.StoreId), _product.GetSeName()); }
+            get { return string.Format("{0}{1}", _store.SslEnabled ? _store.SecureUrl : _store.Url, _product.GetSeName(_language.Id)); }
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

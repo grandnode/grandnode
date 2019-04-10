@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -24,9 +25,9 @@ namespace Grand.Web.Areas.Admin.Components
             this._permissionService = permissionService;
         }
 
-        public IViewComponentResult Invoke(string affiliateId)//original Action name: AffiliatedOrderList
+        public async Task<IViewComponentResult> InvokeAsync(string affiliateId)//original Action name: AffiliatedOrderList
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return Content("");
 
             if (String.IsNullOrEmpty(affiliateId))

@@ -77,7 +77,7 @@ namespace Grand.Services.Cms
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IWidgetPlugin>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<IWidgetPlugin>();
+                return descriptor.Instance<IWidgetPlugin>(_pluginFinder.ServiceProvider);
 
             return null;
         }

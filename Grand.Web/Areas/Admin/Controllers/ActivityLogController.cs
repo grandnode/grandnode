@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -39,19 +40,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity log types
 
-        public IActionResult ListTypes()
+        public async Task<IActionResult> ListTypes()
         {
-            var model = _activityLogViewModelService.PrepareActivityLogTypeModels();
+            var model = await _activityLogViewModelService.PrepareActivityLogTypeModels();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult SaveTypes(IFormCollection form)
+        public async Task<IActionResult> SaveTypes(IFormCollection form)
         {
             string formKey = "checkbox_activity_types";
             var checkedActivityTypes = form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
 
-            _activityLogViewModelService.SaveTypes(checkedActivityTypes);
+            await _activityLogViewModelService.SaveTypes(checkedActivityTypes);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
             return RedirectToAction("ListTypes");
@@ -61,16 +62,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity log
 
-        public IActionResult ListLogs()
+        public async Task<IActionResult> ListLogs()
         {
-            var model = _activityLogViewModelService.PrepareActivityLogSearchModel();
+            var model = await _activityLogViewModelService.PrepareActivityLogSearchModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
+        public async Task<IActionResult> ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
-            var activitymodel = _activityLogViewModelService.PrepareActivityLogModel(model, command.Page, command.PageSize);
+            var activitymodel = await _activityLogViewModelService.PrepareActivityLogModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activitymodel.activityLogs,
@@ -79,24 +80,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult AcivityLogDelete(string id)
+        public async Task<IActionResult> AcivityLogDelete(string id)
         {
-            var activityLog = _customerActivityService.GetActivityById(id);
+            var activityLog = await _customerActivityService.GetActivityById(id);
             if (activityLog == null)
             {
                 throw new ArgumentException("No activity log found with the specified id");
             }
             if (ModelState.IsValid)
             {
-                _customerActivityService.DeleteActivity(activityLog);
+                await _customerActivityService.DeleteActivity(activityLog);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public IActionResult ClearAll()
+        public async Task<IActionResult> ClearAll()
         {
-            _customerActivityService.ClearAllActivities();
+            await _customerActivityService.ClearAllActivities();
             return RedirectToAction("ListLogs");
         }
 
@@ -104,16 +105,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Activity Stats
 
-        public IActionResult ListStats()
+        public async Task<IActionResult> ListStats()
         {
-            var model = _activityLogViewModelService.PrepareActivityLogSearchModel();
+            var model = await _activityLogViewModelService.PrepareActivityLogSearchModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ListStats(DataSourceRequest command, ActivityLogSearchModel model)
+        public async Task<IActionResult> ListStats(DataSourceRequest command, ActivityLogSearchModel model)
         {
-            var activityStatmodel = _activityLogViewModelService.PrepareActivityStatModel(model, command.Page, command.PageSize);
+            var activityStatmodel = await _activityLogViewModelService.PrepareActivityStatModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activityStatmodel.activityStats,

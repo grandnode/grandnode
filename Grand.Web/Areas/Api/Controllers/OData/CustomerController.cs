@@ -6,6 +6,7 @@ using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -28,9 +29,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
-        public IActionResult Get(string key)
+        public async Task<IActionResult> Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var customer = _customerApiService.GetByEmail(key);
@@ -41,81 +42,81 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CustomerDto model)
+        public async Task<IActionResult> Post([FromBody] CustomerDto model)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (ModelState.IsValid)
             {
-                model = _customerApiService.InsertOrUpdateCustomer(model);
+                model = await _customerApiService.InsertOrUpdateCustomer(model);
                 return Created(model);
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete]
-        public IActionResult Delete(string key)
+        public async Task<IActionResult> Delete(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customer = _customerApiService.GetByEmail(key);
+            var customer = await _customerApiService.GetByEmail(key);
             if (customer == null)
             {
                 return NotFound();
             }
-            _customerApiService.DeleteCustomer(customer);
+            await _customerApiService.DeleteCustomer(customer);
             return Ok();
         }
         //odata/Customer(email)/AddAddress
         [HttpPost]
-        public IActionResult AddAddress(string key, [FromBody] AddressDto address)
+        public async Task<IActionResult> AddAddress(string key, [FromBody] AddressDto address)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customer = _customerApiService.GetByEmail(key);
+            var customer = await _customerApiService.GetByEmail(key);
             if (customer == null)
                 return NotFound();
 
-            address = _customerApiService.InsertAddress(customer, address);
+            address = await _customerApiService.InsertAddress(customer, address);
             return Ok(address);
         }
 
         //odata/Customer(email)/UpdateAddress
         [HttpPost]
-        public IActionResult UpdateAddress(string key, [FromBody] AddressDto address)
+        public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customer = _customerApiService.GetByEmail(key);
+            var customer = await _customerApiService.GetByEmail(key);
             if (customer == null)
                 return NotFound();
 
-            address = _customerApiService.UpdateAddress(customer, address);
+            address = await _customerApiService.UpdateAddress(customer, address);
             return Ok(address);
         }
         //odata/Customer(email)/DeleteAddress
         //body: { "addressId": "xxx" }
         [HttpPost]
-        public IActionResult DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var addressId = parameters.FirstOrDefault(x => x.Key == "addressId").Value;
             if (addressId == null)
                 return NotFound();
 
-            var customer = _customerApiService.GetByEmail(key);
+            var customer = await _customerApiService.GetByEmail(key);
             if (customer == null)
                 return NotFound();
 
@@ -123,7 +124,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (address == null)
                 return NotFound();
 
-            _customerApiService.DeleteAddress(customer, address);
+            await _customerApiService.DeleteAddress(customer, address);
             return Ok(true);
         }
 
@@ -131,9 +132,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         //odata/Customer(email)/SetPassword
         //body: { "password": "123456" }
         [HttpPost]
-        public IActionResult SetPassword(string key, [FromBody] ODataActionParameters parameters)
+        public async Task<IActionResult> SetPassword(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
             var password = parameters.FirstOrDefault(x => x.Key == "password").Value;
@@ -141,7 +142,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
                 return NotFound();
 
             var changePassRequest = new ChangePasswordRequest(key, false, _customerSettings.DefaultPasswordFormat, password.ToString());
-            var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
+            var changePassResult = await _customerRegistrationService.ChangePassword(changePassRequest);
             if (!changePassResult.Success)
             {
                 return BadRequest(string.Join(',', changePassResult.Errors));

@@ -1,7 +1,8 @@
-﻿@{
-    var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true);
-}
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
 @using Grand.Services.Authentication.External;
+@{
+    var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true, httpContextAccessor);
+}
 @if (errors != null && errors.Any())
 {
     <div class="external-auth-errors">

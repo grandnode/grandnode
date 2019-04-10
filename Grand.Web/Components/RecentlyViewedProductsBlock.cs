@@ -33,7 +33,7 @@ namespace Grand.Web.Components
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
 
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsRecentlyViewed(productThumbPictureSize, preparePriceModel));
+            var model = await _productViewModelService.PrepareProductsRecentlyViewed(productThumbPictureSize, preparePriceModel);
             return View(model);
         }
 

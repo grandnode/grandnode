@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Orders;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -14,7 +15,7 @@ namespace Grand.Services.Orders
         /// Deletes a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute);
 
         /// <summary>
         /// Gets all checkout attributes
@@ -22,29 +23,28 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
-        IList<CheckoutAttribute> GetAllCheckoutAttributes(string storeId = "", bool excludeShippableAttributes = false, bool ignorAcl = false);
+        Task<IList<CheckoutAttribute>> GetAllCheckoutAttributes(string storeId = "", bool excludeShippableAttributes = false, bool ignorAcl = false);
 
         /// <summary>
         /// Gets a checkout attribute 
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute</returns>
-        CheckoutAttribute GetCheckoutAttributeById(string checkoutAttributeId);
+        Task<CheckoutAttribute> GetCheckoutAttributeById(string checkoutAttributeId);
 
         /// <summary>
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute);
 
         /// <summary>
         /// Updates the checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute);
 
         #endregion
 
-        
     }
 }

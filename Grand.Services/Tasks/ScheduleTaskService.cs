@@ -1,9 +1,11 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Tasks;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks
 {
@@ -32,9 +34,9 @@ namespace Grand.Services.Tasks
         /// </summary>
         /// <param name="taskId">Task identifier</param>
         /// <returns>Task</returns>
-        public virtual ScheduleTask GetTaskById(string taskId)
+        public virtual Task<ScheduleTask> GetTaskById(string taskId)
         {
-            return _taskRepository.GetById(taskId);
+            return _taskRepository.GetByIdAsync(taskId);
         }
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace Grand.Services.Tasks
         /// </summary>
         /// <param name="type">Task type</param>
         /// <returns>Task</returns>
-        public virtual ScheduleTask GetTaskByType(string type)
+        public virtual Task<ScheduleTask> GetTaskByType(string type)
         {
             if (String.IsNullOrWhiteSpace(type))
                 return null;
@@ -52,8 +54,7 @@ namespace Grand.Services.Tasks
             query = query.Where(st => st.Type == type);
             query = query.OrderByDescending(t => t.Id);
 
-            var task = query.FirstOrDefault();
-            return task;
+            return query.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -61,45 +62,45 @@ namespace Grand.Services.Tasks
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Tasks</returns>
-        public virtual IList<ScheduleTask> GetAllTasks()
+        public virtual async Task<IList<ScheduleTask>> GetAllTasks()
         {
-            return _taskRepository.Table.ToList();
+            return await _taskRepository.Table.ToListAsync();
         }
 
         /// <summary>
         /// Insert the task
         /// </summary>
         /// <param name="task">Task</param>
-        public virtual ScheduleTask InsertTask(ScheduleTask task)
+        public virtual async Task<ScheduleTask> InsertTask(ScheduleTask task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");
 
-            return _taskRepository.Insert(task);
+            return await _taskRepository.InsertAsync(task);
         }
 
         /// <summary>
         /// Updates the task
         /// </summary>
         /// <param name="task">Task</param>
-        public virtual void UpdateTask(ScheduleTask task)
+        public virtual async Task UpdateTask(ScheduleTask task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");
 
-            _taskRepository.Update(task);
+            await _taskRepository.UpdateAsync(task);
         }
 
         /// <summary>
         /// Delete the task
         /// </summary>
         /// <param name="task">Task</param>
-        public virtual void DeleteTask(ScheduleTask task)
+        public virtual async Task DeleteTask(ScheduleTask task)
         {
             if (task == null)
                 throw new ArgumentNullException("task");
 
-            _taskRepository.Delete(task);
+            await _taskRepository.DeleteAsync(task);
         }
     }
 }

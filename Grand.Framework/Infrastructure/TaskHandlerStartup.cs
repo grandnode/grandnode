@@ -32,7 +32,8 @@ namespace Grand.Framework.Infrastructure
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var logger = EngineContext.Current.Resolve<ILogger>();
+                var serviceProvider = application.ApplicationServices;
+                var logger = serviceProvider.GetRequiredService<ILogger>();
                 //database is already installed, so start scheduled tasks
                 try
                 {
@@ -56,7 +57,7 @@ namespace Grand.Framework.Infrastructure
         public int Order
         {
             //task handlers should be loaded last
-            get { return 500; }
+            get { return 1010; }
         }
     }
 }

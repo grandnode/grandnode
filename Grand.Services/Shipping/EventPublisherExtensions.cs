@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Shipping;
 using Grand.Services.Events;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Shipping
 {
@@ -10,18 +11,18 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static void PublishShipmentSent(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentSent(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            eventPublisher.Publish(new ShipmentSentEvent(shipment));
+            await eventPublisher.Publish(new ShipmentSentEvent(shipment));
         }
         /// <summary>
         /// Publishes the shipment delivered event.
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static void PublishShipmentDelivered(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentDelivered(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            eventPublisher.Publish(new ShipmentDeliveredEvent(shipment));
+            await eventPublisher.Publish(new ShipmentDeliveredEvent(shipment));
         }
     }
 }

@@ -7,6 +7,7 @@ using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -28,45 +29,45 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-		public IActionResult List()
+		public async Task<IActionResult> List()
         {
-            var model = _contactFormViewModelService.PrepareContactFormListModel();
+            var model = await _contactFormViewModelService.PrepareContactFormListModel();
             return View(model);
 		}
 
 		[HttpPost]
-		public IActionResult ContactFormList(DataSourceRequest command, ContactFormListModel model)
+		public async Task<IActionResult> ContactFormList(DataSourceRequest command, ContactFormListModel model)
         {
-            var contactform = _contactFormViewModelService.PrepareContactFormListModel(model, command.Page, command.PageSize);
+            var (contactFormModel, totalCount) = await _contactFormViewModelService.PrepareContactFormListModel(model, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
-                Data = contactform.contactFormModel,
-                Total = contactform.totalCount
+                Data = contactFormModel,
+                Total = totalCount
             };
             return Json(gridModel);
         }
 
-		public IActionResult Details(string id)
+		public async Task<IActionResult> Details(string id)
         {
-			var contactform = _contactUsService.GetContactUsById(id);
+			var contactform = await _contactUsService.GetContactUsById(id);
             if (contactform == null)
                 return RedirectToAction("List");
 
-            var model = _contactFormViewModelService.PrepareContactFormModel(contactform);
+            var model = await _contactFormViewModelService.PrepareContactFormModel(contactform);
             return View(model);
 		}
 
 	    [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var contactform = _contactUsService.GetContactUsById(id);
+            var contactform = await _contactUsService.GetContactUsById(id);
             if (contactform == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _contactUsService.DeleteContactUs(contactform);
+                await _contactUsService.DeleteContactUs(contactform);
 
                 SuccessNotification(_localizationService.GetResource("Admin.System.ContactForm.Deleted"));
                 return RedirectToAction("List");
@@ -77,9 +78,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
-        public IActionResult DeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
-            _contactUsService.ClearTable();
+            await _contactUsService.ClearTable();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.ContactForm.DeletedAll"));
             return RedirectToAction("List");

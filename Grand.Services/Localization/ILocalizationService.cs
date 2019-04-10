@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Localization;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Localization
 {
@@ -12,14 +13,14 @@ namespace Grand.Services.Localization
         /// Deletes a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void DeleteLocaleStringResource(LocaleStringResource localeStringResource);
+        Task DeleteLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Gets a locale string resource
         /// </summary>
         /// <param name="localeStringResourceId">Locale string resource identifier</param>
         /// <returns>Locale string resource</returns>
-        LocaleStringResource GetLocaleStringResourceById(string localeStringResourceId);
+        Task<LocaleStringResource> GetLocaleStringResourceById(string localeStringResourceId);
 
         /// <summary>
         /// Gets a locale string resource
@@ -28,7 +29,7 @@ namespace Grand.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <returns>Locale string resource</returns>
-        LocaleStringResource GetLocaleStringResourceByName(string resourceName, string languageId,
+        Task<LocaleStringResource> GetLocaleStringResourceByName(string resourceName, string languageId,
             bool logIfNotFound = true);
 
         /// <summary>
@@ -42,13 +43,13 @@ namespace Grand.Services.Localization
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void InsertLocaleStringResource(LocaleStringResource localeStringResource);
+        Task InsertLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Updates the locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
+        Task UpdateLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
@@ -74,20 +75,20 @@ namespace Grand.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
-        string ExportResourcesToXml(Language language);
+        Task<string> ExportResourcesToXml(Language language);
 
         /// <summary>
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        void ImportResourcesFromXml(Language language, string xml);
- 
+        Task ImportResourcesFromXml(Language language, string xml);
+
         /// <summary>
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        void ImportResourcesFromXmlInstall(Language language, string xml);
+        Task ImportResourcesFromXmlInstall(Language language, string xml);
     }
 }

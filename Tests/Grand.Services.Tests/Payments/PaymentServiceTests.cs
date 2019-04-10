@@ -2,9 +2,12 @@
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;
+using Grand.Services.Directory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Payments.Tests
 {
@@ -15,26 +18,30 @@ namespace Grand.Services.Payments.Tests
         private ShoppingCartSettings _shoppingCartSettings;
         private ISettingService _settingService;
         private IPaymentService _paymentService;
+        private ICurrencyService _currencyService;
+        private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
         public void TestInitialize()
         {
             //plugin initialization
             new Grand.Services.Tests.ServiceTest().PluginInitializator();
-
+            _serviceProvider = new Mock<IServiceProvider>().Object;
             _paymentSettings = new PaymentSettings();
             _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
-            var pluginFinder = new PluginFinder();
+            var pluginFinder = new PluginFinder(_serviceProvider);
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>().Object;
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
+            _currencyService = new Mock<ICurrencyService>().Object;
+
+            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _currencyService, _shoppingCartSettings);
         }
 
         [TestMethod()]
-        public void Can_load_paymentMethods()
+        public async Task Can_load_paymentMethods()
         {
-            var srcm = _paymentService.LoadActivePaymentMethods();
+            var srcm = await _paymentService.LoadActivePaymentMethods();
             Assert.IsNotNull(srcm);
             Assert.IsTrue(srcm.Count > 0);
         }
@@ -47,9 +54,9 @@ namespace Grand.Services.Payments.Tests
         }
 
         [TestMethod()]
-        public void Can_load_active_paymentMethods()
+        public async Task Can_load_active_paymentMethods()
         {
-            var srcm = _paymentService.LoadActivePaymentMethods();
+            var srcm = await _paymentService.LoadActivePaymentMethods();
             Assert.IsNotNull(srcm);
             Assert.IsTrue(srcm.Count > 0);
         }

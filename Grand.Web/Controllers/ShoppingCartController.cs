@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -41,6 +42,7 @@ namespace Grand.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -59,6 +61,7 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService,
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
+            IGenericAttributeService genericAttributeService,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
@@ -72,6 +75,7 @@ namespace Grand.Web.Controllers
             this._permissionService = permissionService;
             this._downloadService = downloadService;
             this._shoppingCartViewModelService = shoppingCartViewModelService;
+            this._genericAttributeService = genericAttributeService;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -80,25 +84,25 @@ namespace Grand.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
+        public virtual async Task<IActionResult> CheckoutAttributeChange(IFormCollection form,
             [FromServices] ICheckoutAttributeParser checkoutAttributeParser,
             [FromServices] ICheckoutAttributeFormatter checkoutAttributeFormatter)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
-            var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes,
+            await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            var attributeXml = await _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes,
                 _storeContext.CurrentStore.Id);
 
             var enabledAttributeIds = new List<string>();
             var disabledAttributeIds = new List<string>();
-            var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
+            var attributes = await _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in attributes)
             {
-                var conditionMet = checkoutAttributeParser.IsConditionMet(attribute, attributeXml);
+                var conditionMet = await checkoutAttributeParser.IsConditionMet(attribute, attributeXml);
                 if (conditionMet.HasValue)
                 {
                     if (conditionMet.Value)
@@ -112,15 +116,15 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
-                checkoutattributeinfo = checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
+                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
 
         [HttpPost]
-        public virtual IActionResult UploadFileCheckoutAttribute(string attributeId)
+        public virtual async Task<IActionResult> UploadFileCheckoutAttribute(string attributeId)
         {
-            var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
+            var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
             {
                 return Json(new
@@ -185,7 +189,7 @@ namespace Grand.Web.Controllers
                 Extension = fileExtension,
                 IsNew = true
             };
-            _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownload(download);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
@@ -198,59 +202,59 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public virtual IActionResult Cart(bool checkoutAttributes)
+        public virtual async Task<IActionResult> Cart(bool checkoutAttributes)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: checkoutAttributes);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: checkoutAttributes);
             return View(model);
         }
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult UpdateCart(IFormCollection form)
+        public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                    foreach (string formKey in form.Keys)
-                        if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
+                foreach (string formKey in form.Keys)
+                    if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (int.TryParse(form[formKey], out int newQuantity))
                         {
-                            if (int.TryParse(form[formKey], out int newQuantity))
-                            {
-                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
-                                    sci.RentalStartDateUtc, sci.RentalEndDateUtc,
-                                    newQuantity, true, sci.ReservationId, sci.Id);
-                                innerWarnings.Add(sci.Id, currSciWarnings);
-                            }
-                            break;
+                            var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                                sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                sci.RentalStartDateUtc, sci.RentalEndDateUtc,
+                                newQuantity, true, sci.ReservationId, sci.Id);
+                            innerWarnings.Add(sci.Id, currSciWarnings);
                         }
+                        break;
+                    }
             }
 
             //updated cart
-            _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
+            _workContext.CurrentCustomer = await _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -271,20 +275,20 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public virtual IActionResult ClearCart()
+        public virtual async Task<IActionResult> ClearCart()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
+                await _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
             }
 
             return RedirectToRoute("HomePage");
@@ -292,23 +296,22 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteCartItem(string id, bool shoppingcartpage = false)
+        public virtual async Task<IActionResult> DeleteCartItem(string id, bool shoppingcartpage = false)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
             var item = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => (sci.ShoppingCartType == ShoppingCartType.ShoppingCart) && sci.Id == id)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .FirstOrDefault();
 
             if (item != null)
             {
-                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, item, ensureOnlyActiveCheckoutAttributes: true);
+                await _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, item, ensureOnlyActiveCheckoutAttributes: true);
             }
 
-
-            var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
+            var model = await _shoppingCartViewModelService.PrepareMiniShoppingCart();
             if (!shoppingcartpage)
             {
                 return Json(new
@@ -321,10 +324,10 @@ namespace Grand.Web.Controllers
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id).ToList();
 
                 var shoppingcartmodel = new ShoppingCartModel();
-                _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
+                await _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
 
                 return Json(new
                 {
@@ -337,7 +340,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult ContinueShopping()
         {
-            var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
+            var returnUrl = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -349,19 +352,19 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
+        public virtual async Task<IActionResult> StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
-            var checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            var checkoutAttributeWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
+            var checkoutAttributes = await _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            var checkoutAttributeWarnings = await _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (checkoutAttributeWarnings.Any())
             {
                 return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
@@ -381,11 +384,11 @@ namespace Grand.Web.Controllers
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode)
+        public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             var model = new ShoppingCartModel();
@@ -393,28 +396,28 @@ namespace Grand.Web.Controllers
             {
                 discountcouponcode = discountcouponcode.ToUpper();
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
-                var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
+                var discount = await _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)
                 {
-                    var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                    var coupons = await _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService);
                     var existsAndUsed = false;
                     foreach (var item in coupons)
                     {
-                        if (_discountService.ExistsCodeInDiscount(item, discount.Id, null))
+                        if (await _discountService.ExistsCodeInDiscount(item, discount.Id, null))
                             existsAndUsed = true;
                     }
                     if (!existsAndUsed)
                     {
                         if (!discount.Reused)
-                            existsAndUsed = !_discountService.ExistsCodeInDiscount(discountcouponcode, discount.Id, false);
+                            existsAndUsed = !await _discountService.ExistsCodeInDiscount(discountcouponcode, discount.Id, false);
 
                         if (!existsAndUsed)
                         {
-                            var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
+                            var validationResult = await _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
                             if (validationResult.IsValid)
                             {
                                 //valid
-                                _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
+                                await _workContext.CurrentCustomer.ApplyDiscountCouponCode(_genericAttributeService, discountcouponcode);
                                 model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                                 model.DiscountBox.IsApplied = true;
                             }
@@ -458,7 +461,7 @@ namespace Grand.Web.Controllers
                 model.DiscountBox.IsApplied = false;
             }
 
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
 
             return Json(new
             {
@@ -468,7 +471,7 @@ namespace Grand.Web.Controllers
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode)
+        public virtual async Task<IActionResult> ApplyGiftCard(string giftcardcouponcode)
         {
             //trim
             if (giftcardcouponcode != null)
@@ -476,7 +479,7 @@ namespace Grand.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             var model = new ShoppingCartModel();
@@ -484,11 +487,11 @@ namespace Grand.Web.Controllers
             {
                 if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode).FirstOrDefault();
+                    var giftCard = (await _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode)).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
+                        await _workContext.CurrentCustomer.ApplyGiftCardCouponCode(_genericAttributeService, giftcardcouponcode);
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }
@@ -510,7 +513,7 @@ namespace Grand.Web.Controllers
                 model.GiftCardBox.IsApplied = false;
             }
 
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
@@ -519,43 +522,43 @@ namespace Grand.Web.Controllers
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
+        public virtual async Task<IActionResult> GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
-            var model = _shoppingCartViewModelService.PrepareEstimateShippingResult(cart, countryId, stateProvinceId, zipPostalCode);
+            await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            var model = await _shoppingCartViewModelService.PrepareEstimateShippingResult(cart, countryId, stateProvinceId, zipPostalCode);
 
             return PartialView("_EstimateShippingResult", model);
         }
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult RemoveDiscountCoupon(string discountId)
+        public virtual async Task<IActionResult> RemoveDiscountCoupon(string discountId)
         {
             var model = new ShoppingCartModel();
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
-                var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                var coupons = await _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes(_genericAttributeService);
                 foreach (var item in coupons)
                 {
-                    var dd = _discountService.GetDiscountByCouponCode(item);
+                    var dd = await _discountService.GetDiscountByCouponCode(item);
                     if (dd.Id == discount.Id)
-                        _workContext.CurrentCustomer.RemoveDiscountCouponCode(item);
+                        await _workContext.CurrentCustomer.RemoveDiscountCouponCode(_genericAttributeService, item);
                 }
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
@@ -564,22 +567,22 @@ namespace Grand.Web.Controllers
 
         [PublicAntiForgery]
         [HttpPost]
-        public virtual IActionResult RemoveGiftCardCode(string giftCardId)
+        public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
         {
             var model = new ShoppingCartModel();
 
             //get gift card identifier
-            var gc = _giftCardService.GetGiftCardById(giftCardId);
+            var gc = await _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
             {
-                _workContext.CurrentCustomer.RemoveGiftCardCouponCode(gc.GiftCardCouponCode);
+                await _workContext.CurrentCustomer.RemoveGiftCardCouponCode(_genericAttributeService, gc.GiftCardCouponCode);
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
@@ -590,37 +593,37 @@ namespace Grand.Web.Controllers
 
         #region Wishlist
 
-        public virtual IActionResult Wishlist(Guid? customerGuid)
+        public virtual async Task<IActionResult> Wishlist(Guid? customerGuid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             Customer customer = customerGuid.HasValue ?
-                _customerService.GetCustomerByGuid(customerGuid.Value)
+                await _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
                 return RedirectToRoute("HomePage");
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+            await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
             return View(model);
         }
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("updatecart")]
-        public virtual IActionResult UpdateWishlist(IFormCollection form)
+        public virtual async Task<IActionResult> UpdateWishlist(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             var customer = _workContext.CurrentCustomer;
 
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString())
@@ -635,7 +638,7 @@ namespace Grand.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(customer, sci);
+                    await _shoppingCartService.DeleteShoppingCartItem(customer, sci);
                 else
                 {
                     foreach (string formKey in form.Keys)
@@ -643,7 +646,7 @@ namespace Grand.Web.Controllers
                         {
                             if (int.TryParse(form[formKey], out int newQuantity))
                             {
-                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                                var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
                                     sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                     newQuantity, true);
@@ -655,14 +658,14 @@ namespace Grand.Web.Controllers
             }
 
             //updated wishlist
-            _workContext.CurrentCustomer = _customerService.GetCustomerById(customer.Id);
+            _workContext.CurrentCustomer = await _customerService.GetCustomerById(customer.Id);
 
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartViewModelService.PrepareWishlist(model, cart);
+            await _shoppingCartViewModelService.PrepareWishlist(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -681,23 +684,23 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
-        public virtual IActionResult AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
+        public virtual async Task<IActionResult> AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
             var pageCustomer = customerGuid.HasValue
-                ? _customerService.GetCustomerByGuid(customerGuid.Value)
+                ? await _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
             var pageCart = pageCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             var allWarnings = new List<string>();
@@ -710,7 +713,7 @@ namespace Grand.Web.Controllers
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
-                    var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                    var warnings = await _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductId, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
@@ -722,7 +725,7 @@ namespace Grand.Web.Controllers
                         !warnings.Any()) //no warnings ( already in the cart)
                     {
                         //let's remove the item from wishlist
-                        _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci);
+                        await _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci);
                     }
                     allWarnings.AddRange(warnings);
                 }
@@ -750,22 +753,22 @@ namespace Grand.Web.Controllers
                 //no items added. redisplay the wishlist page
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
-                _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+                await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
                 return View(model);
             }
         }
 
-        public virtual IActionResult EmailWishlist([FromServices] CaptchaSettings captchaSettings)
+        public virtual async Task<IActionResult> EmailWishlist([FromServices] CaptchaSettings captchaSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
 
             if (!cart.Any())
@@ -783,16 +786,16 @@ namespace Grand.Web.Controllers
         [FormValueRequired("send-email")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid,
+        public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid,
             [FromServices] IWorkflowMessageService workflowMessageService,
             [FromServices] CaptchaSettings captchaSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
@@ -812,7 +815,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 //email
-                workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
+                await workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
                         _workContext.WorkingLanguage.Id, model.YourEmailAddress,
                         model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 

@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Customers;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -12,7 +13,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml);
+        Task<string> FormatAttributes(string attributesXml);
 
         /// <summary>
         /// Formats attributes
@@ -24,7 +25,7 @@ namespace Grand.Services.Orders
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml,
+        Task<string> FormatAttributes(string attributesXml,
             Customer customer, 
             string serapator = "<br />", 
             bool htmlEncode = true,

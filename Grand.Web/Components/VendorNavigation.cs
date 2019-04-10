@@ -23,7 +23,7 @@ namespace Grand.Web.ViewComponents
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _catalogViewModelService.PrepareVendorNavigation());
+            var model = await _catalogViewModelService.PrepareVendorNavigation();
             if (!model.Vendors.Any())
                 return Content("");
 

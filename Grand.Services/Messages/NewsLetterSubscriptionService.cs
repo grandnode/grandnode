@@ -7,6 +7,7 @@ using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -20,6 +21,7 @@ namespace Grand.Services.Messages
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
         private readonly ICustomerService _customerService;
+        private readonly IHistoryService _historyService;
 
         #endregion
 
@@ -28,11 +30,13 @@ namespace Grand.Services.Messages
         public NewsLetterSubscriptionService(
             IRepository<NewsLetterSubscription> subscriptionRepository,
             IEventPublisher eventPublisher,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IHistoryService historyService)
         {
             this._subscriptionRepository = subscriptionRepository;
             this._eventPublisher = eventPublisher;
             this._customerService = customerService;
+            this._historyService = historyService;
         }
 
         #endregion
@@ -45,17 +49,17 @@ namespace Grand.Services.Messages
         /// <param name="email">The email.</param>
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
+        private async Task PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
         {
             if (publishSubscriptionEvents)
             {
                 if (isSubscribe)
                 {
-                    _eventPublisher.PublishNewsletterSubscribe(email);
+                    await _eventPublisher.PublishNewsletterSubscribe(email);
                 }
                 else
                 {
-                    _eventPublisher.PublishNewsletterUnsubscribe(email);
+                    await _eventPublisher.PublishNewsletterUnsubscribe(email);
                 }
             }
         }
@@ -68,7 +72,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
             {
@@ -79,19 +83,19 @@ namespace Grand.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Persist
-            _subscriptionRepository.Insert(newsLetterSubscription);
+            await _subscriptionRepository.InsertAsync(newsLetterSubscription);
 
             //Publish the subscription event 
             if (newsLetterSubscription.Active)
             {
-                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+                await PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
             }
 
             //save history
-            newsLetterSubscription.SaveHistory<NewsLetterSubscription>();
+            await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            _eventPublisher.EntityInserted(newsLetterSubscription);
+            await _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
             {
@@ -110,13 +114,13 @@ namespace Grand.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Persist
-            _subscriptionRepository.Update(newsLetterSubscription);
+            await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
 
             //save history
-            newsLetterSubscription.SaveHistory<NewsLetterSubscription>();
+            await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            _eventPublisher.EntityUpdated(newsLetterSubscription);
+            await _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -124,17 +128,17 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
 
-            _subscriptionRepository.Delete(newsLetterSubscription);
+            await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
 
             //Publish the unsubscribe event 
-            PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
+            await PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
 
             //event notification
-            _eventPublisher.EntityDeleted(newsLetterSubscription);
+            await _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -142,9 +146,9 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(string newsLetterSubscriptionId)
+        public virtual Task<NewsLetterSubscription> GetNewsLetterSubscriptionById(string newsLetterSubscriptionId)
         {
-            return _subscriptionRepository.GetById(newsLetterSubscriptionId);
+            return _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId);
         }
 
         /// <summary>
@@ -152,7 +156,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
         {
             if (newsLetterSubscriptionGuid == Guid.Empty) return null;
 
@@ -161,7 +165,7 @@ namespace Grand.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return newsLetterSubscriptions.FirstOrDefault();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -170,7 +174,7 @@ namespace Grand.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId)
         {
             if (!CommonHelper.IsValidEmail(email)) 
                 return null;
@@ -182,7 +186,7 @@ namespace Grand.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return newsLetterSubscriptions.FirstOrDefault();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -190,7 +194,7 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByCustomerId(string customerId)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByCustomerId(string customerId)
         {
             if (String.IsNullOrEmpty(customerId))
                 return null;
@@ -200,7 +204,7 @@ namespace Grand.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return newsLetterSubscriptions.FirstOrDefault();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -213,7 +217,7 @@ namespace Grand.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
-        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+        public virtual async Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptions(string email = null,
             string storeId = "", bool? isActive = null, string[] categoryIds = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -231,8 +235,7 @@ namespace Grand.Services.Messages
 
             query = query.OrderBy(nls => nls.Email);
 
-            var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
-            return subscriptions;
+            return await Task.FromResult(new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize));
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _catalogViewModelService.PrepareHomepageManufacturers());
+            var model = await _catalogViewModelService.PrepareHomepageManufacturers();
             if (!model.Any())
                 return Content("");
 

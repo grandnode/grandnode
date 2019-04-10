@@ -7,39 +7,40 @@ using Grand.Web.Models.Vendors;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface IAddressViewModelService
     {
 
-        void PrepareModel(AddressModel model,
+        Task PrepareModel(AddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             string overrideAttributesXml = "");
 
-        void PrepareAddressModel(AddressModel model,
+        Task PrepareAddressModel(AddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             AddressSettings addressSettings = null);
 
-        void PrepareVendorAddressModel(VendorAddressModel model,
+        Task PrepareVendorAddressModel(VendorAddressModel model,
             Address address, bool excludeProperties,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             VendorSettings vendorSettings = null);
 
-        void PrepareCustomAddressAttributes(AddressModel model,
+        Task PrepareCustomAddressAttributes(AddressModel model,
             Address address, string overrideAttributesXml = "");
 
-        string ParseCustomAddressAttributes(IFormCollection form);
+        Task<string> ParseCustomAddressAttributes(IFormCollection form);
 
         AddressSettings AddressSettings();
-        IList<string> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarnings(string attributesXml);
     }
 }

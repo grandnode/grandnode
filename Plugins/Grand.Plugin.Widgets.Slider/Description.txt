@@ -1,7 +1,7 @@
 ﻿Group: Widgets
 FriendlyName: Bootstrap Slider
 SystemName: Widgets.Slider
-Version: 1.02
+Version: 1.03
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

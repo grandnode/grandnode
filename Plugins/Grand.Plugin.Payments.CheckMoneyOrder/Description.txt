@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Check / Money Order
 SystemName: Payments.CheckMoneyOrder
-Version: 1.17
+Version: 1.18
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

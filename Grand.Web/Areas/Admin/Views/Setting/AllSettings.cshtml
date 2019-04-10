@@ -168,7 +168,7 @@
         }
         @{
             var storeService = EngineContext.Current.Resolve<IStoreService>();
-            var allStores = storeService.GetAllStores();
+            var allStores = await storeService.GetAllStores();
         }
         @foreach (var store in allStores)
         {

@@ -1,5 +1,6 @@
 ﻿using Grand.Api.DTOs.Common;
 using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Interfaces
 {
@@ -11,8 +12,8 @@ namespace Grand.Api.Interfaces
         IMongoQueryable<CountryDto> GetCountries();
         IMongoQueryable<StateProvinceDto> GetStates();
         IMongoQueryable<PictureDto> GetPictures();
-        PictureDto InsertPicture(PictureDto pictureDto);
-        void DeletePicture(PictureDto pictureDto);
+        Task<PictureDto> InsertPicture(PictureDto pictureDto);
+        Task DeletePicture(PictureDto pictureDto);
         IMongoQueryable<MessageTemplateDto> GetCategoryMessageTemplate();
         IMongoQueryable<MessageTemplateDto> GetManufacturerMessageTemplate();
         IMongoQueryable<MessageTemplateDto> GetProductMessageTemplate();

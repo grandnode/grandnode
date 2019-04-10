@@ -12,6 +12,7 @@ using Grand.Web.Models.PrivateMessages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -35,7 +36,7 @@ namespace Grand.Web.Controllers
 
         public PrivateMessagesController(IForumService forumService,
             ICustomerService customerService, ICustomerActivityService customerActivityService,
-            ILocalizationService localizationService, IWorkContext workContext, 
+            ILocalizationService localizationService, IWorkContext workContext,
             IStoreContext storeContext, IDateTimeHelper dateTimeHelper,
             ForumSettings forumSettings, CustomerSettings customerSettings)
         {
@@ -101,7 +102,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public virtual IActionResult DeleteInboxPM(IFormCollection formCollection)
+        public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
             {
@@ -110,13 +111,13 @@ namespace Grand.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.OrdinalIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    var pm = _forumService.GetPrivateMessageById(id);
+                    var pm = await _forumService.GetPrivateMessageById(id);
                     if (pm != null)
                     {
                         if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                         {
                             pm.IsDeletedByRecipient = true;
-                            _forumService.UpdatePrivateMessage(pm);
+                            await _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
@@ -126,7 +127,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public virtual IActionResult MarkUnread(IFormCollection formCollection)
+        public virtual async Task<IActionResult> MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
             {
@@ -135,13 +136,13 @@ namespace Grand.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.OrdinalIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    var pm = _forumService.GetPrivateMessageById(id);
+                    var pm = await _forumService.GetPrivateMessageById(id);
                     if (pm != null)
                     {
                         if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                         {
                             pm.IsRead = false;
-                            _forumService.UpdatePrivateMessage(pm);
+                            await _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
@@ -152,7 +153,7 @@ namespace Grand.Web.Controllers
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
         [PublicAntiForgery]
-        public virtual IActionResult DeleteSentPM(IFormCollection formCollection)
+        public virtual async Task<IActionResult> DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
             {
@@ -161,22 +162,22 @@ namespace Grand.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("si", StringComparison.OrdinalIgnoreCase))
                 {
                     var id = key.Replace("si", "").Trim();
-                    PrivateMessage pm = _forumService.GetPrivateMessageById(id);
+                    PrivateMessage pm = await _forumService.GetPrivateMessageById(id);
                     if (pm != null)
                     {
                         if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
                         {
                             pm.IsDeletedByAuthor = true;
-                            _forumService.UpdatePrivateMessage(pm);
+                            await _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
 
             }
-            return RedirectToRoute("PrivateMessages", new {tab = "sent"});
+            return RedirectToRoute("PrivateMessages", new { tab = "sent" });
         }
 
-        public virtual IActionResult SendPM(string toCustomerId, string replyToMessageId)
+        public virtual async Task<IActionResult> SendPM(string toCustomerId, string replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -188,7 +189,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
             }
 
-            var customerTo = _customerService.GetCustomerById(toCustomerId);
+            var customerTo = await _customerService.GetCustomerById(toCustomerId);
 
             if (customerTo == null || customerTo.IsGuest())
             {
@@ -197,12 +198,12 @@ namespace Grand.Web.Controllers
 
             var model = new SendPrivateMessageModel();
             model.ToCustomerId = customerTo.Id;
-            model.CustomerToName = customerTo.FormatUserName();
+            model.CustomerToName = customerTo.FormatUserName(_customerSettings.CustomerNameFormat);
             model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest();
 
             if (!String.IsNullOrEmpty(replyToMessageId))
             {
-                var replyToPM = _forumService.GetPrivateMessageById(replyToMessageId);
+                var replyToPM = await _forumService.GetPrivateMessageById(replyToMessageId);
                 if (replyToPM == null)
                 {
                     return RedirectToRoute("PrivateMessages");
@@ -223,7 +224,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult SendPM(SendPrivateMessageModel model)
+        public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -236,14 +237,14 @@ namespace Grand.Web.Controllers
             }
 
             Customer toCustomer = null;
-            var replyToPM = _forumService.GetPrivateMessageById(model.ReplyToMessageId);
+            var replyToPM = await _forumService.GetPrivateMessageById(model.ReplyToMessageId);
             if (replyToPM != null)
             {
                 if (replyToPM.ToCustomerId == _workContext.CurrentCustomer.Id || replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
                 {
                     toCustomer = replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id
-                                ? _customerService.GetCustomerById(replyToPM.ToCustomerId)
-                                : _customerService.GetCustomerById(replyToPM.FromCustomerId);
+                                ? await _customerService.GetCustomerById(replyToPM.ToCustomerId)
+                                : await _customerService.GetCustomerById(replyToPM.FromCustomerId);
 
                 }
                 else
@@ -253,7 +254,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                toCustomer = _customerService.GetCustomerById(model.ToCustomerId);
+                toCustomer = await _customerService.GetCustomerById(model.ToCustomerId);
             }
 
             if (toCustomer == null || toCustomer.IsGuest())
@@ -261,7 +262,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("PrivateMessages");
             }
             model.ToCustomerId = toCustomer.Id;
-            model.CustomerToName = toCustomer.FormatUserName();
+            model.CustomerToName = toCustomer.FormatUserName(_customerSettings.CustomerNameFormat);
             model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !toCustomer.IsGuest();
 
             if (ModelState.IsValid)
@@ -295,10 +296,10 @@ namespace Grand.Web.Controllers
                         CreatedOnUtc = nowUtc
                     };
 
-                    _forumService.InsertPrivateMessage(privateMessage);
+                    await _forumService.InsertPrivateMessage(privateMessage);
 
                     //activity log
-                    _customerActivityService.InsertActivity("PublicStore.SendPM", "", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
+                    await _customerActivityService.InsertActivity("PublicStore.SendPM", "", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }
@@ -311,7 +312,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult ViewPM(string privateMessageId)
+        public virtual async Task<IActionResult> ViewPM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -323,7 +324,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
             }
 
-            var pm = _forumService.GetPrivateMessageById(privateMessageId);
+            var pm = await _forumService.GetPrivateMessageById(privateMessageId);
             if (pm != null)
             {
                 if (pm.ToCustomerId != _workContext.CurrentCustomer.Id && pm.FromCustomerId != _workContext.CurrentCustomer.Id)
@@ -334,7 +335,7 @@ namespace Grand.Web.Controllers
                 if (!pm.IsRead && pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                 {
                     pm.IsRead = true;
-                    _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessage(pm);
                 }
             }
             else
@@ -342,18 +343,18 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("PrivateMessages");
             }
 
-            var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
-            var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
+            var fromCustomer = await _customerService.GetCustomerById(pm.FromCustomerId);
+            var toCustomer = await _customerService.GetCustomerById(pm.ToCustomerId);
 
 
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
                 FromCustomerId = fromCustomer.Id,
-                CustomerFromName = fromCustomer.FormatUserName(),
+                CustomerFromName = fromCustomer.FormatUserName(_customerSettings.CustomerNameFormat),
                 AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && fromCustomer != null && !fromCustomer.IsGuest(),
                 ToCustomerId = toCustomer.Id,
-                CustomerToName = toCustomer.FormatUserName(),
+                CustomerToName = toCustomer.FormatUserName(_customerSettings.CustomerNameFormat),
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && toCustomer != null && !toCustomer.IsGuest(),
                 Subject = pm.Subject,
                 Message = pm.FormatPrivateMessageText(),
@@ -364,7 +365,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult DeletePM(string privateMessageId)
+        public virtual async Task<IActionResult> DeletePM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -376,19 +377,19 @@ namespace Grand.Web.Controllers
                 return Challenge();
             }
 
-            var pm = _forumService.GetPrivateMessageById(privateMessageId);
+            var pm = await _forumService.GetPrivateMessageById(privateMessageId);
             if (pm != null)
             {
                 if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
                 {
                     pm.IsDeletedByAuthor = true;
-                    _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessage(pm);
                 }
 
                 if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                 {
                     pm.IsDeletedByRecipient = true;
-                    _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessage(pm);
                 }
             }
             return RedirectToRoute("PrivateMessages");

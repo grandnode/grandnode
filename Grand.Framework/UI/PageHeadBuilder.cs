@@ -89,7 +89,7 @@ namespace Grand.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = SeoExtensions.GetSeName(hash);
+            hash = SeoExtensions.GetSeName(hash, _seoSettings);
             return hash;
         }
 

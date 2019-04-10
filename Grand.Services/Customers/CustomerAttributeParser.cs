@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Services.Customers
@@ -60,7 +61,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attributes</returns>
-        public virtual IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml)
+        public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributes(string attributesXml)
         {
             var result = new List<CustomerAttribute>();
             if (String.IsNullOrEmpty(attributesXml))
@@ -69,7 +70,7 @@ namespace Grand.Services.Customers
             var ids = ParseCustomerAttributeIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = _customerAttributeService.GetCustomerAttributeById(id);
+                var attribute = await _customerAttributeService.GetCustomerAttributeById(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -83,13 +84,13 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Customer attribute values</returns>
-        public virtual IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml)
+        public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(string attributesXml)
         {
             var values = new List<CustomerAttributeValue>();
             if (String.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseCustomerAttributes(attributesXml);
+            var attributes = await ParseCustomerAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -220,15 +221,15 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = ParseCustomerAttributes(attributesXml);
+            var attributes1 = await ParseCustomerAttributes(attributesXml);
 
             //validate required customer attributes (whether they're chosen/selected/entered)
-            var attributes2 = _customerAttributeService.GetAllCustomerAttributes();
+            var attributes2 = await _customerAttributeService.GetAllCustomerAttributes();
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -254,7 +255,7 @@ namespace Grand.Services.Customers
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name));
+                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name, ""));
 
                         warnings.Add(notFoundWarning);
                     }

@@ -1,5 +1,6 @@
 using Grand.Core;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Common
 {
@@ -8,8 +9,8 @@ namespace Grand.Services.Common
     /// </summary>
     public partial interface IHistoryService
     {
-        void SaveObject<T>(T entity) where T : BaseEntity;
-        IList<T> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity;
-        IList<HistoryObject> GetHistoryObjectForEntity(BaseEntity entity);
+        Task SaveObject<T>(T entity) where T : BaseEntity;
+        Task<IList<T>> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity;
+        Task<IList<HistoryObject>> GetHistoryObjectForEntity(BaseEntity entity);
     }
 }

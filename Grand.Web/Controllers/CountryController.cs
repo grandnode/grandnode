@@ -4,6 +4,7 @@ using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -31,14 +32,14 @@ namespace Grand.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
+        public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             //this action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
             {
                 return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
             }
-            var model = _countryViewModelService.PrepareModel(countryId, addSelectStateItem);
+            var model = await _countryViewModelService.PrepareModel(countryId, addSelectStateItem);
             return Json(model);
         }
 

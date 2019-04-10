@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _catalogViewModelService.PrepareTopMenu());
+            var model = await _catalogViewModelService.PrepareTopMenu();
             return View(model);
         }
     }

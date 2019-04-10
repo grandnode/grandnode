@@ -3,6 +3,7 @@ using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -21,9 +22,9 @@ namespace Grand.Web.Controllers
        
 
         [HttpPost]
-        public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
+        public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
         {
-            var model = _newsletterViewModelService.SubscribeNewsletter(email, subscribe);
+            var model = await _newsletterViewModelService.SubscribeNewsletter(email, subscribe);
             if(model.NewsletterCategory!=null)
             {
                 model.ShowCategories = true;
@@ -39,7 +40,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult SaveCategories(IFormCollection form)
+        public virtual async Task<IActionResult> SaveCategories(IFormCollection form)
         {
 
             bool success = false;
@@ -48,7 +49,7 @@ namespace Grand.Web.Controllers
             var newsletterEmailId = form["NewsletterEmailId"].ToString();
             if (!string.IsNullOrEmpty(newsletterEmailId))
             {
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(newsletterEmailId);
+                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(newsletterEmailId);
                 if(subscription!=null)
                 {
                     foreach (string formKey in form.Keys)
@@ -67,7 +68,7 @@ namespace Grand.Web.Controllers
                         }
                     }
                     success = true;
-                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription, false);
+                    await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription, false);
                 }
                 else
                 {
@@ -85,13 +86,13 @@ namespace Grand.Web.Controllers
         }
 
 
-        public virtual IActionResult SubscriptionActivation(Guid token, bool active)
+        public virtual async Task<IActionResult> SubscriptionActivation(Guid token, bool active)
         {
-            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
+            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _newsletterViewModelService.PrepareSubscriptionActivation(subscription, active);
+            var model = await _newsletterViewModelService.PrepareSubscriptionActivation(subscription, active);
 
             return View(model);
         }

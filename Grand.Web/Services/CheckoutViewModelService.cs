@@ -21,10 +21,11 @@ using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
-    public partial class CheckoutViewModelService: ICheckoutViewModelService
+    public partial class CheckoutViewModelService : ICheckoutViewModelService
     {
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IWorkContext _workContext;
@@ -94,18 +95,18 @@ namespace Grand.Web.Services
             this._paymentSettings = paymentSettings;
             this._orderSettings = orderSettings;
         }
-        public virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
+        public virtual async Task<bool> IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {
             bool result = true;
 
             //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
+            decimal? shoppingCartTotalBase = (await _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints)).shoppingCartTotal;
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
         }
 
-        public virtual CheckoutBillingAddressModel PrepareBillingAddress(
+        public virtual async Task<CheckoutBillingAddressModel> PrepareBillingAddress(
             IList<ShoppingCartItem> cart, string selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
@@ -114,33 +115,41 @@ namespace Grand.Web.Services
             model.ShipToSameAddress = true;
 
             //existing addresses
+            var addresses = new List<Address>();
+            foreach (var item in _workContext.CurrentCustomer.Addresses)
+            {
+                if (string.IsNullOrEmpty(item.CountryId))
+                {
+                    addresses.Add(item);
+                    continue;
+                }
+                var country = await _countryService.GetCountryById(item.CountryId);
+                if (country == null || (country.AllowsBilling && _storeMappingService.Authorize(country)))
+                {
+                    addresses.Add(item);
+                    continue;
+                }
+            }
 
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.CountryId == "" ||
-                (_countryService.GetCountryById(a.CountryId) != null ? _countryService.GetCountryById(a.CountryId).AllowsBilling : false)
-                )
-                .Where(a => a.CountryId == "" ||
-                _storeMappingService.Authorize((_countryService.GetCountryById(a.CountryId))
-                ))
-                .ToList();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                _addressViewModelService.PrepareModel(model: addressModel, address: address, excludeProperties: false);
+                await _addressViewModelService.PrepareModel(model: addressModel, address: address, excludeProperties: false);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            _addressViewModelService.PrepareModel(model: model.NewAddress, address: null, excludeProperties: false,
-                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
+            var countries = await _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id);
+            await _addressViewModelService.PrepareModel(model: model.NewAddress, address: null, excludeProperties: false,
+                loadCountries: () => countries,
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
                 overrideAttributesXml: overrideAttributesXml
                 );
             return model;
         }
-        public virtual CheckoutShippingAddressModel PrepareShippingAddress(string selectedCountryId = null,
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddress(string selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel();
@@ -149,30 +158,29 @@ namespace Grand.Web.Services
             if (model.AllowPickUpInStore)
             {
 
-                var pickupPoints = _shippingService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
+                var pickupPoints = await _shippingService.LoadActivePickupPoints(_storeContext.CurrentStore.Id);
 
                 if (pickupPoints.Any())
                 {
-                    model.PickupPoints = pickupPoints.Select(x =>
+                    foreach (var pickupPoint in pickupPoints)
                     {
                         var pickupPointModel = new CheckoutPickupPointModel()
                         {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Description = x.Description,
-                            Address = x.Address,
+                            Id = pickupPoint.Id,
+                            Name = pickupPoint.Name,
+                            Description = pickupPoint.Description,
+                            Address = pickupPoint.Address,
                         };
-                        if (x.PickupFee > 0)
+                        if (pickupPoint.PickupFee > 0)
                         {
-                            var amount = _taxService.GetShippingPrice(x.PickupFee, _workContext.CurrentCustomer);
-                            amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
+                            var amount = (await _taxService.GetShippingPrice(pickupPoint.PickupFee, _workContext.CurrentCustomer)).shippingPrice;
+                            amount = await _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                             pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
                         }
-                        return pickupPointModel;
-                    }).ToList();
+                    }
                 }
 
-                if (!_shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Any())
+                if (!(await _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id)).Any())
                 {
                     if (!pickupPoints.Any())
                     {
@@ -186,20 +194,25 @@ namespace Grand.Web.Services
 
             }
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                //allow shipping
-                .Where(a => a.CountryId == "" ||
-                (_countryService.GetCountryById(a.CountryId) != null ? _countryService.GetCountryById(a.CountryId).AllowsShipping : false)
-                //a.Country.AllowsShipping
-                )
-                //enabled for the current store
-                .Where(a => a.CountryId == "" ||
-                _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId)))
-                .ToList();
+            var addresses = new List<Address>();
+            foreach (var item in _workContext.CurrentCustomer.Addresses)
+            {
+                if (string.IsNullOrEmpty(item.CountryId))
+                {
+                    addresses.Add(item);
+                    continue;
+                }
+                var country = await _countryService.GetCountryById(item.CountryId);
+                if (country == null || (country.AllowsShipping && _storeMappingService.Authorize(country)))
+                {
+                    addresses.Add(item);
+                    continue;
+                }
+            }
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                _addressViewModelService.PrepareModel(model: addressModel,
+                await _addressViewModelService.PrepareModel(model: addressModel,
                     address: address,
                     excludeProperties: false);
 
@@ -208,27 +221,28 @@ namespace Grand.Web.Services
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            _addressViewModelService.PrepareModel(model: model.NewAddress,
+            var countries = await _countryService.GetAllCountriesForShipping();
+            await _addressViewModelService.PrepareModel(model: model.NewAddress,
                 address: null,
                 excludeProperties: false,
-                loadCountries: () => _countryService.GetAllCountriesForShipping(),
+                loadCountries: () => countries,
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
                 overrideAttributesXml: overrideAttributesXml);
             return model;
         }
-        public virtual CheckoutShippingMethodModel PrepareShippingMethod(IList<ShoppingCartItem> cart, Address shippingAddress)
+        public virtual async Task<CheckoutShippingMethodModel> PrepareShippingMethod(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
             var model = new CheckoutShippingMethodModel();
 
-            var getShippingOptionResponse = _shippingService
+            var getShippingOptionResponse = await _shippingService
                 .GetShippingOptions(_workContext.CurrentCustomer, cart, shippingAddress,
                 "", _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                                                        SystemCustomerAttributeNames.OfferedShippingOptions,
                                                        getShippingOptionResponse.ShippingOptions,
                                                        _storeContext.CurrentStore.Id);
@@ -244,19 +258,19 @@ namespace Grand.Web.Services
                     };
 
                     //adjust rate
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out List<AppliedDiscount> appliedDiscounts);
+                    var shippingTotal = (await _orderTotalCalculationService.AdjustShippingRate(
+                        shippingOption.Rate, cart)).shippingRate;
 
-                    decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                    decimal rateBase = (await _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer)).shippingPrice;
+                    decimal rate = await _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
 
                     model.ShippingMethods.Add(soModel);
                 }
 
                 //find a selected (previously) shipping method
-                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
-                        SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                var selectedShippingOption = await _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
+                        _genericAttributeService, SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -294,33 +308,38 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual CheckoutPaymentMethodModel PreparePaymentMethod(IList<ShoppingCartItem> cart, string filterByCountryId)
+        public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethod(IList<ShoppingCartItem> cart, string filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
 
             //reward points
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
-                int rewardPointsBalance = _rewardPointsService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+                int rewardPointsBalance = await _rewardPointsService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                decimal rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+                decimal rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero &&
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     model.DisplayRewardPoints = true;
                     model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
                     model.RewardPointsBalance = rewardPointsBalance;
-                    model.RewardPointsEnoughToPayForOrder = !IsPaymentWorkflowRequired(cart, true);
+                    model.RewardPointsEnoughToPayForOrder = !(await  IsPaymentWorkflowRequired(cart, true));
                 }
             }
 
             //filter by country
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
-                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
+            var paymentMethods = (await _paymentService
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId))
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection).ToList();
+            var availablepaymentMethods = new List<IPaymentMethod>();
             foreach (var pm in paymentMethods)
+            {
+                if (!await pm.HidePaymentMethod(cart))
+                    availablepaymentMethods.Add(pm);
+            }
+
+            foreach (var pm in availablepaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
@@ -328,14 +347,14 @@ namespace Grand.Web.Services
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
-                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
+                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? await pm.PaymentMethodDescription() : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
                     LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
                 };
                 //payment method additional fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                decimal paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
+                decimal rateBase = (await _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer)).paymentPrice;
+                decimal rate = await _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                 if (rate > decimal.Zero)
                     pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
 
@@ -343,8 +362,8 @@ namespace Grand.Web.Services
             }
 
             //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
+            var selectedPaymentMethodSystemName = await _workContext.CurrentCustomer.GetAttribute<string>(
+                _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()
@@ -375,27 +394,27 @@ namespace Grand.Web.Services
             return model;
 
         }
-        public virtual CheckoutConfirmModel PrepareConfirmOrder(IList<ShoppingCartItem> cart)
+        public virtual async Task<CheckoutConfirmModel> PrepareConfirmOrder(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel();
             //terms of service
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             //min order amount validation
-            bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
+            bool minOrderTotalAmountOk = await _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)
             {
-                decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                decimal minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
                 model.MinOrderTotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
             }
             return model;
         }
-        public virtual bool IsMinimumOrderPlacementIntervalValid(Customer customer)
+        public virtual async Task<bool> IsMinimumOrderPlacementIntervalValid(Customer customer)
         {
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrder = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
+            var lastOrder = (await _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1))
                 .FirstOrDefault();
             if (lastOrder == null)
                 return true;

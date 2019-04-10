@@ -22,7 +22,7 @@ namespace Grand.Services.Tests.Configuration
         public void TestInitialize()
         {
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
-            config = new ConfigFileSettingService(new List<ICacheManager> { cacheManager }, null, null);
+            config = new ConfigFileSettingService(new List<ICacheManager> { cacheManager }, null, null, null);
         }
 
         [TestMethod()]

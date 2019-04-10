@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Plugin.ExchangeRate.EcbExchange
@@ -13,10 +14,12 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
     public class EcbExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
         private readonly ILocalizationService _localizationService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public EcbExchangeRateProvider(ILocalizationService localizationService)
+        public EcbExchangeRateProvider(ILocalizationService localizationService, IServiceProvider serviceProvider)
         {
             this._localizationService = localizationService;
+            this._serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -24,7 +27,7 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public IList<Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             if (String.IsNullOrEmpty(exchangeRateCurrencyCode) ||
                 exchangeRateCurrencyCode.ToLower() != "eur")
@@ -58,21 +61,22 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
                     );
                 }
             }
-            return exchangeRates;
+
+            return await Task.FromResult(exchangeRates);
         }
 
-        public override void Install()
+        public override async Task Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is set to EURO");
-            base.Install();
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is set to EURO");
+            await base.Install();
         }
 
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO");
-            base.Uninstall();
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO");
+            await base.Uninstall();
         }
     }
 }

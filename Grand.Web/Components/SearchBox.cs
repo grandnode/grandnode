@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _catalogViewModelService.PrepareSearchBox());
+            var model = await _catalogViewModelService.PrepareSearchBox();
             return View(model);
         }
     }

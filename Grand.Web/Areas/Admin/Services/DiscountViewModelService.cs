@@ -22,10 +22,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
-    public partial class DiscountViewModelService: IDiscountViewModelService
+    public partial class DiscountViewModelService : IDiscountViewModelService
     {
         #region Fields
 
@@ -43,7 +44,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-
+        private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
 
         #region Constructors
@@ -61,7 +62,8 @@ namespace Grand.Web.Areas.Admin.Services
             IStoreService storeService,
             IVendorService vendorService,
             IOrderService orderService,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter,
+            IDateTimeHelper dateTimeHelper)
         {
             _discountService = discountService;
             _localizationService = localizationService;
@@ -77,6 +79,7 @@ namespace Grand.Web.Areas.Admin.Services
             _vendorService = vendorService;
             _orderService = orderService;
             _priceFormatter = priceFormatter;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -90,31 +93,33 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             return model;
         }
-        public virtual (IEnumerable<DiscountModel> discountModel, int totalCount) PrepareDiscountModel(DiscountListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<DiscountModel> discountModel, int totalCount)> PrepareDiscountModel(DiscountListModel model, int pageIndex, int pageSize)
         {
             DiscountType? discountType = null;
             if (model.SearchDiscountTypeId > 0)
                 discountType = (DiscountType)model.SearchDiscountTypeId;
-            var discounts = _discountService.GetAllDiscounts(discountType,
+            var discounts = await _discountService.GetAllDiscounts(discountType,
                 model.SearchDiscountCouponCode,
                 model.SearchDiscountName,
                 true);
-
-            return (discounts.Skip((pageIndex - 1) * pageSize).Take(pageSize).Select(x =>
-                {
-                    var discountModel = x.ToModel();
-                    discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
-                    discountModel.PrimaryStoreCurrencyCode = x.CalculateByPlugin ? "" : _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1).TotalCount;
-                    return discountModel;
-                }), discounts.Count);
+            var items = new List<DiscountModel>();
+            foreach (var x in discounts.Skip((pageIndex - 1) * pageSize).Take(pageSize))
+            {
+                var discountModel = x.ToModel();
+                discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
+                discountModel.PrimaryStoreCurrencyCode = x.CalculateByPlugin ? "" : (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+                discountModel.TimesUsed = (await _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1)).TotalCount;
+                items.Add(discountModel);
+            };
+            return (items, discounts.Count);
         }
-        public virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
+
+        public virtual async Task PrepareDiscountModel(DiscountModel model, Discount discount)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
             var discountPlugins = _discountService.LoadAllDiscountPlugins();
             foreach (var discountPlugin in discountPlugins)
@@ -150,21 +155,21 @@ namespace Grand.Web.Areas.Admin.Services
             else
                 model.IsEnabled = true;
         }
-        public virtual Discount InsertDiscountModel(DiscountModel model)
+        public virtual async Task<Discount> InsertDiscountModel(DiscountModel model)
         {
             var discount = model.ToEntity();
-            _discountService.InsertDiscount(discount);
+            await _discountService.InsertDiscount(discount);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewDiscount", discount.Id, _localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name);
+            await _customerActivityService.InsertActivity("AddNewDiscount", discount.Id, _localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name);
             return discount;
         }
 
-        public virtual Discount UpdateDiscountModel(Discount discount, DiscountModel model)
+        public virtual async Task<Discount> UpdateDiscountModel(Discount discount, DiscountModel model)
         {
             var prevDiscountType = discount.DiscountType;
             discount = model.ToEntity(discount);
-            _discountService.UpdateDiscount(discount);
+            await _discountService.UpdateDiscount(discount);
 
             //clean up old references (if changed) and update "HasDiscountsApplied" properties
             if (prevDiscountType == DiscountType.AssignedToCategories
@@ -172,7 +177,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 //applied to categories
                 //_categoryService.
-                var categories = _categoryService.GetAllCategoriesByDiscount(discount.Id);
+                var categories = await _categoryService.GetAllCategoriesByDiscount(discount.Id);
 
                 //update "HasDiscountsApplied" property
                 foreach (var category in categories)
@@ -185,7 +190,7 @@ namespace Grand.Web.Areas.Admin.Services
                 && discount.DiscountType != DiscountType.AssignedToManufacturers)
             {
                 //applied to manufacturers
-                var manufacturers = _manufacturerService.GetAllManufacturersByDiscount(discount.Id);
+                var manufacturers = await _manufacturerService.GetAllManufacturersByDiscount(discount.Id);
                 foreach (var manufacturer in manufacturers)
                 {
                     var item = manufacturer.AppliedDiscounts.Where(x => x == discount.Id).FirstOrDefault();
@@ -196,35 +201,35 @@ namespace Grand.Web.Areas.Admin.Services
                 && discount.DiscountType != DiscountType.AssignedToSkus)
             {
                 //applied to products
-                var products = _productService.GetProductsByDiscount(discount.Id);
+                var products = await _productService.GetProductsByDiscount(discount.Id);
 
                 foreach (var p in products)
                 {
                     var item = p.AppliedDiscounts.Where(x => x == discount.Id).FirstOrDefault();
                     p.AppliedDiscounts.Remove(item);
-                    _productService.DeleteDiscount(item, p.Id);
+                    await _productService.DeleteDiscount(item, p.Id);
                 }
             }
 
             //activity log
-            _customerActivityService.InsertActivity("EditDiscount", discount.Id, _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
+            await _customerActivityService.InsertActivity("EditDiscount", discount.Id, _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
             return discount;
 
         }
-        public virtual void DeleteDiscount(Discount discount)
+        public virtual async Task DeleteDiscount(Discount discount)
         {
-            _discountService.DeleteDiscount(discount);
+            await _discountService.DeleteDiscount(discount);
             //activity log
-            _customerActivityService.InsertActivity("DeleteDiscount", discount.Id, _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
+            await _customerActivityService.InsertActivity("DeleteDiscount", discount.Id, _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
         }
-        public virtual void InsertCouponCode(string discountId, string couponCode)
+        public virtual async Task InsertCouponCode(string discountId, string couponCode)
         {
             var coupon = new DiscountCoupon
             {
                 CouponCode = couponCode.ToUpper(),
                 DiscountId = discountId
             };
-            _discountService.InsertDiscountCoupon(coupon);
+            await _discountService.InsertDiscountCoupon(coupon);
         }
         public virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, string discountRequirementId)
         {
@@ -237,34 +242,34 @@ namespace Grand.Web.Areas.Admin.Services
             string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
             return url;
         }
-        public void DeleteDiscountRequirement(DiscountRequirement discountRequirement, Discount discount)
+        public virtual async Task DeleteDiscountRequirement(DiscountRequirement discountRequirement, Discount discount)
         {
-            _discountService.DeleteDiscountRequirement(discountRequirement);
+            await _discountService.DeleteDiscountRequirement(discountRequirement);
             discount.DiscountRequirements.Remove(discountRequirement);
-            _discountService.UpdateDiscount(discount);
+            await _discountService.UpdateDiscount(discount);
         }
-        public virtual DiscountModel.AddProductToDiscountModel PrepareProductToDiscountModel()
+        public virtual async Task<DiscountModel.AddProductToDiscountModel> PrepareProductToDiscountModel()
         {
             var model = new DiscountModel.AddProductToDiscountModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -272,130 +277,131 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(DiscountModel.AddProductToDiscountModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(DiscountModel.AddProductToDiscountModel model, int pageIndex, int pageSize)
         {
-            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
-        public virtual void InsertProductToDiscountModel(DiscountModel.AddProductToDiscountModel model)
+        public virtual async Task InsertProductToDiscountModel(DiscountModel.AddProductToDiscountModel model)
         {
             foreach (string id in model.SelectedProductIds)
             {
-                var product = _productService.GetProductById(id);
+                var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
                     if (product.AppliedDiscounts.Count(d => d == model.DiscountId) == 0)
                     {
                         product.AppliedDiscounts.Add(model.DiscountId);
-                        _productService.InsertDiscount(model.DiscountId, product.Id);
+                        await _productService.InsertDiscount(model.DiscountId, product.Id);
                     }
                 }
             }
         }
-        public virtual void DeleteProduct(Discount discount, Product product)
+        public virtual async Task DeleteProduct(Discount discount, Product product)
         {
             //remove discount
             if (product.AppliedDiscounts.Count(d => d == discount.Id) > 0)
             {
                 product.AppliedDiscounts.Remove(discount.Id);
-                _productService.DeleteDiscount(discount.Id, product.Id);
+                await _productService.DeleteDiscount(discount.Id, product.Id);
             }
         }
-        public virtual void DeleteCategory(Discount discount, Category category)
+        public virtual async Task DeleteCategory(Discount discount, Category category)
         {
             //remove discount
             if (category.AppliedDiscounts.Count(d => d == discount.Id) > 0)
                 category.AppliedDiscounts.Remove(discount.Id);
 
-            _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategory(category);
         }
-        public virtual void InsertCategoryToDiscountModel(DiscountModel.AddCategoryToDiscountModel model)
+        public virtual async Task InsertCategoryToDiscountModel(DiscountModel.AddCategoryToDiscountModel model)
         {
             foreach (string id in model.SelectedCategoryIds)
             {
-                var category = _categoryService.GetCategoryById(id);
+                var category = await _categoryService.GetCategoryById(id);
                 if (category != null)
                 {
                     if (category.AppliedDiscounts.Count(d => d == model.DiscountId) == 0)
                         category.AppliedDiscounts.Add(model.DiscountId);
 
-                    _categoryService.UpdateCategory(category);
+                    await _categoryService.UpdateCategory(category);
                 }
             }
         }
-        public virtual void DeleteManufacturer(Discount discount, Manufacturer manufacturer)
+        public virtual async Task DeleteManufacturer(Discount discount, Manufacturer manufacturer)
         {
             //remove discount
             if (manufacturer.AppliedDiscounts.Count(d => d == discount.Id) > 0)
                 manufacturer.AppliedDiscounts.Remove(discount.Id);
 
-            _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturer(manufacturer);
         }
-        public virtual void InsertManufacturerToDiscountModel(DiscountModel.AddManufacturerToDiscountModel model)
+        public virtual async Task InsertManufacturerToDiscountModel(DiscountModel.AddManufacturerToDiscountModel model)
         {
             foreach (string id in model.SelectedManufacturerIds)
             {
-                var manufacturer = _manufacturerService.GetManufacturerById(id);
+                var manufacturer = await _manufacturerService.GetManufacturerById(id);
                 if (manufacturer != null)
                 {
                     if (manufacturer.AppliedDiscounts.Count(d => d == model.DiscountId) == 0)
                         manufacturer.AppliedDiscounts.Add(model.DiscountId);
 
-                    _manufacturerService.UpdateManufacturer(manufacturer);
+                    await _manufacturerService.UpdateManufacturer(manufacturer);
                 }
             }
         }
-        public virtual void DeleteVendor(Discount discount, Vendor vendor)
+        public virtual async Task DeleteVendor(Discount discount, Vendor vendor)
         {
             //remove discount
             if (vendor.AppliedDiscounts.Count(d => d == discount.Id) > 0)
                 vendor.AppliedDiscounts.Remove(discount.Id);
 
-            _vendorService.UpdateVendor(vendor);
+            await _vendorService.UpdateVendor(vendor);
         }
-        public virtual void InsertVendorToDiscountModel(DiscountModel.AddVendorToDiscountModel model)
+        public virtual async Task InsertVendorToDiscountModel(DiscountModel.AddVendorToDiscountModel model)
         {
             foreach (string id in model.SelectedVendorIds)
             {
-                var vendor = _vendorService.GetVendorById(id);
+                var vendor = await _vendorService.GetVendorById(id);
                 if (vendor != null)
                 {
                     if (vendor.AppliedDiscounts.Count(d => d == model.DiscountId) == 0)
                         vendor.AppliedDiscounts.Add(model.DiscountId);
 
-                    _vendorService.UpdateVendor(vendor);
+                    await _vendorService.UpdateVendor(vendor);
                 }
             }
         }
-        public virtual void DeleteStore(Discount discount, Store store)
+        public virtual async Task DeleteStore(Discount discount, Store store)
         {
             //remove discount
             if (store.AppliedDiscounts.Count(d => d == discount.Id) > 0)
                 store.AppliedDiscounts.Remove(discount.Id);
 
-            _storeService.UpdateStore(store);
+            await _storeService.UpdateStore(store);
         }
-        public virtual void InsertStoreToDiscountModel(DiscountModel.AddStoreToDiscountModel model)
+        public virtual async Task InsertStoreToDiscountModel(DiscountModel.AddStoreToDiscountModel model)
         {
             foreach (string id in model.SelectedStoreIds)
             {
-                var store = _storeService.GetStoreById(id);
+                var store = await _storeService.GetStoreById(id);
                 if (store != null)
                 {
                     if (store.AppliedDiscounts.Count(d => d == model.DiscountId) == 0)
                         store.AppliedDiscounts.Add(model.DiscountId);
 
-                    _storeService.UpdateStore(store);
+                    await _storeService.UpdateStore(store);
                 }
             }
         }
-        public (IEnumerable<DiscountModel.DiscountUsageHistoryModel> usageHistoryModels, int totalCount) PrepareDiscountUsageHistoryModel(Discount discount, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<DiscountModel.DiscountUsageHistoryModel> usageHistoryModels, int totalCount)> PrepareDiscountUsageHistoryModel(Discount discount, int pageIndex, int pageSize)
         {
-            var dateTimeHelper = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, null, pageIndex - 1, pageSize);
-            return (duh.Select(x =>
+            var duh = await _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, null, pageIndex - 1, pageSize);
+            var items = new List<DiscountModel.DiscountUsageHistoryModel>();
+
+            foreach (var x in duh)
             {
-                var order = _orderService.GetOrderById(x.OrderId);
+                var order = await _orderService.GetOrderById(x.OrderId);
                 var duhModel = new DiscountModel.DiscountUsageHistoryModel
                 {
                     Id = x.Id,
@@ -403,10 +409,12 @@ namespace Grand.Web.Areas.Admin.Services
                     OrderId = x.OrderId,
                     OrderNumber = order != null ? order.OrderNumber : 0,
                     OrderTotal = order != null ? _priceFormatter.FormatPrice(order.OrderTotal, true, false) : "",
-                    CreatedOn = dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };
-                return duhModel;
-            }), duh.TotalCount);
+                items.Add(duhModel);
+
+            }
+            return (items, duh.TotalCount);
         }
     }
 }

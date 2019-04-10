@@ -1,3 +1,5 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace Grand.Core.Domain.Orders
@@ -35,46 +37,55 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the unit price without discount in primary store currency (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal UnitPriceWithoutDiscInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price without discount in primary store currency (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal UnitPriceWithoutDiscExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price in primary store currency (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal UnitPriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price in primary store currency (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal UnitPriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal PriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal PriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (incl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal DiscountAmountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (excl tax)
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal DiscountAmountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the original cost of this order item (when an order was placed), qty 1
         /// </summary>
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal OriginalProductCost { get; set; }
 
         /// <summary>
@@ -105,6 +116,7 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the total weight of one item
         /// </summary>       
+        [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]
         public decimal? ItemWeight { get; set; }
 
         /// <summary>

@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -15,14 +16,14 @@ namespace Grand.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void DeleteGiftCard(GiftCard giftCard);
+        Task DeleteGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Gets a gift card
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        GiftCard GetGiftCardById(string giftCardId);
+        Task<GiftCard> GetGiftCardById(string giftCardId);
 
         /// <summary>
         /// Gets all gift cards
@@ -36,7 +37,7 @@ namespace Grand.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        IPagedList<GiftCard> GetAllGiftCards(string purchasedWithOrderId = "",
+        Task<IPagedList<GiftCard>> GetAllGiftCards(string purchasedWithOrderId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -46,33 +47,26 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets all gift cards usage history for orderId
         /// </summary>
-        IList<GiftCardUsageHistory> GetAllGiftCardUsageHistory(string orderId = "");
+        Task<IList<GiftCardUsageHistory>> GetAllGiftCardUsageHistory(string orderId = "");
 
         /// <summary>
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void InsertGiftCard(GiftCard giftCard);
+        Task InsertGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void UpdateGiftCard(GiftCard giftCard);
+        Task UpdateGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Gets gift cards by 'PurchasedWithOrderItemId'
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
         /// <returns>Gift card entries</returns>
-        IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(string purchasedWithOrderItemId);
-        
-        /// <summary>
-        /// Get active gift cards that are applied by a customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Active gift cards</returns>
-        IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer);
+        Task<IList<GiftCard>> GetGiftCardsByPurchasedWithOrderItemId(string purchasedWithOrderItemId);
 
         /// <summary>
         /// Generate new gift card code

@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -52,9 +53,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var productAttributes = _productAttributeService
+            var productAttributes = await _productAttributeService
                 .GetAllProductAttributes(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -66,24 +67,24 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         
         //create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new ProductAttributeModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(ProductAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Create(ProductAttributeModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
-                _productAttributeService.InsertProductAttribute(productAttribute);
+                await _productAttributeService.InsertProductAttribute(productAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
+                await _customerActivityService.InsertActivity("AddNewProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = productAttribute.Id }) : RedirectToAction("List");
@@ -94,16 +95,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(id);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List");
 
             var model = productAttribute.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = productAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = productAttribute.GetLocalized(x => x.Description, languageId, false, false);
@@ -113,9 +114,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(ProductAttributeModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(ProductAttributeModel model, bool continueEditing)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List");
@@ -123,10 +124,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
-                _productAttributeService.UpdateProductAttribute(productAttribute);
+                await _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
+                await _customerActivityService.InsertActivity("EditProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
                 if (continueEditing)
@@ -145,18 +146,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(id);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _productAttributeService.DeleteProductAttribute(productAttribute);
+                await _productAttributeService.DeleteProductAttribute(productAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
+                await _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
                 return RedirectToAction("List");
@@ -171,9 +172,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //used by products
         [HttpPost]
-        public IActionResult UsedByProducts(DataSourceRequest command, string productAttributeId)
+        public async Task<IActionResult> UsedByProducts(DataSourceRequest command, string productAttributeId)
         {
-            var orders = _productService.GetProductsByProductAtributeId(
+            var orders = await _productService.GetProductsByProductAtributeId(
                 productAttributeId: productAttributeId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
@@ -197,9 +198,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Predefined values
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueList(string productAttributeId, DataSourceRequest command)
+        public async Task<IActionResult> PredefinedProductAttributeValueList(string productAttributeId, DataSourceRequest command)
         {
-            var values = _productAttributeService.GetProductAttributeById(productAttributeId).PredefinedProductAttributeValues;
+            var values = (await _productAttributeService.GetProductAttributeById(productAttributeId)).PredefinedProductAttributeValues;
             var gridModel = new DataSourceResult
             {
                 Data = values.Select(x =>x.ToModel()),
@@ -210,25 +211,27 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult PredefinedProductAttributeValueCreatePopup(string productAttributeId)
+        public async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(string productAttributeId)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(productAttributeId);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
 
-            var model = new PredefinedProductAttributeValueModel();
-            model.ProductAttributeId = productAttributeId;
+            var model = new PredefinedProductAttributeValueModel
+            {
+                ProductAttributeId = productAttributeId
+            };
 
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
+        public async Task<IActionResult> PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
 
@@ -236,7 +239,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var ppav = model.ToEntity();
                 productAttribute.PredefinedProductAttributeValues.Add(ppav);
-                _productAttributeService.UpdateProductAttribute(productAttribute);
+                await _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -246,15 +249,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult PredefinedProductAttributeValueEditPopup(string id, string productAttributeId)
+        public async Task<IActionResult> PredefinedProductAttributeValueEditPopup(string id, string productAttributeId)
         {
-            var ppav = _productAttributeService.GetProductAttributeById(productAttributeId).PredefinedProductAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
+            var ppav = (await _productAttributeService.GetProductAttributeById(productAttributeId)).PredefinedProductAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
             if (ppav == null)
                 throw new ArgumentException("No product attribute value found with the specified id");
 
             var model = ppav.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = ppav.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -262,9 +265,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
+        public async Task<IActionResult> PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
-            var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
+            var productAttribute = await _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
             var ppav = productAttribute.PredefinedProductAttributeValues.Where(x=>x.Id == model.Id).FirstOrDefault();
             if (ppav == null)
                 throw new ArgumentException("No product attribute value found with the specified id");
@@ -272,7 +275,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ppav = model.ToEntity(ppav);
-                _productAttributeService.UpdateProductAttribute(productAttribute);
+                await _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -283,16 +286,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueDelete(string id, string productAttributeId)
+        public async Task<IActionResult> PredefinedProductAttributeValueDelete(string id, string productAttributeId)
         {
             if (ModelState.IsValid)
             {
-                var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
+                var productAttribute = await _productAttributeService.GetProductAttributeById(productAttributeId);
                 var ppav = productAttribute.PredefinedProductAttributeValues.Where(x => x.Id == id).FirstOrDefault();
                 if (ppav == null)
                     throw new ArgumentException("No predefined product attribute value found with the specified id");
                 productAttribute.PredefinedProductAttributeValues.Remove(ppav);
-                _productAttributeService.UpdateProductAttribute(productAttribute);
+                await _productAttributeService.UpdateProductAttribute(productAttribute);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);

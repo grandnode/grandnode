@@ -296,48 +296,48 @@ namespace Grand.Web.Services
 
         #region Category
 
-        public virtual Category GetCategoryById(string categoryId)
+        public virtual Task<Category> GetCategoryById(string categoryId)
         {
             return _categoryService.GetCategoryById(categoryId);
         }
 
-        public virtual List<string> GetChildCategoryIds(string parentCategoryId)
+        public virtual async Task<List<string>> GetChildCategoryIds(string parentCategoryId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () =>
+            return await _cacheManager.Get(cacheKey, async () =>
             {
                 var categoriesIds = new List<string>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
+                var categories = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
                 foreach (var category in categories)
                 {
                     categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
+                    categoriesIds.AddRange(await GetChildCategoryIds(category.Id));
                 }
                 return categoriesIds;
             });
         }
 
 
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels()
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(""));
+            return await _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(""));
         }
 
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(string rootCategoryId,
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(string rootCategoryId,
             bool loadSubCategories = true, IList<Category> allCategories = null)
         {
             var result = new List<CategorySimpleModel>();
             var langid = _workContext.WorkingLanguage.Id;
             if (allCategories == null)
             {
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                allCategories = await _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             foreach (var category in categories)
@@ -351,7 +351,7 @@ namespace Grand.Web.Services
                     Flag = category.Flag,
                     FlagStyle = category.FlagStyle,
                     Icon = category.Icon,
-                    ImageUrl = _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize)
+                    ImageUrl = await _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize)
                 };
 
                 //product number for each category
@@ -361,20 +361,20 @@ namespace Grand.Web.Services
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id,
                         category.Id);
-                    categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
-                    {
-                        var categoryIds = new List<string>();
-                        categoryIds.Add(category.Id);
+                    categoryModel.NumberOfProducts = await _cacheManager.Get(cacheKey, async () =>
+                     {
+                         var categoryIds = new List<string>();
+                         categoryIds.Add(category.Id);
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                        return _productService.GetCategoryProductNumber(categoryIds, _storeContext.CurrentStore.Id);
-                    });
+                             categoryIds.AddRange(await GetChildCategoryIds(category.Id));
+                         return _productService.GetCategoryProductNumber(categoryIds, _storeContext.CurrentStore.Id);
+                     });
                 }
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
+                    var subCategories = await PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -383,7 +383,7 @@ namespace Grand.Web.Services
             return result;
         }
 
-        public virtual CategoryNavigationModel PrepareCategoryNavigation(string currentCategoryId, string currentProductId)
+        public virtual async Task<CategoryNavigationModel> PrepareCategoryNavigation(string currentCategoryId, string currentProductId)
         {
             //get active category
             string activeCategoryId = "";
@@ -395,11 +395,11 @@ namespace Grand.Web.Services
             else if (!String.IsNullOrEmpty(currentProductId))
             {
                 //product details page
-                var productCategories = _productService.GetProductById(currentProductId).ProductCategories;
+                var productCategories = (await _productService.GetProductById(currentProductId)).ProductCategories;
                 if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
-            var cachedModel = PrepareCategorySimpleModels();
+            var cachedModel = await PrepareCategorySimpleModels();
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
@@ -409,14 +409,14 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual string PrepareCategoryTemplateViewPath(string templateId)
+        public virtual async Task<string> PrepareCategoryTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
-            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            var templateViewPath = await _cacheManager.Get(templateCacheKey, async () =>
             {
-                var template = _categoryTemplateService.GetCategoryTemplateById(templateId);
+                var template = await _categoryTemplateService.GetCategoryTemplateById(templateId);
                 if (template == null)
-                    template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+                    template = (await _categoryTemplateService.GetAllCategoryTemplates()).FirstOrDefault();
                 if (template == null)
                     throw new Exception("No default template could be loaded");
                 return template.ViewPath;
@@ -425,9 +425,9 @@ namespace Grand.Web.Services
             return templateViewPath;
         }
 
-        public virtual CategoryModel PrepareCategory(Category category, CatalogPagingFilteringModel command)
+        public virtual async Task<CategoryModel> PrepareCategory(Category category, CatalogPagingFilteringModel command)
         {
-            var model = category.ToModel();
+            var model = category.ToModel(_workContext.WorkingLanguage);
             var customer = _workContext.CurrentCustomer;
             var storeId = _storeContext.CurrentStore.Id;
             var languageId = _workContext.WorkingLanguage.Id;
@@ -451,10 +451,10 @@ namespace Grand.Web.Services
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
+                    minPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
+                    maxPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
             }
 
 
@@ -468,9 +468,9 @@ namespace Grand.Web.Services
                     string.Join(",", customer.GetCustomerRoleIds()),
                     storeId,
                     languageId);
-                model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
-                    category
-                    .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
+                model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                    (await category
+                    .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                     .Select(catBr => new CategoryModel
                     {
                         Id = catBr.Id,
@@ -488,8 +488,10 @@ namespace Grand.Web.Services
                 storeId,
                 languageId,
                 connectionSecured);
-            model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () => _categoryService.GetAllCategoriesByParentCategoryId(category.Id).Where(x => !x.HideOnCatalog)
-                .Select(x =>
+            model.SubCategories = await _cacheManager.Get(subCategoriesCacheKey, async () =>
+            {
+                var subCategories = new List<CategoryModel.SubCategoryModel>();
+                foreach (var x in (await _categoryService.GetAllCategoriesByParentCategoryId(category.Id)).Where(x => !x.HideOnCatalog))
                 {
                     var subCatModel = new CategoryModel.SubCategoryModel
                     {
@@ -502,18 +504,19 @@ namespace Grand.Web.Services
                     };
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
                     subCatModel.PictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
                     };
-                    return subCatModel;
-                })
-                .ToList()
-            );
+                    subCategories.Add(subCatModel);
+                };
+                return subCategories;
+            });
+
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
@@ -527,12 +530,12 @@ namespace Grand.Web.Services
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { category.Id },
                        storeId: storeId,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
@@ -540,16 +543,16 @@ namespace Grand.Web.Services
                 {
                     //cache indicates that the category has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { category.Id },
                        storeId: storeId,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                 }
                 if (featuredProducts != null)
                 {
-                    model.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                    model.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
 
@@ -559,12 +562,11 @@ namespace Grand.Web.Services
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
-                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                categoryIds.AddRange(await GetChildCategoryIds(category.Id));
             }
             //products
             IList<string> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
-            IList<string> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = (await _productService.SearchProducts(loadFilterableSpecificationAttributeOptionIds: !_catalogSettings.IgnoreFilterableSpecAttributeOption,
                 categoryIds: categoryIds,
                 storeId: storeId,
                 visibleIndividuallyOnly: true,
@@ -574,20 +576,20 @@ namespace Grand.Web.Services
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
-            model.Products = _productViewModelService.PrepareProductOverviewModels(products).ToList();
+                pageSize: command.PageSize));
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products.products)).ToList();
 
-            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.LoadPagedList(products.products);
 
             //specs
-            model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds,
+            await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                products.filterableSpecificationAttributeOptionIds,
                 _specificationAttributeService, _webHelper, _workContext, _cacheManager);
 
             return model;
         }
 
-        public virtual List<CategoryModel> PrepareHomepageCategory()
+        public virtual async Task<List<CategoryModel>> PrepareHomepageCategory()
         {
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -595,54 +597,57 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
 
-            var model = _cacheManager.Get(categoriesCacheKey, () =>
-                _categoryService.GetAllCategoriesDisplayedOnHomePage()
-                .Select(x =>
+            var model = await _cacheManager.Get(categoriesCacheKey, async () =>
+            {
+                var cat = new List<CategoryModel>();
+                foreach (var x in (await _categoryService.GetAllCategoriesDisplayedOnHomePage()))
                 {
-                    var catModel = x.ToModel();
+                    var catModel = x.ToModel(_workContext.WorkingLanguage);
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
                     catModel.PictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
                     };
-                    return catModel;
-                })
-                .ToList()
-            );
+                    cat.Add(catModel);
+                }
+                return cat;
+            });
+
             return model;
         }
 
-
-        public virtual List<CategoryModel> PrepareCategoryFeaturedProducts()
+        public virtual async Task<List<CategoryModel>> PrepareCategoryFeaturedProducts()
         {
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
 
-            var model = _cacheManager.Get(categoriesCacheKey, () =>
-                _categoryService.GetAllCategoriesFeaturedProductsOnHomePage()
-                .Select(x =>
+            var model = await _cacheManager.Get(categoriesCacheKey, async () =>
+            {
+                var catlistmodel = new List<CategoryModel>();
+                foreach (var x in await _categoryService.GetAllCategoriesFeaturedProductsOnHomePage())
                 {
-                    var catModel = x.ToModel();
+                    var catModel = x.ToModel(_workContext.WorkingLanguage);
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
                     catModel.PictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
                     };
-                    return catModel;
-                })
-                .ToList()
-            );
+                    catlistmodel.Add(catModel);
+                }
+                return catlistmodel;
+            });
+
 
             foreach (var item in model)
             {
@@ -655,12 +660,12 @@ namespace Grand.Web.Services
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { item.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
@@ -668,16 +673,16 @@ namespace Grand.Web.Services
                 {
                     //cache indicates that the category has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { item.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                 }
                 if (featuredProducts != null)
                 {
-                    item.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
 
@@ -687,7 +692,7 @@ namespace Grand.Web.Services
 
         #region Top menu
 
-        public virtual TopMenuModel PrepareTopMenu()
+        public virtual async Task<TopMenuModel> PrepareTopMenu()
         {
             var languageId = _workContext.WorkingLanguage.Id;
 
@@ -698,8 +703,8 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
-                _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+            var cachedTopicModel = await _cacheManager.Get(topicCacheKey, async () =>
+                (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => t.IncludeInTopMenu)
                 .Select(t => new TopMenuModel.TopMenuTopicModel
                 {
@@ -713,8 +718,8 @@ namespace Grand.Web.Services
             string manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
-            var cachedManufacturerModel = _cacheManager.Get(manufacturerCacheKey, () =>
-                _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id)
+            var cachedManufacturerModel = await _cacheManager.Get(manufacturerCacheKey, async () =>
+                    (await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id))
                     .Where(x => x.IncludeInTopMenu)
                     .Select(t => new TopMenuModel.TopMenuManufacturerModel
                     {
@@ -729,7 +734,7 @@ namespace Grand.Web.Services
 
             var model = new TopMenuModel
             {
-                Categories = cachedCategoriesModel,
+                Categories = await cachedCategoriesModel,
                 Topics = cachedTopicModel,
                 Manufacturers = cachedManufacturerModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
@@ -752,19 +757,19 @@ namespace Grand.Web.Services
 
         #region Manufacturer
 
-        public virtual Manufacturer GetManufacturerById(string manufacturerId)
+        public virtual Task<Manufacturer> GetManufacturerById(string manufacturerId)
         {
             return _manufacturerService.GetManufacturerById(manufacturerId);
         }
 
-        public virtual string PrepareManufacturerTemplateViewPath(string templateId)
+        public virtual async Task<string> PrepareManufacturerTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
-            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            var templateViewPath = await _cacheManager.Get(templateCacheKey, async () => 
             {
-                var template = _manufacturerTemplateService.GetManufacturerTemplateById(templateId);
+                var template = await _manufacturerTemplateService.GetManufacturerTemplateById(templateId);
                 if (template == null)
-                    template = _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+                    template = (await _manufacturerTemplateService.GetAllManufacturerTemplates()).FirstOrDefault();
                 if (template == null)
                     throw new Exception("No default template could be loaded");
                 return template.ViewPath;
@@ -772,21 +777,21 @@ namespace Grand.Web.Services
             return templateViewPath;
         }
 
-        public virtual List<ManufacturerModel> PrepareManufacturerAll()
+        public virtual async Task<List<ManufacturerModel>> PrepareManufacturerAll()
         {
             var model = new List<ManufacturerModel>();
-            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+            var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
             foreach (var manufacturer in manufacturers)
             {
-                var modelMan = manufacturer.ToModel();
+                var modelMan = manufacturer.ToModel(_workContext.WorkingLanguage);
 
                 //prepare picture model
                 int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
-                var picture = _pictureService.GetPictureById(manufacturer.PictureId);
+                var picture = await _pictureService.GetPictureById(manufacturer.PictureId);
                 modelMan.PictureModel = new PictureModel
                 {
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                     Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                 };
@@ -795,45 +800,46 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual List<ManufacturerModel> PrepareHomepageManufacturers()
+        public virtual async Task<List<ManufacturerModel>> PrepareHomepageManufacturers()
         {
             string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HOMEPAGE_KEY,
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id);
 
-            List<ManufacturerModel> model = _cacheManager.Get(manufacturersCacheKey, () =>
-                _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id)
-                .Where(x => x.ShowOnHomePage)
-                .Select(x =>
+            List<ManufacturerModel> model = await _cacheManager.Get(manufacturersCacheKey, async () =>
+            {
+                List<ManufacturerModel> modelManuf = new List<ManufacturerModel>();
+                var manuf = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+                foreach (var x in manuf.Where(x => x.ShowOnHomePage))
                 {
-                    var manModel = x.ToModel();
+                    var manModel = x.ToModel(_workContext.WorkingLanguage);
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
                     manModel.PictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), manModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), manModel.Name)
                     };
-                    return manModel;
-                })
-                .ToList()
-            );
+                    modelManuf.Add(manModel);
+                }
+                return modelManuf;
+            });
             return model;
         }
-        public virtual ManufacturerNavigationModel PrepareManufacturerNavigation(string currentManufacturerId)
+        public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigation(string currentManufacturerId)
         {
             var languageId = _workContext.WorkingLanguage.Id;
 
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY,
                 currentManufacturerId, languageId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
             {
-                var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
-                var manufacturers = _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay, storeId: _storeContext.CurrentStore.Id);
+                var currentManufacturer = await _manufacturerService.GetManufacturerById(currentManufacturerId);
+                var manufacturers = await _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay, storeId: _storeContext.CurrentStore.Id);
                 var model = new ManufacturerNavigationModel
                 {
                     TotalManufacturers = manufacturers.TotalCount
@@ -855,31 +861,33 @@ namespace Grand.Web.Services
             });
             return cacheModel;
         }
-        public virtual List<ManufacturerModel> PrepareManufacturerFeaturedProducts()
+        public virtual async Task<List<ManufacturerModel>> PrepareManufacturerFeaturedProducts()
         {
             string manufCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
 
-            var model = _cacheManager.Get(manufCacheKey, () =>
-                _manufacturerService.GetAllManufacturerFeaturedProductsOnHomePage()
-                .Select(x =>
+            var model = await _cacheManager.Get(manufCacheKey, async () =>
+            {
+                var manufList = new List<ManufacturerModel>();
+                var manufmodel = await _manufacturerService.GetAllManufacturerFeaturedProductsOnHomePage();
+                foreach (var x in manufmodel)
                 {
-                    var catModel = x.ToModel();
+                    var manModel = x.ToModel(_workContext.WorkingLanguage);
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = _pictureService.GetPictureById(x.PictureId);
-                    catModel.PictureModel = new PictureModel
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
+                    manModel.PictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), manModel.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), manModel.Name)
                     };
-                    return catModel;
-                })
-                .ToList()
-            );
+                    manufList.Add(manModel);
+                }
+                return manufList;
+            });
 
             foreach (var item in model)
             {
@@ -895,12 +903,12 @@ namespace Grand.Web.Services
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: item.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
@@ -908,25 +916,25 @@ namespace Grand.Web.Services
                 {
                     //cache indicates that the manufacturer has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: item.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                 }
                 if (featuredProducts != null)
                 {
-                    item.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
             return model;
         }
 
 
-        public virtual ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command)
+        public virtual async Task<ManufacturerModel> PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
-            var model = manufacturer.ToModel();
+            var model = manufacturer.ToModel(_workContext.WorkingLanguage);
             var currency = _workContext.WorkingCurrency;
 
             //sorting
@@ -948,10 +956,10 @@ namespace Grand.Web.Services
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
+                    minPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
+                    maxPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
             }
 
             //featured products
@@ -969,12 +977,12 @@ namespace Grand.Web.Services
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
@@ -982,21 +990,19 @@ namespace Grand.Web.Services
                 {
                     //cache indicates that the manufacturer has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = (await _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
-                       featuredProducts: true);
+                       featuredProducts: true)).products;
                 }
                 if (featuredProducts != null)
                 {
-                    model.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                    model.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
-            //products
-            IList<string> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, false,
+            var products = (await _productService.SearchProducts(
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
@@ -1005,8 +1011,8 @@ namespace Grand.Web.Services
                 priceMax: maxPriceConverted,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
-            model.Products = _productViewModelService.PrepareProductOverviewModels(products).ToList();
+                pageSize: command.PageSize)).products;
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
@@ -1016,7 +1022,7 @@ namespace Grand.Web.Services
 
         #region Vendors
 
-        public virtual VendorModel PrepareVendor(Vendor vendor, CatalogPagingFilteringModel command)
+        public virtual async Task<VendorModel> PrepareVendor(Vendor vendor, CatalogPagingFilteringModel command)
         {
             var languageId = _workContext.WorkingLanguage.Id;
 
@@ -1032,7 +1038,7 @@ namespace Grand.Web.Services
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
 
-            _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
+            await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
             address: vendor.Address,
             excludeProperties: false,
             vendorSettings: _vendorSettings);
@@ -1041,13 +1047,13 @@ namespace Grand.Web.Services
             //prepare picture model
             int pictureSize = _mediaSettings.VendorThumbPictureSize;
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            model.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
+            model.PictureModel = await _cacheManager.Get(pictureCacheKey, async () =>
             {
-                var picture = _pictureService.GetPictureById(vendor.PictureId);
+                var picture = await _pictureService.GetPictureById(vendor.PictureId);
                 var pictureModel = new PictureModel
                 {
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                     Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), model.Name),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), model.Name)
                 };
@@ -1065,25 +1071,24 @@ namespace Grand.Web.Services
                 vendor.PageSize);
 
             //products
-            IList<string> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = (await _productService.SearchProducts(
                 vendorId: vendor.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
-            model.Products = _productViewModelService.PrepareProductOverviewModels(products).ToList();
+                pageSize: command.PageSize)).products;
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             return model;
         }
-        public virtual List<VendorModel> PrepareVendorAll()
+        public virtual async Task<List<VendorModel>> PrepareVendorAll()
         {
             var model = new List<VendorModel>();
             var languageId = _workContext.WorkingLanguage.Id;
 
-            var vendors = _vendorService.GetAllVendors();
+            var vendors = await _vendorService.GetAllVendors();
             foreach (var vendor in vendors)
             {
                 var vendorModel = new VendorModel
@@ -1099,7 +1104,7 @@ namespace Grand.Web.Services
                 };
 
                 //prepare vendor address
-                _addressViewModelService.PrepareVendorAddressModel(model: vendorModel.Address,
+                await _addressViewModelService.PrepareVendorAddressModel(model: vendorModel.Address,
                 address: vendor.Address,
                 excludeProperties: false,
                 vendorSettings: _vendorSettings);
@@ -1107,13 +1112,13 @@ namespace Grand.Web.Services
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                vendorModel.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
+                vendorModel.PictureModel = await _cacheManager.Get(pictureCacheKey, async () =>
                 {
-                    var picture = _pictureService.GetPictureById(vendor.PictureId);
+                    var picture = await _pictureService.GetPictureById(vendor.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
                     };
@@ -1124,12 +1129,12 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual VendorNavigationModel PrepareVendorNavigation()
+        public virtual async Task<VendorNavigationModel> PrepareVendorNavigation()
         {
             string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
             {
-                var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
+                var vendors = await _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
                 var model = new VendorNavigationModel
                 {
                     TotalVendors = vendors.TotalCount
@@ -1140,8 +1145,8 @@ namespace Grand.Web.Services
                     model.Vendors.Add(new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
-                        Name = vendor.GetLocalized(x => x.Name),
-                        SeName = vendor.GetSeName(),
+                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
                     });
                 }
                 return model;
@@ -1152,7 +1157,7 @@ namespace Grand.Web.Services
         #endregion
 
         #region Tags
-        public virtual ProductsByTagModel PrepareProductsByTag(ProductTag productTag, CatalogPagingFilteringModel command)
+        public virtual async Task<ProductsByTagModel> PrepareProductsByTag(ProductTag productTag, CatalogPagingFilteringModel command)
         {
             var languageId = _workContext.WorkingLanguage.Id;
 
@@ -1175,30 +1180,30 @@ namespace Grand.Web.Services
 
 
             //products
-            var products = _productService.SearchProducts(
+            var products = (await _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 productTag: productTag.Name,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
-            model.Products = _productViewModelService.PrepareProductOverviewModels(products).ToList();
+                pageSize: command.PageSize)).products;
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
             return model;
         }
-        public virtual PopularProductTagsModel PreparePopularProductTags()
+        public virtual async Task<PopularProductTagsModel> PreparePopularProductTags()
         {
             var languageId = _workContext.WorkingLanguage.Id;
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, languageId, _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new PopularProductTagsModel();
 
                 //get all tags
-                var allTags = _productTagService
-                    .GetAllProductTags()
+                var allTags = (await _productTagService
+                    .GetAllProductTags())
                     .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id))
                     .ToList();
 
@@ -1206,7 +1211,7 @@ namespace Grand.Web.Services
                     .Take(_catalogSettings.NumberOfProductTags)
                     .ToList();
                 //sorting
-                tags = tags.OrderBy(x => x.GetLocalized(y => y.Name)).ToList();
+                tags = tags.OrderBy(x => x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id)).ToList();
 
                 model.TotalTags = allTags.Count;
 
@@ -1222,13 +1227,13 @@ namespace Grand.Web.Services
             });
             return cacheModel;
         }
-        public virtual PopularProductTagsModel PrepareProductTagsAll()
+        public virtual async Task<PopularProductTagsModel> PrepareProductTagsAll()
         {
             var languageId = _workContext.WorkingLanguage.Id;
             var model = new PopularProductTagsModel();
-            model.Tags = _productTagService
-                .GetAllProductTags()
-                .OrderBy(x => x.GetLocalized(y => y.Name))
+            model.Tags = (await _productTagService
+                .GetAllProductTags())
+                .OrderBy(x => x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id))
                 .Select(x =>
                 {
                     var ptModel = new ProductTagModel
@@ -1248,7 +1253,7 @@ namespace Grand.Web.Services
 
         #region Search
 
-        public virtual IList<SearchAutoCompleteModel> PrepareSearchAutoComplete(string term, string categoryId)
+        public virtual async Task<IList<SearchAutoCompleteModel>> PrepareSearchAutoComplete(string term, string categoryId)
         {
             var model = new List<SearchAutoCompleteModel>();
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
@@ -1261,11 +1266,11 @@ namespace Grand.Web.Services
                 if (_catalogSettings.ShowProductsFromSubcategoriesInSearchBox)
                 {
                     //include subcategories
-                    categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                    categoryIds.AddRange(await GetChildCategoryIds(categoryId));
                 }
             }
 
-            var products = _productService.SearchProducts(
+            var products = (await _productService.SearchProducts(
                 storeId: storeId,
                 keywords: term,
                 categoryIds: categoryIds,
@@ -1273,7 +1278,7 @@ namespace Grand.Web.Services
                 searchDescriptions: _catalogSettings.SearchByDescription,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
-                pageSize: productNumber);
+                pageSize: productNumber)).products;
 
             var categories = new List<string>();
             var manufacturers = new List<string>();
@@ -1287,13 +1292,13 @@ namespace Grand.Web.Services
                 {
                     var picture = item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                     if (picture != null)
-                        pictureUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
+                        pictureUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
                 }
                 model.Add(new SearchAutoCompleteModel()
                 {
                     SearchType = "Product",
-                    Label = item.GetLocalized(x => x.Name) ?? "",
-                    Desc = item.GetLocalized(x => x.ShortDescription) ?? "",
+                    Label = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) ?? "",
+                    Desc = item.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id) ?? "",
                     PictureUrl = pictureUrl,
                     Url = $"{storeurl}{item.SeName}"
                 });
@@ -1309,7 +1314,7 @@ namespace Grand.Web.Services
 
             foreach (var item in manufacturers.Distinct())
             {
-                var manufacturer = _manufacturerService.GetManufacturerById(item);
+                var manufacturer = await _manufacturerService.GetManufacturerById(item);
                 if (manufacturer != null && manufacturer.Published)
                 {
                     var allow = true;
@@ -1327,7 +1332,7 @@ namespace Grand.Web.Services
                         model.Add(new SearchAutoCompleteModel()
                         {
                             SearchType = "Manufacturer",
-                            Label = manufacturer.GetLocalized(x => x.Name),
+                            Label = manufacturer.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             Desc = "",
                             PictureUrl = "",
                             Url = $"{storeurl}search?q={term}&adv=true&mid={item}{desc}"
@@ -1337,7 +1342,7 @@ namespace Grand.Web.Services
             }
             foreach (var item in categories.Distinct())
             {
-                var category = _categoryService.GetCategoryById(item);
+                var category = await _categoryService.GetCategoryById(item);
                 if (category != null && category.Published)
                 {
                     var allow = true;
@@ -1355,7 +1360,7 @@ namespace Grand.Web.Services
                         model.Add(new SearchAutoCompleteModel()
                         {
                             SearchType = "Category",
-                            Label = category.GetLocalized(x => x.Name),
+                            Label = category.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             Desc = "",
                             PictureUrl = "",
                             Url = $"{storeurl}search?q={term}&adv=true&cid={item}{desc}"
@@ -1366,13 +1371,13 @@ namespace Grand.Web.Services
 
             if (_catalogSettings.ShowBlogPostsInSearchAutoComplete)
             {
-                var posts = _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
+                var posts = await _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
                 foreach (var item in posts)
                 {
                     model.Add(new SearchAutoCompleteModel()
                     {
                         SearchType = "Blog",
-                        Label = item.GetLocalized(x => x.Title),
+                        Label = item.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
                         Desc = "",
                         PictureUrl = "",
                         Url = $"{storeurl}{item.SeName}"
@@ -1382,38 +1387,36 @@ namespace Grand.Web.Services
             //search term statistics
             if (!String.IsNullOrEmpty(term) && _catalogSettings.SaveSearchAutoComplete)
             {
-                Task.Run(() =>
+                var searchTerm = await _searchTermService.GetSearchTermByKeyword(term, _storeContext.CurrentStore.Id);
+                if (searchTerm != null)
                 {
-                    var searchTerm = _searchTermService.GetSearchTermByKeyword(term, _storeContext.CurrentStore.Id);
-                    if (searchTerm != null)
+                    searchTerm.Count++;
+                    await _searchTermService.UpdateSearchTerm(searchTerm);
+                }
+                else
+                {
+                    searchTerm = new SearchTerm
                     {
-                        searchTerm.Count++;
-                        _searchTermService.UpdateSearchTerm(searchTerm);
-                    }
-                    else
-                    {
-                        searchTerm = new SearchTerm
-                        {
-                            Keyword = term,
-                            StoreId = storeId,
-                            Count = 1
-                        };
-                        _searchTermService.InsertSearchTerm(searchTerm);
-                    }
-                });
+                        Keyword = term,
+                        StoreId = storeId,
+                        Count = 1
+                    };
+                    await _searchTermService.InsertSearchTerm(searchTerm);
+                }
+
             }
             return model;
         }
 
-        public virtual SearchBoxModel PrepareSearchBox()
+        public virtual async Task<SearchBoxModel> PrepareSearchBox()
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_SEARCHBOX,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
 
-            return _cacheManager.Get(cacheKey, () =>
+            return await _cacheManager.Get(cacheKey, async () =>
             {
-                var searchbocategories = _categoryService.GetAllCategoriesSearchBox();
+                var searchbocategories = await _categoryService.GetAllCategoriesSearchBox();
                 searchbocategories = searchbocategories
                     .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
                     .ToList();
@@ -1440,7 +1443,7 @@ namespace Grand.Web.Services
 
         }
 
-        public virtual SearchModel PrepareSearch(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual async Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
                 model = new SearchModel();
@@ -1470,11 +1473,11 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var categories = _cacheManager.Get(cacheKey, () =>
+            var categories = await _cacheManager.Get(cacheKey, async () =>
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
-                var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                var allCategories = await _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
                 foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)
@@ -1482,7 +1485,7 @@ namespace Grand.Web.Services
                     var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
                     for (int i = 0; i <= breadcrumb.Count - 1; i++)
                     {
-                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
+                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
                         if (i != breadcrumb.Count - 1)
                             categoryBreadcrumb += " >> ";
                     }
@@ -1514,7 +1517,7 @@ namespace Grand.Web.Services
                 }
             }
 
-            var manufacturers = _manufacturerService.GetAllManufacturers();
+            var manufacturers = await _manufacturerService.GetAllManufacturers();
             if (manufacturers.Any())
             {
                 model.AvailableManufacturers.Add(new SelectListItem
@@ -1526,7 +1529,7 @@ namespace Grand.Web.Services
                     model.AvailableManufacturers.Add(new SelectListItem
                     {
                         Value = m.Id.ToString(),
-                        Text = m.GetLocalized(x => x.Name),
+                        Text = m.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Selected = model.mid == m.Id
                     });
             }
@@ -1534,7 +1537,7 @@ namespace Grand.Web.Services
             model.asv = _vendorSettings.AllowSearchByVendor;
             if (model.asv)
             {
-                var vendors = _vendorService.GetAllVendors();
+                var vendors = await _vendorService.GetAllVendors();
                 if (vendors.Any())
                 {
                     model.AvailableVendors.Add(new SelectListItem
@@ -1546,7 +1549,7 @@ namespace Grand.Web.Services
                         model.AvailableVendors.Add(new SelectListItem
                         {
                             Value = vendor.Id.ToString(),
-                            Text = vendor.GetLocalized(x => x.Name),
+                            Text = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             Selected = model.vid == vendor.Id
                         });
                 }
@@ -1587,7 +1590,7 @@ namespace Grand.Web.Services
                             if (model.isc)
                             {
                                 //include subcategories
-                                categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                                categoryIds.AddRange(await GetChildCategoryIds(categoryId));
                             }
                         }
 
@@ -1599,14 +1602,14 @@ namespace Grand.Web.Services
                         {
                             decimal minPrice;
                             if (decimal.TryParse(model.pf, out minPrice))
-                                minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
+                                minPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
                         }
                         //max price
                         if (!string.IsNullOrEmpty(model.pt))
                         {
                             decimal maxPrice;
                             if (decimal.TryParse(model.pt, out maxPrice))
-                                maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
+                                maxPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
                         }
 
                         searchInDescriptions = model.sid;
@@ -1617,7 +1620,7 @@ namespace Grand.Web.Services
                     var searchInProductTags = searchInDescriptions;
 
                     //products
-                    products = _productService.SearchProducts(
+                    products = (await _productService.SearchProducts(
                         categoryIds: categoryIds,
                         manufacturerId: manufacturerId,
                         storeId: _storeContext.CurrentStore.Id,
@@ -1632,19 +1635,19 @@ namespace Grand.Web.Services
                         orderBy: (ProductSortingEnum)command.OrderBy,
                         pageIndex: command.PageNumber - 1,
                         pageSize: command.PageSize,
-                        vendorId: vendorId);
-                    model.Products = _productViewModelService.PrepareProductOverviewModels(products).ToList();
+                        vendorId: vendorId)).products;
+                    model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
 
                     model.NoResults = !model.Products.Any();
 
                     //search term statistics
                     if (!String.IsNullOrEmpty(searchTerms))
                     {
-                        var searchTerm = _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
+                        var searchTerm = await _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
                         if (searchTerm != null)
                         {
                             searchTerm.Count++;
-                            _searchTermService.UpdateSearchTerm(searchTerm);
+                            await _searchTermService.UpdateSearchTerm(searchTerm);
                         }
                         else
                         {
@@ -1654,12 +1657,12 @@ namespace Grand.Web.Services
                                 StoreId = _storeContext.CurrentStore.Id,
                                 Count = 1
                             };
-                            _searchTermService.InsertSearchTerm(searchTerm);
+                            await _searchTermService.InsertSearchTerm(searchTerm);
                         }
                     }
 
                     //event
-                    _eventPublisher.Publish(new ProductSearchEvent
+                    await _eventPublisher.Publish(new ProductSearchEvent
                     {
                         SearchTerm = searchTerms,
                         SearchInDescriptions = searchInDescriptions,

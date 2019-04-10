@@ -7,6 +7,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -53,7 +54,7 @@ namespace Grand.Services.Orders
         /// <param name="customerId">Customer Id</param>
         /// <returns>PointsBalance</returns>
 
-        public int GetRewardPointsBalance(string customerId, string storeId)
+        public virtual async Task<int> GetRewardPointsBalance(string customerId, string storeId)
         {
             var query = _rphRepository.Table;
             if (!String.IsNullOrEmpty(customerId))
@@ -62,7 +63,7 @@ namespace Grand.Services.Orders
                 query = query.Where(rph => rph.StoreId == storeId);
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 
-            var lastRph = query.FirstOrDefault();
+            var lastRph = await query.FirstOrDefaultAsync();
             return lastRph != null ? lastRph.PointsBalance : 0;
 
         }
@@ -77,7 +78,7 @@ namespace Grand.Services.Orders
         /// <param name="usedAmount">Used amount</param>
         /// <returns>RewardPointsHistory</returns>
 
-        public RewardPointsHistory AddRewardPointsHistory(string customerId, int points, string storeId,  string message = "",
+        public virtual async Task<RewardPointsHistory> AddRewardPointsHistory(string customerId, int points, string storeId,  string message = "",
            string usedWithOrderId = "", decimal usedAmount = 0M)
         {
 
@@ -86,21 +87,21 @@ namespace Grand.Services.Orders
                 CustomerId = customerId,
                 UsedWithOrderId = usedWithOrderId,
                 Points = points,
-                PointsBalance = GetRewardPointsBalance(customerId, storeId) + points,
+                PointsBalance = await GetRewardPointsBalance(customerId, storeId) + points,
                 UsedAmount = usedAmount,
                 Message = message,
                 StoreId = storeId,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _rphRepository.Insert(rewardPointsHistory);
+            await _rphRepository.InsertAsync(rewardPointsHistory);
 
             //event notification
-            _eventPublisher.EntityInserted(rewardPointsHistory);
+            await _eventPublisher.EntityInserted(rewardPointsHistory);
 
             return rewardPointsHistory;
         }
 
-        public IList<RewardPointsHistory> GetRewardPointsHistory(string customerId = "", bool showHidden = false)
+        public virtual async Task<IList<RewardPointsHistory>> GetRewardPointsHistory(string customerId = "", bool showHidden = false)
         {
             var query = _rphRepository.Table;
             if (!String.IsNullOrEmpty(customerId))
@@ -113,9 +114,7 @@ namespace Grand.Services.Orders
             }
             query = query.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id);
 
-            var records = query.ToList();
-            return records;
-
+            return await query.ToListAsync();
         }
 
         #endregion

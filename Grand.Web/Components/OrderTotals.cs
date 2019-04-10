@@ -14,20 +14,24 @@ namespace Grand.Web.ViewComponents
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public OrderTotalsViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+
+        public OrderTotalsViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
-            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable));
+            var model = await _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable);
             return View(model);
         }
     }

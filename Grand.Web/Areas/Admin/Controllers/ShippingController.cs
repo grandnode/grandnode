@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -80,13 +81,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void PrepareAddressWarehouseModel(WarehouseModel model)
+        protected virtual async Task PrepareAddressWarehouseModel(WarehouseModel model)
         {
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+            foreach (var c in await _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? await _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true) : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
@@ -106,13 +107,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.CompanyEnabled = true;
         }
 
-        protected virtual void PreparePickupPointModel(PickupPointModel model)
+        protected virtual async Task PreparePickupPointModel(PickupPointModel model)
         {
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+            foreach (var c in await _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? await _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true) : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
@@ -132,11 +133,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.CompanyEnabled = true;
 
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
-            foreach (var c in _storeService.GetAllStores())
+            foreach (var c in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
 
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
-            foreach (var c in _shippingService.GetAllWarehouses())
+            foreach (var c in await _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
 
         }
@@ -171,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProviderUpdate(ShippingRateComputationMethodModel model)
+        public async Task<IActionResult> ProviderUpdate(ShippingRateComputationMethodModel model)
         {
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
             if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
@@ -180,7 +181,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSetting(_shippingSettings);
                 }
             }
             else
@@ -189,7 +190,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSetting(_shippingSettings);
                 }
             }
             var pluginDescriptor = srcm.PluginDescriptor;
@@ -224,9 +225,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Methods() => View();
 
         [HttpPost]
-        public IActionResult Methods(DataSourceRequest command)
+        public async Task<IActionResult> Methods(DataSourceRequest command)
         {
-            var shippingMethodsModel = _shippingService.GetAllShippingMethods()
+            var shippingMethodsModel = (await _shippingService.GetAllShippingMethods())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult
@@ -239,21 +240,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
-        public IActionResult CreateMethod()
+        public async Task<IActionResult> CreateMethod()
         {
             var model = new ShippingMethodModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
+        public async Task<IActionResult> CreateMethod(ShippingMethodModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity();
-                _shippingService.InsertShippingMethod(sm);
+                await _shippingService.InsertShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
@@ -263,16 +264,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult EditMethod(string id)
+        public async Task<IActionResult> EditMethod(string id)
         {
-            var sm = _shippingService.GetShippingMethodById(id);
+            var sm = await _shippingService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
 
             var model = sm.ToModel();
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = sm.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = sm.GetLocalized(x => x.Description, languageId, false, false);
@@ -282,9 +283,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
+        public async Task<IActionResult> EditMethod(ShippingMethodModel model, bool continueEditing)
         {
-            var sm = _shippingService.GetShippingMethodById(model.Id);
+            var sm = await _shippingService.GetShippingMethodById(model.Id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
@@ -292,26 +293,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sm = model.ToEntity(sm);
-                _shippingService.UpdateShippingMethod(sm);
+                await _shippingService.UpdateShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
             }
-
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DeleteMethod(string id)
+        public async Task<IActionResult> DeleteMethod(string id)
         {
-            var sm = _shippingService.GetShippingMethodById(id);
+            var sm = await _shippingService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
                 return RedirectToAction("Methods");
 
-            _shippingService.DeleteShippingMethod(sm);
+            await _shippingService.DeleteShippingMethod(sm);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
             return RedirectToAction("Methods");
@@ -324,9 +323,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult DeliveryDates() => View();
 
         [HttpPost]
-        public IActionResult DeliveryDates(DataSourceRequest command)
+        public async Task<IActionResult> DeliveryDates(DataSourceRequest command)
         {
-            var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
+            var deliveryDatesModel = (await _shippingService.GetAllDeliveryDates())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult
@@ -338,22 +337,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CreateDeliveryDate()
+        public async Task<IActionResult> CreateDeliveryDate()
         {
-            var model = new DeliveryDateModel();
-            model.ColorSquaresRgb = "#000000";
+            var model = new DeliveryDateModel
+            {
+                ColorSquaresRgb = "#000000"
+            };
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public async Task<IActionResult> CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity();
-                _shippingService.InsertDeliveryDate(deliveryDate);
+                await _shippingService.InsertDeliveryDate(deliveryDate);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
             }
@@ -362,9 +363,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult EditDeliveryDate(string id)
+        public async Task<IActionResult> EditDeliveryDate(string id)
         {
-            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = await _shippingService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
@@ -377,7 +378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = deliveryDate.GetLocalized(x => x.Name, languageId, false, false);
             });
@@ -386,9 +387,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public async Task<IActionResult> EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            var deliveryDate = _shippingService.GetDeliveryDateById(model.Id);
+            var deliveryDate = await _shippingService.GetDeliveryDateById(model.Id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
@@ -396,7 +397,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                _shippingService.UpdateDeliveryDate(deliveryDate);
+                await _shippingService.UpdateDeliveryDate(deliveryDate);
                 //locales
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
@@ -408,15 +409,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteDeliveryDate(string id)
+        public async Task<IActionResult> DeleteDeliveryDate(string id)
         {
-            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            var deliveryDate = await _shippingService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
             if (ModelState.IsValid)
             {
-                _shippingService.DeleteDeliveryDate(deliveryDate);
+                await _shippingService.DeleteDeliveryDate(deliveryDate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
                 return RedirectToAction("DeliveryDates");
@@ -432,9 +433,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Warehouses() => View();
 
         [HttpPost]
-        public IActionResult Warehouses(DataSourceRequest command)
+        public async Task<IActionResult> Warehouses(DataSourceRequest command)
         {
-            var warehousesModel = _shippingService.GetAllWarehouses()
+            var warehousesModel = (await _shippingService.GetAllWarehouses())
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult
@@ -445,92 +446,92 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-        public IActionResult CreateWarehouse()
+        public async Task<IActionResult> CreateWarehouse()
         {
             var model = new WarehouseModel();
-            PrepareAddressWarehouseModel(model);
+            await PrepareAddressWarehouseModel(model);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CreateWarehouse(WarehouseModel model, bool continueEditing)
+        public async Task<IActionResult> CreateWarehouse(WarehouseModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
                 address.CreatedOnUtc = DateTime.UtcNow;
-                _addressService.InsertAddressSettings(address);
+                await _addressService.InsertAddressSettings(address);
                 var warehouse = model.ToEntity();
                 warehouse.AddressId = address.Id;
-                _shippingService.InsertWarehouse(warehouse);
+                await _shippingService.InsertWarehouse(warehouse);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareAddressWarehouseModel(model);
+            await PrepareAddressWarehouseModel(model);
             return View(model);
         }
 
-        public IActionResult EditWarehouse(string id)
+        public async Task<IActionResult> EditWarehouse(string id)
         {
-            var warehouse = _shippingService.GetWarehouseById(id);
+            var warehouse = await _shippingService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
 
-            var address = _addressService.GetAddressByIdSettings(warehouse.AddressId);
+            var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId);
             var model = warehouse.ToModel();
             if (address != null)
             {
                 model.Address = address.ToModel();
             }
-            PrepareAddressWarehouseModel(model);
+            await PrepareAddressWarehouseModel(model);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditWarehouse(WarehouseModel model, bool continueEditing)
+        public async Task<IActionResult> EditWarehouse(WarehouseModel model, bool continueEditing)
         {
-            var warehouse = _shippingService.GetWarehouseById(model.Id);
+            var warehouse = await _shippingService.GetWarehouseById(model.Id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
 
             if (ModelState.IsValid)
             {
-                var address = _addressService.GetAddressByIdSettings(warehouse.AddressId) ??
+                var address = await _addressService.GetAddressByIdSettings(warehouse.AddressId) ??
                     new Core.Domain.Common.Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
                 address = model.Address.ToEntity(address);
                 if (!String.IsNullOrEmpty(address.Id))
-                    _addressService.UpdateAddressSettings(address);
+                    await _addressService.UpdateAddressSettings(address);
                 else
-                    _addressService.InsertAddressSettings(address);
+                    await _addressService.InsertAddressSettings(address);
 
                 warehouse = model.ToEntity(warehouse);
-                _shippingService.UpdateWarehouse(warehouse);
+                await _shippingService.UpdateWarehouse(warehouse);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareAddressWarehouseModel(model);
+            await PrepareAddressWarehouseModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DeleteWarehouse(string id)
+        public async Task<IActionResult> DeleteWarehouse(string id)
         {
-            var warehouse = _shippingService.GetWarehouseById(id);
+            var warehouse = await _shippingService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
                 return RedirectToAction("Warehouses");
 
-            _shippingService.DeleteWarehouse(warehouse);
+            await _shippingService.DeleteWarehouse(warehouse);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
             return RedirectToAction("Warehouses");
@@ -543,9 +544,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult PickupPoints() => View();
 
         [HttpPost]
-        public IActionResult PickupPoints(DataSourceRequest command)
+        public async Task<IActionResult> PickupPoints(DataSourceRequest command)
         {
-            var pickupPointsModel = _shippingService.GetAllPickupPoints()
+            var pickupPointsModel = (await _shippingService.GetAllPickupPoints())
                 .Select(x => x.ToModel())
                 .ToList();
 
@@ -558,53 +559,53 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CreatePickupPoint()
+        public async Task<IActionResult> CreatePickupPoint()
         {
             var model = new PickupPointModel();
-            PreparePickupPointModel(model);
+            await PreparePickupPointModel(model);
             return View(model);
         }
 
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CreatePickupPoint(PickupPointModel model, bool continueEditing)
+        public async Task<IActionResult> CreatePickupPoint(PickupPointModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
                 address.CreatedOnUtc = DateTime.UtcNow;
-                _addressService.InsertAddressSettings(address);
+                await _addressService.InsertAddressSettings(address);
                 var pickuppoint = model.ToEntity();
                 pickuppoint.Address = address;
-                _shippingService.InsertPickupPoint(pickuppoint);
+                await _shippingService.InsertPickupPoint(pickuppoint);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Added"));
                 return continueEditing ? RedirectToAction("EditPickupPoint", new { id = pickuppoint.Id }) : RedirectToAction("PickupPoints");
             }
 
             //If we got this far, something failed, redisplay form
-            PreparePickupPointModel(model);
+            await PreparePickupPointModel(model);
             return View(model);
         }
 
-        public IActionResult EditPickupPoint(string id)
+        public async Task<IActionResult> EditPickupPoint(string id)
         {
-            var pickuppoint = _shippingService.GetPickupPointById(id);
+            var pickuppoint = await _shippingService.GetPickupPointById(id);
             if (pickuppoint == null)
                 //No pickup pint found with the specified id
                 return RedirectToAction("PickupPoints");
 
             var model = pickuppoint.ToModel();
             model.Address = pickuppoint.Address.ToModel();
-            PreparePickupPointModel(model);
+            await PreparePickupPointModel(model);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditPickupPoint(PickupPointModel model, bool continueEditing)
+        public async Task<IActionResult> EditPickupPoint(PickupPointModel model, bool continueEditing)
         {
-            var pickupPoint = _shippingService.GetPickupPointById(model.Id);
+            var pickupPoint = await _shippingService.GetPickupPointById(model.Id);
             if (pickupPoint == null)
                 //No pickup point found with the specified id
                 return RedirectToAction("PickupPoints");
@@ -615,24 +616,24 @@ namespace Grand.Web.Areas.Admin.Controllers
                 address = model.Address.ToEntity(address);
                 pickupPoint = model.ToEntity(pickupPoint);
                 pickupPoint.Address = address;
-                _shippingService.UpdatePickupPoint(pickupPoint);
+                await _shippingService.UpdatePickupPoint(pickupPoint);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Updated"));
                 return continueEditing ? RedirectToAction("EditPickupPoint", new { id = pickupPoint.Id }) : RedirectToAction("PickupPoints");
             }
             //If we got this far, something failed, redisplay form
-            PreparePickupPointModel(model);
+            await PreparePickupPointModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DeletePickupPoint(string id)
+        public async Task<IActionResult> DeletePickupPoint(string id)
         {
-            var pickupPoint = _shippingService.GetPickupPointById(id);
+            var pickupPoint = await _shippingService.GetPickupPointById(id);
             if (pickupPoint == null)
                 //No pickup point found with the specified id
                 return RedirectToAction("PickupPoints");
 
-            _shippingService.DeletePickupPoint(pickupPoint);
+            await _shippingService.DeletePickupPoint(pickupPoint);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Deleted"));
             return RedirectToAction("PickupPoints");
@@ -642,13 +643,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Restrictions
 
-        public IActionResult Restrictions()
+        public async Task<IActionResult> Restrictions()
         {
             var model = new ShippingMethodRestrictionModel();
 
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var shippingMethods = _shippingService.GetAllShippingMethods();
-            var customerRoles = _customerService.GetAllCustomerRoles();
+            var countries = await _countryService.GetAllCountries(showHidden: true);
+            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var customerRoles = await _customerService.GetAllCustomerRoles();
 
             foreach (var country in countries)
             {
@@ -699,11 +700,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Restrictions")]
         [RequestFormLimits(ValueCountLimit = 2048)]
-        public IActionResult RestrictionSave(IFormCollection form)
+        public async Task<IActionResult> RestrictionSave(IFormCollection form)
         {
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var shippingMethods = _shippingService.GetAllShippingMethods();
-            var customerRoles = _customerService.GetAllCustomerRoles();
+            var countries = await _countryService.GetAllCountries(showHidden: true);
+            var shippingMethods = await _shippingService.GetAllShippingMethods();
+            var customerRoles = await _customerService.GetAllCustomerRoles();
 
             foreach (var shippingMethod in shippingMethods)
             {
@@ -723,7 +724,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
                         {
                             shippingMethod.RestrictedCountries.Add(country);
-                            _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                     else
@@ -731,7 +732,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
                         {
                             shippingMethod.RestrictedCountries.Remove(shippingMethod.RestrictedCountries.FirstOrDefault(x=>x.Id ==  country.Id));
-                            _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                 }
@@ -753,7 +754,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) == null)
                         {
                             shippingMethod.RestrictedRoles.Add(role.Id);
-                            _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                     else
@@ -761,7 +762,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) != null)
                         {
                             shippingMethod.RestrictedRoles.Remove(role.Id);
-                            _shippingService.UpdateShippingMethod(shippingMethod);
+                            await _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                 }

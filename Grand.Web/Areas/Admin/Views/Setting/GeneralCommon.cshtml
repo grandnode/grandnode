@@ -106,7 +106,7 @@
     @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "generalsettings-edit");
-        eventPublisher.Publish(eventMessage);
+        await eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock

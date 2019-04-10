@@ -26,7 +26,7 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string productId, int? productThumbPictureSize)
         {
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsRelated(productId, productThumbPictureSize));
+            var model = await _productViewModelService.PrepareProductsRelated(productId, productThumbPictureSize);
             if (!model.Any())
                 return Content("");
 

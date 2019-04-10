@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Plugins
 {
@@ -199,7 +200,7 @@ namespace Grand.Core.Plugins
         /// Mark plugin as installed
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        public static void MarkPluginAsInstalled(string systemName)
+        public static async Task MarkPluginAsInstalled(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
@@ -217,14 +218,14 @@ namespace Grand.Core.Plugins
                                 .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
             if (!alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Add(systemName);
-            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
+            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
         }
 
         /// <summary>
         /// Mark plugin as uninstalled
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        public static void MarkPluginAsUninstalled(string systemName)
+        public static async Task MarkPluginAsUninstalled(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
@@ -242,7 +243,7 @@ namespace Grand.Core.Plugins
                                 .FirstOrDefault(x => x.Equals(systemName, StringComparison.OrdinalIgnoreCase)) != null;
             if (alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Remove(systemName);
-            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
+            await PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames, filePath);
         }
 
         /// <summary>

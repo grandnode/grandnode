@@ -14,9 +14,9 @@ namespace Grand.Web.ViewComponents
             this._commonViewModelService = commonViewModelService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareTaxTypeSelector());
+            var model = _commonViewModelService.PrepareTaxTypeSelector();
             if (model == null)
                 return Content("");
 

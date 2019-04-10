@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -36,12 +38,14 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILanguageService _languageService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly SeoSettings _seoSettings;
 
         public CategoryViewModelService(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService, IDiscountService discountService,
             ILocalizationService localizationService, IStoreService storeService, ICustomerService customerService, IPictureService pictureService,
             IUrlRecordService urlRecordService, ICustomerActivityService customerActivityService, IProductService productService, IManufacturerService manufacturerService,
-            IVendorService vendorService, IDateTimeHelper dateTimeHelper, CatalogSettings catalogSettings)
+            IVendorService vendorService, IDateTimeHelper dateTimeHelper, ILanguageService languageService, CatalogSettings catalogSettings, SeoSettings seoSettings)
         {
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
@@ -55,11 +59,13 @@ namespace Grand.Web.Areas.Admin.Services
             _pictureService = pictureService;
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
+            _languageService = languageService;
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
+            _seoSettings = seoSettings;
         }
 
-        protected virtual void PrepareAllCategoriesModel(CategoryModel model)
+        protected virtual async Task PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -69,7 +75,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "[None]",
                 Value = ""
             });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
             {
                 model.AvailableCategories.Add(new SelectListItem
@@ -81,12 +87,12 @@ namespace Grand.Web.Areas.Admin.Services
         }
 
 
-        protected virtual void PrepareTemplatesModel(CategoryModel model)
+        protected virtual async Task PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            var templates = _categoryTemplateService.GetAllCategoryTemplates();
+            var templates = await _categoryTemplateService.GetAllCategoryTemplates();
             foreach (var template in templates)
             {
                 model.AvailableCategoryTemplates.Add(new SelectListItem
@@ -97,13 +103,13 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual async Task PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true)
+            model.AvailableDiscounts = (await _discountService
+                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
                 .Select(d => d.ToModel())
                 .ToList();
 
@@ -132,17 +138,17 @@ namespace Grand.Web.Areas.Admin.Services
         }
 
 
-        public virtual CategoryListModel PrepareCategoryListModel()
+        public virtual async Task<CategoryListModel> PrepareCategoryListModel()
         {
             var model = new CategoryListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             return model;
         }
-        public virtual List<TreeNode> PrepareCategoryNodeListModel()
+        public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel()
         {
-            var categories = _categoryService.GetAllCategories();
+            var categories = await _categoryService.GetAllCategories();
             List<TreeNode> nodeList = new List<TreeNode>();
             List<ITreeNode> list = new List<ITreeNode>();
             list.AddRange(categories);
@@ -163,31 +169,34 @@ namespace Grand.Web.Areas.Admin.Services
             return nodeList;
         }
 
-        public virtual (IEnumerable<CategoryModel> categoryListModel, int totalCount) PrepareCategoryListModel(CategoryListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<CategoryModel> categoryListModel, int totalCount)> PrepareCategoryListModel(CategoryListModel model, int pageIndex, int pageSize)
         {
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName, model.SearchStoreId,
+            var categories = await _categoryService.GetAllCategories(model.SearchCategoryName, model.SearchStoreId,
                 pageIndex - 1, pageSize, true);
-            return (categories.Select(x =>
-                {
-                    var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
-                    return categoryModel;
-                }), categories.TotalCount);
+
+            var categoryListModel = new List<CategoryModel>();
+            foreach (var x in categories)
+            {
+                var categoryModel = x.ToModel();
+                categoryModel.Breadcrumb = await x.GetFormattedBreadCrumb(_categoryService);
+                categoryListModel.Add(categoryModel);
+            }
+            return (categoryListModel, categories.TotalCount);
         }
 
-        public virtual CategoryModel PrepareCategoryModel()
+        public virtual async Task<CategoryModel> PrepareCategoryModel()
         {
             var model = new CategoryModel();
             //templates
-            PrepareTemplatesModel(model);
+            await PrepareTemplatesModel(model);
             //categories
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //discounts
-            PrepareDiscountModel(model, null, true);
+            await PrepareDiscountModel(model, null, true);
             //ACL
-            model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
@@ -197,62 +206,62 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual CategoryModel PrepareCategoryModel(CategoryModel model, Category category)
+        public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category)
         {
             //templates
-            PrepareTemplatesModel(model);
+            await PrepareTemplatesModel(model);
             //categories
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //discounts
-            PrepareDiscountModel(model, category, false);
+            await PrepareDiscountModel(model, category, false);
             return model;
         }
 
-        public Category InsertCategoryModel(CategoryModel model)
+        public async Task<Category> InsertCategoryModel(CategoryModel model)
         {
             var category = model.ToEntity();
             category.CreatedOnUtc = DateTime.UtcNow;
             category.UpdatedOnUtc = DateTime.UtcNow;
-            var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     category.AppliedDiscounts.Add(discount.Id);
             }
-            _categoryService.InsertCategory(category);
+            await _categoryService.InsertCategory(category);
 
             //locales
-            category.Locales = model.Locales.ToLocalizedProperty(category, x => x.Name, _urlRecordService);
-            model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+            category.Locales = await model.Locales.ToLocalizedProperty(category, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            model.SeName = await category.ValidateSeName(model.SeName, category.Name, true, _seoSettings, _urlRecordService, _languageService);
             category.SeName = model.SeName;
-            _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategory(category);
 
-            _urlRecordService.SaveSlug(category, model.SeName, "");
+            await _urlRecordService.SaveSlug(category, model.SeName, "");
 
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
+            await _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewCategory", category.Id, _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
+            await _customerActivityService.InsertActivity("AddNewCategory", category.Id, _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
             return category;
         }
 
-        public virtual Category UpdateCategoryModel(Category category, CategoryModel model)
+        public virtual async Task<Category> UpdateCategoryModel(Category category, CategoryModel model)
         {
             string prevPictureId = category.PictureId;
             category = model.ToEntity(category);
             category.UpdatedOnUtc = DateTime.UtcNow;
-            model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+            model.SeName = await category.ValidateSeName(model.SeName, category.Name, true, _seoSettings, _urlRecordService, _languageService);
             category.SeName = model.SeName;
             //locales
-            category.Locales = model.Locales.ToLocalizedProperty(category, x => x.Name, _urlRecordService);
-            _categoryService.UpdateCategory(category);
+            category.Locales = await model.Locales.ToLocalizedProperty(category, x => x.Name, _seoSettings, _urlRecordService, _languageService);
+            await _categoryService.UpdateCategory(category);
             //search engine name
-            _urlRecordService.SaveSlug(category, model.SeName, "");
+            await _urlRecordService.SaveSlug(category, model.SeName, "");
 
             //discounts
-            var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -268,45 +277,52 @@ namespace Grand.Web.Areas.Admin.Services
                         category.AppliedDiscounts.Remove(discount.Id);
                 }
             }
-            _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategory(category);
             //delete an old picture (if deleted or updated)
             if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != category.PictureId)
             {
-                var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                var prevPicture = await _pictureService.GetPictureById(prevPictureId);
                 if (prevPicture != null)
-                    _pictureService.DeletePicture(prevPicture);
+                    await _pictureService.DeletePicture(prevPicture);
             }
             //update picture seo file name
-            _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
+            await _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
 
             //activity log
-            _customerActivityService.InsertActivity("EditCategory", category.Id, _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
+            await _customerActivityService.InsertActivity("EditCategory", category.Id, _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
             return category;
         }
-        public virtual void DeleteCategory(Category category)
+        public virtual async Task DeleteCategory(Category category)
         {
-            _categoryService.DeleteCategory(category);
+            await _categoryService.DeleteCategory(category);
             //activity log
-            _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+            await _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
         }
-        public virtual (IEnumerable<CategoryModel.CategoryProductModel> categoryProductModels, int totalCount) PrepareCategoryProductModel(string categoryId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<CategoryModel.CategoryProductModel> categoryProductModels, int totalCount)> PrepareCategoryProductModel(string categoryId, int pageIndex, int pageSize)
         {
-            var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
+            var productCategories = await _categoryService.GetProductCategoriesByCategoryId(categoryId,
                 pageIndex - 1, pageSize, true);
-            return (productCategories.Select(x => new CategoryModel.CategoryProductModel
+
+            var categoryproducts = new List<CategoryModel.CategoryProductModel>();
+            foreach (var item in productCategories)
             {
-                Id = x.Id,
-                CategoryId = x.CategoryId,
-                ProductId = x.ProductId,
-                ProductName = _productService.GetProductById(x.ProductId)?.Name,
-                IsFeaturedProduct = x.IsFeaturedProduct,
-                DisplayOrder = x.DisplayOrder
-            }), productCategories.TotalCount);
+                var pc = new CategoryModel.CategoryProductModel
+                {
+                    Id = item.Id,
+                    CategoryId = item.CategoryId,
+                    ProductId = item.ProductId,
+                    ProductName = (await _productService.GetProductById(item.ProductId))?.Name,
+                    IsFeaturedProduct = item.IsFeaturedProduct,
+                    DisplayOrder = item.DisplayOrder
+                };
+                categoryproducts.Add(pc);
+            }
+            return (categoryproducts, productCategories.TotalCount);
         }
 
-        public virtual ProductCategory UpdateProductCategoryModel(CategoryModel.CategoryProductModel model)
+        public virtual async Task<ProductCategory> UpdateProductCategoryModel(CategoryModel.CategoryProductModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             var productCategory = product.ProductCategories.FirstOrDefault(x => x.Id == model.Id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -314,12 +330,12 @@ namespace Grand.Web.Areas.Admin.Services
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
             productCategory.DisplayOrder = model.DisplayOrder;
             productCategory.ProductId = model.ProductId;
-            _categoryService.UpdateProductCategory(productCategory);
+            await _categoryService.UpdateProductCategory(productCategory);
             return productCategory;
         }
-        public virtual void DeleteProductCategoryModel(string id, string productId)
+        public virtual async Task DeleteProductCategoryModel(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -327,31 +343,31 @@ namespace Grand.Web.Areas.Admin.Services
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
             productCategory.ProductId = productId;
-            _categoryService.DeleteProductCategory(productCategory);
+            await _categoryService.DeleteProductCategory(productCategory);
 
         }
-        public virtual CategoryModel.AddCategoryProductModel PrepareAddCategoryProductModel()
+        public virtual async Task<CategoryModel.AddCategoryProductModel> PrepareAddCategoryProductModel()
         {
             var model = new CategoryModel.AddCategoryProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -360,16 +376,16 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual void InsertCategoryProductModel(CategoryModel.AddCategoryProductModel model)
+        public virtual async Task InsertCategoryProductModel(CategoryModel.AddCategoryProductModel model)
         {
             foreach (string id in model.SelectedProductIds)
             {
-                var product = _productService.GetProductById(id);
+                var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
                     if (product.ProductCategories.Where(x => x.CategoryId == model.CategoryId).Count() == 0)
                     {
-                        _categoryService.InsertProductCategory(
+                        await _categoryService.InsertProductCategory(
                             new ProductCategory
                             {
                                 CategoryId = model.CategoryId,
@@ -381,28 +397,29 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
         }
-        public virtual (IEnumerable<CategoryModel.ActivityLogModel> activityLogModel, int totalCount) PrepareActivityLogModel(string categoryId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<CategoryModel.ActivityLogModel> activityLogModel, int totalCount)> PrepareActivityLogModel(string categoryId, int pageIndex, int pageSize)
         {
-            var activityLog = _customerActivityService.GetCategoryActivities(null, null, categoryId, pageIndex - 1, pageSize);
-            return (activityLog.Select(x =>
+            var activityLog = await _customerActivityService.GetCategoryActivities(null, null, categoryId, pageIndex - 1, pageSize);
+            var activityLogModelList = new List<CategoryModel.ActivityLogModel>();
+            foreach (var item in activityLog)
+            {
+                var customer = await _customerService.GetCustomerById(item.CustomerId);
+                var m = new CategoryModel.ActivityLogModel
                 {
-                    var customer = _customerService.GetCustomerById(x.CustomerId);
-                    var m = new CategoryModel.ActivityLogModel
-                    {
-                        Id = x.Id,
-                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
-                        Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        CustomerId = x.CustomerId,
-                        CustomerEmail = customer != null ? customer.Email : "null"
-                    };
-                    return m;
-
-                }), activityLog.TotalCount);
+                    Id = item.Id,
+                    ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(item.ActivityLogTypeId))?.Name,
+                    Comment = item.Comment,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc),
+                    CustomerId = item.CustomerId,
+                    CustomerEmail = customer != null ? customer.Email : "null"
+                };
+                activityLogModelList.Add(m);
+            }
+            return (activityLogModelList, activityLog.TotalCount);
         }
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CategoryModel.AddCategoryProductModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CategoryModel.AddCategoryProductModel model, int pageIndex, int pageSize)
         {
-            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
     }

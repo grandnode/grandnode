@@ -3,6 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Discounts
 {
@@ -15,14 +16,14 @@ namespace Grand.Services.Discounts
         /// Delete discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        void DeleteDiscount(Discount discount);
+        Task DeleteDiscount(Discount discount);
 
         /// <summary>
         /// Gets a discount
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Discount</returns>
-        Discount GetDiscountById(string discountId);
+        Task<Discount> GetDiscountById(string discountId);
 
         /// <summary>
         /// Gets all discounts
@@ -32,26 +33,26 @@ namespace Grand.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType,
+        Task<IList<Discount>> GetAllDiscounts(DiscountType? discountType,
             string couponCode = "", string discountName = "", bool showHidden = false);
 
         /// <summary>
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        void InsertDiscount(Discount discount);
+        Task InsertDiscount(Discount discount);
 
         /// <summary>
         /// Updates the discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        void UpdateDiscount(Discount discount);
+        Task UpdateDiscount(Discount discount);
 
         /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
+        Task DeleteDiscountRequirement(DiscountRequirement discountRequirement);
 
         /// <summary>
         /// Load discount plugin by system name
@@ -73,7 +74,7 @@ namespace Grand.Services.Discounts
         /// <param name="couponCode">CouponCode</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discount</returns>
-        Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
+        Task<Discount> GetDiscountByCouponCode(string couponCode, bool showHidden = false);
 
         /// <summary>
         /// Exist coupon code in discount
@@ -81,7 +82,7 @@ namespace Grand.Services.Discounts
         /// <param name="couponCode"></param>
         /// <param name="discountId"></param>
         /// <returns></returns>
-        bool ExistsCodeInDiscount(string couponCode, string discountId, bool? used);
+        Task<bool> ExistsCodeInDiscount(string couponCode, string discountId, bool? used);
 
         /// <summary>
         /// Validate discount
@@ -89,7 +90,7 @@ namespace Grand.Services.Discounts
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer);
+        Task<DiscountValidationResult> ValidateDiscount(Discount discount, Customer customer);
 
         /// <summary>
         /// Validate discount
@@ -98,7 +99,7 @@ namespace Grand.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
         /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
+        Task<DiscountValidationResult> ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
 
         /// <summary>
         /// Validate discount
@@ -107,7 +108,7 @@ namespace Grand.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
+        Task<DiscountValidationResult> ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
 
 
         /// <summary>
@@ -115,8 +116,8 @@ namespace Grand.Services.Discounts
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
         /// <returns>Discount usage history</returns>
-        DiscountUsageHistory GetDiscountUsageHistoryById(string discountUsageHistoryId);
-        
+        Task<DiscountUsageHistory> GetDiscountUsageHistoryById(string discountUsageHistoryId);
+
         /// <summary>
         /// Gets all discount usage history records
         /// </summary>
@@ -126,7 +127,7 @@ namespace Grand.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(string discountId = "",
+        Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistory(string discountId = "",
             string customerId = "", string orderId = "", bool? canceled = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -134,19 +135,19 @@ namespace Grand.Services.Discounts
         /// Insert discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
-        
+        Task InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+
         /// <summary>
         /// Update discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+        Task UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
         /// <summary>
         /// Delete discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+        Task DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
         /// <summary>
         /// Get all coupon codes for discount
@@ -155,27 +156,27 @@ namespace Grand.Services.Discounts
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        IPagedList<DiscountCoupon> GetAllCouponCodesByDiscountId(string discountId, int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<DiscountCoupon>> GetAllCouponCodesByDiscountId(string discountId, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Get discount code by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        DiscountCoupon GetDiscountCodeById(string id);
+        Task<DiscountCoupon> GetDiscountCodeById(string id);
 
         /// <summary>
         /// Get discount code by discount code
         /// </summary>
         /// <param name="couponCode"></param>
         /// <returns></returns>
-        DiscountCoupon GetDiscountCodeByCode(string couponCode);
+        Task<DiscountCoupon> GetDiscountCodeByCode(string couponCode);
 
         /// <summary>
         /// Delete discount code
         /// </summary>
         /// <param name="coupon"></param>
-        void DeleteDiscountCoupon(DiscountCoupon coupon);
+        Task DeleteDiscountCoupon(DiscountCoupon coupon);
 
         /// <summary>
         /// Update discount code - set as used or not
@@ -183,19 +184,19 @@ namespace Grand.Services.Discounts
         /// <param name="couponCode"></param>
         /// <param name="discountId"></param>
         /// <param name="used"></param>
-        void DiscountCouponSetAsUsed(string couponCode, bool used);
+        Task DiscountCouponSetAsUsed(string couponCode, bool used);
 
         /// <summary>
         /// Cancel discount if order was canceled or deleted
         /// </summary>
         /// <param name="orderId"></param>
-        void CancelDiscount(string orderId);
+        Task CancelDiscount(string orderId);
 
         /// <summary>
         /// Insert discount code
         /// </summary>
         /// <param name="coupon"></param>
-        void InsertDiscountCoupon(DiscountCoupon coupon);
+        Task InsertDiscountCoupon(DiscountCoupon coupon);
 
         /// <summary>
         /// Get discount amount from plugin
@@ -214,8 +215,8 @@ namespace Grand.Services.Discounts
         /// <param name="product"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
-        List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, Product product, decimal amount, out decimal discountAmount);
+        Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+            Customer customer, Product product, decimal amount);
 
         /// <summary>
         /// Get preferred discount
@@ -225,8 +226,8 @@ namespace Grand.Services.Discounts
         /// <param name="customer"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
-        List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            Customer customer, decimal amount, out decimal discountAmount);
+        Task<(List<AppliedDiscount> appliedDiscount, decimal discountAmount)> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+            Customer customer, decimal amount);
 
         /// <summary>
         /// GetDiscountAmountProvider

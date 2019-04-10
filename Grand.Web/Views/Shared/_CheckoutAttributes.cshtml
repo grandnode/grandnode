@@ -110,7 +110,7 @@
                             Download download = null;
                             if (!String.IsNullOrEmpty(attribute.DefaultValue))
                             {
-                                download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                                download = await downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
                             }
 
                             //register CSS and JS

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -63,7 +64,7 @@ namespace Grand.Web.Areas.Admin.Services
             return sb.ToString();
         }
 
-        protected virtual void PrepareStoresModel(CampaignModel model)
+        protected virtual async Task PrepareStoresModel(CampaignModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -73,7 +74,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = _localizationService.GetResource("Admin.Common.All"),
                 Value = ""
             });
-            var stores = _storeService.GetAllStores();
+            var stores = await _storeService.GetAllStores();
             foreach (var store in stores)
             {
                 model.AvailableStores.Add(new SelectListItem
@@ -84,97 +85,97 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        protected virtual void PrepareCustomerTagsModel(CampaignModel model)
+        protected virtual async Task PrepareCustomerTagsModel(CampaignModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-            model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
+            model.AvailableCustomerTags = (await _customerTagService.GetAllCustomerTags()).Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
             model.CustomerTags = model.CustomerTags == null ? new List<string>() : model.CustomerTags;
         }
 
-        protected virtual void PrepareCustomerRolesModel(CampaignModel model)
+        protected virtual async Task PrepareCustomerRolesModel(CampaignModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-            model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
+            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles()).Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
             model.CustomerRoles = model.CustomerRoles == null ? new List<string>() : model.CustomerRoles;
         }
 
-        protected virtual void PrepareNewsletterCategoriesModel(CampaignModel model)
+        protected virtual async Task PrepareNewsletterCategoriesModel(CampaignModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-            model.AvailableNewsletterCategories = _newsletterCategoryService.GetAllNewsletterCategory().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
+            model.AvailableNewsletterCategories = (await _newsletterCategoryService.GetAllNewsletterCategory()).Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
             model.NewsletterCategories = model.NewsletterCategories == null ? new List<string>() : model.NewsletterCategories;
         }
 
-        protected virtual void PrepareEmailAccounts(CampaignModel model)
+        protected virtual async Task PrepareEmailAccounts(CampaignModel model)
         {
             //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+            foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
         }
 
-        public virtual CampaignModel PrepareCampaignModel()
+        public virtual async Task<CampaignModel> PrepareCampaignModel()
         {
             var model = new CampaignModel();
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
-            PrepareStoresModel(model);
+            await PrepareStoresModel(model);
             //Tags
-            PrepareCustomerTagsModel(model);
+            await PrepareCustomerTagsModel(model);
             //Roles
-            PrepareCustomerRolesModel(model);
+            await PrepareCustomerRolesModel(model);
             //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
+            await PrepareNewsletterCategoriesModel(model);
             //email
-            PrepareEmailAccounts(model);
+            await PrepareEmailAccounts(model);
             return model;
         }
 
-        public virtual CampaignModel PrepareCampaignModel(CampaignModel model)
+        public virtual async Task<CampaignModel> PrepareCampaignModel(CampaignModel model)
         {
             //If we got this far, something failed, redisplay form
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
-            PrepareStoresModel(model);
+            await PrepareStoresModel(model);
             //Tags
-            PrepareCustomerTagsModel(model);
+            await PrepareCustomerTagsModel(model);
             //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
+            await PrepareNewsletterCategoriesModel(model);
             //Roles
-            PrepareCustomerRolesModel(model);
+            await PrepareCustomerRolesModel(model);
             //email
-            PrepareEmailAccounts(model);
+            await PrepareEmailAccounts(model);
             return model;
         }
 
-        public virtual CampaignModel PrepareCampaignModel(Campaign campaign)
+        public virtual async Task<CampaignModel> PrepareCampaignModel(Campaign campaign)
         {
             var model = campaign.ToModel();
             model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
-            PrepareStoresModel(model);
+            await PrepareStoresModel(model);
             //Tags
-            PrepareCustomerTagsModel(model);
+            await PrepareCustomerTagsModel(model);
             //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
+            await PrepareNewsletterCategoriesModel(model);
             //Roles
-            PrepareCustomerRolesModel(model);
+            await PrepareCustomerRolesModel(model);
             //email
-            PrepareEmailAccounts(model);
+            await PrepareEmailAccounts(model);
 
             return model;
         }
 
-        public virtual Campaign InsertCampaignModel(CampaignModel model)
+        public virtual async Task<Campaign> InsertCampaignModel(CampaignModel model)
         {
             var campaign = model.ToEntity();
             campaign.CreatedOnUtc = DateTime.UtcNow;
-            _campaignService.InsertCampaign(campaign);
+            await _campaignService.InsertCampaign(campaign);
             return campaign;
         }
-        public virtual Campaign UpdateCampaignModel(Campaign campaign, CampaignModel model)
+        public virtual async Task<Campaign> UpdateCampaignModel(Campaign campaign, CampaignModel model)
         {
             campaign = model.ToEntity(campaign);
             campaign.CustomerRoles.Clear();
@@ -192,13 +193,12 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 campaign.NewsletterCategories.Add(item);
             }
-            _campaignService.UpdateCampaign(campaign);
-
+            await _campaignService.UpdateCampaign(campaign);
             return campaign;
         }
-        public virtual (IEnumerable<CampaignModel> campaignModels, int totalCount) PrepareCampaignModels()
+        public virtual async Task<(IEnumerable<CampaignModel> campaignModels, int totalCount)> PrepareCampaignModels()
         {
-            var campaigns = _campaignService.GetAllCampaigns();
+            var campaigns = await _campaignService.GetAllCampaigns();
             return (campaigns.Select(x => {
                     var model = x.ToModel();
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);

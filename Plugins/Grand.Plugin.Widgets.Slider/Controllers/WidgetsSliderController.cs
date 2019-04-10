@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Widgets.Slider.Controllers
 {
@@ -50,7 +51,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             this._manufacturerService = manufacturerService;
         }
 
-        protected virtual void PrepareAllCategoriesModel(SlideModel model)
+        protected virtual async Task PrepareAllCategoriesModel(SlideModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -60,7 +61,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 Text = "[None]",
                 Value = ""
             });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
             {
                 model.AvailableCategories.Add(new SelectListItem
@@ -70,7 +71,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 });
             }
         }
-        protected virtual void PrepareAllManufacturersModel(SlideModel model)
+        protected virtual async Task PrepareAllManufacturersModel(SlideModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -80,7 +81,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 Text = "[None]",
                 Value = ""
             });
-            var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
+            var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true);
             foreach (var m in manufacturers)
             {
                 model.AvailableManufacturers.Add(new SelectListItem
@@ -91,57 +92,60 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             }
         }
 
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             return View("~/Plugins/Widgets.Slider/Views/List.cshtml");
         }
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var sliders = _sliderService.GetPictureSliders();
+            var sliders = await _sliderService.GetPictureSliders();
+
+            var items = new List<SlideListModel>();
+            foreach (var x in sliders)
+            {
+                var model = x.ToListModel();
+                var picture = await _pictureService.GetPictureById(x.PictureId);
+                if (picture != null)
+                {
+                    model.PictureUrl = await _pictureService.GetPictureUrl(picture, 150);
+                }
+                items.Add(model);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = sliders.Select(x =>
-                {
-                    var model = x.ToListModel();
-                    var picture = _pictureService.GetPictureById(x.PictureId);
-                    if (picture != null)
-                    {
-                        model.PictureUrl = _pictureService.GetPictureUrl(picture, 150);
-                    }
-                    return model;
-                }),
+                Data = items,
                 Total = sliders.Count
             };
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             var model = new SlideModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             //Categories 
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //Manufacturers
-            PrepareAllManufacturersModel(model);
+            await PrepareAllManufacturersModel(model);
             return View("~/Plugins/Widgets.Slider/Views/Create.cshtml", model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(SlideModel model, bool continueEditing)
+        public async Task<IActionResult> Create(SlideModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -150,7 +154,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 pictureSlider.Locales = model.Locales.ToLocalizedProperty();
                 pictureSlider.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
-                _sliderService.InsertPictureSlider(pictureSlider);
+                await _sliderService.InsertPictureSlider(pictureSlider);
 
                 SuccessNotification(_localizationService.GetResource("Plugins.Widgets.Slider.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = pictureSlider.Id }) : RedirectToAction("Configure");
@@ -158,48 +162,48 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             }
 
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
             //Categories 
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //Manufacturers
-            PrepareAllManufacturersModel(model);
+            await PrepareAllManufacturersModel(model);
 
             return View("~/Plugins/Widgets.Slider/Views/Create.cshtml", model);
         }
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var slide = _sliderService.GetById(id);
+            var slide = await _sliderService.GetById(id);
             if (slide == null)
                 return RedirectToAction("Configure");
 
             var model = slide.ToModel();
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = slide.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = slide.GetLocalized(x => x.Description, languageId, false, false);
             });
             //Stores
-            model.PrepareStoresMappingModel(slide, false, _storeService);
+            await model.PrepareStoresMappingModel(slide, false, _storeService);
             //Categories 
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //Manufacturers
-            PrepareAllManufacturersModel(model);
+            await PrepareAllManufacturersModel(model);
 
             return View("~/Plugins/Widgets.Slider/Views/Edit.cshtml", model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(SlideModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(SlideModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var pictureSlider = _sliderService.GetById(model.Id);
+            var pictureSlider = await _sliderService.GetById(model.Id);
             if (pictureSlider == null)
                 return RedirectToAction("Configure");
 
@@ -208,31 +212,31 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 pictureSlider = model.ToEntity();
                 pictureSlider.Locales = model.Locales.ToLocalizedProperty();
                 pictureSlider.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _sliderService.UpdatePictureSlider(pictureSlider);
+                await _sliderService.UpdatePictureSlider(pictureSlider);
                 SuccessNotification(_localizationService.GetResource("Plugins.Widgets.Slider.Edited"));
                 return continueEditing ? RedirectToAction("Edit", new { id = pictureSlider.Id }) : RedirectToAction("Configure");
 
             }
             //Stores
-            model.PrepareStoresMappingModel(pictureSlider, true, _storeService);
+            await model.PrepareStoresMappingModel(pictureSlider, true, _storeService);
             //Categories 
-            PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model);
             //Manufacturers
-            PrepareAllManufacturersModel(model);
+            await PrepareAllManufacturersModel(model);
 
             return View("~/Plugins/Widgets.Slider/Views/Edit.cshtml", model);
         }
 
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var pictureSlider = _sliderService.GetById(id);
+            var pictureSlider = await _sliderService.GetById(id);
             if (pictureSlider == null)
                 return Json(new DataSourceResult { Errors = "This pictureSlider not exists" });
 
-            _sliderService.DeleteSlider(pictureSlider);
+            await _sliderService.DeleteSlider(pictureSlider);
 
             return new NullJsonResult();
         }

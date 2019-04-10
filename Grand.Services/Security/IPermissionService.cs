@@ -1,6 +1,7 @@
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Security;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Security
 {
@@ -13,58 +14,58 @@ namespace Grand.Services.Security
         /// Delete a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        void DeletePermissionRecord(PermissionRecord permission);
+        Task DeletePermissionRecord(PermissionRecord permission);
 
         /// <summary>
         /// Gets a permission
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
         /// <returns>Permission</returns>
-        PermissionRecord GetPermissionRecordById(string permissionId);
+        Task<PermissionRecord> GetPermissionRecordById(string permissionId);
 
         /// <summary>
         /// Gets a permission
         /// </summary>
         /// <param name="systemName">Permission system name</param>
         /// <returns>Permission</returns>
-        PermissionRecord GetPermissionRecordBySystemName(string systemName);
+        Task<PermissionRecord> GetPermissionRecordBySystemName(string systemName);
 
         /// <summary>
         /// Gets all permissions
         /// </summary>
         /// <returns>Permissions</returns>
-        IList<PermissionRecord> GetAllPermissionRecords();
+        Task<IList<PermissionRecord>> GetAllPermissionRecords();
 
         /// <summary>
         /// Inserts a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        void InsertPermissionRecord(PermissionRecord permission);
+        Task InsertPermissionRecord(PermissionRecord permission);
 
         /// <summary>
         /// Updates the permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        void UpdatePermissionRecord(PermissionRecord permission);
+        Task UpdatePermissionRecord(PermissionRecord permission);
 
         /// <summary>
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
-        void InstallPermissions(IPermissionProvider permissionProvider);
+        Task InstallPermissions(IPermissionProvider permissionProvider);
 
         /// <summary>
         /// Uninstall permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
-        void UninstallPermissions(IPermissionProvider permissionProvider);
+        Task UninstallPermissions(IPermissionProvider permissionProvider);
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(PermissionRecord permission);
+        Task<bool> Authorize(PermissionRecord permission);
 
         /// <summary>
         /// Authorize permission
@@ -72,14 +73,14 @@ namespace Grand.Services.Security
         /// <param name="permission">Permission record</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(PermissionRecord permission, Customer customer);
+        Task<bool> Authorize(PermissionRecord permission, Customer customer);
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(string permissionRecordSystemName);
+        Task<bool> Authorize(string permissionRecordSystemName);
 
         /// <summary>
         /// Authorize permission
@@ -87,6 +88,6 @@ namespace Grand.Services.Security
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(string permissionRecordSystemName, Customer customer);
+        Task<bool> Authorize(string permissionRecordSystemName, Customer customer);
     }
 }

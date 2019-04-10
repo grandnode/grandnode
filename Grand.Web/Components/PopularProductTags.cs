@@ -17,7 +17,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string currentCategoryId, string currentProductId)
         {
-            var model = await Task.Run(() => _catalogViewModelService.PreparePopularProductTags());
+            var model = await _catalogViewModelService.PreparePopularProductTags();
             if (!model.Tags.Any())
                 return Content("");
 

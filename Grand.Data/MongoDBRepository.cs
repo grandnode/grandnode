@@ -98,6 +98,15 @@ namespace Grand.Data
         }
 
         /// <summary>
+        /// Get entity by identifier async
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Entity</returns>
+        public virtual Task<T> GetByIdAsync(string id)
+        {
+            return this._collection.Find(e => e.Id == id).FirstOrDefaultAsync();
+        }
+        /// <summary>
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>

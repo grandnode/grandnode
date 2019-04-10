@@ -1,4 +1,6 @@
-﻿namespace Grand.Core.Plugins
+﻿using System.Threading.Tasks;
+
+namespace Grand.Core.Plugins
 {
     /// <summary>
     /// Interface denoting plug-in attributes that are displayed throughout 
@@ -19,11 +21,11 @@
         /// <summary>
         /// Install plugin
         /// </summary>
-        void Install();
+        Task Install();
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        void Uninstall();
+        Task Uninstall();
     }
 }

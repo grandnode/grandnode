@@ -1,6 +1,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -13,8 +14,8 @@ namespace Grand.Services.Catalog
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        void DeleteManufacturer(Manufacturer manufacturer);
-        
+        Task DeleteManufacturer(Manufacturer manufacturer);
+
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
@@ -23,7 +24,7 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+        Task<IPagedList<Manufacturer>> GetAllManufacturers(string manufacturerName = "",
             string storeId = "",
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -34,33 +35,33 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        IList<Manufacturer> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false);
-        
+        Task<IList<Manufacturer>> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false);
+
         /// <summary>
         /// Gets a manufacturer
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        Manufacturer GetManufacturerById(string manufacturerId);
+        Task<Manufacturer> GetManufacturerById(string manufacturerId);
 
         /// <summary>
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        void InsertManufacturer(Manufacturer manufacturer);
+        Task InsertManufacturer(Manufacturer manufacturer);
 
         /// <summary>
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        void UpdateManufacturer(Manufacturer manufacturer);
+        Task UpdateManufacturer(Manufacturer manufacturer);
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        void DeleteProductManufacturer(ProductManufacturer productManufacturer);
-        
+        Task DeleteProductManufacturer(ProductManufacturer productManufacturer);
+
         /// <summary>
         /// Gets product manufacturer collection
         /// </summary>
@@ -69,7 +70,7 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(string manufacturerId,
+        Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
@@ -77,19 +78,19 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        IList<Manufacturer> GetAllManufacturersByDiscount(string discountId);
+        Task<IList<Manufacturer>> GetAllManufacturersByDiscount(string discountId);
 
         /// <summary>
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        void InsertProductManufacturer(ProductManufacturer productManufacturer);
+        Task InsertProductManufacturer(ProductManufacturer productManufacturer);
 
         /// <summary>
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        void UpdateProductManufacturer(ProductManufacturer productManufacturer);
+        Task UpdateProductManufacturer(ProductManufacturer productManufacturer);
 
     }
 }

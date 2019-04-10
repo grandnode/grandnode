@@ -3,6 +3,8 @@ using Grand.Services.Localization;
 using Grand.Services.Tax;
 using Grand.Core.Plugins;
 using Grand.Core;
+using System;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.FixedRate
 {
@@ -13,11 +15,13 @@ namespace Grand.Plugin.Tax.FixedRate
     {
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
 
-        public FixedRateTaxProvider(ISettingService settingService, IWebHelper webHelper)
+        public FixedRateTaxProvider(ISettingService settingService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
             this._settingService = settingService;
             this._webHelper = webHelper;
+            this._serviceProvider = serviceProvider;
         }
         
         /// <summary>
@@ -25,13 +29,13 @@ namespace Grand.Plugin.Tax.FixedRate
         /// </summary>
         /// <param name="calculateTaxRequest">Tax calculation request</param>
         /// <returns>Tax</returns>
-        public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
+        public Task<CalculateTaxResult> GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
             var result = new CalculateTaxResult
             {
                 TaxRate = GetTaxRate(calculateTaxRequest.TaxCategoryId)
             };
-            return result;
+            return Task.FromResult(result);
         }
 
         /// <summary>
@@ -52,26 +56,26 @@ namespace Grand.Plugin.Tax.FixedRate
         {
             return $"{_webHelper.GetStoreLocation()}Admin/TaxFixedRate/Configure";
         }
-
-        public override void Install()
+        
+        public override async Task Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.FixedRate.Fields.TaxCategoryName", "Tax category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.FixedRate.Fields.Rate", "Rate");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.FixedRate.Fields.TaxCategoryName", "Tax category");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.FixedRate.Fields.Rate", "Rate");
             
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.Tax.FixedRate.Fields.TaxCategoryName");
-            this.DeletePluginLocaleResource("Plugins.Tax.FixedRate.Fields.Rate");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.FixedRate.Fields.TaxCategoryName");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.FixedRate.Fields.Rate");
             
-            base.Uninstall();
+            await base.Uninstall();
         }
     }
 }

@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Grand.Web.Areas.Admin.Models.Catalog;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -101,66 +103,67 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customeractions = _customerActionService.GetCustomerActions();
+            var customeractions = await _customerActionService.GetCustomerActions();
+            var actions = await _customerActionService.GetCustomerActionType();
             var gridModel = new DataSourceResult
             {
-                Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = _customerActionService.GetCustomerActionTypeById(x.ActionTypeId).Name }),
+                Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = actions.FirstOrDefault(y=>y.Id == x.ActionTypeId)?.Name }),
                 Total = customeractions.Count()
             };
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = _customerActionViewModelService.PrepareCustomerActionModel();
+            var model = await _customerActionViewModelService.PrepareCustomerActionModel();
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(CustomerActionModel model, bool continueEditing)
+        public async Task<IActionResult> Create(CustomerActionModel model, bool continueEditing)
         {
             CheckValidateModel(model);
             if (ModelState.IsValid)
             {
-                var customeraction = _customerActionViewModelService.InsertCustomerActionModel(model);
+                var customeraction = await _customerActionViewModelService.InsertCustomerActionModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id }) : RedirectToAction("List");
             }
-            _customerActionViewModelService.PrepareReactObjectModel(model);
+            await _customerActionViewModelService.PrepareReactObjectModel(model);
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(id);
+            var customerAction = await _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
                 return RedirectToAction("List");
 
             var model = customerAction.ToModel();
             model.ConditionCount = customerAction.Conditions.Count();
-            _customerActionViewModelService.PrepareReactObjectModel(model);
+            await _customerActionViewModelService.PrepareReactObjectModel(model);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(CustomerActionModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(CustomerActionModel model, bool continueEditing)
         {
             CheckValidateModel(model);
 
-            var customeraction = _customerActionService.GetCustomerActionById(model.Id);
+            var customeraction = await _customerActionService.GetCustomerActionById(model.Id);
             if (customeraction == null)
                 return RedirectToAction("List");
             try
             {
                 if (ModelState.IsValid)
                 {
-                    customeraction = _customerActionViewModelService.UpdateCustomerActionModel(customeraction, model);
+                    customeraction = await _customerActionViewModelService.UpdateCustomerActionModel(customeraction, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id }) : RedirectToAction("List");
                 }
-                _customerActionViewModelService.PrepareReactObjectModel(model);
+                await _customerActionViewModelService.PrepareReactObjectModel(model);
                 return View(model);
             }
             catch (Exception exc)
@@ -171,14 +174,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult History(DataSourceRequest command, string customerActionId)
+        public async Task<IActionResult> History(DataSourceRequest command, string customerActionId)
         {
-            var history = _customerActionService.GetAllCustomerActionHistory(customerActionId,
+            var history = await _customerActionService.GetAllCustomerActionHistory(customerActionId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
+            var items = new List<SerializeCustomerActionHistory>();
+            foreach (var item in history)
+            {
+                items.Add(await _customerActionViewModelService.PrepareHistoryModelForList(item));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = history.Select(_customerActionViewModelService.PrepareHistoryModelForList),
+                Data = items,
                 Total = history.TotalCount
             };
 
@@ -186,17 +194,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(id);
+            var customerAction = await _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
                 return RedirectToAction("List");
 
             try
             {
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerAction", customerAction.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerAction"), customerAction.Name);
-                _customerActionService.DeleteCustomerAction(customerAction);
+                await _customerActivityService.InsertActivity("DeleteCustomerAction", customerAction.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerAction"), customerAction.Name);
+                await _customerActionService.DeleteCustomerAction(customerAction);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Deleted"));
                 return RedirectToAction("List");
             }
@@ -208,9 +216,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Conditions(string customerActionId)
+        public async Task<IActionResult> Conditions(string customerActionId)
         {
-            var conditions = _customerActionService.GetCustomerActionById(customerActionId);
+            var conditions = await _customerActionService.GetCustomerActionById(customerActionId);
             var gridModel = new DataSourceResult
             {
                 Data = conditions.Conditions.Select(x => new { Id = x.Id, Name = x.Name, Condition = x.CustomerActionConditionType.ToString() }),
@@ -223,30 +231,30 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Conditions
 
-        public IActionResult AddCondition(string customerActionId)
+        public async Task<IActionResult> AddCondition(string customerActionId)
         {
-            var model = _customerActionViewModelService.PrepareCustomerActionConditionModel(customerActionId);
+            var model = await _customerActionViewModelService.PrepareCustomerActionConditionModel(customerActionId);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult AddCondition(CustomerActionConditionModel model, bool continueEditing)
+        public async Task<IActionResult> AddCondition(CustomerActionConditionModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var customerAction = _customerActionViewModelService.InsertCustomerActionConditionModel(model);
+                var customerAction = await _customerActionViewModelService.InsertCustomerActionConditionModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerActionCondition.Added"));
                 return continueEditing ? RedirectToAction("EditCondition", new { customerActionId = customerAction.customerActionId, cid = customerAction.conditionId }) : RedirectToAction("Edit", new { id = customerAction.customerActionId });
             }
             return View(model);
         }
 
-        public IActionResult EditCondition(string customerActionId, string cid)
+        public async Task<IActionResult> EditCondition(string customerActionId, string cid)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(customerActionId);
             if (customerAction == null)
                 return RedirectToAction("List");
-            var actionType = _customerActionService.GetCustomerActionTypeById(customerAction.ActionTypeId);
+            var actionType = await _customerActionService.GetCustomerActionTypeById(customerAction.ActionTypeId);
             var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == cid);
             if (condition == null)
                 return RedirectToAction("List");
@@ -267,9 +275,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult EditCondition(string customerActionId, string cid, CustomerActionConditionModel model, bool continueEditing)
+        public async Task<IActionResult> EditCondition(string customerActionId, string cid, CustomerActionConditionModel model, bool continueEditing)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(customerActionId);
             if (customerAction == null)
                 return RedirectToAction("List");
 
@@ -280,7 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _customerActionViewModelService.UpdateCustomerActionConditionModel(customerAction, condition, model);
+                    await _customerActionViewModelService.UpdateCustomerActionConditionModel(customerAction, condition, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerActionCondition.Updated"));
                     return continueEditing ? RedirectToAction("EditCondition", new { customerActionId = customerAction.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerAction.Id });
                 }
@@ -294,16 +302,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionDelete(string Id, string customerActionId)
+        public async Task<IActionResult> ConditionDelete(string Id, string customerActionId)
         {
-            _customerActionViewModelService.ConditionDelete(Id, customerActionId);
+            await _customerActionViewModelService.ConditionDelete(Id, customerActionId);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ConditionDeletePosition(string id, string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionDeletePosition(string id, string customerActionId, string conditionId)
         {
-            _customerActionViewModelService.ConditionDeletePosition(id, customerActionId, conditionId);
+            await _customerActionViewModelService.ConditionDeletePosition(id, customerActionId, conditionId);
 
             return new NullJsonResult();
         }
@@ -312,30 +320,35 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Product
 
         [HttpPost]
-        public IActionResult ConditionProduct(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionProduct(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string ProductName)>();
+            foreach (var item in condition.Products)
+            {
+                var product = (await _productService.GetProductById(item))?.Name;
+                items.Add((item, product));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) != null ? _productService.GetProductById(z).Name : "" }) : null,
+                Data = items.Select(x=>new { Id = x.Id, ProductName = x.ProductName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
 
-        public IActionResult ProductAddPopup(string customerActionId, string conditionId)
+        public async Task<IActionResult> ProductAddPopup(string customerActionId, string conditionId)
         {
-            var model = _customerActionViewModelService.PrepareAddProductToConditionModel(customerActionId, conditionId);
+            var model = await _customerActionViewModelService.PrepareAddProductToConditionModel(customerActionId, conditionId);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
+        public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            var products = _customerActionViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var products = await _customerActionViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = products.products.ToList();
             gridModel.Total = products.totalCount;
@@ -345,11 +358,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(CustomerActionConditionModel.AddProductToConditionModel model)
+        public async Task<IActionResult> ProductAddPopup(CustomerActionConditionModel.AddProductToConditionModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _customerActionViewModelService.InsertProductToConditionModel(model);
+                await _customerActionViewModelService.InsertProductToConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
@@ -359,14 +372,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Category
 
         [HttpPost]
-        public IActionResult ConditionCategory(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionCategory(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CategoryName)>();
+            foreach (var item in condition.Categories)
+            {
+                var category = (await _categoryService.GetCategoryById(item))?.Name;
+                items.Add((item, category));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z) != null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
+                Data = items.Select(x => new { Id = x.Id, CategoryName = x.CategoryName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -374,25 +392,29 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string customerActionId, string conditionId)
         {
-            var model = new CustomerActionConditionModel.AddCategoryConditionModel();
-            model.CustomerActionConditionId = conditionId;
-            model.CustomerActionId = customerActionId;
+            var model = new CustomerActionConditionModel.AddCategoryConditionModel
+            {
+                CustomerActionConditionId = conditionId,
+                CustomerActionId = customerActionId
+            };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddCategoryConditionModel model)
+        public async Task<IActionResult> CategoryAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddCategoryConditionModel model)
         {
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
+            var categories = await _categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
+            var items = new List<CategoryModel>();
+            foreach (var x in categories)
+            {
+                var categoryModel = x.ToModel();
+                categoryModel.Breadcrumb = await x.GetFormattedBreadCrumb(_categoryService);
+                items.Add(categoryModel);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = categories.Select(x =>
-                {
-                    var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
-                    return categoryModel;
-                }),
+                Data = items,
                 Total = categories.TotalCount
             };
 
@@ -401,11 +423,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CategoryAddPopup(CustomerActionConditionModel.AddCategoryConditionModel model)
+        public async Task<IActionResult> CategoryAddPopup(CustomerActionConditionModel.AddCategoryConditionModel model)
         {
             if (model.SelectedCategoryIds != null)
             {
-                _customerActionViewModelService.InsertCategoryConditionModel(model);
+                await _customerActionViewModelService.InsertCategoryConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
@@ -415,14 +437,20 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Condition Manufacturer
         [HttpPost]
-        public IActionResult ConditionManufacturer(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionManufacturer(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
+            var items = new List<(string Id, string ManufacturerName)>();
+            foreach (var item in condition.Manufacturers)
+            {
+                var manufacturer = (await _manufacturerService.GetManufacturerById(item))?.Name;
+                items.Add((item, manufacturer));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z) != null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
+                Data = items.Select(x => new { Id = x.Id, ManufacturerName = x.ManufacturerName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -430,17 +458,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ManufacturerAddPopup(string customerActionId, string conditionId)
         {
-            var model = new CustomerActionConditionModel.AddManufacturerConditionModel();
-            model.CustomerActionConditionId = conditionId;
-            model.CustomerActionId = customerActionId;
+            var model = new CustomerActionConditionModel.AddManufacturerConditionModel
+            {
+                CustomerActionConditionId = conditionId,
+                CustomerActionId = customerActionId
+            };
             return View(model);
-
         }
 
         [HttpPost]
-        public IActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddManufacturerConditionModel model)
+        public async Task<IActionResult> ManufacturerAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
+            var manufacturers = await _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -453,11 +482,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ManufacturerAddPopup(CustomerActionConditionModel.AddManufacturerConditionModel model)
+        public async Task<IActionResult> ManufacturerAddPopup(CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
             if (model.SelectedManufacturerIds != null)
             {
-                _customerActionViewModelService.InsertManufacturerConditionModel(model);
+                await _customerActionViewModelService.InsertManufacturerConditionModel(model);
             }
             ViewBag.RefreshPage = true;            
             return View(model);
@@ -468,30 +497,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Vendor
 
         [HttpPost]
-        public IActionResult ConditionVendor(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionVendor(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var vendors = await _vendorService.GetAllVendors();
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Vendors.Select(z => new { Id = z, VendorName = _vendorService.GetVendorById(z).Name }) : null,
+                Data = condition != null ? condition.Vendors.Select(z => new { Id = z, VendorName = vendors.FirstOrDefault(y=>y.Id == z).Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionVendorInsert(CustomerActionConditionModel.AddVendorConditionModel model)
+        public async Task<IActionResult> ConditionVendorInsert(CustomerActionConditionModel.AddVendorConditionModel model)
         {
-            _customerActionViewModelService.InsertVendorConditionModel(model);
+            await _customerActionViewModelService.InsertVendorConditionModel(model);
             return new NullJsonResult();
         }
 
         [HttpGet]
-        public IActionResult Vendors()
+        public async Task<IActionResult> Vendors()
         {
-            var customerVendors = _vendorService.GetAllVendors().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerVendors = (await _vendorService.GetAllVendors()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerVendors);
         }
         #endregion
@@ -499,31 +528,35 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Customer role
 
         [HttpPost]
-        public IActionResult ConditionCustomerRole(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerRole(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CustomerRole)>();
+            foreach (var item in condition.CustomerRoles)
+            {
+                var roles = (await _customerService.GetCustomerRoleById(item))?.Name;
+                items.Add((item, roles));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ? _customerService.GetCustomerRoleById(z).Name : "" }) : null,
+                Data = items.Select(x => new { Id = x.Id, CustomerRole = x.CustomerRole }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomerRoleInsert(CustomerActionConditionModel.AddCustomerRoleConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRoleInsert(CustomerActionConditionModel.AddCustomerRoleConditionModel model)
         {
-            _customerActionViewModelService.InsertCustomerRoleConditionModel(model);
+            await _customerActionViewModelService.InsertCustomerRoleConditionModel(model);
             return new NullJsonResult();
         }
 
-
         [HttpGet]
-        public IActionResult CustomerRoles()
+        public async Task<IActionResult> CustomerRoles()
         {
-            var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerRole = (await _customerService.GetAllCustomerRoles()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
 
@@ -532,30 +565,35 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Stores
 
         [HttpGet]
-        public IActionResult Stores()
+        public async Task<IActionResult> Stores()
         {
-            var stores = _storeService.GetAllStores().Select(x => new { Id = x.Id, Name = x.Name });
+            var stores = (await _storeService.GetAllStores()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(stores);
         }
 
         [HttpPost]
-        public IActionResult ConditionStore(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionStore(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string Store)>();
+            foreach (var item in condition.Stores)
+            {
+                var store = (await _storeService.GetStoreById(item))?.Name;
+                items.Add((item, store));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Stores.Select(z => new { Id = z, Store = _storeService.GetStoreById(z) != null ? _storeService.GetStoreById(z).Name : "" }) : null,
+                Data = items.Select(x => new { Id = x.Id, Store = x.Store }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionStoreInsert(CustomerActionConditionModel.AddStoreConditionModel model)
+        public async Task<IActionResult> ConditionStoreInsert(CustomerActionConditionModel.AddStoreConditionModel model)
         {
-            _customerActionViewModelService.InsertStoreConditionModel(model);
+            await _customerActionViewModelService.InsertStoreConditionModel(model);
             return new NullJsonResult();
         }
 
@@ -564,30 +602,35 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Customer Tags
 
         [HttpPost]
-        public IActionResult ConditionCustomerTag(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerTag(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string CustomerTag)>();
+            foreach (var item in condition.CustomerTags)
+            {
+                var tag = (await _customerTagService.GetCustomerTagById(item))?.Name;
+                items.Add((item, tag));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z) != null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
+                Data = items.Select(x => new { Id = x.Id, CustomerTag = x.CustomerTag }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomerTagInsert(CustomerActionConditionModel.AddCustomerTagConditionModel model)
+        public async Task<IActionResult> ConditionCustomerTagInsert(CustomerActionConditionModel.AddCustomerTagConditionModel model)
         {
-            _customerActionViewModelService.InsertCustomerTagConditionModel(model);
+            await _customerActionViewModelService.InsertCustomerTagConditionModel(model);
             return new NullJsonResult();
         }
 
         [HttpGet]
-        public IActionResult CustomerTags()
+        public async Task<IActionResult> CustomerTags()
         {
-            var customerTag = _customerTagService.GetAllCustomerTags().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerTag = (await _customerTagService.GetAllCustomerTags()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerTag);
         }
         #endregion
@@ -595,36 +638,41 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Product Attributes
 
         [HttpPost]
-        public IActionResult ConditionProductAttribute(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionProductAttribute(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var items = new List<(string Id, string ProductAttributeId, string ProductAttributeName)>();
+            foreach (var item in condition.ProductAttribute)
+            {
+                var pa = (await _productAttributeService.GetProductAttributeById(item.ProductAttributeId))?.Name;
+                items.Add((item.Id, item.ProductAttributeId, pa));
+            }
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.ProductAttribute.Select(z => new { Id = z.Id, ProductAttributeId = z.ProductAttributeId, ProductAttributeName = _productAttributeService.GetProductAttributeById(z.ProductAttributeId).Name, Name = z.Name }) : null,
+                Data = items.Select(x => new { Id = x.Id, ProductAttributeId = x.ProductAttributeId, ProductAttributeName = x.ProductAttributeName }),
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult ConditionProductAttributeInsert(CustomerActionConditionModel.AddProductAttributeConditionModel model)
+        public async Task<IActionResult> ConditionProductAttributeInsert(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            _customerActionViewModelService.InsertProductAttributeConditionModel(model);
+            await _customerActionViewModelService.InsertProductAttributeConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
-        public IActionResult ConditionProductAttributeUpdate(CustomerActionConditionModel.AddProductAttributeConditionModel model)
+        public async Task<IActionResult> ConditionProductAttributeUpdate(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            _customerActionViewModelService.UpdateProductAttributeConditionModel(model);
+            await _customerActionViewModelService.UpdateProductAttributeConditionModel(model);
             return new NullJsonResult();
         }
 
         [HttpGet]
-        public IActionResult ProductAttributes()
+        public async Task<IActionResult> ProductAttributes()
         {
-            var customerAttr = _productAttributeService.GetAllProductAttributes().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerAttr = (await _productAttributeService.GetAllProductAttributes()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerAttr);
         }
         #endregion
@@ -632,11 +680,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Product Specification
 
         [HttpPost]
-        public IActionResult ConditionProductSpecification(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionProductSpecification(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
+            var specs = await _specificationAttributeService.GetSpecificationAttributes();
             var gridModel = new DataSourceResult
             {
                 Data = condition != null ? condition.ProductSpecifications
@@ -644,8 +692,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             Id = z.Id,
                             SpecificationId = z.ProductSpecyficationId,
-                            SpecificationName = _specificationAttributeService.GetSpecificationAttributeById(z.ProductSpecyficationId).Name,
-                            SpecificationValueName = !String.IsNullOrEmpty(z.ProductSpecyficationValueId) ? _specificationAttributeService.GetSpecificationAttributeById(z.ProductSpecyficationId).SpecificationAttributeOptions.FirstOrDefault(x => x.Id == z.ProductSpecyficationValueId).Name : "Undefined"
+                            SpecificationName = specs.FirstOrDefault(x=>x.Id == z.ProductSpecyficationId)?.Name,
+                            SpecificationValueName = !String.IsNullOrEmpty(z.ProductSpecyficationValueId) ? specs.FirstOrDefault(x => x.Id == z.ProductSpecyficationId).SpecificationAttributeOptions.FirstOrDefault(x => x.Id == z.ProductSpecyficationValueId).Name : "Undefined"
                         }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
@@ -653,27 +701,26 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionProductSpecificationInsert(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
+        public async Task<IActionResult> ConditionProductSpecificationInsert(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
         {
-            _customerActionViewModelService.InsertProductSpecificationConditionModel(model);
+            await _customerActionViewModelService.InsertProductSpecificationConditionModel(model);
             return new NullJsonResult();
         }
 
         [HttpGet]
-        public IActionResult ProductSpecification()
+        public async Task<IActionResult> ProductSpecification()
         {
-            var customerAttr = _specificationAttributeService.GetSpecificationAttributes().Select(x => new { Id = x.Id, Name = x.Name });
+            var customerAttr = (await _specificationAttributeService.GetSpecificationAttributes()).Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerAttr);
         }
 
         [HttpGet]
-        public IActionResult ProductSpecificationValue(string specificationId)
+        public async Task<IActionResult> ProductSpecificationValue(string specificationId)
         {
             if (String.IsNullOrEmpty(specificationId))
                 return new NullJsonResult();
 
-            var customerSpec = _specificationAttributeService.GetSpecificationAttributeById(specificationId).SpecificationAttributeOptions.Select(x => new { Id = x.Id, Name = x.Name });
-
+            var customerSpec = (await _specificationAttributeService.GetSpecificationAttributeById(specificationId)).SpecificationAttributeOptions.Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerSpec);
         }
 
@@ -682,9 +729,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Customer Register
 
         [HttpPost]
-        public IActionResult ConditionCustomerRegister(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionCustomerRegister(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
@@ -702,15 +749,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomerRegisterInsert(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRegisterInsert(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            _customerActionViewModelService.InsertCustomerRegisterConditionModel(model);
+            await _customerActionViewModelService.InsertCustomerRegisterConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
-        public IActionResult ConditionCustomerRegisterUpdate(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
+        public async Task<IActionResult> ConditionCustomerRegisterUpdate(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            _customerActionViewModelService.UpdateCustomerRegisterConditionModel(model);
+            await _customerActionViewModelService.UpdateCustomerRegisterConditionModel(model);
             return new NullJsonResult();
         }
 
@@ -735,13 +782,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Condition Custom Customer Attribute
 
-        private string CustomerAttribute(string registerField)
+        private async Task<string> CustomerAttribute(string registerField)
         {
             string _field = registerField;
             var _rf = registerField.Split(':');
             if (_rf.Count() > 1)
             {
-                var ca = _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
+                var ca = await _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
                 if (ca != null)
                 {
                     _field = ca.Name;
@@ -757,9 +804,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttribute(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionCustomCustomerAttribute(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
@@ -778,23 +825,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttributeInsert(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public async Task<IActionResult> ConditionCustomCustomerAttributeInsert(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            _customerActionViewModelService.InsertCustomCustomerAttributeConditionModel(model);
+            await _customerActionViewModelService.InsertCustomCustomerAttributeConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
-        public IActionResult ConditionCustomCustomerAttributeUpdate(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public async Task<IActionResult> ConditionCustomCustomerAttributeUpdate(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            _customerActionViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
+            await _customerActionViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
             return new NullJsonResult();
         }
 
         [HttpGet]
-        public IActionResult CustomCustomerAttributeFields()
+        public async Task<IActionResult> CustomCustomerAttributeFields()
         {
             var list = new List<Tuple<string, string>>();
-            foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
+            foreach (var item in await _customerAttributeService.GetAllCustomerAttributes())
             {
                 if (item.AttributeControlType == AttributeControlType.Checkboxes ||
                     item.AttributeControlType == AttributeControlType.DropdownList ||
@@ -814,9 +861,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Url Referrer
 
         [HttpPost]
-        public IActionResult ConditionUrlReferrer(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionUrlReferrer(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
@@ -828,15 +875,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionUrlReferrerInsert(CustomerActionConditionModel.AddUrlConditionModel model)
+        public async Task<IActionResult> ConditionUrlReferrerInsert(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            _customerActionViewModelService.InsertUrlConditionModel(model);
+            await _customerActionViewModelService.InsertUrlConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
-        public IActionResult ConditionUrlReferrerUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
+        public async Task<IActionResult> ConditionUrlReferrerUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            _customerActionViewModelService.UpdateUrlConditionModel(model);
+            await _customerActionViewModelService.UpdateUrlConditionModel(model);
             return new NullJsonResult();
         }
 
@@ -845,9 +892,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Url Current
 
         [HttpPost]
-        public IActionResult ConditionUrlCurrent(string customerActionId, string conditionId)
+        public async Task<IActionResult> ConditionUrlCurrent(string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
@@ -859,15 +906,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConditionUrlCurrentInsert(CustomerActionConditionModel.AddUrlConditionModel model)
+        public async Task<IActionResult> ConditionUrlCurrentInsert(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            _customerActionViewModelService.InsertUrlCurrentConditionModel(model);
+            await _customerActionViewModelService.InsertUrlCurrentConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
-        public IActionResult ConditionUrlCurrentUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
+        public async Task<IActionResult> ConditionUrlCurrentUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            _customerActionViewModelService.UpdateUrlCurrentConditionModel(model);
+            await _customerActionViewModelService.UpdateUrlCurrentConditionModel(model);
             return new NullJsonResult();
         }
 

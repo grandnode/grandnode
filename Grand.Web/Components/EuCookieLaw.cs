@@ -5,6 +5,7 @@ using Grand.Framework.Components;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -32,7 +33,7 @@ namespace Grand.Web.ViewComponents
             if (customer.IsSearchEngineAccount())
                 return Content("");
 
-            if (customer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
+            if (customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
 

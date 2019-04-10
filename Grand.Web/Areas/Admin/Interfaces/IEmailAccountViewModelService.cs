@@ -1,14 +1,15 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Web.Areas.Admin.Models.Messages;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IEmailAccountViewModelService
     {
         EmailAccountModel PrepareEmailAccountModel();
-        EmailAccount InsertEmailAccountModel(EmailAccountModel model);
-        EmailAccount UpdateEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
-        EmailAccount ChangePasswordEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
-        void SendTestEmail(EmailAccount emailAccount, EmailAccountModel model);
+        Task<EmailAccount> InsertEmailAccountModel(EmailAccountModel model);
+        Task<EmailAccount> UpdateEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
+        Task<EmailAccount> ChangePasswordEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
+        Task SendTestEmail(EmailAccount emailAccount, EmailAccountModel model);
     }
 }

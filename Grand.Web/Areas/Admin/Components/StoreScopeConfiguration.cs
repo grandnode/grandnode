@@ -5,6 +5,7 @@ using Grand.Services.Common;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Settings;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -29,9 +30,9 @@ namespace Grand.Web.Areas.Admin.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var allStores = _storeService.GetAllStores();
+            var allStores = await _storeService.GetAllStores();
             if (allStores.Count < 2)
                 return Content("");
 
@@ -44,8 +45,7 @@ namespace Grand.Web.Areas.Admin.Components
                     Name = s.Name
                 });
             }
-            model.StoreId = GetActiveStoreScopeConfiguration(_storeService, _workContext);
-
+            model.StoreId = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             return View(model);
         }
 
@@ -53,14 +53,14 @@ namespace Grand.Web.Areas.Admin.Components
 
         #region Methods
 
-        private string GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
+        private async Task<string> GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
         {
             //ensure that we have 2 (or more) stores
-            if (storeService.GetAllStores().Count < 2)
+            if ((await storeService.GetAllStores()).Count < 2)
                 return string.Empty;
 
-            var storeId = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = storeService.GetStoreById(storeId);
+            var storeId = workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+            var store = await storeService.GetStoreById(storeId);
 
             return store != null ? store.Id : "";
         }

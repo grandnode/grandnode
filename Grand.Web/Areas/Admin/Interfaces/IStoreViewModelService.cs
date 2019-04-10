@@ -1,16 +1,17 @@
 ﻿using Grand.Core.Domain.Stores;
 using Grand.Web.Areas.Admin.Models.Stores;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IStoreViewModelService
     {
-        void PrepareLanguagesModel(StoreModel model);
-        void PrepareWarehouseModel(StoreModel model);
+        Task PrepareLanguagesModel(StoreModel model);
+        Task PrepareWarehouseModel(StoreModel model);
         StoreModel PrepareStoreModel();
-        Store InsertStoreModel(StoreModel model);
-        Store UpdateStoreModel(Store store, StoreModel model);
-        void DeleteStore(Store store);
+        Task<Store> InsertStoreModel(StoreModel model);
+        Task<Store> UpdateStoreModel(Store store, StoreModel model);
+        Task DeleteStore(Store store);
 
     }
 }

@@ -10,6 +10,7 @@ using Grand.Services.Payments;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Payments.PayInStore
 {
@@ -24,19 +25,21 @@ namespace Grand.Plugin.Payments.PayInStore
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Ctor
 
         public PayInStorePaymentProcessor(PayInStorePaymentSettings payInStorePaymentSettings,
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILocalizationService localizationService, IWebHelper webHelper)
+            ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
             this._payInStorePaymentSettings = payInStorePaymentSettings;
             this._settingService = settingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -57,20 +60,21 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
             result.NewPaymentStatus = PaymentStatus.Pending;
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        public Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //nothing
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -78,12 +82,12 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
+        public async Task<bool> HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
             //you can put any logic here
             //for example, hide this payment method if all products in the cart are downloadable
             //or hide this payment method if current customer is from certain country
-            return false;
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -91,9 +95,9 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
+        public async Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            var result = await this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
                 _payInStorePaymentSettings.AdditionalFee, _payInStorePaymentSettings.AdditionalFeePercentage);
             return result;
         }
@@ -103,11 +107,11 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        public async Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest)
         {
             var result = new CapturePaymentResult();
             result.AddError("Capture method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -115,11 +119,11 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        public async Task<RefundPaymentResult> Refund(RefundPaymentRequest refundPaymentRequest)
         {
             var result = new RefundPaymentResult();
             result.AddError("Refund method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -127,11 +131,11 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        public async Task<VoidPaymentResult> Void(VoidPaymentRequest voidPaymentRequest)
         {
             var result = new VoidPaymentResult();
             result.AddError("Void method not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -139,11 +143,11 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
             result.AddError("Recurring payment not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -151,11 +155,11 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        public async Task<CancelRecurringPaymentResult> CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             var result = new CancelRecurringPaymentResult();
             result.AddError("Recurring payment not supported");
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -163,13 +167,13 @@ namespace Grand.Plugin.Payments.PayInStore
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public bool CanRePostProcessPayment(Order order)
+        public async Task<bool> CanRePostProcessPayment(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             //it's not a redirection payment method. So we always return false
-            return false;
+            return await Task.FromResult(false);
         }
 
         public Type GetControllerType()
@@ -177,51 +181,51 @@ namespace Grand.Plugin.Payments.PayInStore
             return typeof(PaymentPayInStoreController);
         }
 
-        public override void Install()
+        public override async Task Install()
         {
             var settings = new PayInStorePaymentSettings()
             {
                 DescriptionText = "<p>Reserve items at your local store, and pay in store when you pick up your order.<br />Our store location: USA, New York,...</p><p>P.S. You can edit this text from admin panel.</p>"
             };
-            _settingService.SaveSetting(settings);
+            await _settingService.SaveSetting(settings);
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText", "Description");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.PaymentMethodDescription", "Pay In Store");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText", "Description");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.PaymentMethodDescription", "Pay In Store");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
 
 
-            base.Install();
+            await base.Install();
         }
 
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //settings
-            _settingService.DeleteSetting<PayInStorePaymentSettings>();
+            await _settingService.DeleteSetting<PayInStorePaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.PaymentMethodDescription");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFee.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.DescriptionText.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Payment.PayInStore.PaymentMethodDescription");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
-        public IList<string> ValidatePaymentForm(IFormCollection form)
+        public async Task<IList<string>> ValidatePaymentForm(IFormCollection form)
         {
-            return new List<string>();
+            return await Task.FromResult(new List<string>());
         }
 
-        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        public async Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form)
         {
-            return new ProcessPaymentRequest();
+            return await Task.FromResult(new ProcessPaymentRequest());
         }
 
         public void GetPublicViewComponent(out string viewComponentName)
@@ -236,45 +240,33 @@ namespace Grand.Plugin.Payments.PayInStore
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
+        public async Task<bool> SupportCapture()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
+        public async Task<bool> SupportPartiallyRefund()
         {
-            get
-            {
-                return false;
-            }
+            return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
+        public async Task<bool> SupportRefund()
         {
-            get
-            {
-                return false;
-            }
+             return await Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
+        public async Task<bool> SupportVoid()
         {
-            get
-            {
-                return false;
-            }
+             return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -302,17 +294,14 @@ namespace Grand.Plugin.Payments.PayInStore
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
+        public async Task<bool> SkipPaymentInfo()
         {
-            get { return false; }
+             return await Task.FromResult(false);
         }
 
-        public string PaymentMethodDescription
+        public async Task<string> PaymentMethodDescription()
         {
-            get
-            {
-                return _localizationService.GetResource("Plugins.Payment.PayInStore.PaymentMethodDescription");
-            }
+            return await Task.FromResult(_localizationService.GetResource("Plugins.Payment.PayInStore.PaymentMethodDescription"));
         }
         #endregion
 

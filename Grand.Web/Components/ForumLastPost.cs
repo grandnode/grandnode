@@ -15,7 +15,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string forumPostId, bool showTopic)
         {
-            var model = await Task.Run(() => _boardsViewModelService.PrepareLastPost(forumPostId, showTopic));
+            var model = await _boardsViewModelService.PrepareLastPost(forumPostId, showTopic);
             return View(model);
         }
     }

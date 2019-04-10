@@ -2,6 +2,7 @@
 @using Grand.Core.Domain.Forums;
 @using Grand.Web.Models.Boards;
 @using Grand.Web.Models.Common;
+@inject Grand.Services.Localization.ILocalizationService localizationService
 @{
     Layout = "_ColumnsOne";
 
@@ -52,7 +53,7 @@
             }
         </div>
         @{
-            var pager = Html.Pager(new PagerModel
+            var pager = Html.Pager(localizationService, new PagerModel(localizationService)
             {
                 PageSize = Model.TopicPageSize,
                 TotalRecords = Model.TopicTotalRecords,
@@ -158,7 +159,7 @@
                                                 @if (topic.NumPosts > Model.PostsPageSize)
                                                 {
                                                     <div class="topic-pager">
-                                                        @Html.ForumTopicSmallPager(topic)
+                                                        @Html.ForumTopicSmallPager(localizationService, topic)
                                                     </div>
                                                 }
                                                 <div class="topic-starter">

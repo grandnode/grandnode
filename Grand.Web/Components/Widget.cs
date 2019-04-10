@@ -17,7 +17,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
-            var model = await Task.Run(() => _widgetViewModelService.PrepareRenderWidget(widgetZone, additionalData));
+            var model = await _widgetViewModelService.PrepareRenderWidget(widgetZone, additionalData);
             if (!model.Any())
                 return Content("");
 

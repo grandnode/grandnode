@@ -34,7 +34,7 @@ namespace Grand.Web.Components
             if (!_catalogSettings.PersonalizedProductsEnabled || _catalogSettings.PersonalizedProductsNumber == 0)
                 return Content("");
 
-            var model = await Task.Run(() => _productViewModelService.PrepareProductsPersonalized(productThumbPictureSize));
+            var model = await _productViewModelService.PrepareProductsPersonalized(productThumbPictureSize);
             if (!model.Any())
                 return Content("");
 

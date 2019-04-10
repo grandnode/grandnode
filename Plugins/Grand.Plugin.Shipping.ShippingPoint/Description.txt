@@ -1,7 +1,7 @@
 ﻿Group: Shipping rate computation
 FriendlyName: Shipping Point
 SystemName: Shipping.ShippingPoint
-Version: 1.0
+Version: 1.1
 SupportedVersions: 4.50
 Author: grandnode team
 DisplayOrder: 1

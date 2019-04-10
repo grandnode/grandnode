@@ -8,10 +8,12 @@ using Grand.Core.Domain.Stores;
 using Grand.Core.Infrastructure;
 using Grand.Services.Events;
 using Grand.Services.Messages;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -25,104 +27,106 @@ namespace Grand.Services.Catalog
         private readonly IProductService _productService;
         private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
-
+        private readonly IServiceProvider _serviceProvider;
         private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
         public AuctionService(IRepository<Bid> bidRepository,
             IEventPublisher eventPublisher,
             IProductService productService,
             IRepository<Product> productRepository,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IServiceProvider serviceProvider)
         {
             this._bidRepository = bidRepository;
             this._eventPublisher = eventPublisher;
             this._productService = productService;
             this._productRepository = productRepository;
             this._cacheManager = cacheManager;
+            this._serviceProvider = serviceProvider;
         }
 
-        public virtual void DeleteBid(Bid bid)
+        public virtual async Task DeleteBid(Bid bid)
         {
             if (bid == null)
                 throw new ArgumentNullException("bid");
 
-            _bidRepository.Delete(bid);
-            _eventPublisher.EntityDeleted(bid);
+            await _bidRepository.DeleteAsync(bid);
+            await _eventPublisher.EntityDeleted(bid);
 
-            var productToUpdate = _productService.GetProductById(bid.ProductId);
-            var highestBid = GetBidsByProductId(bid.ProductId).OrderByDescending(x => x.Amount).FirstOrDefault();
+            var productToUpdate = await _productService.GetProductById(bid.ProductId);
+            var _bid = await GetBidsByProductId(bid.ProductId);
+            var highestBid = _bid.OrderByDescending(x => x.Amount).FirstOrDefault();
             if (productToUpdate != null)
             {
-                UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount: 0, highestBid != null ? highestBid.CustomerId : "");
+                await UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount: 0, highestBid != null ? highestBid.CustomerId : "");
             }
         }
 
-        public virtual Bid GetBid(string Id)
+        public virtual Task<Bid> GetBid(string Id)
         {
-            return _bidRepository.GetById(Id);
+            return _bidRepository.GetByIdAsync(Id);
         }
 
-        public virtual Bid GetLatestBid(string productId)
+        public virtual Task<Bid> GetLatestBid(string productId)
         {
             var builder = Builders<Bid>.Filter;
             var filter = builder.Eq(x => x.ProductId, productId);
-            var bid = _bidRepository.Collection.Find(filter).SortByDescending(x => x.Date).FirstOrDefault();
+            var bid = _bidRepository.Collection.Find(filter).SortByDescending(x => x.Date).FirstOrDefaultAsync();
             return bid;
         }
 
-        public virtual IPagedList<Bid> GetBidsByProductId(string productId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<Bid>> GetBidsByProductId(string productId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _bidRepository.Table.Where(x => x.ProductId == productId).OrderByDescending(x => x.Date);
-            return new PagedList<Bid>(query, pageIndex, pageSize);
+            return await Task.FromResult(new PagedList<Bid>(query, pageIndex, pageSize));
         }
 
-        public virtual IPagedList<Bid> GetBidsByCustomerId(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<Bid>> GetBidsByCustomerId(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _bidRepository.Table.Where(x => x.CustomerId == customerId);
-            return new PagedList<Bid>(query, pageIndex, pageSize);
+            return await Task.FromResult(new PagedList<Bid>(query, pageIndex, pageSize));
         }
 
-        public virtual void InsertBid(Bid bid)
+        public virtual async Task InsertBid(Bid bid)
         {
             if (bid == null)
                 throw new ArgumentNullException("bid");
 
-            _bidRepository.Insert(bid);
-            _eventPublisher.EntityInserted(bid);
+            await _bidRepository.InsertAsync(bid);
+            await _eventPublisher.EntityInserted(bid);
         }
 
-        public virtual void UpdateBid(Bid bid)
+        public virtual async Task UpdateBid(Bid bid)
         {
             if (bid == null)
                 throw new ArgumentNullException("bid");
 
-            _bidRepository.Update(bid);
-            _eventPublisher.EntityUpdated(bid);
+            await _bidRepository.UpdateAsync(bid);
+            await _eventPublisher.EntityUpdated(bid);
         }
 
-        public virtual void UpdateHighestBid(Product product, decimal bid, string highestBidder)
+        public virtual async Task UpdateHighestBid(Product product, decimal bid, string highestBidder)
         {
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, product.Id);
             var update = Builders<Product>.Update.Set(x => x.HighestBid, bid).Set(x => x.HighestBidder, highestBidder);
 
-            var result = _productRepository.Collection.UpdateOneAsync(filter, update).Result;
+            await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            _eventPublisher.EntityUpdated(product);
+            await _eventPublisher.EntityUpdated(product);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
-        public virtual IList<Product> GetAuctionsToEnd()
+        public virtual async Task<IList<Product>> GetAuctionsToEnd()
         {
             var builder = Builders<Product>.Filter;
             var filter = FilterDefinition<Product>.Empty;
             filter = filter & builder.Where(x => x.ProductTypeId == (int)ProductType.Auction &&
             !x.AuctionEnded && x.AvailableEndDateTimeUtc < DateTime.UtcNow);
-            var products = _productRepository.Collection.Find(filter).ToList();
-            return products;
+            return await _productRepository.Collection.Find(filter).ToListAsync();
         }
 
-        public virtual void UpdateAuctionEnded(Product product, bool ended, bool enddate = false)
+        public virtual async Task UpdateAuctionEnded(Product product, bool ended, bool enddate = false)
         {
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, product.Id);
@@ -131,9 +135,9 @@ namespace Grand.Services.Catalog
             if (enddate)
                 update = update.Set(x => x.AvailableEndDateTimeUtc, DateTime.UtcNow);
 
-            var result = _productRepository.Collection.UpdateOneAsync(filter, update).Result;
+            await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            _eventPublisher.EntityUpdated(product);
+            await _eventPublisher.EntityUpdated(product);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
@@ -146,10 +150,10 @@ namespace Grand.Services.Catalog
         /// <param name="store"></param>
         /// <param name="language"></param>
         /// <param name="amount"></param>
-        public virtual void NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
+        public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
         {
-            var latestbid = GetLatestBid(product.Id);
-            InsertBid(new Bid
+            var latestbid = await GetLatestBid(product.Id);
+            await InsertBid(new Bid
             {
                 Date = DateTime.UtcNow,
                 Amount = amount,
@@ -162,21 +166,19 @@ namespace Grand.Services.Catalog
             {
                 if (latestbid.CustomerId != customer.Id)
                 {
-                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                    workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
+                    var workflowmessageService = _serviceProvider.GetRequiredService<IWorkflowMessageService>();
+                    await workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
                 }
             }
-
-
             product.HighestBid = amount;
-            UpdateHighestBid(product, amount, customer.Id);
+            await UpdateHighestBid(product, amount, customer.Id);
         }
 
         /// <summary>
         /// Cancel bid
         /// </summary>
         /// <param name="OrderId">OrderId</param>
-        public virtual void CancelBidByOrder(string orderId)
+        public virtual async Task CancelBidByOrder(string orderId)
         {
             var builder = Builders<Bid>.Filter;
             var filter = builder.Eq(x => x.OrderId, orderId);
@@ -184,12 +186,12 @@ namespace Grand.Services.Catalog
             if (bid != null)
             {
                 var filterDelete = builder.Eq(x => x.ProductId, bid.ProductId);
-                var result = _bidRepository.Collection.DeleteManyAsync(filterDelete).Result;
-                var product = _productService.GetProductById(bid.ProductId);
+                await _bidRepository.Collection.DeleteManyAsync(filterDelete);
+                var product = await _productService.GetProductById(bid.ProductId);
                 if (product != null)
                 {
-                    UpdateHighestBid(product, 0, "");
-                    UpdateAuctionEnded(product, false);
+                    await UpdateHighestBid(product, 0, "");
+                    await UpdateAuctionEnded(product, false);
                 }
             }
         }

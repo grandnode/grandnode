@@ -13,6 +13,7 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Catalog
 {
@@ -126,19 +127,19 @@ namespace Grand.Services.Catalog
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual void DeleteManufacturer(Manufacturer manufacturer)
+        public virtual async Task DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
             var builder = Builders<Product>.Update;
             var updatefilter = builder.PullFilter(x => x.ProductManufacturers, y => y.ManufacturerId == manufacturer.Id);
-            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
 
-            _manufacturerRepository.Delete(manufacturer);
+            await _manufacturerRepository.DeleteAsync(manufacturer);
 
         }
 
@@ -150,7 +151,7 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+        public virtual async Task<IPagedList<Manufacturer>> GetAllManufacturers(string manufacturerName = "",
             string storeId = "",
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -185,7 +186,7 @@ namespace Grand.Services.Catalog
             }
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Name);
 
-            return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+            return await Task.FromResult(new PagedList<Manufacturer>(query, pageIndex, pageSize));
         }
 
 
@@ -194,14 +195,14 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        public virtual IList<Manufacturer> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false)
+        public virtual async Task<IList<Manufacturer>> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false)
         {
             var builder = Builders<Manufacturer>.Filter;
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.FeaturedProductsOnHomaPage, true);
             var query = _manufacturerRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder);
 
-            var manufacturers = query.ToList();
+            var manufacturers = await query.ToListAsync();
             if (!showHidden)
             {
                 manufacturers = manufacturers
@@ -217,62 +218,62 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        public virtual Manufacturer GetManufacturerById(string manufacturerId)
+        public virtual Task<Manufacturer> GetManufacturerById(string manufacturerId)
         {
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
-            return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
+            return _cacheManager.Get(key, () => _manufacturerRepository.GetByIdAsync(manufacturerId));
         }
 
         /// <summary>
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual void InsertManufacturer(Manufacturer manufacturer)
+        public virtual async Task InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            _manufacturerRepository.Insert(manufacturer);
+            await _manufacturerRepository.InsertAsync(manufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(manufacturer);
+            await _eventPublisher.EntityInserted(manufacturer);
         }
 
         /// <summary>
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual void UpdateManufacturer(Manufacturer manufacturer)
+        public virtual async Task UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            _manufacturerRepository.Update(manufacturer);
+            await _manufacturerRepository.UpdateAsync(manufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityUpdated(manufacturer);
+            await _eventPublisher.EntityUpdated(manufacturer);
         }
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductManufacturers, productManufacturer);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -280,7 +281,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
-            _eventPublisher.EntityDeleted(productManufacturer);
+            await _eventPublisher.EntityDeleted(productManufacturer);
         }
 
         /// <summary>
@@ -291,11 +292,11 @@ namespace Grand.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public virtual IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(string manufacturerId,
+        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(string manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.Get(key, () =>
             {
                 var query = _productRepository.Table.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId));
 
@@ -337,8 +338,7 @@ namespace Grand.Services.Catalog
                                             orderby pm.DisplayOrder
                                             select pm;
 
-                var productManufacturers = new PagedList<ProductManufacturer>(query_ProductManufacturer, pageIndex, pageSize);
-                return productManufacturers;
+                return Task.FromResult(new PagedList<ProductManufacturer>(query_ProductManufacturer, pageIndex, pageSize));
             });
         }
 
@@ -347,29 +347,27 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        public virtual IList<Manufacturer> GetAllManufacturersByDiscount(string discountId)
+        public virtual async Task<IList<Manufacturer>> GetAllManufacturersByDiscount(string discountId)
         {
             var query = from c in _manufacturerRepository.Table
                         where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
-            var manufacturers = query.ToList();
-            return manufacturers;
-
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductManufacturers, productManufacturer);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -377,14 +375,14 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
-            _eventPublisher.EntityInserted(productManufacturer);
+            await _eventPublisher.EntityInserted(productManufacturer);
         }
 
         /// <summary>
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
@@ -397,7 +395,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ProductManufacturers.ElementAt(-1).IsFeaturedProduct, productManufacturer.IsFeaturedProduct)
                 .Set(x => x.ProductManufacturers.ElementAt(-1).DisplayOrder, productManufacturer.DisplayOrder);
 
-            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -405,7 +403,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
-            _eventPublisher.EntityUpdated(productManufacturer);
+            await _eventPublisher.EntityUpdated(productManufacturer);
         }
 
         #endregion

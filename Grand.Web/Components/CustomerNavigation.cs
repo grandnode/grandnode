@@ -16,7 +16,7 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int selectedTabId = 0)
         {
-            var model = await Task.Run(() => _customerViewModelService.PrepareNavigation(selectedTabId));
+            var model = await _customerViewModelService.PrepareNavigation(selectedTabId);
             return View(model);
         }
     }

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -84,31 +85,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         //list products
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var model = _productViewModelService.PrepareProductListModel();
+            var model = await _productViewModelService.PrepareProductListModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductList(DataSourceRequest command, ProductListModel model)
+        public async Task<IActionResult> ProductList(DataSourceRequest command, ProductListModel model)
         {
-            var products = _productViewModelService.PrepareProductsModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.productModels.ToList();
-            gridModel.Total = products.totalCount;
+            var (productModels, totalCount) = await _productViewModelService.PrepareProductsModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = productModels.ToList(),
+                Total = totalCount
+            };
 
             return Json(gridModel);
         }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-product-by-sku")]
-        public IActionResult GoToSku(ProductListModel model)
+        public async Task<IActionResult> GoToSku(ProductListModel model)
         {
             string sku = model.GoDirectlyToSku;
 
             //try to load a product entity
-            var product = _productService.GetProductBySku(sku);
+            var product = await _productService.GetProductBySku(sku);
             if (product != null)
                 return RedirectToAction("Edit", "Product", new { id = product.Id });
 
@@ -117,38 +120,38 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create product
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new ProductModel();
-            _productViewModelService.PrepareProductModel(model, null, true, true);
-            AddLocales(_languageService, model.Locales);
-            model.PrepareACLModel(null, false, _customerService);
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await _productViewModelService.PrepareProductModel(model, null, true, true);
+            await AddLocales(_languageService, model.Locales);
+            await model.PrepareACLModel(null, false, _customerService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(ProductModel model, bool continueEditing)
+        public async Task<IActionResult> Create(ProductModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                var product = _productViewModelService.InsertProductModel(model);
+                var product = await _productViewModelService.InsertProductModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareProductModel(model, null, false, true);
-            model.PrepareACLModel(null, true, _customerService);
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            await _productViewModelService.PrepareProductModel(model, null, false, true);
+            await model.PrepareACLModel(null, true, _customerService);
+            await model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
 
         //edit product
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var product = _productService.GetProductById(id);
+            var product = await _productService.GetProductById(id);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -160,8 +163,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = product.ToModel();
             model.Ticks = product.UpdatedOnUtc.Ticks;
 
-            _productViewModelService.PrepareProductModel(model, product, false, false);
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await _productViewModelService.PrepareProductModel(model, product, false, false);
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
                 locale.ShortDescription = product.GetLocalized(x => x.ShortDescription, languageId, false, false);
@@ -172,16 +175,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = product.GetSeName(languageId, false, false);
             });
 
-            model.PrepareACLModel(product, false, _customerService);
-            model.PrepareStoresMappingModel(product, false, _storeService);
+            await model.PrepareACLModel(product, false, _customerService);
+            await model.PrepareStoresMappingModel(product, false, _storeService);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(ProductModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(ProductModel model, bool continueEditing)
         {
-            var product = _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductById(model.Id);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -197,7 +200,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                product = _productViewModelService.UpdateProductModel(product, model);
+                product = await _productViewModelService.UpdateProductModel(product, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
                 if (continueEditing)
                 {
@@ -208,17 +211,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareProductModel(model, product, false, true);
-            model.PrepareACLModel(product, true, _customerService);
-            model.PrepareStoresMappingModel(product, true, _storeService);
+            await _productViewModelService.PrepareProductModel(model, product, false, true);
+            await model.PrepareACLModel(product, true, _customerService);
+            await model.PrepareStoresMappingModel(product, true, _storeService);
 
             return View(model);
         }
         //delete product
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var product = _productService.GetProductById(id);
+            var product = await _productService.GetProductById(id);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -229,7 +232,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _productViewModelService.DeleteProduct(product);
+                await _productViewModelService.DeleteProduct(product);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
                 return RedirectToAction("List");
             }
@@ -238,29 +241,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteSelected(ICollection<string> selectedIds)
+        public async Task<IActionResult> DeleteSelected(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
-                _productViewModelService.DeleteSelected(selectedIds.ToList());
+                await _productViewModelService.DeleteSelected(selectedIds.ToList());
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public IActionResult CopyProduct(ProductModel model, [FromServices] ICopyProductService copyProductService)
+        public async Task<IActionResult> CopyProduct(ProductModel model, [FromServices] ICopyProductService copyProductService)
         {
             var copyModel = model.CopyProductModel;
             try
             {
-                var originalProduct = _productService.GetProductById(copyModel.Id);
+                var originalProduct = await _productService.GetProductById(copyModel.Id);
 
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor != null && originalProduct.VendorId != _workContext.CurrentVendor.Id)
                     return RedirectToAction("List");
 
-                var newProduct = copyProductService.CopyProduct(originalProduct,
+                var newProduct = await copyProductService.CopyProduct(originalProduct,
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
                 SuccessNotification("The product has been copied successfully");
                 return RedirectToAction("Edit", new { id = newProduct.Id });
@@ -278,7 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
 
-        public IActionResult LoadProductFriendlyNames(string productIds)
+        public async Task<IActionResult> LoadProductFriendlyNames(string productIds)
         {
             var result = "";
 
@@ -295,7 +298,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ids.Add(str1);
                 }
 
-                var products = _productService.GetProductsByIds(ids.ToArray());
+                var products = await _productService.GetProductsByIds(ids.ToArray());
                 for (int i = 0; i <= products.Count - 1; i++)
                 {
                     result += products[i].Name;
@@ -307,25 +310,27 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public IActionResult RequiredProductAddPopup(string productIdsInput)
+        public async Task<IActionResult> RequiredProductAddPopup(string productIdsInput)
         {
-            var model = _productViewModelService.PrepareAddRequiredProductModel();
+            var model = await _productViewModelService.PrepareAddRequiredProductModel();
             ViewBag.productIdsInput = productIdsInput;
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
+        public async Task<IActionResult> RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
 
             return Json(gridModel);
         }
@@ -335,9 +340,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product categories
 
         [HttpPost]
-        public IActionResult ProductCategoryList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductCategoryList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -347,7 +352,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            var productCategoriesModel = _productViewModelService.PrepareProductCategoryModel(product);
+            var productCategoriesModel = await _productViewModelService.PrepareProductCategoryModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = productCategoriesModel,
@@ -358,13 +363,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductCategoryInsert(ProductModel.ProductCategoryModel model)
+        public async Task<IActionResult> ProductCategoryInsert(ProductModel.ProductCategoryModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _productViewModelService.InsertProductCategoryModel(model);
+                    await _productViewModelService.InsertProductCategoryModel(model);
                     return new NullJsonResult();
                 }
                 catch (Exception ex)
@@ -376,13 +381,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
+        public async Task<IActionResult> ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _productViewModelService.UpdateProductCategoryModel(model);
+                    await _productViewModelService.UpdateProductCategoryModel(model);
                     return new NullJsonResult();
                 }
                 catch (Exception ex)
@@ -394,11 +399,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductCategoryDelete(string id, string productId)
+        public async Task<IActionResult> ProductCategoryDelete(string id, string productId)
         {
             if (ModelState.IsValid)
             {
-                _productViewModelService.DeleteProductCategory(id, productId);
+                await _productViewModelService.DeleteProductCategory(id, productId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -409,9 +414,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product manufacturers
 
         [HttpPost]
-        public IActionResult ProductManufacturerList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductManufacturerList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -421,7 +426,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            var productManufacturersModel = _productViewModelService.PrepareProductManufacturerModel(product);
+            var productManufacturersModel = await _productViewModelService.PrepareProductManufacturerModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = productManufacturersModel,
@@ -432,13 +437,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
+        public async Task<IActionResult> ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _productViewModelService.InsertProductManufacturer(model);
+                    await _productViewModelService.InsertProductManufacturer(model);
                     return new NullJsonResult();
                 }
                 catch (Exception ex)
@@ -450,13 +455,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
+        public async Task<IActionResult> ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _productViewModelService.UpdateProductManufacturer(model);
+                    await _productViewModelService.UpdateProductManufacturer(model);
                     return new NullJsonResult();
                 }
                 catch (Exception ex)
@@ -468,11 +473,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductManufacturerDelete(string id, string productId)
+        public async Task<IActionResult> ProductManufacturerDelete(string id, string productId)
         {
             if (ModelState.IsValid)
             {
-                _productViewModelService.DeleteProductManufacturer(id, productId);
+                await _productViewModelService.DeleteProductManufacturer(id, productId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -483,9 +488,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Related products
 
         [HttpPost]
-        public IActionResult RelatedProductList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> RelatedProductList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -497,16 +502,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             var relatedProducts = product.RelatedProducts.OrderBy(x => x.DisplayOrder);
-            var relatedProductsModel = relatedProducts
-                .Select(x => new ProductModel.RelatedProductModel
+            var relatedProductsModel = new List<ProductModel.RelatedProductModel>();
+            foreach (var x in relatedProducts)
+            {
+                relatedProductsModel.Add(new ProductModel.RelatedProductModel
                 {
                     Id = x.Id,
                     ProductId1 = productId,
                     ProductId2 = x.ProductId2,
-                    Product2Name = _productService.GetProductById(x.ProductId2).Name,
+                    Product2Name = (await _productService.GetProductById(x.ProductId2)).Name,
                     DisplayOrder = x.DisplayOrder
-                })
-                .ToList();
+                });
+            }
 
             var gridModel = new DataSourceResult
             {
@@ -518,42 +525,44 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult RelatedProductUpdate(ProductModel.RelatedProductModel model)
+        public async Task<IActionResult> RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
-            _productViewModelService.UpdateRelatedProductModel(model);
+            await _productViewModelService.UpdateRelatedProductModel(model);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult RelatedProductDelete(ProductModel.RelatedProductModel model)
+        public async Task<IActionResult> RelatedProductDelete(ProductModel.RelatedProductModel model)
         {
-            _productViewModelService.DeleteRelatedProductModel(model);
+            await _productViewModelService.DeleteRelatedProductModel(model);
             return new NullJsonResult();
         }
 
-        public IActionResult RelatedProductAddPopup(string productId)
+        public async Task<IActionResult> RelatedProductAddPopup(string productId)
         {
-            var model = _productViewModelService.PrepareRelatedProductModel();
+            var model = await _productViewModelService.PrepareRelatedProductModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
+        public async Task<IActionResult> RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
 
             return Json(gridModel);
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
+        public async Task<IActionResult> RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _productViewModelService.InsertRelatedProductModel(model);
+                await _productViewModelService.InsertRelatedProductModel(model);
             }
 
             //a vendor should have access only to his products
@@ -567,9 +576,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Bundle products
 
         [HttpPost]
-        public IActionResult BundleProductList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> BundleProductList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -580,18 +589,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             var bundleProducts = product.BundleProducts.OrderBy(x => x.DisplayOrder);
-            var bundleProductsModel = bundleProducts
-                .Select(x => new ProductModel.BundleProductModel
+            var bundleProductsModel = new List<ProductModel.BundleProductModel>();
+            foreach (var x in bundleProducts)
+            {
+                bundleProductsModel.Add(new ProductModel.BundleProductModel
                 {
                     Id = x.Id,
                     ProductBundleId = productId,
                     ProductId = x.ProductId,
-                    ProductName = _productService.GetProductById(x.ProductId).Name,
+                    ProductName = (await _productService.GetProductById(x.ProductId)).Name,
                     DisplayOrder = x.DisplayOrder,
                     Quantity = x.Quantity
-                })
-                .ToList();
-
+                });
+            }
             var gridModel = new DataSourceResult
             {
                 Data = bundleProductsModel,
@@ -602,43 +612,45 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult BundleProductUpdate(ProductModel.BundleProductModel model)
+        public async Task<IActionResult> BundleProductUpdate(ProductModel.BundleProductModel model)
         {
-            _productViewModelService.UpdateBundleProductModel(model);
+            await _productViewModelService.UpdateBundleProductModel(model);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult BundleProductDelete(ProductModel.BundleProductModel model)
+        public async Task<IActionResult> BundleProductDelete(ProductModel.BundleProductModel model)
         {
-            _productViewModelService.DeleteBundleProductModel(model);
+            await _productViewModelService.DeleteBundleProductModel(model);
             return new NullJsonResult();
         }
 
-        public IActionResult BundleProductAddPopup(string productId)
+        public async Task<IActionResult> BundleProductAddPopup(string productId)
         {
-            var model = _productViewModelService.PrepareBundleProductModel();
+            var model = await _productViewModelService.PrepareBundleProductModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult BundleProductAddPopupList(DataSourceRequest command, ProductModel.AddBundleProductModel model)
+        public async Task<IActionResult> BundleProductAddPopupList(DataSourceRequest command, ProductModel.AddBundleProductModel model)
         {
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
 
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult BundleProductAddPopup(ProductModel.AddBundleProductModel model)
+        public async Task<IActionResult> BundleProductAddPopup(ProductModel.AddBundleProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _productViewModelService.InsertBundleProductModel(model);
+                await _productViewModelService.InsertBundleProductModel(model);
             }
 
             //a vendor should have access only to his products
@@ -652,9 +664,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Cross-sell products
 
         [HttpPost]
-        public IActionResult CrossSellProductList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> CrossSellProductList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -665,14 +677,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             var crossSellProducts = product.CrossSellProduct;
-            var crossSellProductsModel = crossSellProducts
-                .Select(x => new ProductModel.CrossSellProductModel
+            var crossSellProductsModel = new List<ProductModel.CrossSellProductModel>();
+            foreach (var x in crossSellProducts)
+            {
+                crossSellProductsModel.Add(new ProductModel.CrossSellProductModel
                 {
                     Id = x,
-                    Product2Name = _productService.GetProductById(x).Name,
-                })
-                .ToList();
-
+                    Product2Name = (await _productService.GetProductById(x)).Name,
+                });
+            }
             var gridModel = new DataSourceResult
             {
                 Data = crossSellProductsModel,
@@ -683,9 +696,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CrossSellProductDelete(string id, string productId)
+        public async Task<IActionResult> CrossSellProductDelete(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
 
             var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();
             if (String.IsNullOrEmpty(crossSellProduct))
@@ -699,34 +712,36 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            _productViewModelService.DeleteCrossSellProduct(productId, crossSellProduct);
+            await _productViewModelService.DeleteCrossSellProduct(productId, crossSellProduct);
             return new NullJsonResult();
         }
 
-        public IActionResult CrossSellProductAddPopup(string productId)
+        public async Task<IActionResult> CrossSellProductAddPopup(string productId)
         {
-            var model = _productViewModelService.PrepareCrossSellProductModel();
+            var model = await _productViewModelService.PrepareCrossSellProductModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
+        public async Task<IActionResult> CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
 
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
+        public async Task<IActionResult> CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _productViewModelService.InsertCrossSellProductModel(model);
+                await _productViewModelService.InsertCrossSellProductModel(model);
             }
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -740,12 +755,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Associated products
 
         [HttpPost]
-        public IActionResult AssociatedProductList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> AssociatedProductList(DataSourceRequest command, string productId)
         {
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                var product = _productService.GetProductById(productId);
+                var product = await _productService.GetProductById(productId);
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -758,7 +773,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            var associatedProducts = _productService.GetAssociatedProducts(parentGroupedProductId: productId,
+            var associatedProducts = await _productService.GetAssociatedProducts(parentGroupedProductId: productId,
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts
@@ -780,9 +795,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
+        public async Task<IActionResult> AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
-            var associatedProduct = _productService.GetProductById(model.Id);
+            var associatedProduct = await _productService.GetProductById(model.Id);
             if (associatedProduct == null)
                 throw new ArgumentException("No associated product found with the specified id");
 
@@ -793,45 +808,47 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             associatedProduct.DisplayOrder = model.DisplayOrder;
-            _productService.UpdateAssociatedProduct(associatedProduct);
+            await _productService.UpdateAssociatedProduct(associatedProduct);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult AssociatedProductDelete(string id)
+        public async Task<IActionResult> AssociatedProductDelete(string id)
         {
-            var product = _productService.GetProductById(id);
+            var product = await _productService.GetProductById(id);
             if (product == null)
                 throw new ArgumentException("No associated product found with the specified id");
 
-            _productViewModelService.DeleteAssociatedProduct(product);
+            await _productViewModelService.DeleteAssociatedProduct(product);
             return new NullJsonResult();
         }
 
-        public IActionResult AssociatedProductAddPopup(string productId)
+        public async Task<IActionResult> AssociatedProductAddPopup(string productId)
         {
-            var model = _productViewModelService.PrepareAssociatedProductModel();
+            var model = await _productViewModelService.PrepareAssociatedProductModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
+        public async Task<IActionResult> AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
+        public async Task<IActionResult> AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
         {
             if (model.SelectedProductIds != null)
             {
-                _productViewModelService.InsertAssociatedProductModel(model);
+                await _productViewModelService.InsertAssociatedProductModel(model);
             }
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -842,14 +859,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product pictures
-        public IActionResult ProductPictureAdd(string pictureId, int displayOrder,
+        public async Task<IActionResult> ProductPictureAdd(string pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
             string productId)
         {
             if (String.IsNullOrEmpty(pictureId))
                 throw new ArgumentException();
 
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -857,15 +874,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
-            _productViewModelService.InsertProductPicture(product, pictureId, displayOrder, overrideAltAttribute, overrideTitleAttribute);
+            await _productViewModelService.InsertProductPicture(product, pictureId, displayOrder, overrideAltAttribute, overrideTitleAttribute);
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public IActionResult ProductPictureList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductPictureList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -874,7 +891,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            var productPicturesModel = _productViewModelService.PrepareProductPictureModel(product);
+            var productPicturesModel = await _productViewModelService.PrepareProductPictureModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = productPicturesModel,
@@ -885,16 +902,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model)
+        public async Task<IActionResult> ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
-            _productViewModelService.UpdateProductPicture(model);
+            await _productViewModelService.UpdateProductPicture(model);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ProductPictureDelete(ProductModel.ProductPictureModel model)
+        public async Task<IActionResult> ProductPictureDelete(ProductModel.ProductPictureModel model)
         {
-            _productViewModelService.DeleteProductPicture(model);
+            await _productViewModelService.DeleteProductPicture(model);
             return new NullJsonResult();
         }
         #endregion
@@ -902,20 +919,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product specification attributes
         //ajax
         [AcceptVerbs("GET")]
-        public IActionResult GetOptionsByAttributeId(string attributeId, [FromServices] ISpecificationAttributeService specificationAttributeService)
+        public async Task<IActionResult> GetOptionsByAttributeId(string attributeId, [FromServices] ISpecificationAttributeService specificationAttributeService)
         {
             if (String.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException("attributeId");
 
-            var options = specificationAttributeService.GetSpecificationAttributeById(attributeId).SpecificationAttributeOptions;
+            var options = (await specificationAttributeService.GetSpecificationAttributeById(attributeId)).SpecificationAttributeOptions;
             var result = (from o in options
                           select new { id = o.Id, name = o.Name }).ToList();
             return Json(result);
         }
 
-        public IActionResult ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model, string productId)
+        public async Task<IActionResult> ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -924,16 +941,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
                 }
             }
-            _productViewModelService.InsertProductSpecificationAttributeModel(model, product);
+            await _productViewModelService.InsertProductSpecificationAttributeModel(model, product);
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public IActionResult ProductSpecAttrList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductSpecAttrList(DataSourceRequest command, string productId)
         {
             //a vendor should have access only to his products
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (_workContext.CurrentVendor != null)
             {
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -941,7 +958,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            var productrSpecsModel = _productViewModelService.PrepareProductSpecificationAttributeModel(product);
+            var productrSpecsModel = await _productViewModelService.PrepareProductSpecificationAttributeModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = productrSpecsModel,
@@ -951,9 +968,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
+        public async Task<IActionResult> ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();
             if (psa == null)
                 return Content("No product specification attribute found with the specified id");
@@ -966,14 +983,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            _productViewModelService.UpdateProductSpecificationAttributeModel(product, psa, model);
+            await _productViewModelService.UpdateProductSpecificationAttributeModel(product, psa, model);
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ProductSpecAttrDelete(string id, string ProductSpecificationId, string productId)
+        public async Task<IActionResult> ProductSpecAttrDelete(string id, string ProductSpecificationId, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             var psa = product.ProductSpecificationAttributes.Where(x => x.Id == id && x.SpecificationAttributeId == ProductSpecificationId).FirstOrDefault();
             if (psa == null)
                 throw new ArgumentException("No specification attribute found with the specified id");
@@ -986,7 +1003,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            _productViewModelService.DeleteProductSpecificationAttribute(product, psa);
+            await _productViewModelService.DeleteProductSpecificationAttribute(product, psa);
             return new NullJsonResult();
         }
 
@@ -995,9 +1012,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Purchased with order
 
         [HttpPost]
-        public IActionResult PurchasedWithOrders(DataSourceRequest command, string productId)
+        public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1005,11 +1022,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var orders = _productViewModelService.PrepareOrderModel(productId, command.Page, command.PageSize);
+            var (orderModels, totalCount) = await _productViewModelService.PrepareOrderModel(productId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = orders.orderModels.ToList(),
-                Total = orders.totalCount
+                Data = orderModels.ToList(),
+                Total = totalCount
             };
 
             return Json(gridModel);
@@ -1020,9 +1037,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Reviews
 
         [HttpPost]
-        public IActionResult Reviews(DataSourceRequest command, string productId)
+        public async Task<IActionResult> Reviews(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1030,17 +1047,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var productReviews = _productService.GetAllProductReviews("", null,
+            var productReviews = await _productService.GetAllProductReviews("", null,
                 null, null, "", null, productId);
 
+            var items = new List<ProductReviewModel>();
+            foreach (var item in productReviews.PagedForCommand(command))
+            {
+                var m = new ProductReviewModel();
+                await _productViewModelService.PrepareProductReviewModel(m, item, false, true);
+                items.Add(m);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = productReviews.PagedForCommand(command).Select(x =>
-                {
-                    var m = new ProductReviewModel();
-                    _productViewModelService.PrepareProductReviewModel(m, x, false, true);
-                    return m;
-                }),
+                Data = items,
                 Total = productReviews.Count,
             };
 
@@ -1053,15 +1072,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("download-catalog-pdf")]
-        public IActionResult DownloadCatalogAsPdf(ProductListModel model, [FromServices] IPdfService pdfService)
+        public async Task<IActionResult> DownloadCatalogAsPdf(ProductListModel model, [FromServices] IPdfService pdfService)
         {
-            var products = _productViewModelService.PrepareProducts(model);
+            var products = await _productViewModelService.PrepareProducts(model);
             try
             {
                 byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
-                    pdfService.PrintProductsToPdf(stream, products);
+                    await pdfService.PrintProductsToPdf(stream, products);
                     bytes = stream.ToArray();
                 }
                 return File(bytes, "application/pdf", "pdfcatalog.pdf");
@@ -1076,12 +1095,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
-        public IActionResult ExportXmlAll(ProductListModel model)
+        public async Task<IActionResult> ExportXmlAll(ProductListModel model)
         {
-            var products = _productViewModelService.PrepareProducts(model);
+            var products = await _productViewModelService.PrepareProducts(model);
             try
             {
-                var xml = _exportManager.ExportProductsToXml(products);
+                var xml = await _exportManager.ExportProductsToXml(products);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "products.xml");
 
             }
@@ -1093,7 +1112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ExportXmlSelected(string selectedIds)
+        public async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
             var products = new List<Product>();
             if (selectedIds != null)
@@ -1102,7 +1121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
-                products.AddRange(_productService.GetProductsByIds(ids));
+                products.AddRange(await _productService.GetProductsByIds(ids));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1110,7 +1129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            var xml = _exportManager.ExportProductsToXml(products);
+            var xml = await _exportManager.ExportProductsToXml(products);
             return File(Encoding.UTF8.GetBytes(xml), "application/xml", "products.xml");
 
         }
@@ -1118,9 +1137,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
-        public IActionResult ExportExcelAll(ProductListModel model)
+        public async Task<IActionResult> ExportExcelAll(ProductListModel model)
         {
-            var products = _productViewModelService.PrepareProducts(model);
+            var products = await _productViewModelService.PrepareProducts(model);
             try
             {
                 byte[] bytes = _exportManager.ExportProductsToXlsx(products);
@@ -1134,7 +1153,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ExportExcelSelected(string selectedIds)
+        public async Task<IActionResult> ExportExcelSelected(string selectedIds)
         {
             var products = new List<Product>();
             if (selectedIds != null)
@@ -1143,7 +1162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
-                products.AddRange(_productService.GetProductsByIds(ids));
+                products.AddRange(await _productService.GetProductsByIds(ids));
             }
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1156,7 +1175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ImportExcel(IFormFile importexcelfile)
+        public async Task<IActionResult> ImportExcel(IFormFile importexcelfile)
         {
             //a vendor cannot import products
             if (_workContext.CurrentVendor != null)
@@ -1166,7 +1185,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    _importManager.ImportProductsFromXlsx(importexcelfile.OpenReadStream());
+                    await _importManager.ImportProductsFromXlsx(importexcelfile.OpenReadStream());
                 }
                 else
                 {
@@ -1188,38 +1207,40 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Bulk editing
 
-        public IActionResult BulkEdit()
+        public async Task<IActionResult> BulkEdit()
         {
-            var model = _productViewModelService.PrepareBulkEditListModel();
+            var model = await _productViewModelService.PrepareBulkEditListModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
+        public async Task<IActionResult> BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
-            var items = _productViewModelService.PrepareBulkEditProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.bulkEditProductModels.ToList();
-            gridModel.Total = items.totalCount;
+            var (bulkEditProductModels, totalCount) = await _productViewModelService.PrepareBulkEditProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = bulkEditProductModels.ToList(),
+                Total = totalCount
+            };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
+        public async Task<IActionResult> BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
         {
             if (products != null)
             {
-                _productViewModelService.UpdateBulkEdit(products.ToList());
+                await _productViewModelService.UpdateBulkEdit(products.ToList());
             }
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult BulkEditDelete(IEnumerable<BulkEditProductModel> products)
+        public async Task<IActionResult> BulkEditDelete(IEnumerable<BulkEditProductModel> products)
         {
             if (products != null)
             {
-                _productViewModelService.DeleteBulkEdit(products.ToList());
+                await _productViewModelService.DeleteBulkEdit(products.ToList());
             }
             return new NullJsonResult();
         }
@@ -1229,9 +1250,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Tier prices
 
         [HttpPost]
-        public IActionResult TierPriceList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> TierPriceList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1239,7 +1260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var tierPricesModel = _productViewModelService.PrepareTierPriceModel(product);
+            var tierPricesModel = await _productViewModelService.PrepareTierPriceModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = tierPricesModel,
@@ -1248,19 +1269,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult TierPriceCreatePopup(string productId)
+        public async Task<IActionResult> TierPriceCreatePopup(string productId)
         {
-            var model = new ProductModel.TierPriceModel();
-            model.ProductId = productId;
-            _productViewModelService.PrepareTierPriceModel(model);
+            var model = new ProductModel.TierPriceModel
+            {
+                ProductId = productId
+            };
+            await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult TierPriceCreatePopup(ProductModel.TierPriceModel model)
+        public async Task<IActionResult> TierPriceCreatePopup(ProductModel.TierPriceModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1271,19 +1294,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var tierPrice = model.ToEntity();
-                _productService.InsertTierPrice(tierPrice);
+                await _productService.InsertTierPrice(tierPrice);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
 
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareTierPriceModel(model);
+            await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
         }
 
-        public IActionResult TierPriceEditPopup(string id, string productId)
+        public async Task<IActionResult> TierPriceEditPopup(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1297,14 +1320,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = tierPrice.ToModel();
             model.ProductId = productId;
-            _productViewModelService.PrepareTierPriceModel(model);
+            await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
+        public async Task<IActionResult> TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1320,20 +1343,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 tierPrice = model.ToEntity(tierPrice);
-                _productService.UpdateTierPrice(tierPrice);
+                await _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
             //stores
-            _productViewModelService.PrepareTierPriceModel(model);
+            await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult TierPriceDelete(string id, string productId)
+        public async Task<IActionResult> TierPriceDelete(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1348,7 +1371,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _productService.DeleteTierPrice(tierPrice);
+                await _productService.DeleteTierPrice(tierPrice);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -1359,9 +1382,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product attributes
 
         [HttpPost]
-        public IActionResult ProductAttributeMappingList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductAttributeMappingList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1369,7 +1392,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var attributesModel = _productViewModelService.PrepareProductAttributeMappingModels(product);
+            var attributesModel = await _productViewModelService.PrepareProductAttributeMappingModels(product);
             var gridModel = new DataSourceResult
             {
                 Data = attributesModel,
@@ -1379,9 +1402,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
+        public async Task<IActionResult> ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1390,21 +1413,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
             if (string.IsNullOrEmpty(productAttributeMappingId))
             {
-                var model = _productViewModelService.PrepareProductAttributeMappingModel(product);
+                var model = await _productViewModelService.PrepareProductAttributeMappingModel(product);
                 return View(model);
             }
             else
             {
                 var productAttributeMapping = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == productAttributeMappingId);
-                var model = _productViewModelService.PrepareProductAttributeMappingModel(product, productAttributeMapping);
+                var model = await _productViewModelService.PrepareProductAttributeMappingModel(product, productAttributeMapping);
                 return View(model);
             }
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
+        public async Task<IActionResult> ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1414,22 +1437,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.Id))
-                    _productViewModelService.InsertProductAttributeMappingModel(model);
+                    await _productViewModelService.InsertProductAttributeMappingModel(model);
                 else
-                    _productViewModelService.UpdateProductAttributeMappingModel(model);
+                    await _productViewModelService.UpdateProductAttributeMappingModel(model);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
 
-            model = _productViewModelService.PrepareProductAttributeMappingModel(model);
+            model = await _productViewModelService.PrepareProductAttributeMappingModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeMappingDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
+        public async Task<IActionResult> ProductAttributeMappingDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1444,16 +1467,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                productAttributeService.DeleteProductAttributeMapping(productAttributeMapping);
+                await productAttributeService.DeleteProductAttributeMapping(productAttributeMapping);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         //edit
-        public IActionResult ProductAttributeValidationRulesPopup(string id, string productId)
+        public async Task<IActionResult> ProductAttributeValidationRulesPopup(string id, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1467,14 +1490,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = _productViewModelService.PrepareProductAttributeMappingModel(productAttributeMapping);
+            var model = await _productViewModelService.PrepareProductAttributeMappingModel(productAttributeMapping);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
+        public async Task<IActionResult> ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1489,7 +1512,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _productViewModelService.UpdateProductAttributeValidationRulesModel(productAttributeMapping, model);
+                await _productViewModelService.UpdateProductAttributeValidationRulesModel(productAttributeMapping, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -1504,9 +1527,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product attributes. Condition
 
-        public IActionResult ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
+        public async Task<IActionResult> ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1518,14 +1541,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-            var model = _productViewModelService.PrepareProductAttributeConditionModel(product, productAttributeMapping);
+            var model = await _productViewModelService.PrepareProductAttributeConditionModel(product, productAttributeMapping);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
+        public async Task<IActionResult> ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1543,7 +1566,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 formcollection.Add(item.Key, item.Value);
             }
-            _productViewModelService.UpdateProductAttributeConditionModel(product, productAttributeMapping, model, formcollection);
+            await _productViewModelService.UpdateProductAttributeConditionModel(product, productAttributeMapping, model, formcollection);
             ViewBag.RefreshPage = true;
             return View(model);
         }
@@ -1553,9 +1576,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product attribute values
 
         //list
-        public IActionResult EditAttributeValues(string productAttributeMappingId, string productId, [FromServices] IProductAttributeService productAttributeService)
+        public async Task<IActionResult> EditAttributeValues(string productAttributeMappingId, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1567,7 +1590,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var productAttribute = productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
+            var productAttribute = await productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
             var model = new ProductModel.ProductAttributeValueListModel
             {
                 ProductName = product.Name,
@@ -1580,9 +1603,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
+        public async Task<IActionResult> ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1594,7 +1617,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var values = _productViewModelService.PrepareProductAttributeValueModels(product, productAttributeMapping);
+            var values = await _productViewModelService.PrepareProductAttributeValueModels(product, productAttributeMapping);
             var gridModel = new DataSourceResult
             {
                 Data = values,
@@ -1604,9 +1627,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //create
-        public IActionResult ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
+        public async Task<IActionResult> ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1618,41 +1641,43 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductAttributeValueModel();
-            model.ProductAttributeMappingId = productAttributeMappingId;
-            model.ProductId = productId;
+            var model = new ProductModel.ProductAttributeValueModel
+            {
+                ProductAttributeMappingId = productAttributeMappingId,
+                ProductId = productId,
 
-            //color squares
-            model.DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares;
-            model.ColorSquaresRgb = "#000000";
-            //image squares
-            model.DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares;
+                //color squares
+                DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
+                ColorSquaresRgb = "#000000",
+                //image squares
+                DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
 
-            //default qantity for associated product
-            model.Quantity = 1;
+                //default qantity for associated product
+                Quantity = 1
+            };
 
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
 
             //pictures
-            model.ProductPictureModels = product.ProductPictures
-                .Select(x => new ProductModel.ProductPictureModel
+            foreach (var x in product.ProductPictures)
+            {
+                model.ProductPictureModels.Add(new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = pictureService.GetPictureUrl(x.PictureId),
+                    PictureUrl = await pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
-                })
-                .ToList();
-
+                });
+            }
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
+        public async Task<IActionResult> ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = await _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1681,19 +1706,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _productViewModelService.InsertProductAttributeValueModel(model);
+                await _productViewModelService.InsertProductAttributeValueModel(model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareProductAttributeValueModel(product, model);
+            await _productViewModelService.PrepareProductAttributeValueModel(product, model);
             return View(model);
         }
 
         //edit
-        public IActionResult ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
+        public async Task<IActionResult> ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1709,21 +1734,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-            var model = _productViewModelService.PrepareProductAttributeValueModel(pa, pav);
+            var model = await _productViewModelService.PrepareProductAttributeValueModel(pa, pav);
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = pav.GetLocalized(x => x.Name, languageId, false, false);
             });
             //pictures
-            _productViewModelService.PrepareProductAttributeValueModel(product, model);
+            await _productViewModelService.PrepareProductAttributeValueModel(product, model);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValueEditPopup(string productId, ProductModel.ProductAttributeValueModel model)
+        public async Task<IActionResult> ProductAttributeValueEditPopup(string productId, ProductModel.ProductAttributeValueModel model)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1751,20 +1776,20 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _productViewModelService.UpdateProductAttributeValueModel(pav, model);
+                await _productViewModelService.UpdateProductAttributeValueModel(pav, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareProductAttributeValueModel(product, model);
+            await _productViewModelService.PrepareProductAttributeValueModel(product, model);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult ProductAttributeValueDelete(string Id, string pam, string productId, [FromServices] IProductAttributeService productAttributeService)
+        public async Task<IActionResult> ProductAttributeValueDelete(string Id, string pam, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1779,34 +1804,36 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("This is not your product");
             if (ModelState.IsValid)
             {
-                productAttributeService.DeleteProductAttributeValue(pav);
+                await productAttributeService.DeleteProductAttributeValue(pav);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public IActionResult AssociateProductToAttributeValuePopup()
+        public async Task<IActionResult> AssociateProductToAttributeValuePopup()
         {
-            var model = _productViewModelService.PrepareAssociateProductToAttributeValueModel();
+            var model = await _productViewModelService.PrepareAssociateProductToAttributeValueModel();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
+        public async Task<IActionResult> AssociateProductToAttributeValuePopupList(DataSourceRequest command,
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
-            var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult();
-            gridModel.Data = items.products.ToList();
-            gridModel.Total = items.totalCount;
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.ToList(),
+                Total = totalCount
+            };
             return Json(gridModel);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
+        public async Task<IActionResult> AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
-            var associatedProduct = _productService.GetProductById(model.AssociatedToProductId);
+            var associatedProduct = await _productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
 
@@ -1827,9 +1854,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product attribute combinations
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationList(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ProductAttributeCombinationList(DataSourceRequest command, string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1837,7 +1864,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var combinationsModel = _productViewModelService.PrepareProductAttributeCombinationModel(product);
+            var combinationsModel = await _productViewModelService.PrepareProductAttributeCombinationModel(product);
             var gridModel = new DataSourceResult
             {
                 Data = combinationsModel,
@@ -1847,9 +1874,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
+        public async Task<IActionResult> ProductAttributeCombinationDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1863,21 +1890,21 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             combination.ProductId = productId;
 
-            productAttributeService.DeleteProductAttributeCombination(combination);
+            await productAttributeService.DeleteProductAttributeCombination(combination);
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-                var pr = _productService.GetProductById(productId);
+                var pr = await _productService.GetProductById(productId);
                 pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                _productService.UpdateStockProduct(pr);
+                await _productService.UpdateStockProduct(pr);
             }
 
             return new NullJsonResult();
         }
 
         //edit
-        public IActionResult AttributeCombinationPopup(string productId, string Id)
+        public async Task<IActionResult> AttributeCombinationPopup(string productId, string Id)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List", "Product");
@@ -1885,17 +1912,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-            var model = _productViewModelService.PrepareProductAttributeCombinationModel(product, Id);
-            _productViewModelService.PrepareAddProductAttributeCombinationModel(model, product);
+            var model = await _productViewModelService.PrepareProductAttributeCombinationModel(product, Id);
+            await _productViewModelService.PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
 
         [HttpPost]
 
-        public IActionResult AttributeCombinationPopup(string productId,
+        public async Task<IActionResult> AttributeCombinationPopup(string productId,
             ProductAttributeCombinationModel model, IFormCollection form)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 //No product found with the specified id
                 return RedirectToAction("List", "Product");
@@ -1909,22 +1936,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 formcollection.Add(item.Key, item.Value);
             }
-            var warnings = _productViewModelService.InsertOrUpdateProductAttributeCombinationPopup(product, model, formcollection);
+            var warnings = await _productViewModelService.InsertOrUpdateProductAttributeCombinationPopup(product, model, formcollection);
             if (!warnings.Any())
             {
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
             //If we got this far, something failed, redisplay form
-            _productViewModelService.PrepareAddProductAttributeCombinationModel(model, product);
+            await _productViewModelService.PrepareAddProductAttributeCombinationModel(model, product);
             model.Warnings = warnings;
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult GenerateAllAttributeCombinations(string productId)
+        public async Task<IActionResult> GenerateAllAttributeCombinations(string productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1932,15 +1959,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            _productViewModelService.GenerateAllAttributeCombinations(product);
+            await _productViewModelService.GenerateAllAttributeCombinations(product);
 
             return Json(new { Success = true });
         }
 
         [HttpPost]
-        public IActionResult ClearAllAttributeCombinations(string productId, [FromServices] IProductAttributeService productAttributeService)
+        public async Task<IActionResult> ClearAllAttributeCombinations(string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1952,13 +1979,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 foreach (var combination in product.ProductAttributeCombinations.ToList())
                 {
                     combination.ProductId = productId;
-                    productAttributeService.DeleteProductAttributeCombination(combination);
+                    await productAttributeService.DeleteProductAttributeCombination(combination);
                 }
 
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     product.StockQuantity = 0;
-                    _productService.UpdateStockProduct(product);
+                    await _productService.UpdateStockProduct(product);
                 }
                 return Json(new { Success = true });
             }
@@ -1968,9 +1995,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product Attribute combination - tier prices
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
+        public async Task<IActionResult> ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -1978,7 +2005,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var tierPriceModel = _productViewModelService.PrepareProductAttributeCombinationTierPricesModel(product, productAttributeCombinationId);
+            var tierPriceModel = await _productViewModelService.PrepareProductAttributeCombinationTierPricesModel(product, productAttributeCombinationId);
             var gridModel = new DataSourceResult
             {
                 Data = tierPriceModel,
@@ -1989,9 +2016,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationTierPriceInsert(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
+        public async Task<IActionResult> ProductAttributeCombinationTierPriceInsert(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -2000,15 +2027,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("This is not your product");
             var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
             if (combination != null)
-                _productViewModelService.InsertProductAttributeCombinationTierPricesModel(product, combination, model);
+                await _productViewModelService.InsertProductAttributeCombinationTierPricesModel(product, combination, model);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationTierPriceUpdate(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
+        public async Task<IActionResult> ProductAttributeCombinationTierPriceUpdate(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -2018,15 +2045,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
             if (combination != null)
-                _productViewModelService.UpdateProductAttributeCombinationTierPricesModel(product, combination, model);
+                await _productViewModelService.UpdateProductAttributeCombinationTierPricesModel(product, combination, model);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationTierPriceDelete(string productId, string productAttributeCombinationId, string id)
+        public async Task<IActionResult> ProductAttributeCombinationTierPriceDelete(string productId, string productAttributeCombinationId, string id)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -2040,7 +2067,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var tierPrice = combination.TierPrices.FirstOrDefault(x => x.Id == id);
                 if (tierPrice != null)
                 {
-                    _productViewModelService.DeleteProductAttributeCombinationTierPrices(product, combination, tierPrice);
+                    await _productViewModelService.DeleteProductAttributeCombinationTierPrices(product, combination, tierPrice);
                 }
             }
             return new NullJsonResult();
@@ -2051,13 +2078,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Activity log
 
         [HttpPost]
-        public IActionResult ListActivityLog(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string productId)
         {
-            var activityLog = _productViewModelService.PrepareActivityLogModel(productId, command.Page, command.PageSize);
+            var (activityLogModels, totalCount) = await _productViewModelService.PrepareActivityLogModel(productId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.activityLogModels.ToList(),
-                Total = activityLog.totalCount
+                Data = activityLogModels.ToList(),
+                Total = totalCount
             };
             return Json(gridModel);
         }
@@ -2067,9 +2094,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Reservation
 
         [HttpPost]
-        public IActionResult ListReservations(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ListReservations(DataSourceRequest command, string productId)
         {
-            var reservations = _productReservationService.GetProductReservationsByProductId(productId, null, null, command.Page - 1, command.PageSize);
+            var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null, command.Page - 1, command.PageSize);
             var reservationModel = reservations
                 .Select(x => new ProductModel.ReservationModel
                 {
@@ -2091,12 +2118,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult GenerateCalendar(string productId, ProductModel.GenerateCalendarModel model)
+        public async Task<IActionResult> GenerateCalendar(string productId, ProductModel.GenerateCalendarModel model)
         {
-            var reservations = _productReservationService.GetProductReservationsByProductId(productId, null, null);
+            var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null);
             if (reservations.Any())
             {
-                var product = _productService.GetProductById(productId);
+                var product = await _productService.GetProductById(productId);
                 if (product == null)
                     throw new ArgumentNullException("product");
 
@@ -2106,7 +2133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
                 }
             }
-            _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
+            await _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
 
             if (!ModelState.IsValid)
             {
@@ -2205,14 +2232,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                             if (reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
                                 insert = false;
                         }
-
-
                         if (insert)
                         {
                             if (counter++ > 1000)
                                 break;
 
-                            _productReservationService.InsertProductReservation(new ProductReservation
+                            await _productReservationService.InsertProductReservation(new ProductReservation
                             {
                                 OrderId = "",
                                 Date = iterator,
@@ -2230,36 +2255,36 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { success = true });
         }
 
-        public IActionResult ClearCalendar(string productId)
+        public async Task<IActionResult> ClearCalendar(string productId)
         {
-            var toDelete = _productReservationService.GetProductReservationsByProductId(productId, true, null);
+            var toDelete = await _productReservationService.GetProductReservationsByProductId(productId, true, null);
             foreach (var record in toDelete)
             {
-                _productReservationService.DeleteProductReservation(record);
+                await _productReservationService.DeleteProductReservation(record);
             }
 
             return Json("");
         }
 
-        public IActionResult ClearOld(string productId)
+        public async Task<IActionResult> ClearOld(string productId)
         {
-            var toDelete = _productReservationService.GetProductReservationsByProductId(productId, true, null).Where(x => x.Date < DateTime.UtcNow);
+            var toDelete = (await _productReservationService.GetProductReservationsByProductId(productId, true, null)).Where(x => x.Date < DateTime.UtcNow);
             foreach (var record in toDelete)
             {
-                _productReservationService.DeleteProductReservation(record);
+                await _productReservationService.DeleteProductReservation(record);
             }
 
             return Json("");
         }
 
         [HttpPost]
-        public IActionResult ProductReservationDelete(ProductModel.ReservationModel model)
+        public async Task<IActionResult> ProductReservationDelete(ProductModel.ReservationModel model)
         {
-            var toDelete = _productReservationService.GetProductReservation(model.ReservationId);
+            var toDelete = await _productReservationService.GetProductReservation(model.ReservationId);
             if (toDelete != null)
             {
                 if (string.IsNullOrEmpty(toDelete.OrderId))
-                    _productReservationService.DeleteProductReservation(toDelete);
+                    await _productReservationService.DeleteProductReservation(toDelete);
                 else
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.ProductReservations.CantDeleteWithOrder") });
             }
@@ -2272,33 +2297,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Bids
 
         [HttpPost]
-        public IActionResult ListBids(DataSourceRequest command, string productId)
+        public async Task<IActionResult> ListBids(DataSourceRequest command, string productId)
         {
-            var bids = _productViewModelService.PrepareBidMode(productId, command.Page, command.PageSize);
+            var (bidModels, totalCount) = await _productViewModelService.PrepareBidMode(productId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = bids.bidModels.ToList(),
-                Total = bids.totalCount
+                Data = bidModels.ToList(),
+                Total = totalCount
             };
             return Json(gridModel);
         }
 
         [HttpPost]
-        public IActionResult BidDelete(ProductModel.BidModel model, [FromServices] ICustomerActivityService customerActivityService)
+        public async Task<IActionResult> BidDelete(ProductModel.BidModel model, [FromServices] ICustomerActivityService customerActivityService)
         {
-            var toDelete = _auctionService.GetBid(model.BidId);
+            var toDelete = await _auctionService.GetBid(model.BidId);
             if (toDelete != null)
             {
-                var product = _productService.GetProductById(toDelete.ProductId);
+                var product = await _productService.GetProductById(toDelete.ProductId);
                 if (product == null)
                     return Json(new DataSourceResult { Errors = "Product not exists" });
 
                 if (string.IsNullOrEmpty(toDelete.OrderId))
                 {
                     //activity log
-                    customerActivityService.InsertActivity("DeleteBid", toDelete.ProductId, _localizationService.GetResource("ActivityLog.DeleteBid"), product.Name);
+                    await customerActivityService.InsertActivity("DeleteBid", toDelete.ProductId, _localizationService.GetResource("ActivityLog.DeleteBid"), product.Name);
                     //delete bid
-                    _auctionService.DeleteBid(toDelete);
+                    await _auctionService.DeleteBid(toDelete);
                     return Json("");
                 }
                 else

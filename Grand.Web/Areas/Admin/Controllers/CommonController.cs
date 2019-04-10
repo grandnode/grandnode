@@ -29,6 +29,7 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Bindings;
@@ -39,6 +40,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -69,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IHttpContextAccessor _httpContext;
         private readonly GrandConfig _grandConfig;
         private readonly IMongoDBContext _mongoDBContext;
-
+        private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Constructors
@@ -95,7 +97,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             CatalogSettings catalogSettings,
             IHttpContextAccessor httpContext,
             GrandConfig grandConfig,
-            IMongoDBContext mongoDBContext
+            IMongoDBContext mongoDBContext,
+            IServiceProvider serviceProvider
             )
         {
             this._paymentService = paymentService;
@@ -120,6 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._httpContext = httpContext;
             this._grandConfig = grandConfig;
             this._mongoDBContext = mongoDBContext;
+            this._serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -166,7 +170,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             catch (Exception) { }
 
-            var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
+            var machineNameProvider = _serviceProvider.GetRequiredService<IMachineNameProvider>();
             model.MachineName = machineNameProvider.GetMachineName();
 
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
@@ -191,7 +195,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Warnings()
+        public async Task<IActionResult> Warnings()
         {
             var model = new List<SystemWarningModel>();
 
@@ -216,7 +220,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             //primary exchange rate currency
-            var perCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var perCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (perCurrency != null)
             {
                 model.Add(new SystemWarningModel
@@ -243,7 +247,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //primary store currency
-            var pscCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var pscCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (pscCurrency != null)
             {
                 model.Add(new SystemWarningModel
@@ -263,7 +267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             //base measure weight
-            var bWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
+            var bWeight = await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (bWeight != null)
             {
                 model.Add(new SystemWarningModel
@@ -292,7 +296,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             //base dimension weight
-            var bDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
+            var bDimension = await _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (bDimension != null)
             {
                 model.Add(new SystemWarningModel
@@ -320,7 +324,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //shipping rate coputation methods
-            var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
+            var srcMethods = await _shippingService.LoadActiveShippingRateComputationMethods();
             if (srcMethods.Count == 0)
                 model.Add(new SystemWarningModel
                 {
@@ -335,7 +339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
 
             //payment methods
-            if (_paymentService.LoadActivePaymentMethods().Any())
+            if ((await _paymentService.LoadActivePaymentMethods()).Any())
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
@@ -358,7 +362,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     });
 
             //performance settings
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeService.GetAllStores().Count == 1)
+            if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStores()).Count == 1)
             {
                 model.Add(new SystemWarningModel
                 {
@@ -429,7 +433,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
-        public IActionResult MaintenanceDeleteGuests(MaintenanceModel model)
+        public async Task<IActionResult> MaintenanceDeleteGuests(MaintenanceModel model)
         {
             DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -437,17 +441,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime? endDateValue = (model.DeleteGuests.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            model.DeleteGuests.NumberOfDeletedCustomers = _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
+            model.DeleteGuests.NumberOfDeletedCustomers = await _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
 
             return View(model);
         }
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("clear-most-view")]
-        public IActionResult MaintenanceClearMostViewed(MaintenanceModel model)
+        public async Task<IActionResult> MaintenanceClearMostViewed(MaintenanceModel model)
         {
             var update = new UpdateDefinitionBuilder<Product>().Set(x => x.Viewed, 0);
-            var result = _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update).Result;
-
+            await _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update);
             return View(model);
         }
         [HttpPost, ActionName("Maintenance")]
@@ -460,6 +463,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
+            //TO DO
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             return View(model);
         }
@@ -467,10 +471,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-activitylog")]
-        public IActionResult MaintenanceDeleteActivitylog(MaintenanceModel model)
+        public async Task<IActionResult> MaintenanceDeleteActivitylog(MaintenanceModel model)
         {
-            var _activityLogRepository = EngineContext.Current.Resolve<IRepository<ActivityLog>>();
-            _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
+            var _activityLogRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
+            await _activityLogRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
             model.DeleteActivityLog = true;
             return View(model);
         }
@@ -611,90 +615,93 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
+        public async Task<IActionResult> SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
-            var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
+            var urlRecords = await _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
+            var items = new List<UrlRecordModel>();
+            foreach (var x in urlRecords)
+            {
+                //language
+                string languageName;
+                if (String.IsNullOrEmpty(x.LanguageId))
+                {
+                    languageName = _localizationService.GetResource("Admin.System.SeNames.Language.Standard");
+                }
+                else
+                {
+                    var language = await _languageService.GetLanguageById(x.LanguageId);
+                    languageName = language != null ? language.Name : "Unknown";
+                }
+
+                //details URL
+                string detailsUrl = "";
+                var entityName = x.EntityName != null ? x.EntityName.ToLowerInvariant() : "";
+                switch (entityName)
+                {
+                    case "blogpost":
+                        detailsUrl = Url.Action("Edit", "Blog", new { id = x.EntityId });
+                        break;
+                    case "category":
+                        detailsUrl = Url.Action("Edit", "Category", new { id = x.EntityId });
+                        break;
+                    case "manufacturer":
+                        detailsUrl = Url.Action("Edit", "Manufacturer", new { id = x.EntityId });
+                        break;
+                    case "product":
+                        detailsUrl = Url.Action("Edit", "Product", new { id = x.EntityId });
+                        break;
+                    case "newsitem":
+                        detailsUrl = Url.Action("Edit", "News", new { id = x.EntityId });
+                        break;
+                    case "topic":
+                        detailsUrl = Url.Action("Edit", "Topic", new { id = x.EntityId });
+                        break;
+                    case "vendor":
+                        detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
+                        break;
+                    case "knowledgebasecategory":
+                        detailsUrl = Url.Action("EditCategory", "Knowledgebase", new { id = x.EntityId });
+                        break;
+                    case "knowledgebasearticle":
+                        detailsUrl = Url.Action("EditArticle", "Knowledgebase", new { id = x.EntityId });
+                        break;
+                    default:
+                        break;
+                }
+
+                items.Add(new UrlRecordModel
+                {
+                    Id = x.Id,
+                    Name = x.Slug,
+                    EntityId = x.EntityId,
+                    EntityName = x.EntityName,
+                    IsActive = x.IsActive,
+                    Language = languageName,
+                    DetailsUrl = detailsUrl
+                });
+
+            }
             var gridModel = new DataSourceResult
             {
-                Data = urlRecords.Select(x =>
-                {
-                    //language
-                    string languageName;
-                    if (String.IsNullOrEmpty(x.LanguageId))
-                    {
-                        languageName = _localizationService.GetResource("Admin.System.SeNames.Language.Standard");
-                    }
-                    else
-                    {
-                        var language = _languageService.GetLanguageById(x.LanguageId);
-                        languageName = language != null ? language.Name : "Unknown";
-                    }
-
-                    //details URL
-                    string detailsUrl = "";
-                    var entityName = x.EntityName != null ? x.EntityName.ToLowerInvariant() : "";
-                    switch (entityName)
-                    {
-                        case "blogpost":
-                            detailsUrl = Url.Action("Edit", "Blog", new { id = x.EntityId });
-                            break;
-                        case "category":
-                            detailsUrl = Url.Action("Edit", "Category", new { id = x.EntityId });
-                            break;
-                        case "manufacturer":
-                            detailsUrl = Url.Action("Edit", "Manufacturer", new { id = x.EntityId });
-                            break;
-                        case "product":
-                            detailsUrl = Url.Action("Edit", "Product", new { id = x.EntityId });
-                            break;
-                        case "newsitem":
-                            detailsUrl = Url.Action("Edit", "News", new { id = x.EntityId });
-                            break;
-                        case "topic":
-                            detailsUrl = Url.Action("Edit", "Topic", new { id = x.EntityId });
-                            break;
-                        case "vendor":
-                            detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
-                            break;
-                        case "knowledgebasecategory":
-                            detailsUrl = Url.Action("EditCategory", "Knowledgebase", new { id = x.EntityId });
-                            break;
-                        case "knowledgebasearticle":
-                            detailsUrl = Url.Action("EditArticle", "Knowledgebase", new { id = x.EntityId });
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return new UrlRecordModel
-                    {
-                        Id = x.Id,
-                        Name = x.Slug,
-                        EntityId = x.EntityId,
-                        EntityName = x.EntityName,
-                        IsActive = x.IsActive,
-                        Language = languageName,
-                        DetailsUrl = detailsUrl
-                    };
-                }),
+                Data = items,
                 Total = urlRecords.TotalCount
             };
             return Json(gridModel);
         }
         [HttpPost]
-        public IActionResult DeleteSelectedSeNames(ICollection<string> selectedIds)
+        public async Task<IActionResult> DeleteSelectedSeNames(ICollection<string> selectedIds)
         {
             if (selectedIds != null)
             {
                 var urlRecords = new List<UrlRecord>();
                 foreach (var id in selectedIds)
                 {
-                    var urlRecord = _urlRecordService.GetUrlRecordById(id);
+                    var urlRecord = await _urlRecordService.GetUrlRecordById(id);
                     if (urlRecord != null)
                         urlRecords.Add(urlRecord);
                 }
                 foreach (var urlRecord in urlRecords)
-                    _urlRecordService.DeleteUrlRecord(urlRecord);
+                    await _urlRecordService.DeleteUrlRecord(urlRecord);
             }
 
             return Json(new { Result = true });

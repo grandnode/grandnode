@@ -2,28 +2,29 @@
 using Grand.Web.Models.Boards;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
     public partial interface IBoardsViewModelService
     {
-        BoardsIndexModel PrepareBoardsIndex();
-        ActiveDiscussionsModel PrepareActiveDiscussions();
-        ActiveDiscussionsModel PrepareActiveDiscussions(string forumId = "", int pageNumber = 1);
-        ForumTopicRowModel PrepareForumTopicRow(ForumTopic topic);
-        ForumPageModel PrepareForumPage(Forum forum, int pageNumber);
+        Task<BoardsIndexModel> PrepareBoardsIndex();
+        Task<ActiveDiscussionsModel> PrepareActiveDiscussions();
+        Task<ActiveDiscussionsModel> PrepareActiveDiscussions(string forumId = "", int pageNumber = 1);
+        Task<ForumTopicRowModel> PrepareForumTopicRow(ForumTopic topic);
+        Task<ForumPageModel> PrepareForumPage(Forum forum, int pageNumber);
         ForumRowModel PrepareForumRow(Forum forum);
-        ForumGroupModel PrepareForumGroup(ForumGroup forumGroup);
+        Task<ForumGroupModel> PrepareForumGroup(ForumGroup forumGroup);
         IEnumerable<SelectListItem> ForumTopicTypesList();
-        IEnumerable<SelectListItem> ForumGroupsForumsList();
-        ForumTopicPageModel PrepareForumTopicPage(ForumTopic forumTopic, int pageNumber);
-        TopicMoveModel PrepareTopicMove(ForumTopic forumTopic);
+        Task<IEnumerable<SelectListItem>> ForumGroupsForumsList();
+        Task<ForumTopicPageModel> PrepareForumTopicPage(ForumTopic forumTopic, int pageNumber);
+        Task<TopicMoveModel> PrepareTopicMove(ForumTopic forumTopic);
         EditForumTopicModel PrepareEditForumTopic(Forum forum);
-        EditForumPostModel PrepareEditForumPost(Forum forum, ForumTopic forumTopic, string quote);
-        LastPostModel PrepareLastPost(string forumPostId, bool showTopic);
-        ForumBreadcrumbModel PrepareForumBreadcrumb(string forumGroupId, string forumId, string forumTopicId);
-        CustomerForumSubscriptionsModel PrepareCustomerForumSubscriptions(int pageIndex);
-        SearchModel PrepareSearch(string searchterms, bool? adv, string forumId,
+        Task<EditForumPostModel> PrepareEditForumPost(Forum forum, ForumTopic forumTopic, string quote);
+        Task<LastPostModel> PrepareLastPost(string forumPostId, bool showTopic);
+        Task<ForumBreadcrumbModel> PrepareForumBreadcrumb(string forumGroupId, string forumId, string forumTopicId);
+        Task<CustomerForumSubscriptionsModel> PrepareCustomerForumSubscriptions(int pageIndex);
+        Task<SearchModel> PrepareSearch(string searchterms, bool? adv, string forumId,
             string within, string limitDays, int pageNumber = 1);
     }
 }

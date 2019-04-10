@@ -15,11 +15,15 @@ namespace Grand.Web.ViewComponents
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+
+        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
@@ -30,12 +34,12 @@ namespace Grand.Web.ViewComponents
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            await Task.Run(() => _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
+            await _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
                 isEditable: false,
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault()));
+                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return View(model);
 
         }

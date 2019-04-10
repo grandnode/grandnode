@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Models.Directory;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -48,9 +49,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Weights() => View();
 
         [HttpPost]
-        public IActionResult Weights(DataSourceRequest command)
+        public async Task<IActionResult> Weights(DataSourceRequest command)
         {
-            var weightsModel = _measureService.GetAllMeasureWeights()
+            var weightsModel = (await _measureService.GetAllMeasureWeights())
                 .Select(x => x.ToModel())
                 .ToList();
             foreach (var wm in weightsModel)
@@ -65,22 +66,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult WeightUpdate(MeasureWeightModel model)
+        public async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var weight = _measureService.GetMeasureWeightById(model.Id);
+            var weight = await _measureService.GetMeasureWeightById(model.Id);
             weight = model.ToEntity(weight);
-            _measureService.UpdateMeasureWeight(weight);
+            await _measureService.UpdateMeasureWeight(weight);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult WeightAdd(MeasureWeightModel model)
+        public async Task<IActionResult> WeightAdd(MeasureWeightModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -89,15 +90,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var weight = new MeasureWeight();
             weight = model.ToEntity(weight);
-            _measureService.InsertMeasureWeight(weight);
+            await _measureService.InsertMeasureWeight(weight);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult WeightDelete(string id)
+        public async Task<IActionResult> WeightDelete(string id)
         {
-            var weight = _measureService.GetMeasureWeightById(id);
+            var weight = await _measureService.GetMeasureWeightById(id);
             if (weight == null)
                 throw new ArgumentException("No weight found with the specified id");
 
@@ -106,19 +107,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Weights.CantDeletePrimary") });
             }
 
-            _measureService.DeleteMeasureWeight(weight);
+            await _measureService.DeleteMeasureWeight(weight);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult MarkAsPrimaryWeight(string id)
+        public async Task<IActionResult> MarkAsPrimaryWeight(string id)
         {
-            var primaryWeight = _measureService.GetMeasureWeightById(id);
+            var primaryWeight = await _measureService.GetMeasureWeightById(id);
             if (primaryWeight != null)
             {
                 _measureSettings.BaseWeightId = primaryWeight.Id;
-                _settingService.SaveSetting(_measureSettings);
+                await _settingService.SaveSetting(_measureSettings);
             }
 
             return Json(new { result = true });
@@ -131,9 +132,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Dimensions() => View();
 
         [HttpPost]
-        public IActionResult Dimensions(DataSourceRequest command)
+        public async Task<IActionResult> Dimensions(DataSourceRequest command)
         {
-            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+            var dimensionsModel = (await _measureService.GetAllMeasureDimensions())
                 .Select(x => x.ToModel())
                 .ToList();
             foreach (var wm in dimensionsModel)
@@ -148,22 +149,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult DimensionUpdate(MeasureDimensionModel model)
+        public async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var dimension = _measureService.GetMeasureDimensionById(model.Id);
+            var dimension = await _measureService.GetMeasureDimensionById(model.Id);
             dimension = model.ToEntity(dimension);
-            _measureService.UpdateMeasureDimension(dimension);
+            await _measureService.UpdateMeasureDimension(dimension);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult DimensionAdd(MeasureDimensionModel model)
+        public async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -172,15 +173,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var dimension = new MeasureDimension();
             dimension = model.ToEntity(dimension);
-            _measureService.InsertMeasureDimension(dimension);
+            await _measureService.InsertMeasureDimension(dimension);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult DimensionDelete(string id)
+        public async Task<IActionResult> DimensionDelete(string id)
         {
-            var dimension = _measureService.GetMeasureDimensionById(id);
+            var dimension = await _measureService.GetMeasureDimensionById(id);
             if (dimension == null)
                 throw new ArgumentException("No dimension found with the specified id");
 
@@ -189,19 +190,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Measures.Dimensions.CantDeletePrimary") });
             }
 
-            _measureService.DeleteMeasureDimension(dimension);
+            await _measureService.DeleteMeasureDimension(dimension);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult MarkAsPrimaryDimension(string id)
+        public async Task<IActionResult> MarkAsPrimaryDimension(string id)
         {
-            var primaryDimension = _measureService.GetMeasureDimensionById(id);
+            var primaryDimension = await _measureService.GetMeasureDimensionById(id);
             if (primaryDimension != null)
             {
                 _measureSettings.BaseDimensionId = id;
-                _settingService.SaveSetting(_measureSettings);
+                await _settingService.SaveSetting(_measureSettings);
             }
             return Json(new { result = true });
         }
@@ -213,9 +214,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Units() => View();
 
         [HttpPost]
-        public IActionResult Units(DataSourceRequest command)
+        public async Task<IActionResult> Units(DataSourceRequest command)
         {
-            var unitsModel = _measureService.GetAllMeasureUnits()
+            var unitsModel = (await _measureService.GetAllMeasureUnits())
                 .Select(x => x.ToModel())
                 .ToList();
 
@@ -229,22 +230,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnitUpdate(MeasureUnitModel model)
+        public async Task<IActionResult> UnitUpdate(MeasureUnitModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
-            var unit = _measureService.GetMeasureUnitById(model.Id);
+            var unit = await _measureService.GetMeasureUnitById(model.Id);
             unit = model.ToEntity(unit);
-            _measureService.UpdateMeasureUnit(unit);
+            await _measureService.UpdateMeasureUnit(unit);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult UnitAdd(MeasureUnitModel model)
+        public async Task<IActionResult> UnitAdd(MeasureUnitModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -253,19 +254,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var unit = new MeasureUnit();
             unit = model.ToEntity(unit);
-            _measureService.InsertMeasureUnit(unit);
+            await _measureService.InsertMeasureUnit(unit);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public IActionResult UnitDelete(string id)
+        public async Task<IActionResult> UnitDelete(string id)
         {
-            var unit = _measureService.GetMeasureUnitById(id);
+            var unit = await _measureService.GetMeasureUnitById(id);
             if (unit == null)
                 throw new ArgumentException("No unit found with the specified id");
 
-            _measureService.DeleteMeasureUnit(unit);
+            await _measureService.DeleteMeasureUnit(unit);
 
             return new NullJsonResult();
         }

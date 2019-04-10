@@ -10,6 +10,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -45,9 +46,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var newslettercategories = _newsletterCategoryService.GetAllNewsletterCategory();
+            var newslettercategories = await _newsletterCategoryService.GetAllNewsletterCategory();
             var gridModel = new DataSourceResult
             {
                 Data = newslettercategories.Select(x =>
@@ -64,84 +65,84 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new NewsletterCategoryModel();
             //locales
-            AddLocales(_languageService, model.Locales);
+            await AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Create(NewsletterCategoryModel model, bool continueEditing)
+        public async Task<IActionResult> Create(NewsletterCategoryModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
                 var newsletterCategory = model.ToEntity();
-                _newsletterCategoryService.InsertNewsletterCategory(newsletterCategory);
+                await _newsletterCategoryService.InsertNewsletterCategory(newsletterCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.NewsletterCategory.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsletterCategory.Id }) : RedirectToAction("List");
             }
 
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, false, _storeService);
 
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(id);
+            var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
 
             var model = newsletterCategory.ToModel();
 
             //locales
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = newsletterCategory.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = newsletterCategory.GetLocalized(x => x.Description, languageId, false, false);
             });
 
             //Stores
-            model.PrepareStoresMappingModel(newsletterCategory, false, _storeService);
+            await model.PrepareStoresMappingModel(newsletterCategory, false, _storeService);
             return View(model);
         }
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public IActionResult Edit(NewsletterCategoryModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(NewsletterCategoryModel model, bool continueEditing)
         {
-            var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(model.Id);
+            var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(model.Id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 newsletterCategory = model.ToEntity(newsletterCategory);
-                _newsletterCategoryService.UpdateNewsletterCategory(newsletterCategory);
+                await _newsletterCategoryService.UpdateNewsletterCategory(newsletterCategory);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.NewsletterCategory.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsletterCategory.Id }) : RedirectToAction("List");
             }
             //Stores
-            model.PrepareStoresMappingModel(newsletterCategory, true, _storeService);
+            await model.PrepareStoresMappingModel(newsletterCategory, true, _storeService);
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(id);
+            var newsletterCategory = await _newsletterCategoryService.GetNewsletterCategoryById(id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
 
-            _newsletterCategoryService.DeleteNewsletterCategory(newsletterCategory);
+            await _newsletterCategoryService.DeleteNewsletterCategory(newsletterCategory);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.NewsletterCategory.Deleted"));
             return RedirectToAction("List");

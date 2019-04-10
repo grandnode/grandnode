@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Customers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
@@ -13,14 +14,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attributes</returns>
-        IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml);
+        Task<IList<CustomerAttribute>> ParseCustomerAttributes(string attributesXml);
 
         /// <summary>
         /// Get customer attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Customer attribute values</returns>
-        IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml);
+        Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected customer attribute value
@@ -44,6 +45,6 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarnings(string attributesXml);
     }
 }

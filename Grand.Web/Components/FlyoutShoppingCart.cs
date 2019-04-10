@@ -27,10 +27,10 @@ namespace Grand.Web.ViewComponents
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareMiniShoppingCart());
+            var model = await _shoppingCartViewModelService.PrepareMiniShoppingCart();
             return View(model);
         }
     }

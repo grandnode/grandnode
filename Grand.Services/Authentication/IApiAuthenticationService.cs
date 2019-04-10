@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Customers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
@@ -8,30 +9,30 @@ namespace Grand.Services.Authentication
         /// <summary>
         /// Sign in
         /// </summary>
-        void SignIn();
+        Task SignIn();
 
         /// <summary>
         /// Sign in
         /// </summary>
         /// <param name="email">email</param>
-        void SignIn(string email);
+        Task SignIn(string email);
 
         /// <summary>
         /// Valid email 
         /// </summary>
         ///<param name="context">Token</param>
-        bool Valid(TokenValidatedContext context);
+        Task<bool> Valid(TokenValidatedContext context);
 
         /// <summary>
         /// Get error message
         /// </summary>
         /// <returns></returns>
-        string ErrorMessage();
+        Task<string> ErrorMessage();
 
         /// <summary>
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        Customer GetAuthenticatedCustomer();
+        Task<Customer> GetAuthenticatedCustomer();
     }
 }

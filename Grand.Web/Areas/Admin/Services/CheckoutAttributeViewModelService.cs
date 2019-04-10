@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -66,19 +67,19 @@ namespace Grand.Web.Areas.Admin.Services
 
         #region Utilities
 
-        public virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        public virtual async Task PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
             //tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            var taxCategories = await _taxCategoryService.GetAllTaxCategories();
             model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
         }
 
-        public virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
+        public virtual async Task PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -89,14 +90,14 @@ namespace Grand.Web.Areas.Admin.Services
             if (checkoutAttribute == null)
                 return;
 
-            var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
-            var selectedValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
+            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
+            var selectedValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
 
             model.ConditionModel = new ConditionModel()
             {
                 EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = _checkoutAttributeService.GetAllCheckoutAttributes()
+                ConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes())
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
                     .Select(x =>
@@ -116,12 +117,12 @@ namespace Grand.Web.Areas.Admin.Services
             };
         }
 
-        protected virtual void SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        protected virtual async Task SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             string attributesXml = null;
             if (model.ConditionModel.EnableCondition)
             {
-                var attribute = _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
+                var attribute = await _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
                 if (attribute != null)
                 {
                     switch (attribute.AttributeControlType)
@@ -169,9 +170,9 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual IEnumerable<CheckoutAttributeModel> PrepareCheckoutAttributeListModel()
+        public virtual async Task<IEnumerable<CheckoutAttributeModel>> PrepareCheckoutAttributeListModel()
         {
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes();
             return checkoutAttributes.Select(x =>
                 {
                     var attributeModel = x.ToModel();
@@ -179,9 +180,9 @@ namespace Grand.Web.Areas.Admin.Services
                     return attributeModel;
                 });
         }
-        public virtual IEnumerable<CheckoutAttributeValueModel> PrepareCheckoutAttributeValuesModel(string checkoutAttributeId)
+        public virtual async Task<IEnumerable<CheckoutAttributeValueModel>> PrepareCheckoutAttributeValuesModel(string checkoutAttributeId)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var values = checkoutAttribute.CheckoutAttributeValues;
             return values.Select(x => new CheckoutAttributeValueModel
             {
@@ -195,70 +196,70 @@ namespace Grand.Web.Areas.Admin.Services
                 DisplayOrder = x.DisplayOrder,
             });
         }
-        public virtual CheckoutAttributeModel PrepareCheckoutAttributeModel()
+        public virtual async Task<CheckoutAttributeModel> PrepareCheckoutAttributeModel()
         {
             var model = new CheckoutAttributeModel();
             //tax categories
-            PrepareTaxCategories(model, null, true);
+            await PrepareTaxCategories(model, null, true);
             //condition
-            PrepareConditionAttributes(model, null);
+            await PrepareConditionAttributes(model, null);
             return model;
         }
 
-        public virtual CheckoutAttributeValueModel PrepareCheckoutAttributeValueModel(string checkoutAttributeId)
+        public virtual async Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModel(string checkoutAttributeId)
         {
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
+            var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var model = new CheckoutAttributeValueModel();
             model.CheckoutAttributeId = checkoutAttributeId;
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
 
             //color squares
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
             model.ColorSquaresRgb = "#000000";
             return model;
         }
-        public virtual CheckoutAttributeValueModel PrepareCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue)
+        public virtual async Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue)
         {
             var model = checkoutAttributeValue.ToModel();
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
 
             return model;
         }
-        public virtual CheckoutAttribute InsertCheckoutAttributeModel(CheckoutAttributeModel model)
+        public virtual async Task<CheckoutAttribute> InsertCheckoutAttributeModel(CheckoutAttributeModel model)
         {
             var checkoutAttribute = model.ToEntity();
-            _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
+            await _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("AddNewCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
+            await _customerActivityService.InsertActivity("AddNewCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
             return checkoutAttribute;
         }
-        public virtual CheckoutAttribute UpdateCheckoutAttributeModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        public virtual async Task<CheckoutAttribute> UpdateCheckoutAttributeModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             checkoutAttribute = model.ToEntity(checkoutAttribute);
-            SaveConditionAttributes(checkoutAttribute, model);
-            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
+            await SaveConditionAttributes(checkoutAttribute, model);
+            await _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("EditCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
+            await _customerActivityService.InsertActivity("EditCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
             return checkoutAttribute;
         }
 
-        public virtual CheckoutAttributeValue InsertCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValueModel model)
+        public virtual async Task<CheckoutAttributeValue> InsertCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValueModel model)
         {
             var cav = model.ToEntity();
             checkoutAttribute.CheckoutAttributeValues.Add(cav);
-            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
+            await _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
             return cav;
         }
 
-        public virtual CheckoutAttributeValue UpdateCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
+        public virtual async Task<CheckoutAttributeValue> UpdateCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
         {
             checkoutAttributeValue = model.ToEntity(checkoutAttributeValue);
-            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
+            await _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
             return checkoutAttributeValue;
         }
     }

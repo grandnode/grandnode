@@ -6,6 +6,7 @@ using Grand.Services.Logging;
 using Grand.Services.PushNotifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -26,15 +27,15 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProcessRegistration(bool success, string value)
+        public virtual async Task<IActionResult> ProcessRegistration(bool success, string value)
         {
             if (success)
             {
-                var toUpdate = _pushNotificationsService.GetPushReceiverByCustomerId(_workContext.CurrentCustomer.Id);
+                var toUpdate = await _pushNotificationsService.GetPushReceiverByCustomerId(_workContext.CurrentCustomer.Id);
 
                 if (toUpdate == null)
                 {
-                    _pushNotificationsService.InsertPushReceiver(new PushRegistration
+                    await _pushNotificationsService.InsertPushReceiver(new PushRegistration
                     {
                         CustomerId = _workContext.CurrentCustomer.Id,
                         Token = value,
@@ -47,18 +48,18 @@ namespace Grand.Web.Controllers
                     toUpdate.Token = value;
                     toUpdate.RegisteredOn = DateTime.UtcNow;
                     toUpdate.Allowed = true;
-                    _pushNotificationsService.UpdatePushReceiver(toUpdate);
+                    await _pushNotificationsService.UpdatePushReceiver(toUpdate);
                 }
             }
             else
             {
                 if (value == "Permission denied")
                 {
-                    var toUpdate = _pushNotificationsService.GetPushReceiverByCustomerId(_workContext.CurrentCustomer.Id);
+                    var toUpdate = await _pushNotificationsService.GetPushReceiverByCustomerId(_workContext.CurrentCustomer.Id);
 
                     if (toUpdate == null)
                     {
-                        _pushNotificationsService.InsertPushReceiver(new PushRegistration
+                        await _pushNotificationsService.InsertPushReceiver(new PushRegistration
                         {
                             CustomerId = _workContext.CurrentCustomer.Id,
                             Token = "[DENIED]",
@@ -71,7 +72,7 @@ namespace Grand.Web.Controllers
                         toUpdate.Token = "[DENIED]";
                         toUpdate.RegisteredOn = DateTime.UtcNow;
                         toUpdate.Allowed = false;
-                        _pushNotificationsService.UpdatePushReceiver(toUpdate);
+                        await _pushNotificationsService.UpdatePushReceiver(toUpdate);
                     }
                 }
             }

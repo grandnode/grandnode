@@ -4,6 +4,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -19,41 +20,41 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        Order GetOrderById(string orderId);
+        Task<Order> GetOrderById(string orderId);
 
         /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderItemId">The order item identifier</param>
         /// <returns>Order</returns>
-        Order GetOrderByOrderItemId(string orderItemId);
+        Task<Order> GetOrderByOrderItemId(string orderItemId);
 
         /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderNumber">The order number</param>
         /// <returns>Order</returns>
-        Order GetOrderByNumber(int orderNumber);
+        Task<Order> GetOrderByNumber(int orderNumber);
 
         /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
         /// <returns>Order</returns>
-        IList<Order> GetOrdersByIds(string[] orderIds);
+        Task<IList<Order>> GetOrdersByIds(string[] orderIds);
 
         /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
         /// <returns>Order</returns>
-        Order GetOrderByGuid(Guid orderGuid);
+        Task<Order> GetOrderByGuid(Guid orderGuid);
 
         /// <summary>
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
-        void DeleteOrder(Order order);
+        Task DeleteOrder(Order order);
 
         /// <summary>
         /// Search orders
@@ -77,7 +78,7 @@ namespace Grand.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        IPagedList<Order> SearchOrders(string storeId = "",
+        Task<IPagedList<Order>> SearchOrders(string storeId = "",
             string vendorId = "", string customerId = "",
             string productId = "", string affiliateId = "", string warehouseId = "",
             string billingCountryId = "", string paymentMethodSystemName = null,
@@ -90,19 +91,19 @@ namespace Grand.Services.Orders
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
-        void InsertOrder(Order order);
+        Task InsertOrder(Order order);
 
         /// <summary>
         /// Inserts an product also purchased
         /// </summary>
         /// <param name="order">Order</param>
-        void InsertProductAlsoPurchased(Order order);
+        Task InsertProductAlsoPurchased(Order order);
 
         /// <summary>
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
-        void UpdateOrder(Order order);
+        Task UpdateOrder(Order order);
 
         /// <summary>
         /// Get an order by authorization transaction ID and payment method system name
@@ -110,7 +111,7 @@ namespace Grand.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
+        Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
         
         #endregion
 
@@ -121,7 +122,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderItemGuid">Order item identifier</param>
         /// <returns>Order item</returns>
-        OrderItem GetOrderItemByGuid(Guid orderItemGuid);
+        Task<OrderItem> GetOrderItemByGuid(Guid orderItemGuid);
 
         /// <summary>
         /// Gets all order items
@@ -135,7 +136,7 @@ namespace Grand.Services.Orders
         /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order items</returns>
-        IList<OrderItem> GetAllOrderItems(string orderId,
+        Task<IList<OrderItem>> GetAllOrderItems(string orderId,
            string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
            bool loadDownloableProductsOnly = false);
@@ -144,7 +145,7 @@ namespace Grand.Services.Orders
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>
-        void DeleteOrderItem(OrderItem orderItem);
+        Task DeleteOrderItem(OrderItem orderItem);
 
         #endregion
 
@@ -154,13 +155,13 @@ namespace Grand.Services.Orders
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        void DeleteOrderNote(OrderNote orderNote);
+        Task DeleteOrderNote(OrderNote orderNote);
 
         /// <summary>
         /// Insert an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        void InsertOrderNote(OrderNote orderNote);
+        Task InsertOrderNote(OrderNote orderNote);
 
 
         /// <summary>
@@ -168,14 +169,14 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>OrderNote</returns>
-        IList<OrderNote> GetOrderNotes(string orderId);
+        Task<IList<OrderNote>> GetOrderNotes(string orderId);
 
         /// <summary>
         /// Get ordernote by id
         /// </summary>
         /// <param name="ordernoteId">Order note identifier</param>
         /// <returns>OrderNote</returns>
-        OrderNote GetOrderNote(string ordernoteId);
+        Task<OrderNote> GetOrderNote(string ordernoteId);
 
         #endregion
 
@@ -185,26 +186,26 @@ namespace Grand.Services.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void DeleteRecurringPayment(RecurringPayment recurringPayment);
+        Task DeleteRecurringPayment(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Gets a recurring payment
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        RecurringPayment GetRecurringPaymentById(string recurringPaymentId);
+        Task<RecurringPayment> GetRecurringPaymentById(string recurringPaymentId);
 
         /// <summary>
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void InsertRecurringPayment(RecurringPayment recurringPayment);
+        Task InsertRecurringPayment(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void UpdateRecurringPayment(RecurringPayment recurringPayment);
+        Task UpdateRecurringPayment(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Search recurring payments
@@ -217,7 +218,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        IPagedList<RecurringPayment> SearchRecurringPayments(string storeId = "",
+        Task<IPagedList<RecurringPayment>> SearchRecurringPayments(string storeId = "",
             string customerId = "", string initialOrderId = "", OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 

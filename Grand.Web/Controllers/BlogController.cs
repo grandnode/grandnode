@@ -17,6 +17,7 @@ using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -29,6 +30,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly BlogSettings _blogSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -41,6 +43,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IWebHelper webHelper,
+            IWorkContext workContext,
             BlogSettings blogSettings,
             CaptchaSettings captchaSettings)
         {
@@ -51,56 +54,57 @@ namespace Grand.Web.Controllers
             this._webHelper = webHelper;
             this._blogSettings = blogSettings;
             this._captchaSettings = captchaSettings;
+            this._workContext = workContext;
         }
 
 		#endregion
 
         #region Methods
 
-        public virtual IActionResult List(BlogPagingFilteringModel command)
+        public virtual async Task<IActionResult> List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
             
-            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
+        public virtual async Task<IActionResult> BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
+        public virtual async Task<IActionResult> BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual IActionResult BlogByCategory(BlogPagingFilteringModel command)
+        public virtual async Task<IActionResult> BlogByCategory(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual IActionResult BlogByKeyword(BlogPagingFilteringModel command)
+        public virtual async Task<IActionResult> BlogByKeyword(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual IActionResult ListRss(string languageId)
+        public virtual async Task<IActionResult> ListRss(string languageId)
         {
             var feed = new RssFeed(
-                string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)),
                 "Blog",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -109,24 +113,24 @@ namespace Grand.Web.Controllers
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
-            var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
+            var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        public virtual IActionResult BlogPost(string blogPostId,
+        public virtual async Task<IActionResult> BlogPost(string blogPostId,
             [FromServices] IStoreMappingService storeMappingService,
             [FromServices] IPermissionService permissionService)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var blogPost = _blogService.GetBlogPostById(blogPostId);
+            var blogPost = await _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null ||
                 (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= DateTime.UtcNow) ||
                 (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= DateTime.UtcNow))
@@ -137,12 +141,11 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
             
             var model = new BlogPostModel();
-            _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
+            await _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
 
             //display "edit" (manage) link
-            if (permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
-
 
             return View(model);
         }
@@ -151,13 +154,13 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
-        public virtual IActionResult BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid,
+        public virtual async Task<IActionResult> BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid,
                        [FromServices] IWorkContext workContext)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var blogPost = _blogService.GetBlogPostById(blogPostId);
+            var blogPost = await _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("HomePage");
 
@@ -174,15 +177,15 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _blogViewModelService.InsertBlogComment(model, blogPost);
+                await _blogViewModelService.InsertBlogComment(model, blogPost);
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName() });
+                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id) });
             }
 
             //If we got this far, something failed, redisplay form
-            _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
+            await _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
             return View(model);
         }
         #endregion

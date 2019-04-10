@@ -30,7 +30,8 @@ namespace Grand.Framework.Infrastructure
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var hostingConfig = EngineContext.Current.Resolve<HostingConfig>();
+            var serviceProvider = application.ApplicationServices;
+            var hostingConfig = serviceProvider.GetRequiredService<HostingConfig>();
 
             if (hostingConfig.UseForwardedHeaders)
                 application.UseGrandForwardedHeaders();

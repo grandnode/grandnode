@@ -5,6 +5,7 @@ using Grand.Data;
 using Grand.Services.Media;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Api.Services
 {
@@ -54,17 +55,17 @@ namespace Grand.Api.Services
         {
             return _pictureDto.AsQueryable();
         }
-        public virtual PictureDto InsertPicture(PictureDto pictureDto)
+        public virtual async Task<PictureDto> InsertPicture(PictureDto pictureDto)
         {
-            var picture = _pictureService.InsertPicture(pictureDto.PictureBinary, pictureDto.MimeType, pictureDto.SeoFilename, pictureDto.AltAttribute, pictureDto.TitleAttribute, pictureDto.IsNew);
+            var picture = await _pictureService.InsertPicture(pictureDto.PictureBinary, pictureDto.MimeType, pictureDto.SeoFilename, pictureDto.AltAttribute, pictureDto.TitleAttribute, pictureDto.IsNew);
             return picture.ToModel();
         }
-        public virtual void DeletePicture(PictureDto pictureDto)
+        public virtual async Task DeletePicture(PictureDto pictureDto)
         {
-            var picture = _pictureService.GetPictureById(pictureDto.Id);
+            var picture = await _pictureService.GetPictureById(pictureDto.Id);
             if (picture != null)
             {
-                _pictureService.DeletePicture(picture);
+                await _pictureService.DeletePicture(picture);
             }
         }
         public virtual IMongoQueryable<MessageTemplateDto> GetCategoryMessageTemplate()

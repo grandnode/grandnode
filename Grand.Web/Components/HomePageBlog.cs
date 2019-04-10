@@ -22,7 +22,7 @@ namespace Grand.Web.ViewComponents
             if (!_blogSettings.Enabled || !_blogSettings.ShowBlogOnHomePage)
                 return Content("");
 
-            var model = await Task.Run(() => _blogViewModelService.PrepareHomePageBlogItems());
+            var model = await _blogViewModelService.PrepareHomePageBlogItems();
             return View(model);
         }
     }

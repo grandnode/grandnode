@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Messages;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -9,32 +10,32 @@ namespace Grand.Services.Messages
         /// Inserts a InteractiveForm
         /// </summary>
         /// <param name="InteractiveForm">Interactive Form</param>        
-        void InsertForm(InteractiveForm form);
+        Task InsertForm(InteractiveForm form);
 
         /// <summary>
         /// Updates a InteractiveForm
         /// </summary>
         /// <param name="InteractiveForm">Interactive Form</param>
-        void UpdateForm(InteractiveForm form);
+        Task UpdateForm(InteractiveForm form);
 
         /// <summary>
         /// Deleted a InteractiveForm
         /// </summary>
         /// <param name="InteractiveForm">Interactive Form</param>
-        void DeleteForm(InteractiveForm form);
+        Task DeleteForm(InteractiveForm form);
 
         /// <summary>
         /// Gets a form by identifier
         /// </summary>
         /// <param name="formId">Form identifier</param>
         /// <returns>Banner</returns>
-        InteractiveForm GetFormById(string formId);
+        Task<InteractiveForm> GetFormById(string formId);
 
         /// <summary>
         /// Gets all banner
         /// </summary>
         /// <returns>Banners</returns>
-        IList<InteractiveForm> GetAllForms();
+        Task<IList<InteractiveForm>> GetAllForms();
 
     }
 }

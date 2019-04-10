@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
@@ -48,7 +49,7 @@ namespace Grand.Services.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual async void SignIn(Customer customer, bool isPersistent)
+        public virtual async Task SignIn(Customer customer, bool isPersistent)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -83,7 +84,7 @@ namespace Grand.Services.Authentication
         /// <summary>
         /// Sign out
         /// </summary>
-        public virtual async void SignOut()
+        public virtual async Task SignOut()
         {
             //reset cached customer
             _cachedCustomer = null;
@@ -96,14 +97,14 @@ namespace Grand.Services.Authentication
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer GetAuthenticatedCustomer()
+        public virtual async Task<Customer> GetAuthenticatedCustomer()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
             //try to get authenticated user identity
-            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme).Result;
+            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded)
                 return null;
 
@@ -114,7 +115,7 @@ namespace Grand.Services.Authentication
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+                    customer = await _customerService.GetCustomerByUsername(usernameClaim.Value);
             }
             else
             {
@@ -122,7 +123,7 @@ namespace Grand.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                    customer = await _customerService.GetCustomerByEmail(emailClaim.Value);
             }
 
             //whether the found customer is available

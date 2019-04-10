@@ -18,6 +18,7 @@ using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -37,13 +38,13 @@ namespace Grand.Web.Controllers
 
         private readonly NewsSettings _newsSettings;
         private readonly CaptchaSettings _captchaSettings;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public NewsController(INewsViewModelService newsViewModelService, INewsService newsService, 
-            IWorkContext workContext, IStoreContext storeContext, 
+        public NewsController(INewsViewModelService newsViewModelService, INewsService newsService,
+            IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService,
             IWebHelper webHelper, ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
@@ -68,20 +69,20 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult List(NewsPagingFilteringModel command)
+        public virtual async Task<IActionResult> List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _newsViewModelService.PrepareNewsItemList(command);
+            var model = await _newsViewModelService.PrepareNewsItemList(command);
 
             return View(model);
         }
 
-        public virtual IActionResult ListRss(string languageId)
+        public virtual async Task<IActionResult> ListRss(string languageId)
         {
             var feed = new RssFeed(
-                string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)),
                 "News",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -90,23 +91,23 @@ namespace Grand.Web.Controllers
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
-            var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id);
+            var newsItems = await _newsService.GetAllNews(_storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
-                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(_workContext.WorkingLanguage.Id) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        public virtual IActionResult NewsItem(string newsItemId)
+        public virtual async Task<IActionResult> NewsItem(string newsItemId)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var newsItem = _newsService.GetNewsById(newsItemId);
-            if (newsItem == null || 
+            var newsItem = await _newsService.GetNewsById(newsItemId);
+            if (newsItem == null ||
                 !newsItem.Published ||
                 (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
                 (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow) ||
@@ -115,10 +116,10 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();
-            _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
+            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 DisplayEditLink(Url.Action("Edit", "News", new { id = newsItem.Id, area = "Admin" }));
 
             return View(model);
@@ -128,12 +129,12 @@ namespace Grand.Web.Controllers
         [FormValueRequired("add-comment")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
+        public virtual async Task<IActionResult> NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var newsItem = _newsService.GetNewsById(newsItemId);
+            var newsItem = await _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
                 return RedirectToRoute("HomePage");
 
@@ -150,18 +151,18 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _newsViewModelService.InsertNewsComment(newsItem, model);
+                await _newsViewModelService.InsertNewsComment(newsItem, model);
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
+                await _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
-                return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName() });
+                return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(_workContext.WorkingLanguage.Id) });
             }
 
             //If we got this far, something failed, redisplay form
-            _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
         #endregion

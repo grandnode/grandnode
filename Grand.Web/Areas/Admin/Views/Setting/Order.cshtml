@@ -69,7 +69,7 @@
     @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
-        eventPublisher.Publish(eventMessage);
+        await eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
            @eventBlock

@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using static Grand.Core.Domain.Customers.CustomerAction;
 
 namespace Grand.Web.Areas.Admin.Services
@@ -36,7 +37,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IInteractiveFormService _interactiveFormService;
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IDateTimeHelper _dateTimeHelper;
-
+        private readonly IProductService _productService;
 
         public CustomerActionViewModelService(ICustomerService customerService,
             ICustomerTagService customerTagService,
@@ -51,7 +52,8 @@ namespace Grand.Web.Areas.Admin.Services
             IBannerService bannerService,
             IInteractiveFormService interactiveFormService,
             IMessageTemplateService messageTemplateService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IProductService productService)
         {
             _customerService = customerService;
             _customerTagService = customerTagService;
@@ -66,14 +68,15 @@ namespace Grand.Web.Areas.Admin.Services
             _interactiveFormService = interactiveFormService;
             _messageTemplateService = messageTemplateService;
             _dateTimeHelper = dateTimeHelper;
+            _productService = productService;
         }
 
-        public virtual void PrepareReactObjectModel(CustomerActionModel model)
+        public virtual async Task PrepareReactObjectModel(CustomerActionModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            var banners = _bannerService.GetAllBanners();
+            var banners = await _bannerService.GetAllBanners();
             foreach (var item in banners)
             {
                 model.Banners.Add(new SelectListItem
@@ -83,7 +86,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
 
             }
-            var message = _messageTemplateService.GetAllMessageTemplates("");
+            var message = await _messageTemplateService.GetAllMessageTemplates("");
             foreach (var item in message)
             {
                 model.MessageTemplates.Add(new SelectListItem
@@ -92,7 +95,7 @@ namespace Grand.Web.Areas.Admin.Services
                     Value = item.Id.ToString()
                 });
             }
-            var customerRole = _customerService.GetAllCustomerRoles();
+            var customerRole = await _customerService.GetAllCustomerRoles();
             foreach (var item in customerRole)
             {
                 model.CustomerRoles.Add(new SelectListItem
@@ -102,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
 
-            var customerTag = _customerTagService.GetAllCustomerTags();
+            var customerTag = await _customerTagService.GetAllCustomerTags();
             foreach (var item in customerTag)
             {
                 model.CustomerTags.Add(new SelectListItem
@@ -112,7 +115,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
 
-            foreach (var item in _customerActionService.GetCustomerActionType())
+            foreach (var item in await _customerActionService.GetCustomerActionType())
             {
                 model.ActionType.Add(new SelectListItem()
                 {
@@ -121,7 +124,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
 
-            foreach (var item in _interactiveFormService.GetAllForms())
+            foreach (var item in await _interactiveFormService.GetAllForms())
             {
                 model.InteractiveForms.Add(new SelectListItem()
                 {
@@ -134,9 +137,9 @@ namespace Grand.Web.Areas.Admin.Services
 
         }
 
-        public virtual SerializeCustomerActionHistory PrepareHistoryModelForList(CustomerActionHistory history)
+        public virtual async Task<SerializeCustomerActionHistory> PrepareHistoryModelForList(CustomerActionHistory history)
         {
-            var customer = _customerService.GetCustomerById(history.CustomerId);
+            var customer = await _customerService.GetCustomerById(history.CustomerId);
             return new SerializeCustomerActionHistory
             {
                 Email = customer != null ? String.IsNullOrEmpty(customer.Email) ? "(unknown)" : customer.Email : "(unknown)",
@@ -144,24 +147,24 @@ namespace Grand.Web.Areas.Admin.Services
             };
         }
 
-        public virtual CustomerActionModel PrepareCustomerActionModel()
+        public virtual async Task<CustomerActionModel> PrepareCustomerActionModel()
         {
             var model = new CustomerActionModel();
             model.Active = true;
             model.StartDateTime = DateTime.Now;
             model.EndDateTime = DateTime.Now.AddMonths(1);
             model.ReactionTypeId = (int)CustomerReactionTypeEnum.Banner;
-            PrepareReactObjectModel(model);
+            await PrepareReactObjectModel(model);
             return model;
         }
-        public virtual CustomerAction InsertCustomerActionModel(CustomerActionModel model)
+        public virtual async Task<CustomerAction> InsertCustomerActionModel(CustomerActionModel model)
         {
             var customeraction = model.ToEntity();
-            _customerActionService.InsertCustomerAction(customeraction);
-            _customerActivityService.InsertActivity("AddNewCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customeraction.Name);
+            await _customerActionService.InsertCustomerAction(customeraction);
+            await _customerActivityService.InsertActivity("AddNewCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customeraction.Name);
             return customeraction;
         }
-        public virtual CustomerAction UpdateCustomerActionModel(CustomerAction customeraction, CustomerActionModel model)
+        public virtual async Task<CustomerAction> UpdateCustomerActionModel(CustomerAction customeraction, CustomerActionModel model)
         {
             if (customeraction.Conditions.Count() > 0)
                 model.ActionTypeId = customeraction.ActionTypeId;
@@ -169,15 +172,15 @@ namespace Grand.Web.Areas.Admin.Services
                 model.ActionTypeId = customeraction.ActionTypeId;
 
             customeraction = model.ToEntity(customeraction);
-            _customerActionService.UpdateCustomerAction(customeraction);
-            _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
+            await _customerActionService.UpdateCustomerAction(customeraction);
+            await _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
             return customeraction;
         }
 
-        public virtual CustomerActionConditionModel PrepareCustomerActionConditionModel(string customerActionId)
+        public virtual async Task<CustomerActionConditionModel> PrepareCustomerActionConditionModel(string customerActionId)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
-            var actionType = _customerActionService.GetCustomerActionTypeById(customerAction.ActionTypeId);
+            var customerAction = await _customerActionService.GetCustomerActionById(customerActionId);
+            var actionType = await _customerActionService.GetCustomerActionTypeById(customerAction.ActionTypeId);
 
             var model = new CustomerActionConditionModel();
             model.CustomerActionId = customerActionId;
@@ -193,9 +196,9 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual (string customerActionId, string conditionId) InsertCustomerActionConditionModel(CustomerActionConditionModel model)
+        public virtual async Task<(string customerActionId, string conditionId)> InsertCustomerActionConditionModel(CustomerActionConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction == null)
             {
                 return (null, null);
@@ -207,127 +210,127 @@ namespace Grand.Web.Areas.Admin.Services
                 ConditionId = model.ConditionId,
             };
             customerAction.Conditions.Add(condition);
-            _customerActionService.UpdateCustomerAction(customerAction);
+            await _customerActionService.UpdateCustomerAction(customerAction);
 
-            _customerActivityService.InsertActivity("AddNewCustomerActionCondition", customerAction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customerAction.Name);
+            await _customerActivityService.InsertActivity("AddNewCustomerActionCondition", customerAction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customerAction.Name);
             return (customerAction.Id, condition.Id);
         }
 
-        public virtual CustomerAction UpdateCustomerActionConditionModel(CustomerAction customeraction, ActionCondition condition, CustomerActionConditionModel model)
+        public virtual async Task<CustomerAction> UpdateCustomerActionConditionModel(CustomerAction customeraction, ActionCondition condition, CustomerActionConditionModel model)
         {
             condition = model.ToEntity(condition);
-            _customerActionService.UpdateCustomerAction(customeraction);
+            await _customerActionService.UpdateCustomerAction(customeraction);
             //activity log
-            _customerActivityService.InsertActivity("EditCustomerActionCondition", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerActionCondition"), customeraction.Name);
+            await _customerActivityService.InsertActivity("EditCustomerActionCondition", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerActionCondition"), customeraction.Name);
             return customeraction;
         }
 
-        public virtual void ConditionDelete(string Id, string customerActionId)
+        public virtual async Task ConditionDelete(string Id, string customerActionId)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == Id);
             customerAction.Conditions.Remove(condition);
-            _customerActionService.UpdateCustomerAction(customerAction);
+            await _customerActionService.UpdateCustomerAction(customerAction);
         }
 
-        public void ConditionDeletePosition(string id, string customerActionId, string conditionId)
+        public virtual async Task ConditionDeletePosition(string id, string customerActionId, string conditionId)
         {
-            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var customerActions = await _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Product)
             {
                 condition.Products.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Category)
             {
                 condition.Categories.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Manufacturer)
             {
                 condition.Manufacturers.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Vendor)
             {
                 condition.Vendors.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.ProductAttribute)
             {
                 condition.ProductAttribute.Remove(condition.ProductAttribute.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.ProductSpecification)
             {
                 condition.ProductSpecifications.Remove(condition.ProductSpecifications.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomerRole)
             {
                 condition.CustomerRoles.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomerTag)
             {
                 condition.CustomerTags.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
 
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomCustomerAttribute)
             {
                 condition.CustomCustomerAttributes.Remove(condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomerRegisterField)
             {
                 condition.CustomerRegistration.Remove(condition.CustomerRegistration.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.UrlCurrent)
             {
                 condition.UrlCurrent.Remove(condition.UrlCurrent.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.UrlReferrer)
             {
                 condition.UrlReferrer.Remove(condition.UrlReferrer.FirstOrDefault(x => x.Id == id));
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Store)
             {
                 condition.Stores.Remove(id);
-                _customerActionService.UpdateCustomerAction(customerActions);
+                await _customerActionService.UpdateCustomerAction(customerActions);
             }
 
         }
 
-        public virtual CustomerActionConditionModel.AddProductToConditionModel PrepareAddProductToConditionModel(string customerActionId, string conditionId)
+        public virtual async Task<CustomerActionConditionModel.AddProductToConditionModel> PrepareAddProductToConditionModel(string customerActionId, string conditionId)
         {
             var model = new CustomerActionConditionModel.AddProductToConditionModel();
             model.CustomerActionConditionId = conditionId;
             model.CustomerActionId = customerActionId;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
+            foreach (var s in await _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -336,11 +339,11 @@ namespace Grand.Web.Areas.Admin.Services
 
             return model;
         }
-        public virtual void InsertProductToConditionModel(CustomerActionConditionModel.AddProductToConditionModel model)
+        public virtual async Task InsertProductToConditionModel(CustomerActionConditionModel.AddProductToConditionModel model)
         {
             foreach (string id in model.SelectedProductIds)
             {
-                var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+                var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
                 if (customerAction != null)
                 {
                     var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.CustomerActionConditionId);
@@ -349,17 +352,17 @@ namespace Grand.Web.Areas.Admin.Services
                         if (condition.Products.Where(x => x == id).Count() == 0)
                         {
                             condition.Products.Add(id);
-                            _customerActionService.UpdateCustomerAction(customerAction);
+                            await _customerActionService.UpdateCustomerAction(customerAction);
                         }
                     }
                 }
             }
         }
-        public virtual void InsertCategoryConditionModel(CustomerActionConditionModel.AddCategoryConditionModel model)
+        public virtual async Task InsertCategoryConditionModel(CustomerActionConditionModel.AddCategoryConditionModel model)
         {
             foreach (string id in model.SelectedCategoryIds)
             {
-                var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+                var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
                 if (customerAction != null)
                 {
                     var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.CustomerActionConditionId);
@@ -368,17 +371,17 @@ namespace Grand.Web.Areas.Admin.Services
                         if (condition.Categories.Where(x => x == id).Count() == 0)
                         {
                             condition.Categories.Add(id);
-                            _customerActionService.UpdateCustomerAction(customerAction);
+                            await _customerActionService.UpdateCustomerAction(customerAction);
                         }
                     }
                 }
             }
         }
-        public virtual void InsertManufacturerConditionModel(CustomerActionConditionModel.AddManufacturerConditionModel model)
+        public virtual async Task InsertManufacturerConditionModel(CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
             foreach (string id in model.SelectedManufacturerIds)
             {
-                var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+                var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
                 if (customerAction != null)
                 {
                     var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.CustomerActionConditionId);
@@ -387,15 +390,15 @@ namespace Grand.Web.Areas.Admin.Services
                         if (condition.Manufacturers.Where(x => x == id).Count() == 0)
                         {
                             condition.Manufacturers.Add(id);
-                            _customerActionService.UpdateCustomerAction(customerAction);
+                            await _customerActionService.UpdateCustomerAction(customerAction);
                         }
                     }
                 }
             }
         }
-        public virtual void InsertCustomerRoleConditionModel(CustomerActionConditionModel.AddCustomerRoleConditionModel model)
+        public virtual async Task InsertCustomerRoleConditionModel(CustomerActionConditionModel.AddCustomerRoleConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -404,15 +407,15 @@ namespace Grand.Web.Areas.Admin.Services
                     if (condition.CustomerRoles.Where(x => x == model.CustomerRoleId).Count() == 0)
                     {
                         condition.CustomerRoles.Add(model.CustomerRoleId);
-                        _customerActionService.UpdateCustomerAction(customerAction);
+                        await _customerActionService.UpdateCustomerAction(customerAction);
                     }
                 }
             }
         }
 
-        public virtual void InsertStoreConditionModel(CustomerActionConditionModel.AddStoreConditionModel model)
+        public virtual async Task InsertStoreConditionModel(CustomerActionConditionModel.AddStoreConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -421,14 +424,14 @@ namespace Grand.Web.Areas.Admin.Services
                     if (condition.Stores.Where(x => x == model.StoreId).Count() == 0)
                     {
                         condition.Stores.Add(model.StoreId);
-                        _customerActionService.UpdateCustomerAction(customerAction);
+                        await _customerActionService.UpdateCustomerAction(customerAction);
                     }
                 }
             }
         }
-        public virtual void InsertVendorConditionModel(CustomerActionConditionModel.AddVendorConditionModel model)
+        public virtual async Task InsertVendorConditionModel(CustomerActionConditionModel.AddVendorConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -437,15 +440,15 @@ namespace Grand.Web.Areas.Admin.Services
                     if (condition.Vendors.Where(x => x == model.VendorId).Count() == 0)
                     {
                         condition.Vendors.Add(model.VendorId);
-                        _customerActionService.UpdateCustomerAction(customerAction);
+                        await _customerActionService.UpdateCustomerAction(customerAction);
                     }
                 }
             }
         }
 
-        public virtual void InsertCustomerTagConditionModel(CustomerActionConditionModel.AddCustomerTagConditionModel model)
+        public virtual async Task InsertCustomerTagConditionModel(CustomerActionConditionModel.AddCustomerTagConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -454,14 +457,14 @@ namespace Grand.Web.Areas.Admin.Services
                     if (condition.CustomerTags.Where(x => x == model.CustomerTagId).Count() == 0)
                     {
                         condition.CustomerTags.Add(model.CustomerTagId);
-                        _customerActionService.UpdateCustomerAction(customerAction);
+                        await _customerActionService.UpdateCustomerAction(customerAction);
                     }
                 }
             }
         }
-        public virtual void InsertProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model)
+        public virtual async Task InsertProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -473,13 +476,13 @@ namespace Grand.Web.Areas.Admin.Services
                         Name = model.Name
                     };
                     condition.ProductAttribute.Add(_pv);
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void UpdateProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model)
+        public virtual async Task UpdateProductAttributeConditionModel(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -488,13 +491,13 @@ namespace Grand.Web.Areas.Admin.Services
                     var pva = condition.ProductAttribute.FirstOrDefault(x => x.Id == model.Id);
                     pva.ProductAttributeId = model.ProductAttributeId;
                     pva.Name = model.Name;
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void InsertProductSpecificationConditionModel(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
+        public virtual async Task InsertProductSpecificationConditionModel(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -508,14 +511,14 @@ namespace Grand.Web.Areas.Admin.Services
                             ProductSpecyficationValueId = model.SpecificationValueId
                         };
                         condition.ProductSpecifications.Add(_ps);
-                        _customerActionService.UpdateCustomerAction(customerAction);
+                        await _customerActionService.UpdateCustomerAction(customerAction);
                     }
                 }
             }
         }
-        public virtual void InsertCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
+        public virtual async Task InsertCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -527,13 +530,13 @@ namespace Grand.Web.Areas.Admin.Services
                         RegisterValue = model.CustomerRegisterValue,
                     };
                     condition.CustomerRegistration.Add(_cr);
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void UpdateCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
+        public virtual async Task UpdateCustomerRegisterConditionModel(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -542,13 +545,13 @@ namespace Grand.Web.Areas.Admin.Services
                     var cr = condition.CustomerRegistration.FirstOrDefault(x => x.Id == model.Id);
                     cr.RegisterField = model.CustomerRegisterName;
                     cr.RegisterValue = model.CustomerRegisterValue;
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void InsertCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public virtual async Task InsertCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -560,13 +563,13 @@ namespace Grand.Web.Areas.Admin.Services
                         RegisterValue = model.CustomerAttributeValue,
                     };
                     condition.CustomCustomerAttributes.Add(_cr);
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void UpdateCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        public virtual async Task UpdateCustomCustomerAttributeConditionModel(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -575,14 +578,14 @@ namespace Grand.Web.Areas.Admin.Services
                     var cr = condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == model.Id);
                     cr.RegisterField = model.CustomerAttributeName;
                     cr.RegisterValue = model.CustomerAttributeValue;
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
 
-        public virtual void InsertUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
+        public virtual async Task InsertUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -593,14 +596,14 @@ namespace Grand.Web.Areas.Admin.Services
                         Name = model.Name
                     };
                     condition.UrlReferrer.Add(_url);
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
 
-        public virtual void UpdateUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
+        public virtual async Task UpdateUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -608,13 +611,13 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var _url = condition.UrlReferrer.FirstOrDefault(x => x.Id == model.Id);
                     _url.Name = model.Name;
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void InsertUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
+        public virtual async Task InsertUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -625,13 +628,13 @@ namespace Grand.Web.Areas.Admin.Services
                         Name = model.Name
                     };
                     condition.UrlCurrent.Add(_url);
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual void UpdateUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
+        public virtual async Task UpdateUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            var customerAction = await _customerActionService.GetCustomerActionById(model.CustomerActionId);
             if (customerAction != null)
             {
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
@@ -639,14 +642,13 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var _url = condition.UrlCurrent.FirstOrDefault(x => x.Id == model.Id);
                     _url.Name = model.Name;
-                    _customerActionService.UpdateCustomerAction(customerAction);
+                    await _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
         }
-        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize)
         {
-            var productService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
-            var products = productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
     }

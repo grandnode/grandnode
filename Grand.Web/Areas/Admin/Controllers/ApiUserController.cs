@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -32,9 +33,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Index() => View();
 
         [HttpPost]
-        public IActionResult List(string email, DataSourceRequest command)
+        public async Task<IActionResult> List(string email, DataSourceRequest command)
         {
-            var model = _userApiService.GetUsers(email, command.Page - 1, command.PageSize)
+            var model = (await _userApiService.GetUsers(email, command.Page - 1, command.PageSize))
                 .Select(x => x.ToModel())
                 .ToList();
             var gridModel = new DataSourceResult
@@ -46,13 +47,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UserApiModel model)
+        public async Task<IActionResult> Update(UserApiModel model)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
-            var userapi = _userApiService.GetUserById(model.Id);
+            var userapi = await _userApiService.GetUserById(model.Id);
             if (userapi == null)
                 throw new ArgumentException("No user api found with the specified id");
             if (ModelState.IsValid)
@@ -64,14 +65,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                     userapi.Password = keys.hashpassword;
                     userapi.PrivateKey = keys.privatekey;
                 }
-                _userApiService.UpdateUserApi(userapi);
+                await _userApiService.UpdateUserApi(userapi);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult Insert(UserApiModel model)
+        public async Task<IActionResult> Insert(UserApiModel model)
         {
             if (string.IsNullOrEmpty(model.Password))
                 ModelState.AddModelError("", "Password is required");
@@ -86,21 +87,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var keys = HashPassword(model.Password);
                 userapi.Password = keys.hashpassword;
                 userapi.PrivateKey = keys.privatekey;
-                _userApiService.InsertUserApi(userapi);
+                await _userApiService.InsertUserApi(userapi);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var userapi = _userApiService.GetUserById(id);
+            var userapi = await _userApiService.GetUserById(id);
             if (userapi == null)
                 throw new ArgumentException("No user found with the specified id");
             if (ModelState.IsValid)
             {
-                _userApiService.DeleteUserApi(userapi);
+                await _userApiService.DeleteUserApi(userapi);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
