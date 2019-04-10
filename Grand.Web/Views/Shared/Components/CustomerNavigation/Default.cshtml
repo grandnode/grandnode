@@ -129,6 +129,6 @@
                                                                      {<text>inactive</text>}"><span class="material-icons">supervisor_account</span><span>@T("Account.VendorInfo")</span></a>
                                                                 </li>
                                                             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData=Model })
         </ul>
 </div>

@@ -15,7 +15,7 @@
     }
 }
 <!DOCTYPE html>
-<html lang="@(this.WorkingLanguage())  @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null)">
+<html lang="@(this.WorkingLanguage())" @(this.ShouldUseRtlTheme() ? Html.Raw("dir=\"rtl\"") : null)>
 <head>
     <title>@Html.GrandTitle(true)</title>
     <meta charset="utf-8">

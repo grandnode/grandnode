@@ -26,4 +26,73 @@
   <LocaleResource Name="Admin.Review.Fields.ReviewText.Required">
     <Value>Review text is required</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.privateapikey.hint">
+    <Value>API Key used for sending notifications. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.pushapikey.hint">
+    <Value>API Key used for receiving notifications. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.authdomain.hint">
+    <Value>Copy your auth domain here. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.databaseurl.hint">
+    <Value>Copy your database url here. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.projectid.hint">
+    <Value>Copy your project id here. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.storagebucket.hint">
+    <Value>Copy your storage bucket here. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.senderid.hint">
+    <Value>Copy your sender id here. See documentation for instructions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.privateapikey">
+    <Value>Private Api Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.pushapikey">
+    <Value>Public Api Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.senderid">
+    <Value>Sender Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.authdomain">
+    <Value>Auth Domain</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.databaseurl">
+    <Value>Database URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.projectid">
+    <Value>Project Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.pushnotifications.storagebucket">
+    <Value>Storage Bucket</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AllowGuestNotifications">
+    <Value>Allow guest notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AllowGuestNotifications.Hint">
+    <Value>Should be checked if you want to allow guest to register for push notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.NotificationsEnabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.NotificationsEnabled.Hint">
+    <Value>If left unchecked, registration script won't be added to homepage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.PushNotifications">
+    <Value>Push notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.PushNotifications.Info">
+    <Value>We are using firebase for push notifications. You can find more info in our manuals or on firebase docs.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.PushNotifications.Warning">
+    <Value>Warning! Press "Save" button every time you upgrade GrandNode to new version, as the settings will be wiped out in registration script.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pushnotifications.Pushnotifications.Messages">
+    <Value>Messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pushnotifications.Pushnotifications.Receivers">
+    <Value>Receivers</Value>
+  </LocaleResource>
 </Language>

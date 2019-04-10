@@ -203,8 +203,8 @@ input {
 
 /* body ready */
 
-body:not(.is-ready) .navUp {
-    opacity: 0;
+body:not(.is-ready) .mat {
+    display: none;
 }
  
 /* Default Buttons */
@@ -4525,6 +4525,9 @@ footer .socicon-pinterest:hover {
         border: 0;
         padding: 0;
         transition: all .5s ease;
+    }
+    .mobile-menu .nav-item.dropdown > .dropdown-menu.next-level {
+        top: 0 !important;
     }
     .mobile-menu .nav-item.dropdown > .dropdown-menu.show {
         transform: translate(0,0) !important;

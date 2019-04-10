@@ -1,7 +1,7 @@
 ﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.ConfigurationModel
 @{
     //page title
-    ViewBag.Title = T("PushNotifications.PushNotications").Text;
+    ViewBag.Title = T("PushNotifications.PushNotifications").Text;
 }
 <form asp-controller="Setting" asp-action="PushNotifications" method="post">
     <antiforgery-token />
@@ -11,7 +11,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
-                        @T("PushNotifications.PushNotications")
+                        @T("Admin.PushNotifications")
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
@@ -23,10 +23,10 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="alert alert-info">
-                                <p>@T("PushNotifications.PushNotications.Info")</p>
+                                <p>@T("Admin.Configuration.Settings.PushNotifications.PushNotifications.Info")</p>
                             </div>
                             <div class="alert alert-danger">
-                                <p>@T("PushNotifications.PushNotications.Warning")</p>
+                                <p>@T("Admin.Configuration.Settings.PushNotifications.PushNotifications.Warning")</p>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="Enabled" />
