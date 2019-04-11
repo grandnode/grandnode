@@ -86,18 +86,18 @@
 }
 <div class="row">
     <div class="col-md-12">
-        <div class="portlet light form-fit">
-            <div class="portlet-title">
-                <div class="caption">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
+                <div class="caption caption-flex">
                     <i class="fa fa-tasks"></i>
-                    @T(configureLocale) - @friendlyName
+                    <div class="captionText">@T(configureLocale) - @friendlyName</div>
                     <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T(backToLocale).Text, listActionMethodName, listControllerName)</small>
                 </div>
             </div>
-            <div class="portlet-body form">
+            <div class="x_content form">
                 <div class="form-horizontal">
                     <div class="form-body">
-                        <div class="portlet-body">
+                        <div class="x_content">
                             @RenderBody()
                         </div>
                     </div>
