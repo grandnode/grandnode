@@ -23,7 +23,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Vendors))
                 return Forbid();
 
-            var vendor = _customerApiService.GetVendorById(key);
+            var vendor = await _customerApiService.GetVendorById(key);
             if (vendor == null)
                 return NotFound();
 
