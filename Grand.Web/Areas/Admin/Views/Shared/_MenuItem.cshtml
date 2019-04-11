@@ -19,30 +19,49 @@
 
     }
 
-<li class="nav-item @(url.ToLowerInvariant() == webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant() ? "start active": "") @(url.ToLowerInvariant() == webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant() ? "active open" : "") ">
-
-    <a href="@url" class="nav-link nav-toggle">
-        @if (!String.IsNullOrEmpty(Model.IconClass))
-            {
-            <i class="@Model.IconClass"></i>
+    <li>
+        @{
+            var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
         }
-        <span class="title">@Model.Title</span>
-        <span class="selected"></span>
-        <span class="arrow"></span>
-    </a>
+        @if (childNodes.Any())
+        {
+            <a class="nav-link">
+                @if (!String.IsNullOrEmpty(Model.IconClass))
+                {
+                    <i class="@Model.IconClass"></i>
+                }
+                <span class="title">@Model.Title</span>
+                @if (childNodes.Any())
+                {
+                    <span class="fa fa-chevron-down"></span>
+                }
 
-    @{
-        var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
-    }
+            </a>
+        }
+        else
+        {
+            <a href="@url" class="nav-link">
+                @if (!String.IsNullOrEmpty(Model.IconClass))
+                {
+                    <i class="@Model.IconClass"></i>
+                }
+                <span class="title">@Model.Title</span>
+                @if (childNodes.Any())
+                {
+                    <span class="fa fa-chevron-down"></span>
+                }
 
-    @if (childNodes.Any())
-    {
-        <ul class="sub-menu">
-            @foreach (var childItem in childNodes)
-            {
-                <partial name="_MenuItem" model="childItem"/>
-            }
-        </ul>
-    }
-</li>
+            </a>
+        }
+
+        @if (childNodes.Any())
+        {
+            <ul class="nav child_menu">
+                @foreach (var childItem in childNodes)
+                {
+                    <partial name="_MenuItem" model="childItem" />
+                }
+            </ul>
+        }
+    </li>
 }
