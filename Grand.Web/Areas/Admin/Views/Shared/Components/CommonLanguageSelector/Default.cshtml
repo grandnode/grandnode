@@ -2,13 +2,11 @@
 @inject IWebHelper webHelper
 @if (Model.AvailableLanguages.Count > 1)
 {
-    <li class="dropdown dropdown-extended dropdown-notification">
-        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-            <i class="fa fa-language"></i><span class="username username-hide-on-mobile">
-                @Model.AvailableLanguages.FirstOrDefault(x => x.Id == Model.CurrentLanguage.Id).UniqueSeoCode
-            </span>
+    <li class="dropdown" id="header_inbox_bar" role="presentation">
+        <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-language"></i>
         </a>
-        <ul class="dropdown-menu dropdown-menu-default">
+        <ul id="menu1" class="dropdown-menu list-unstyled msg_list overflow-h" role="menu">
             @foreach (var lang in Model.AvailableLanguages)
             {
                 <li>
