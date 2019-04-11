@@ -12,11 +12,9 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages.DotLiquidDrops;
@@ -156,6 +154,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("NewCustomer.Notification", store.Id);
             if (messageTemplate == null)
@@ -191,6 +193,11 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.WelcomeMessage", store.Id);
             if (messageTemplate == null)
@@ -226,6 +233,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.EmailValidationMessage", store.Id);
             if (messageTemplate == null)
@@ -261,6 +272,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Customer.PasswordRecovery", store.Id);
             if (messageTemplate == null)
@@ -346,13 +361,13 @@ namespace Grand.Services.Messages
             var customer = await customerService.GetCustomerById(order.CustomerId);
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
-           
+
             var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
-            
+
             //event notification
             await _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
@@ -422,7 +437,7 @@ namespace Grand.Services.Messages
 
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
-            
+
             var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
@@ -1071,6 +1086,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.EmailAFriend", store.Id);
             if (messageTemplate == null)
@@ -1112,6 +1131,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Wishlist.EmailAFriend", store.Id);
             if (messageTemplate == null)
@@ -1157,6 +1180,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Service.AskQuestion", store.Id);
             if (messageTemplate == null)
@@ -1183,8 +1210,7 @@ namespace Grand.Services.Messages
                 var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
                 var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
 
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -1364,6 +1390,10 @@ namespace Grand.Services.Messages
             }
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumTopic", store.Id);
             if (messageTemplate == null)
@@ -1407,6 +1437,11 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
+
             var messageTemplate = await GetEmailAccountOfMessageTemplate("Forums.NewForumPost", store.Id);
             if (messageTemplate == null)
             {
@@ -1494,6 +1529,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
@@ -1692,6 +1731,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
@@ -1727,6 +1770,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("QuantityBelow.AttributeCombination.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
@@ -1766,6 +1813,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
@@ -1804,6 +1855,10 @@ namespace Grand.Services.Messages
 
             var store = _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             var messageTemplate = await GetEmailAccountOfMessageTemplate("CustomerDelete.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
@@ -1999,6 +2054,10 @@ namespace Grand.Services.Messages
 
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             string fromEmail;
             string fromName;
@@ -2030,8 +2089,7 @@ namespace Grand.Services.Messages
             //store in database
             if (_commonSettings.StoreInDatabaseContactUsForm)
             {
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -2078,6 +2136,11 @@ namespace Grand.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
+
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
 
@@ -2113,8 +2176,7 @@ namespace Grand.Services.Messages
             //store in database
             if (_commonSettings.StoreInDatabaseContactUsForm)
             {
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -2167,8 +2229,7 @@ namespace Grand.Services.Messages
 
             //limit name length
             toName = CommonHelper.EnsureMaximumLength(toName, 300);
-            var email = new QueuedEmail
-            {
+            var email = new QueuedEmail {
                 Priority = QueuedEmailPriority.High,
                 From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
                 FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
@@ -2246,6 +2307,10 @@ namespace Grand.Services.Messages
 
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
@@ -2279,12 +2344,16 @@ namespace Grand.Services.Messages
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store =  await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplate = await _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
             if (messageTemplate == null)
                 return 0;
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
@@ -2338,6 +2407,10 @@ namespace Grand.Services.Messages
 
             //email account
             var emailAccount = await GetEmailAccountOfMessageTemplate(messageTemplate, language.Id);
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+            //get actual data from customer entity
+            if (customer != null)
+                customer = await customerService.GetCustomerById(customer.Id);
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
