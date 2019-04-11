@@ -28,7 +28,7 @@ namespace Grand.Api.Validators.Customers
 
             RuleFor(x => x).MustAsync(async (x, context) =>
             {
-                var username = await customerService.GetCustomerByEmail(x.Username);
+                var username = await customerService.GetCustomerByUsername(x.Username);
                 if (username != null && username.Id != x.Id && customerSettings.UsernamesEnabled)
                 {
                     return false;

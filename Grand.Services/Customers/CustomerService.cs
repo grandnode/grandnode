@@ -137,7 +137,7 @@ namespace Grand.Services.Customers
         #region Methods
 
         #region Customers
-        
+
         /// <summary>
         /// Gets all customers
         /// </summary>
@@ -189,15 +189,15 @@ namespace Grand.Services.Customers
                 }
             }
             if (!String.IsNullOrWhiteSpace(email))
-                query = query.Where(c => c.Email!=null && c.Email.Contains(email.ToLower()));
+                query = query.Where(c => c.Email != null && c.Email.Contains(email.ToLower()));
             if (!String.IsNullOrWhiteSpace(username))
-                query = query.Where(c => c.Username!=null && c.Username.ToLower().Contains(username.ToLower()));
-            
+                query = query.Where(c => c.Username != null && c.Username.ToLower().Contains(username.ToLower()));
+
             if (!String.IsNullOrWhiteSpace(firstName))
             {
-                query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.FirstName && y.Value!=null && y.Value.ToLower().Contains(firstName.ToLower())));
+                query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.FirstName && y.Value != null && y.Value.ToLower().Contains(firstName.ToLower())));
             }
-            
+
             if (!String.IsNullOrWhiteSpace(lastName))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.LastName && y.Value != null && y.Value.ToLower().Contains(lastName.ToLower())));
@@ -229,7 +229,7 @@ namespace Grand.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId.Value)) :
                     query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
-            
+
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
@@ -266,9 +266,9 @@ namespace Grand.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
-            
+
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize)); 
+            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
         }
 
 
@@ -318,7 +318,10 @@ namespace Grand.Services.Customers
         /// <param name="customerId">Customer identifier</param>
         /// <returns>A customer</returns>
         public virtual Task<Customer> GetCustomerById(string customerId)
-        {            
+        {
+            if (string.IsNullOrWhiteSpace(customerId))
+                return Task.FromResult<Customer>(null);
+
             return _customerRepository.GetByIdAsync(customerId);
         }
 
@@ -354,6 +357,9 @@ namespace Grand.Services.Customers
         /// <returns>A customer</returns>
         public virtual Task<Customer> GetCustomerByGuid(Guid customerGuid)
         {
+            if (customerGuid == null)
+                return Task.FromResult<Customer>(null);
+
             var filter = Builders<Customer>.Filter.Eq(x => x.CustomerGuid, customerGuid);
             return _customerRepository.Collection.Find(filter).FirstOrDefaultAsync();
         }
@@ -366,7 +372,8 @@ namespace Grand.Services.Customers
         public virtual Task<Customer> GetCustomerByEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-                return null;
+                return Task.FromResult<Customer>(null);
+
             var filter = Builders<Customer>.Filter.Eq(x => x.Email, email.ToLower());
             return _customerRepository.Collection.Find(filter).FirstOrDefaultAsync();
         }
@@ -378,6 +385,9 @@ namespace Grand.Services.Customers
         /// <returns>Customer</returns>
         public virtual Task<Customer> GetCustomerBySystemName(string systemName)
         {
+            if (string.IsNullOrWhiteSpace(systemName))
+                return Task.FromResult<Customer>(null);
+
             var filter = Builders<Customer>.Filter.Eq(x => x.SystemName, systemName);
             return _customerRepository.Collection.Find(filter).FirstOrDefaultAsync();
         }
@@ -389,18 +399,20 @@ namespace Grand.Services.Customers
         /// <returns>Customer</returns>
         public virtual Task<Customer> GetCustomerByUsername(string username)
         {
+            if (string.IsNullOrWhiteSpace(username))
+                return Task.FromResult<Customer>(null);
+
             var filter = Builders<Customer>.Filter.Eq(x => x.Username, username.ToLower());
             return _customerRepository.Collection.Find(filter).FirstOrDefaultAsync();
         }
-        
+
         /// <summary>
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
         public virtual async Task<Customer> InsertGuestCustomer(Store store, string urlreferrer = "")
         {
-            var customer = new Customer
-            {
+            var customer = new Customer {
                 CustomerGuid = Guid.NewGuid(),
                 Active = true,
                 StoreId = store.Id,
@@ -419,7 +431,7 @@ namespace Grand.Services.Customers
 
             return customer;
         }
-        
+
         /// <summary>
         /// Insert a customer
         /// </summary>
@@ -513,7 +525,7 @@ namespace Grand.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -691,7 +703,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.LastUpdateWishListDateUtc, date);
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
-       
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -709,7 +721,7 @@ namespace Grand.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException();
-            
+
             //clear entered coupon codes
             if (clearCouponCodes)
             {
@@ -808,7 +820,7 @@ namespace Grand.Services.Customers
         }
 
         #endregion
-        
+
         #region Customer roles
 
         /// <summary>
@@ -842,6 +854,9 @@ namespace Grand.Services.Customers
         /// <returns>Customer role</returns>
         public virtual Task<CustomerRole> GetCustomerRoleById(string customerRoleId)
         {
+            if (string.IsNullOrWhiteSpace(customerRoleId))
+                return Task.FromResult<CustomerRole>(null);
+
             return _customerRoleRepository.GetByIdAsync(customerRoleId);
         }
 
@@ -877,7 +892,7 @@ namespace Grand.Services.Customers
                 return query.ToListAsync();
             });
         }
-        
+
         /// <summary>
         /// Inserts a customer role
         /// </summary>
@@ -959,7 +974,7 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerRole");
 
             await _customerRoleProductRepository.DeleteAsync(customerRoleProduct);
-            
+
             //clear cache
             _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
             _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
@@ -1053,7 +1068,7 @@ namespace Grand.Services.Customers
                         where cr.Id == id
                         orderby cr.DisplayOrder
                         select cr;
-           
+
             return query.FirstOrDefaultAsync();
         }
 
@@ -1180,7 +1195,7 @@ namespace Grand.Services.Customers
         public virtual async Task ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType)
         {
             var updatebuilder = Builders<Customer>.Update;
-            var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p=>p.StoreId == storeId && p.ShoppingCartTypeId == (int)shoppingCartType);
+            var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p => p.StoreId == storeId && p.ShoppingCartTypeId == (int)shoppingCartType);
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             if (shoppingCartType == ShoppingCartType.ShoppingCart || shoppingCartType == ShoppingCartType.Auctions)
@@ -1435,6 +1450,9 @@ namespace Grand.Services.Customers
         /// <returns>CustomerNote</returns>
         public virtual Task<CustomerNote> GetCustomerNote(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                return Task.FromResult<CustomerNote>(null);
+
             return _customerNoteRepository.Table.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
@@ -1478,7 +1496,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerNote>> GetCustomerNotes(string customerId, bool? displaytocustomer = null)
         {
             var query = from customerNote in _customerNoteRepository.Table
-                        where customerNote.CustomerId == customerId                        
+                        where customerNote.CustomerId == customerId
                         select customerNote;
 
             if (displaytocustomer.HasValue)
