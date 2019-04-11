@@ -101,7 +101,7 @@
                                         <span class="caption-helper">@T("Admin.Dashboard.ReportOverviewHelper")</span>
                                     </div>
                                 </div>
-                                <div class="portlet-body">
+                                <div class="x_content">
                                     <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
                                         <img src="~/administration/images/loading.gif" /> Loading ...
                                     </div>
@@ -126,7 +126,7 @@
                                             <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
                                             <img src="~/administration/images/loading.gif" /> Loading ...
                                         </div>
@@ -157,7 +157,7 @@
                                             <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
                                             <img src="~/administration/images/loading.gif" /> Loading ...
                                         </div>
@@ -172,7 +172,7 @@
                                             <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
                                             <img src="~/administration/images/loading.gif" /> Loading ...
                                         </div>
@@ -191,7 +191,7 @@
                                             <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
                                             <img src="~/administration/images/loading.gif" /> Loading ...
                                         </div>
@@ -206,7 +206,7 @@
                                             <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
                                             <img src="~/administration/images/loading.gif" /> Loading ...
                                         </div>
@@ -228,7 +228,7 @@
                                     <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReportLatestOrder")</span>
                                 </div>
                             </div>
-                            <div class="portlet-body">
+                            <div class="x_content">
                                 @await Component.InvokeAsync("OrderReportLatestOrder")
                             </div>
                         </div>
