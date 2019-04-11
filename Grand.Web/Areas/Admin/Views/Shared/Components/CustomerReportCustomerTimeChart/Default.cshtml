@@ -8,6 +8,7 @@
         initReportCustomerTimeChart(true);
     });
 
+
     function initReportCustomerTimeChart(first) {
         function additionalData() {
             var data = {
@@ -27,6 +28,7 @@
             dataType: "json",
             data: add,
             success: function (data) {
+
                 var chartData = {
                     labels: [],
                     datasets: [{
@@ -45,7 +47,9 @@
                     chartData.datasets[0].data[i] = data.Data[i].Registered;
                 }
 
+
                 var ctx = document.getElementById('canvasReportCustomerTimeChart').getContext('2d');
+
                 if (first) {
                     window.myReportCustomerTimeChart = new Chart(ctx, {
                         type: 'bar',

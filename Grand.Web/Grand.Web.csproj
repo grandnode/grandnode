@@ -9,7 +9,7 @@
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <TieredCompilation>true</TieredCompilation>
-    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnBuild>true</RazorCompileOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
