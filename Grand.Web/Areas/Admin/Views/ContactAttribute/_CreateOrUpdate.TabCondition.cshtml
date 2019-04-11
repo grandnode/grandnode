@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <admin-label asp-for="ConditionModel.EnableCondition" />
                     <div class="col-md-9 col-sm-9">
-                        <label class=""mt-checkbox mt-checkbox-outline control control--checkbox">
+                        <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
                             <admin-input asp-for="ConditionModel.EnableCondition" />
                              <div class="control__indicator"></div>
                         </label>
@@ -81,7 +81,7 @@
                                                 for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                 {
                                                     <div>
-                                                        <label class=""mt-checkbox mt-checkbox-outline control control--checkbox">
+                                                        <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
                                                             <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
                                                             <admin-input asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
                                                             @Model.ConditionModel.ConditionAttributes[i].Values[j].Text

@@ -5,7 +5,7 @@
     <div class="mt-checkbox-list">
         @foreach (var discount in Model.AvailableDiscounts)
         {
-            <label class=""mt-checkbox mt-checkbox-outline control control--checkbox">
+            <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
                 <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
                        @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>         } />@discount.Name
                      <div class="control__indicator"></div>
