@@ -221,7 +221,7 @@ namespace Grand.Framework
                     { "data-for-input-selector", dataInputSelector },
                 });
                 result.Append(check.ToHtmlString());
-                result.Append(" <div class='control__indicator'></div>");
+                result.Append("<div class='control__indicator'></div>");
                 result.Append("</label>");
             }
             return new HtmlString(result.ToString());

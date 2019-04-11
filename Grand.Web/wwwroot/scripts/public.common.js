@@ -69,12 +69,14 @@ function mainMenuReplace() {
             $(this).removeAttr('href');
         });
 
-        $('#pills-mobile-tabContent .navbar-nav .nav-item.dropdown > .dropdown-toggle').click(function () {
-            var CatForOpen = $(this).parent().find('.dropdown-menu:first');
-            CatForOpen.addClass('show');
-        });
-        $('#pills-mobile-tabContent .navbar-nav .cat-back').click(function () {
-            $(this).parent().removeClass('show');
+        $('#pills-mobile-tabContent .navbar-nav .nav-item.dropdown').click(function () {
+            var CatForOpen = $(this).find('.dropdown-menu:first');
+            if (CatForOpen.hasClass('show')) {
+                CatForOpen.removeClass('show');
+            }
+            else {
+                CatForOpen.addClass('show');
+            }
         });
 
     }
