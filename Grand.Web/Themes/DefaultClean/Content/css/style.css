@@ -191,6 +191,10 @@ input {
 }
 
 /* Custom Checkbox & Radio Buttons */
+.custom-radio .custom-control.label,
+.custom-checkbox .custom-control-label{
+    cursor: pointer;
+}
 
 .custom-radio .custom-control-input:checked ~ .custom-control-label::before,
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
