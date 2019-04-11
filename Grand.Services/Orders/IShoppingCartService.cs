@@ -50,6 +50,14 @@ namespace Grand.Services.Orders
             decimal customerEnteredPrice, int quantity);
 
         /// <summary>
+        /// Gets shopping cart
+        /// </summary>
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <returns>Shopping Cart</returns>
+        IList<ShoppingCartItem> GetShoppingCart(string storeId = null, params ShoppingCartType[] shoppingCartType);
+
+        /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>

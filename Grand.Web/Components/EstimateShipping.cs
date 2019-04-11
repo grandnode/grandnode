@@ -4,7 +4,6 @@ using Grand.Framework.Components;
 using Grand.Services.Orders;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
@@ -12,24 +11,18 @@ namespace Grand.Web.ViewComponents
     public class EstimateShippingViewComponent : BaseViewComponent
     {
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
-        private readonly IWorkContext _workContext;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
-        public EstimateShippingViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+        public EstimateShippingViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IShoppingCartService shoppingCartService, IStoreContext storeContext)
         {
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart);
 
             var model = await _shoppingCartViewModelService.PrepareEstimateShipping(cart);
             if (!model.Enabled)

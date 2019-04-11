@@ -88,10 +88,7 @@ namespace Grand.Web.Controllers
             [FromServices] ICheckoutAttributeParser checkoutAttributeParser,
             [FromServices] ICheckoutAttributeFormatter checkoutAttributeFormatter)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = await _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes,
@@ -207,10 +204,7 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             var model = new ShoppingCartModel();
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: checkoutAttributes);
             return View(model);
@@ -223,10 +217,7 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart);
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<string, IList<string>>();
@@ -249,10 +240,8 @@ namespace Grand.Web.Controllers
 
             //updated cart
             _workContext.CurrentCustomer = await _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
-            cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             var model = new ShoppingCartModel();
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             //update current warnings
@@ -280,12 +269,8 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
-            var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
                 await _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
@@ -301,10 +286,8 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
 
-            var item = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => (sci.ShoppingCartType == ShoppingCartType.ShoppingCart) && sci.Id == id)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .FirstOrDefault();
+            var item = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                .FirstOrDefault(sci => sci.Id == id);
 
             if (item != null)
             {
@@ -322,9 +305,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id).ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
                 var shoppingcartmodel = new ShoppingCartModel();
                 await _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
@@ -354,10 +335,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             //parse and save checkout attributes
             await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
@@ -386,10 +364,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
@@ -477,10 +452,7 @@ namespace Grand.Web.Controllers
             if (giftcardcouponcode != null)
                 giftcardcouponcode = giftcardcouponcode.Trim();
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
@@ -524,10 +496,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             //parse and save checkout attributes
             await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
@@ -553,10 +522,7 @@ namespace Grand.Web.Controllers
                 }
             }
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
@@ -578,11 +544,9 @@ namespace Grand.Web.Controllers
                 await _workContext.CurrentCustomer.RemoveGiftCardCouponCode(_genericAttributeService, gc.GiftCardCouponCode);
             }
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+
             return Json(new
             {
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
@@ -603,10 +567,8 @@ namespace Grand.Web.Controllers
                 : _workContext.CurrentCustomer;
             if (customer == null)
                 return RedirectToRoute("HomePage");
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+
             var model = new WishlistModel();
             await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
             return View(model);
@@ -621,10 +583,7 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
 
             var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString())
                 ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -660,10 +619,7 @@ namespace Grand.Web.Controllers
             //updated wishlist
             _workContext.CurrentCustomer = await _customerService.GetCustomerById(customer.Id);
 
-            cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
             var model = new WishlistModel();
             await _shoppingCartViewModelService.PrepareWishlist(model, cart);
             //update current warnings
@@ -698,10 +654,7 @@ namespace Grand.Web.Controllers
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
-            var pageCart = pageCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var pageCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
@@ -751,10 +704,7 @@ namespace Grand.Web.Controllers
                     ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), false);
                 }
                 //no items added. redisplay the wishlist page
-                var cart = pageCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
                 var model = new WishlistModel();
                 await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
                 return View(model);
@@ -766,10 +716,7 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
 
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
@@ -793,10 +740,7 @@ namespace Grand.Web.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
 

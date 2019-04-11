@@ -34,6 +34,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
@@ -56,6 +57,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ILocalizationService localizationService,
             ICustomerService customerService,
+            IShoppingCartService shoppingCartService,
             IGenericAttributeService genericAttributeService,
             IShippingService shippingService,
             IPaymentService paymentService,
@@ -75,6 +77,7 @@ namespace Grand.Web.Controllers
             this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._customerService = customerService;
+            this._shoppingCartService = shoppingCartService;
             this._genericAttributeService = genericAttributeService;
             this._shippingService = shippingService;
             this._paymentService = paymentService;
@@ -122,10 +125,8 @@ namespace Grand.Web.Controllers
         {
             var customer = _workContext.CurrentCustomer;
 
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -136,6 +137,7 @@ namespace Grand.Web.Controllers
             await _customerService.ResetCheckoutData(customer, _storeContext.CurrentStore.Id);
 
             //validation (cart)
+
             var checkoutAttributesXml = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             var scWarnings = await shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
             if (scWarnings.Any())
@@ -202,10 +204,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> BillingAddress(IFormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -244,10 +244,7 @@ namespace Grand.Web.Controllers
             address.CustomerId = _workContext.CurrentCustomer.Id;
             await _customerService.UpdateBillingAddress(address);
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             //ship to the same address?
             if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping())
@@ -273,10 +270,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -347,10 +342,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ShippingAddress()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -395,10 +388,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -506,10 +497,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ShippingMethod()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -547,10 +536,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> SelectShippingMethod(IFormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var customer = _workContext.CurrentCustomer;
             var store = _storeContext.CurrentStore;
@@ -626,10 +612,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> PaymentMethod()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -681,10 +665,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -730,10 +712,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> PaymentInfo()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -780,10 +760,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> EnterPaymentInfo(IFormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -830,10 +808,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> Confirm()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -852,10 +828,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -938,8 +912,20 @@ namespace Grand.Web.Controllers
 
         #region Methods (one page checkout)
 
+        private void OpcCartValidate(IList<ShoppingCartItem> cart)
+        {
+            if (!cart.Any())
+                throw new Exception("Your cart is empty");
+
+            if (!_orderSettings.OnePageCheckoutEnabled)
+                throw new Exception("One page checkout is disabled");
+
+            if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+                throw new Exception("Anonymous checkout is not allowed");
+        }
+
         [NonAction]
-        protected async Task<JsonResult> OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
+        protected async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart)
         {
             var shippingMethodModel = await _checkoutViewModelService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
 
@@ -969,7 +955,7 @@ namespace Grand.Web.Controllers
         }
 
         [NonAction]
-        protected async Task<JsonResult> OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
+        protected async Task<JsonResult> OpcLoadStepAfterShippingMethod(IList<ShoppingCartItem> cart)
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
@@ -1037,7 +1023,7 @@ namespace Grand.Web.Controllers
         }
 
         [NonAction]
-        protected async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, List<ShoppingCartItem> cart)
+        protected async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, IList<ShoppingCartItem> cart)
         {
             if (await paymentMethod.SkipPaymentInfo() ||
                     (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection
@@ -1077,10 +1063,8 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> OnePageCheckout()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
@@ -1104,18 +1088,8 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 string billingAddressId = form["billing_address_id"];
 
@@ -1240,18 +1214,8 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 if (!cart.RequiresShipping())
                     throw new Exception("Shipping is not required");
@@ -1395,19 +1359,8 @@ namespace Grand.Web.Controllers
                 var customer = _workContext.CurrentCustomer;
                 var store = _storeContext.CurrentStore;
 
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, store.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 if (!cart.RequiresShipping())
                     throw new Exception("Shipping is not required");
@@ -1476,18 +1429,8 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 string paymentmethod = form["paymentmethod"];
                 //payment method 
@@ -1550,18 +1493,8 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 var paymentMethodSystemName = await _workContext.CurrentCustomer.GetAttribute<string>(
                     _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
@@ -1615,18 +1548,8 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
-                if (!cart.Any())
-                    throw new Exception("Your cart is empty");
-
-                if (!_orderSettings.OnePageCheckoutEnabled)
-                    throw new Exception("One page checkout is disabled");
-
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    throw new Exception("Anonymous checkout is not allowed");
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+                OpcCartValidate(cart);
 
                 //prevent 2 orders being placed within an X seconds time frame
                 if (!await _checkoutViewModelService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
