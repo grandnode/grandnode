@@ -133,9 +133,9 @@
         <div class="form-group">
             <admin-label asp-for="AddCustomerNoteDownloadId" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class=""mt-checkbox mt-checkbox-outline control control--checkbox">
                     <admin-input asp-for="AddCustomerNoteHasDownload" />  @T("Admin.Customers.CustomerNotes.Fields.Download.HasDownload")
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <div id="pnlAddCustomerNoteDownloadId">
                     <admin-input asp-for="AddCustomerNoteDownloadId" />
@@ -146,9 +146,9 @@
         <div class="form-group">
             <admin-label asp-for="AddCustomerNoteDisplayToCustomer" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class=""mt-checkbox mt-checkbox-outline control control--checkbox">
                     <admin-input asp-for="AddCustomerNoteDisplayToCustomer" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AddCustomerNoteDisplayToCustomer"></span>
             </div>

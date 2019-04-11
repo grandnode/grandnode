@@ -41,7 +41,7 @@
                                     var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                     <th scope="col">
                                         <strong>@pm.FriendlyName</strong>
-                                        <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(systemNameWithoutDot)" /><span></span></label>
+                                        <label class='"mt-checkbox mt-checkbox-outline control control--checkbox'><input type="checkbox" id="selectall-@(systemNameWithoutDot)" /> <div class="control__indicator"></div></label>
                                     </th>
                                 }
                             </tr>
@@ -61,7 +61,7 @@
 
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <td style="text-align:center">
-                                            <label class='mt-checkbox mt-checkbox-outline'><input class="restrict_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrict_@(pm.SystemName)" @(resticted ? " checked=checked" : null) /><span></span></label>
+                                            <label class='"mt-checkbox mt-checkbox-outline control control--checkbox'><input class="restrict_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrict_@(pm.SystemName)" @(resticted ? " checked=checked" : null) /> <div class="control__indicator"></div></label>
                                         </td>
                                     }
                                 </tr>

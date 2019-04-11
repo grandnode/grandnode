@@ -101,10 +101,10 @@
             dataBound: onDataBound,
             columns: [{
                 field: "Id",
-                headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
+                headerTemplate: "<label class='"mt-checkbox mt-checkbox-outline control control--checkbox'><input id='mastercheckbox' type='checkbox'/> <div class="control__indicator"></div></label>",
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
+                template: "<label class='"mt-checkbox mt-checkbox-outline control control--checkbox'><input type='checkbox' value='#=Id#' class='checkboxGroups'/> <div class="control__indicator"></div></label>",
                 width: 60
             }, {
                 field: "LogLevel",

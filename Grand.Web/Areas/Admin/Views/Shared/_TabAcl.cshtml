@@ -18,7 +18,7 @@
         <div class="form-group">
             <admin-label asp-for="SubjectToAcl" />
             <div class="col-md-6 col-sm-6">
-                <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                <label class=""mt-checkbox mt-checkbox-outline control control--checkbox control control--checkbox">
                     <admin-input asp-for="SubjectToAcl" />
                     <div class="control__indicator"></div>
                 </label>
@@ -34,7 +34,7 @@
                     <div class="mt-checkbox-list">
                         @foreach (var customerRole in Model.AvailableCustomerRoles)
                         {
-                            <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                            <label class=""mt-checkbox mt-checkbox-outline control control--checkbox control control--checkbox">
                                 <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
                                 <div class="control__indicator"></div>
                             </label>
