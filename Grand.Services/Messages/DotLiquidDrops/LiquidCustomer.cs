@@ -53,6 +53,50 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastName); }
         }
 
+        public string Gender 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Gender); }
+        }
+
+        public string DateOfBirth 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.DateOfBirth); }
+        }        
+
+        public string Company 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company); }
+        }
+
+        public string StreetAddress 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress); }
+        }
+
+        public string StreetAddress2 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2); }
+        }
+
+        public string ZipPostalCode 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode); }
+        }
+
+        public string City 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City); }
+        }
+
+        public string Phone 
+        {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone); }
+        }
+
+        public string Fax {
+            get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax); }
+        }
+
         public string VatNumber
         {
             get { return _customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber); }
