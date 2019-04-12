@@ -5303,7 +5303,7 @@ a span.username {
 
 /* Checkbox tick */
 
-.control--checkbox .control__indicator:after {
+.control-checkbox .control__indicator:after {
     top: 5px;
     left: 7px;
     width: 6px;
@@ -5326,7 +5326,7 @@ a span.username {
 
 /* Disabled tick colour */
 
-.control--checkbox input:disabled~.control__indicator:after {
+.control-checkbox input:disabled~.control__indicator:after {
     border-color: #7b7b7b;
 }
 

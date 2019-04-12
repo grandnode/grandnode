@@ -315,7 +315,7 @@
             <div class="form-group">
                 <admin-label asp-for="IsTaxExempt" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="IsTaxExempt" />
                          <div class="control__indicator"></div>
                     </label>
@@ -325,7 +325,7 @@
             <div class="form-group">
                 <admin-label asp-for="FreeShipping" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="FreeShipping" />
                          <div class="control__indicator"></div>
                     </label>
@@ -377,7 +377,7 @@
                         @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
                         {
                             <div>
-                                <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                     <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
                                      <div class="control__indicator"></div>
                                 </label>
@@ -397,7 +397,7 @@
             <div class="form-group">
                 <admin-label asp-for="Active" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline control control--checkbox">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="Active" />
                          <div class="control__indicator"></div>
                     </label>

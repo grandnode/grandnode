@@ -41,7 +41,7 @@
                                 {
                                     <th scope="col">
                                         <strong>@sm.Name</strong>
-                                        <label class='mt-checkbox mt-checkbox-outline control control--checkbox'><input type="checkbox" id="selectroleall-@(sm.Id)" /> <div class="control__indicator"></div></label>
+                                        <label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input type="checkbox" id="selectroleall-@(sm.Id)" /> <div class="control__indicator"></div></label>
                                     </th>
                                 }
                             </tr>
@@ -59,7 +59,7 @@
                                     {
                                         var restricted = Model.RestictedRole.ContainsKey(c.Id) && Model.RestictedRole[c.Id][sm.Id];
                                         <td style="text-align:center">
-                                            <label class='mt-checkbox mt-checkbox-outline control control--checkbox'><input id="restrictrole_@(sm.Id)" class="restrictrole_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrictrole_@(sm.Id)" @(restricted ? " checked=checked" : null) /> <div class="control__indicator"></div></label>
+                                            <label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input id="restrictrole_@(sm.Id)" class="restrictrole_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrictrole_@(sm.Id)" @(restricted ? " checked=checked" : null) /> <div class="control__indicator"></div></label>
                                         </td>
                                     }
                                 </tr>
