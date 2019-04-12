@@ -4,7 +4,6 @@ using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Customers;
-using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Customers
 {

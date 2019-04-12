@@ -6,7 +6,6 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
-using System.Linq;
 
 namespace Grand.Api.Validators.Customers
 {
