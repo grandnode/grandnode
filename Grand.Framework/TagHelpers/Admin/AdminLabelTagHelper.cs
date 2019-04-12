@@ -54,7 +54,7 @@ namespace Grand.Framework.TagHelpers.Admin
                         i.AddCssClass("help icon-question");
                         i.Attributes.Add("title", hintResource);
                         i.Attributes.Add("data-toggle", "tooltip");
-                        i.Attributes.Add("data-placement", "bottom");
+                        i.Attributes.Add("data-placement", "left");
                         output.Content.AppendHtml(i.ToHtmlString());
                     }
                 }
