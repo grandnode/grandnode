@@ -110,28 +110,28 @@ namespace Grand.Services.Tests.PushNotifications
         }
 
         [TestMethod()]
-        public void CanDeleteRegistration()
+        public async Task CanDeleteRegistration()
         {
             ClearPushRegistrations();
 
             var toDelete = new PushRegistration();
-            _pushNotificationsService.InsertPushReceiver(toDelete);
+            await _pushNotificationsService.InsertPushReceiver(toDelete);
 
             Assert.AreEqual(1, _registrationRepository.Table.Count());
-            _pushNotificationsService.DeletePushReceiver(toDelete);
+            await _pushNotificationsService.DeletePushReceiver(toDelete);
             Assert.AreEqual(0, _registrationRepository.Table.Count());
         }
 
         [TestMethod()]
-        public void CanUpdateRegistration()
+        public async Task CanUpdateRegistration()
         {
             ClearPushRegistrations();
 
             var registration = new PushRegistration() { Token = "CanUpdateRegistrationToken" };
-            _pushNotificationsService.InsertPushReceiver(registration);
+            await _pushNotificationsService.InsertPushReceiver(registration);
 
             registration.Token = "CanUpdateRegistrationToken1";
-            _pushNotificationsService.UpdatePushReceiver(registration);
+            await _pushNotificationsService.UpdatePushReceiver(registration);
 
             var found = _registrationRepository.Table.Where(x => x.Token == "CanUpdateRegistrationToken1");
 

@@ -23,7 +23,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customerRole = _customerRoleApiService.GetById(key);
+            var customerRole = await _customerRoleApiService.GetById(key);
             if (customerRole == null)
                 return NotFound();
 

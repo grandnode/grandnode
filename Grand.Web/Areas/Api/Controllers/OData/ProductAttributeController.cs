@@ -23,7 +23,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Attributes))
                 return Forbid();
 
-            var productAttribute = _productAttributeApiService.GetById(key);
+            var productAttribute = await _productAttributeApiService.GetById(key);
             if (productAttribute == null)
                 return NotFound();
 

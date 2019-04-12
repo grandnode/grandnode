@@ -23,7 +23,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var manufacturer = _manufacturerApiService.GetById(key);
+            var manufacturer = await _manufacturerApiService.GetById(key);
             if (manufacturer == null)
                 return NotFound();
 

@@ -286,11 +286,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public async Task<IActionResult> PredefinedProductAttributeValueDelete(string id, string productAttributeId)
+        public async Task<IActionResult> PredefinedProductAttributeValueDelete(string id)
         {
             if (ModelState.IsValid)
             {
-                var productAttribute = await _productAttributeService.GetProductAttributeById(productAttributeId);
+                var productAttribute = (await _productAttributeService.GetAllProductAttributes()).FirstOrDefault(x=>x.PredefinedProductAttributeValues.Any(y=>y.Id == id));
                 var ppav = productAttribute.PredefinedProductAttributeValues.Where(x => x.Id == id).FirstOrDefault();
                 if (ppav == null)
                     throw new ArgumentException("No predefined product attribute value found with the specified id");
