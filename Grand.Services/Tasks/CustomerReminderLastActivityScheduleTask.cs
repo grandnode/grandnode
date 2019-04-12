@@ -16,7 +16,7 @@ namespace Grand.Services.Tasks
         {
             lock (_lock)
             {
-                _customerReminderService.Task_LastActivity();
+                _customerReminderService.Task_LastActivity().GetAwaiter().GetResult();
             }
         }
     }

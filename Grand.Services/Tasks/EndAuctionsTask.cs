@@ -50,8 +50,8 @@ namespace Grand.Services.Tasks
                     var bid = _auctionService.GetBidsByProductId(auctionToEnd.Id).GetAwaiter().GetResult().OrderByDescending(x => x.Amount).FirstOrDefault();
                     if (bid == null)
                     {
-                        _auctionService.UpdateAuctionEnded(auctionToEnd, true);
-                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, null);
+                        _auctionService.UpdateAuctionEnded(auctionToEnd, true).GetAwaiter().GetResult();
+                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, null).GetAwaiter().GetResult();
                         continue;
                     }
                     var warnings = _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId).GetAwaiter().GetResult(), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
@@ -61,10 +61,10 @@ namespace Grand.Services.Tasks
                     {
                         bid.Win = true;
                         _auctionService.UpdateBid(bid);
-                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, bid);
-                        _workflowMessageService.SendAuctionEndedCustomerNotificationWin(auctionToEnd, null, bid);
-                        _workflowMessageService.SendAuctionEndedCustomerNotificationLost(auctionToEnd, null, bid);
-                        _auctionService.UpdateAuctionEnded(auctionToEnd, true);
+                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, bid).GetAwaiter().GetResult();
+                        _workflowMessageService.SendAuctionEndedCustomerNotificationWin(auctionToEnd, null, bid).GetAwaiter().GetResult();
+                        _workflowMessageService.SendAuctionEndedCustomerNotificationLost(auctionToEnd, null, bid).GetAwaiter().GetResult();
+                        _auctionService.UpdateAuctionEnded(auctionToEnd, true).GetAwaiter().GetResult();
                     }
                     else
                     {

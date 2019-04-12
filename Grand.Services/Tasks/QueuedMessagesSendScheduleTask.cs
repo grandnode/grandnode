@@ -60,7 +60,7 @@ namespace Grand.Services.Tasks
                            cc,
                            queuedEmail.AttachmentFilePath,
                            queuedEmail.AttachmentFileName,
-                           queuedEmail.AttachedDownloads);
+                           queuedEmail.AttachedDownloads).GetAwaiter().GetResult();
 
                         queuedEmail.SentOnUtc = DateTime.UtcNow;
                     }
@@ -71,7 +71,7 @@ namespace Grand.Services.Tasks
                     finally
                     {
                         queuedEmail.SentTries = queuedEmail.SentTries + 1;
-                        _queuedEmailService.UpdateQueuedEmail(queuedEmail);
+                        _queuedEmailService.UpdateQueuedEmail(queuedEmail).GetAwaiter().GetResult();
                     }
                 }
             }

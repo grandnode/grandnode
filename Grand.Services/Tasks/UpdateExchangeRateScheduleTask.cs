@@ -39,7 +39,7 @@ namespace Grand.Services.Tasks
                     {
                         currency.Rate = exchageRate.Rate;
                         currency.UpdatedOnUtc = DateTime.UtcNow;
-                        _currencyService.UpdateCurrency(currency);
+                        _currencyService.UpdateCurrency(currency).GetAwaiter().GetResult();
                     }
                 }
             }
