@@ -288,6 +288,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 
+            //register controllers as services, it'll allow to override them
+            mvcBuilder.AddControllersAsServices();
+
             return mvcBuilder;
         }
 

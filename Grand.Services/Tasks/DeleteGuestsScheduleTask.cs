@@ -30,7 +30,7 @@ namespace Grand.Services.Tasks
                 var olderThanMinutes = _commonSettings.DeleteGuestTaskOlderThanMinutes;
                 // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
                 olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
-                _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+                _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true).GetAwaiter().GetResult();
             }
         }
     }

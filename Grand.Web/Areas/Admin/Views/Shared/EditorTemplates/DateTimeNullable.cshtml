@@ -1,10 +1,9 @@
 @model DateTime?
-@using System.Globalization
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat.UniversalSortableDateTimePattern) : "")" />
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString("M/d/yyyy h:mm:ss tt") : "")" />
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoDateTimePicker({
-             //culture: "@System.Globalization.CultureInfo.CurrentCulture.Name"
+            parseFormats: ["M/d/yyyy h:mm:ss tt"],
         });
     });
 </script>
