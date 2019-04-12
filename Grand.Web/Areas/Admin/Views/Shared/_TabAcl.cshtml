@@ -17,26 +17,26 @@
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="SubjectToAcl" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-md-6 col-sm-6">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox control control-checkbox">
                     <admin-input asp-for="SubjectToAcl" />
-                    <span></span>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SubjectToAcl"></span>
             </div>
         </div>
         <div class="form-group" id="pnl-acl">
             <admin-label asp-for="AvailableCustomerRoles" />
-            <div class="col-md-9 col-sm-9">
+            <div class="col-md-6 col-sm-6">
                 @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                 {
                     @await Component.InvokeAsync("CommonAclDisabledWarning")
                     <div class="mt-checkbox-list">
                         @foreach (var customerRole in Model.AvailableCustomerRoles)
                         {
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox mt-checkbox-outline control control-checkbox control control-checkbox">
                                 <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
-                                <span></span>
+                                <div class="control__indicator"></div>
                             </label>
                         }
                     </div>

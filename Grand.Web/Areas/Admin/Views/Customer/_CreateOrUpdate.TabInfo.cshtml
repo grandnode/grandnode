@@ -315,9 +315,9 @@
             <div class="form-group">
                 <admin-label asp-for="IsTaxExempt" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="IsTaxExempt" />
-                        <span></span>
+                         <div class="control__indicator"></div>
                     </label>
                     <span asp-validation-for="IsTaxExempt"></span>
                 </div>
@@ -325,9 +325,9 @@
             <div class="form-group">
                 <admin-label asp-for="FreeShipping" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="FreeShipping" />
-                        <span></span>
+                         <div class="control__indicator"></div>
                     </label>
                     <span asp-validation-for="FreeShipping"></span>
                 </div>
@@ -377,9 +377,9 @@
                         @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
                         {
                             <div>
-                                <label class="mt-checkbox mt-checkbox-outline">
+                                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                     <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
-                                    <span></span>
+                                     <div class="control__indicator"></div>
                                 </label>
 
                             </div>
@@ -397,9 +397,9 @@
             <div class="form-group">
                 <admin-label asp-for="Active" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <admin-input asp-for="Active" />
-                        <span></span>
+                         <div class="control__indicator"></div>
                     </label>
                     <span asp-validation-for="Active"></span>
                 </div>

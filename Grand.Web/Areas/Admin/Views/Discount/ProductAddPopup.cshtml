@@ -23,22 +23,22 @@
     }
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
                         @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group popup">
                                 <admin-label asp-for="SearchProductName" class="col-sm-4 control-label" />
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-xs-8 col-md-4 col-sm-4">
                                     <admin-input asp-for="SearchProductName" />
                                 </div>
-                                <div class="col-md-4 col-sm-4 mt-mobile-10">
+                                <div class="col-xs-8 col-md-4 col-sm-4 mt-mobile-10">
                                     <div class="btn-group btn-group-devided">
                                         <button class="btn btn-success filter-submit" id="search-products">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")

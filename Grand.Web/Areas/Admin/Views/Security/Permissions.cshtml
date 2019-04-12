@@ -7,8 +7,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-user-secret"></i>
                         @T("Admin.Configuration.ACL")
@@ -18,7 +18,7 @@
                     </div>
                     <vc:admin-widget widget-zone="permission_list_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
@@ -55,7 +55,7 @@
                                                     {
                                                         <th scope="col">
                                                             <strong>@cr.Name</strong>
-                                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(cr.Id)" /><span></span></label>
+                                                            <label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input type="checkbox" id="selectall-@(cr.Id)" /> <div class="control__indicator"></div></label>
                                                         </th>
                                                     }
                                                 </tr>
@@ -73,7 +73,7 @@
                                                         {
                                                             var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
                                                             <td style="text-align:center">
-                                                                <label class='mt-checkbox mt-checkbox-outline'><input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) /><span></span></label>
+                                                                <label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) /> <div class="control__indicator"></div></label>
                                                             </td>
                                                         }
                                                     </tr>

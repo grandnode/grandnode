@@ -8,8 +8,8 @@
     <input asp-for="Id" type="hidden" />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-envelope-o"></i>
                         @T("Admin.System.ContactForm.Details")
@@ -19,7 +19,7 @@
                         <span id="contactform-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <vc:admin-widget widget-zone="contact_form_details_top" additional-data="Model" />
                     <div class="form-horizontal">
                         <div class="form-body">

@@ -35,80 +35,80 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SearchPageAllowCustomersToSelectPageSize" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SearchPageAllowCustomersToSelectPageSize" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSearchPageProductsPerPage">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SearchPageProductsPerPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SearchPageProductsPerPage" />
                 <span asp-validation-for="SearchPageProductsPerPage"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSearchPagePageSizeOptions">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SearchPagePageSizeOptions" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SearchPagePageSizeOptions" />
                 <span asp-validation-for="SearchPagePageSizeOptions"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="ProductSearchAutoCompleteEnabled" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ProductSearchAutoCompleteEnabled" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ProductSearchAutoCompleteEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlProductSearchAutoCompleteNumberOfProducts">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="ProductSearchAutoCompleteNumberOfProducts" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="ProductSearchAutoCompleteNumberOfProducts" />
                 <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
             </div>
         </div>
         <div class="form-group" id="pnlShowProductImagesInSearchAutoComplete">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="ShowProductImagesInSearchAutoComplete" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowProductImagesInSearchAutoComplete" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="ProductSearchTermMinimumLength" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="ProductSearchTermMinimumLength" />
                 <span asp-validation-for="ProductSearchTermMinimumLength"></span>
             </div>

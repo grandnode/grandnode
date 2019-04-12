@@ -8,8 +8,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-fw fa-sliders"></i>
                         @T("Admin.Configuration.Settings.Catalog")
@@ -21,14 +21,14 @@
                     </div>
                     <vc:admin-widget widget-zone="catalog_settings_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body">
+                <div class="x_content">
                     <div class="form-horizontal">
                         <div class="form-body">
                             @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <vc:admin-widget widget-zone="catalog_settings_top" additional-data="null" />
                     <div id="catalogsettings-edit" style="display:none">
                         <ul>

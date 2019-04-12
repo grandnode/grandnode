@@ -71,8 +71,8 @@
     </script>
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-fw fa-sliders"></i>
                         @T("Admin.Configuration.Settings.Tax")
@@ -84,131 +84,131 @@
                     </div>
                     <vc:admin-widget widget-zone="tax_settings_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body">
+                <div class="x_content">
                     <div class="form-horizontal">
                         <div class="form-body">
                             @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <vc:admin-widget widget-zone="tax_settings_top" additional-data="null" />
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PricesIncludeTax" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="PricesIncludeTax" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="PricesIncludeTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowCustomersToSelectTaxDisplayType" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowCustomersToSelectTaxDisplayType" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowCustomersToSelectTaxDisplayType"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlTaxDisplayType">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="TaxDisplayType" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="TaxDisplayType" asp-items="Model.TaxDisplayTypeValues" />
                                     <span asp-validation-for="TaxDisplayType"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayTaxSuffix" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayTaxSuffix" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="DisplayTaxSuffix"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DisplayTaxRates" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="DisplayTaxRates" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="DisplayTaxRates"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="HideZeroTax" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="HideZeroTax" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="HideZeroTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="HideTaxInOrderSummary" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="HideTaxInOrderSummary" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="HideTaxInOrderSummary"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ForceTaxExclusionFromOrderSubtotal" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ForceTaxExclusionFromOrderSubtotal" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ForceTaxExclusionFromOrderSubtotal"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="TaxBasedOn" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
                                     <span asp-validation-for="TaxBasedOn"></span>
                                 </div>
                             </div>
                             <div class="form-horizontal portlet light bg-inverse form-fit">
                                 <div class="form-group" style="padding-top:15px;margin-bottom: 0px;">
-                                    <div class="col-md-4 col-sm-4 text-right">
+                                    <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                         @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
                                         <strong>@T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")</strong>
                                     </div>
@@ -220,158 +220,158 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShippingIsTaxable" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShippingIsTaxable" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShippingIsTaxable"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShippingPriceIncludesTax">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShippingPriceIncludesTax" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShippingPriceIncludesTax" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShippingPriceIncludesTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="DefaultTaxCategoryId" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="DefaultTaxCategoryId" asp-items="Model.TaxCategories" />
                                     <span asp-validation-for="DefaultTaxCategoryId"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShippingTaxClass">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShippingTaxClassId" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="ShippingTaxClassId" asp-items="Model.TaxCategories" />
                                     <span asp-validation-for="ShippingTaxClassId"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PaymentMethodAdditionalFeeIsTaxable" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="PaymentMethodAdditionalFeeIsTaxable" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="PaymentMethodAdditionalFeeIsTaxable"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PaymentMethodAdditionalFeeIncludesTax" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="PaymentMethodAdditionalFeeIncludesTax" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="PaymentMethodAdditionalFeeIncludesTax"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="PaymentMethodAdditionalFeeTaxClassId" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="Model.PaymentMethodAdditionalFeeTaxCategories" />
                                     <span asp-validation-for="PaymentMethodAdditionalFeeTaxClassId"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatEnabled" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EuVatEnabled" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="EuVatEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatShopCountry">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatShopCountryId" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-select asp-for="EuVatShopCountryId" asp-items="Model.EuVatShopCountries" />
                                     <span asp-validation-for="EuVatShopCountryId"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatAllowVATExemption">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatAllowVatExemption" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EuVatAllowVatExemption" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="EuVatAllowVatExemption"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatAssumeValid">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatAssumeValid" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EuVatAssumeValid" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="EuVatAssumeValid"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatUseWebService">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatUseWebService" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EuVatUseWebService" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="EuVatUseWebService"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="EuVatEmailAdminWhenNewVatSubmitted" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="EuVatEmailAdminWhenNewVatSubmitted"></span>
                                 </div>

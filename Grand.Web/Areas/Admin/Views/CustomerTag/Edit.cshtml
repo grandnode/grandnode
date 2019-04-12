@@ -7,8 +7,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-tag"></i>
                         @T("Admin.Customers.CustomerTags.EditCustomerTagDetails") - @Model.Name 
@@ -20,7 +20,7 @@
                         <span id="customertag-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                    <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>

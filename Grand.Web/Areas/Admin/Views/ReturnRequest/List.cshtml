@@ -8,15 +8,15 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-truck"></i>
                         @T("Admin.ReturnRequests")
                     </div>
                     <vc:admin-widget widget-zone="return_request_list_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
@@ -33,7 +33,7 @@
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="GoDirectlyToId" class="control-label col-md-3 col-sm-3" />
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-xs-8 col-md-4 col-sm-4">
                                     <div class="input-group" style="text-align:left">
                                         <admin-input asp-for="GoDirectlyToId" />
                                         <span class="input-group-btn">
@@ -54,10 +54,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            <div class="portlet-body">
+                            <div class="x_content">
                                 <div id="returnrequests-grid"></div>
                             </div>
                         </div>

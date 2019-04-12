@@ -40,9 +40,9 @@
         <div class="form-group">
             <admin-label asp-for="DisableBuyButton" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisableBuyButton" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisableBuyButton"></span>
             </div>
@@ -50,9 +50,9 @@
         <div class="form-group">
             <admin-label asp-for="DisableWishlistButton" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisableWishlistButton" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisableWishlistButton"></span>
             </div>
@@ -60,9 +60,9 @@
         <div class="form-group">
             <admin-label asp-for="AvailableForPreOrder" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AvailableForPreOrder" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AvailableForPreOrder"></span>
             </div>
@@ -77,9 +77,9 @@
         <div class="form-group">
             <admin-label asp-for="CallForPrice" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CallForPrice" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="CallForPrice"></span>
             </div>
@@ -87,9 +87,9 @@
         <div class="form-group">
             <admin-label asp-for="CustomerEntersPrice" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CustomerEntersPrice" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="CustomerEntersPrice"></span>
             </div>
@@ -111,9 +111,9 @@
         <div class="form-group">
             <admin-label asp-for="BasepriceEnabled" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="BasepriceEnabled" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="BasepriceEnabled"></span>
             </div>
@@ -149,9 +149,9 @@
         <div class="form-group">
             <admin-label asp-for="IsTaxExempt" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IsTaxExempt" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsTaxExempt"></span>
             </div>
@@ -166,9 +166,9 @@
         <div class="form-group" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
             <admin-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline white-bg">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox white-bg">
                     <admin-input asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
             </div>
@@ -316,10 +316,10 @@ else
             <div class="mt-checkbox-list">
                 @foreach (var discount in Model.AvailableDiscounts)
                 {
-                    <label class="mt-checkbox mt-checkbox-outline">
+                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                         <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
                                @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>     } />@discount.Name
-                            <span></span>
+                             <div class="control__indicator"></div>
                         </label>
                 }
             </div>
