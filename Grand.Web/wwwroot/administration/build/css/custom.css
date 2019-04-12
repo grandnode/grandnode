@@ -4,6 +4,7 @@ html, body {
 
 body {
     font-size: 14px;
+    direction:ltr;
 }
 
 .full-width {
@@ -1348,7 +1349,7 @@ h2 {
 
 .x_title {
     border-bottom: 2px solid #E6E9ED;
-    padding: 1px 5px 6px;
+    padding: 0px 5px;
     margin-bottom: 10px;
     background-color: #f7f7f7;
     display: flex;
@@ -2469,7 +2470,7 @@ a.star {
 }
 
 button, .buttons, .btn, .modal-footer .btn+.btn {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     margin-right: 5px
 }
 
@@ -4153,7 +4154,7 @@ a.hiddenanchor {
     margin-left: 15px
 }
 
-.clearfix:after, form:after {
+.clearfix:after {
     content: ".";
     display: block;
     height: 0;
@@ -5894,6 +5895,9 @@ form>h4 {
     }
     .caption {
         transform: translateY(10%);
+    }
+    .mt-top2{
+        top:-15px!important;
     }
 }
 

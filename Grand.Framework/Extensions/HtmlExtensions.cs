@@ -213,7 +213,7 @@ namespace Grand.Framework
                     dataInputSelector = "#" + String.Join(", #", datainputIds);
                 }
                 var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
-                result.Append("<label class=\"mt-checkbox\">");
+                result.Append("<label class=\"mt-checkbox control control--checkbox\">");
                 var check = helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
