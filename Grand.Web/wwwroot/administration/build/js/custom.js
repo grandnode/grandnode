@@ -118,54 +118,14 @@ function init_sidebar() {
     });
 
 
-    var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () { // find nav element with exact match
 
-        var segment = this.href.split("/");
+    $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
 
-        var linkY = "";
-        for (let i = 3; i < segment.length - 1; i++) {
-            linkY += "/" + segment[i];
-        }
-
-        var z = window.location.pathname;
-        if (linkY.length > 1) {
- 
-            if (z.startsWith(linkY)) {
-                console.log(z);
-                console.log(linkY);
-                console.log('__');
-                return linkY;
-
-            }
-        }
-    });
-
-    if ($cur_menu.length == 0) { // if no exact match, try to find best match
-        var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () {
-            return CURRENT_URL.startsWith(this.href) && this.href != '';
-        });
-
-        if ($cur_menu.length > 1) { // get ONLY one with longest href as best match
-            var l = 0;
-            for (var i = 0; i < $cur_menu.length; i++) {
-                if ($cur_menu.eq(l).attr('href').length < $cur_menu.eq(i).attr('href').length) l = i;
-            }
-            $cur_menu = $cur_menu.eq(l);
-        }
-    }
-
-    // original code below, but executed for $cur_menu
-    $cur_menu.parent('li').addClass('current-page').parents('ul').slideDown(function () {
+    $SIDEBAR_MENU.find('a').filter(function () {
+        return this.href == CURRENT_URL;
+    }).parent('li').addClass('current-page').parents('ul').slideDown(1, function () {
         setContentHeight();
     }).parent().addClass('active');
-
-    //$SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
-
-    //$SIDEBAR_MENU.find('a').filter(function () {
-    //    return this.href == CURRENT_URL;
-    //}).parent('li').addClass('current-page').parents('ul').slideDown(1, function () {
-    //    setContentHeight();
-    //}).parent().addClass('active');
 
     // recompute content when resizing
     $(window).smartresize(function () {
