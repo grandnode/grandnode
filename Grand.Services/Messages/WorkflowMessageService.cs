@@ -12,11 +12,9 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages.DotLiquidDrops;
@@ -346,13 +344,13 @@ namespace Grand.Services.Messages
             var customer = await customerService.GetCustomerById(order.CustomerId);
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
-           
+
             var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPlaced.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
             await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
-            
+
             //event notification
             await _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
@@ -422,7 +420,7 @@ namespace Grand.Services.Messages
 
             var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
-            
+
             var messageTemplate = await GetEmailAccountOfMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
@@ -799,8 +797,8 @@ namespace Grand.Services.Messages
             //event notification
             await _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
-            var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);
@@ -1183,8 +1181,7 @@ namespace Grand.Services.Messages
                 var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
                 var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
 
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -2030,8 +2027,7 @@ namespace Grand.Services.Messages
             //store in database
             if (_commonSettings.StoreInDatabaseContactUsForm)
             {
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -2113,8 +2109,7 @@ namespace Grand.Services.Messages
             //store in database
             if (_commonSettings.StoreInDatabaseContactUsForm)
             {
-                var contactus = new ContactUs()
-                {
+                var contactus = new ContactUs() {
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
@@ -2167,8 +2162,7 @@ namespace Grand.Services.Messages
 
             //limit name length
             toName = CommonHelper.EnsureMaximumLength(toName, 300);
-            var email = new QueuedEmail
-            {
+            var email = new QueuedEmail {
                 Priority = QueuedEmailPriority.High,
                 From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
                 FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
@@ -2279,7 +2273,7 @@ namespace Grand.Services.Messages
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var store =  await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var store = await _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             var language = await EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplate = await _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
