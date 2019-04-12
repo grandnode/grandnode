@@ -50,6 +50,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $FOOTER = $('footer');
 
 
+
 	
 // Sidebar
 function init_sidebar() {
@@ -118,11 +119,26 @@ $MENU_TOGGLE.on('click', function() {
 	$('.dataTable').each ( function () { $(this).dataTable().fnDraw(); });
 });
 
+    var segment = CURRENT_URL.split("/");
+    
+    var linkY = "";
+    for (let i = 3; i < segment.length-1; i++) {
+        linkY += "/" + segment[i];
+    }
+
+    var fullLink = "";
+    for (let i = 0; i < segment.length; i++) {
+        fullLink += segment[i] + "/";
+    }
+
 	// check active menu
-	$SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
+	$SIDEBAR_MENU.find('a[href="' + linkY + '"]').parent('li').addClass('current-page');
+
+   // $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
 
 	$SIDEBAR_MENU.find('a').filter(function () {
-		return this.href == CURRENT_URL;
+        //return this.href == CURRENT_URL;
+        return this.href == fullLink;
 	}).parent('li').addClass('current-page').parents('ul').slideDown(1,function() {
 		setContentHeight();
 	}).parent().addClass('active');
