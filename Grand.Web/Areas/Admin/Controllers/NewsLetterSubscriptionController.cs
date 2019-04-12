@@ -126,7 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var m = x.ToModel();
                 var store = await _storeService.GetStoreById(x.StoreId);
                 m.StoreName = store != null ? store.Name : "Unknown store";
-                m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToLongTimeString();
+                m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                 m.Categories = await GetCategoryNames(x.Categories.ToList());
                 items.Add(m);
             }
