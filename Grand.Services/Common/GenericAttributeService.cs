@@ -42,7 +42,7 @@ namespace Grand.Services.Common
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -79,8 +79,11 @@ namespace Grand.Services.Common
                 {
                     //delete
                     var builder = Builders<GenericAttributeBaseEntity>.Update;
-                    var updatefilter = builder.PullFilter(x => x.GenericAttributes, y => y.Key == prop.Key &&  y.StoreId == storeId);
+                    var updatefilter = builder.PullFilter(x => x.GenericAttributes, y => y.Key == prop.Key && y.StoreId == storeId);
                     await collection.UpdateManyAsync(new BsonDocument("_id", entity.Id), updatefilter);
+                    var entityProp = entity.GenericAttributes.FirstOrDefault(x => x.Key == prop.Key && x.StoreId == storeId);
+                    if (entityProp != null)
+                        entity.GenericAttributes.Remove(entityProp);
                 }
                 else
                 {
@@ -93,14 +96,18 @@ namespace Grand.Services.Common
                         .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
 
                     await collection.UpdateManyAsync(filter, update);
+
+                    var entityProp = entity.GenericAttributes.FirstOrDefault(x => x.Key == prop.Key && x.StoreId == storeId);
+                    if (entityProp != null)
+                        entityProp.Value = valueStr;
+
                 }
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace(valueStr))
                 {
-                    prop = new GenericAttribute
-                    {
+                    prop = new GenericAttribute {
                         Key = key,
                         Value = valueStr,
                         StoreId = storeId,
@@ -108,6 +115,7 @@ namespace Grand.Services.Common
                     var updatebuilder = Builders<GenericAttributeBaseEntity>.Update;
                     var update = updatebuilder.AddToSet(p => p.GenericAttributes, prop);
                     await collection.UpdateOneAsync(new BsonDocument("_id", entity.Id), update);
+                    entity.GenericAttributes.Add(prop);
                 }
             }
         }
@@ -128,7 +136,7 @@ namespace Grand.Services.Common
                 return default(TPropType);
 
             var prop = props.FirstOrDefault(ga =>
-                ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase)); 
+                ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase));
 
             if (prop == null || string.IsNullOrEmpty(prop.Value))
                 return default(TPropType);

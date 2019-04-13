@@ -472,6 +472,25 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
+        /// Gets shopping cart
+        /// </summary>
+        /// <param name="storeId">Store identifier; pass null to load all records</param>
+        /// <param name="shoppingCartType">Shopping cart type; pass null to load all records</param>
+        /// <returns>Shopping Cart</returns>
+        public IList<ShoppingCartItem> GetShoppingCart(string storeId = null, params ShoppingCartType[] shoppingCartType)
+        {
+            IEnumerable<ShoppingCartItem> cart = _workContext.CurrentCustomer.ShoppingCartItems;
+
+            if(!string.IsNullOrEmpty(storeId))
+                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, storeId);
+            
+            if (shoppingCartType.Length > 0)
+                cart = cart.Where(sci => shoppingCartType.Contains(sci.ShoppingCartType));
+
+            return cart.ToList();
+        }
+
+        /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>

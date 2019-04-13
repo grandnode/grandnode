@@ -168,10 +168,7 @@ namespace Grand.Web.Controllers
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
-            var cart = customer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == cartType)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, cartType);
             var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product.Id);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
@@ -230,10 +227,8 @@ namespace Grand.Web.Controllers
 
                         //display notification message and update appropriate blocks
                         var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                        customer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity));
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist)
+                                .Sum(x => x.Quantity));
 
                         return Json(new
                         {
@@ -260,10 +255,8 @@ namespace Grand.Web.Controllers
 
                         //display notification message and update appropriate blocks
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                        customer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity));
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                                .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderViewComponentToString("FlyoutShoppingCart")
@@ -333,13 +326,11 @@ namespace Grand.Web.Controllers
                     updatecartitemid = form[formKey];
                     break;
                 }
+
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartTypeId == shoppingCartTypeId)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, (ShoppingCartType) shoppingCartTypeId);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
 
                 //is it this product?
@@ -487,10 +478,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == updatecartitem.ShoppingCartType)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, (ShoppingCartType)shoppingCartTypeId);
                 var otherCartItemWithSameParameters = await _shoppingCartService.FindShoppingCartItemInTheCart(
                     cart, updatecartitem.ShoppingCartType, productId, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
@@ -545,10 +533,8 @@ namespace Grand.Web.Controllers
 
                         //display notification message and update appropriate blocks
                         var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                        _workContext.CurrentCustomer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity));
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist)
+                                .Sum(x => x.Quantity));
 
                         return Json(new
                         {
@@ -575,10 +561,8 @@ namespace Grand.Web.Controllers
 
                         //display notification message and update appropriate blocks
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                        _workContext.CurrentCustomer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity));
+                            _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart)
+                                .Sum(x => x.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderViewComponentToString("FlyoutShoppingCart")

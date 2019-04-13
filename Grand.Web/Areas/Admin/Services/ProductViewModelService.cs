@@ -1449,6 +1449,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertCrossSellProductModel(ProductModel.AddCrossSellProductModel model)
         {
+            var crossSellProduct = await _productService.GetProductById(model.ProductId);
             foreach (string id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
@@ -1458,7 +1459,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                         continue;
 
-                    if (product.CrossSellProduct.Where(x => x == model.ProductId).Count() == 0)
+                    if (crossSellProduct.CrossSellProduct.Where(x => x == id).Count() == 0)
                     {
                         if (model.ProductId != id)
                             await _productService.InsertCrossSellProduct(

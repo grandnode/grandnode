@@ -34,7 +34,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            var customer = _customerApiService.GetByEmail(key);
+            var customer = await _customerApiService.GetByEmail(key);
             if (customer == null)
                 return NotFound();
 

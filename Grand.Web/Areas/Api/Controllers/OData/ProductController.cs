@@ -24,7 +24,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
-            var product = _productApiService.GetById(key);
+            var product = await _productApiService.GetById(key);
             if (product == null)
                 return NotFound();
 

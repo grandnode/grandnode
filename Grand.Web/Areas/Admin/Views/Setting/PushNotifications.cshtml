@@ -7,8 +7,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
                         @T("Admin.PushNotifications")
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="alert alert-info">
@@ -31,9 +31,9 @@
                             <div class="form-group">
                                 <admin-label asp-for="Enabled" />
                                 <div class="col-md-9">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="Enabled" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                 </div>
                             </div>
@@ -82,9 +82,9 @@
                             <div class="form-group">
                                 <admin-label asp-for="AllowGuestNotifications" />
                                 <div class="col-md-9">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowGuestNotifications" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                 </div>
                             </div>

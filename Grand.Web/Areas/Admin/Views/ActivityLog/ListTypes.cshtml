@@ -7,8 +7,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-tags"></i>
                         @T("Admin.Configuration.ActivityLog.ActivityLogType")
@@ -18,10 +18,10 @@
                     </div>
                     <vc:admin-widget widget-zone="activity_types_list_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            <div class="portlet-body">
+                            <div class="x_content">
                                 <div id="activityLogType-grid"></div>
                             </div>
                         </div>
@@ -87,10 +87,10 @@
                     width: 100
                 }, {
                     field: "Enabled",
-                    headerTemplate: "@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")&nbsp<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox' /><span></span></label>",
+                    headerTemplate: "@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")&nbsp<label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input id='mastercheckbox' type='checkbox' /> <div class='control__indicator'></div></label>",
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: "<label class='mt-checkbox mt-checkbox-outline'><input name='checkbox_activity_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # /><span></span></label>",
+                    template: "<label class='mt-checkbox mt-checkbox-outline control control-checkbox'><input name='checkbox_activity_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # /> <div class='control__indicator'></div></label>",
                     width: 100
                 }
             ]

@@ -24,9 +24,9 @@
         <div class="form-group">
             <admin-label asp-for="IsActive" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IsActive" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsActive"></span>
             </div>
@@ -116,9 +116,9 @@
         <div class="form-group">
             <admin-label asp-for="SendImmediately" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SendImmediately" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SendImmediately"></span>
             </div>
@@ -145,9 +145,9 @@
                     //we store a value into "ViewData" and then use it in the Download.cshtml file
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
-                <label class="mt-checkbox mt-checkbox-outline">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="HasAttachedDownload" />@T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <div id="pnlAttachedDownload">
                     <admin-input asp-for="AttachedDownloadId" />

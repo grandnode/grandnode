@@ -23,10 +23,10 @@
         @Html.DropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;", @class = "form-control" })
         @if (!String.IsNullOrEmpty(Model.StoreId))
         {
-            <label class="mt-checkbox">
+            <label class="mt-checkbox control control-checkbox">
                 <input type="checkbox" onclick="checkAllOverriddenStoreValue(this)" style="margin-top: 4px;">
                 <b>@T("Admin.Configuration.Settings.StoreScope.CheckAll")</b> @T("Admin.Configuration.Settings.StoreScope.CheckAll.Hint")
-                <span></span>
+                 <div class="control__indicator"></div>
             </label>
         }
     </div>

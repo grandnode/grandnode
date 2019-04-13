@@ -11,7 +11,7 @@
 <antiforgery-token />
 <div class="page-bar" style="height:43px;">
     <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <div id="dashboard-report-range" class="pull-right btn btn-sm">
             <i class="icon-calendar"></i>&nbsp;
             <span class="thin uppercase">@DateTime.Now.ToLocalTime().ToString()</span>&nbsp;
         </div>
@@ -32,14 +32,14 @@
             {
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
+                        <div class="x_panel">
+                            <div class="x_title">
                                 <div class="caption">
                                     <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Average")</span>
                                 </div>
                             </div>
-                            <div class="portlet-body">
-                                @await Component.InvokeAsync("OrderOrderAverageReport")                                
+                            <div class="x_content">
+                                @await Component.InvokeAsync("OrderOrderAverageReport")
                             </div>
                         </div>
                     </div>
@@ -53,13 +53,13 @@
                         @if (canManageOrders)
                         {
                             <div class="col-md-6">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
+                                <div class="x_panel">
+                                    <div class="x_title">
                                         <div class="caption">
                                             <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Incomplete")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         @await Component.InvokeAsync("OrderOrderIncompleteReport")
                                     </div>
                                 </div>
@@ -69,13 +69,13 @@
                         @if (canManageCustomers)
                         {
                             <div class="col-md-6">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
+                                <div class="x_panel">
+                                    <div class="x_title">
                                         <div class="caption">
                                             <span class="caption-subject font-dark bold uppercase">@T("Admin.Customers.Reports.RegisteredCustomers")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         @await Component.InvokeAsync("CustomerReportRegisteredCustomers")
                                     </div>
                                 </div>
@@ -86,13 +86,13 @@
                         @if (canManageProducts)
                         {
                             <div class="col-md-6">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
+                                <div class="x_panel">
+                                    <div class="x_title">
                                         <div class="caption">
                                             <span class="caption-subject font-dark bold uppercase">@T("Admin.SearchTermReport")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         @await Component.InvokeAsync("CommonPopularSearchTermsReport")
                                     </div>
                                 </div>
@@ -101,13 +101,13 @@
                         @if (canManageOrders)
                         {
                             <div class="col-md-6">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
+                                <div class="x_panel">
+                                    <div class="x_title">
                                         <div class="caption">
                                             <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Period")</span>
                                         </div>
                                     </div>
-                                    <div class="portlet-body">
+                                    <div class="x_content">
                                         @await Component.InvokeAsync("OrderOrderPeriodReport")
                                     </div>
                                 </div>
@@ -122,25 +122,25 @@
             {
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
+                        <div class="x_panel">
+                            <div class="x_title">
                                 <div class="caption">
                                     <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByQuantity")</span>
                                 </div>
                             </div>
-                            <div class="portlet-body">
+                            <div class="x_content">
                                 @await Component.InvokeAsync("OrderBestsellersBriefReportByQuantity")
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
+                        <div class="x_panel">
+                            <div class="x_title">
                                 <div class="caption">
                                     <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByAmount")</span>
                                 </div>
                             </div>
-                            <div class="portlet-body">
+                            <div class="x_content">
                                 @await Component.InvokeAsync("OrderBestsellersBriefReportByAmount")
                             </div>
                         </div>

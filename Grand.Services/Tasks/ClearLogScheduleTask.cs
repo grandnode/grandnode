@@ -22,7 +22,7 @@ namespace Grand.Services.Tasks
         {
             lock (_lock)
             {
-                _logger.ClearLog();
+                _logger.ClearLog().GetAwaiter().GetResult();
             }
         }
     }

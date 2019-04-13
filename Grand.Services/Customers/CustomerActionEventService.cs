@@ -681,12 +681,11 @@ namespace Grand.Services.Customers
                         string _style = string.Format("{0}", item.Style);
                         string _class = string.Format("{0} {1}", "custom-control-input", item.Class);
 
-                        checkbox += "<label class=\"custom-control custom-checkbox\">";
-                        checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\" >", _class, _style,
+                        checkbox += "<div class=\"custom-control custom-checkbox\">";
+                        checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\">", _class, _style,
                             itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
-                        checkbox += "<span class=\"custom-control-indicator\"></span>";
-                        checkbox += string.Format("<span class=\"custom-control-description\">{0}</span>", itemcheck.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
-                        checkbox += "</label>";
+                        checkbox += string.Format("<label class=\"custom-control-label\" for=\"{0}\">{1}</label>", itemcheck.Id, itemcheck.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
+                        checkbox += "</div>";
                     }
                     checkbox += "</div>";
                     body = body.Replace(string.Format("%{0}%", item.SystemName), checkbox);
@@ -698,7 +697,7 @@ namespace Grand.Services.Customers
                     string _style = string.Format("{0}", item.Style);
                     string _class = string.Format("{0} {1}", "form-control custom-select", item.Class);
 
-                    dropdown = string.Format("<select name=\"{0}\" class=\"{1}\" style=\"{2}\" >", item.SystemName, _class, _style);
+                    dropdown = string.Format("<select name=\"{0}\" class=\"{1}\" style=\"{2}\">", item.SystemName, _class, _style);
                     foreach (var itemdropdown in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
                     {
                         dropdown += string.Format("<option value=\"{0}\" {1}>{2}</option>", itemdropdown.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id), itemdropdown.IsPreSelected ? "selected" : "", itemdropdown.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
@@ -714,12 +713,11 @@ namespace Grand.Services.Customers
                         string _style = string.Format("{0}", item.Style);
                         string _class = string.Format("{0} {1}", "custom-control-input", item.Class);
 
-                        radio += "<label class=\"custom-control custom-radio\">";
+                        radio += "<div class=\"custom-control custom-radio\">";
                         radio += string.Format("<input type=\"radio\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\">", _class, _style,
                             itemradio.IsPreSelected ? "checked" : "", itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
-                        radio += "<span class=\"custom-control-indicator\"></span>";
-                        radio += string.Format("<span class=\"custom-control-description\">{0}</span>", itemradio.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
-                        radio += "</label>";
+                        radio += string.Format("<label class=\"custom-control-label\" for=\"{0}\">{1}</label>", itemradio.Id, itemradio.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id));
+                        radio += "</div>";
                     }
                     radio += "</div>";
                     body = body.Replace(string.Format("%{0}%", item.SystemName), radio);

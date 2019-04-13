@@ -14,15 +14,15 @@
     <vc:admin-widget widget-zone="order_add_products_details_top" additional-data="Model" />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
                         @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderNumber)
                         @Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToList") + ")", "AddProductToOrder", new { orderId = Model.OrderId })
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="col-md-offset-1 col-md-11 col-sm-11">
                         @if (Model.Warnings.Count > 0)
                         {

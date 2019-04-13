@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Media
@@ -412,25 +413,21 @@ namespace Grand.Services.Media
                     fileExtension);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
-                using (var mutex = new System.Threading.Mutex(false, thumbFileName))
+                using (var mutex = new Mutex(false, thumbFileName))
                 {
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    if (GeneratedThumbExists(thumbFilePath, thumbFileName))
+                        return GetThumbUrl(thumbFileName, storeLocation);
+
+                    mutex.WaitOne();
+                    using (var b = Image.FromFile(filePath))
                     {
-                        mutex.WaitOne();
+                        var pictureBinary = File.ReadAllBytes(filePath);
 
-                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
-                        {
-                            using (var b = Image.FromFile(filePath))
-                            {
-                                var pictureBinary = File.ReadAllBytes(filePath);
-
-                                pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
-                                b.Dispose();
-                                SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                            }
-                            mutex.ReleaseMutex();
-                        }
+                        pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
+                        b.Dispose();
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
+                    mutex.ReleaseMutex();
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
@@ -515,10 +512,8 @@ namespace Grand.Services.Media
                     {
                         mutex.WaitOne();
 
-                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
-                        {
-                            SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                        }
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+
                         mutex.ReleaseMutex();
                     }
                 }
@@ -534,32 +529,27 @@ namespace Grand.Services.Media
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         mutex.WaitOne();
-
-                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                        using (var stream = new MemoryStream(pictureBinary))
                         {
+                            Image b = null;
+                            try
                             {
-                                using (var stream = new MemoryStream(pictureBinary))
-                                {
-                                    Image b = null;
-                                    try
-                                    {
-                                        b = Image.FromStream(stream);
-                                    }
-                                    catch (ArgumentException exc)
-                                    {
-                                        _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
-                                    }
-                                    if (b == null)
-                                    {
-                                        return url;
-                                    }
-
-                                    pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
-                                    b.Dispose();
-                                    SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                                }
+                                b = Image.FromStream(stream);
                             }
+                            catch (ArgumentException exc)
+                            {
+                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
+                            }
+                            if (b == null)
+                            {
+                                return url;
+                            }
+
+                            pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
+                            b.Dispose();
+                            SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         }
+                        mutex.ReleaseMutex();
                     }
                 }
             }
@@ -685,8 +675,7 @@ namespace Grand.Services.Media
             if (validateBinary)
                 pictureBinary = await ValidatePicture(pictureBinary, mimeType);
 
-            var picture = new Picture
-            {
+            var picture = new Picture {
                 PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
                 MimeType = mimeType,
                 SeoFilename = seoFilename,
@@ -852,14 +841,11 @@ namespace Grand.Services.Media
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
-        public virtual bool StoreInDb
-        {
-            get
-            {
+        public virtual bool StoreInDb {
+            get {
                 return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
             }
-            set
-            {
+            set {
                 //check whether it's a new value
                 if (this.StoreInDb == value)
                     return;

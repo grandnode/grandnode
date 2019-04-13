@@ -204,7 +204,7 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        decimal GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount);
+        Task<decimal> GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount);
 
         /// <summary>
         /// Get preferred discount
@@ -237,7 +237,7 @@ namespace Grand.Services.Discounts
         /// <param name="product"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        decimal GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount);
+        Task<decimal> GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount);
 
         /// <summary>
         /// Load discount amount provider by systemName

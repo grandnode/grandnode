@@ -4,40 +4,40 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="Layout" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-select asp-for="Layout" asp-items="((Grand.Web.Areas.Admin.Helpers.AdminLayout)Model.Layout).ToSelectList()" />
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="GridLayout" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-select asp-for="GridLayout" asp-items="((Grand.Web.Areas.Admin.Helpers.KendoLayout)Model.GridLayout).ToSelectList()" />
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.StoreClosed" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.StoreClosed" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.StoreClosed"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.DefaultStoreTheme" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <div class="row">
                     <ul class="clearer" style="list-style: none;" id="theme-selection-block">
                         @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
@@ -64,175 +64,175 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.AllowCustomerToSelectTheme"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, model => model.StoreInformationSettings.LogoPictureId, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.LogoPictureId" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.LogoPictureId" />
                 <span asp-validation-for="StoreInformationSettings.LogoPictureId"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.DisplayEuCookieLawWarning"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.FacebookLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.FacebookLink" />
                 <span asp-validation-for="StoreInformationSettings.FacebookLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.TwitterLink_OverrideForStore, model => model.StoreInformationSettings.TwitterLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.TwitterLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.TwitterLink" />
                 <span asp-validation-for="StoreInformationSettings.TwitterLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.YoutubeLink_OverrideForStore, model => model.StoreInformationSettings.YoutubeLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.YoutubeLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.YoutubeLink" />
                 <span asp-validation-for="StoreInformationSettings.YoutubeLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.InstagramLink_OverrideForStore, model => model.StoreInformationSettings.InstagramLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.InstagramLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.InstagramLink" />
                 <span asp-validation-for="StoreInformationSettings.InstagramLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LinkedInLink_OverrideForStore, model => model.StoreInformationSettings.LinkedInLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.LinkedInLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.LinkedInLink" />
                 <span asp-validation-for="StoreInformationSettings.LinkedInLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.PinterestLink_OverrideForStore, model => model.StoreInformationSettings.PinterestLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.PinterestLink" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="StoreInformationSettings.PinterestLink" />
                 <span asp-validation-for="StoreInformationSettings.PinterestLink"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore, model => model.StoreInformationSettings.StoreInDatabaseContactUsForm, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.StoreInDatabaseContactUsForm" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.StoreInDatabaseContactUsForm" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.StoreInDatabaseContactUsForm"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.SubjectFieldOnContactUsForm"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.KnowledgebaseSettings.Enabled_OverrideForStore, model => model.KnowledgebaseSettings.Enabled, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="KnowledgebaseSettings.Enabled" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.Enabled" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.Enabled"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.KnowledgebaseSettings.NotifyAboutNewArticleComments_OverrideForStore, model => model.KnowledgebaseSettings.NotifyAboutNewArticleComments, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="KnowledgebaseSettings.NotifyAboutNewArticleComments" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="KnowledgebaseSettings.NotifyAboutNewArticleComments" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="KnowledgebaseSettings.NotifyAboutNewArticleComments"></span>
             </div>

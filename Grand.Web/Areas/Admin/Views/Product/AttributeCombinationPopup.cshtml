@@ -27,8 +27,8 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-cube"></i>
                         @if (string.IsNullOrEmpty(Model.Id))
@@ -45,7 +45,7 @@
                         <vc:admin-widget widget-zone="product_attribute_combination_details_buttons" additional-data="Model" />
                     </div>
                 </div>
-                <div class="portlet-body">
+                <div class="x_content">
                     <div class="form-horizontal">
                         <div class="form-body">
                             @if (Model.Warnings.Count > 0)
@@ -128,9 +128,9 @@
                                                                 </div>
                                                             </td>
                                                             <td align="center" style="width: 10%;">
-                                                                <label class="mt-checkbox mt-checkbox-outline">
+                                                                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                                                     <admin-input asp-for="@Model.WarehouseInventoryModels[i].WarehouseUsed" />
-                                                                    <span></span>
+                                                                     <div class="control__indicator"></div>
                                                                 </label>
                                                             <td align="center" style="width: 20%;">
                                                                 <admin-input asp-for="@Model.WarehouseInventoryModels[i].StockQuantity" />
@@ -156,9 +156,9 @@
                             <div class="form-group">
                                 <admin-label asp-for="AllowOutOfStockOrders" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowOutOfStockOrders" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowOutOfStockOrders"></span>
                                 </div>

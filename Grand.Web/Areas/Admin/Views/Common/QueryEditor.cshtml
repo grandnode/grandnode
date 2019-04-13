@@ -8,15 +8,15 @@
 <antiforgery-token />
 <div class="row">
     <div class="col-md-12">
-        <div class="portlet light form-fit">
-            <div class="portlet-title">
+        <div class="x_panel light form-fit">
+            <div class="x_title">
                 <div class="caption">
                     <i class="fa fa-sitemap"></i>
                     @T("Admin.System.QueryEditor")
                 </div>
                 <vc:admin-widget widget-zone="queryeditor_buttons" additional-data="null" />
             </div>
-            <div class="portlet-body form">
+            <div class="x_content form">
                 <div class="note note-info">
                     More info about queries you can find: <a target="_blank" href="https://docs.mongodb.com/manual/reference/command/" />https://docs.mongodb.com/manual/reference/command/</a>
                 </div>
@@ -24,7 +24,7 @@
                     <div class="form-body">
                         <div class="form-group">
                             <admin-label asp-for="Query" />
-                            <div class="col-md-8 col-sm-8">
+                            <div class="col-xs-4 col-md-8 col-sm-8">
                                 <admin-textarea asp-for="Query" />
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="portlet-body">
+            <div class="x_content">
                 <div id="result"></div>
                 <div id="queryEditor-grid"></div>
             </div>

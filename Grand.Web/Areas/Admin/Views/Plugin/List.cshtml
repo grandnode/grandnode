@@ -7,8 +7,8 @@
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-plug"></i>
                         @T("Admin.Configuration.Plugins.Local")
@@ -18,7 +18,7 @@
                         <input type="button" id="importfile" class="btn btn-success" value="@T("Admin.Configuration.Plugins.Upload")" />
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <div class="note note-info">
                         <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
                         <ol>
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body">
+                <div class="x_content">
                     <vc:admin-widget widget-zone="plugin_list_top" additional-data="Model" />
                     <div id="plugins-grid"></div>
                     <vc:admin-widget widget-zone="plugin_list_bottom" additional-data="Model" />

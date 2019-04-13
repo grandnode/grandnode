@@ -29,14 +29,13 @@ namespace Grand.Web.Interfaces
 
         Task<AddToCartModel> PrepareAddToCartModel(Product product, Customer customer, int quantity, decimal customerEnteredPrice, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration);
 
-        Task ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form);
+        Task ParseAndSaveCheckoutAttributes(IList<ShoppingCartItem> cart, IFormCollection form);
 
         Task<string> ParseProductAttributes(Product product, IFormCollection form);
 
         void ParseReservationDates(Product product, IFormCollection form,
             out DateTime? startDate, out DateTime? endDate);
 
-        Task<EstimateShippingResultModel> PrepareEstimateShippingResult(List<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode);
-
+        Task<EstimateShippingResultModel> PrepareEstimateShippingResult(IList<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode);
     }
 }

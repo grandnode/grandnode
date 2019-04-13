@@ -17,228 +17,201 @@
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
 <antiforgery-token />
-<div class="page-bar" style="height:43px;">
-    <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height green" data-placement="top" data-original-title="Change dashboard date range">
-            <i class="icon-calendar"></i>&nbsp;
-            <span class="thin uppercase hidden-xs"></span>&nbsp;
-            <i class="fa fa-angle-down"></i>
+<vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
+
+@if (!Model.IsLoggedInAsVendor && canManageOrders)
+{
+    <div class="row top_tiles">
+
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-user"></i></div>
+                <div class="count">@customersOnline</div>
+                <h3> @T("Admin.Dashboard.OnlineCustomers")</h3>
+                <p>@T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes)</p>
+            </div>
+        </div>
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-shopping-cart"></i></div>
+                <div class="count">@customersShoppingCart</div>
+                <h3> @T("Admin.Dashboard.ActiveShoppingCarts")</h3>
+                <p>@T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes)</p>
+            </div>
+        </div>
+        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="tile-stats">
+                <div class="icon"><i class="fa fa-money"></i></div>
+                <div class="count"> @ordersAmount / @ordersToday.Count</div>
+                <h3>  @T("Admin.Dashboard.TodayOrders")</h3>
+                <p> @T("Admin.Dashboard.TodayOrders.AmountCount")</p>
+            </div>
         </div>
     </div>
-</div>
-<div class="content-header">
-    <h3 class="page-title">
-        <i class="icon-home"></i>
-        @T("Admin.Dashboard")
-        <small>@T("Admin.Dashboard.StoreStatistics")</small>
-    </h3>
-</div>
-<div class="content">
+
     <div class="row">
-        <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
         <div class="col-md-12">
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Summary</h2>
+                    <div class="filter">
+                        <div class="page-bar" style="height:43px;">
+                            <div class="page-toolbar">
+                                <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
+                                    <i class="icon-calendar"></i>&nbsp;
+                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="col-xs-12 col-sm-12 col-lg-8 col-md-12 whiteBg">
+                        @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
+                    </div>
+                    <div class="col-cs-12 col-sm-12 col-lg-4 col-md-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    @T("Admin.Dashboard.ActivityOverview")
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content-body">
+                                <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
+                                    <img src="~/administration/images/loading.gif" /> Loading ...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (!Model.HideReportGA)
             {
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
-                        <div class="dashboard-stat green">
-                            <div class="visual">
-                                <i class="fa fa-group fa-icon-medium"></i>
+                <div class="col-xs-12 col-sm-12 col-lg-4 col-md-12 whiteBg">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="caption">
+                                <i class="fa fa-line-chart font-blue"></i>
+                                <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
                             </div>
-                            <div class="details">
-                                <div class="number" style="padding-top:15px;"> @customersOnline </div>
-                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.OnlineCustomers")</div>
-                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes) </div>
-                            </div>
-                            <a class="more" href="@Url.Action("List", "OnlineCustomer")">
-                                @T("Admin.Dashboard.ViewMore")
-                                <i class="m-icon-swapright m-icon-white"></i>
-                            </a>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
-                        <div class="dashboard-stat red">
-                            <div class="visual">
-                                <i class="fa fa-shopping-cart"></i>
+                        <div class="x_content">
+                            <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
+                                <img src="~/administration/images/loading.gif" /> Loading ...
                             </div>
-                            <div class="details">
-                                <div class="number" style="padding-top:15px;"> @customersShoppingCart </div>
-                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.ActiveShoppingCarts") </div>
-                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes) </div>
-                            </div>
-                            <a class="more" href="@Url.Action("CurrentCarts", "ShoppingCart")">
-                                @T("Admin.Dashboard.ViewMore")
-                                <i class="m-icon-swapright m-icon-white"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
-                        <div class="dashboard-stat blue">
-                            <div class="visual">
-                                <i class="fa fa-briefcase fa-icon-medium"></i>
-                            </div>
-                            <div class="details">
-                                <div class="number" style="padding-top:15px;"> @ordersAmount / @ordersToday.Count</div>
-                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.TodayOrders") </div>
-                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.TodayOrders.AmountCount") </div>
-                            </div>
-                            <a class="more" href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToUniversalTime() })">
-                                @T("Admin.Dashboard.ViewMore")
-                                <i class="m-icon-swapright m-icon-white"></i>
-                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="col-sm-12 col-lg-4 col-md-12">
-                            <div class="portlet light bordered">
-                                <div class="portlet-title">
-                                    <div class="caption">
-                                        <i class="icon-share font-blue"></i>
-                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ActivityOverview")</span>
-                                        <span class="caption-helper">@T("Admin.Dashboard.ReportOverviewHelper")</span>
-                                    </div>
-                                </div>
-                                <div class="portlet-body">
-                                    <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
-                                        <img src="~/administration/images/loading.gif" /> Loading ...
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-lg-8 col-md-12">
-                            @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
-                        </div>
-                    </div>
+                <div class="col-sm-12 col-lg-8 col-md-12 whiteBg">
+                    @await Component.InvokeAsync("OrderReportOrderTimeChart")
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        @if (!Model.HideReportGA)
-                        {
-                            <div class="col-sm-12 col-lg-4 col-md-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="fa fa-line-chart font-blue"></i>
-                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
-                                            <img src="~/administration/images/loading.gif" /> Loading ...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-lg-8 col-md-12">
-                                @await Component.InvokeAsync("OrderReportOrderTimeChart")
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-sm-12 col-lg-12 col-md-12">
-                                @await Component.InvokeAsync("OrderReportOrderTimeChart")
-                            </div>
-                        }
-                    </div>
-                </div>
-                if (!Model.HideReportGA)
-                {
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="col-sm-12 col-lg-6 col-md-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="fa fa-sign-in font-blue"></i>
-                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
-                                            <img src="~/administration/images/loading.gif" /> Loading ...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-lg-6 col-md-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="fa fa-sign-out font-blue"></i>
-                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
-                                            <img src="~/administration/images/loading.gif" /> Loading ...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="col-sm-12 col-lg-6 col-md-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="fa fa-laptop font-blue"></i>
-                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
-                                            <img src="~/administration/images/loading.gif" /> Loading ...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-lg-6 col-md-12">
-                                <div class="portlet light bordered">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <i class="fa fa-map-marker font-blue"></i>
-                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
-                                            <img src="~/administration/images/loading.gif" /> Loading ...
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
             }
-            @if (canManageOrders)
+            else
             {
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-briefcase font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReportLatestOrder")</span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                @await Component.InvokeAsync("OrderReportLatestOrder")
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-sm-12 col-lg-12 col-md-12 whiteBg">
+                    @await Component.InvokeAsync("OrderReportOrderTimeChart")
                 </div>
             }
         </div>
-        <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null"/>
     </div>
-</div>
+    if (!Model.HideReportGA)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-12 col-lg-6 col-md-12 whiteBg">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="caption">
+                                <i class="fa fa-sign-in font-blue"></i>
+                                <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
+                            </div>
+                        </div>
+                        <div class="x_content">
+                            <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
+                                <img src="~/administration/images/loading.gif" /> Loading ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-6 col-md-12 whiteBg">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="caption">
+                                <i class="fa fa-sign-out font-blue"></i>
+                                <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
+                            </div>
+                        </div>
+                        <div class="x_content">
+                            <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
+                                <img src="~/administration/images/loading.gif" /> Loading ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-12 col-lg-6 col-md-12 whiteBg">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="caption">
+                                <i class="fa fa-laptop font-blue"></i>
+                                <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
+                            </div>
+                        </div>
+                        <div class="x_content">
+                            <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
+                                <img src="~/administration/images/loading.gif" /> Loading ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-6 col-md-12 whiteBg">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <div class="caption">
+                                <i class="fa fa-map-marker font-blue"></i>
+                                <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
+                            </div>
+                        </div>
+                        <div class="x_content">
+                            <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
+                                <img src="~/administration/images/load" ing.gif" /> Loading ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (canManageOrders)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light bordered">
+                <div class="x_title">
+                    <h2 class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReportLatestOrder")</h2>
+                    <div class="clear"></div>
+                </div>
+                <div class="x_content">
+                    @await Component.InvokeAsync("OrderReportLatestOrder")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
+
 <script type="text/javascript">
     $(document).ready(function (e) {
         var site = site || {};

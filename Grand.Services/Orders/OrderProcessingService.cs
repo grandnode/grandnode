@@ -718,8 +718,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = string.Format("Order status has been changed to {0}", os.ToString()),
                 DisplayToCustomer = false,
                 OrderId = order.Id,
@@ -744,8 +743,7 @@ namespace Grand.Services.Orders
                     orderCompletedAttachmentFileName, orderCompletedAttachments);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "\"Order completed\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -762,8 +760,7 @@ namespace Grand.Services.Orders
                 int orderCancelledCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailId > 0)
                 {
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "\"Order cancelled\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -780,8 +777,7 @@ namespace Grand.Services.Orders
                 int orderCancelledStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderCancelledStoreOwnerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledStoreOwnerNotificationQueuedEmailId > 0)
                 {
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "\"Order cancelled\" by customer.",
                         DisplayToCustomer = true,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -1140,27 +1136,26 @@ namespace Grand.Services.Orders
                 {
                     #region Save order details
 
-                    var order = new Order
-                    {
+                    var order = new Order {
                         StoreId = processPaymentRequest.StoreId,
                         OrderGuid = processPaymentRequest.OrderGuid,
                         CustomerId = details.Customer.Id,
                         CustomerLanguageId = details.CustomerLanguage.Id,
                         CustomerTaxDisplayType = details.CustomerTaxDisplayType,
                         CustomerIp = _webHelper.GetCurrentIpAddress(),
-                        OrderSubtotalInclTax = details.OrderSubTotalInclTax,
-                        OrderSubtotalExclTax = details.OrderSubTotalExclTax,
-                        OrderSubTotalDiscountInclTax = details.OrderSubTotalDiscountInclTax,
-                        OrderSubTotalDiscountExclTax = details.OrderSubTotalDiscountExclTax,
-                        OrderShippingInclTax = details.OrderShippingTotalInclTax,
-                        OrderShippingExclTax = details.OrderShippingTotalExclTax,
-                        PaymentMethodAdditionalFeeInclTax = details.PaymentAdditionalFeeInclTax,
-                        PaymentMethodAdditionalFeeExclTax = details.PaymentAdditionalFeeExclTax,
+                        OrderSubtotalInclTax = Math.Round(details.OrderSubTotalInclTax, 6),
+                        OrderSubtotalExclTax = Math.Round(details.OrderSubTotalExclTax, 6),
+                        OrderSubTotalDiscountInclTax = Math.Round(details.OrderSubTotalDiscountInclTax, 6),
+                        OrderSubTotalDiscountExclTax = Math.Round(details.OrderSubTotalDiscountExclTax, 6),
+                        OrderShippingInclTax = Math.Round(details.OrderShippingTotalInclTax, 6),
+                        OrderShippingExclTax = Math.Round(details.OrderShippingTotalExclTax, 6),
+                        PaymentMethodAdditionalFeeInclTax = Math.Round(details.PaymentAdditionalFeeInclTax, 6),
+                        PaymentMethodAdditionalFeeExclTax = Math.Round(details.PaymentAdditionalFeeExclTax, 6),
                         TaxRates = details.TaxRates,
-                        OrderTax = details.OrderTaxTotal,
-                        OrderTotal = details.OrderTotal,
+                        OrderTax = Math.Round(details.OrderTaxTotal, 6),
+                        OrderTotal = Math.Round(details.OrderTotal, 6),
                         RefundedAmount = decimal.Zero,
-                        OrderDiscount = details.OrderDiscountAmount,
+                        OrderDiscount = Math.Round(details.OrderDiscountAmount, 6),
                         CheckoutAttributeDescription = details.CheckoutAttributeDescription,
                         CheckoutAttributesXml = details.CheckoutAttributesXml,
                         CustomerCurrencyCode = details.CustomerCurrencyCode,
@@ -1267,24 +1262,23 @@ namespace Grand.Services.Orders
                                 }
                             }
                             //save order item
-                            var orderItem = new OrderItem
-                            {
+                            var orderItem = new OrderItem {
                                 OrderItemGuid = Guid.NewGuid(),
                                 ProductId = sc.ProductId,
                                 VendorId = product.VendorId,
                                 WarehouseId = warehouseId,
-                                UnitPriceWithoutDiscInclTax = scUnitPriceWithoutDiscInclTax,
-                                UnitPriceWithoutDiscExclTax = scUnitPriceWithoutDiscExclTax,
-                                UnitPriceInclTax = scUnitPriceInclTax,
-                                UnitPriceExclTax = scUnitPriceExclTax,
-                                PriceInclTax = scSubTotalInclTax,
-                                PriceExclTax = scSubTotalExclTax,
+                                UnitPriceWithoutDiscInclTax = Math.Round(scUnitPriceWithoutDiscInclTax, 6),
+                                UnitPriceWithoutDiscExclTax = Math.Round(scUnitPriceWithoutDiscExclTax, 6),
+                                UnitPriceInclTax = Math.Round(scUnitPriceInclTax, 6),
+                                UnitPriceExclTax = Math.Round(scUnitPriceExclTax, 6),
+                                PriceInclTax = Math.Round(scSubTotalInclTax, 6),
+                                PriceExclTax = Math.Round(scSubTotalExclTax, 6),
                                 OriginalProductCost = await _priceCalculationService.GetProductCost(product, sc.AttributesXml),
                                 AttributeDescription = attributeDescription,
                                 AttributesXml = sc.AttributesXml,
                                 Quantity = sc.Quantity,
-                                DiscountAmountInclTax = discountAmountInclTax,
-                                DiscountAmountExclTax = discountAmountExclTax,
+                                DiscountAmountInclTax = Math.Round(discountAmountInclTax, 6),
+                                DiscountAmountExclTax = Math.Round(discountAmountExclTax, 6),
                                 DownloadCount = 0,
                                 IsDownloadActivated = false,
                                 LicenseDownloadId = "",
@@ -1339,8 +1333,7 @@ namespace Grand.Services.Orders
 
                                 for (int i = 0; i < sc.Quantity; i++)
                                 {
-                                    var gc = new GiftCard
-                                    {
+                                    var gc = new GiftCard {
                                         GiftCardType = product.GiftCardType,
                                         PurchasedWithOrderItem = orderItem,
                                         Amount = product.OverriddenGiftCardAmount ?? scUnitPriceExclTax,
@@ -1447,8 +1440,7 @@ namespace Grand.Services.Orders
                                 await _auctionService.UpdateAuctionEnded(product, true, true);
                                 await _auctionService.UpdateHighestBid(product, product.Price, order.CustomerId);
                                 await _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
-                                await _auctionService.InsertBid(new Bid()
-                                {
+                                await _auctionService.InsertBid(new Bid() {
                                     CustomerId = order.CustomerId,
                                     OrderId = order.Id,
                                     Amount = product.Price,
@@ -1510,8 +1502,7 @@ namespace Grand.Services.Orders
                         {
 
                             //save item
-                            var newOrderItem = new OrderItem
-                            {
+                            var newOrderItem = new OrderItem {
 
                                 OrderItemGuid = Guid.NewGuid(),
                                 ProductId = orderItem.ProductId,
@@ -1549,8 +1540,7 @@ namespace Grand.Services.Orders
 
                                 for (int i = 0; i < orderItem.Quantity; i++)
                                 {
-                                    var gc = new GiftCard
-                                    {
+                                    var gc = new GiftCard {
                                         GiftCardType = product.GiftCardType,
                                         PurchasedWithOrderItem = newOrderItem,
                                         Amount = orderItem.UnitPriceExclTax,
@@ -1584,8 +1574,7 @@ namespace Grand.Services.Orders
                     if (!processPaymentRequest.IsRecurringPayment)
                         foreach (var discount in details.AppliedDiscounts)
                         {
-                            var duh = new DiscountUsageHistory
-                            {
+                            var duh = new DiscountUsageHistory {
                                 DiscountId = discount.DiscountId,
                                 CouponCode = discount.CouponCode,
                                 OrderId = order.Id,
@@ -1601,8 +1590,7 @@ namespace Grand.Services.Orders
                             foreach (var agc in details.AppliedGiftCards)
                             {
                                 decimal amountUsed = agc.AmountCanBeUsed;
-                                var gcuh = new GiftCardUsageHistory
-                                {
+                                var gcuh = new GiftCardUsageHistory {
                                     GiftCardId = agc.GiftCard.Id,
                                     UsedWithOrderId = order.Id,
                                     UsedValue = amountUsed,
@@ -1629,8 +1617,7 @@ namespace Grand.Services.Orders
                     if (!processPaymentRequest.IsRecurringPayment && details.IsRecurringShoppingCart)
                     {
                         //create recurring payment (the first payment)
-                        var rp = new RecurringPayment
-                        {
+                        var rp = new RecurringPayment {
                             CycleLength = processPaymentRequest.RecurringCycleLength,
                             CyclePeriod = processPaymentRequest.RecurringCyclePeriod,
                             TotalCycles = processPaymentRequest.RecurringTotalCycles,
@@ -1653,8 +1640,7 @@ namespace Grand.Services.Orders
                             case RecurringPaymentType.Manual:
                                 {
                                     //first payment
-                                    var rph = new RecurringPaymentHistory
-                                    {
+                                    var rph = new RecurringPaymentHistory {
                                         CreatedOnUtc = DateTime.UtcNow,
                                         OrderId = order.Id,
                                         RecurringPaymentId = rp.Id
@@ -1680,8 +1666,7 @@ namespace Grand.Services.Orders
                     if (_workContext.OriginalCustomerIfImpersonated != null)
                     {
                         //this order is placed by a store administrator impersonating a customer
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
                                 _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
                             DisplayToCustomer = false,
@@ -1691,8 +1676,7 @@ namespace Grand.Services.Orders
                     }
                     else
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "Order placed",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -1706,8 +1690,7 @@ namespace Grand.Services.Orders
                     int orderPlacedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                     if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order placed\" email (to store owner) has been queued",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -1727,8 +1710,7 @@ namespace Grand.Services.Orders
                         .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName, orderPlacedAttachments);
                     if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order placed\" email (to customer) has been queued",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -1743,8 +1725,7 @@ namespace Grand.Services.Orders
                         int orderPlacedVendorNotificationQueuedEmailId = await _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                         if (orderPlacedVendorNotificationQueuedEmailId > 0)
                         {
-                            await _orderService.InsertOrderNote(new OrderNote
-                            {
+                            await _orderService.InsertOrderNote(new OrderNote {
                                 Note = "\"Order placed\" email (to vendor) has been queued",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow,
@@ -1914,8 +1895,7 @@ namespace Grand.Services.Orders
                     throw new GrandException("Next payment date could not be calculated");
 
                 //payment info
-                var paymentInfo = new ProcessPaymentRequest
-                {
+                var paymentInfo = new ProcessPaymentRequest {
                     StoreId = initialOrder.StoreId,
                     CustomerId = customer.Id,
                     OrderGuid = Guid.NewGuid(),
@@ -1933,8 +1913,7 @@ namespace Grand.Services.Orders
                     if (result.PlacedOrder == null)
                         throw new GrandException("Placed order could not be loaded");
 
-                    var rph = new RecurringPaymentHistory
-                    {
+                    var rph = new RecurringPaymentHistory {
                         RecurringPaymentId = recurringPayment.Id,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = result.PlacedOrder.Id,
@@ -1988,8 +1967,7 @@ namespace Grand.Services.Orders
                     await _orderService.UpdateRecurringPayment(recurringPayment);
 
                     //add a note
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "Recurring payment has been cancelled",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2022,8 +2000,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Unable to cancel recurring payment. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2114,8 +2091,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = $"Shipment #{shipment.ShipmentNumber} has been sent",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2128,8 +2104,7 @@ namespace Grand.Services.Orders
                 int queuedEmailId = await _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "\"Shipped\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2174,8 +2149,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = $"Shipment #{shipment.ShipmentNumber} has been delivered",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2188,8 +2162,7 @@ namespace Grand.Services.Orders
                 int queuedEmailId = await _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "\"Delivered\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2240,8 +2213,7 @@ namespace Grand.Services.Orders
             await SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer, notifyStoreOwner);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order has been cancelled",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2324,8 +2296,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order has been marked as authorized",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2393,8 +2364,7 @@ namespace Grand.Services.Orders
                     await _orderService.UpdateOrder(order);
 
                     //add a note
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "Order has been captured",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2429,8 +2399,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Unable to capture order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2482,8 +2451,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order has been marked as paid",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2561,8 +2529,7 @@ namespace Grand.Services.Orders
                     await _orderService.UpdateOrder(order);
 
                     //add a note
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = string.Format("Order has been refunded. Amount = {0}", request.AmountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2576,8 +2543,7 @@ namespace Grand.Services.Orders
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order refunded\" email (to store owner) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -2589,8 +2555,7 @@ namespace Grand.Services.Orders
                     var orderRefundedCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order refunded\" email (to customer) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -2621,8 +2586,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Unable to refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2688,8 +2652,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = string.Format("Order has been marked as refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2703,8 +2666,7 @@ namespace Grand.Services.Orders
             var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
             {
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "\"Order refunded\" email (to store owner) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2717,8 +2679,7 @@ namespace Grand.Services.Orders
             var orderRefundedCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "\"Order refunded\" email (to customer) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2798,8 +2759,7 @@ namespace Grand.Services.Orders
                     await _orderService.UpdateOrder(order);
 
                     //add a note
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = string.Format("Order has been partially refunded. Amount = {0}", amountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -2813,8 +2773,7 @@ namespace Grand.Services.Orders
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order refunded\" email (to store owner) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -2826,8 +2785,7 @@ namespace Grand.Services.Orders
                     var orderRefundedCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
-                        await _orderService.InsertOrderNote(new OrderNote
-                        {
+                        await _orderService.InsertOrderNote(new OrderNote {
                             Note = "\"Order refunded\" email (to customer) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -2857,8 +2815,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Unable to partially refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2926,8 +2883,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = string.Format("Order has been marked as partially refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -2941,8 +2897,7 @@ namespace Grand.Services.Orders
             var orderRefundedStoreOwnerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
             {
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "\"Order refunded\" email (to store owner) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -2953,8 +2908,7 @@ namespace Grand.Services.Orders
             var orderRefundedCustomerNotificationQueuedEmailId = await _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "\"Order refunded\" email (to customer) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -3014,8 +2968,7 @@ namespace Grand.Services.Orders
                     await _orderService.UpdateOrder(order);
 
                     //add a note
-                    await _orderService.InsertOrderNote(new OrderNote
-                    {
+                    await _orderService.InsertOrderNote(new OrderNote {
                         Note = "Order has been voided",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -3044,8 +2997,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Unable to voiding order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -3094,8 +3046,7 @@ namespace Grand.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order has been marked as voided",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,

@@ -5,7 +5,6 @@ using Grand.Services.Orders;
 using Grand.Web.Models.ShoppingCart;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
@@ -13,17 +12,14 @@ namespace Grand.Web.ViewComponents
     public class OrderSummaryViewComponent : BaseViewComponent
     {
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
-        private readonly IWorkContext _workContext;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext,
-            ShoppingCartSettings shoppingCartSettings)
+        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IShoppingCartService shoppingCartService, IStoreContext storeContext)
         {
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
@@ -32,10 +28,8 @@ namespace Grand.Web.ViewComponents
             if (overriddenModel != null)
                 return View(overriddenModel);
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
+
             var model = new ShoppingCartModel();
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
                 isEditable: false,

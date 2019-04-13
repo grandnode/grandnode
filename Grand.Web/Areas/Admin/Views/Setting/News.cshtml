@@ -9,8 +9,8 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet light form-fit">
-                <div class="portlet-title">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-fw fa-sliders"></i>
                         @T("Admin.Configuration.Settings.News")
@@ -22,98 +22,98 @@
                     </div>
                     <vc:admin-widget widget-zone="news_settings_buttons" additional-data="null" />
                 </div>
-                <div class="portlet-body">
+                <div class="x_content">
                     <div class="form-horizontal">
                         <div class="form-body">
                             @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="x_content form">
                     <vc:admin-widget widget-zone="news_settings_top" additional-data="null" />
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="Enabled" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="Enabled" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="Enabled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="AllowNotRegisteredUsersToLeaveComments" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="AllowNotRegisteredUsersToLeaveComments" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewNewsComments_OverrideForStore, model => model.NotifyAboutNewNewsComments, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="NotifyAboutNewNewsComments" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="NotifyAboutNewNewsComments" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="NotifyAboutNewNewsComments"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowNewsOnMainPage" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowNewsOnMainPage" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShowNewsOnMainPage"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="MainPageNewsCount" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="MainPageNewsCount" />
                                     <span asp-validation-for="MainPageNewsCount"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="NewsArchivePageSize" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
                                     <admin-input asp-for="NewsArchivePageSize" />
                                     <span asp-validation-for="NewsArchivePageSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-4 text-right">
+                                <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
                                     <admin-label asp-for="ShowHeaderRssUrl" class="control-label" />
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <label class="mt-checkbox mt-checkbox-outline">
+                                <div class="col-xs-4 col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                                         <admin-input asp-for="ShowHeaderRssUrl" />
-                                        <span></span>
+                                         <div class="control__indicator"></div>
                                     </label>
                                     <span asp-validation-for="ShowHeaderRssUrl"></span>
                                 </div>

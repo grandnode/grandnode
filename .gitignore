@@ -13,6 +13,7 @@
 # Build results
 
 .vs/
+.idea/
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -154,9 +155,9 @@ $RECYCLE.BIN/
 glob:*.user
 *.patch
 *.hg
-Grand.Web/wwwroot/content/images/Thumbs/*.jpg
-Grand.Web/wwwroot/content/images/Thumbs/*.jpeg
-Grand.Web/wwwroot/content/images/Thumbs/*.png
+Grand.Web/wwwroot/content/images/thumbs/*.jpg
+Grand.Web/wwwroot/content/images/thumbs/*.jpeg
+Grand.Web/wwwroot/content/images/thumbs/*.png
 Grand.Web/wwwroot/content/files/exportimport/*.*
 Grand.Web/wwwroot/bundles/*.*
 Grand.Web/App_Data/InstalledPlugins.txt

@@ -44,10 +44,10 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.EncryptionKey" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <div class="input-group">
                     <admin-input asp-for="SecuritySettings.EncryptionKey" />
                     <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
@@ -58,46 +58,46 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
                 <span asp-validation-for="SecuritySettings.AdminAreaAllowedIpAddresses"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForAdminArea"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.HoneypotEnabled" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.HoneypotEnabled" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
             </div>
@@ -113,172 +113,172 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaEnabled" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaEnabled" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnLoginPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnLoginPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnLoginPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnRegistrationPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnRegistrationPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnRegistrationPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnContactUsPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnContactUsPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnContactUsPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnAskQuestionPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnAskQuestionPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnAskQuestionPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnAskQuestionPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnBlogCommentPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnBlogCommentPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnBlogCommentPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnArticleCommentPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnArticleCommentPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnArticleCommentPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnArticleCommentPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnNewsCommentPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnNewsCommentPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnNewsCommentPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnProductReviewPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnProductReviewPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnProductReviewPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.CaptchaShowOnApplyVendorPage" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline">
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SecuritySettings.CaptchaShowOnApplyVendorPage" />
-                    <span></span>
+                     <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SecuritySettings.CaptchaShowOnApplyVendorPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaVersionpnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.ReCaptchaVersion" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-select asp-for="SecuritySettings.ReCaptchaVersion" asp-items="Model.SecuritySettings.AvailableReCaptchaVersions" />
                 <span asp-validation-for="SecuritySettings.ReCaptchaVersion"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaPublicKeypnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.ReCaptchaPublicKey" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SecuritySettings.ReCaptchaPublicKey" />
                 <span asp-validation-for="SecuritySettings.ReCaptchaPublicKey"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaPrivateKeypnl">
-            <div class="col-md-4 col-sm-4 text-right">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="SecuritySettings.ReCaptchaPrivateKey" class="control-label" />
             </div>
-            <div class="col-md-8 col-sm-8">
+            <div class="col-xs-4 col-md-8 col-sm-8">
                 <admin-input asp-for="SecuritySettings.ReCaptchaPrivateKey" />
                 <span asp-validation-for="SecuritySettings.ReCaptchaPrivateKey"></span>
             </div>

@@ -809,10 +809,7 @@ namespace Grand.Web.Services
 
             if (customer.ShoppingCartItems.Any())
             {
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, storeId)
-                    .ToList();
+                var cart = _shoppingCartService.GetShoppingCart(storeId, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
                 model.TotalProducts = cart.Sum(x => x.Quantity);
                 if (cart.Any())
                 {
@@ -1139,10 +1136,7 @@ namespace Grand.Web.Services
                 model.Picture = await PrepareCartItemPicture(product, null, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
             }
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(x => x.ShoppingCartType == cartType)
-                .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                .ToList();
+            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, cartType);
 
             if (cartType != ShoppingCartType.Auctions)
             {
@@ -1192,7 +1186,7 @@ namespace Grand.Web.Services
 
         }
 
-        public virtual async Task ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
+        public virtual async Task ParseAndSaveCheckoutAttributes(IList<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -1484,7 +1478,7 @@ namespace Grand.Web.Services
             }
         }
 
-        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResult(List<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
+        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResult(IList<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
         {
             var model = new EstimateShippingResultModel();
 
