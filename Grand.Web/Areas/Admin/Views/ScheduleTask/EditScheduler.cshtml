@@ -6,110 +6,6 @@
     <div asp-validation-summary="All"></div>
     <antiforgery-token />
     <input asp-for="Id" type="hidden" />
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").change(toggleTimeIntervalChoice);
-        toggleTimeIntervalChoice();
-
-        function toggleTimeIntervalChoice() {
-            var selectedTimeIntervalChoice = $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").val();
-            if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryMinutes).ToString()))
-            {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').hide();
-                $('#trHourOfDay').hide();
-                $('#trDayOfWeek').hide();
-                $('#trMonthOptionChoice').hide();
-                $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryHours).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').hide();
-                $('#trDayOfWeek').hide();
-                $('#trMonthOptionChoice').hide();
-                $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryDays).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').hide();
-                $('#trMonthOptionChoice').hide();
-                $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryWeeks).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-                $('#trMonthOptionChoice').hide();
-                $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryMonths).ToString())) {
-                $('#trMonthOptionChoice').show();
-                $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").change(toggleMonthOptionChoice);
-                toggleMonthOptionChoice();
-            }
-        }
-
-        function toggleMonthOptionChoice() {
-            var selectedMonthIntervalChoice = $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").val();
-            if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnSpecificDay).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').hide();
-
-                $('#trDayOfMonth').show();
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheFirstWeekOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-
-                $('#trDayOfMonth').hide();
-
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheSecondWeekOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-
-                $('#trDayOfMonth').hide();
-
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheThirdWeekOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-
-                $('#trDayOfMonth').hide();
-
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheFourtWeekOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-
-                $('#trDayOfMonth').hide();
-
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheLastWeekOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').show();
-
-                $('#trDayOfMonth').hide();
-
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheLastDayOfMonth).ToString())) {
-                $('#trTimeInterval').show();
-                $('#trMinuteOfHour').show();
-                $('#trHourOfDay').show();
-                $('#trDayOfWeek').hide();
-
-                $('#trDayOfMonth').hide();
-            }
-        }
-    });
-    </script>
-
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -170,53 +66,11 @@
                                     <span asp-validation-for="StopOnError"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <admin-label asp-for="TimeIntervalChoice" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-select asp-for="TimeIntervalChoice" asp-items="((Grand.Core.Domain.Tasks.TimeIntervalChoice)Model.TimeIntervalChoice).ToSelectList()" />
-                                    <span asp-validation-for="TimeIntervalChoice"></span>
-                                </div>
-                            </div>
                             <div class="form-group" id="trTimeInterval">
                                 <admin-label asp-for="TimeInterval" />
                                 <div class="col-md-9 col-sm-9">
                                     <admin-input asp-for="TimeInterval" />
                                     <span asp-validation-for="TimeInterval"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="trMinuteOfHour">
-                                <admin-label asp-for="MinuteOfHour" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-input asp-for="MinuteOfHour" />
-                                    <span asp-validation-for="MinuteOfHour"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="trHourOfDay">
-                                <admin-label asp-for="HourOfDay" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-input asp-for="HourOfDay" />
-                                    <span asp-validation-for="HourOfDay"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="trMonthOptionChoice">
-                                <admin-label asp-for="MonthOptionChoice" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-select asp-for="MonthOptionChoice" asp-items="((Grand.Core.Domain.Tasks.MonthOptionChoice)Model.MonthOptionChoice).ToSelectList()" />
-                                    <span asp-validation-for="MonthOptionChoice"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="trDayOfWeek">
-                                <admin-label asp-for="DayOfWeek" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-select asp-for="DayOfWeek" asp-items="((System.DayOfWeek)Model.DayOfWeek).ToSelectList()" />
-                                    <span asp-validation-for="DayOfWeek"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="trDayOfMonth">
-                                <admin-label asp-for="DayOfMonth" />
-                                <div class="col-md-9 col-sm-9">
-                                    <admin-input asp-for="DayOfMonth" />
-                                    <span asp-validation-for="DayOfMonth"></span>
                                 </div>
                             </div>
                         </div>

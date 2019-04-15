@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Tasks;
 using Grand.Services.Directory;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks
 {
@@ -12,35 +13,31 @@ namespace Grand.Services.Tasks
     {
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
-        private readonly object _lock = new object();
         public UpdateExchangeRateScheduleTask(ICurrencyService currencyService, CurrencySettings currencySettings)
         {
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
         }
 
         /// <summary>
         /// Executes a task
         /// </summary>
-        public void Execute()
+        public async Task Execute()
         {
-            lock (_lock)
+            if (!_currencySettings.AutoUpdateEnabled)
+                return;
+
+            var primaryCurrencyCode = (await _currencyService.GetPrimaryExchangeRateCurrency()).CurrencyCode;
+            var exchangeRates = await _currencyService.GetCurrencyLiveRates(primaryCurrencyCode);
+
+            foreach (var exchageRate in exchangeRates)
             {
-                if (!_currencySettings.AutoUpdateEnabled)
-                    return;
-
-                var primaryCurrencyCode = _currencyService.GetPrimaryExchangeRateCurrency().GetAwaiter().GetResult().CurrencyCode;
-                var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryCurrencyCode).GetAwaiter().GetResult();
-
-                foreach (var exchageRate in exchangeRates)
+                var currency = await _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
+                if (currency != null)
                 {
-                    var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode).GetAwaiter().GetResult();
-                    if (currency != null)
-                    {
-                        currency.Rate = exchageRate.Rate;
-                        currency.UpdatedOnUtc = DateTime.UtcNow;
-                        _currencyService.UpdateCurrency(currency).GetAwaiter().GetResult();
-                    }
+                    currency.Rate = exchageRate.Rate;
+                    currency.UpdatedOnUtc = DateTime.UtcNow;
+                    await _currencyService.UpdateCurrency(currency);
                 }
             }
         }
