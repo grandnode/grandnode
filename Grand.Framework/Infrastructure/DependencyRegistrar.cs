@@ -321,20 +321,21 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
 
-            //TASKS
-            builder.RegisterType<QueuedMessagesSendScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<ClearCacheScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<ClearLogScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderAbandonedCartScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderBirthdayScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderCompletedOrderScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderLastActivityScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderLastPurchaseScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderRegisteredCustomerScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerReminderUnpaidOrderScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<DeleteGuestsScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<UpdateExchangeRateScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
+            //Register task
+            builder.RegisterType<QueuedMessagesSendScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<ClearCacheScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<ClearLogScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderAbandonedCartScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderBirthdayScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderCompletedOrderScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderLastActivityScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderLastPurchaseScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderRegisteredCustomerScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderUnpaidOrderScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<DeleteGuestsScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<UpdateExchangeRateScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<EndAuctionsTask>().As<IScheduleTask>().InstancePerLifetimeScope();
+
         }
 
         /// <summary>

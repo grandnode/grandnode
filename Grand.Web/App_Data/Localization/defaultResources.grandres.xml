@@ -14854,18 +14854,6 @@
   <LocaleResource Name="Admin.System.ScheduleTasks.BackToList">
     <Value>Back to schedule tasks list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth">
-    <Value>Day of month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth.hint">
-    <Value>Day of month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek">
-    <Value>Day of week</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek.hint">
-    <Value>Day of week</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Edit">
     <Value>Edit Schedule task</Value>
   </LocaleResource>
@@ -14874,12 +14862,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Enabled.hint">
     <Value>Enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay">
-    <Value>Hour of day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay.hint">
-    <Value>Hour of day</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
     <Value>Last no success end date</Value>
@@ -14904,18 +14886,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName.hint">
     <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour">
-    <Value>Minute of hour</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour.hint">
-    <Value>Minute of hour</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice">
-    <Value>Month option</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice.hint">
-    <Value>Month option</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Name">
     <Value>Name</Value>
@@ -14954,16 +14924,10 @@
     <Value>Stop on error</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval">
-    <Value>Time interval</Value>
+    <Value>Time interval (in minutes)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval.hint">
-    <Value>Time interval</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice">
-    <Value>Select time interval</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice.hint">
-    <Value>Select time interval</Value>
+    <Value>Time interval (in minutes)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Type">
     <Value>SheduledTask Type</Value>

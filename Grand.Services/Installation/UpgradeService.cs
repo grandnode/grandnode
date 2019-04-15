@@ -3,22 +3,16 @@ using Grand.Core.Data;
 using Grand.Core.Domain.AdminSearch;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
-using Grand.Core.Infrastructure;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
@@ -29,14 +23,11 @@ using Grand.Services.Topics;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Bindings;
-using MongoDB.Driver.Core.Operations;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Grand.Services.Installation
 {
@@ -189,19 +180,12 @@ namespace Grand.Services.Installation
 
             var keepliveTask = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
 
-            var endtask = new ScheduleTask
-            {
+            var endtask = new ScheduleTask {
                 ScheduleTaskName = "End of the auctions",
                 Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
                 Enabled = false,
                 StopOnError = false,
-                TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                TimeInterval = 10,
-                MinuteOfHour = 1,
-                HourOfDay = 1,
-                DayOfWeek = DayOfWeek.Monday,
-                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                DayOfMonth = 1
+                TimeInterval = 1440
             };
             keepliveTask.Insert(endtask);
 
@@ -214,14 +198,12 @@ namespace Grand.Services.Installation
             #region Insert activities
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType() {
                 SystemKeyword = "PublicStore.AddNewBid",
                 Enabled = false,
                 Name = "Public store. Add new bid"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType() {
                 SystemKeyword = "DeleteBid",
                 Enabled = false,
                 Name = "Delete bid"
@@ -271,62 +253,52 @@ namespace Grand.Services.Installation
             #region ActivityLog
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType() {
                 SystemKeyword = "PublicStore.DeleteAccount",
                 Enabled = false,
                 Name = "Public store. Delete account"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "UpdateKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Update knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "CreateKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Create knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "DeleteKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Delete knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "CreateKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Create knowledgebase article"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "UpdateKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Update knowledgebase article"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "DeleteKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Delete knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "AddNewContactAttribute",
                 Enabled = true,
                 Name = "Add a new contact attribute"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "EditContactAttribute",
                 Enabled = true,
                 Name = "Edit a contact attribute"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "DeleteContactAttribute",
                 Enabled = true,
                 Name = "Delete a contact attribute"
@@ -358,8 +330,7 @@ namespace Grand.Services.Installation
             if (defaultTopicTemplate == null)
                 defaultTopicTemplate = _serviceProvider.GetRequiredService<IRepository<TopicTemplate>>().Table.FirstOrDefault();
 
-            var knowledgebaseHomepageTopic = new Topic
-            {
+            var knowledgebaseHomepageTopic = new Topic {
                 SystemName = "KnowledgebaseHomePage",
                 IncludeInSitemap = false,
                 IsPasswordProtected = false,
@@ -486,8 +457,7 @@ namespace Grand.Services.Installation
 
             #region Activity log
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            _activityLogTypeRepository.Insert(new ActivityLogType {
                 SystemKeyword = "PublicStore.AddArticleComment",
                 Enabled = false,
                 Name = "Public store. Add article comment"
@@ -692,6 +662,23 @@ namespace Grand.Services.Installation
         {
             #region Install String resources
             InstallStringResources("EN_440_450.nopres.xml");
+            #endregion
+
+            #region Update task
+            var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
+            foreach (var task in tasks.Table)
+            {
+                if (task.TimeInterval == 0)
+                {
+                    task.TimeInterval = 1440;
+                    tasks.Update(task);
+                }
+                if(task.Type == "Grand.Services.Tasks.ClearLogScheduleTask")
+                {
+                    task.Type = "Grand.Services.Tasks.ClearLogScheduleTask, Grand.Services";
+                    tasks.Update(task);
+                }
+            }
             #endregion
         }
 

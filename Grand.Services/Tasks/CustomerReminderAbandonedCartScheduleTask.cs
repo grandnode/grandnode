@@ -1,24 +1,20 @@
-﻿using Grand.Core.Domain.Tasks;
-using Grand.Services.Customers;
+﻿using Grand.Services.Customers;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks
 {
-    public partial class CustomerReminderAbandonedCartScheduleTask : ScheduleTask, IScheduleTask
+    public partial class CustomerReminderAbandonedCartScheduleTask : IScheduleTask
     {
         private readonly ICustomerReminderService _customerReminderService;
-        private readonly object _lock = new object();
 
         public CustomerReminderAbandonedCartScheduleTask(ICustomerReminderService customerReminderService)
         {
             this._customerReminderService = customerReminderService;
         }
 
-        public void Execute()
+        public async Task Execute()
         {
-            lock (_lock)
-            {
-                _customerReminderService.Task_AbandonedCart().GetAwaiter().GetResult();
-            }
+            await _customerReminderService.Task_AbandonedCart();
         }
     }
 }
