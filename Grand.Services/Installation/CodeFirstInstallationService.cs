@@ -10570,13 +10570,7 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.QueuedMessagesSendScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1
                 },
                 new ScheduleTask
                 {
@@ -10584,13 +10578,7 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.DeleteGuestsScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10598,27 +10586,15 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.ClearCacheScheduleTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 120
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Clear log",
-                    Type = "Grand.Services.Tasks.ClearLogScheduleTask",
+                    Type = "Grand.Services.Tasks.ClearLogScheduleTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10626,111 +10602,63 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.UpdateExchangeRateScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - AbandonedCart",
                     Type = "Grand.Services.Tasks.CustomerReminderAbandonedCartScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 20
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - RegisteredCustomer",
                     Type = "Grand.Services.Tasks.CustomerReminderRegisteredCustomerScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - LastActivity",
                     Type = "Grand.Services.Tasks.CustomerReminderLastActivityScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - LastPurchase",
                     Type = "Grand.Services.Tasks.CustomerReminderLastPurchaseScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Birthday",
                     Type = "Grand.Services.Tasks.CustomerReminderBirthdayScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Completed order",
                     Type = "Grand.Services.Tasks.CustomerReminderCompletedOrderScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Unpaid order",
                     Type = "Grand.Services.Tasks.CustomerReminderUnpaidOrderScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10738,13 +10666,7 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 60
                 },
             };
             _scheduleTaskRepository.Insert(tasks);
