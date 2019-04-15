@@ -117,7 +117,9 @@ function init_sidebar() {
         $('.dataTable').each(function () { $(this).dataTable().fnDraw(); });
     });
 
-
+    $('#searchIcon').on('click', function () {
+        $('.admin-search-input-container').toggle('fast');
+    });
 
     $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
 

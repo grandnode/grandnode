@@ -5915,6 +5915,13 @@ form>h4 {
     .mt-top2{
         top:-15px!important;
     }
+    .filter-submit{
+        margin-bottom:5px;
+    }
+    .k-numerictextbox{
+        margin-bottom:5px;
+    }
+
 }
 
 @media screen and (max-width: 700px) {
@@ -5950,13 +5957,17 @@ form>h4 {
         text-align: center;
     }
 }
-
+@media screen and (min-width: 500px){
+    .searchIcon{
+        display:none;
+    }
+}
 @media screen and (max-width: 500px) {
     .admin-search-input-container {
         width: 77%;
     }
     .top_nav .navbar-right {
-        text-align: center;
+        text-align: right;
     }
     .top_nav .navbar-right li a {
         padding: 13px 10px 12px;
@@ -5975,6 +5986,23 @@ form>h4 {
     .control__indicator_custom {
         top: -15px;
     }
+    .admin-search-input-container{
+        display:none;
+    }
+    .top_nav .navbar-right{
+        width:80%;
+    }
+    .searchIcon{
+        display:block;
+        cursor:pointer;
+        margin-right:5px;
+    }
+    .user-profile img{
+        margin-top:-6px;
+    }
+    .text-box{
+        margin-bottom:5px;
+    }
 }
 @media screen and (max-width: 440px){
     .admin-search-input-container {
@@ -5987,5 +6015,8 @@ form>h4 {
     }
     .top_nav .navbar-right li a {
         padding: 13px 9px 12px;
+    }
+    .top_nav .navbar-right{
+        width:75%;
     }
 }

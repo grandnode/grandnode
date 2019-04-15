@@ -150,6 +150,11 @@
                             <vc:admin-widget widget-zone="header_toggle_after" additional-data="null" />
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="dropdown" role="presentation">
+                                    <span id="searchIcon" class="searchIcon dropdown-toggle">
+                                        <i class="icon-magnifier"></i>
+                                    </span>
+                                </li>
+                                <li class="dropdown" role="presentation">
                                     <a href="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-toggle">
                                         <i class="icon-home"></i>
                                     </a>
@@ -178,37 +183,6 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="">
-                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/administration/layout/img/avatar.png" alt="">
-
-                                        @if (currentCustomer != null && currentCustomer.IsRegistered())
-                                        {
-                                            <div class="username-hide-on-mobile">
-                                                @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                                            </div>
-
-                                        }
-                                        <span class="fa fa-angle-down"></span>
-                                    </a>
-
-                                    <ul class="dropdown-menu dropdown-menu-default">
-                                        <li>
-                                            <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
-                                                <i class="icon-user"></i> @T("Admin.Header.Profile")
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
-                                                <i class="icon-logout"></i> @T("Admin.Header.Logout")
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <vc:admin-widget widget-zone="header_middle" additional-data="null" />
-                                        </li>
-                                    </ul>
-                                </li>
-
                                 <li role="presentation" class="dropdown">
                                     <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                         <i class="icon-settings"></i>
@@ -240,6 +214,35 @@
                                         }
                                     </ul>
                                 </li>
+                                <li>
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/administration/layout/img/avatar.png" alt="">
+
+                                        @if (currentCustomer != null && currentCustomer.IsRegistered())
+                                        {
+                                            <div class="username-hide-on-mobile">
+                                                @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                                            </div>
+
+                                        }
+                                        <span class="fa fa-angle-down"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-default">
+                                        <li>
+                                            <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                                <i class="icon-user"></i> @T("Admin.Header.Profile")
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
+                                                <i class="icon-logout"></i> @T("Admin.Header.Logout")
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
                                 @await Component.InvokeAsync("CommonLanguageSelector")
 
                             </ul>
