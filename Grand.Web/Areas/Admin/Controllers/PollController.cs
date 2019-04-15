@@ -291,7 +291,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> PollAnswerDelete(PollAnswer answer)
         {
-            var pol = await _pollService.GetPollById(answer.PollId);
+            var pol = (await _pollService.GetPolls()).FirstOrDefault(x => x.PollAnswers.Any(y => y.Id == answer.Id));
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");
