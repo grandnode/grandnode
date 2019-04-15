@@ -3868,9 +3868,7 @@ ul.project_files li a i {
     display: block !important;
 }
 
-.input-group-btn .btn {
-    margin-bottom: 0;
-}
+
 
 /*!
  * bootstrap-vertical-tabs - v1.2.1
@@ -5915,10 +5913,13 @@ form>h4 {
     .mt-top2{
         top:-15px!important;
     }
-    .filter-submit{
+    .k-numerictextbox{
         margin-bottom:5px;
     }
-    .k-numerictextbox{
+    #ExtendFilter > .filter-submit{
+        margin-bottom:5px;
+    }
+    .k-input.text-box{
         margin-bottom:5px;
     }
 
