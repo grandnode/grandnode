@@ -736,7 +736,7 @@ a:hover, a:focus {
 
 .top_nav .navbar-right {
     margin: 0 20px 0 0;
-    width: 60%;
+    width: 58%;
     float: right
 }
 
@@ -5691,6 +5691,12 @@ form>h4 {
 .form-horizontal {
     clear: both;
 }
+.pull-right{
+    margin-top:-5px;
+}
+.AllowedTokens > .btn{
+    margin-bottom:5px;
+}
 
 @keyframes spinner-dash {
     0% {
@@ -5789,6 +5795,9 @@ form>h4 {
     .control__indicator_custom {
         margin-left: 12px;
     }
+    .btn-group.btn-group-devided>.btn {
+        margin-bottom: 5px;
+    }
 }
 
 @media screen and (max-width: 1350px) {
@@ -5801,6 +5810,9 @@ form>h4 {
     }
     #searchInput {
         width: 300px;
+    }
+    .k-grid-edit{
+        margin-bottom:5px;
     }
 }
 
@@ -5858,9 +5870,12 @@ form>h4 {
     .twitter-typeahead {
         width: 100%;
     }
+    .tile-stats .icon i{
+        font-size:40px;
+    }
     .admin-search-input-container {
         max-width: none;
-        width: 87%;
+        width: 85%;
         float: right;
         margin-right: 3%;
     }
@@ -5883,6 +5898,7 @@ form>h4 {
         left: 3px;
         margin-left: 0px;
     }
+    
     .caption {
         padding: 13px 5px;
     }
@@ -5903,10 +5919,7 @@ form>h4 {
 
 @media screen and (max-width: 700px) {
     .admin-search-input-container {
-        width: 83%;
-    }
-    .btn-group.btn-group-devided>.btn {
-        margin-bottom: 5px;
+        width: 80%;
     }
     .caption {
         transform: translateY(0%);
@@ -5940,7 +5953,7 @@ form>h4 {
 
 @media screen and (max-width: 500px) {
     .admin-search-input-container {
-        width: 78%;
+        width: 77%;
     }
     .top_nav .navbar-right {
         text-align: center;
@@ -5963,8 +5976,12 @@ form>h4 {
         top: -15px;
     }
 }
-
-@media screen and (max-width:385px) {
+@media screen and (max-width: 440px){
+    .admin-search-input-container {
+        width: 74%;
+    }
+}
+@media screen and (max-width:395px) {
     .admin-search-input-container {
         width: 70%;
     }
