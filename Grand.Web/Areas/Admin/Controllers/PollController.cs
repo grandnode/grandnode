@@ -4,7 +4,6 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
 using Grand.Services.Security;
