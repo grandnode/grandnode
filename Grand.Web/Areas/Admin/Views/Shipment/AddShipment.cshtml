@@ -166,7 +166,7 @@
                                                     <select name="warehouse_@(item.OrderItemId)" id="warehouse_@(item.OrderItemId)">
                                                         @foreach (var warehouse in item.AvailableWarehouses)
                                                         {
-                                                            <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity" @(warehouse.WarehouseId= =item.WarehouseId ? "selected" : "" )>
+                                                            <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity" @(warehouse.WarehouseId==item.WarehouseId ? "selected" : "" )>
                                                                 @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity, warehouse.PlannedQuantity)
                                                             </option>
                                                         }

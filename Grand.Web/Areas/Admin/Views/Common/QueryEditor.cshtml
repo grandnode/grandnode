@@ -18,7 +18,7 @@
             </div>
             <div class="x_content form">
                 <div class="note note-info">
-                    More info about queries you can find: <a target="_blank" href="https://docs.mongodb.com/manual/reference/command/" />https://docs.mongodb.com/manual/reference/command/</a>
+                    More info about queries you can find: <a target="_blank" href="https://docs.mongodb.com/manual/reference/command/">https://docs.mongodb.com/manual/reference/command/</a>
                 </div>
                 <div class="form-horizontal">
                     <div class="form-body">
@@ -59,21 +59,21 @@
 					url: "@Html.Raw(Url.Action("QueryEditor", "Common"))",
 					dataType: "json",
 					data: additionalData,
-					type: "POST",
+					type: "POST"
 				}
 			},
 			schema:
             {
                 data: "Data",
                 total: "Total",
-				errors: "Errors",
+				errors: "Errors"
 			},
 			error: function(e) {
 				display_kendoui_grid_error(e);
                 // Cancel the changes
                 this.cancelChanges();
             },
-            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            pageSize: @(adminAreaSettings.DefaultGridPageSize)
         });
 
         $("#queryEditor-grid").kendoGrid({
@@ -84,7 +84,7 @@
                 confirmation: false,
                 mode: "inline"
             },
-            scrollable: false,
+            scrollable: false
         });
     });
 

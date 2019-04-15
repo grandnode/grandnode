@@ -550,14 +550,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult EditPopup(string systemName)
+        public async Task<IActionResult> EditPopup(string systemName)
         {
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 //No plugin found with the specified id
                 return RedirectToAction("List");
 
-            var model = PreparePluginModel(pluginDescriptor);
+            var model = await PreparePluginModel(pluginDescriptor);
 
             return View(model);
         }
