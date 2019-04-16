@@ -344,6 +344,8 @@
                 $('#pnlAllowBackInStockSubscriptions').hide();
             }
             $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+        } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStockByAttributes).ToString())) {
+            $('#pnlUseMultipleWarehouses').show();
         } else {
             if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
                 $('#pnlWarehouse').hide();
