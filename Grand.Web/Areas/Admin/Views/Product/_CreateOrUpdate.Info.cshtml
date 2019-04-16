@@ -346,6 +346,13 @@
             $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
         } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStockByAttributes).ToString())) {
             $('#pnlUseMultipleWarehouses').show();
+            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+                $('#pnlWarehouse').hide();
+                $('#pnlMultipleWarehouses').show();
+            } else {
+                $('#pnlWarehouse').show();
+                $('#pnlMultipleWarehouses').hide();
+            }
         } else {
             if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
                 $('#pnlWarehouse').hide();
