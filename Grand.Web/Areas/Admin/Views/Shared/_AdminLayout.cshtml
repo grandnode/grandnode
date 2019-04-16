@@ -58,14 +58,9 @@
     Html.AppendScriptParts("~/scripts/jquery.validate.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/admin.search.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/typeahead.js", excludeFromBundle: true);
-
     Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/layout/js/layout.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/jquery.cookieBar.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/app.min.js", excludeFromBundle: true);
-
-    Html.AppendCssFileParts("~/administration/vendors/font-awesome/css/font-awesome.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/administration/build/css/font-awesome.css", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/global/js/moment.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/global/js/jquery.min.js", excludeFromBundle: true);
 
