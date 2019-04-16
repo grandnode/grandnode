@@ -139,11 +139,7 @@
                             }
                             <vc:admin-widget widget-zone="header_toggle_after" additional-data="null" />
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="dropdown" role="presentation">
-                                    <span id="searchIcon" class="searchIcon dropdown-toggle">
-                                        <i class="icon-magnifier"></i>
-                                    </span>
-                                </li>
+
                                 <li class="dropdown" role="presentation">
                                     <a href="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-toggle">
                                         <i class="icon-home"></i>
@@ -234,7 +230,11 @@
 
 
                                 @await Component.InvokeAsync("CommonLanguageSelector")
-
+                                <li class="dropdown" role="presentation">
+                                    <span id="searchIcon" class="searchIcon dropdown-toggle">
+                                        <i class="icon-magnifier"></i>
+                                    </span>
+                                </li>
                             </ul>
                         </nav>
                     </div>
