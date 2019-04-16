@@ -1498,7 +1498,7 @@ namespace Grand.Services.Catalog
                 var pwi = productInventory[0];
                 pwi.ReservedQuantity += qty;
             }
-            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity-x.ReservedQuantity);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, combination.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);

@@ -29,6 +29,7 @@
     if (supportRtl)
     {
         Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
+        Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap-rtl.min.css", excludeFromBundle: true);
     }
     Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.{adminAreaSettings.KendoLayout}.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.common.min.css", kendoVersion), excludeFromBundle: true);
@@ -37,24 +38,18 @@
 
     //administration
 
-    Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/vendors/iCheck/icheck.js", excludeFromBundle: true);
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/custom.js", excludeFromBundle: true);
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/src/js/helpers/smartresize.js", excludeFromBundle: true);
 
     //vendors
 
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/vendors/autosize/dist/autosize.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/vendors/bootstrap/dist/js/bootstrap.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/vendors/skycons/skycons.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/vendors/autosize/dist/autosize.min.js", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/vendors/iCheck/skins/flat/green.css", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/vendors/bootstrap/dist/css/bootstrap.min.css", excludeFromBundle: true);
+    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
 
     //js
+    //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures
     Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
-    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, @System.Globalization.CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.ui.core.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/admin.common.js", excludeFromBundle: true);
@@ -63,16 +58,11 @@
     Html.AppendScriptParts("~/scripts/jquery.validate.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/admin.search.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/typeahead.js", excludeFromBundle: true);
-
     Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/layout/js/layout.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/jquery.cookieBar.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/app.min.js", excludeFromBundle: true);
-
-    Html.AppendCssFileParts("~/administration/vendors/font-awesome/css/font-awesome.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/administration/build/css/font-awesome.css", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/global/js/moment.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/vendors/jquery/dist/jquery.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/administration/global/js/jquery.min.js", excludeFromBundle: true);
 
     //page title
     string adminPageTitle = "";
