@@ -39,7 +39,7 @@
     //administration
 
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/custom.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/src/js/helpers/smartresize.js", excludeFromBundle: true);
+    Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/build/js/smartresize.js", excludeFromBundle: true);
 
     //vendors
 
@@ -61,8 +61,8 @@
     Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/build/css/font-awesome.css", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/moment.min.js", excludeFromBundle: true);
-    Html.AppendScriptParts("~/administration/global/js/jquery.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/administration/build/js/moment.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/administration/build/js/jquery.min.js", excludeFromBundle: true);
 
     //page title
     string adminPageTitle = "";
@@ -202,7 +202,7 @@
                                 </li>
                                 <li>
                                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img src="~/administration/layout/img/avatar.png" alt="">
+                                        <img src="~/administration/build/images/avatar.png" alt="">
 
                                         @if (currentCustomer != null && currentCustomer.IsRegistered())
                                         {
