@@ -29,8 +29,6 @@ namespace Grand.Services.Media
 
         #region Fields
 
-        private static readonly object s_lock = new object();
-
         private readonly IRepository<Picture> _pictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
