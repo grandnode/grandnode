@@ -213,9 +213,6 @@ function init_sidebar() {
         setContentHeight();
     }).parent().addClass('active');
 
-    // original code below, but executed for $cur_menu
-
-
     // recompute content when resizing
     $(window).smartresize(function () {
         setContentHeight();
