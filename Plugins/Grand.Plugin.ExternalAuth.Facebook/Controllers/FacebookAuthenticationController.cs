@@ -1,20 +1,19 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
 using Grand.Plugin.ExternalAuth.Facebook.Models;
 using Grand.Services.Authentication.External;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Framework.Controllers;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
-using System;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
 {
