@@ -51,7 +51,7 @@ namespace Grand.Services.Tasks
                     continue;
                 }
 
-                var warnings = await _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId).GetAwaiter().GetResult(), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
+                var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
                     bid.StoreId, customerEnteredPrice: bid.Amount);
 
                 if (!warnings.Any())
