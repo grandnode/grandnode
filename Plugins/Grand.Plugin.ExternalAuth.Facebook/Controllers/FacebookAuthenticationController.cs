@@ -62,21 +62,12 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
-
             var model = new ConfigurationModel
             {
-                ClientId = settings.ClientKeyIdentifier,
-                ClientSecret = settings.ClientSecret,
-                ActiveStoreScopeConfiguration = storeScope
+                ClientId = _facebookExternalAuthSettings.ClientKeyIdentifier,
+                ClientSecret = _facebookExternalAuthSettings.ClientSecret,
             };
-            if (!string.IsNullOrEmpty(storeScope))
-            {
-                model.ClientId_OverrideForStore = _settingService.SettingExists(settings, setting => setting.ClientKeyIdentifier, storeScope);
-                model.ClientSecret_OverrideForStore = _settingService.SettingExists(settings, setting => setting.ClientSecret, storeScope);
-            }
+           
 
             return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
@@ -93,22 +84,9 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             if (!ModelState.IsValid)
                 return await Configure();
 
-            //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
-
-            settings.ClientKeyIdentifier = model.ClientId;
-            settings.ClientSecret = model.ClientSecret;
-
-            if (model.ClientId_OverrideForStore || storeScope == "")
-                await _settingService.SaveSetting(settings, x => x.ClientKeyIdentifier, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                await _settingService.DeleteSetting(settings, x => x.ClientKeyIdentifier, storeScope);
-
-            if (model.ClientSecret_OverrideForStore || storeScope == "")
-                await _settingService.SaveSetting(settings, x => x.ClientSecret, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                await _settingService.DeleteSetting(settings, x => x.ClientSecret, storeScope);
+            _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientId;
+            _facebookExternalAuthSettings.ClientSecret = model.ClientSecret;
+            await _settingService.SaveSetting(_facebookExternalAuthSettings);
 
             //now clear settings cache
             _settingService.ClearCache();
