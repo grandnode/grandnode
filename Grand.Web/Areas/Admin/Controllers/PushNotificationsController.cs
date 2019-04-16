@@ -53,9 +53,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new PushModel
             {
-                MessageText = _localizationService.GetResource("PushNotifications.MessageTextPlaceholder"),
-                Title = _localizationService.GetResource("PushNotifications.MessageTitlePlaceholder"),
-                PictureId = _pushNotificationsSettings.PicutreId,
+                MessageText = _localizationService.GetResource("Admin.PushNotifications.MessageTextPlaceholder"),
+                Title = _localizationService.GetResource("Admin.PushNotifications.MessageTitlePlaceholder"),
+                PictureId = _pushNotificationsSettings.PictureId,
                 ClickUrl = _pushNotificationsSettings.ClickUrl
             };
 
@@ -67,7 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!string.IsNullOrEmpty(_pushNotificationsSettings.PrivateApiKey) && !string.IsNullOrEmpty(model.MessageText))
             {
-                _pushNotificationsSettings.PicutreId = model.PictureId;
+                _pushNotificationsSettings.PictureId = model.PictureId;
                 _pushNotificationsSettings.ClickUrl = model.ClickUrl;
                 await _settingService.SaveSetting(_pushNotificationsSettings);
                 var pictureUrl = await _pictureService.GetPictureUrl(model.PictureId);

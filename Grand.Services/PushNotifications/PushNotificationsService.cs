@@ -154,7 +154,7 @@ namespace Grand.Services.PushNotifications
                 var receivers = await GetPushReceivers();
                 if (!receivers.Any())
                 {
-                    return (false, _localizationService.GetResource("PushNotifications.Error.NoReceivers"));
+                    return (false, _localizationService.GetResource("Admin.PushNotifications.Error.NoReceivers"));
                 }
 
                 foreach (var receiver in receivers)
@@ -208,7 +208,7 @@ namespace Grand.Services.PushNotifications
                                     Title = title
                                 });
 
-                                return (true, string.Format(_localizationService.GetResource("PushNotifications.MessageSent"), response.success, response.failure));
+                                return (true, string.Format(_localizationService.GetResource("Admin.PushNotifications.MessageSent"), response.success, response.failure));
                             }
                         }
                     }
