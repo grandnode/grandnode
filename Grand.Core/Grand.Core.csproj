@@ -31,10 +31,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="MongoDB.Bson" Version="2.8.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.8.0" />
-    <PackageReference Include="MongoDB.Driver.Core" Version="2.8.0" />
-    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.8.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.7.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.7.0" />
+    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.7.0" />
     <PackageReference Include="DotLiquid" Version="2.0.298" />
   </ItemGroup>
 </Project>
