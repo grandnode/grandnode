@@ -491,21 +491,13 @@ function deletecartitem(href) {
 
 function itemsStatistics() {
     if ($('#items_statistics').length) {
-        var perPage = parseInt($('#products-pagesize option:selected').text());
         var totalItems = parseInt($('#items_statistics .items-total').text());
-        if (parseInt($('.items-total').text()) > perPage) {
-            var perPageFinal = parseInt($('#products-pagesize option:selected').text());
-        }
-        else {
-            var perPageFinal = parseInt($('.items-total').text());
-        }
+        var perPageFinal = parseInt($('.items-page-size').text());
+        var currentPaggingSite = 0;
         if ($('.pagination').length) {
-            var currentPaggingSite = parseInt($('.pagination .current-page .page-link').text()),
-                totalPaggingSites = $('.pagination li').length;
+            currentPaggingSite = parseInt($('.pagination .current-page .page-link').text());
         } else {
-            var currentPaggingSite = 1;
-            var paggingSite = 1;
-            var totalPaggingSites = 1;
+            currentPaggingSite = 1;
         }
         if (totalItems < currentPaggingSite * perPageFinal) {
             $('#items_statistics .items-per-page .number').text(currentPaggingSite * perPageFinal - perPageFinal + 1 + ' - ' + totalItems);
