@@ -257,8 +257,7 @@ namespace Grand.Services.Seo
             if (!String.IsNullOrWhiteSpace(slug))
                 query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLower()));
             query = query.OrderBy(ur => ur.Slug);
-
-            return await Task.FromResult(new PagedList<UrlRecord>(query, pageIndex, pageSize));
+            return await PagedList<UrlRecord>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

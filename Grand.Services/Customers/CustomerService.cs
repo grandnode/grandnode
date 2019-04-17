@@ -231,8 +231,7 @@ namespace Grand.Services.Customers
             }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
+            return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -268,7 +267,7 @@ namespace Grand.Services.Customers
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
+            return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
 
@@ -1340,7 +1339,7 @@ namespace Grand.Services.Customers
             var query = from pp in _customerProductPriceRepository.Table
                         where pp.CustomerId == customerId
                         select pp;
-            return await Task.FromResult(new PagedList<CustomerProductPrice>(query, pageIndex, pageSize));
+            return await PagedList<CustomerProductPrice>.Create(query, pageIndex, pageSize);
         }
 
         #endregion
@@ -1436,7 +1435,7 @@ namespace Grand.Services.Customers
                         where pp.CustomerId == customerId
                         orderby pp.DisplayOrder
                         select pp;
-            return await Task.FromResult(new PagedList<CustomerProduct>(query, pageIndex, pageSize));
+            return await PagedList<CustomerProduct>.Create(query, pageIndex, pageSize);
         }
 
         #endregion

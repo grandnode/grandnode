@@ -234,8 +234,7 @@ namespace Grand.Services.Messages
                 query = query.Where(c => c.Categories.Any(x => categoryIds.Contains(x)));
 
             query = query.OrderBy(nls => nls.Email);
-
-            return await Task.FromResult(new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize));
+            return await PagedList<NewsLetterSubscription>.Create(query, pageIndex, pageSize);
         }
 
         #endregion

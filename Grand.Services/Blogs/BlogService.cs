@@ -129,7 +129,8 @@ namespace Grand.Services.Blogs
 
             query = query.OrderByDescending(b => b.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<BlogPost>(query, pageIndex, pageSize));
+            return await PagedList<BlogPost>.Create(query, pageIndex, pageSize);
+           
         }
 
 

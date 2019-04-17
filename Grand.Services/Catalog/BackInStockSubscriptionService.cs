@@ -87,7 +87,7 @@ namespace Grand.Services.Catalog
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Grand.Services.Catalog
                 query = query.Where(biss => biss.WarehouseId == warehouseId);
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            return await Task.FromResult(new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

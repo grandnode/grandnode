@@ -184,8 +184,7 @@ namespace Grand.Services.Messages
                 //load by priority
                 query = query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
             }
-
-            return await Task.FromResult(new PagedList<QueuedEmail>(query, pageIndex, pageSize));
+            return await PagedList<QueuedEmail>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

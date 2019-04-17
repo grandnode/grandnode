@@ -96,8 +96,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrWhiteSpace(recipientName))
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<GiftCard>(query, pageIndex, pageSize));
+            return await PagedList<GiftCard>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<IList<GiftCardUsageHistory>> GetAllGiftCardUsageHistory(string orderId = "")

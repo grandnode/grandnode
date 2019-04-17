@@ -268,7 +268,7 @@ namespace Grand.Services.Orders
             }
 
             //database layer paging
-            return new PagedList<Order>(query, pageIndex, pageSize);
+            return await PagedList<Order>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -620,8 +620,7 @@ namespace Grand.Services.Orders
                          where cc.Contains(rp.Id)
                          orderby rp.StartDateUtc
                          select rp;
-
-            return await Task.FromResult(new PagedList<RecurringPayment>(query2, pageIndex, pageSize));
+            return await PagedList<RecurringPayment>.Create(query2, pageIndex, pageSize);
         }
 
         #endregion

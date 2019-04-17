@@ -114,8 +114,10 @@ namespace Grand.Services.Logging
 
             var builderSort = Builders<Log>.Sort.Descending(x => x.CreatedOnUtc);
             var query = _logRepository.Collection;
-            
-            return await Task.FromResult(new PagedList<Log>(query, filter, builderSort, pageIndex, pageSize));
+
+            var logs = await PagedList<Log>.Create(query, filter, builderSort, pageIndex, pageSize);
+
+            return logs;
         }
 
         /// <summary>

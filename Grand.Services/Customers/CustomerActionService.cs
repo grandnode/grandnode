@@ -126,7 +126,7 @@ namespace Grand.Services.Customers
             var query = from h in _customerActionHistoryRepository.Table
                         where h.CustomerActionId == customerActionId
                         select h;
-            return await Task.FromResult(new PagedList<CustomerActionHistory>(query, pageIndex, pageSize));
+            return await PagedList<CustomerActionHistory>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<CustomerActionType> GetCustomerActionTypeById(string id)

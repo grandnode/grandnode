@@ -76,8 +76,7 @@ namespace Grand.Services.Catalog
             }
 
             query = query.OrderBy(x => x.Date);
-
-            return await Task.FromResult(new PagedList<ProductReservation>(query, pageIndex, pageSize));
+            return await PagedList<ProductReservation>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
