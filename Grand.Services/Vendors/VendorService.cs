@@ -309,7 +309,7 @@ namespace Grand.Services.Vendors
             if (vendorReview == null)
                 throw new ArgumentNullException("vendorPicture");
 
-            await _vendorReviewRepository.UpdateAsync(vendorReview);
+            await _vendorReviewRepository.InsertAsync(vendorReview);
 
             //event notification
             await _eventPublisher.EntityInserted(vendorReview);
