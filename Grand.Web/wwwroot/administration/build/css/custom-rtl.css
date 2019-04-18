@@ -784,6 +784,7 @@ body .container.body .right_col {
     width: 62%;
     font-size: 17px;
   }
+  
 }
 
 @media (max-width: 1270px) and (min-width: 192px) {
@@ -1162,6 +1163,7 @@ table.no-margin .progress {
   .col-md-55 {
     width: 20%;
   }
+  
 }
 
 @media (min-width: 192px) and (max-width: 1270px) {
@@ -6002,6 +6004,14 @@ h2 {
   margin-top: 5px;
 }
 
+.x_title:before, .x_title:after {
+  content: " ";
+  display: table;
+}
+
+.x_title:after {
+  clear: both;
+}
 @media screen and (max-width: 1700px) {
   .rtlabel {
     margin-left: 30px;
@@ -6032,12 +6042,15 @@ h2 {
   }
 }
 
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1200px) {
   .rtlabel {
     margin-left: 0px;
   }
   #searchInput {
     width: 250px;
+  }
+  .x_title{
+    display:block;
   }
 }
 
