@@ -1035,8 +1035,8 @@ namespace Grand.Services.Catalog
                                  where p.LowStock && p.ProductTypeId == 5 && p.ManageInventoryMethodId != 0
                                  select p;
 
-            if (!String.IsNullOrEmpty(vendorId))
-                query_products.Where(x => x.VendorId == vendorId);
+            if (!string.IsNullOrEmpty(vendorId))
+                query_products = query_products.Where(x => x.VendorId == vendorId);
 
             products = query_products.ToList();
 
