@@ -39,7 +39,7 @@ namespace Grand.Services.Configuration
                 }
                 catch(Exception ex)
                 {
-                    _logger.InsertLog(Core.Domain.Logging.LogLevel.Error,"GoogleAnalytics", ex.Message);
+                    _logger.InsertLog(Core.Domain.Logging.LogLevel.Error,"GoogleAnalytics", ex.Message).GetAwaiter().GetResult();
                     return null;
                 }
             }

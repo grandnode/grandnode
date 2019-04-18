@@ -193,13 +193,13 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
-        public virtual void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds)
+        public virtual async Task SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
 
             var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
-            _settingService.SetSetting(settingKey, countryIds);
+            await _settingService.SetSetting(settingKey, countryIds);
         }
 
         /// <summary>
@@ -207,13 +207,13 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
-        public virtual void SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds)
+        public virtual async Task SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
 
             var settingKey = string.Format("PaymentMethodRestictionsRole.{0}", paymentMethod.PluginDescriptor.SystemName);
-            _settingService.SetSetting(settingKey, roleIds);
+            await _settingService.SetSetting(settingKey, roleIds);
         }
 
         /// <summary>
@@ -221,13 +221,13 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="shippingIds">A list of country identifiers</param>
-        public virtual void SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds)
+        public virtual async Task SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
 
             var settingKey = string.Format("PaymentMethodRestictionsShipping.{0}", paymentMethod.PluginDescriptor.SystemName);
-            _settingService.SetSetting(settingKey, shippingIds);
+            await _settingService.SetSetting(settingKey, shippingIds);
         }
 
         /// <summary>

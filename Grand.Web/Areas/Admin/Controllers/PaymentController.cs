@@ -223,8 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newCountryIds.Add(c.Id);
                     }
                 }
-                _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
-
+                await _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
 
                 formKey = "restrictrole_" + pm.PluginDescriptor.SystemName;
                 var roleIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
@@ -238,7 +237,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newRoleIds.Add(r.Id);
                     }
                 }
-                _paymentService.SaveRestictedRoleIds(pm, newRoleIds);
+                await _paymentService.SaveRestictedRoleIds(pm, newRoleIds);
 
                 formKey = "restrictship_" + pm.PluginDescriptor.SystemName;
                 var shipIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
@@ -252,7 +251,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newShipIds.Add(s.Name);
                     }
                 }
-                _paymentService.SaveRestictedShippingIds(pm, newShipIds);
+                await _paymentService.SaveRestictedShippingIds(pm, newShipIds);
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));

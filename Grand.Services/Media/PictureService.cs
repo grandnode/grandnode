@@ -849,7 +849,7 @@ namespace Grand.Services.Media
                     return;
 
                 //save the new setting value
-                _settingService.SetSetting("Media.Images.StoreInDB", value);
+                _settingService.SetSetting("Media.Images.StoreInDB", value).GetAwaiter().GetResult();
 
                 int pageIndex = 0;
                 const int pageSize = 400;

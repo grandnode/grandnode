@@ -60,21 +60,21 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
-        void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds);
+        Task SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds);
 
         /// <summary>
         /// Saves a list of role identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="roleIds">A list of role identifiers</param>
-        void SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds);
+        Task SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds);
 
         /// <summary>
         /// Saves a list of shipping identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="shippingIds">A list of shipping identifiers</param>
-        void SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds);
+        Task SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds);
 
         /// <summary>
         /// Process a payment

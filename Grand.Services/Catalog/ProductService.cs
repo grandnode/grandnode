@@ -474,7 +474,7 @@ namespace Grand.Services.Catalog
 
                 var builderCustomer = Builders<Customer>.Filter;
                 var filterCustomer = builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
-                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync((cs) =>
+                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync(async (cs) =>
                 {
                     foreach (var item in cs.ShoppingCartItems.Where(x => x.ProductId == product.Id))
                     {
@@ -488,7 +488,7 @@ namespace Grand.Services.Catalog
 
                         var _builderCustomer = Builders<Customer>.Filter;
                         var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
-                        _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
+                        await _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
                     }
                 }
                 );
