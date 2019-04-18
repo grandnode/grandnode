@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Polls;
-using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
@@ -39,8 +38,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<PollModel> PreparePoll(Poll poll, bool setAlreadyVotedProperty)
         {
-            var model = new PollModel
-            {
+            var model = new PollModel {
                 Id = poll.Id,
                 AlreadyVoted = setAlreadyVotedProperty && await _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
                 Name = poll.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
@@ -50,8 +48,7 @@ namespace Grand.Web.Services
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)
             {
-                model.Answers.Add(new PollAnswerModel
-                {
+                model.Answers.Add(new PollAnswerModel {
                     Id = pa.Id,
                     PollId = poll.Id,
                     Name = pa.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
@@ -116,10 +113,9 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual void PollVoting(Poll poll, PollAnswer pollAnswer)
+        public virtual async Task PollVoting(Poll poll, PollAnswer pollAnswer)
         {
-            pollAnswer.PollVotingRecords.Add(new PollVotingRecord
-            {
+            pollAnswer.PollVotingRecords.Add(new PollVotingRecord {
                 PollId = poll.Id,
                 PollAnswerId = pollAnswer.Id,
                 CustomerId = _workContext.CurrentCustomer.Id,
@@ -127,18 +123,17 @@ namespace Grand.Web.Services
             });
             //update totals
             pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
-            _pollService.UpdatePoll(poll);
+            await _pollService.UpdatePoll(poll);
 
             if (!_workContext.CurrentCustomer.HasContributions)
             {
-                _serviceProvider.GetRequiredService<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
+                await _serviceProvider.GetRequiredService<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
             }
         }
 
         public virtual async Task<PollModel> PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
-            var model = new PollModel
-            {
+            var model = new PollModel {
                 Id = poll.Id,
                 AlreadyVoted = setAlreadyVotedProperty && await _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
                 Name = poll.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
@@ -148,8 +143,7 @@ namespace Grand.Web.Services
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)
             {
-                model.Answers.Add(new PollAnswerModel
-                {
+                model.Answers.Add(new PollAnswerModel {
                     Id = pa.Id,
                     PollId = poll.Id,
                     Name = pa.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),

@@ -64,7 +64,7 @@ namespace Grand.Web.Controllers
             if (!alreadyVoted)
             {
                 //vote
-                _pollViewModelService.PollVoting(poll, pollAnswer);
+                await _pollViewModelService.PollVoting(poll, pollAnswer);
             }
 
             return Json(new
