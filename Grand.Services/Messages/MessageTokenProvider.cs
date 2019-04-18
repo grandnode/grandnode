@@ -614,7 +614,7 @@ namespace Grand.Services.Messages
                             var picture = await pictureService.GetPictureById(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                             if (picture != null)
                             {
-                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl: store.Url);
                             }
                         }
                         sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
