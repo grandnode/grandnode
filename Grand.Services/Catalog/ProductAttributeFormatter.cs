@@ -3,6 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
+using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -88,6 +89,15 @@ namespace Grand.Services.Catalog
             bool allowHyperlinks = true, bool showInAdmin = false)
         {
             var result = new StringBuilder();
+            var langId = string.Empty;
+
+            if (_workContext.WorkingLanguage != null)
+                langId = _workContext.WorkingLanguage.Id;
+            else
+                langId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
+
+            if (string.IsNullOrEmpty(langId))
+                langId = "";
 
             //attributes
             if (renderProductAttributes)
@@ -108,7 +118,7 @@ namespace Grand.Services.Catalog
                             if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
                                 //multiline textbox
-                                var attributeName = productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
@@ -142,7 +152,7 @@ namespace Grand.Services.Catalog
                                         //hyperlinks aren't allowed
                                         attributeText = fileName;
                                     }
-                                    var attributeName = productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                    var attributeName = productAttribute.GetLocalized(a => a.Name, langId);
                                     //encode (if required)
                                     if (htmlEncode)
                                         attributeName = WebUtility.HtmlEncode(attributeName);
@@ -152,7 +162,7 @@ namespace Grand.Services.Catalog
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                                formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), valueStr);
                                 //encode (if required)
                                 if (htmlEncode)
                                     formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -167,7 +177,7 @@ namespace Grand.Services.Catalog
                                 var attributeValue = product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                                 if (attributeValue != null)
                                 {
-                                    formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                    formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), attributeValue.GetLocalized(a => a.Name, langId));
                                     
                                     if (renderPrices)
                                     {
@@ -203,7 +213,7 @@ namespace Grand.Services.Catalog
                                 else
                                 {
                                     if(showInAdmin)
-                                        formattedAttribute += string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), "");
+                                        formattedAttribute += string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, langId), "");
                                 }
 
                                 //encode (if required)

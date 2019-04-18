@@ -341,6 +341,9 @@ namespace Grand.Services.Directory
         /// <returns>Converted value</returns>
         public virtual async Task<decimal> ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
         {
+            if (targetCurrencyCode == null)
+                return amount;
+
             var result = await ConvertCurrency(amount, await GetPrimaryStoreCurrency(), targetCurrencyCode);
             return result;
         }

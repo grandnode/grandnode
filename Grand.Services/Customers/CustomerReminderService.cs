@@ -5,6 +5,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -106,8 +107,7 @@ namespace Grand.Services.Customers
 
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
-            var email = new QueuedEmail
-            {
+            var email = new QueuedEmail {
                 Priority = QueuedEmailPriority.High,
                 From = emailAccount.Email,
                 FromName = emailAccount.DisplayName,
@@ -137,11 +137,38 @@ namespace Grand.Services.Customers
         {
             var reminderLevel = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId);
             var emailAccount = await _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
-            var store = customer.ShoppingCartItems.Count > 0 ? await _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : (await _storeService.GetAllStores()).FirstOrDefault();
+            var store = await _storeService.GetStoreById(customer.StoreId);
+            if (order != null)
+            {
+                store = await _storeService.GetStoreById(order.StoreId);
+            }
+            if(store == null)
+            {
+                store = (await _storeService.GetAllStores()).FirstOrDefault();
+            }
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
             var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
+            if (language == null)
+            {
+                var languageService = _serviceProvider.GetRequiredService<ILanguageService>();
+                if (order != null)
+                {
+                    language = await languageService.GetLanguageById(order.CustomerLanguageId);
+                }
+                if (language == null)
+                {
+                    var customerLanguageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId);
+                    if (!string.IsNullOrEmpty(customerLanguageId))
+                        language = await languageService.GetLanguageById(customerLanguageId);
+                }
+                if (language == null)
+                {
+                    language = (await languageService.GetAllLanguages()).FirstOrDefault();
+                }
+            }
+
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
@@ -153,8 +180,7 @@ namespace Grand.Services.Customers
 
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
-            var email = new QueuedEmail
-            {
+            var email = new QueuedEmail {
                 Priority = QueuedEmailPriority.High,
                 From = emailAccount.Email,
                 FromName = emailAccount.DisplayName,
@@ -481,8 +507,7 @@ namespace Grand.Services.Customers
         {
             if (history != null)
             {
-                history.Levels.Add(new CustomerReminderHistory.HistoryLevel()
-                {
+                history.Levels.Add(new CustomerReminderHistory.HistoryLevel() {
                     Level = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level,
                     ReminderLevelId = reminderlevelId,
                     SendDate = DateTime.UtcNow,
@@ -503,8 +528,7 @@ namespace Grand.Services.Customers
                 history.StartDate = DateTime.UtcNow;
                 history.CustomerReminderId = customerReminder.Id;
                 history.ReminderRuleId = customerReminder.ReminderRuleId;
-                history.Levels.Add(new CustomerReminderHistory.HistoryLevel()
-                {
+                history.Levels.Add(new CustomerReminderHistory.HistoryLevel() {
                     Level = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level,
                     ReminderLevelId = reminderlevelId,
                     SendDate = DateTime.UtcNow,
@@ -519,8 +543,7 @@ namespace Grand.Services.Customers
         {
             if (history != null)
             {
-                history.Levels.Add(new CustomerReminderHistory.HistoryLevel()
-                {
+                history.Levels.Add(new CustomerReminderHistory.HistoryLevel() {
                     Level = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level,
                     ReminderLevelId = reminderlevelId,
                     SendDate = DateTime.UtcNow,
@@ -542,8 +565,7 @@ namespace Grand.Services.Customers
                 history.StartDate = DateTime.UtcNow;
                 history.CustomerReminderId = customerReminder.Id;
                 history.ReminderRuleId = customerReminder.ReminderRuleId;
-                history.Levels.Add(new CustomerReminderHistory.HistoryLevel()
-                {
+                history.Levels.Add(new CustomerReminderHistory.HistoryLevel() {
                     Level = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level,
                     ReminderLevelId = reminderlevelId,
                     SendDate = DateTime.UtcNow,
@@ -642,8 +664,7 @@ namespace Grand.Services.Customers
         {
             var query = from h in _customerReminderHistoryRepository.Table
                         from l in h.Levels
-                        select new SerializeCustomerReminderHistory()
-                        { CustomerId = h.CustomerId, Id = h.Id, CustomerReminderId = h.CustomerReminderId, Level = l.Level, SendDate = l.SendDate, OrderId = h.OrderId };
+                        select new SerializeCustomerReminderHistory() { CustomerId = h.CustomerId, Id = h.Id, CustomerReminderId = h.CustomerReminderId, Level = l.Level, SendDate = l.SendDate, OrderId = h.OrderId };
 
             query = from p in query
                     where p.CustomerReminderId == customerReminderId
