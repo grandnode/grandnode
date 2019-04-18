@@ -596,6 +596,7 @@ namespace Grand.Services.Messages
                 sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Quantity", language.Id) : _localizationService.GetResource("Messages.Wishlist.Product(s).Quantity", language.Id)));
                 sb.AppendLine("</tr>");
                 var productService = _serviceProvider.GetRequiredService<IProductService>();
+                var productAttributeFormatter = _serviceProvider.GetRequiredService<IProductAttributeFormatter>();
                 var pictureService = _serviceProvider.GetRequiredService<IPictureService>();
 
                 foreach (var item in cart ? customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart) :
@@ -620,10 +621,11 @@ namespace Grand.Services.Messages
                     }
                     sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
                     //attributes
-                    if (!String.IsNullOrEmpty(item.AttributesXml))
+                    if (!string.IsNullOrEmpty(item.AttributesXml))
                     {
                         sb.AppendLine("<br />");
-                        sb.AppendLine(item.AttributesXml);
+                        string attributeDescription = await productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer);
+                        sb.AppendLine(attributeDescription);
                     }
                     sb.AppendLine("</td>");
 
