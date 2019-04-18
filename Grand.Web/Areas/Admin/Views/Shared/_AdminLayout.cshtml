@@ -50,7 +50,7 @@
 
     Html.AppendScriptParts(location: ResourceLocation.Footer, src: "~/administration/bootstrap/js/bootstrap.min.js", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
+
 
     //js
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures
@@ -63,9 +63,11 @@
     Html.AppendScriptParts("~/scripts/jquery.validate.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/admin.search.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/typeahead.js", excludeFromBundle: true);
-    Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
+
     Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/build/css/font-awesome.css", excludeFromBundle: true);
+    Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/build/js/moment.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/build/js/jquery.min.js", excludeFromBundle: true);
 
@@ -99,7 +101,6 @@
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
 <body class="nav-md">
-
 
     <div class="container body">
         <div class="main_container">
@@ -248,10 +249,24 @@
                 <vc:admin-widget widget-zone="header_navbar_after" additional-data="null" />
             }
 
-            <div class="right_col" role="main">
-                <partial name="Notifications" />
-                @RenderBody()
-            </div>
+                <div class="right_col" role="main">
+                    <partial name="Notifications" />
+                    @if (currentCustomer.IsVendor())
+                    {
+                        <div class="filter">
+                            <div class="page-bar" style="height:43px;">
+                                <div class="page-toolbar">
+                                    <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
+                                        <i class="icon-calendar"></i>&nbsp;
+                                        <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                        <i class="fa fa-angle-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @RenderBody()
+                </div>
             <div class="throbber">
                 <div class="curtain">
                 </div>
