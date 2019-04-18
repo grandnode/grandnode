@@ -149,7 +149,7 @@ namespace Grand.Api.Infrastructure
             ActionConfiguration createSpecification = product.Action("CreateProductSpecification");
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
             createSpecification.Parameter<int>(nameof(ProductSpecificationAttributeDto.DisplayOrder));
-            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue)).Required();
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue));
             createSpecification.Parameter<SpecificationAttributeType>(nameof(ProductSpecificationAttributeDto.AttributeType)).Required();
             createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.AllowFiltering));
             createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId)).Required();
@@ -160,7 +160,7 @@ namespace Grand.Api.Infrastructure
             ActionConfiguration updateSpecification = product.Action("UpdateProductSpecification");
             updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
             updateSpecification.Parameter<int>(nameof(ProductSpecificationAttributeDto.DisplayOrder));
-            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue)).Required();
+            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue));
             updateSpecification.Parameter<SpecificationAttributeType>(nameof(ProductSpecificationAttributeDto.AttributeType)).Required();
             updateSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.AllowFiltering));
             updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId)).Required();
