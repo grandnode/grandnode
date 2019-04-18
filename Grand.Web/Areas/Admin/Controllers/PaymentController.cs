@@ -93,7 +93,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult MethodUpdate( PaymentMethodModel model)
+        public async Task<IActionResult> MethodUpdate( PaymentMethodModel model)
         {
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
@@ -102,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
+                    await _settingService.SaveSetting(_paymentSettings);
                 }
             }
             else
@@ -111,7 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
+                    await _settingService.SaveSetting(_paymentSettings);
                 }
             }
             var pluginDescriptor = pm.PluginDescriptor;

@@ -68,7 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult MarkAsPrimaryProvider(string systemName)
+        public async Task<IActionResult> MarkAsPrimaryProvider(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
             {
@@ -78,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (taxProvider != null)
             {
                 _taxSettings.ActiveTaxProviderSystemName = systemName;
-                _settingService.SaveSetting(_taxSettings);
+                await _settingService.SaveSetting(_taxSettings);
             }
 
             return RedirectToAction("Providers");
