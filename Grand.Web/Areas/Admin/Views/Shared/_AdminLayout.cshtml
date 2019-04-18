@@ -23,14 +23,21 @@
     var supportRtl = workContext.WorkingLanguage.Rtl &&
         !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
-    Html.AppendCssFileParts("~/administration/build/css/custom.css", excludeFromBundle: true);
+    //Html.AppendCssFileParts("~/administration/build/css/custom.css", excludeFromBundle: true);
 
     //CSS
     if (supportRtl)
     {
         Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
+        Html.AppendCssFileParts("~/administration/build/css/custom-rtl.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/administration/bootstrap/css/bootstrap-rtl.min.css", excludeFromBundle: true);
     }
+    else
+    {
+        Html.AppendCssFileParts("~/administration/build/css/custom.css", excludeFromBundle: true);
+    }
+
+
     Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.{adminAreaSettings.KendoLayout}.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.common.min.css", kendoVersion), excludeFromBundle: true);
     Html.AppendCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);

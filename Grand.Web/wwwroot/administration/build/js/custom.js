@@ -119,6 +119,7 @@ function init_sidebar() {
 
     $('#searchIcon').on('click', function () {
         $('.admin-search-input-container').toggle('fast');
+        $('.admin-search-input-container').css('display', 'inline-block');
     });
 
     var arr = [];

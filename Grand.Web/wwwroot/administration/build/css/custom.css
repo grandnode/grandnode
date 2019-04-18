@@ -5419,7 +5419,7 @@ a span.username {
 }
 
 .x_title>.caption>small {
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 .x_title>.caption>small>i {
@@ -5712,7 +5712,9 @@ form>h4 {
     width:50%;
     margin-bottom:40px;
 }
-
+.AllowedTokens{
+    margin-top:5px;
+}
 @keyframes spinner-dash {
     0% {
         stroke-dashoffset: 58px
