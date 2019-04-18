@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Models.ExternalAuthentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -67,7 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult MethodUpdate( AuthenticationMethodModel model)
+        public async Task<IActionResult> MethodUpdate(AuthenticationMethodModel model)
         {
             var eam = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(model.SystemName);
             if (eam.IsMethodActive(_externalAuthenticationSettings))
@@ -76,7 +77,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(eam.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSetting(_externalAuthenticationSettings);
                 }
             }
             else
@@ -85,7 +86,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(eam.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSetting(_externalAuthenticationSettings);
                 }
             }
             var pluginDescriptor = eam.PluginDescriptor;

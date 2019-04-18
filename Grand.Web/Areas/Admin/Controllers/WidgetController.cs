@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -77,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult WidgetUpdate( WidgetModel model)
+        public async Task<IActionResult> WidgetUpdate( WidgetModel model)
         {
             var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
             if (widget.IsWidgetActive(_widgetSettings))
@@ -86,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _widgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSetting(_widgetSettings);
                 }
             }
             else
@@ -95,7 +96,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _widgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSetting(_widgetSettings);
                 }
             }
             _cacheManager.Clear();

@@ -648,8 +648,7 @@ namespace Grand.Services.Customers
             query = from p in query
                     where p.CustomerReminderId == customerReminderId
                     select p;
-
-            return await Task.FromResult(new PagedList<SerializeCustomerReminderHistory>(query, pageIndex, pageSize));
+            return await PagedList<SerializeCustomerReminderHistory>.Create(query, pageIndex, pageSize);
         }
 
         #endregion

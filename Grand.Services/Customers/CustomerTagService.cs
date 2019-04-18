@@ -72,7 +72,7 @@ namespace Grand.Services.Customers
             var query = from c in _customerRepository.Table
                         where c.CustomerTags.Contains(customerTagId)
                         select c;
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
+            return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

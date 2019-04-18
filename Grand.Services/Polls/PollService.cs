@@ -115,8 +115,7 @@ namespace Grand.Services.Polls
                 query = query.Where(p => p.ShowOnHomePage);
             }
             query = query.OrderBy(p => p.DisplayOrder);
-
-            return await Task.FromResult(new PagedList<Poll>(query, pageIndex, pageSize));
+            return await PagedList<Poll>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

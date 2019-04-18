@@ -63,8 +63,8 @@ namespace Grand.Services.Media
             BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
             containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
             container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
-            container_thumb.CreateIfNotExistsAsync();
-            container_thumb.SetPermissionsAsync(containerPermissions);
+            container_thumb.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            container_thumb.SetPermissionsAsync(containerPermissions).GetAwaiter().GetResult();
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Grand.Services.Media
             foreach (var ff in files.Results)
             {
                 CloudBlockBlob blockBlob = (CloudBlockBlob)ff;
-                blockBlob.DeleteAsync();
+                blockBlob.DeleteAsync().GetAwaiter().GetResult();
             }
         }
 
@@ -143,7 +143,7 @@ namespace Grand.Services.Media
         protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
+            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length).GetAwaiter().GetResult();
 
         }
 

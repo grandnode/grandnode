@@ -128,7 +128,7 @@ namespace Grand.Services.Affiliates
 
             query = query.OrderByDescending(a => a.Id);
 
-            return await Task.FromResult(new PagedList<Affiliate>(query, pageIndex, pageSize));
+            return await PagedList<Affiliate>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

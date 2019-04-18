@@ -315,7 +315,7 @@ namespace Grand.Services.Catalog
                         where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
-            return await Task.FromResult(new PagedList<Product>(query, pageIndex, pageSize));
+            return await PagedList<Product>.Create(query, pageIndex, pageSize);
         }
 
 
@@ -474,7 +474,7 @@ namespace Grand.Services.Catalog
 
                 var builderCustomer = Builders<Customer>.Filter;
                 var filterCustomer = builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
-                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync((cs) =>
+                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync(async (cs) =>
                 {
                     foreach (var item in cs.ShoppingCartItems.Where(x => x.ProductId == product.Id))
                     {
@@ -488,7 +488,7 @@ namespace Grand.Services.Catalog
 
                         var _builderCustomer = Builders<Customer>.Filter;
                         var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
-                        _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
+                        await _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
                     }
                 }
                 );
@@ -899,7 +899,7 @@ namespace Grand.Services.Catalog
                 builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
 
-            var products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
+            var products = await PagedList<Product>.Create(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
 
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
@@ -964,7 +964,7 @@ namespace Grand.Services.Catalog
             query = query.Where(x => x.ProductAttributeMappings.Any(y => y.ProductAttributeId == productAttributeId));
             query = query.OrderBy(x => x.Name);
 
-            return await Task.FromResult(new PagedList<Product>(query, pageIndex, pageSize));
+            return await PagedList<Product>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -2374,7 +2374,7 @@ namespace Grand.Services.Catalog
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<ProductReview>(query, pageIndex, pageSize));
+            return await PagedList<ProductReview>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<int> RatingSumProduct(string productId, string storeId)

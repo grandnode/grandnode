@@ -209,7 +209,7 @@ namespace Grand.Services.Helpers
                 }
 
                 _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
-                _settingService.SaveSetting(_dateTimeSettings);
+                _settingService.SaveSetting(_dateTimeSettings).GetAwaiter().GetResult();
             }
         }
 
@@ -234,7 +234,7 @@ namespace Grand.Services.Helpers
                 }
 
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId);
+                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId).GetAwaiter().GetResult();
             }
         }
     }

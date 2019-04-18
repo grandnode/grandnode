@@ -573,13 +573,13 @@ namespace Grand.Services.Customers
             {
                 var banner = await _bannerRepository.GetByIdAsync(action.BannerId);
                 if (banner != null)
-                    PrepareBanner(action, banner, customer.Id);
+                    await PrepareBanner(action, banner, customer.Id);
             }
             if (action.ReactionType == CustomerReactionTypeEnum.InteractiveForm)
             {
                 var interactiveform = await _interactiveFormRepository.GetByIdAsync(action.InteractiveFormId);
                 if (interactiveform != null)
-                    PrepareInteractiveForm(action, interactiveform, customer.Id);
+                    await PrepareInteractiveForm(action, interactiveform, customer.Id);
             }
 
             var _cat = await GetAllCustomerActionType();
@@ -614,13 +614,13 @@ namespace Grand.Services.Customers
 
             if (action.ReactionType == CustomerReactionTypeEnum.AssignToCustomerTag)
             {
-                AssignToCustomerTag(action, customer);
+                await AssignToCustomerTag(action, customer);
             }
 
             await SaveActionToCustomer(action.Id, customer.Id);
 
         }
-        protected void PrepareBanner(CustomerAction action, Banner banner, string customerId)
+        protected async Task PrepareBanner(CustomerAction action, Banner banner, string customerId)
         {
             var banneractive = new PopupActive()
             {
@@ -631,10 +631,10 @@ namespace Grand.Services.Customers
                 Name = banner.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 PopupTypeId = (int)PopupType.Banner
             };
-            _popupService.InsertPopupActive(banneractive);
+            await _popupService.InsertPopupActive(banneractive);
         }
 
-        protected void PrepareInteractiveForm(CustomerAction action, InteractiveForm form, string customerId)
+        protected async Task PrepareInteractiveForm(CustomerAction action, InteractiveForm form, string customerId)
         {
 
             var body = PrepareDataInteractiveForm(form);
@@ -648,7 +648,7 @@ namespace Grand.Services.Customers
                 Name = form.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 PopupTypeId = (int)PopupType.InteractiveForm
             };
-            _popupService.InsertPopupActive(formactive);
+            await _popupService.InsertPopupActive(formactive);
         }
 
         protected string PrepareDataInteractiveForm(InteractiveForm form)
@@ -740,11 +740,11 @@ namespace Grand.Services.Customers
             }
         }
 
-        protected void AssignToCustomerTag(CustomerAction action, Customer customer)
+        protected async Task AssignToCustomerTag(CustomerAction action, Customer customer)
         {
             if (customer.CustomerTags.Where(x => x == action.CustomerTagId).Count() == 0)
             {
-                _customerTagService.InsertTagToCustomer(action.CustomerTagId, customer.Id);
+                await _customerTagService.InsertTagToCustomer(action.CustomerTagId, customer.Id);
             }
         }
 

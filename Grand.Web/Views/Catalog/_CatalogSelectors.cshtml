@@ -15,6 +15,7 @@
             </div>
         }
         <div class="d-flex align-items-center mx-auto" id="items_statistics">
+            <div class="items-page-size d-none">@Model.PageSize</div>
             <div class="items-per-page d-lg-inline-flex"><span>@T("catalog.selectors.items")</span><span class="number"></span></div>
             <div class="items-separator">@T("catalog.selectors.of")</div>
             <div class="items-total">@Model.TotalItems</div>

@@ -99,8 +99,7 @@ namespace Grand.Services.Common
                             Keyword = r.Keyword,
                             Count = r.Count
                         });
-
-            return await Task.FromResult(new PagedList<SearchTermReportLine>(query, pageIndex, pageSize));
+            return await PagedList<SearchTermReportLine>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

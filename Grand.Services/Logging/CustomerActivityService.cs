@@ -295,8 +295,7 @@ namespace Grand.Services.Logging
                 query = query.Where(al => ipAddress == al.IpAddress);
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<ActivityLog>(query, pageIndex, pageSize));
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -367,8 +366,7 @@ namespace Grand.Services.Logging
 
             query = query.Where(al => al.EntityKeyId == categoryId);
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -396,8 +394,7 @@ namespace Grand.Services.Logging
 
             query = query.Where(al => al.EntityKeyId == categoryId);
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -425,8 +422,7 @@ namespace Grand.Services.Logging
 
             query = query.Where(al => al.EntityKeyId == categoryId);
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -454,8 +450,7 @@ namespace Grand.Services.Logging
 
             query = query.Where(al => al.EntityKeyId == manufacturerId);
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -483,8 +478,7 @@ namespace Grand.Services.Logging
 
             query = query.Where(al => al.EntityKeyId == productId);
             query = query.OrderByDescending(al => al.CreatedOnUtc);
-            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
-            return activityLog;
+            return await PagedList<ActivityLog>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

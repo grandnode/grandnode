@@ -114,8 +114,7 @@ namespace Grand.Services.News
                 }
             }
             query = query.OrderByDescending(n => n.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<NewsItem>(query, pageIndex, pageSize));
+            return await PagedList<NewsItem>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

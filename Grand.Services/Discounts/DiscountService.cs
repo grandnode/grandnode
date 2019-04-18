@@ -423,7 +423,7 @@ namespace Grand.Services.Discounts
             if (!String.IsNullOrEmpty(discountId))
                 query = query.Where(duh => duh.DiscountId == discountId);
             query = query.OrderByDescending(c => c.CouponCode);
-            return await Task.FromResult(new PagedList<DiscountCoupon>(query, pageIndex, pageSize));
+            return await PagedList<DiscountCoupon>.Create(query, pageIndex, pageSize);
         }
 
 
@@ -742,7 +742,7 @@ namespace Grand.Services.Discounts
             if (canceled.HasValue)
                 query = query.Where(duh => duh.Canceled == canceled.Value);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
-            return await Task.FromResult(new PagedList<DiscountUsageHistory>(query, pageIndex, pageSize));
+            return await PagedList<DiscountUsageHistory>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

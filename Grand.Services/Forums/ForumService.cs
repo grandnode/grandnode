@@ -618,8 +618,7 @@ namespace Grand.Services.Forums
                          orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
                          select ft;
 
-            var topics = new PagedList<ForumTopic>(query3, pageIndex, pageSize);
-            return topics;
+            return await PagedList<ForumTopic>.Create(query3, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -643,8 +642,8 @@ namespace Grand.Services.Forums
                          orderby ft.LastPostTime descending
                          select ft;
 
-            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
-            return topics;
+            return await PagedList<ForumTopic>.Create(query2, pageIndex, pageSize);
+
         }
 
         /// <summary>
@@ -861,7 +860,8 @@ namespace Grand.Services.Forums
             {
                 query = query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
             }
-            return await Task.FromResult(new PagedList<ForumPost>(query, pageIndex, pageSize));
+            return await PagedList<ForumPost>.Create(query, pageIndex, pageSize);
+
         }
 
         /// <summary>
@@ -1008,7 +1008,8 @@ namespace Grand.Services.Forums
             }
             query = query.OrderByDescending(pm => pm.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<PrivateMessage>(query, pageIndex, pageSize));
+            return await PagedList<PrivateMessage>.Create(query, pageIndex, pageSize);
+
         }
 
         /// <summary>
@@ -1117,8 +1118,7 @@ namespace Grand.Services.Forums
                         orderby fs.CreatedOnUtc descending, fs.SubscriptionGuid descending
                         select fs;
 
-            var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
-            return forumSubscriptions;
+            return await PagedList<ForumSubscription>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

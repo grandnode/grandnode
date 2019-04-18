@@ -383,7 +383,7 @@ namespace Grand.Services.Configuration
                 catch (Exception ex)
                 {
                     var msg = $"Could not convert setting {key} to type {prop.PropertyType.FullName}";
-                    _serviceProvider.GetRequiredService<Logging.ILogger>().InsertLog(Core.Domain.Logging.LogLevel.Error, msg, ex.Message);
+                    _serviceProvider.GetRequiredService<Logging.ILogger>().InsertLog(Core.Domain.Logging.LogLevel.Error, msg, ex.Message).GetAwaiter().GetResult();
                 }
             }
 

@@ -86,8 +86,7 @@ namespace Grand.Services.Vendors
                 query = query.Where(v => v.Active);
             query = query.Where(v => !v.Deleted);
             query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
-
-            return await Task.FromResult(new PagedList<Vendor>(query, pageIndex, pageSize));
+            return await PagedList<Vendor>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -211,8 +210,7 @@ namespace Grand.Services.Vendors
             if (!String.IsNullOrEmpty(vendorId))
                 query = query.Where(c => c.VendorId == vendorId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<VendorReview>(query, pageIndex, pageSize));
+            return await PagedList<VendorReview>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<int> RatingSumVendor(string vendorId, string storeId)

@@ -10,7 +10,7 @@ namespace Grand.Web.Interfaces
         Task<PollModel> PreparePoll(Poll poll, bool setAlreadyVotedProperty);
         Task<PollModel> PreparePollBySystemName(string systemKeyword);
         Task<List<PollModel>> PrepareHomePagePoll();
-        void PollVoting(Poll poll, PollAnswer pollAnswer);
+        Task PollVoting(Poll poll, PollAnswer pollAnswer);
         Task<PollModel> PreparePollModel(Poll poll, bool setAlreadyVotedProperty);
     }
 }
