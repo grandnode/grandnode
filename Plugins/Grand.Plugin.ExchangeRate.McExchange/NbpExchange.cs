@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace Grand.Plugin.ExchangeRate.McExchange
 {
-    public class NbpExchange : IRateProvider
+    internal class NbpExchange : IRateProvider
     {
         public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates()
         {

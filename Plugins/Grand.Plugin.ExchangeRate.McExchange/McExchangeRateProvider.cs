@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Grand.Core;
 using Grand.Core.Plugins;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+
+[assembly:InternalsVisibleTo("Grand.Plugin.Tests")]
 
 namespace Grand.Plugin.ExchangeRate.McExchange
 {
