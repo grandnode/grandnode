@@ -251,7 +251,7 @@
 
                 <div class="right_col" role="main">
                     <partial name="Notifications" />
-                    @if (currentCustomer.IsVendor())
+                    @if (currentCustomer.IsVendor() && !currentCustomer.IsAdmin())
                     {
                         <div class="filter">
                             <div class="page-bar" style="height:43px;">
