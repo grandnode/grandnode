@@ -29,7 +29,7 @@ namespace Grand.Api.Services
         private readonly IMongoCollection<ManufacturerDto> _manufacturer;
         private readonly SeoSettings _seoSettings;
 
-        public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, ILanguageService languageService, PictureService pictureService,
+        public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, ILanguageService languageService, IPictureService pictureService,
             ICustomerActivityService customerActivityService, ILocalizationService localizationService, SeoSettings seoSettings)
         {
             _mongoDBContext = mongoDBContext;

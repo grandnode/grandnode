@@ -240,16 +240,16 @@
                     }, {
                         field: "Price",
                         title: "@T("Admin.Catalog.Products.Fields.Price")",
-						headerAttributes: { style: "text-align:center" },
-						attributes: { style: "text-align:center" },
+						headerAttributes: { style: "text-align:right" },
+						attributes: { style: "text-align:right" },
                         width: 100,
                         //if not a grouped product, then display
                         template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
                     }, {
                         field: "StockQuantityStr",
                         title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-						headerAttributes: { style: "text-align:center" },
-						attributes: { style: "text-align:center" },
+						headerAttributes: { style: "text-align:right" },
+						attributes: { style: "text-align:right" },
 						minScreenWidth: 750,
                         width: 80
                     }, {
