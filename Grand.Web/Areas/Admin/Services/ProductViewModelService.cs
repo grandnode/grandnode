@@ -362,6 +362,47 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
         }
+        public virtual async Task BackInStockNotifications(ProductAttributeCombination combination)
+        {
+            var product = await _productService.GetDbProductById(combination.ProductId);
+            var prevcombination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == combination.Id);
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
+                product.BackorderMode == BackorderMode.NoBackorders &&
+                product.AllowBackInStockSubscriptions &&
+                combination.StockQuantity > 0 &&
+                prevcombination.StockQuantity <= 0 && !product.UseMultipleWarehouses &&
+                product.Published)
+            {
+                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, "");
+            }
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
+                product.BackorderMode == BackorderMode.NoBackorders &&
+                product.AllowBackInStockSubscriptions &&
+                product.UseMultipleWarehouses &&
+                product.Published)
+            {
+                foreach (var prevstock in prevcombination.WarehouseInventory)
+                {
+                    if (prevstock.StockQuantity - prevstock.ReservedQuantity <= 0)
+                    {
+                        var actualStock = combination.WarehouseInventory.FirstOrDefault(x => x.WarehouseId == prevstock.WarehouseId);
+                        if (actualStock != null)
+                        {
+                            if (actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
+                                await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, prevstock.WarehouseId);
+                        }
+                    }
+                }
+                if (combination.WarehouseInventory.Sum(x => x.StockQuantity - x.ReservedQuantity) > 0)
+                {
+                    if (prevcombination.WarehouseInventory.Sum(x => x.StockQuantity - x.ReservedQuantity) <= 0)
+                    {
+                        await _backInStockSubscriptionService.SendNotificationsToSubscribers(product, combination.AttributesXml, "");
+                    }
+                }
+            }
+        }
         public virtual async Task PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties)
         {
@@ -2622,6 +2663,11 @@ namespace Grand.Web.Areas.Admin.Services
                     await PrepareCombinationWarehouseInventory(combination);
                     combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
                 }
+
+                //notification - back in stock
+                await BackInStockNotifications(combination);
+
+                //update combination
                 await _productAttributeService.UpdateProductAttributeCombination(combination);
 
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)

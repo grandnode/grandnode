@@ -7,7 +7,6 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
@@ -374,7 +373,7 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> EuCookieLawAccept([FromServices] StoreInformationSettings storeInformationSettings, 
+        public virtual async Task<IActionResult> EuCookieLawAccept([FromServices] StoreInformationSettings storeInformationSettings,
             [FromServices] IGenericAttributeService genericAttributeService)
         {
             if (!storeInformationSettings.DisplayEuCookieLawWarning)
@@ -492,8 +491,7 @@ namespace Grand.Web.Controllers
                 }
             }
 
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",
@@ -630,8 +628,7 @@ namespace Grand.Web.Controllers
                 from = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
 
-                await queuedEmailService.InsertQueuedEmail(new QueuedEmail
-                {
+                await queuedEmailService.InsertQueuedEmail(new QueuedEmail {
                     From = from,
                     FromName = fromName,
                     To = emailAccount.Email,

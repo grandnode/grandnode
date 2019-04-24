@@ -347,6 +347,15 @@
                         if (data.stockAvailability) {
                             $('#stock-availability-value-@productId').text(data.stockAvailability);
                         }
+                        if (data.backInStockSubscription) {
+                            $('#back-in-stock-subscribe-@productId').show();
+                        }
+                        else {
+                            $('#back-in-stock-subscribe-@productId').hide();
+                        }
+                        if (data.buttonTextBackInStockSubscription) {
+                            $('#back-in-stock-subscribe-@productId').val(data.buttonTextBackInStockSubscription);
+                        }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
                                 $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();

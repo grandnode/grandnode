@@ -54,6 +54,13 @@ namespace Grand.Services.Catalog
         Task<Product> GetProductById(string productId);
 
         /// <summary>
+        /// Gets product from db 
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product</returns>
+        Task<Product> GetDbProductById(string productId);
+
+        /// <summary>
         /// Gets product from product or product deleted
         /// </summary>
         /// <param name="productId">Product identifier</param>

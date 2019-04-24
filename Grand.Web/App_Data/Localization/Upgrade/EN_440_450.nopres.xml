@@ -143,4 +143,16 @@
   <LocaleResource Name="Admin.PushNotifications.Fields.ClickUrl.Hint">
     <Value>Page that will be opened after user clicks on notification</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.DeleteNotifyWhenAvailable">
+    <Value>Cancel notification</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Title">
+    <Value>Notify about availability</Value>
+  </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.subscribed">
+    <Value>You are successfully subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.unsubscribed">
+    <Value>You are successfully unsubscribed</Value>
+  </LocaleResource>
 </Language>

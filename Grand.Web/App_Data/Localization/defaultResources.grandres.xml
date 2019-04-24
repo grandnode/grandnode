@@ -15685,6 +15685,9 @@
   <LocaleResource Name="BackInStockSubscriptions.MaxSubscriptions">
     <Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.DeleteNotifyWhenAvailable">
+    <Value>Cancel notification</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.NotAllowed">
     <Value>Subscriptions are not allowed for this product</Value>
   </LocaleResource>
@@ -15703,11 +15706,17 @@
   <LocaleResource Name="BackInStockSubscriptions.PopupTitle">
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.subscribed">
+    <Value>You are successfully subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Title">
+    <Value>Notify about availability</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
     <Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
   </LocaleResource>
-  <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
-    <Value>Unsubscribe</Value>
+  <LocaleResource Name="backinstocksubscriptions.unsubscribed">
+    <Value>You are successfully unsubscribed</Value>
   </LocaleResource>
   <LocaleResource Name="Bestsellers">
     <Value>Bestsellers</Value>

@@ -203,6 +203,8 @@ namespace Grand.Web.Controllers
                 sku = model.Sku,
                 price = model.Price,
                 stockAvailability = model.StockAvailability,
+                backInStockSubscription = model.DisplayBackInStockSubscription,
+                buttonTextBackInStockSubscription = model.ButtonTextBackInStockSubscription,
                 enabledattributemappingids = model.EnabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = model.DisabledAttributeMappingids.ToArray(),
                 pictureFullSizeUrl = model.PictureFullSizeUrl,

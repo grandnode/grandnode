@@ -264,6 +264,19 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Gets product from db 
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product</returns>
+        public virtual async Task<Product> GetDbProductById(string productId)
+        {
+            if (String.IsNullOrEmpty(productId))
+                return null;
+
+            return await _productRepository.GetByIdAsync(productId);
+        }
+
+        /// <summary>
         /// Gets product for order
         /// </summary>
         /// <param name="productId">Product identifier</param>
