@@ -103,8 +103,7 @@ namespace Grand.Services.Configuration
                 foreach (var s in settings)
                 {
                     var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching
-                    {
+                    var settingForCaching = new SettingForCaching {
                         Id = s.Id,
                         Name = s.Name,
                         Value = s.Value,
@@ -297,8 +296,7 @@ namespace Grand.Services.Configuration
             else
             {
                 //insert
-                var setting = new Setting
-                {
+                var setting = new Setting {
                     Name = key,
                     Value = valueStr,
                     StoreId = storeId
@@ -342,11 +340,7 @@ namespace Grand.Services.Configuration
         /// <param name="storeId">Store identifier for which settings should be loaded</param>
         public virtual T LoadSetting<T>(string storeId = "") where T : ISettings, new()
         {
-            string cachekey = string.Format("{0}{1}.{2}", SETTINGS_PATTERN_KEY, typeof(T).Name, storeId);
-            return _cacheManager.Get<T>(cachekey, () =>
-            {
-                return (T)LoadSetting(typeof(T), storeId);
-            });
+            return (T)LoadSetting(typeof(T), storeId);
         }
 
         /// <summary>
