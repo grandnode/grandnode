@@ -62,7 +62,7 @@
                     });
         </script>
             <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-info add-to-cart-button d-flex align-items-center" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-                <span class="material-icons mat">shopping_cart</span> @T("ShoppingCart.AddToCart").Text
+                <span class="mdi mdi-cart"></span> @T("ShoppingCart.AddToCart").Text
             </button>
     }
 

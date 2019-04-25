@@ -11,7 +11,7 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <div class="page account-page address-list-page pl-lg-3 pt-lg-0 pt-3">
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
     <button type="button" class="btn btn-info btn-sm add-address-button float-sm-right" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">
         <i class="fa fa-plus" aria-hidden="true"></i> @T("Common.AddNew")
     </button>

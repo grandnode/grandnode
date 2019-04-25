@@ -53,7 +53,7 @@
             </span>
         </div>
     </form>
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_posts" })
     <div class="blog-posts row">
         @foreach (var item in Model.BlogPosts)
@@ -71,7 +71,7 @@
                         <h4 class="card-header">@item.Title</h4>
                     </a>
                     <div class="card-body pt-2">
-                        <h6 class="card-subtitle d-inline-flex align-items-center text-muted w-100"><span class="material-icons mr-2">alarm</span>@item.CreatedOn.ToString("D")</h6>
+                        <h6 class="card-subtitle d-inline-flex align-items-center text-muted w-100"><span class="mdi mdi-alarm mr-2"></span>@item.CreatedOn.ToString("D")</h6>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
                         @*//post content*@
                         @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
