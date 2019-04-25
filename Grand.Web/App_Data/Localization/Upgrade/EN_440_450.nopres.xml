@@ -155,4 +155,19 @@
   <LocaleResource Name="backinstocksubscriptions.unsubscribed">
     <Value>You are successfully unsubscribed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsOnHomePage">
+    <Value>Show 'New products' on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsOnHomePage.Hint">
+    <Value>Check to enable the 'New products' on home page in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumberOnHomePage">
+    <Value>Number of products 'New products' on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumberOnHomePage.Hint">
+    <Value>The number of products to display when 'New products' on home page is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
 </Language>

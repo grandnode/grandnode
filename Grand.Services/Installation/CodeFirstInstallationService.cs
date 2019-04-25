@@ -5054,6 +5054,8 @@ namespace Grand.Services.Installation
                 PersonalizedProductsNumber = 6,
                 NewProductsNumber = 6,
                 NewProductsEnabled = true,
+                NewProductsOnHomePage = false,
+                NewProductsNumberOnHomePage = 6,
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,

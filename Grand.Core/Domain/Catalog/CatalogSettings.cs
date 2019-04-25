@@ -199,6 +199,16 @@ namespace Grand.Core.Domain.Catalog
         public bool NewProductsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "New products" is show on home page
+        /// </summary>
+        public bool NewProductsOnHomePage { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a number of products on the "New products" on home page
+        /// </summary>
+        public int NewProductsNumberOnHomePage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
         /// </summary>
         public bool CompareProductsEnabled { get; set; }

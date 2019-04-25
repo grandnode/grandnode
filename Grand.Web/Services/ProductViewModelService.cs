@@ -1658,7 +1658,23 @@ namespace Grand.Web.Services
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
             return await Task.FromResult(model);
         }
+        public virtual async Task<IList<ProductOverviewModel>> PrepareNewProductsDisplayedOnHomePage(int? productThumbPictureSize)
+        {
+            if (!_catalogSettings.NewProductsOnHomePage)
+                return new List<ProductOverviewModel>();
 
+            var products = (await _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
+                markedAsNewOnly: true,
+                orderBy: ProductSortingEnum.CreatedOn,
+                pageSize: _catalogSettings.NewProductsNumberOnHomePage)).products;
+            
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+        }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
         {
             var products = await _productService.GetAllProductsDisplayedOnHomePage();

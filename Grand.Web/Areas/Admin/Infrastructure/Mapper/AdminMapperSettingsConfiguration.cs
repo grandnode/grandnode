@@ -180,6 +180,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.RecommendedProductsEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NewProductsNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NewProductsEnabled_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.NewProductsOnHomePage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.NewProductsNumberOnHomePage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CompareProductsEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowBestsellersOnHomepage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NumberOfBestsellersOnHomepage_OverrideForStore, mo => mo.Ignore())
