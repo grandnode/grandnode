@@ -1352,7 +1352,6 @@ h2 {
     padding: 0px 5px;
     margin-bottom: 10px;
     background-color: #f7f7f7;
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -3748,7 +3747,7 @@ ul.project_files li a i {
 }
 
 .caption {
-    padding: 19px 5px;
+    padding: 21px 5px 0px 5px;
     background: #F7F7F7;
 }
 
@@ -5413,7 +5412,6 @@ a span.username {
     color: #777;
     font-size: 15px;
     font-weight: 300;
-    margin-top: 3px;
     float: left;
     margin-right: 5px;
 }
