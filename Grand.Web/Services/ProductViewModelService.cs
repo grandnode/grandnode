@@ -460,6 +460,33 @@ namespace Grand.Web.Services
                         return pictureModel;
                     });
 
+                    //prepare second picture model
+                    if (_catalogSettings.SecondPictureOnCatalogPages)
+                    {
+                        var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
+                        model.SecondPictureModel = await _cacheManager.Get(secondProductPictureCacheKey, async () =>
+                        {
+                            var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
+                            if (picture == null)
+                                return new PictureModel();
+
+                            var pictureModel = new PictureModel {
+                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
+                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                            };
+                            //"title" attribute
+                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                                    picture.TitleAttribute :
+                                    string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
+                            //"alt" attribute
+                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                                    picture.AltAttribute :
+                                    string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
+
+                            return pictureModel;
+                        });
+                    }
+
                     #endregion
                 }
 

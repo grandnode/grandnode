@@ -34,6 +34,12 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display product SKU on catalog pages
         /// </summary>
         public bool ShowSkuOnCatalogPages { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to generate second picture on catalog pages
+        /// </summary>
+        public bool SecondPictureOnCatalogPages { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to display manufacturer part number of a product
         /// </summary>

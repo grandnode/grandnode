@@ -520,6 +520,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {5} : current store ID
         /// </remarks>
         public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Grand.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY = "Grand.pres.product.detailspictures-second-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Grand.pres.product.detailspictures";
 
         /// <summary>
