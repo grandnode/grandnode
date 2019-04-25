@@ -231,21 +231,21 @@
                     @if (Model.IsEditable)
                     {
                         <button type="submit" name="updatecart" class="btn btn-info update-wishlist-button">
-                            <span class="material-icons pr-sm-2 pr-0">update</span>
+                            <span class="mdi mdi-update pr-sm-2 pr-0"></span>
                             <span class="d-sm-block d-none">@T("Wishlist.UpdateCart")</span>
                         </button>
                     }
                     @if (Model.DisplayAddToCart)
                     {
                         <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center">
-                            <i class="fas fa-shopping-cart d-sm-none d-block pr-sm-0 pr-2"></i>
+                            <span class="mdi mdi-cart d-sm-none d-block pr-sm-0 pr-2"></span>
                             <span class="hidden-down">@T("ShoppingCart.AddToCart")</span> 
                         </button>
                     }
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)
                     {
                         <button type="button" class="btn btn-secondary email-a-friend-wishlist-button ml-1" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
-                            <span class="material-icons pr-sm-2 pr-0">local_post_office</span>
+                            <span class="mdi mdi-email pr-sm-2 pr-0"></span>
                             <span class="hidden-down d-sm-block d-none">@T("Wishlist.EmailAFriend")</span>
                         </button>
                     }

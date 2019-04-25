@@ -6,7 +6,7 @@
             <div id="footer-block-information" class="col-lg-12 col-md-12 col-sm-12 footer-block information block">
                 <div class="step-title card mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
-                        <span class="lnr linearicons-chevron-down d-lg-none float-right" aria-hidden="true"></span>
+                        <span class="mdi mdi-chevron-down d-lg-none float-right" aria-hidden="true"></span>
                         <span class="h5"><strong>@T("Footer.Information")</strong></span>
                     </blockquote>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="step-title card mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
                         <span class="h5"><strong>@T("Footer.MyAccount")</strong></span>
-                        <span class="lnr linearicons-chevron-down d-lg-none float-right" aria-hidden="true"></span>
+                        <span class="mdi mdi-chevron-down d-lg-none float-right" aria-hidden="true"></span>
                     </blockquote>
                 </div>
                 <div class="viewBox">
@@ -92,7 +92,7 @@
                 <div class="step-title card mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
                         <span class="h5"><strong>@T("Footer.AboutUs")</strong></span>
-                        <span class="lnr linearicons-chevron-down d-lg-none float-right" aria-hidden="true"></span>
+                        <span class="mdi mdi-chevron-down  d-lg-none float-right" aria-hidden="true"></span>
                     </blockquote>
                 </div>
                 <div class="viewBox">
@@ -121,7 +121,7 @@
                 {
                     <li class="list-group-item facebook">
                         <a title="facebook" href="@Model.FacebookLink" rel="noopener" target="_blank">
-                            <span class="socicon-facebook"></span>
+                            <span class="mdi mdi-facebook"></span>
                             <span class="sr-only">Facebook</span>
 
                         </a>
@@ -131,7 +131,7 @@
                 {
                     <li class="list-group-item twitter">
                         <a title="twitter" href="@Model.TwitterLink" rel="noopener" target="_blank">
-                            <span class="socicon-twitter"></span>
+                            <span class="mdi  mdi-twitter"></span>
                             <span class="sr-only">twitter</span>
                         </a>
                     </li>
@@ -140,7 +140,7 @@
                 {
                     <li class="list-group-item rss">
                         <a title="rss" href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})" rel="noopener" target="_blank">
-                            <span class="socicon-rss"></span>
+                            <span class="mdi mdi-rss"></span>
                             <span class="sr-only">@T("NewsRSS")</span>
                         </a>
                     </li>
@@ -149,7 +149,7 @@
                 {
                     <li class="list-group-item youtube">
                         <a title="youtube" href="@Model.YoutubeLink" rel="noopener" target="_blank">
-                            <span class="socicon-youtube"></span>
+                            <span class="mdi mdi-youtube"></span>
                             <span class="sr-only">youtube</span>
                         </a>
                     </li>
@@ -158,7 +158,7 @@
                 {
                     <li class="list-group-item instagram">
                         <a href="@Model.InstagramLink" rel="noopener" target="_blank">
-                            <span class="socicon-instagram"></span>
+                            <span class="mdi mdi-instagram"></span>
                             <span class="sr-only">instagram</span>
                         </a>
                     </li>
@@ -167,7 +167,7 @@
                 {
                     <li class="list-group-item linkedin">
                         <a href="@Model.LinkedInLink" rel="noopener" target="_blank">
-                            <span class="socicon-linkedin"></span>
+                            <span class="mdi mdi-linkedin"></span>
                             <span class="sr-only">linkedin</span>
                         </a>
                     </li>
@@ -177,7 +177,7 @@
                     <li class="list-group-item pinterest">
                         <a href="@Model.PinterestLink" rel="noopener" target="_blank">
                             <span class="sr-only">pinterest</span>
-                            <span class="socicon-pinterest"></span>
+                            <span class="mdi mdi-pinterest"></span>
                         </a>
                     </li>
                 }
@@ -207,8 +207,6 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "footer" })
 </footer>
 <a href="#" id="back-to-top" title="Back to top">
-    <span class="material-icons mat">
-        keyboard_arrow_up
-    </span>
+    <span class="mdi mdi-chevron-up"></span>
     <span class="sr-only">back to top</span>
 </a>

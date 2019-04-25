@@ -49,9 +49,7 @@
                                             <div class="ml-auto text-nowrap">
                                                 <button class="btn btn-link text-danger deletecartitem p-0" title="Remove"
                                                         onclick="deletecartitem('@Url.RouteUrl("DeleteCartItem", new { id=item.Id })')">
-                                                    <span class="material-icons mat">
-                                                        close
-                                                    </span>
+                                                    <span class="mdi mdi-close"></span>
                                                 </button>
                                             </div>
                                         </div>
@@ -87,9 +85,7 @@
                     else
                     {
                         <div class="d-flex justify-content-center flyout-cart-nodata-icon mt-4">
-                            <span class="material-icons mat">
-                                shopping_cart
-                            </span>
+                            <span class="mdi mdi-cart"></span>
                         </div>
                         <div class="d-flex flyout-cart-nodata-text text-muted px-3 mt-3">
                             @T("ShoppingCart.Mini.NoDataText")
