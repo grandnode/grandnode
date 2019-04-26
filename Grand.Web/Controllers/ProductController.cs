@@ -428,7 +428,7 @@ namespace Grand.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber)).products;
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(await _productViewModelService.PrepareProductOverviewModels(products));
+            model.AddRange(await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages));
 
             return View(model);
         }

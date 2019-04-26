@@ -36,6 +36,11 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowSkuOnCatalogPages { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to display specification attribute on catalog pages
+        /// </summary>
+        public bool ShowSpecAttributeOnCatalogPages { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to generate second picture on catalog pages
         /// </summary>
         public bool SecondPictureOnCatalogPages { get; set; }
