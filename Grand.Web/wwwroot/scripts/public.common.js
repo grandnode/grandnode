@@ -149,6 +149,19 @@ function dataCountdown() {
     });
 }
 
+// flyCart on Cart fix 
+
+function CartFix() {
+    var pathname = window.location.pathname;
+    if (pathname === '/cart') {
+        var CartLink = $("#topcartlink .nav-link"),
+            cartQty = $("#topcartlink .cart-qty").html();
+        cartName = $("#topcartlink .mobile-desc").text();
+        CartLink.addClass('d-none');
+        $('<a class="nav-link"><span class="c-button__text"><span class="cart-label hl-label"><span class= "mdi mdi-cart"></span><span class="d-flex align-items-center cart-name mobile-desc">' + cartName + '</span><span class="cart-qty">' + cartQty + '</span></span></span></a>').appendTo("#topcartlink .dropdown");
+    }
+}
+
 // left-side canvas
 
 function LeftSide() {
@@ -162,6 +175,7 @@ function LeftSide() {
 
 $(document).ready(function () {
 
+    CartFix();
     mainMenuReplace();
     LeftSide();
     itemsStatistics();
