@@ -101,12 +101,14 @@
                     <fieldset class="form-group col-sm-6 col-12">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
+                        <span class="required">*</span>
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName"></span>
                     </fieldset>
                     <fieldset class="form-group col-sm-6 col-12">
                         <legend class="sr-only">@T("account.fields.lastname")</legend>
                         <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
+                        <span class="required">*</span>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName"></span>
                     </fieldset>
@@ -115,11 +117,13 @@
                 {
                     <fieldset class="form-group date-of-birth">
                         <legend class="sr-only">@T("account.fields.dateofbirth")</legend>
-                        <div class="row">
-                            <div class="col-12 col-form-label px-3">
+                            <span class="col-form-label">
                                 @T("Account.Fields.DateOfBirth"):
-                            </div>
-                        </div>
+                            </span>
+                            @if (Model.DateOfBirthRequired)
+                            {
+                                <span class="required">*</span>
+                            }
                         <div class="input-group">
                             @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
                                                   Html.NameFor(x => x.DateOfBirthMonth),
@@ -139,8 +143,9 @@
                 }
                 <fieldset class="form-group row mail">
                     <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
-                    <div class="col-md-12">
+                    <div class="col-12">
                         <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
+                        <span class="required">*</span>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email"></span>
                     </div>
@@ -151,8 +156,9 @@
                     {
                         <fieldset class="form-group row mb-0">
                             <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
-                            <label asp-for="Username" class="col-form-label px-3">@T("Account.Fields.Username"):</label>
                             <div class="col-12">
+                                <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
+                                <span class="required">*</span>
                                 <input asp-for="Username" class="form-control" />
                                 <span asp-validation-for="Username"></span>
                                 @if (Model.CheckUsernameAvailabilityEnabled)
@@ -183,6 +189,10 @@
                         {
                             <div class="form-group">
                                 <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
+                                @if (Model.CompanyRequired)
+                                {
+                                    <span class="required">*</span>
+                                }
                                 <input asp-for="Company" class="form-control" />
                                 <span asp-validation-for="Company"></span>
                             </div>
@@ -218,6 +228,10 @@
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.streetaddress")</legend>
                                     <label asp-for="StreetAddress" class="col-form-label">@T("Account.Fields.StreetAddress"):</label>
+                                    @if (Model.StreetAddressRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <input asp-for="StreetAddress" class="form-control" />
                                     <span asp-validation-for="StreetAddress"></span>
                                 </fieldset>
@@ -227,6 +241,10 @@
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
                                     <label asp-for="StreetAddress2" class="col-form-label">@T("Account.Fields.StreetAddress2"):</label>
+                                    @if (Model.StreetAddress2Required)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <input asp-for="StreetAddress2" class="form-control" />
                                     <span asp-validation-for="StreetAddress2"></span>
                                 </fieldset>
@@ -236,6 +254,10 @@
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
                                     <label asp-for="ZipPostalCode" class="col-form-label">@T("Account.Fields.ZipPostalCode"):</label>
+                                    @if (Model.ZipPostalCodeRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <input asp-for="ZipPostalCode" class="form-control" />
                                     <span asp-validation-for="ZipPostalCode"></span>
                                 </fieldset>
@@ -245,6 +267,10 @@
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.city")</legend>
                                     <label asp-for="City" class="col-form-label">@T("Account.Fields.City"):</label>
+                                    @if (Model.CityRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <input asp-for="City" class="form-control" />
                                     <span asp-validation-for="City"></span>
                                 </fieldset>
@@ -254,6 +280,10 @@
                                 <fieldset class="form-group col-12">
                                     <legend class="sr-only">@T("account.fields.country")</legend>
                                     <label asp-for="CountryId" class="col-form-label">@T("Account.Fields.Country"):</label>
+                                    @if (Model.CountryRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <select asp-for="CountryId" class="custom-select form-control" asp-items="Model.AvailableCountries"></select>
                                     <span asp-validation-for="CountryId"></span>
                                 </fieldset>
@@ -263,6 +293,10 @@
                                 <fieldset class="form-group col-12">
                                     <legend class="sr-only">@T("account.fields.stateprovince")</legend>
                                     <label asp-for="StateProvinceId" class="col-form-label">@T("Account.Fields.StateProvince"):</label>
+                                    @if (Model.StateProvinceRequired)
+                                    {
+                                        <span class="required">*</span>
+                                    }
                                     <select asp-for="StateProvinceId" class="custom-select form-control" asp-items="Model.AvailableStates"></select>
                                     <span asp-validation-for="StateProvinceId"></span>
                                     <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
@@ -284,6 +318,10 @@
                         <fieldset class="form-group col-12 col-sm-6">
                             <legend class="sr-only">@T("account.fields.phone")</legend>
                             <label asp-for="Phone" class="col-form-label">@T("Account.Fields.Phone"):</label>
+                            @if (Model.PhoneRequired)
+                            {
+                                <span class="required">*</span>
+                            }
                             <input asp-for="Phone" class="form-control" />
                             <span asp-validation-for="Phone"></span>
 
@@ -294,6 +332,10 @@
                         <fieldset class="form-group col-12 col-sm-6">
                             <legend class="sr-only">@T("account.fields.fax")</legend>
                             <label asp-for="Fax" class="col-form-label">@T("Account.Fields.Fax"):</label>
+                            @if (Model.FaxRequired)
+                            {
+                                <span class="required">*</span>
+                            }
                             <input asp-for="Fax" class="form-control" />
                             <span asp-validation-for="Fax"></span>
                         </fieldset>

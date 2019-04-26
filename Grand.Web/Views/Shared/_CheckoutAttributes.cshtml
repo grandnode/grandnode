@@ -16,6 +16,10 @@
                 <span class="col-form-label text-prompt">
                     @textPrompt
                 </span>
+                @if (attribute.IsRequired)
+                {
+                    <span class="required">*</span>
+                }
                 @switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.TextBox:

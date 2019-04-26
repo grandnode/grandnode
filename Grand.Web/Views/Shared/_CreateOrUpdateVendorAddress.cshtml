@@ -47,6 +47,10 @@
     {
         <div class="form-group col-sm-12">
             <label asp-for="Company" class="col-form-label">@T("Address.Fields.Company"):</label>
+            @if (Model.CompanyRequired)
+            {
+                <span class="required">*</span>
+            }
             <input asp-for="Company" class="form-control"/>
             <span asp-validation-for="Company"></span>
         </div>
@@ -55,6 +59,7 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="CountryId" class="col-form-label">@T("Address.Fields.Country"):</label>
+            <span class="required">*</span>
             <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="custom-select form-control"></select>
             <span asp-validation-for="CountryId"></span>
         </div>
@@ -73,6 +78,10 @@
     {
         <div class="form-group col-sm-12">
             <label asp-for="City" class="col-form-label">@T("Address.Fields.City"):</label>
+            @if (Model.CityRequired)
+            {
+                <span class="required">*</span>
+            }
             <input asp-for="City" class="form-control"/>
             <span asp-validation-for="City"></span>
         </div>
@@ -81,7 +90,11 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="Address1" class="col-form-label">@T("Address.Fields.Address1"):</label>
-            <input asp-for="Address1" class="form-control"/>
+            @if (Model.StreetAddressRequired)
+            {
+                <span class="required">*</span>
+            }
+            <input asp-for="Address1" class="form-control" />
             <span asp-validation-for="Address1"></span>
         </div>
     }
@@ -89,6 +102,10 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="Address2" class="col-form-label">@T("Address.Fields.Address2"):</label>
+            @if (Model.StreetAddress2Required)
+            {
+                <span class="required">*</span>
+            }
             <input asp-for="Address2" class="form-control" />
             <span asp-validation-for="Address2"></span>
         </div>
@@ -97,6 +114,10 @@
     {
         <div class="form-group col-sm-12">
             <label asp-for="ZipPostalCode" class="col-form-label">@T("Address.Fields.ZipPostalCode"):</label>
+            @if (Model.ZipPostalCodeRequired)
+            {
+                <span class="required">*</span>
+            }
             <input asp-for="ZipPostalCode" class="form-control" />
             <span asp-validation-for="ZipPostalCode"></span>
         </div>
@@ -105,6 +126,10 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="PhoneNumber" class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
+            @if (Model.PhoneRequired)
+            {
+                <span class="required">*</span>
+            }
             <input asp-for="PhoneNumber" class="form-control" />
             <span asp-validation-for="PhoneNumber"></span>
         </div>
@@ -113,7 +138,11 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="FaxNumber" class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
-            <input asp-for="FaxNumber" class="form-control"/>
+            @if (Model.FaxRequired)
+            {
+                <span class="required">*</span>
+            }
+            <input asp-for="FaxNumber" class="form-control" />
             <span asp-validation-for="FaxNumber"></span>
         </div>
     }

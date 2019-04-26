@@ -13,10 +13,14 @@
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <tr>
-                    <td id="@string.Format("product_attribute_label_{0}", attribute.Id)">
+                    <td class="d-inline-flex w-100" id="@string.Format("product_attribute_label_{0}", attribute.Id)">
                         <span class="text-prompt">
                             @textPrompt
                         </span>
+                        @if (attribute.IsRequired)
+                        {
+                            <span class="pl-1 required">*</span>
+                        }
                         @if (!string.IsNullOrEmpty(attribute.Description))
                         {
                             <span class="attribute-description">
