@@ -1,9 +1,9 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
 using Grand.Services.Installation;
 using Grand.Web.Models.Upgrade;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -18,7 +18,7 @@ namespace Grand.Web.Controllers
 
         public UpgradeController(IUpgradeService upgradeService)
         {
-            this._upgradeService = upgradeService;
+            _upgradeService = upgradeService;
         }
         #endregion
 
@@ -27,23 +27,25 @@ namespace Grand.Web.Controllers
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("Install");
 
-            var model = new UpgradeModel();
-            model.ApplicationVersion = GrandVersion.CurrentVersion;
-            model.DatabaseVersion = _upgradeService.DatabaseVersion();
+            var model = new UpgradeModel {
+                ApplicationVersion = GrandVersion.CurrentVersion,
+                DatabaseVersion = _upgradeService.DatabaseVersion()
+            };
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Index(UpgradeModel m, [FromServices] IWebHelper webHelper)
+        public virtual async Task<IActionResult> Index(UpgradeModel m, [FromServices] IWebHelper webHelper)
         {
-            var model = new UpgradeModel();
-            model.ApplicationVersion = GrandVersion.CurrentVersion;
-            model.DatabaseVersion = _upgradeService.DatabaseVersion();
+            var model = new UpgradeModel {
+                ApplicationVersion = GrandVersion.CurrentVersion,
+                DatabaseVersion = _upgradeService.DatabaseVersion()
+            };
 
             if (model.ApplicationVersion != model.DatabaseVersion)
             {
-                _upgradeService.UpgradeData(model.DatabaseVersion, model.ApplicationVersion);
+                await _upgradeService.UpgradeData(model.DatabaseVersion, model.ApplicationVersion);
             }
 
             //restart application

@@ -28,7 +28,7 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets all gift cards
         /// </summary>
-        /// <param name="purchasedWithOrderId">Associated order ID; null to load all records</param>
+        /// <param name="purchasedWithOrderItemId">Associated order ID; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
@@ -37,7 +37,7 @@ namespace Grand.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        Task<IPagedList<GiftCard>> GetAllGiftCards(string purchasedWithOrderId = "",
+        Task<IPagedList<GiftCard>> GetAllGiftCards(string purchasedWithOrderItemId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,

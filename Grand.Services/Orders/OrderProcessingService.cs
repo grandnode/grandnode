@@ -661,41 +661,45 @@ namespace Grand.Services.Orders
         /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
         protected virtual async Task SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
-            var giftCards = await _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id,
-                isGiftCardActivated: !activate);
-            foreach (var gc in giftCards)
+            foreach (var orderItem in order.OrderItems)
             {
-                if (activate)
+                var giftCards = await _giftCardService.GetAllGiftCards(purchasedWithOrderItemId: orderItem.Id,
+                    isGiftCardActivated: !activate);
+                foreach (var gc in giftCards)
                 {
-                    //activate
-                    bool isRecipientNotified = gc.IsRecipientNotified;
-                    if (gc.GiftCardType == GiftCardType.Virtual)
+                    if (activate)
                     {
-                        //send email for virtual gift card
-                        if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
-                            !String.IsNullOrEmpty(gc.SenderEmail))
+                        //activate
+                        bool isRecipientNotified = gc.IsRecipientNotified;
+                        if (gc.GiftCardType == GiftCardType.Virtual)
                         {
-                            var customerLang = await _languageService.GetLanguageById(order.CustomerLanguageId);
-                            if (customerLang == null)
-                                customerLang = (await _languageService.GetAllLanguages()).FirstOrDefault();
-                            if (customerLang == null)
-                                throw new Exception("No languages could be loaded");
-                            int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
-                            if (queuedEmailId > 0)
-                                isRecipientNotified = true;
+                            //send email for virtual gift card
+                            if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
+                                !String.IsNullOrEmpty(gc.SenderEmail))
+                            {
+                                var customerLang = await _languageService.GetLanguageById(order.CustomerLanguageId);
+                                if (customerLang == null)
+                                    customerLang = (await _languageService.GetAllLanguages()).FirstOrDefault();
+                                if (customerLang == null)
+                                    throw new Exception("No languages could be loaded");
+                                int queuedEmailId = await _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
+                                if (queuedEmailId > 0)
+                                    isRecipientNotified = true;
+                            }
                         }
+                        gc.IsGiftCardActivated = true;
+                        gc.IsRecipientNotified = isRecipientNotified;
+                        await _giftCardService.UpdateGiftCard(gc);
                     }
-                    gc.IsGiftCardActivated = true;
-                    gc.IsRecipientNotified = isRecipientNotified;
-                    await _giftCardService.UpdateGiftCard(gc);
-                }
-                else
-                {
-                    //deactivate
-                    gc.IsGiftCardActivated = false;
-                    await _giftCardService.UpdateGiftCard(gc);
+                    else
+                    {
+                        //deactivate
+                        gc.IsGiftCardActivated = false;
+                        await _giftCardService.UpdateGiftCard(gc);
+                    }
                 }
             }
+
         }
 
         /// <summary>

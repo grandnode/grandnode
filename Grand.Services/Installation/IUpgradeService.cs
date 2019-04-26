@@ -1,8 +1,10 @@
-﻿namespace Grand.Services.Installation
+﻿using System.Threading.Tasks;
+
+namespace Grand.Services.Installation
 {
     public partial interface IUpgradeService
     {
         string DatabaseVersion();
-        void UpgradeData(string fromversion, string toversion);
+        Task UpgradeData(string fromversion, string toversion);
     }
 }
