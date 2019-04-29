@@ -19,7 +19,7 @@
 }
 <div class="page blogpost-page pt-lg-0 pt-3">
     @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model.Id })
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
     <div class="card border-0 px-0 pb-3 pt-0">
         @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
         {
@@ -30,7 +30,7 @@
         <h4 class="card-header generalTitle h2 border-bottom-0 ml-0 pb-0">@Model.Title</h4>
         <div class="card-body px-0 pt-0">
             <div class="post-date generalMarginSupporter text-muted">
-                <div class="d-inline-flex align-items-center"><span class="material-icons mr-2">alarm</span><strong>@Model.CreatedOn.ToString("D")</strong></div>
+                <div class="d-inline-flex align-items-center"><span class="mdi mdi-alarm mr-2"></span><strong>@Model.CreatedOn.ToString("D")</strong></div>
             </div>
             @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model.Id })
             <div class="post-body">

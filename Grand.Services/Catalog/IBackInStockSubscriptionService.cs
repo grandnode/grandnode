@@ -30,11 +30,13 @@ namespace Grand.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="warehouseId">Warehouse ident</param>
         /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string warehouseId,
+        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string attributeXml, string warehouseId,
             string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -42,10 +44,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
+        /// <param name="attrxml">Attribute xml</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Subscriptions</returns>
-        Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string storeId, string warehouseId);
+        Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string attributexml, string storeId, string warehouseId);
 
         /// <summary>
         /// Gets a subscription
@@ -70,7 +73,17 @@ namespace Grand.Services.Catalog
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
         Task<int> SendNotificationsToSubscribers(Product product, string warehouse);
+
+        /// <summary>
+        /// Send notification to subscribers
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="warehouse">Warehouse ident</param>
+        /// <returns>Number of sent email</returns>
+        Task<int> SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse);
     }
 }

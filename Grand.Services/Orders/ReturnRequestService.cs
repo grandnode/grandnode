@@ -112,8 +112,7 @@ namespace Grand.Services.Orders
                 query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.OrderItemId == orderItemId));
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
-
-            return await Task.FromResult(new PagedList<ReturnRequest>(query, pageIndex, pageSize));
+            return await PagedList<ReturnRequest>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

@@ -11,13 +11,15 @@
                 <div class="x_title">
                     <div class="caption">
                         <i class="fa fa-tag"></i>
-                        @T("Admin.Customers.CustomerTags.EditCustomerTagDetails") - @Model.Name 
+                        @T("Admin.Customers.CustomerTags.EditCustomerTagDetails") - @Model.Name
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.CustomerTags.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
-                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
-                        <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
-                        <span id="customertag-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="customertag-delete" class="btn red"><i class="fa fa-trash-o"></i><span class="hidden-xs"> @T("Admin.Common.Delete")</span></span>
+                        </div>
                     </div>
                 </div>
                 <div class="x_content form">

@@ -4,7 +4,7 @@ html, body {
 
 body {
     font-size: 14px;
-    direction:ltr;
+    direction: ltr;
 }
 
 .full-width {
@@ -736,7 +736,7 @@ a:hover, a:focus {
 
 .top_nav .navbar-right {
     margin: 0 20px 0 0;
-    width: 60%;
+    width: 58%;
     float: right
 }
 
@@ -1352,7 +1352,6 @@ h2 {
     padding: 0px 5px;
     margin-bottom: 10px;
     background-color: #f7f7f7;
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -3748,7 +3747,7 @@ ul.project_files li a i {
 }
 
 .caption {
-    padding: 19px 5px;
+    padding: 21px 5px 0px 5px;
     background: #F7F7F7;
 }
 
@@ -3868,8 +3867,9 @@ ul.project_files li a i {
     display: block !important;
 }
 
-.input-group-btn .btn {
-    margin-bottom: 0;
+.form-inline:after {
+    content: '';
+    clear: both;
 }
 
 /*!
@@ -5412,13 +5412,12 @@ a span.username {
     color: #777;
     font-size: 15px;
     font-weight: 300;
-    margin-top: 3px;
     float: left;
     margin-right: 5px;
 }
 
 .x_title>.caption>small {
-    margin-left: auto;
+    margin-left: 10px;
 }
 
 .x_title>.caption>small>i {
@@ -5692,6 +5691,28 @@ form>h4 {
     clear: both;
 }
 
+.pull-right {
+    margin-top: -5px;
+}
+
+.AllowedTokens>.btn {
+    margin-bottom: 5px;
+}
+
+.mt-checkbox-inline {
+    margin-left: 15px;
+}
+
+.mt-checkbox-inline>.mt-checkbox {
+    margin-right: 5px;
+}
+.piechart{
+    width:50%;
+    margin-bottom:40px;
+}
+.AllowedTokens{
+    margin-top:5px;
+}
 @keyframes spinner-dash {
     0% {
         stroke-dashoffset: 58px
@@ -5789,6 +5810,9 @@ form>h4 {
     .control__indicator_custom {
         margin-left: 12px;
     }
+    .btn-group.btn-group-devided>.btn {
+        margin-bottom: 5px;
+    }
 }
 
 @media screen and (max-width: 1350px) {
@@ -5801,6 +5825,9 @@ form>h4 {
     }
     #searchInput {
         width: 300px;
+    }
+    .k-grid-edit {
+        margin-bottom: 5px;
     }
 }
 
@@ -5858,9 +5885,12 @@ form>h4 {
     .twitter-typeahead {
         width: 100%;
     }
+    .tile-stats .icon i {
+        font-size: 40px;
+    }
     .admin-search-input-container {
         max-width: none;
-        width: 87%;
+        width: 85%;
         float: right;
         margin-right: 3%;
     }
@@ -5883,11 +5913,17 @@ form>h4 {
         left: 3px;
         margin-left: 0px;
     }
+    .col-sm-9>.input-group>.input-group-btn>.btn {
+        margin-top: -5px;
+    }
     .caption {
         padding: 13px 5px;
     }
     #go-to-product-by-sku {
-        margin-top: 0;
+        margin-top: -5px;
+    }
+    #gotoorderbynumber {
+        margin-top: -5px;
     }
     .control-label {
         display: inline;
@@ -5896,17 +5932,20 @@ form>h4 {
     .caption {
         transform: translateY(10%);
     }
-    .mt-top2{
-        top:-15px!important;
+    .mt-top2 {
+        top: -15px!important;
+    }
+    .k-numerictextbox {
+        margin-bottom: 5px;
+    }
+    .k-input.text-box {
+        margin-bottom: 5px;
     }
 }
 
 @media screen and (max-width: 700px) {
     .admin-search-input-container {
-        width: 83%;
-    }
-    .btn-group.btn-group-devided>.btn {
-        margin-bottom: 5px;
+        width: 80%;
     }
     .caption {
         transform: translateY(0%);
@@ -5938,12 +5977,21 @@ form>h4 {
     }
 }
 
+@media screen and (min-width: 500px) {
+    .searchIcon {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 500px) {
     .admin-search-input-container {
-        width: 78%;
+        width: 77%;
+    }
+    .form-horizontal .control-label {
+        padding: 1px 0;
     }
     .top_nav .navbar-right {
-        text-align: center;
+        text-align: right;
     }
     .top_nav .navbar-right li a {
         padding: 13px 10px 12px;
@@ -5951,7 +5999,7 @@ form>h4 {
     }
     .top_nav .navbar-right li {
         display: inline-block;
-        float: none;
+        
     }
     .username-hide-on-mobile {
         display: none;
@@ -5962,13 +6010,54 @@ form>h4 {
     .control__indicator_custom {
         top: -15px;
     }
+    .admin-search-input-container {
+        display: none;
+    }
+    .top_nav .navbar-right {
+        width: 80%;
+    }
+    .searchIcon {
+        display: block;
+        cursor: pointer;
+        margin-right: 5px;
+        padding:11px 10px 12px;
+    }
+    .searchIcon > i{
+        
+        line-height: 32px;
+        font-size:16px;
+        color:#515356;
+
+    }
+    .user-profile img {
+        margin-top: -6px;
+    }
+    .text-box {
+        margin-bottom: 5px;
+    }
+    .orderEditBtn>.btn {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+    .x_title>.caption>small {
+        margin-left: 0px;
+    }
 }
 
-@media screen and (max-width:385px) {
+@media screen and (max-width: 440px) {
+    .admin-search-input-container {
+        width: 74%;
+    }
+}
+
+@media screen and (max-width:395px) {
     .admin-search-input-container {
         width: 70%;
     }
     .top_nav .navbar-right li a {
         padding: 13px 9px 12px;
+    }
+    .top_nav .navbar-right {
+        width: 75%;
     }
 }

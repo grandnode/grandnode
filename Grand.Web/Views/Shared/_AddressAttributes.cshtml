@@ -4,9 +4,13 @@
     string controlId = string.Format("address_attribute_{0}", attribute.Id);
     string textPrompt = attribute.Name;
 
-    <div class="inputs custom-attributes col-sm-12">
+    <div class="inputs custom-attributes col-sm-12 mb-3">
         <label for="@(controlId)">@textPrompt:</label>
-        
+        @if (attribute.IsRequired)
+        {
+            <span class="required">*</span>
+        }
+
         @switch (attribute.AttributeControlType)
         {
             case AttributeControlType.DropdownList:

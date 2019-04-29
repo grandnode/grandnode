@@ -15,7 +15,7 @@
                     <input class="form-control" asp-for="NewsletterEmail" id="newsletter-email" placeholder="@T("Newsletter.Email.Placeholder")" aria-label="@T("Newsletter.Email.Placeholder")" />
                     <label for="newsletter-email" class="sr-only">newsletter</label>
                     <div class="input-group-prepend newsletter-button-container">
-                        <button class="btn btn-outline-white d-flex align-items-center" aria-hidden="true" id="newsletter-subscribe-button" type="button"><span class="material-icons mat">local_post_office</span></button>
+                        <button class="btn btn-outline-white d-flex align-items-center" aria-hidden="true" id="newsletter-subscribe-button" type="button"><span class="mdi mdi-email"></span></button>
                     </div>
                     @if (Model.AllowToUnsubscribe)
                     {

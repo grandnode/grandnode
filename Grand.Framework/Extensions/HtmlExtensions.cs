@@ -52,10 +52,11 @@ namespace Grand.Framework
                 tabStrip.AppendLine("Standard");
                 tabStrip.AppendLine("</li>");
 
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId).GetAwaiter().GetResult();
+                    var language = languageService.GetLanguageById(locale.LanguageId).GetAwaiter().GetResult();
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);

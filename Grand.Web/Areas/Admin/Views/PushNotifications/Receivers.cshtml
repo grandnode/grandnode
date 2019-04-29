@@ -15,7 +15,7 @@
             <div class="x_title">
                 <div class="caption">
                     <i class="fa fa-cubes"></i>
-                    @T("PushNotifications.PushNotications.Receivers")
+                    @T("Admin.PushNotifications.Receivers")
                 </div>
             </div>
 
@@ -25,7 +25,7 @@
                         <div class="x_content">
                             @if (!(Model.Allowed == 0 && Model.Denied == 0))
                             {
-                                <div style="width:50%;margin-bottom:40px">
+                                <div class="piechart">
                                     <canvas id="piechart"></canvas>
                                 </div>
                             }
@@ -91,19 +91,19 @@ $(document).ready(function() {
         columns: [
         {
             field: "CustomerId",
-            title: "@T("PushNotifications.Message.Fields.CustomerEmail")",
+            title: "@T("Admin.PushNotifications.Message.Fields.CustomerEmail")",
             template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>',
             width: 100
         }, {
             field: "Allowed",
-            title: "@T("PushNotifications.Message.Fields.Allowed")",
+            title: "@T("Admin.PushNotifications.Message.Fields.Allowed")",
             headerAttributes: { style: "text-align:center" },
             attributes: { style: "text-align:center" },
                 template: '# if(Allowed) {# <i class="fa fa-check true-icon" style="color:green"></i> #} else {# <i class="fa fa-close false-icon" style="color:red"></i> #} #',
             width: 100
         }, {
             field: "RegisteredOn",
-            title: "@T("PushNotifications.Message.Fields.RegisteredOn")",
+            title: "@T("Admin.PushNotifications.Message.Fields.RegisteredOn")",
             width: 200,
             type: "date",
             format: "{0:G}"

@@ -6,16 +6,14 @@
     @await Component.InvokeAsync("AdminHeaderLinks")
     <li class="nav-item col d-flex">
         <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
-            <span class="hl-label"><span class="material-icons mat">account_circle</span></span>
+            <span class="hl-label"><span class="mdi mdi-account-circle"></span></span>
             <span class="d-flex align-items-center mobile-desc">@T("Account.MyAccount")</span>
         </a>
     </li>
     <li class="nav-item col d-flex">
         <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
             <span class="hl-label">
-                <span class="material-icons mat">
-                    lock
-                </span>
+                <span class="mdi mdi-lock"></span>
             </span>
             <span class="d-flex align-items-center mobile-desc">@T("Account.Logout")</span>
         </a>
@@ -26,9 +24,7 @@ else
     <li class="nav-item col d-flex">
         <a class="nav-link" href="@Url.RouteUrl("Login")">
             <span class="hl-label">
-                <span class="material-icons mat">
-                    lock_open
-                </span>
+                <span class="mdi mdi-lock-open"></span>
             </span>
             <span class="d-flex align-items-center mobile-desc">@T("Account.Login")</span>
         </a>
@@ -39,9 +35,7 @@ else
     <li class="nav-item col d-flex">
         <a class="nav-link" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
             <span class="hl-label">
-                <span class="material-icons mat">
-                    message
-                </span>
+                <span class="mdi mdi-message"></span>
             </span>
             <span class="inbox-label d-none d-lg-flex align-items-center">@T("PrivateMessages.Inbox")</span>
             <span class="inbox-unread d-none d-lg-flex align-items-center">@Model.UnreadPrivateMessages</span>
@@ -54,9 +48,7 @@ else
     <li class="nav-item col wishlist-container">
         <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
             <span class="wishlist-label hl-label">
-                <span class="material-icons mat">
-                    favorite_border
-                </span>
+                <span class="mdi mdi-heart-outline"></span>
             </span>
             <span class="d-flex align-items-center wish-name mobile-desc">
                 @T("Wishlist")
@@ -80,9 +72,7 @@ else
                }
             >
                 <span class="cart-label hl-label">
-                    <span class="material-icons mat">
-                        shopping_cart
-                    </span>
+                    <span class="mdi mdi-cart"></span>
                 </span>
                 <span class="d-flex align-items-center cart-name mobile-desc">
                     @T("ShoppingCart")

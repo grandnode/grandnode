@@ -8,13 +8,10 @@ namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IProductViewModelService
     {
-        Task PrepareProductModel(ProductModel model, Product product,
-            bool setPredefinedValues, bool excludeProperties);
-        Task PrepareProductReviewModel(ProductReviewModel model,
-            ProductReview productReview, bool excludeProperties, bool formatReviewText);
-        Task BackInStockNotifications(Product product, ProductModel model, int prevStockQuantity,
-            List<ProductWarehouseInventory> prevMultiWarehouseStock
-            );
+        Task PrepareProductModel(ProductModel model, Product product, bool setPredefinedValues, bool excludeProperties);
+        Task PrepareProductReviewModel(ProductReviewModel model, ProductReview productReview, bool excludeProperties, bool formatReviewText);
+        Task BackInStockNotifications(Product product, ProductModel model, int prevStockQuantity, List<ProductWarehouseInventory> prevMultiWarehouseStock);
+        Task BackInStockNotifications(ProductAttributeCombination combination);
         Task<(IEnumerable<OrderModel> orderModels, int totalCount)> PrepareOrderModel(string productId, int pageIndex, int pageSize);
         Task PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product);
         Task SaveProductWarehouseInventory(Product product, IList<ProductModel.ProductWarehouseInventoryModel> model);
@@ -91,8 +88,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
 
         //Pictures
         Task<IList<ProductModel.ProductPictureModel>> PrepareProductPictureModel(Product product);
-        Task InsertProductPicture(Product product, string pictureId, int displayOrder,
-           string overrideAltAttribute, string overrideTitleAttribute);
+        Task InsertProductPicture(Product product, string pictureId, int displayOrder, string overrideAltAttribute, string overrideTitleAttribute);
         Task UpdateProductPicture(ProductModel.ProductPictureModel model);
         Task DeleteProductPicture(ProductModel.ProductPictureModel model);
 

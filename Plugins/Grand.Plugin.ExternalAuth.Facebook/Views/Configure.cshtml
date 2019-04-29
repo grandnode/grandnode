@@ -2,9 +2,7 @@
 @{
     Layout = "_ConfigurePlugin";
 }
-@using Grand.Framework;
 @inject Grand.Core.IWebHelper webHelper
-@await Component.InvokeAsync("StoreScopeConfiguration")
 <form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
     <antiforgery-token />
     <div class="form-horizontal">
@@ -24,10 +22,8 @@
                     9. Copy your App ID and App secret below.<br />
                 </p>
             </div>
-            @* no longer required *@
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.ClientId_OverrideForStore, model => model.ClientId, Model.ActiveStoreScopeConfiguration)
                     <admin-label asp-for="ClientId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
@@ -37,7 +33,6 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
                     <admin-label asp-for="ClientSecret" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">

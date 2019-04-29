@@ -264,6 +264,19 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Gets product from db 
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product</returns>
+        public virtual async Task<Product> GetDbProductById(string productId)
+        {
+            if (String.IsNullOrEmpty(productId))
+                return null;
+
+            return await _productRepository.GetByIdAsync(productId);
+        }
+
+        /// <summary>
         /// Gets product for order
         /// </summary>
         /// <param name="productId">Product identifier</param>
@@ -315,7 +328,7 @@ namespace Grand.Services.Catalog
                         where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
-            return await Task.FromResult(new PagedList<Product>(query, pageIndex, pageSize));
+            return await PagedList<Product>.Create(query, pageIndex, pageSize);
         }
 
 
@@ -474,7 +487,7 @@ namespace Grand.Services.Catalog
 
                 var builderCustomer = Builders<Customer>.Filter;
                 var filterCustomer = builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
-                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync((cs) =>
+                await _customerRepository.Collection.Find(filterCustomer).ForEachAsync(async (cs) =>
                 {
                     foreach (var item in cs.ShoppingCartItems.Where(x => x.ProductId == product.Id))
                     {
@@ -488,7 +501,7 @@ namespace Grand.Services.Catalog
 
                         var _builderCustomer = Builders<Customer>.Filter;
                         var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
-                        _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
+                        await _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer);
                     }
                 }
                 );
@@ -899,7 +912,7 @@ namespace Grand.Services.Catalog
                 builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
 
-            var products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
+            var products = await PagedList<Product>.Create(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
 
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
@@ -964,7 +977,7 @@ namespace Grand.Services.Catalog
             query = query.Where(x => x.ProductAttributeMappings.Any(y => y.ProductAttributeId == productAttributeId));
             query = query.OrderBy(x => x.Name);
 
-            return await Task.FromResult(new PagedList<Product>(query, pageIndex, pageSize));
+            return await PagedList<Product>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1035,8 +1048,8 @@ namespace Grand.Services.Catalog
                                  where p.LowStock && p.ProductTypeId == 5 && p.ManageInventoryMethodId != 0
                                  select p;
 
-            if (!String.IsNullOrEmpty(vendorId))
-                query_products.Where(x => x.VendorId == vendorId);
+            if (!string.IsNullOrEmpty(vendorId))
+                query_products = query_products.Where(x => x.VendorId == vendorId);
 
             products = query_products.ToList();
 
@@ -1498,7 +1511,7 @@ namespace Grand.Services.Catalog
                 var pwi = productInventory[0];
                 pwi.ReservedQuantity += qty;
             }
-            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity-x.ReservedQuantity);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, combination.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
@@ -2374,7 +2387,7 @@ namespace Grand.Services.Catalog
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<ProductReview>(query, pageIndex, pageSize));
+            return await PagedList<ProductReview>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<int> RatingSumProduct(string productId, string storeId)

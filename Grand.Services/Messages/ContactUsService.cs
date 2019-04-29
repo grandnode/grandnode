@@ -82,9 +82,8 @@ namespace Grand.Services.Messages
 
             var builderSort = Builders<ContactUs>.Sort.Descending(x => x.CreatedOnUtc);
             var query = _contactusRepository.Collection;
-            var contactus = new PagedList<ContactUs>(query, filter, builderSort, pageIndex, pageSize);
-
-            return await Task.FromResult(contactus);
+            var contactus = await PagedList<ContactUs>.Create(query, filter, builderSort, pageIndex, pageSize);
+            return contactus;
         }
 
         /// <summary>

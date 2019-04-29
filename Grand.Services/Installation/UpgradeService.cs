@@ -3,22 +3,16 @@ using Grand.Core.Data;
 using Grand.Core.Domain.AdminSearch;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
-using Grand.Core.Infrastructure;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
@@ -29,14 +23,12 @@ using Grand.Services.Topics;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Bindings;
-using MongoDB.Driver.Core.Operations;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Installation
 {
@@ -59,45 +51,45 @@ namespace Grand.Services.Installation
         #region Ctor
         public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository, IWebHelper webHelper)
         {
-            this._serviceProvider = serviceProvider;
-            this._versionRepository = versionRepository;
-            this._webHelper = webHelper;
+            _serviceProvider = serviceProvider;
+            _versionRepository = versionRepository;
+            _webHelper = webHelper;
         }
         #endregion
 
         public virtual string DatabaseVersion()
         {
-            string version = version_400;
+            var version = version_400;
             var databaseversion = _versionRepository.Table.FirstOrDefault();
             if (databaseversion != null)
                 version = databaseversion.DataBaseVersion;
             return version;
         }
-        public virtual void UpgradeData(string fromversion, string toversion)
+        public virtual async Task UpgradeData(string fromversion, string toversion)
         {
             if (fromversion == version_400)
             {
-                From400To410();
+                await From400To410();
                 fromversion = version_410;
             }
             if (fromversion == version_410)
             {
-                From410To420();
+                await From410To420();
                 fromversion = version_420;
             }
             if (fromversion == version_420)
             {
-                From420To430();
+                await From420To430();
                 fromversion = version_430;
             }
             if (fromversion == version_430)
             {
-                From430To440();
+                await From430To440();
                 fromversion = version_440;
             }
             if (fromversion == version_440)
             {
-                From440To450();
+                await From440To450();
                 fromversion = version_450;
             }
             if (fromversion == toversion)
@@ -106,32 +98,33 @@ namespace Grand.Services.Installation
                 if (databaseversion != null)
                 {
                     databaseversion.DataBaseVersion = GrandVersion.CurrentVersion;
-                    _versionRepository.Update(databaseversion);
+                    await _versionRepository.UpdateAsync(databaseversion);
                 }
                 else
                 {
-                    databaseversion = new GrandNodeVersion();
-                    databaseversion.DataBaseVersion = GrandVersion.CurrentVersion;
-                    _versionRepository.Insert(databaseversion);
+                    databaseversion = new GrandNodeVersion {
+                        DataBaseVersion = GrandVersion.CurrentVersion
+                    };
+                    await _versionRepository.InsertAsync(databaseversion);
                 }
             }
         }
 
-        private void From400To410()
+        private async Task From400To410()
         {
             #region Install String resources
-            InstallStringResources("EN_400_410.nopres.xml");
+            await InstallStringResources("EN_400_410.nopres.xml");
             #endregion
 
             #region Install product reservation
-            _serviceProvider.GetRequiredService<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<ProductReservation>((Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date)), new CreateIndexOptions() { Name = "ProductReservation", Unique = false }));
+            await _serviceProvider.GetRequiredService<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<ProductReservation>((Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date)), new CreateIndexOptions() { Name = "ProductReservation", Unique = false }));
             #endregion
 
             #region Security settings
             var settingService = _serviceProvider.GetRequiredService<ISettingService>();
             var securitySettings = _serviceProvider.GetRequiredService<SecuritySettings>();
             securitySettings.AllowNonAsciiCharInHeaders = true;
-            settingService.SaveSetting(securitySettings, x => x.AllowNonAsciiCharInHeaders, "", false);
+            await settingService.SaveSetting(securitySettings, x => x.AllowNonAsciiCharInHeaders, "", false);
             #endregion
 
             #region MessageTemplates
@@ -182,28 +175,22 @@ namespace Grand.Services.Installation
                             EmailAccountId = eaGeneral.Id,
                         },
             };
-            _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
+
             #endregion
 
             #region Tasks
 
             var keepliveTask = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
 
-            var endtask = new ScheduleTask
-            {
+            var endtask = new ScheduleTask {
                 ScheduleTaskName = "End of the auctions",
                 Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
                 Enabled = false,
                 StopOnError = false,
-                TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                TimeInterval = 10,
-                MinuteOfHour = 1,
-                HourOfDay = 1,
-                DayOfWeek = DayOfWeek.Monday,
-                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                DayOfMonth = 1
+                TimeInterval = 1440
             };
-            keepliveTask.Insert(endtask);
+            await keepliveTask.InsertAsync(endtask);
 
             var _keepAliveScheduleTask = keepliveTask.Table.Where(x => x.Type == "Grand.Services.Tasks.KeepAliveScheduleTask").FirstOrDefault();
             if (_keepAliveScheduleTask != null)
@@ -214,14 +201,12 @@ namespace Grand.Services.Installation
             #region Insert activities
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
                 SystemKeyword = "PublicStore.AddNewBid",
                 Enabled = false,
                 Name = "Public store. Add new bid"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
                 SystemKeyword = "DeleteBid",
                 Enabled = false,
                 Name = "Delete bid"
@@ -232,30 +217,30 @@ namespace Grand.Services.Installation
 
             #region Index bid
 
-            _serviceProvider.GetRequiredService<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<Bid>((Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date)), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false }));
-            _serviceProvider.GetRequiredService<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<Bid>((Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date)), new CreateIndexOptions() { Name = "ProductDate", Unique = false }));
+            await _serviceProvider.GetRequiredService<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<Bid>((Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date)), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false }));
+            await _serviceProvider.GetRequiredService<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<Bid>((Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date)), new CreateIndexOptions() { Name = "ProductDate", Unique = false }));
 
             #endregion
 
         }
 
-        private void From410To420()
+        private async Task From410To420()
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
             #region Install String resources
-            InstallStringResources("EN_410_420.nopres.xml");
+            await InstallStringResources("EN_410_420.nopres.xml");
             #endregion
 
             #region Update string resources
 
             var _localeStringResource = _serviceProvider.GetRequiredService<IRepository<LocaleStringResource>>();
 
-            _localeStringResource.Collection.Find(new BsonDocument()).ForEachAsync((e) =>
+            await _localeStringResource.Collection.Find(new BsonDocument()).ForEachAsync(async (e) =>
             {
                 e.ResourceName = e.ResourceName.ToLowerInvariant();
-                _localeStringResource.Update(e);
-            }).Wait();
+                await _localeStringResource.UpdateAsync(e);
+            });
 
             #endregion
 
@@ -264,69 +249,59 @@ namespace Grand.Services.Installation
             var adminareasettings = _serviceProvider.GetRequiredService<AdminAreaSettings>();
             adminareasettings.AdminLayout = "Default";
             adminareasettings.KendoLayout = "custom";
-            _settingService.SaveSetting(adminareasettings);
+            await _settingService.SaveSetting(adminareasettings);
 
             #endregion
 
             #region ActivityLog
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType()
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType() {
                 SystemKeyword = "PublicStore.DeleteAccount",
                 Enabled = false,
                 Name = "Public store. Delete account"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "UpdateKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Update knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "CreateKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Create knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "DeleteKnowledgebaseCategory",
                 Enabled = true,
                 Name = "Delete knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "CreateKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Create knowledgebase article"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "UpdateKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Update knowledgebase article"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "DeleteKnowledgebaseArticle",
                 Enabled = true,
                 Name = "Delete knowledgebase category"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "AddNewContactAttribute",
                 Enabled = true,
                 Name = "Add a new contact attribute"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "EditContactAttribute",
                 Enabled = true,
                 Name = "Edit a contact attribute"
             });
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "DeleteContactAttribute",
                 Enabled = true,
                 Name = "Delete a contact attribute"
@@ -350,7 +325,7 @@ namespace Grand.Services.Installation
                     EmailAccountId = emailAccount.Id,
                 },
             };
-            _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
             #endregion
 
             #region Install new Topics
@@ -358,8 +333,7 @@ namespace Grand.Services.Installation
             if (defaultTopicTemplate == null)
                 defaultTopicTemplate = _serviceProvider.GetRequiredService<IRepository<TopicTemplate>>().Table.FirstOrDefault();
 
-            var knowledgebaseHomepageTopic = new Topic
-            {
+            var knowledgebaseHomepageTopic = new Topic {
                 SystemName = "KnowledgebaseHomePage",
                 IncludeInSitemap = false,
                 IsPasswordProtected = false,
@@ -370,13 +344,13 @@ namespace Grand.Services.Installation
             };
 
             var topicService = _serviceProvider.GetRequiredService<ITopicService>();
-            topicService.InsertTopic(knowledgebaseHomepageTopic);
+            await topicService.InsertTopic(knowledgebaseHomepageTopic);
             #endregion
 
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
-            _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
 
             #endregion
 
@@ -386,7 +360,7 @@ namespace Grand.Services.Installation
             knowledgesettings.Enabled = false;
             knowledgesettings.AllowNotRegisteredUsersToLeaveComments = true;
             knowledgesettings.NotifyAboutNewArticleComments = false;
-            _settingService.SaveSetting(knowledgesettings);
+            await _settingService.SaveSetting(knowledgesettings);
 
             #endregion
 
@@ -395,14 +369,14 @@ namespace Grand.Services.Installation
             var pushNotificationSettings = _serviceProvider.GetRequiredService<PushNotificationsSettings>();
             pushNotificationSettings.Enabled = false;
             pushNotificationSettings.AllowGuestNotifications = true;
-            _settingService.SaveSetting(pushNotificationSettings);
+            await _settingService.SaveSetting(pushNotificationSettings);
 
             #endregion
 
             #region Knowledge table
 
-            _serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<KnowledgebaseArticle>((Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false }));
-            _serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<KnowledgebaseCategory>((Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false }));
+            await _serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<KnowledgebaseArticle>((Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false }));
+            await _serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<KnowledgebaseCategory>((Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false }));
 
             #endregion
 
@@ -419,11 +393,11 @@ namespace Grand.Services.Installation
 
         }
 
-        private void From420To430()
+        private async Task From420To430()
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
-            InstallStringResources("EN_420_430.nopres.xml");
+            await InstallStringResources("EN_420_430.nopres.xml");
 
             #region Settings
 
@@ -448,11 +422,11 @@ namespace Grand.Services.Installation
             adminSearchSettings.TopicsDisplayOrder = 0;
             adminSearchSettings.SearchInMenu = true;
             adminSearchSettings.MenuDisplayOrder = -1;
-            _settingService.SaveSetting(adminSearchSettings);
+            await _settingService.SaveSetting(adminSearchSettings);
 
             var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
             customerSettings.HideNotesTab = true;
-            _settingService.SaveSetting(customerSettings);
+            await _settingService.SaveSetting(customerSettings);
 
             #endregion
 
@@ -480,14 +454,13 @@ namespace Grand.Services.Installation
                     EmailAccountId = emailAccount.Id,
                 },
             };
-            _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
 
             #endregion
 
             #region Activity log
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Insert(new ActivityLogType
-            {
+            await _activityLogTypeRepository.InsertAsync(new ActivityLogType {
                 SystemKeyword = "PublicStore.AddArticleComment",
                 Enabled = false,
                 Name = "Public store. Add article comment"
@@ -499,14 +472,14 @@ namespace Grand.Services.Installation
             var knowledgebaseSettings = _serviceProvider.GetRequiredService<KnowledgebaseSettings>();
             knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = true;
             knowledgebaseSettings.NotifyAboutNewArticleComments = false;
-            _settingService.SaveSetting(knowledgebaseSettings);
+            await _settingService.SaveSetting(knowledgebaseSettings);
             #endregion
 
             #region Customer Personalize Product
 
             var _customerProductRepository = _serviceProvider.GetRequiredService<IRepository<CustomerProduct>>();
-            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = false }));
-            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct_Unique", Unique = true }));
+            await _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = false }));
+            await _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct_Unique", Unique = true }));
 
             #endregion
 
@@ -523,7 +496,7 @@ namespace Grand.Services.Installation
             var updateCustomer = Builders<Customer>.Update
                .Set(x => x.HasContributions, true);
 
-            var resultUpdate = customerRepository.Collection.UpdateOneAsync(filterCustomer, updateCustomer).Result;
+            await customerRepository.Collection.UpdateOneAsync(filterCustomer, updateCustomer);
 
             var removeFields = Builders<object>.Update
                .Unset("IsNewsItem")
@@ -539,7 +512,7 @@ namespace Grand.Services.Installation
                .Unset("IsHasForumTopic")
                .Unset("HasShoppingCartItems");
 
-            var resultRemove = dbContext.GetCollection<object>(typeof(Customer).Name).UpdateMany(new BsonDocument(), removeFields);
+            await dbContext.GetCollection<object>(typeof(Customer).Name).UpdateManyAsync(new BsonDocument(), removeFields);
 
 
             #endregion
@@ -554,75 +527,79 @@ namespace Grand.Services.Installation
             foreach (var oldrr in oldreturRequestCollection.AsQueryable().ToList())
             {
                 //prepare object
-                var newrr = new ReturnRequest();
-                newrr.ReturnNumber = oldrr.ReturnNumber;
-                newrr.OrderId = oldrr.OrderId;
-                newrr.ReturnRequestStatusId = oldrr.ReturnRequestStatusId;
-                newrr.StaffNotes = oldrr.StaffNotes;
-                newrr.UpdatedOnUtc = oldrr.UpdatedOnUtc;
-                newrr.CreatedOnUtc = oldrr.CreatedOnUtc;
-                newrr.CustomerComments = oldrr.CustomerComments;
-                newrr.CustomerId = oldrr.CustomerId;
+                var newrr = new ReturnRequest {
+                    ReturnNumber = oldrr.ReturnNumber,
+                    OrderId = oldrr.OrderId,
+                    ReturnRequestStatusId = oldrr.ReturnRequestStatusId,
+                    StaffNotes = oldrr.StaffNotes,
+                    UpdatedOnUtc = oldrr.UpdatedOnUtc,
+                    CreatedOnUtc = oldrr.CreatedOnUtc,
+                    CustomerComments = oldrr.CustomerComments,
+                    CustomerId = oldrr.CustomerId
+                };
                 var order = orderCollection.GetById(oldrr.OrderId);
                 if (order != null)
                     newrr.OrderId = order.StoreId;
-                var rrItem = new ReturnRequestItem();
-                rrItem.OrderItemId = oldrr.OrderItemId;
-                rrItem.Quantity = oldrr.Quantity;
-                rrItem.ReasonForReturn = oldrr.ReasonForReturn;
-                rrItem.RequestedAction = oldrr.RequestedAction;
+                var rrItem = new ReturnRequestItem {
+                    OrderItemId = oldrr.OrderItemId,
+                    Quantity = oldrr.Quantity,
+                    ReasonForReturn = oldrr.ReasonForReturn,
+                    RequestedAction = oldrr.RequestedAction
+                };
                 newrr.ReturnRequestItems.Add(rrItem);
                 //remove old document
                 var rrbuilder = Builders<OldReturnRequest>.Filter;
                 var rrfilter = FilterDefinition<OldReturnRequest>.Empty;
                 rrfilter = rrfilter & rrbuilder.Where(x => x.Id == oldrr.Id);
-                var oldresult = oldreturRequestCollection.DeleteOne(rrfilter);
+                await oldreturRequestCollection.DeleteOneAsync(rrfilter);
                 //insert new document
-                var newresult = newReturnRequestCollection.Insert(newrr);
+                await newReturnRequestCollection.InsertAsync(newrr);
             }
             #endregion
 
             #region Customer note
 
             //customer note
-            _serviceProvider.GetRequiredService<IRepository<CustomerNote>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
+            await _serviceProvider.GetRequiredService<IRepository<CustomerNote>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
 
             #endregion
 
             #region Category index
 
             var _categoryRepository = _serviceProvider.GetRequiredService<IRepository<Category>>();
-            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.FeaturedProductsOnHomaPage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "FeaturedProductsOnHomaPage_DisplayOrder_1", Unique = false }));
+            await _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.FeaturedProductsOnHomaPage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "FeaturedProductsOnHomaPage_DisplayOrder_1", Unique = false }));
 
             #endregion
         }
 
-        private void From430To440()
+        private async Task From430To440()
         {
             #region Install String resources
-            InstallStringResources("430_440.nopres.xml");
+            await InstallStringResources("430_440.nopres.xml");
             #endregion
 
             #region Permisions
             IPermissionProvider provider = new StandardPermissionProvider();
-            _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
+            await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
             #endregion
             #region Update tags on the products
 
             var productTagService = _serviceProvider.GetRequiredService<IProductTagService>();
             var productRepository = _serviceProvider.GetRequiredService<IRepository<Product>>();
 
-            foreach (var tag in productTagService.GetAllProductTags().Result)
+            foreach (var tag in await productTagService.GetAllProductTags())
             {
                 var builder = Builders<Product>.Filter;
-                var filter = new BsonDocument();
-                filter.Add(new BsonElement("ProductTags", tag.Id));
+                var filter = new BsonDocument {
+                    new BsonElement("ProductTags", tag.Id)
+                };
                 var update = Builders<Product>.Update
                     .Set(x => x.ProductTags.ElementAt(-1), tag.Name);
-                var result = productRepository.Collection.UpdateMany(filter, update);
+
+                await productRepository.Collection.UpdateManyAsync(filter, update);
 
                 tag.SeName = SeoExtensions.GetSeName(tag.Name, false, false);
-                productTagService.UpdateProductTag(tag);
+                await productTagService.UpdateProductTag(tag);
             }
 
             #endregion
@@ -641,15 +618,15 @@ namespace Grand.Services.Installation
                 {
                     return $"{{{{{match.Value.Replace("%", "")}}}}}";
                 }
-                MatchEvaluator evaluator = new MatchEvaluator(Evaluator);
+                var evaluator = new MatchEvaluator(Evaluator);
                 return Regex.Replace(value, @"%([A-Za-z0-9_.]*?)%", new MatchEvaluator(Evaluator));
             }
 
-            string orderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
-            string shipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
+            var orderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
+            var shipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
 
             var messagetemplateService = _serviceProvider.GetRequiredService<Grand.Services.Messages.IMessageTemplateService>();
-            var messagetemplates = messagetemplateService.GetAllMessageTemplates(string.Empty).Result;
+            var messagetemplates = await messagetemplateService.GetAllMessageTemplates(string.Empty);
             foreach (var messagetemplate in messagetemplates)
             {
                 messagetemplate.Subject = ReplaceValue(messagetemplate.Subject);
@@ -662,7 +639,7 @@ namespace Grand.Services.Installation
                     messagetemplate.Body = messagetemplate.Body.Replace("%Shipment.Product(s)%", shipmentProducts);
                 }
                 messagetemplate.Body = ReplaceValue(messagetemplate.Body);
-                messagetemplateService.UpdateMessageTemplate(messagetemplate);
+                await messagetemplateService.UpdateMessageTemplate(messagetemplate);
             }
             #endregion
 
@@ -683,19 +660,36 @@ namespace Grand.Services.Installation
                     EmailAccountId = eaGeneral.Id,
                 }
             };
-            _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            await _serviceProvider.GetRequiredService<IRepository<MessageTemplate>>().InsertAsync(messageTemplates);
             #endregion
 
         }
 
-        private void From440To450()
+        private async Task From440To450()
         {
             #region Install String resources
-            InstallStringResources("EN_440_450.nopres.xml");
+            await InstallStringResources("EN_440_450.nopres.xml");
+            #endregion
+
+            #region Update task
+            var tasks = _serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
+            foreach (var task in tasks.Table)
+            {
+                if (task.TimeInterval == 0)
+                {
+                    task.TimeInterval = 1440;
+                    await tasks.UpdateAsync(task);
+                }
+                if(task.Type == "Grand.Services.Tasks.ClearLogScheduleTask")
+                {
+                    task.Type = "Grand.Services.Tasks.ClearLogScheduleTask, Grand.Services";
+                    await tasks.UpdateAsync(task);
+                }
+            }
             #endregion
         }
 
-        private void InstallStringResources(string filenames)
+        private async Task InstallStringResources(string filenames)
         {
             //'English' language            
             var language = _serviceProvider.GetRequiredService<IRepository<Language>>().Table.Single(l => l.Name == "English");
@@ -705,7 +699,7 @@ namespace Grand.Services.Installation
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
-                localizationService.ImportResourcesFromXmlInstall(language, localesXml);
+                await localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
         }
 

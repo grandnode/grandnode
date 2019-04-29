@@ -9,7 +9,7 @@
                     <a href="@Url.RouteUrl("CustomerInfo")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Info)
                                                                    {<text>active</text>}
                                                                    else
-                                                                   {<text>inactive</text>}"><span class="material-icons">face</span><span>@T("Account.CustomerInfo")</span></a>
+                                                                   {<text>inactive</text>}"><span class="mdi mdi-face"></span><span>@T("Account.CustomerInfo")</span></a>
                                                             </li>
                                                         }
             @if (!Model.HideAddresses)
@@ -18,7 +18,7 @@
                     <a href="@Url.RouteUrl("CustomerAddresses")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Addresses)
                                                                         {<text>active</text>}
                                                                         else
-                                                                        {<text>inactive</text>}"><span class="material-icons">assignment</span><span>@T("Account.CustomerAddresses")</span></a>
+                                                                        {<text>inactive</text>}"><span class="mdi mdi-clipboard-account-outline"></span><span>@T("Account.CustomerAddresses")</span></a>
                                                                     </li>
                                                                 }
             @if (!Model.HideOrders)
@@ -27,7 +27,7 @@
                     <a href="@Url.RouteUrl("CustomerOrders")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Orders)
                                                                      {<text>active</text>}
                                                                      else
-                                                                     {<text>inactive</text>}"><span class="material-icons">shopping_cart</span><span>@T("Account.CustomerOrders")</span></a>
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-cart"></span><span>@T("Account.CustomerOrders")</span></a>
                                                                 </li>
                                                             }
             @if (!Model.HideAuctions)
@@ -36,7 +36,7 @@
                     <a href="@Url.RouteUrl("CustomerAuctions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Auctions)
                                                                      {<text>active</text>}
                                                                      else
-                                                                     {<text>inactive</text>}"><span class="material-icons">gavel</span><span>@T("Account.CustomerAuctions")</span></a>
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-gavel"></span><span>@T("Account.CustomerAuctions")</span></a>
                                                                 </li>
                                                             }
             @if (!Model.HideNotes)
@@ -45,7 +45,7 @@
                     <a href="@Url.RouteUrl("CustomerNotes")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Notes)
                                                                     {<text>active</text>}
                                                                              else
-                                                                             {<text>inactive</text>}"><span class="material-icons">chat_bubble_outline</span><span>@T("Account.CustomerNotes")</span></a>
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-chat"></span><span>@T("Account.CustomerNotes")</span></a>
                                                                         </li>
                                                                     }
             @if (!Model.HideReturnRequests)
@@ -54,7 +54,7 @@
                     <a href="@Url.RouteUrl("CustomerReturnRequests")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ReturnRequests)
                                                                              {<text>active</text>}
                                                                              else
-                                                                             {<text>inactive</text>}"><span class="material-icons">keyboard_return</span><span>@T("Account.CustomerReturnRequests")</span></a>
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-clipboard-arrow-down-outline"></span><span>@T("Account.CustomerReturnRequests")</span></a>
                                                                         </li>
                                                                     }
             @if (!Model.HideDownloadableProducts)
@@ -63,7 +63,7 @@
                     <a href="@Url.RouteUrl("CustomerDownloadableProducts")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DownloadableProducts)
                                                                                    {<text>active</text>}
                                                                                    else
-                                                                                   {<text>inactive</text>}"><span class="material-icons">cloud_download</span><span>@T("Account.DownloadableProducts")</span></a>
+                                                                                   {<text>inactive</text>}"><span class="mdi mdi-cloud-download-outline"></span><span>@T("Account.DownloadableProducts")</span></a>
                                                                             </li>
                                                                         }
             @if (!Model.HideBackInStockSubscriptions)
@@ -72,7 +72,7 @@
                     <a href="@Url.RouteUrl("CustomerBackInStockSubscriptions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.BackInStockSubscriptions)
                                                                                    {<text>active</text>}
                                                                                    else
-                                                                                   {<text>inactive</text>}"><span class="material-icons">settings_backup_restore</span><span>@T("Account.BackInStockSubscriptions")</span></a>
+                                                                                   {<text>inactive</text>}"><span class="mdi mdi-backup-restore"></span><span>@T("Account.BackInStockSubscriptions")</span></a>
                                                                             </li>
                                                                         }
             @if (!Model.HideRewardPoints)
@@ -81,7 +81,7 @@
                     <a href="@Url.RouteUrl("CustomerRewardPoints")" class="@if (Model.SelectedTab == CustomerNavigationEnum.RewardPoints)
                                                                            {<text>active</text>}
                                                                            else
-                                                                           {<text>inactive</text>}"><span class="material-icons">cake</span><span>@T("Account.RewardPoints")</span></a>
+                                                                           {<text>inactive</text>}"><span class="mdi mdi-trophy-outline"></span><span>@T("Account.RewardPoints")</span></a>
                                                                     </li>
                                                                 }
             @if (!Model.HideChangePassword)
@@ -90,7 +90,7 @@
                     <a href="@Url.RouteUrl("CustomerChangePassword")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ChangePassword)
                                                                              {<text>active</text>}
                                                                              else
-                                                                             {<text>inactive</text>}"><span class="material-icons">vpn_key</span><span>@T("Account.ChangePassword")</span></a>
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-shield-key-outline"></span><span>@T("Account.ChangePassword")</span></a>
                                                                         </li>
                                                                     }
             @if (!Model.HideDeleteAccount)
@@ -99,7 +99,7 @@
                     <a href="@Url.RouteUrl("CustomerDeleteAccount")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DeleteAccount)
                                                                              {<text>active</text>}
                                                                              else
-                                                                             {<text>inactive</text>}"><span class="material-icons">delete_forever</span><span>@T("Account.DeleteAccount")</span></a>
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-delete-outline"></span><span>@T("Account.DeleteAccount")</span></a>
                                                                         </li>
                                                                     }
             @if (!Model.HideAvatar)
@@ -108,7 +108,7 @@
                     <a href="@Url.RouteUrl("CustomerAvatar")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Avatar)
                                                                      {<text>active</text>}
                                                                      else
-                                                                     {<text>inactive</text>}"><span class="material-icons">face</span><span>@T("Account.Avatar")</span></a>
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-face-recognition"></span><span>@T("Account.Avatar")</span></a>
                                                                 </li>
                                                             }
             @if (!Model.HideForumSubscriptions)
@@ -117,7 +117,7 @@
                     <a href="@Url.RouteUrl("CustomerForumSubscriptions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ForumSubscriptions)
                                                                                  {<text>active</text>}
                                                                                  else
-                                                                                 {<text>inactive</text>}"><span class="material-icons">forum</span><span>@T("Account.ForumSubscriptions")</span></a>
+                                                                                 {<text>inactive</text>}"><span class="mdi mdi-forum-outline"></span><span>@T("Account.ForumSubscriptions")</span></a>
                                                                             </li>
                                                                         }
             @if (Model.ShowVendorInfo)
@@ -126,7 +126,7 @@
                     <a href="@Url.RouteUrl("CustomerVendorInfo")" class="@if(Model.SelectedTab == CustomerNavigationEnum.VendorInfo)
                                                                      {<text>active</text>}
                                                                      else
-                                                                     {<text>inactive</text>}"><span class="material-icons">supervisor_account</span><span>@T("Account.VendorInfo")</span></a>
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-supervisor"></span><span>@T("Account.VendorInfo")</span></a>
                                                                 </li>
                                                             }
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData=Model })

@@ -117,13 +117,100 @@ function init_sidebar() {
         $('.dataTable').each(function () { $(this).dataTable().fnDraw(); });
     });
 
+    $('#searchIcon').on('click', function () {
+        $('.admin-search-input-container').toggle('fast');
+        $('.admin-search-input-container').css('display', 'inline-block');
+    });
 
+    var arr = [];
+    var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () { // find nav element with exact match
 
-    $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
+        var segment = this.href.split("/");
+        var z = window.location.pathname;
+        var segment2 = z.split("/");
+        var linkY = "";
+        var linkZ = "";
 
-    $SIDEBAR_MENU.find('a').filter(function () {
-        return this.href == CURRENT_URL;
-    }).parent('li').addClass('current-page').parents('ul').slideDown(1, function () {
+        for (var x = 3; x < segment.length; x++) {
+            linkZ += "/" + segment[x];
+        }
+
+        if (z == linkZ) {
+            arr.push(linkZ);
+        }
+
+        if (segment2[2] != undefined) {
+            if (segment[4] == segment2[2] && segment[5] == segment2[3]) {
+
+                for (let i = 3; i < segment.length; i++) {
+                    linkY += "/" + segment[i];
+                }
+                if (z.startsWith(linkY)) {
+                    return this.href;
+                }
+            }
+            else {
+                if (segment[4] == segment2[2]) {
+                    if (segment.length > 4) {
+                        for (let i = 3; i < segment.length - 1; i++) {
+                            linkY += "/" + segment[i];
+                        }
+                        if (z.startsWith(linkY)) {
+                            return this.href;
+                        }
+                    }
+                    else {
+                        for (let i = 2; i < segment.length; i++) {
+                            linkY += "/" + segment[i];
+                        }
+                        if (z.startsWith(linkY)) {
+                            return this.href;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            if (segment.length > 4) {
+                for (let i = 3; i < segment.length; i++) {
+                    linkY += "/" + segment[i];
+                }
+                if (z.startsWith(linkY)) {
+                    return this.href;
+                }
+            }
+            else {
+                for (let i = 2; i < segment.length; i++) {
+                    linkY += "/" + segment[i];
+                }
+                if (z.startsWith(linkY)) {
+                    return this.href;
+                }
+            }
+        }
+    });
+
+    if ($cur_menu.length == 0) { // if no exact match, try to find best match
+        var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () {
+            return CURRENT_URL.startsWith(this.href) && this.href != '';
+        });
+        if ($cur_menu.length > 1) { // get ONLY one with longest href as best match
+
+            var l = 0;
+            for (var i = 0; i < $cur_menu.length; i++) {
+                if ($cur_menu.eq(l).attr('href').length < $cur_menu.eq(i).attr('href').length) l = i;
+            }
+            $cur_menu = $cur_menu.eq(l);
+        }
+    }
+
+    for (var i = 0; i < $cur_menu.length; i++) { //extact match
+        if ($cur_menu.eq(i).attr('href') == arr[0]) {
+            $cur_menu = $cur_menu.eq(i);
+        }
+    }
+
+    $cur_menu.first().parent('li').addClass('current-page').parents('ul').slideDown(function () {
         setContentHeight();
     }).parent().addClass('active');
 

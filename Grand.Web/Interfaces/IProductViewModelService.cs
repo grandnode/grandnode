@@ -29,6 +29,7 @@ namespace Grand.Web.Interfaces
         Task<ProductDetailsAttributeChangeModel> PrepareProductDetailsAttributeChangeModel(Product product, bool validateAttributeConditions, bool loadPicture, IFormCollection form);
         Task<ProductAskQuestionModel> PrepareProductAskQuestionModel(Product product);
         Task<ProductAskQuestionSimpleModel> PrepareProductAskQuestionSimpleModel(Product product);
+        Task<IList<ProductOverviewModel>> PrepareNewProductsDisplayedOnHomePage(int? productThumbPictureSize);
         Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize);
         Task<IList<ProductOverviewModel>> PrepareProductsHomePageBestSellers(int? productThumbPictureSize);
         Task<IList<ProductOverviewModel>> PrepareProductsRecommended(int? productThumbPictureSize);

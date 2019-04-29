@@ -540,9 +540,7 @@ namespace Grand.Services.Orders
                                (showHidden || p.Published)
                          select p;
 
-            var products = new PagedList<Product>(qproducts, pageIndex, pageSize);
-            return products;
-            
+            return await PagedList<Product>.Create(qproducts, pageIndex, pageSize);
         }
 
         /// <summary>

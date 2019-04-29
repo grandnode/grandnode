@@ -231,8 +231,7 @@ namespace Grand.Services.Customers
             }
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
+            return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -268,7 +267,7 @@ namespace Grand.Services.Customers
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
-            return await Task.FromResult(new PagedList<Customer>(query, pageIndex, pageSize));
+            return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
 
@@ -714,7 +713,7 @@ namespace Grand.Services.Customers
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        public virtual Task ResetCheckoutData(Customer customer, string storeId,
+        public virtual async Task ResetCheckoutData(Customer customer, string storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
@@ -725,38 +724,37 @@ namespace Grand.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
+                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
+                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
+                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
             }
 
             //clear reward points flag
             if (clearRewardPoints)
             {
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, false, storeId);
+                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, false, storeId);
             }
 
             //clear selected shipping method
             if (clearShippingMethod)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedPickupPoint, "", storeId);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", storeId);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", storeId);
+                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
+                await _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
+                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedPickupPoint, "", storeId);
+                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", storeId);
+                await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", storeId);
             }
 
             //clear selected payment method
             if (clearPaymentMethod)
             {
-                _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
+                await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
             }
-            return Task.CompletedTask;
         }
 
         public virtual async Task UpdateCustomerReminderHistory(string customerId, string orderId)
@@ -1340,7 +1338,7 @@ namespace Grand.Services.Customers
             var query = from pp in _customerProductPriceRepository.Table
                         where pp.CustomerId == customerId
                         select pp;
-            return await Task.FromResult(new PagedList<CustomerProductPrice>(query, pageIndex, pageSize));
+            return await PagedList<CustomerProductPrice>.Create(query, pageIndex, pageSize);
         }
 
         #endregion
@@ -1436,7 +1434,7 @@ namespace Grand.Services.Customers
                         where pp.CustomerId == customerId
                         orderby pp.DisplayOrder
                         select pp;
-            return await Task.FromResult(new PagedList<CustomerProduct>(query, pageIndex, pageSize));
+            return await PagedList<CustomerProduct>.Create(query, pageIndex, pageSize);
         }
 
         #endregion

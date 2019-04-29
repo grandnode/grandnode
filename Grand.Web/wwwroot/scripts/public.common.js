@@ -149,6 +149,19 @@ function dataCountdown() {
     });
 }
 
+// flyCart on Cart fix 
+
+function CartFix() {
+    var pathname = window.location.pathname;
+    if (pathname === '/cart') {
+        var CartLink = $("#topcartlink .nav-link"),
+            cartQty = $("#topcartlink .cart-qty").html();
+        cartName = $("#topcartlink .mobile-desc").text();
+        CartLink.addClass('d-none');
+        $('<a class="nav-link"><span class="c-button__text"><span class="cart-label hl-label"><span class= "mdi mdi-cart"></span><span class="d-flex align-items-center cart-name mobile-desc">' + cartName + '</span><span class="cart-qty">' + cartQty + '</span></span></span></a>').appendTo("#topcartlink .dropdown");
+    }
+}
+
 // left-side canvas
 
 function LeftSide() {
@@ -162,6 +175,7 @@ function LeftSide() {
 
 $(document).ready(function () {
 
+    CartFix();
     mainMenuReplace();
     LeftSide();
     itemsStatistics();
@@ -491,21 +505,13 @@ function deletecartitem(href) {
 
 function itemsStatistics() {
     if ($('#items_statistics').length) {
-        var perPage = parseInt($('#products-pagesize option:selected').text());
         var totalItems = parseInt($('#items_statistics .items-total').text());
-        if (parseInt($('.items-total').text()) > perPage) {
-            var perPageFinal = parseInt($('#products-pagesize option:selected').text());
-        }
-        else {
-            var perPageFinal = parseInt($('.items-total').text());
-        }
+        var perPageFinal = parseInt($('.items-page-size').text());
+        var currentPaggingSite = 0;
         if ($('.pagination').length) {
-            var currentPaggingSite = parseInt($('.pagination .current-page .page-link').text()),
-                totalPaggingSites = $('.pagination li').length;
+            currentPaggingSite = parseInt($('.pagination .current-page .page-link').text());
         } else {
-            var currentPaggingSite = 1;
-            var paggingSite = 1;
-            var totalPaggingSites = 1;
+            currentPaggingSite = 1;
         }
         if (totalItems < currentPaggingSite * perPageFinal) {
             $('#items_statistics .items-per-page .number').text(currentPaggingSite * perPageFinal - perPageFinal + 1 + ' - ' + totalItems);

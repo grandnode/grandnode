@@ -112,18 +112,14 @@
                 width: 100
             }, {
                 field: "ShortMessage",
-                title: "@T("Admin.System.Log.Fields.ShortMessage")"
+                title: "@T("Admin.System.Log.Fields.ShortMessage")",
+                template: '<a class="k-link" href="View/#=Id#">#=ShortMessage#</a>'
             }, {
                 field: "CreatedOn",
                 title: "@T("Admin.System.Log.Fields.CreatedOn")",
                 width: 200,
                 type: "date",
                 format: "{0:G}"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 50,
-                template: '<a class="k-link" href="View/#=Id#">@T("Admin.Common.View")</a>'
             }]
         });
     });

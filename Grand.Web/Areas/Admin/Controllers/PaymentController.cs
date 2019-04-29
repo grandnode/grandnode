@@ -93,7 +93,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult MethodUpdate( PaymentMethodModel model)
+        public async Task<IActionResult> MethodUpdate( PaymentMethodModel model)
         {
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
@@ -102,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
+                    await _settingService.SaveSetting(_paymentSettings);
                 }
             }
             else
@@ -111,7 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
+                    await _settingService.SaveSetting(_paymentSettings);
                 }
             }
             var pluginDescriptor = pm.PluginDescriptor;
@@ -223,8 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newCountryIds.Add(c.Id);
                     }
                 }
-                _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
-
+                await _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
 
                 formKey = "restrictrole_" + pm.PluginDescriptor.SystemName;
                 var roleIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
@@ -238,7 +237,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newRoleIds.Add(r.Id);
                     }
                 }
-                _paymentService.SaveRestictedRoleIds(pm, newRoleIds);
+                await _paymentService.SaveRestictedRoleIds(pm, newRoleIds);
 
                 formKey = "restrictship_" + pm.PluginDescriptor.SystemName;
                 var shipIdsToRestrict = (form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
@@ -252,7 +251,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         newShipIds.Add(s.Name);
                     }
                 }
-                _paymentService.SaveRestictedShippingIds(pm, newShipIds);
+                await _paymentService.SaveRestictedShippingIds(pm, newShipIds);
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));

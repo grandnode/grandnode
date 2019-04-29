@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Domain.Tasks
 {
@@ -13,14 +14,6 @@ namespace Grand.Core.Domain.Tasks
         public DateTime? LastSuccessUtc { get; set; }
         public string LeasedByMachineName { get; set; }
         public DateTime? LeasedUntilUtc { get; set; }
-
-        //Properties below are for FluentScheduler
-        public TimeIntervalChoice TimeIntervalChoice { get; set; }
         public int TimeInterval { get; set; }
-        public int MinuteOfHour { get; set; }
-        public int HourOfDay { get; set; }
-        public DayOfWeek DayOfWeek { get; set; }
-        public MonthOptionChoice MonthOptionChoice { get; set; }
-        public int DayOfMonth { get; set; }
     }
 }

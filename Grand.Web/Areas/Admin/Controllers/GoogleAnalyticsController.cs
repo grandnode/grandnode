@@ -4,6 +4,7 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -35,7 +36,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        public IActionResult DashboardGeneralData(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> DashboardGeneralData(DateTime? startDate = null, DateTime? endDate = null)
         {
             if(!startDate.HasValue)
             {
@@ -46,11 +47,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 endDate = DateTime.UtcNow;
             }
 
-            var report = _googleAnalyticsService.GetDataByGeneral(startDate.Value, endDate.Value);            
+            var report = await _googleAnalyticsService.GetDataByGeneral(startDate.Value, endDate.Value);
             return PartialView(report);
         }
 
-        public IActionResult DashboardDataBySource(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> DashboardDataBySource(DateTime? startDate = null, DateTime? endDate = null)
         {
             if (!startDate.HasValue)
             {
@@ -61,10 +62,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 endDate = DateTime.UtcNow;
             }
 
-            var report = _googleAnalyticsService.GetDataBySource(startDate.Value, endDate.Value);
+            var report = await _googleAnalyticsService.GetDataBySource(startDate.Value, endDate.Value);
             return PartialView(report);
         }
-        public IActionResult DashboardDataByDevice(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> DashboardDataByDevice(DateTime? startDate = null, DateTime? endDate = null)
         {
             if (!startDate.HasValue)
             {
@@ -75,10 +76,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 endDate = DateTime.UtcNow;
             }
 
-            var report = _googleAnalyticsService.GetDataByDevice(startDate.Value, endDate.Value);
+            var report = await _googleAnalyticsService.GetDataByDevice(startDate.Value, endDate.Value);
             return PartialView(report);
         }
-        public IActionResult DashboardDataByLocalization(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> DashboardDataByLocalization(DateTime? startDate = null, DateTime? endDate = null)
         {
             if (!startDate.HasValue)
             {
@@ -89,10 +90,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 endDate = DateTime.UtcNow;
             }
 
-            var report = _googleAnalyticsService.GetDataByLocalization(startDate.Value, endDate.Value);
+            var report = await _googleAnalyticsService.GetDataByLocalization(startDate.Value, endDate.Value);
             return PartialView(report);
         }
-        public IActionResult DashboardDataByExit(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<IActionResult> DashboardDataByExit(DateTime? startDate = null, DateTime? endDate = null)
         {
             if (!startDate.HasValue)
             {
@@ -103,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 endDate = DateTime.UtcNow;
             }
 
-            var report = _googleAnalyticsService.GetDataByExit(startDate.Value, endDate.Value);
+            var report = await _googleAnalyticsService.GetDataByExit(startDate.Value, endDate.Value);
             return PartialView(report);
         }
 

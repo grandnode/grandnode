@@ -24,11 +24,13 @@
                     <div class="form-fields">
                         <div class="form-group">
                             <label asp-for="FullName" class="col-form-label">@T("ContactUs.FullName"):</label>
+                            <span class="required">*</span>
                             <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname form-control" />
                             <span asp-validation-for="FullName"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Email" class="col-form-label">@T("ContactUs.Email"):</label>
+                            <span class="required">*</span>
                             <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="form-control email" />
                             <span asp-validation-for="Email"></span>
                         </div>
@@ -36,12 +38,14 @@
                         {
                             <div class="form-group">
                                 <label asp-for="Subject" class="col-form-label">@T("ContactUs.Subject"):</label>
+                                <span class="required">*</span>
                                 <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="form-control subject" />
                                 <span asp-validation-for="Subject"></span>
                             </div>
                         }
                         <div class="form-group">
                             <label asp-for="Enquiry" class="col-form-label">@T("ContactUs.Enquiry"):</label>
+                            <span class="required">*</span>
                             <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="form-control enquiry"></textarea>
                             <span asp-validation-for="Enquiry"></span>
                         </div>

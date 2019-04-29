@@ -98,10 +98,10 @@ namespace Grand.Services.Directory.Tests
                 IMongoCollection.InsertOne(_measureDimensionMeters);
                 IMongoCollection.InsertOne(_measureDimensionMilimeters);
                 tempMeasureDimensionRepository.Setup(x => x.Table).Returns(IMongoCollection.AsQueryable());
-                tempMeasureDimensionRepository.Setup(x => x.GetById(_measureDimensionInches.Id)).Returns(_measureDimensionInches);
-                tempMeasureDimensionRepository.Setup(x => x.GetById(_measureDimensionFeets.Id)).Returns(_measureDimensionFeets);
-                tempMeasureDimensionRepository.Setup(x => x.GetById(_measureDimensionMeters.Id)).Returns(_measureDimensionMeters);
-                tempMeasureDimensionRepository.Setup(x => x.GetById(_measureDimensionMilimeters.Id)).Returns(_measureDimensionMilimeters);
+                tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionInches.Id)).ReturnsAsync(_measureDimensionInches);
+                tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionFeets.Id)).ReturnsAsync(_measureDimensionFeets);
+                tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionMeters.Id)).ReturnsAsync(_measureDimensionMeters);
+                tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionMilimeters.Id)).ReturnsAsync(_measureDimensionMilimeters);
 
                 tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionInches.Id)).ReturnsAsync(_measureDimensionInches);
                 tempMeasureDimensionRepository.Setup(x => x.GetByIdAsync(_measureDimensionFeets.Id)).ReturnsAsync(_measureDimensionFeets);
@@ -119,10 +119,10 @@ namespace Grand.Services.Directory.Tests
                 IMongoCollection.InsertOne(_measureWeightKilograms);
                 IMongoCollection.InsertOne(_measureWeightGrams);
                 tempMeasureWeightRepository.Setup(x => x.Table).Returns(IMongoCollection.AsQueryable());
-                tempMeasureWeightRepository.Setup(x => x.GetById(_measureWeightOunces.Id)).Returns(_measureWeightOunces);
-                tempMeasureWeightRepository.Setup(x => x.GetById(_measureWeightPounds.Id)).Returns(_measureWeightPounds);
-                tempMeasureWeightRepository.Setup(x => x.GetById(_measureWeightKilograms.Id)).Returns(_measureWeightKilograms);
-                tempMeasureWeightRepository.Setup(x => x.GetById(_measureWeightGrams.Id)).Returns(_measureWeightGrams);
+                tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightOunces.Id)).ReturnsAsync(_measureWeightOunces);
+                tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightPounds.Id)).ReturnsAsync(_measureWeightPounds);
+                tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightKilograms.Id)).ReturnsAsync(_measureWeightKilograms);
+                tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightGrams.Id)).ReturnsAsync(_measureWeightGrams);
 
                 tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightOunces.Id)).ReturnsAsync(_measureWeightOunces);
                 tempMeasureWeightRepository.Setup(x => x.GetByIdAsync(_measureWeightPounds.Id)).ReturnsAsync(_measureWeightPounds);

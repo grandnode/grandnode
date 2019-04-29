@@ -54,7 +54,7 @@ namespace Grand.Framework
         private Vendor _cachedVendor;
         private Language _cachedLanguage;
         private Currency _cachedCurrency;
-        private TaxDisplayType? _cachedTaxDisplayType;
+        private TaxDisplayType _cachedTaxDisplayType;
 
         #endregion
 
@@ -477,7 +477,7 @@ namespace Grand.Framework
         /// <summary>
         /// Gets or sets current tax display type
         /// </summary>
-        public virtual TaxDisplayType TaxDisplayType => _cachedTaxDisplayType.Value;
+        public virtual TaxDisplayType TaxDisplayType => _cachedTaxDisplayType;
 
         public virtual async Task<TaxDisplayType> SetTaxDisplayType(Customer customer)
         {
@@ -498,7 +498,7 @@ namespace Grand.Framework
             //cache the value
             _cachedTaxDisplayType = taxDisplayType;
 
-            return await Task.FromResult(_cachedTaxDisplayType.Value);
+            return await Task.FromResult(_cachedTaxDisplayType);
         }
 
 
@@ -513,7 +513,7 @@ namespace Grand.Framework
                 SystemCustomerAttributeNames.TaxDisplayTypeId, (int)taxDisplayType, _storeContext.CurrentStore.Id);
 
             //then reset the cache value
-            _cachedTaxDisplayType = null;
+            _cachedTaxDisplayType = taxDisplayType;
             return taxDisplayType;
         }
 

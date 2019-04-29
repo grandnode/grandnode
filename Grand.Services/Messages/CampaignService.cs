@@ -153,7 +153,7 @@ namespace Grand.Services.Messages
                         where c.CampaignId == campaign.Id
                         orderby c.CreatedDateUtc descending
                         select c;
-            return await Task.FromResult(new PagedList<CampaignHistory>(query, pageIndex, pageSize));
+            return await PagedList<CampaignHistory>.Create(query, pageIndex, pageSize);
         }
         public virtual async Task<IPagedList<NewsLetterSubscription>> CustomerSubscriptions(Campaign campaign, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -241,15 +241,14 @@ namespace Grand.Services.Messages
                         query = query.Where(x => x.NewsletterCategories.Contains(item));
                     }
                 }
-
-                model = new PagedList<NewsLetterSubscription>(query.Select(x => new NewsLetterSubscription() { CustomerId = x.CustomerId, Email = x.Email, NewsLetterSubscriptionGuid = x.NewsLetterSubscriptionGuid }), pageIndex, pageSize);
+                model = await PagedList<NewsLetterSubscription>.Create(query.Select(x => new NewsLetterSubscription() { CustomerId = x.CustomerId, Email = x.Email, NewsLetterSubscriptionGuid = x.NewsLetterSubscriptionGuid }), pageIndex, pageSize);
             }
             else
             {
                 var query = from o in _newsLetterSubscriptionRepository.Table
                             where o.Active && (o.StoreId == campaign.StoreId || String.IsNullOrEmpty(campaign.StoreId))
                             select o;
-                model = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+                model = await PagedList<NewsLetterSubscription>.Create(query, pageIndex, pageSize);
             }
 
             return await Task.FromResult(model);

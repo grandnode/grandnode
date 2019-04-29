@@ -8,7 +8,6 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -168,8 +167,7 @@ namespace Grand.Web.Services
 
             foreach (var product in products)
             {
-                var model = new ProductOverviewModel
-                {
+                var model = new ProductOverviewModel {
                     Id = product.Id,
                     Name = product.GetLocalized(x => x.Name, currentLanguage.Id),
                     ShortDescription = product.GetLocalized(x => x.ShortDescription, currentLanguage.Id),
@@ -194,8 +192,7 @@ namespace Grand.Web.Services
                 {
                     #region Prepare product price
 
-                    var priceModel = new ProductOverviewModel.ProductPriceModel
-                    {
+                    var priceModel = new ProductOverviewModel.ProductPriceModel {
                         ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart
                     };
 
@@ -447,8 +444,7 @@ namespace Grand.Web.Services
                         if (picture == null)
                             picture = new ProductPicture();
 
-                        var pictureModel = new PictureModel
-                        {
+                        var pictureModel = new PictureModel {
                             ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
                             FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                         };
@@ -463,6 +459,33 @@ namespace Grand.Web.Services
 
                         return pictureModel;
                     });
+
+                    //prepare second picture model
+                    if (_catalogSettings.SecondPictureOnCatalogPages)
+                    {
+                        var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
+                        model.SecondPictureModel = await _cacheManager.Get(secondProductPictureCacheKey, async () =>
+                        {
+                            var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
+                            if (picture == null)
+                                return new PictureModel();
+
+                            var pictureModel = new PictureModel {
+                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
+                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                            };
+                            //"title" attribute
+                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                                    picture.TitleAttribute :
+                                    string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
+                            //"alt" attribute
+                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                                    picture.AltAttribute :
+                                    string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
+
+                            return pictureModel;
+                        });
+                    }
 
                     #endregion
                 }
@@ -494,8 +517,7 @@ namespace Grand.Web.Services
                 foreach (var item in product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x => x.DisplayOrder))
                 {
                     var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeById(item.SpecificationAttributeId);
-                    var m = new ProductSpecificationModel
-                    {
+                    var m = new ProductSpecificationModel {
                         SpecificationAttributeId = item.SpecificationAttributeId,
                         SpecificationAttributeName = specificationAttribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         ColorSquaresRgb = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == item.SpecificationAttributeOptionId).FirstOrDefault() != null ? specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == item.SpecificationAttributeOptionId).FirstOrDefault().ColorSquaresRgb : "",
@@ -538,8 +560,7 @@ namespace Grand.Web.Services
 
                 productReview = await _cacheManager.Get(cacheKey, async () =>
                 {
-                    return new ProductReviewOverviewModel
-                    {
+                    return new ProductReviewOverviewModel {
                         RatingSum = await _productService.RatingSumProduct(product.Id, _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : ""),
                         TotalReviews = await _productService.TotalReviewsProduct(product.Id, _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : ""),
                     };
@@ -547,8 +568,7 @@ namespace Grand.Web.Services
             }
             else
             {
-                productReview = new ProductReviewOverviewModel()
-                {
+                productReview = new ProductReviewOverviewModel() {
                     RatingSum = product.ApprovedRatingSum,
                     TotalReviews = product.ApprovedTotalReviews
                 };
@@ -589,8 +609,7 @@ namespace Grand.Web.Services
 
             #region Standard properties
 
-            var model = new ProductDetailsModel
-            {
+            var model = new ProductDetailsModel {
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 ShortDescription = product.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
@@ -670,8 +689,7 @@ namespace Grand.Web.Services
                 {
                     model.ShowVendor = true;
 
-                    model.VendorModel = new VendorBriefInfoModel
-                    {
+                    model.VendorModel = new VendorBriefInfoModel {
                         Id = vendor.Id,
                         Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
@@ -698,7 +716,7 @@ namespace Grand.Web.Services
 
             #region Back in stock subscriptions
 
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+            if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
                 product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
@@ -721,8 +739,7 @@ namespace Grand.Web.Services
                     _storeContext.CurrentStore.Id);
                 model.Breadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
                 {
-                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
-                    {
+                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel {
 
                         Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                         ProductId = product.Id,
@@ -737,8 +754,7 @@ namespace Grand.Web.Services
                         {
                             foreach (var catBr in await category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                             {
-                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
-                                {
+                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel {
                                     Id = catBr.Id,
                                     Name = catBr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                                     SeName = catBr.GetSeName(_workContext.WorkingLanguage.Id),
@@ -767,8 +783,7 @@ namespace Grand.Web.Services
                         var tag = await _productTagService.GetProductTagByName(item);
                         if (tag != null)
                         {
-                            tags.Add(new ProductTagModel()
-                            {
+                            tags.Add(new ProductTagModel() {
                                 Id = tag.Id,
                                 Name = tag.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                                 SeName = tag.SeName,
@@ -798,8 +813,7 @@ namespace Grand.Web.Services
                 if (defaultPicture == null)
                     defaultPicture = new ProductPicture();
 
-                var defaultPictureModel = new PictureModel
-                {
+                var defaultPictureModel = new PictureModel {
                     ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
                     FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
                 };
@@ -816,8 +830,7 @@ namespace Grand.Web.Services
                 var pictureModels = new List<PictureModel>();
                 foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
                 {
-                    var pictureModel = new PictureModel
-                    {
+                    var pictureModel = new PictureModel {
                         ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
@@ -948,8 +961,7 @@ namespace Grand.Web.Services
             var allowedQuantities = product.ParseAllowedQuantities();
             foreach (var qty in allowedQuantities)
             {
-                model.AddToCart.AllowedQuantities.Add(new SelectListItem
-                {
+                model.AddToCart.AllowedQuantities.Add(new SelectListItem {
                     Text = qty.ToString(),
                     Value = qty.ToString(),
                     Selected = updatecartitem != null && updatecartitem.Quantity == qty
@@ -1030,8 +1042,7 @@ namespace Grand.Web.Services
             foreach (var attribute in productAttributeMapping.OrderBy(x => x.DisplayOrder))
             {
                 var productAttribute = await _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
-                var attributeModel = new ProductDetailsModel.ProductAttributeModel
-                {
+                var attributeModel = new ProductDetailsModel.ProductAttributeModel {
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -1056,8 +1067,7 @@ namespace Grand.Web.Services
                     var attributeValues = attribute.ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var valueModel = new ProductDetailsModel.ProductAttributeValueModel
-                        {
+                        var valueModel = new ProductDetailsModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
@@ -1093,8 +1103,7 @@ namespace Grand.Web.Services
                                 var imageSquaresPicture = await _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
                                 if (imageSquaresPicture != null)
                                 {
-                                    return new PictureModel
-                                    {
+                                    return new PictureModel {
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
@@ -1115,8 +1124,7 @@ namespace Grand.Web.Services
                                 var valuePicture = await _pictureService.GetPictureById(attributeValue.PictureId);
                                 if (valuePicture != null)
                                 {
-                                    return new PictureModel
-                                    {
+                                    return new PictureModel {
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
                                     };
@@ -1229,7 +1237,7 @@ namespace Grand.Web.Services
             if (product.TierPrices.Any() && await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
 
-                foreach(var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
+                foreach (var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
                                     .FilterByStore(_storeContext.CurrentStore.Id)
                                     .FilterForCustomer(_workContext.CurrentCustomer)
                                     .FilterByDate()
@@ -1244,7 +1252,7 @@ namespace Grand.Web.Services
                     model.TierPrices.Add(tier);
                 }
             }
-            
+
             #endregion
 
             #region Manufacturers
@@ -1341,8 +1349,7 @@ namespace Grand.Web.Services
                     if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
                     {
 
-                        var bundleProduct = new ProductDetailsModel.ProductBundleModel()
-                        {
+                        var bundleProduct = new ProductDetailsModel.ProductBundleModel() {
                             ProductId = p1.Id,
                             Name = p1.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ShortDescription = p1.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
@@ -1373,8 +1380,7 @@ namespace Grand.Web.Services
                             if (picture == null)
                                 picture = new ProductPicture();
 
-                            var pictureModel = new PictureModel
-                            {
+                            var pictureModel = new PictureModel {
                                 ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                             };
@@ -1429,8 +1435,7 @@ namespace Grand.Web.Services
             foreach (var pr in productReviews)
             {
                 var customer = await customerService.GetCustomerById(pr.CustomerId);
-                model.Items.Add(new ProductReviewModel
-                {
+                model.Items.Add(new ProductReviewModel {
                     Id = pr.Id,
                     CustomerId = pr?.CustomerId,
                     CustomerName = customer?.FormatUserName(_customerSettings.CustomerNameFormat),
@@ -1440,8 +1445,7 @@ namespace Grand.Web.Services
                     ReplyText = pr.ReplyText,
                     Signature = pr.Signature,
                     Rating = pr.Rating,
-                    Helpfulness = new ProductReviewHelpfulnessModel
-                    {
+                    Helpfulness = new ProductReviewHelpfulnessModel {
                         ProductId = product.Id,
                         ProductReviewId = pr.Id,
                         HelpfulYesTotal = pr.HelpfulYesTotal,
@@ -1463,8 +1467,7 @@ namespace Grand.Web.Services
                 rating = _catalogSettings.DefaultProductRatingValue;
             bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
 
-            var productReview = new ProductReview
-            {
+            var productReview = new ProductReview {
                 ProductId = product.Id,
                 StoreId = _storeContext.CurrentStore.Id,
                 CustomerId = _workContext.CurrentCustomer.Id,
@@ -1552,6 +1555,28 @@ namespace Grand.Web.Services
             //stock
             model.StockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _storeContext);
 
+            //back in stock subscription
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
+                product.BackorderMode == BackorderMode.NoBackorders &&
+                product.AllowBackInStockSubscriptions)
+            {
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributeXml);
+
+                if (product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
+                    model.DisplayBackInStockSubscription = true;
+
+                var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
+                var subscription = await backInStockSubscriptionService
+                   .FindSubscription(_workContext.CurrentCustomer.Id,
+                    product.Id, attributeXml, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
+
+                if (subscription != null)
+                    model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.DeleteNotifyWhenAvailable");
+                else
+                    model.ButtonTextBackInStockSubscription = _localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable");
+
+            }
+
             //conditional attributes
             if (validateAttributeConditions)
             {
@@ -1588,8 +1613,7 @@ namespace Grand.Web.Services
                     var pictureModel = await _cacheManager.Get(productAttributePictureCacheKey, async () =>
                     {
                         var picture = await _pictureService.GetPictureById(pictureId);
-                        return picture == null ? new PictureModel() : new PictureModel
-                        {
+                        return picture == null ? new PictureModel() : new PictureModel {
                             FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                             ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
                         };
@@ -1634,7 +1658,23 @@ namespace Grand.Web.Services
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
             return await Task.FromResult(model);
         }
+        public virtual async Task<IList<ProductOverviewModel>> PrepareNewProductsDisplayedOnHomePage(int? productThumbPictureSize)
+        {
+            if (!_catalogSettings.NewProductsOnHomePage)
+                return new List<ProductOverviewModel>();
 
+            var products = (await _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
+                markedAsNewOnly: true,
+                orderBy: ProductSortingEnum.CreatedOn,
+                pageSize: _catalogSettings.NewProductsNumberOnHomePage)).products;
+            
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+        }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
         {
             var products = await _productService.GetAllProductsDisplayedOnHomePage();

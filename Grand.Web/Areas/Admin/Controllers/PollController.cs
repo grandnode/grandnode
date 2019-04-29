@@ -4,7 +4,6 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
 using Grand.Services.Security;
@@ -292,7 +291,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> PollAnswerDelete(PollAnswer answer)
         {
-            var pol = await _pollService.GetPollById(answer.PollId);
+            var pol = (await _pollService.GetPolls()).FirstOrDefault(x => x.PollAnswers.Any(y => y.Id == answer.Id));
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");

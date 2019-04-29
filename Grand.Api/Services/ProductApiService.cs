@@ -196,6 +196,10 @@ namespace Grand.Api.Services
                             await _productService.InsertProductWarehouseInventory(newPwI);
                         }
                     }
+                    else
+                    {
+                        throw new ArgumentException("Product don't support multiple warehouses (warehouseId should be null or empty)");
+                    }
                 }
                 await BackInStockNotifications(product, prevStockQuantity, prevMultiWarehouseStock);
 

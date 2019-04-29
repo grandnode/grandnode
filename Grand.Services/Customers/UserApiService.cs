@@ -90,7 +90,7 @@ namespace Grand.Services.Customers
             if (!string.IsNullOrEmpty(email))
                 query = query.Where(x => x.Email.Contains(email.ToLowerInvariant()));
 
-            return await Task.FromResult(new PagedList<UserApi>(query, pageIndex, pageSize));
+            return await PagedList<UserApi>.Create(query, pageIndex, pageSize);
         }
     }
 }

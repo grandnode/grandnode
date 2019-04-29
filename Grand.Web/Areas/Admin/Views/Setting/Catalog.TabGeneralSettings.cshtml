@@ -9,6 +9,7 @@
         $("#@Html.FieldIdFor(model => model.SuggestedProductsEnabled)").click(toggleSuggestedProducts);
         $("#@Html.FieldIdFor(model => model.PersonalizedProductsEnabled)").click(togglePersonalizedProducts);
         $("#@Html.FieldIdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
+        $("#@Html.FieldIdFor(model => model.NewProductsOnHomePage)").click(toggleNewProductsHomePage);
         $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
         $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
         $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
@@ -19,6 +20,7 @@
         toggleSuggestedProducts();
         togglePersonalizedProducts();
         toggleNewProducts();
+        toggleNewProductsHomePage();
         toggleBestsellersOnHomepage();
         toggleProductsAlsoPurchasedNumber();
         toggleProductsByTagPageSize();
@@ -78,6 +80,14 @@
         }
     }
 
+    function toggleNewProductsHomePage() {
+        if ($('#@Html.FieldIdFor(model => model.NewProductsOnHomePage)').is(':checked')) {
+            $('#pnlNewProductsNumberOnHomePage').show();
+        }
+        else {
+            $('#pnlNewProductsNumberOnHomePage').hide();
+        }
+    }
     function toggleBestsellersOnHomepage() {
         if ($('#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
             $('#pnlNumberOfBestsellersOnHomepage').show();
@@ -116,7 +126,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowViewUnpublishedProductPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowViewUnpublishedProductPage"></span>
             </div>
@@ -129,7 +139,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayDiscontinuedMessageForUnpublishedProducts" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayDiscontinuedMessageForUnpublishedProducts"></span>
             </div>
@@ -142,7 +152,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowSkuOnProductDetailsPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowSkuOnProductDetailsPage"></span>
             </div>
@@ -155,7 +165,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowSkuOnCatalogPages" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowSkuOnCatalogPages"></span>
             </div>
@@ -168,7 +178,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowManufacturerPartNumber" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowManufacturerPartNumber"></span>
             </div>
@@ -181,7 +191,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowGtin" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowGtin"></span>
             </div>
@@ -194,7 +204,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowFreeShippingNotification" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowFreeShippingNotification"></span>
             </div>
@@ -207,7 +217,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowProductSorting" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowProductSorting"></span>
             </div>
@@ -220,7 +230,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowProductViewModeChanging" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowProductViewModeChanging"></span>
             </div>
@@ -233,7 +243,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowProductsFromSubcategories" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowProductsFromSubcategories"></span>
             </div>
@@ -246,7 +256,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowCategoryProductNumber" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowCategoryProductNumber"></span>
             </div>
@@ -259,7 +269,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowCategoryProductNumberIncludingSubcategories" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowCategoryProductNumberIncludingSubcategories"></span>
             </div>
@@ -272,7 +282,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="CategoryBreadcrumbEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="CategoryBreadcrumbEnabled"></span>
             </div>
@@ -285,7 +295,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AskQuestionEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AskQuestionEnabled"></span>
             </div>
@@ -298,7 +308,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AskQuestionOnProduct" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AskQuestionOnProduct"></span>
             </div>
@@ -312,7 +322,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="EmailAFriendEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="EmailAFriendEnabled"></span>
             </div>
@@ -325,7 +335,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowAnonymousUsersToEmailAFriend" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowAnonymousUsersToEmailAFriend"></span>
             </div>
@@ -338,7 +348,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="RecentlyViewedProductsEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="RecentlyViewedProductsEnabled"></span>
             </div>
@@ -361,7 +371,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="RecommendedProductsEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="RecommendedProductsEnabled"></span>
             </div>
@@ -374,7 +384,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SuggestedProductsEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SuggestedProductsEnabled"></span>
             </div>
@@ -397,7 +407,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="PersonalizedProductsEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="PersonalizedProductsEnabled"></span>
             </div>
@@ -420,7 +430,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="NewProductsEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="NewProductsEnabled"></span>
             </div>
@@ -434,7 +444,31 @@
                 <admin-input asp-for="NewProductsNumber" />
                 <span asp-validation-for="NewProductsNumber"></span>
             </div>
-        </div>        <div class="form-group">
+        </div>
+        <div class="form-group">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.NewProductsOnHomePage_OverrideForStore, model => model.NewProductsOnHomePage, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="NewProductsOnHomePage" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="NewProductsOnHomePage" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="NewProductsOnHomePage"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlNewProductsNumberOnHomePage">
+            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.NewProductsNumberOnHomePage_OverrideForStore, model => model.NewProductsNumberOnHomePage, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="NewProductsNumberOnHomePage" class="control-label" />
+            </div>
+            <div class="col-xs-4 col-md-8 col-sm-8">
+                <admin-input asp-for="NewProductsNumberOnHomePage" />
+                <span asp-validation-for="NewProductsNumberOnHomePage"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="ShowBestsellersOnHomepage" class="control-label" />
@@ -442,7 +476,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ShowBestsellersOnHomepage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ShowBestsellersOnHomepage"></span>
             </div>
@@ -465,7 +499,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ProductsAlsoPurchasedEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ProductsAlsoPurchasedEnabled"></span>
             </div>
@@ -498,7 +532,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="ProductsByTagAllowCustomersToSelectPageSize"></span>
             </div>
@@ -541,7 +575,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoFooter" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoFooter"></span>
             </div>
@@ -554,7 +588,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoProductDetailsPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoProductDetailsPage"></span>
             </div>
@@ -567,7 +601,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoProductBoxes" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoProductBoxes"></span>
             </div>
@@ -580,7 +614,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoShoppingCart" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoShoppingCart"></span>
             </div>
@@ -593,7 +627,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoWishlist" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoWishlist"></span>
             </div>
@@ -606,7 +640,7 @@
             <div class="col-xs-4 col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="DisplayTaxShippingInfoOrderDetailsPage" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="DisplayTaxShippingInfoOrderDetailsPage"></span>
             </div>

@@ -35,7 +35,14 @@
 }
     <div class="card gen" data-productid="@Model.Id">
         <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-            <img class="card-img-top img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            <img class="card-img-top img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" 
+            @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl))
+            {
+                <text>
+                 onmouseover="this.src='@Model.SecondPictureModel.ImageUrl';" onmouseout="this.src='@Model.DefaultPictureModel.ImageUrl';" 
+                </text>
+            }
+            />
         </a>
          @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
          {
@@ -75,16 +82,8 @@
                                 addToCartText = T("ShoppingCart.PreOrder").Text;
                             }
                             <button type="button" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;">
-                                @if (!Model.ShowQty)
-                                {
                                     <span class="add-cart-text d-sm-block d-none">@(addToCartText)</span>
-                                    <span class="material-icons mat d-sm-none d-block">shopping_cart</span>
-                                }
-                                else
-                                {
-                                    <span class="add-cart-text d-sm-block d-none">@(addToCartText)</span>
-                                    <span class="material-icons mat d-sm-none d-block">shopping_cart</span>
-                                }
+                                    <span class="mdi mdi-cart d-sm-none d-block"></span>
                                 <span class="sr-only">AddToCart</span>
                             </button>
                         }
@@ -94,9 +93,7 @@
                             {
                                 var addToCartText = T("ShoppingCart.Bids").Text;
                                 <button type="button" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
-                                    <span class="material-icons mat">
-                                        gavel
-                                    </span>
+                                    <span class="mdi mdi-gavel"></span>
                                         <span class="d-none d-xl-block">@(addToCartText)</span>
                                     <span class="sr-only">AddToCart</span>
                                 </button>
@@ -105,24 +102,19 @@
                         }
                         <button type="button" value="@T("Products.QuickView")"  title="@T("Products.QuickView")" class="btn btn-secondary btn-quick-view" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
                             <span class="sr-only">@T("Products.QuickView")</span>
-                            <span class="material-icons mat">
-                                search
-                            </span>
+                            <span class="mdi mdi-magnify"></span>
                         </button>
                         @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                         {
                             <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
                                 <span class="sr-only">AddToCompareList</span>
-                                <span class="material-icons mat">
-                                    repeat
-                                </span>
+                                <span class="mdi mdi-repeat"></span>
                             </button>
                         }
                         @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
                         {
                             <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
-                                <span class="material-icons mat">
-                                    favorite_border
+                                <span class="mdi mdi-heart-outline">
                                 </span>
                                 <span class="sr-only">AddToWishlist</span>
                             </button>

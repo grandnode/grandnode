@@ -18,7 +18,7 @@ namespace Grand.Web.ViewComponents
         public IViewComponentResult Invoke()
         {
             var model = _commonViewModelService.PrepareFavicon();
-            if (String.IsNullOrEmpty(model.FaviconUrl))
+            if (string.IsNullOrEmpty(model.FaviconUrl))
                 return Content("");
 
             return View(model);

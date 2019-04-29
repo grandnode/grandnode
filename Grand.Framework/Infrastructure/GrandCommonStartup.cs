@@ -116,9 +116,7 @@ namespace Grand.Framework.Infrastructure
                 application.UsePoweredBy();
 
             //use request localization
-            if (!grandConfig.UseRequestLocalization)
-                application.UseRequestLocalization();
-            else
+            if (grandConfig.UseRequestLocalization)
             {
                 var supportedCultures = new List<CultureInfo>();
                 foreach (var culture in grandConfig.SupportedCultures)
@@ -132,6 +130,10 @@ namespace Grand.Framework.Infrastructure
                     SupportedUICultures = supportedCultures
                 });
             }
+            else
+                //use default request localization
+                application.UseRequestLocalization();
+
         }
 
         /// <summary>

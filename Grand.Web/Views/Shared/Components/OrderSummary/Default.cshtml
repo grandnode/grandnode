@@ -67,7 +67,7 @@
                                 {
                                     <td class="remove-from-cart text-center">
                                         <button type="button" class="btn btn-link text-danger deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
-                                            <span class="material-icons pr-1">close</span>
+                                            <span class="mdi mdi-close pr-1"></span>
                                         </button>
                                     </td>
                                 }
@@ -200,8 +200,8 @@
             @if (Model.IsEditable)
             {
                 <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><span class="material-icons pr-1">clear</span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><i class="fas fa-reply pr-1"></i><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
+                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
+                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><span class="mdi mdi-forward pr-1"></span><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
                 </div>
             }
             <div class="row px-3 cart-options">
@@ -286,7 +286,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="ModalLabel">@T("Checkout.TermsOfService")</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span class="material-icons">close</span>
+                                                    <span class="mdi mdi-close"></span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">

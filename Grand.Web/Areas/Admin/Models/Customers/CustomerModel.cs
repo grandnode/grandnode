@@ -381,6 +381,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string ProductId { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Product")]
             public string ProductName { get; set; }
+            public string AttributeDescription { get; set; }
             [GrandResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }

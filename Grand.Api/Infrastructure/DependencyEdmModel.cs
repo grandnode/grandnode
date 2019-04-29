@@ -1,9 +1,11 @@
-﻿using Grand.Api.DTOs.Catalog;
+﻿using System;
+using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
 using Grand.Api.DTOs.Shipping;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
+using Grand.Core.Domain.Catalog;
 using Microsoft.AspNet.OData.Builder;
 
 namespace Grand.Api.Infrastructure
@@ -87,59 +89,87 @@ namespace Grand.Api.Infrastructure
             //insert/update/delete category
             #region Product category
             ActionConfiguration createCategory = product.Action("CreateProductCategory");
-            createCategory.Parameter<ProductCategoryDto>("productCategory");
+            createCategory.Parameter<string>(nameof(ProductCategoryDto.CategoryId)).Required();
+            createCategory.Parameter<bool>(nameof(ProductCategoryDto.IsFeaturedProduct));
             createCategory.Returns<bool>();
 
             ActionConfiguration updateCategory = product.Action("UpdateProductCategory");
-            updateCategory.Parameter<ProductCategoryDto>("productCategory");
+            updateCategory.Parameter<string>(nameof(ProductCategoryDto.CategoryId)).Required();
+            updateCategory.Parameter<bool>(nameof(ProductCategoryDto.IsFeaturedProduct));
             updateCategory.Returns<bool>();
 
             ActionConfiguration deleteCategory = product.Action("DeleteProductCategory");
-            deleteCategory.Parameter<string>("CategoryId").Required();
+            deleteCategory.Parameter<string>(nameof(ProductCategoryDto.CategoryId)).Required();
             deleteCategory.Returns<bool>();
             #endregion
 
             //insert/update/delete manufacturer
             #region Product manufacturer
             ActionConfiguration createManufacturer = product.Action("CreateProductManufacturer");
-            createManufacturer.Parameter<ProductManufacturerDto>("productManufacturer");
+            createManufacturer.Parameter<string>(nameof(ProductManufacturerDto.ManufacturerId)).Required();
+            createManufacturer.Parameter<bool>(nameof(ProductManufacturerDto.IsFeaturedProduct));
             createManufacturer.Returns<bool>();
 
             ActionConfiguration updateManufacturer = product.Action("UpdateProductManufacturer");
-            updateManufacturer.Parameter<ProductManufacturerDto>("productManufacturer");
+            updateManufacturer.Parameter<string>(nameof(ProductManufacturerDto.ManufacturerId)).Required();
+            updateManufacturer.Parameter<bool>(nameof(ProductManufacturerDto.IsFeaturedProduct));
             updateManufacturer.Returns<bool>();
 
             ActionConfiguration deleteManufacturer = product.Action("DeleteProductManufacturer");
-            deleteManufacturer.Parameter<string>("ManufacturerId").Required();
+            deleteManufacturer.Parameter<string>(nameof(ProductManufacturerDto.ManufacturerId)).Required();
             deleteManufacturer.Returns<bool>();
             #endregion
 
             //insert/update/delete picture
             #region Product picture
             ActionConfiguration createPicture = product.Action("CreateProductPicture");
-            createPicture.Parameter<ProductPictureDto>("productPicture");
+            createPicture.Parameter<string>(nameof(ProductPictureDto.PictureId)).Required();
+            createPicture.Parameter<string>(nameof(ProductPictureDto.MimeType)).Required();
+            createPicture.Parameter<string>(nameof(ProductPictureDto.SeoFilename)).Required();
+            createPicture.Parameter<string>(nameof(ProductPictureDto.AltAttribute)).Required();
+            createPicture.Parameter<int>(nameof(ProductPictureDto.DisplayOrder)).Required();
+            createPicture.Parameter<string>(nameof(ProductPictureDto.TitleAttribute)).Required();
             createPicture.Returns<bool>();
 
             ActionConfiguration updatePicture = product.Action("UpdateProductPicture");
-            updatePicture.Parameter<ProductPictureDto>("productPicture");
+            updatePicture.Parameter<string>(nameof(ProductPictureDto.PictureId)).Required();
+            updatePicture.Parameter<string>(nameof(ProductPictureDto.MimeType)).Required();
+            updatePicture.Parameter<string>(nameof(ProductPictureDto.SeoFilename)).Required();
+            updatePicture.Parameter<string>(nameof(ProductPictureDto.AltAttribute)).Required();
+            updatePicture.Parameter<int>(nameof(ProductPictureDto.DisplayOrder)).Required();
+            updatePicture.Parameter<string>(nameof(ProductPictureDto.TitleAttribute)).Required();
             updatePicture.Returns<bool>();
 
             ActionConfiguration deletePicture = product.Action("DeleteProductPicture");
-            deletePicture.Parameter<string>("PictureId").Required();
+            deletePicture.Parameter<string>(nameof(ProductPictureDto.PictureId)).Required();
             deletePicture.Returns<bool>();
             #endregion
 
             #region Product specification
             ActionConfiguration createSpecification = product.Action("CreateProductSpecification");
-            createSpecification.Parameter<ProductSpecificationAttributeDto>("productSpecification");
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
+            createSpecification.Parameter<int>(nameof(ProductSpecificationAttributeDto.DisplayOrder));
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue));
+            createSpecification.Parameter<SpecificationAttributeType>(nameof(ProductSpecificationAttributeDto.AttributeType)).Required();
+            createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.AllowFiltering));
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId));
+            createSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.ShowOnProductPage));
+            createSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
             createSpecification.Returns<bool>();
 
             ActionConfiguration updateSpecification = product.Action("UpdateProductSpecification");
-            updateSpecification.Parameter<ProductSpecificationAttributeDto>("productSpecification");
+            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
+            updateSpecification.Parameter<int>(nameof(ProductSpecificationAttributeDto.DisplayOrder));
+            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.CustomValue));
+            updateSpecification.Parameter<SpecificationAttributeType>(nameof(ProductSpecificationAttributeDto.AttributeType)).Required();
+            updateSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.AllowFiltering));
+            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeId)).Required();
+            updateSpecification.Parameter<bool>(nameof(ProductSpecificationAttributeDto.ShowOnProductPage));
+            updateSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.SpecificationAttributeOptionId));
             updateSpecification.Returns<bool>();
 
             ActionConfiguration deleteSpecification = product.Action("DeleteProductSpecification");
-            deleteSpecification.Parameter<string>("Id").Required();
+            deleteSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
             deleteSpecification.Returns<bool>();
             #endregion
         }
@@ -187,11 +217,41 @@ namespace Grand.Api.Infrastructure
             builder.ComplexType<AddressDto>();
 
             ActionConfiguration addAddress = customer.Action("AddAddress");
-            addAddress.Parameter<AddressDto>("address");
+            addAddress.Parameter<string>(nameof(AddressDto.Id)).Required();
+            addAddress.Parameter<string>(nameof(AddressDto.City));
+            addAddress.Parameter<string>(nameof(AddressDto.Email));
+            addAddress.Parameter<string>(nameof(AddressDto.Company));
+            addAddress.Parameter<string>(nameof(AddressDto.Address1));
+            addAddress.Parameter<string>(nameof(AddressDto.Address2));
+            addAddress.Parameter<string>(nameof(AddressDto.LastName));
+            addAddress.Parameter<string>(nameof(AddressDto.CountryId));
+            addAddress.Parameter<string>(nameof(AddressDto.FaxNumber));
+            addAddress.Parameter<string>(nameof(AddressDto.FirstName));
+            addAddress.Parameter<string>(nameof(AddressDto.VatNumber));
+            addAddress.Parameter<string>(nameof(AddressDto.PhoneNumber));
+            addAddress.Parameter<string>(nameof(AddressDto.CustomAttributes));
+            addAddress.Parameter<DateTimeOffset>(nameof(AddressDto.CreatedOnUtc));
+            addAddress.Parameter<string>(nameof(AddressDto.ZipPostalCode));
+            addAddress.Parameter<string>(nameof(AddressDto.StateProvinceId));
             addAddress.Returns<AddressDto>();
 
             ActionConfiguration updateAddress = customer.Action("UpdateAddress");
-            updateAddress.Parameter<AddressDto>("address");
+            updateAddress.Parameter<string>(nameof(AddressDto.Id)).Required();
+            updateAddress.Parameter<string>(nameof(AddressDto.City));
+            updateAddress.Parameter<string>(nameof(AddressDto.Email));
+            updateAddress.Parameter<string>(nameof(AddressDto.Company));
+            updateAddress.Parameter<string>(nameof(AddressDto.Address1));
+            updateAddress.Parameter<string>(nameof(AddressDto.Address2));
+            updateAddress.Parameter<string>(nameof(AddressDto.LastName));
+            updateAddress.Parameter<string>(nameof(AddressDto.CountryId));
+            updateAddress.Parameter<string>(nameof(AddressDto.FaxNumber));
+            updateAddress.Parameter<string>(nameof(AddressDto.FirstName));
+            updateAddress.Parameter<string>(nameof(AddressDto.VatNumber));
+            updateAddress.Parameter<string>(nameof(AddressDto.PhoneNumber));
+            updateAddress.Parameter<string>(nameof(AddressDto.CustomAttributes));
+            updateAddress.Parameter<DateTimeOffset>(nameof(AddressDto.CreatedOnUtc));
+            updateAddress.Parameter<string>(nameof(AddressDto.ZipPostalCode));
+            updateAddress.Parameter<string>(nameof(AddressDto.StateProvinceId));
             updateAddress.Returns<AddressDto>();
 
             ActionConfiguration deleteAddress = customer.Action("DeleteAddress");

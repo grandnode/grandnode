@@ -65,6 +65,8 @@
 
         var defaultEditorSettings@(random) = {
             selector: "#@Html.IdForModel()",
+            theme: "modern",
+            schema: "html5",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 200,
             width: '100%',
@@ -75,7 +77,7 @@
                 "searchreplace visualblocks code fullscreen textcolor",
                 "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | media link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
             @if (allowJavaScript)

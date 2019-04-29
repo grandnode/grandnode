@@ -173,7 +173,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("MetaDescription", null, manufacturer.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, manufacturer.MetaTitle);
                 xmlWriter.WriteElementString("SEName", null, manufacturer.GetSeName(""));
-                xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId.ToString());
+                xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId);
                 xmlWriter.WriteElementString("PageSize", null, manufacturer.PageSize.ToString());
                 xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
                 xmlWriter.WriteElementString("PageSizeOptions", null, manufacturer.PageSizeOptions);

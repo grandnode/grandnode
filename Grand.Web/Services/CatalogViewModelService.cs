@@ -577,7 +577,7 @@ namespace Grand.Web.Services
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize));
-            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products.products)).ToList();
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products.products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products.products);
 
@@ -1012,7 +1012,7 @@ namespace Grand.Web.Services
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize)).products;
-            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
@@ -1078,7 +1078,7 @@ namespace Grand.Web.Services
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize)).products;
-            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             return model;
@@ -1187,7 +1187,7 @@ namespace Grand.Web.Services
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize)).products;
-            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
+            model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
@@ -1636,7 +1636,7 @@ namespace Grand.Web.Services
                         pageIndex: command.PageNumber - 1,
                         pageSize: command.PageSize,
                         vendorId: vendorId)).products;
-                    model.Products = (await _productViewModelService.PrepareProductOverviewModels(products)).ToList();
+                    model.Products = (await _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
 
                     model.NoResults = !model.Products.Any();
 

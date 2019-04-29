@@ -1526,13 +1526,14 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var x in subscriptions)
             {
                 var store = await _storeService.GetStoreById(x.StoreId);
-                var product = await _serviceProvider.GetRequiredService<IProductService>().GetProductById(x.ProductId);
+                var product = await _productService.GetProductById(x.ProductId);
                 var m = new CustomerModel.BackInStockSubscriptionModel
                 {
                     Id = x.Id,
                     StoreName = store != null ? store.Name : "Unknown",
                     ProductId = x.ProductId,
                     ProductName = product != null ? product.Name : "Unknown",
+                    AttributeDescription = string.IsNullOrEmpty(x.AttributeXml) ? "" : await _productAttributeFormatter.FormatAttributes(product, x.AttributeXml),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 };
                 items.Add(m);

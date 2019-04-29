@@ -12,7 +12,7 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page pl-lg-3 pt-lg-0 pt-3">
-    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
     <h1 class="h2 generalTitle">@T("Account.BackInStockSubscriptions")</h1>
     @if (Model.Subscriptions.Count > 0)
     {
@@ -67,6 +67,11 @@
                                     </td>
                                     <td class="product">
                                         @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                        @if (!string.IsNullOrEmpty(item.AttributeDescription))
+                                        {
+                                            <br/>
+                                            @Html.Raw(item.AttributeDescription)
+                                        }
                                     </td>
                                 </tr>
                             }

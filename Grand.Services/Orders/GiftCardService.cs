@@ -77,13 +77,16 @@ namespace Grand.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual async Task<IPagedList<GiftCard>> GetAllGiftCards(string purchasedWithOrderId = "",
+        public virtual async Task<IPagedList<GiftCard>> GetAllGiftCards(string purchasedWithOrderItemId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _giftCardRepository.Table;
+
+            if (!string.IsNullOrEmpty(purchasedWithOrderItemId))
+                query = query.Where(gc => gc.PurchasedWithOrderItem.Id == purchasedWithOrderItemId);
 
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
@@ -96,8 +99,7 @@ namespace Grand.Services.Orders
             if (!String.IsNullOrWhiteSpace(recipientName))
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
-
-            return await Task.FromResult(new PagedList<GiftCard>(query, pageIndex, pageSize));
+            return await PagedList<GiftCard>.Create(query, pageIndex, pageSize);
         }
 
         public virtual async Task<IList<GiftCardUsageHistory>> GetAllGiftCardUsageHistory(string orderId = "")

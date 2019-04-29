@@ -80,15 +80,15 @@ namespace Grand.Services.Tests.Catalog
         }
 
         [TestMethod()]
-        public void CanDeleteBid()
+        public async Task CanDeleteBid()
         {
-            _auctionService.InsertBid(new Bid
+            await _auctionService.InsertBid(new Bid
             {
                 CustomerId = "CanDeleteBid"
             });
 
             var bid = _bidRepository.Table.Where(x => x.CustomerId == "CanDeleteBid").First();
-            _auctionService.DeleteBid(bid);
+            await _auctionService.DeleteBid(bid);
             var deleted = _bidRepository.Table.Where(x => x.CustomerId == "CanDeleteBid").FirstOrDefault();
 
             Assert.AreEqual(null, deleted);

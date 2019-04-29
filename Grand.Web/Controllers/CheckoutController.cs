@@ -792,7 +792,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 //get payment info
-                var paymentInfo = paymentMethod.GetPaymentInfo(form);
+                var paymentInfo = await paymentMethod.GetPaymentInfo(form);
                 //session save
                 this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
@@ -1509,7 +1509,7 @@ namespace Grand.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     //get payment info
-                    var paymentInfo = paymentMethod.GetPaymentInfo(form);
+                    var paymentInfo = await paymentMethod.GetPaymentInfo(form);
                     //session save
                     this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 

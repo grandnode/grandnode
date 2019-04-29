@@ -5904,6 +5904,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
     <Value>The number of products to display when 'New products' page is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsOnHomePage">
+    <Value>Show 'New products' on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsOnHomePage.Hint">
+    <Value>Check to enable the 'New products' on home page in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumberOnHomePage">
+    <Value>Number of products 'New products' on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumberOnHomePage.Hint">
+    <Value>The number of products to display when 'New products' on home page is enabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyStoreOwnerAboutNewProductReviews">
     <Value>Notify about new product reviews</Value>
   </LocaleResource>
@@ -14854,18 +14866,6 @@
   <LocaleResource Name="Admin.System.ScheduleTasks.BackToList">
     <Value>Back to schedule tasks list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth">
-    <Value>Day of month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth.hint">
-    <Value>Day of month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek">
-    <Value>Day of week</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek.hint">
-    <Value>Day of week</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Edit">
     <Value>Edit Schedule task</Value>
   </LocaleResource>
@@ -14874,12 +14874,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Enabled.hint">
     <Value>Enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay">
-    <Value>Hour of day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay.hint">
-    <Value>Hour of day</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
     <Value>Last no success end date</Value>
@@ -14904,18 +14898,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName.hint">
     <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour">
-    <Value>Minute of hour</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour.hint">
-    <Value>Minute of hour</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice">
-    <Value>Month option</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice.hint">
-    <Value>Month option</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Name">
     <Value>Name</Value>
@@ -14954,16 +14936,10 @@
     <Value>Stop on error</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval">
-    <Value>Time interval</Value>
+    <Value>Time interval (in minutes)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval.hint">
-    <Value>Time interval</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice">
-    <Value>Select time interval</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice.hint">
-    <Value>Select time interval</Value>
+    <Value>Time interval (in minutes)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Type">
     <Value>SheduledTask Type</Value>
@@ -15721,6 +15697,9 @@
   <LocaleResource Name="BackInStockSubscriptions.MaxSubscriptions">
     <Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.DeleteNotifyWhenAvailable">
+    <Value>Cancel notification</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.NotAllowed">
     <Value>Subscriptions are not allowed for this product</Value>
   </LocaleResource>
@@ -15739,11 +15718,17 @@
   <LocaleResource Name="BackInStockSubscriptions.PopupTitle">
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
+  <LocaleResource Name="backinstocksubscriptions.subscribed">
+    <Value>You are successfully subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Title">
+    <Value>Notify about availability</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
     <Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
   </LocaleResource>
-  <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
-    <Value>Unsubscribe</Value>
+  <LocaleResource Name="backinstocksubscriptions.unsubscribed">
+    <Value>You are successfully unsubscribed</Value>
   </LocaleResource>
   <LocaleResource Name="Bestsellers">
     <Value>Bestsellers</Value>
@@ -17145,6 +17130,9 @@
   </LocaleResource>
   <LocaleResource Name="HomePage">
     <Value>Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.NewProducts">
+    <Value>New Products</Value>
   </LocaleResource>
   <LocaleResource Name="HomePage.Personalized.Products">
     <Value>Personalized products for you</Value>
@@ -19549,64 +19537,67 @@
   <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.AllowGuestNotifications.Hint">
     <Value>Should be checked if you want to allow guest to register for push notifications</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Fields.ClickUrl">
+  <LocaleResource Name="Admin.PushNotifications.Fields.ClickUrl">
     <Value>Click Url</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Fields.ClickUrl.Hint">
+  <LocaleResource Name="Admin.PushNotifications.Fields.ClickUrl.Hint">
     <Value>Page that will be opened after user clicks on notification</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Fields.PictureId">
-    <Value>Picture Id</Value>
+  <LocaleResource Name="Admin.PushNotifications.Fields.Picture">
+    <Value>Picture</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Fields.PushMessageText">
+    <LocaleResource Name="Admin.PushNotifications.Fields.Picture.Hint">
+    <Value>Upload picture of your push notification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Fields.PushMessageText">
     <Value>Message text</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Fields.PushTitle">
+    <LocaleResource Name="Admin.PushNotifications.Fields.PushMessageText.Hint">
+    <Value>Enter your message text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Fields.PushTitle">
     <Value>Title</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Error.NoReceivers">
+    <LocaleResource Name="Admin.PushNotifications.Fields.PushTitle.Hint">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Error.NoReceivers">
     <Value>No receviers yet. Wait for someone to register for push notifications.</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.MessageSent">
+  <LocaleResource Name="Admin.PushNotifications.MessageSent">
     <Value>Notification sent</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.Id">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.Id">
     <Value>Id</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.Title">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.Text">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.Text">
     <Value>Text</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.NumberOfReceivers">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.NumberOfReceivers">
     <Value>Number of receivers</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.SentOn">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.SentOn">
     <Value>Sent on</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.CustomerEmail">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.CustomerEmail">
     <Value>Email</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.Allowed">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.Allowed">
     <Value>Allowed</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.Message.Fields.RegisteredOn">
+  <LocaleResource Name="Admin.PushNotifications.Message.Fields.RegisteredOn">
     <Value>Registered on</Value>
-  </LocaleResource>
-  <LocaleResource Name="PushNotifications.PushNotifications">
-    <Value>Push notifications</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.PushNotifications.Info">
     <Value>We are using firebase for push notifications. You can find more info in our manuals or on firebase docs.</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.SendPush">
-    <Value>Send</Value>
-  </LocaleResource>
-  <LocaleResource Name="PushNotifications.MessageTextPlaceholder">
+  <LocaleResource Name="Admin.PushNotifications.MessageTextPlaceholder">
     <Value>Message text</Value>
   </LocaleResource>
-  <LocaleResource Name="PushNotifications.MessageTitlePlaceholder">
+  <LocaleResource Name="Admin.PushNotifications.MessageTitlePlaceholder">
     <Value>Message title</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.PushNotifications">
@@ -19623,12 +19614,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.PushNotifications.PushNotifications.Warning">
     <Value>Warning! Press "Save" button every time you upgrade GrandNode to new version, as the settings will be wiped out in registration script.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Pushnotifications.Pushnotifications.Messages">
-    <Value>Messages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Pushnotifications.Pushnotifications.Receivers">
-    <Value>Receivers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.PushNotifications">
     <Value>Push notifications settings</Value>

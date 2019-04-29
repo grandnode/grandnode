@@ -102,7 +102,8 @@ namespace Grand.Services.Shipping
             var builderSort = Builders<Shipment>.Sort.Descending(x => x.CreatedOnUtc);
 
             var query = _shipmentRepository.Collection;
-            return await Task.FromResult(new PagedList<Shipment>(query, filter, builderSort, pageIndex, pageSize));
+            var shipments = await PagedList<Shipment>.Create(query, filter, builderSort, pageIndex, pageSize);
+            return shipments;
             
         }
 

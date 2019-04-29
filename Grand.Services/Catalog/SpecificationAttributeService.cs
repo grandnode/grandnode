@@ -103,8 +103,7 @@ namespace Grand.Services.Catalog
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
                         select sa;
-            
-            return await Task.FromResult(new PagedList<SpecificationAttribute>(query, pageIndex, pageSize));
+            return await PagedList<SpecificationAttribute>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

@@ -34,6 +34,17 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display product SKU on catalog pages
         /// </summary>
         public bool ShowSkuOnCatalogPages { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display specification attribute on catalog pages
+        /// </summary>
+        public bool ShowSpecAttributeOnCatalogPages { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to generate second picture on catalog pages
+        /// </summary>
+        public bool SecondPictureOnCatalogPages { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to display manufacturer part number of a product
         /// </summary>
@@ -191,6 +202,16 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a value indicating whether "New products" page is enabled
         /// </summary>
         public bool NewProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "New products" is show on home page
+        /// </summary>
+        public bool NewProductsOnHomePage { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a number of products on the "New products" on home page
+        /// </summary>
+        public int NewProductsNumberOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled

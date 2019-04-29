@@ -25,9 +25,7 @@
         <li class="nav-item dropdown manufacturer-items d-lg-flex d-none">
             <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>@T("Manufacturers.Menu")</span>
-                <span class="material-icons mat arrow-down">
-                    keyboard_arrow_down
-                </span>
+                <span class="mdi mdi-chevron-down arrow-down"></span>
             </a>
             <ul class="dropdown-menu manufacturer-dropdown first-level">
                 @foreach (var manuf in Model.Manufacturers)

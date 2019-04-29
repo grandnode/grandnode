@@ -21,6 +21,7 @@ namespace Grand.Web.Extensions
             var model = new CategoryModel
             {
                 Id = entity.Id,
+                ParentCategoryId = entity.ParentCategoryId,
                 Name = entity.GetLocalized(x => x.Name, language.Id),
                 Description = entity.GetLocalized(x => x.Description, language.Id),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),

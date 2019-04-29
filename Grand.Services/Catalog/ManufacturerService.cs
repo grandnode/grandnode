@@ -185,8 +185,7 @@ namespace Grand.Services.Catalog
                 }
             }
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Name);
-
-            return await Task.FromResult(new PagedList<Manufacturer>(query, pageIndex, pageSize));
+            return await PagedList<Manufacturer>.Create(query, pageIndex, pageSize);
         }
 
 

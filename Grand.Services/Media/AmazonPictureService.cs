@@ -202,7 +202,7 @@ namespace Grand.Services.Media
                 };
                 EnsureValidResponse(_s3Client.PutObjectAsync(putObjectRequest).Result, HttpStatusCode.OK);
             }
-            _s3Client.MakeObjectPublicAsync(_bucketName, thumbFileName, true);
+            _s3Client.MakeObjectPublicAsync(_bucketName, thumbFileName, true).GetAwaiter().GetResult();
         }
 
         /// <summary>

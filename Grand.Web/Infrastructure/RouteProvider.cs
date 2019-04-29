@@ -247,10 +247,17 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",
                             new { controller = "Product", action = "ProductReviews" });
+
             //back in stock notifications
             routeBuilder.MapLocalizedRoute("BackInStockSubscribePopup",
                             "backinstocksubscribe/{productId}",
                             new { controller = "BackInStockSubscription", action = "SubscribePopup" });
+
+            //back in stock notifications button text
+            routeBuilder.MapLocalizedRoute("BackInStockSubscribeButton",
+                            "backinstocksubscribebutton/{productId}",
+                            new { controller = "BackInStockSubscription", action = "SubscribeButton" });
+
             //downloads
             routeBuilder.MapRoute("GetSampleDownload",
                             "download/sample/{productid}",

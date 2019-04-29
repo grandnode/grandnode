@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
@@ -87,7 +86,7 @@ namespace Grand.Services.Catalog
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
-            return await Task.FromResult(new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -98,21 +97,25 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string warehouseId,
+        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(string productId, string attributeXml, string warehouseId,
             string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //product
             query = query.Where(biss => biss.ProductId == productId);
             //store
-            if (!String.IsNullOrEmpty(storeId))
+            if (!string.IsNullOrEmpty(storeId))
                 query = query.Where(biss => biss.StoreId == storeId);
             //warehouse
-            if (!String.IsNullOrEmpty(warehouseId))
+            if (!string.IsNullOrEmpty(warehouseId))
                 query = query.Where(biss => biss.WarehouseId == warehouseId);
 
+            //warehouse
+            if (!string.IsNullOrEmpty(attributeXml))
+                query = query.Where(biss => biss.AttributeXml == attributeXml);
+
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            return await Task.FromResult(new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            return await PagedList<BackInStockSubscription>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -120,9 +123,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
+        /// <param name="attributeXml">Attribute xml</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string storeId, string warehouseId)
+        public virtual async Task<BackInStockSubscription> FindSubscription(string customerId, string productId, string attributeXml, string storeId, string warehouseId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
@@ -132,6 +137,10 @@ namespace Grand.Services.Catalog
                               biss.WarehouseId == warehouseId
                         select biss;
 
+            if (!string.IsNullOrEmpty(attributeXml))
+            {
+                query = query.Where(x => x.AttributeXml == attributeXml);
+            }
             return await query.FirstOrDefaultAsync();
         }
 
@@ -180,17 +189,19 @@ namespace Grand.Services.Catalog
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="warehouse">Warehouse ident</param>
         /// <returns>Number of sent email</returns>
         public virtual async Task<int> SendNotificationsToSubscribers(Product product, string warehouse)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+
             int result = 0;
-            var subscriptions = await GetAllSubscriptionsByProductId(product.Id, warehouse);
+            var subscriptions = await GetAllSubscriptionsByProductId(product.Id, string.Empty, warehouse);
             foreach (var subscription in subscriptions)
             {
-                var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
                 var customer = await customerService.GetCustomerById(subscription.CustomerId);
                 //ensure that customer is registered (simple and fast way)
                 if (customer != null && CommonHelper.IsValidEmail(customer.Email))
@@ -205,7 +216,40 @@ namespace Grand.Services.Catalog
 
             return result;
         }
-        
+
+        /// <summary>
+        /// Send notification to subscribers
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributeXml">Attribute xml</param>
+        /// <param name="warehouse">Warehouse ident</param>
+        /// <returns>Number of sent email</returns>
+        public virtual async Task<int> SendNotificationsToSubscribers(Product product, string attributeXml, string warehouse)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var customerService = _serviceProvider.GetRequiredService<ICustomerService>();
+
+            int result = 0;
+            var subscriptions = await GetAllSubscriptionsByProductId(product.Id, attributeXml, warehouse);
+            foreach (var subscription in subscriptions)
+            {
+                var customer = await customerService.GetCustomerById(subscription.CustomerId);
+                //ensure that customer is registered (simple and fast way)
+                if (customer != null && CommonHelper.IsValidEmail(customer.Email))
+                {
+                    var customerLanguageId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
+                    await _workflowMessageService.SendBackInStockNotification(customer, product, subscription, customerLanguageId);
+                    result++;
+                }
+            }
+            for (int i = 0; i <= subscriptions.Count - 1; i++)
+                await DeleteSubscription(subscriptions[i]);
+
+            return result;
+        }
+
         #endregion
     }
 }

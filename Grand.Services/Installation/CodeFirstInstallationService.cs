@@ -160,105 +160,105 @@ namespace Grand.Services.Installation
 
         public CodeFirstInstallationService(IServiceProvider serviceProvider)
         {
-            this._versionRepository = serviceProvider.GetRequiredService<IRepository<GrandNodeVersion>>();
-            this._bidRepository = serviceProvider.GetRequiredService<IRepository<Bid>>();
-            this._addressRepository = serviceProvider.GetRequiredService<IRepository<Address>>();
-            this._affiliateRepository = serviceProvider.GetRequiredService<IRepository<Affiliate>>();
-            this._blogcommentRepository = serviceProvider.GetRequiredService<IRepository<BlogComment>>();
-            this._blogpostRepository = serviceProvider.GetRequiredService<IRepository<BlogPost>>();
-            this._campaignRepository = serviceProvider.GetRequiredService<IRepository<Campaign>>();
-            this._campaignHistoryRepository = serviceProvider.GetRequiredService<IRepository<CampaignHistory>>();
-            this._downloadRepository = serviceProvider.GetRequiredService<IRepository<Download>>();
-            this._orderRepository = serviceProvider.GetRequiredService<IRepository<Order>>();
-            this._orderNoteRepository = serviceProvider.GetRequiredService<IRepository<OrderNote>>();
-            this._giftcardRepository = serviceProvider.GetRequiredService<IRepository<GiftCard>>();
-            this._storeRepository = serviceProvider.GetRequiredService<IRepository<Store>>();
-            this._measureDimensionRepository = serviceProvider.GetRequiredService<IRepository<MeasureDimension>>();
-            this._measureWeightRepository = serviceProvider.GetRequiredService<IRepository<MeasureWeight>>();
-            this._measureUnitRepository = serviceProvider.GetRequiredService<IRepository<MeasureUnit>>();
-            this._taxCategoryRepository = serviceProvider.GetRequiredService<IRepository<TaxCategory>>();
-            this._languageRepository = serviceProvider.GetRequiredService<IRepository<Language>>();
-            this._lsrRepository = serviceProvider.GetRequiredService<IRepository<LocaleStringResource>>();
-            this._logRepository = serviceProvider.GetRequiredService<IRepository<Log>>();
-            this._currencyRepository = serviceProvider.GetRequiredService<IRepository<Currency>>();
-            this._customerRepository = serviceProvider.GetRequiredService<IRepository<Customer>>();
-            this._customerRoleRepository = serviceProvider.GetRequiredService<IRepository<CustomerRole>>();
-            this._customerProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerProduct>>();
-            this._customerProductPriceRepository = serviceProvider.GetRequiredService<IRepository<CustomerProductPrice>>();
-            this._customerRoleProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerRoleProduct>>();
-            this._customerTagProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerTagProduct>>();
-            this._customerHistoryPasswordRepository = serviceProvider.GetRequiredService<IRepository<CustomerHistoryPassword>>();
-            this._customerNoteRepository = serviceProvider.GetRequiredService<IRepository<CustomerNote>>();
-            this._userapiRepository = serviceProvider.GetRequiredService<IRepository<UserApi>>();
-            this._specificationAttributeRepository = serviceProvider.GetRequiredService<IRepository<SpecificationAttribute>>();
-            this._checkoutAttributeRepository = serviceProvider.GetRequiredService<IRepository<CheckoutAttribute>>();
-            this._productAttributeRepository = serviceProvider.GetRequiredService<IRepository<ProductAttribute>>();
-            this._categoryRepository = serviceProvider.GetRequiredService<IRepository<Category>>();
-            this._manufacturerRepository = serviceProvider.GetRequiredService<IRepository<Manufacturer>>();
-            this._productRepository = serviceProvider.GetRequiredService<IRepository<Product>>();
-            this._productReservationRepository = serviceProvider.GetRequiredService<IRepository<ProductReservation>>();
-            this._pictureRepository = serviceProvider.GetRequiredService<IRepository<Picture>>();
-            this._productalsopurchasedRepository = serviceProvider.GetRequiredService<IRepository<ProductAlsoPurchased>>();
-            this._urlRecordRepository = serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
-            this._emailAccountRepository = serviceProvider.GetRequiredService<IRepository<EmailAccount>>();
-            this._messageTemplateRepository = serviceProvider.GetRequiredService<IRepository<MessageTemplate>>();
-            this._forumGroupRepository = serviceProvider.GetRequiredService<IRepository<ForumGroup>>();
-            this._forumRepository = serviceProvider.GetRequiredService<IRepository<Forum>>();
-            this._forumpostRepository = serviceProvider.GetRequiredService<IRepository<ForumPost>>();
-            this._forumtopicRepository = serviceProvider.GetRequiredService<IRepository<ForumTopic>>();
-            this._forumsubscriptionRepository = serviceProvider.GetRequiredService<IRepository<ForumSubscription>>();
-            this._forumPostVote = serviceProvider.GetRequiredService<IRepository<ForumPostVote>>();
-            this._countryRepository = serviceProvider.GetRequiredService<IRepository<Country>>();
-            this._stateProvinceRepository = serviceProvider.GetRequiredService<IRepository<StateProvince>>();
-            this._discountRepository = serviceProvider.GetRequiredService<IRepository<Discount>>();
-            this._discountCouponRepository = serviceProvider.GetRequiredService<IRepository<DiscountCoupon>>();
-            this._blogPostRepository = serviceProvider.GetRequiredService<IRepository<BlogPost>>();
-            this._topicRepository = serviceProvider.GetRequiredService<IRepository<Topic>>();
-            this._productReviewRepository = serviceProvider.GetRequiredService<IRepository<ProductReview>>();
-            this._newsItemRepository = serviceProvider.GetRequiredService<IRepository<NewsItem>>();
-            this._newslettersubscriptionRepository = serviceProvider.GetRequiredService<IRepository<NewsLetterSubscription>>();
-            this._pollRepository = serviceProvider.GetRequiredService<IRepository<Poll>>();
-            this._privatemessageRepository = serviceProvider.GetRequiredService<IRepository<PrivateMessage>>();
-            this._shippingMethodRepository = serviceProvider.GetRequiredService<IRepository<ShippingMethod>>();
-            this._deliveryDateRepository = serviceProvider.GetRequiredService<IRepository<DeliveryDate>>();
-            this._activityLogTypeRepository = serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            this._activityLogRepository = serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
-            this._productTagRepository = serviceProvider.GetRequiredService<IRepository<ProductTag>>();
-            this._productTemplateRepository = serviceProvider.GetRequiredService<IRepository<ProductTemplate>>();
-            this._recentlyViewedProductRepository = serviceProvider.GetRequiredService<IRepository<RecentlyViewedProduct>>();
-            this._categoryTemplateRepository = serviceProvider.GetRequiredService<IRepository<CategoryTemplate>>();
-            this._manufacturerTemplateRepository = serviceProvider.GetRequiredService<IRepository<ManufacturerTemplate>>();
-            this._topicTemplateRepository = serviceProvider.GetRequiredService<IRepository<TopicTemplate>>();
-            this._scheduleTaskRepository = serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
-            this._queuedemailRepository = serviceProvider.GetRequiredService<IRepository<QueuedEmail>>();
-            this._returnrequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
-            this._rewardpointshistoryRepository = serviceProvider.GetRequiredService<IRepository<RewardPointsHistory>>();
-            this._searchtermRepository = serviceProvider.GetRequiredService<IRepository<SearchTerm>>();
-            this._settingRepository = serviceProvider.GetRequiredService<IRepository<Setting>>();
-            this._shipmentRepository = serviceProvider.GetRequiredService<IRepository<Shipment>>();
-            this._warehouseRepository = serviceProvider.GetRequiredService<IRepository<Warehouse>>();
-            this._pickupPointsRepository = serviceProvider.GetRequiredService<IRepository<PickupPoint>>();
-            this._permissionRepository = serviceProvider.GetRequiredService<IRepository<PermissionRecord>>();
-            this._vendorRepository = serviceProvider.GetRequiredService<IRepository<Vendor>>();
-            this._externalAuthenticationRepository = serviceProvider.GetRequiredService<IRepository<ExternalAuthenticationRecord>>();
-            this._discountusageRepository = serviceProvider.GetRequiredService<IRepository<DiscountUsageHistory>>();
-            this._returnRequestReasonRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestReason>>();
-            this._contactUsRepository = serviceProvider.GetRequiredService<IRepository<ContactUs>>();
-            this._returnRequestActionRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestAction>>();
-            this._customerAction = serviceProvider.GetRequiredService<IRepository<CustomerAction>>();
-            this._customerActionType = serviceProvider.GetRequiredService<IRepository<CustomerActionType>>();
-            this._customerActionHistory = serviceProvider.GetRequiredService<IRepository<CustomerActionHistory>>();
-            this._customerReminder = serviceProvider.GetRequiredService<IRepository<CustomerReminder>>();
-            this._customerReminderHistoryRepository = serviceProvider.GetRequiredService<IRepository<CustomerReminderHistory>>();
-            this._knowledgebaseArticleRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>();
-            this._knowledgebaseCategoryRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>();
-            this._banner = serviceProvider.GetRequiredService<IRepository<Banner>>();
-            this._popupArchive = serviceProvider.GetRequiredService<IRepository<PopupArchive>>();
-            this._genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
-            this._customerActionService = serviceProvider.GetRequiredService<ICustomerActionService>();
-            this._webHelper = serviceProvider.GetRequiredService<IWebHelper>();
-            this._hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
-            this._serviceProvider = serviceProvider;
+            _versionRepository = serviceProvider.GetRequiredService<IRepository<GrandNodeVersion>>();
+            _bidRepository = serviceProvider.GetRequiredService<IRepository<Bid>>();
+            _addressRepository = serviceProvider.GetRequiredService<IRepository<Address>>();
+            _affiliateRepository = serviceProvider.GetRequiredService<IRepository<Affiliate>>();
+            _blogcommentRepository = serviceProvider.GetRequiredService<IRepository<BlogComment>>();
+            _blogpostRepository = serviceProvider.GetRequiredService<IRepository<BlogPost>>();
+            _campaignRepository = serviceProvider.GetRequiredService<IRepository<Campaign>>();
+            _campaignHistoryRepository = serviceProvider.GetRequiredService<IRepository<CampaignHistory>>();
+            _downloadRepository = serviceProvider.GetRequiredService<IRepository<Download>>();
+            _orderRepository = serviceProvider.GetRequiredService<IRepository<Order>>();
+            _orderNoteRepository = serviceProvider.GetRequiredService<IRepository<OrderNote>>();
+            _giftcardRepository = serviceProvider.GetRequiredService<IRepository<GiftCard>>();
+            _storeRepository = serviceProvider.GetRequiredService<IRepository<Store>>();
+            _measureDimensionRepository = serviceProvider.GetRequiredService<IRepository<MeasureDimension>>();
+            _measureWeightRepository = serviceProvider.GetRequiredService<IRepository<MeasureWeight>>();
+            _measureUnitRepository = serviceProvider.GetRequiredService<IRepository<MeasureUnit>>();
+            _taxCategoryRepository = serviceProvider.GetRequiredService<IRepository<TaxCategory>>();
+            _languageRepository = serviceProvider.GetRequiredService<IRepository<Language>>();
+            _lsrRepository = serviceProvider.GetRequiredService<IRepository<LocaleStringResource>>();
+            _logRepository = serviceProvider.GetRequiredService<IRepository<Log>>();
+            _currencyRepository = serviceProvider.GetRequiredService<IRepository<Currency>>();
+            _customerRepository = serviceProvider.GetRequiredService<IRepository<Customer>>();
+            _customerRoleRepository = serviceProvider.GetRequiredService<IRepository<CustomerRole>>();
+            _customerProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerProduct>>();
+            _customerProductPriceRepository = serviceProvider.GetRequiredService<IRepository<CustomerProductPrice>>();
+            _customerRoleProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerRoleProduct>>();
+            _customerTagProductRepository = serviceProvider.GetRequiredService<IRepository<CustomerTagProduct>>();
+            _customerHistoryPasswordRepository = serviceProvider.GetRequiredService<IRepository<CustomerHistoryPassword>>();
+            _customerNoteRepository = serviceProvider.GetRequiredService<IRepository<CustomerNote>>();
+            _userapiRepository = serviceProvider.GetRequiredService<IRepository<UserApi>>();
+            _specificationAttributeRepository = serviceProvider.GetRequiredService<IRepository<SpecificationAttribute>>();
+            _checkoutAttributeRepository = serviceProvider.GetRequiredService<IRepository<CheckoutAttribute>>();
+            _productAttributeRepository = serviceProvider.GetRequiredService<IRepository<ProductAttribute>>();
+            _categoryRepository = serviceProvider.GetRequiredService<IRepository<Category>>();
+            _manufacturerRepository = serviceProvider.GetRequiredService<IRepository<Manufacturer>>();
+            _productRepository = serviceProvider.GetRequiredService<IRepository<Product>>();
+            _productReservationRepository = serviceProvider.GetRequiredService<IRepository<ProductReservation>>();
+            _pictureRepository = serviceProvider.GetRequiredService<IRepository<Picture>>();
+            _productalsopurchasedRepository = serviceProvider.GetRequiredService<IRepository<ProductAlsoPurchased>>();
+            _urlRecordRepository = serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
+            _emailAccountRepository = serviceProvider.GetRequiredService<IRepository<EmailAccount>>();
+            _messageTemplateRepository = serviceProvider.GetRequiredService<IRepository<MessageTemplate>>();
+            _forumGroupRepository = serviceProvider.GetRequiredService<IRepository<ForumGroup>>();
+            _forumRepository = serviceProvider.GetRequiredService<IRepository<Forum>>();
+            _forumpostRepository = serviceProvider.GetRequiredService<IRepository<ForumPost>>();
+            _forumtopicRepository = serviceProvider.GetRequiredService<IRepository<ForumTopic>>();
+            _forumsubscriptionRepository = serviceProvider.GetRequiredService<IRepository<ForumSubscription>>();
+            _forumPostVote = serviceProvider.GetRequiredService<IRepository<ForumPostVote>>();
+            _countryRepository = serviceProvider.GetRequiredService<IRepository<Country>>();
+            _stateProvinceRepository = serviceProvider.GetRequiredService<IRepository<StateProvince>>();
+            _discountRepository = serviceProvider.GetRequiredService<IRepository<Discount>>();
+            _discountCouponRepository = serviceProvider.GetRequiredService<IRepository<DiscountCoupon>>();
+            _blogPostRepository = serviceProvider.GetRequiredService<IRepository<BlogPost>>();
+            _topicRepository = serviceProvider.GetRequiredService<IRepository<Topic>>();
+            _productReviewRepository = serviceProvider.GetRequiredService<IRepository<ProductReview>>();
+            _newsItemRepository = serviceProvider.GetRequiredService<IRepository<NewsItem>>();
+            _newslettersubscriptionRepository = serviceProvider.GetRequiredService<IRepository<NewsLetterSubscription>>();
+            _pollRepository = serviceProvider.GetRequiredService<IRepository<Poll>>();
+            _privatemessageRepository = serviceProvider.GetRequiredService<IRepository<PrivateMessage>>();
+            _shippingMethodRepository = serviceProvider.GetRequiredService<IRepository<ShippingMethod>>();
+            _deliveryDateRepository = serviceProvider.GetRequiredService<IRepository<DeliveryDate>>();
+            _activityLogTypeRepository = serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
+            _activityLogRepository = serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
+            _productTagRepository = serviceProvider.GetRequiredService<IRepository<ProductTag>>();
+            _productTemplateRepository = serviceProvider.GetRequiredService<IRepository<ProductTemplate>>();
+            _recentlyViewedProductRepository = serviceProvider.GetRequiredService<IRepository<RecentlyViewedProduct>>();
+            _categoryTemplateRepository = serviceProvider.GetRequiredService<IRepository<CategoryTemplate>>();
+            _manufacturerTemplateRepository = serviceProvider.GetRequiredService<IRepository<ManufacturerTemplate>>();
+            _topicTemplateRepository = serviceProvider.GetRequiredService<IRepository<TopicTemplate>>();
+            _scheduleTaskRepository = serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
+            _queuedemailRepository = serviceProvider.GetRequiredService<IRepository<QueuedEmail>>();
+            _returnrequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
+            _rewardpointshistoryRepository = serviceProvider.GetRequiredService<IRepository<RewardPointsHistory>>();
+            _searchtermRepository = serviceProvider.GetRequiredService<IRepository<SearchTerm>>();
+            _settingRepository = serviceProvider.GetRequiredService<IRepository<Setting>>();
+            _shipmentRepository = serviceProvider.GetRequiredService<IRepository<Shipment>>();
+            _warehouseRepository = serviceProvider.GetRequiredService<IRepository<Warehouse>>();
+            _pickupPointsRepository = serviceProvider.GetRequiredService<IRepository<PickupPoint>>();
+            _permissionRepository = serviceProvider.GetRequiredService<IRepository<PermissionRecord>>();
+            _vendorRepository = serviceProvider.GetRequiredService<IRepository<Vendor>>();
+            _externalAuthenticationRepository = serviceProvider.GetRequiredService<IRepository<ExternalAuthenticationRecord>>();
+            _discountusageRepository = serviceProvider.GetRequiredService<IRepository<DiscountUsageHistory>>();
+            _returnRequestReasonRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestReason>>();
+            _contactUsRepository = serviceProvider.GetRequiredService<IRepository<ContactUs>>();
+            _returnRequestActionRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequestAction>>();
+            _customerAction = serviceProvider.GetRequiredService<IRepository<CustomerAction>>();
+            _customerActionType = serviceProvider.GetRequiredService<IRepository<CustomerActionType>>();
+            _customerActionHistory = serviceProvider.GetRequiredService<IRepository<CustomerActionHistory>>();
+            _customerReminder = serviceProvider.GetRequiredService<IRepository<CustomerReminder>>();
+            _customerReminderHistoryRepository = serviceProvider.GetRequiredService<IRepository<CustomerReminderHistory>>();
+            _knowledgebaseArticleRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>();
+            _knowledgebaseCategoryRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>();
+            _banner = serviceProvider.GetRequiredService<IRepository<Banner>>();
+            _popupArchive = serviceProvider.GetRequiredService<IRepository<PopupArchive>>();
+            _genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
+            _customerActionService = serviceProvider.GetRequiredService<ICustomerActionService>();
+            _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
+            _hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -271,16 +271,16 @@ namespace Grand.Services.Installation
         }
 
 
-        protected virtual void InstallVersion()
+        protected virtual async Task InstallVersion()
         {
             var version = new GrandNodeVersion
             {
                 DataBaseVersion = GrandVersion.CurrentVersion
             };
-            _versionRepository.Insert(version);
+            await _versionRepository.InsertAsync(version);
         }
 
-        protected virtual void InstallStores()
+        protected virtual async Task InstallStores()
         {
             //var storeUrl = "http://www.yourStore.com/";
             var storeUrl = _webHelper.GetStoreLocation(false);
@@ -303,10 +303,10 @@ namespace Grand.Services.Installation
                 },
             };
 
-            _storeRepository.Insert(stores);
+            await _storeRepository.InsertAsync(stores);
         }
 
-        protected virtual void InstallMeasures()
+        protected virtual async Task InstallMeasures()
         {
             var measureDimensions = new List<MeasureDimension>
             {
@@ -340,7 +340,7 @@ namespace Grand.Services.Installation
                 }
             };
 
-            _measureDimensionRepository.Insert(measureDimensions);
+            await _measureDimensionRepository.InsertAsync(measureDimensions);
 
             var measureWeights = new List<MeasureWeight>
             {
@@ -374,7 +374,7 @@ namespace Grand.Services.Installation
                 }
             };
 
-            _measureWeightRepository.Insert(measureWeights);
+            await _measureWeightRepository.InsertAsync(measureWeights);
 
             var measureUnits = new List<MeasureUnit>
             {
@@ -395,11 +395,11 @@ namespace Grand.Services.Installation
                 }
             };
 
-            _measureUnitRepository.Insert(measureUnits);
+            await _measureUnitRepository.InsertAsync(measureUnits);
 
         }
 
-        protected virtual void InstallTaxCategories()
+        protected virtual async Task InstallTaxCategories()
         {
             var taxCategories = new List<TaxCategory>
                                {
@@ -429,11 +429,11 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 20,
                                        },
                                };
-            _taxCategoryRepository.Insert(taxCategories);
+            await _taxCategoryRepository.InsertAsync(taxCategories);
 
         }
 
-        protected virtual void InstallLanguages()
+        protected virtual async Task InstallLanguages()
         {
             var language = new Language
             {
@@ -444,10 +444,10 @@ namespace Grand.Services.Installation
                 Published = true,
                 DisplayOrder = 1
             };
-            _languageRepository.Insert(language);
+            await _languageRepository.InsertAsync(language);
         }
 
-        protected virtual void InstallLocaleResources()
+        protected virtual async Task InstallLocaleResources()
         {
             //'English' language
             var language = _languageRepository.Table.Single(l => l.Name == "English");
@@ -457,12 +457,12 @@ namespace Grand.Services.Installation
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
-                localizationService.ImportResourcesFromXmlInstall(language, localesXml);
+                await localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
 
         }
 
-        protected virtual void InstallCurrencies()
+        protected virtual async Task InstallCurrencies()
         {
             var currencies = new List<Currency>
             {
@@ -551,10 +551,10 @@ namespace Grand.Services.Installation
                     UpdatedOnUtc = DateTime.UtcNow,
                 },
             };
-            _currencyRepository.Insert(currencies);
+            await _currencyRepository.InsertAsync(currencies);
         }
 
-        protected virtual void InstallCountriesAndStates()
+        protected virtual async Task InstallCountriesAndStates()
         {
             var cUsa = new Country
             {
@@ -570,7 +570,7 @@ namespace Grand.Services.Installation
             };
 
             var states = new List<StateProvince>();
-            _countryRepository.Insert(cUsa);
+            await _countryRepository.InsertAsync(cUsa);
 
             states.Add(new StateProvince
             {
@@ -1080,7 +1080,7 @@ namespace Grand.Services.Installation
                 DisplayOrder = 100,
                 Published = true,
             };
-            _countryRepository.Insert(cCanada);
+            await _countryRepository.InsertAsync(cCanada);
 
             states.Add(new StateProvince
             {
@@ -1187,7 +1187,7 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1,
             });
 
-            _stateProvinceRepository.Insert(states);
+            await _stateProvinceRepository.InsertAsync(states);
 
             var countries = new List<Country>
                                 {
@@ -4012,10 +4012,10 @@ namespace Grand.Services.Installation
                                         Published = true
                                     },
                                 };
-            _countryRepository.Insert(countries);
+            await _countryRepository.InsertAsync(countries);
         }
 
-        protected virtual void InstallShippingMethods()
+        protected virtual async Task InstallShippingMethods()
         {
             var shippingMethods = new List<ShippingMethod>
                                 {
@@ -4038,10 +4038,10 @@ namespace Grand.Services.Installation
                                             DisplayOrder = 3
                                         }
                                 };
-            _shippingMethodRepository.Insert(shippingMethods);
+            await _shippingMethodRepository.InsertAsync(shippingMethods);
         }
 
-        protected virtual void InstallDeliveryDates()
+        protected virtual async Task InstallDeliveryDates()
         {
             var deliveryDates = new List<DeliveryDate>
                                 {
@@ -4061,10 +4061,10 @@ namespace Grand.Services.Installation
                                             DisplayOrder = 10
                                         },
                                 };
-            _deliveryDateRepository.Insert(deliveryDates);
+            await _deliveryDateRepository.InsertAsync(deliveryDates);
         }
 
-        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
+        protected virtual async Task InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
             var crAdministrators = new CustomerRole
             {
@@ -4073,7 +4073,7 @@ namespace Grand.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Administrators,
             };
-            _customerRoleRepository.Insert(crAdministrators);
+            await _customerRoleRepository.InsertAsync(crAdministrators);
 
             var crForumModerators = new CustomerRole
             {
@@ -4082,7 +4082,7 @@ namespace Grand.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.ForumModerators,
             };
-            _customerRoleRepository.Insert(crForumModerators);
+            await _customerRoleRepository.InsertAsync(crForumModerators);
 
             var crRegistered = new CustomerRole
             {
@@ -4091,7 +4091,7 @@ namespace Grand.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Registered,
             };
-            _customerRoleRepository.Insert(crRegistered);
+            await _customerRoleRepository.InsertAsync(crRegistered);
 
             var crGuests = new CustomerRole
             {
@@ -4100,7 +4100,7 @@ namespace Grand.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Guests,
             };
-            _customerRoleRepository.Insert(crGuests);
+            await _customerRoleRepository.InsertAsync(crGuests);
 
             var crVendors = new CustomerRole
             {
@@ -4109,7 +4109,7 @@ namespace Grand.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Vendors,
             };
-            _customerRoleRepository.Insert(crVendors);
+            await _customerRoleRepository.InsertAsync(crVendors);
 
             //admin user
             var adminUser = new Customer
@@ -4147,11 +4147,11 @@ namespace Grand.Services.Installation
             adminUser.CustomerRoles.Add(crAdministrators);
             adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);
-            _customerRepository.Insert(adminUser);
+            await _customerRepository.InsertAsync(adminUser);
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
-            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
+            await _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
+            await _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
 
 
             //search engine (crawler) built-in user
@@ -4168,7 +4168,7 @@ namespace Grand.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
             };
             searchEngineUser.CustomerRoles.Add(crGuests);
-            _customerRepository.Insert(searchEngineUser);
+            await _customerRepository.InsertAsync(searchEngineUser);
 
 
             //built-in user for background tasks
@@ -4185,18 +4185,17 @@ namespace Grand.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
-            _customerRepository.Insert(backgroundTaskUser);
+            await _customerRepository.InsertAsync(backgroundTaskUser);
 
         }
 
-        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
+        protected virtual async Task HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
         {
             var customerRegistrationService = _serviceProvider.GetRequiredService<ICustomerRegistrationService>();
-            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-            PasswordFormat.Hashed, defaultUserPassword));
+            await customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false, PasswordFormat.Hashed, defaultUserPassword));
         }
 
-        protected virtual void InstallCustomerAction()
+        protected virtual async Task InstallCustomerAction()
         {
             var customerActionType = new List<CustomerActionType>()
             {
@@ -4236,11 +4235,11 @@ namespace Grand.Services.Installation
                     ConditionType = {7, 8, 9, 10, 13}
                 }
             };
-            _customerActionType.Insert(customerActionType);
+            await _customerActionType.InsertAsync(customerActionType);
 
         }
 
-        protected virtual void InstallEmailAccounts()
+        protected virtual async Task InstallEmailAccounts()
         {
             var emailAccounts = new List<EmailAccount>
                                {
@@ -4256,17 +4255,17 @@ namespace Grand.Services.Installation
                                            UseServerCertificateValidation = true
                                        },
                                };
-            _emailAccountRepository.Insert(emailAccounts);
+            await _emailAccountRepository.InsertAsync(emailAccounts);
         }
 
-        protected virtual void InstallMessageTemplates()
+        protected virtual async Task InstallMessageTemplates()
         {
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
 
-            string OrderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
-            string ShipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
+            var OrderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
+            var ShipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
 
             var messageTemplates = new List<MessageTemplate>
                                {
@@ -4686,7 +4685,7 @@ namespace Grand.Services.Installation
                                            EmailAccountId = eaGeneral.Id,
                                        },
                                };
-            _messageTemplateRepository.Insert(messageTemplates);
+            await _messageTemplateRepository.InsertAsync(messageTemplates);
         }
 
         protected virtual async Task InstallTopics()
@@ -4833,7 +4832,7 @@ namespace Grand.Services.Installation
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                };
-            _topicRepository.Insert(topics);
+            await _topicRepository.InsertAsync(topics);
 
             var ltopics = from p in _topicRepository.Table
                           select p;
@@ -4841,7 +4840,7 @@ namespace Grand.Services.Installation
             foreach (var topic in ltopics)
             {
                 var seName = topic.SystemName;
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = topic.Id,
                     EntityName = "Topic",
@@ -4855,11 +4854,11 @@ namespace Grand.Services.Installation
 
         }
 
-        protected virtual void InstallSettings(bool installSampleData)
+        protected virtual async Task InstallSettings(bool installSampleData)
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
-            _settingService.SaveSetting(new MenuItemSettings
+            await _settingService.SaveSetting(new MenuItemSettings
             {
                 DisplayHomePageMenu = !installSampleData,
                 DisplayNewProductsMenu = !installSampleData,
@@ -4870,7 +4869,7 @@ namespace Grand.Services.Installation
                 DisplayContactUsMenu = !installSampleData
             });
 
-            _settingService.SaveSetting(new PdfSettings
+            await _settingService.SaveSetting(new PdfSettings
             {
                 LogoPictureId = "",
                 LetterPageSizeEnabled = false,
@@ -4880,7 +4879,7 @@ namespace Grand.Services.Installation
                 InvoiceFooterTextColumn2 = null,
             });
 
-            _settingService.SaveSetting(new CommonSettings
+            await _settingService.SaveSetting(new CommonSettings
             {
                 StoreInDatabaseContactUsForm = true,
                 UseSystemEmailForContactUsForm = true,
@@ -4900,7 +4899,7 @@ namespace Grand.Services.Installation
                 PopupForTermsOfServiceLinks = true,
                 AllowToSelectStore = false,
             });
-            _settingService.SaveSetting(new SecuritySettings
+            await _settingService.SaveSetting(new SecuritySettings
             {
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(24),
                 AdminAreaAllowedIpAddresses = null,
@@ -4910,7 +4909,7 @@ namespace Grand.Services.Installation
                 HoneypotInputName = "hpinput",
                 AllowNonAsciiCharInHeaders = true,
             });
-            _settingService.SaveSetting(new MediaSettings
+            await _settingService.SaveSetting(new MediaSettings
             {
                 AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
@@ -4932,7 +4931,7 @@ namespace Grand.Services.Installation
                 MultipleThumbDirectories = false
             });
 
-            _settingService.SaveSetting(new SeoSettings
+            await _settingService.SaveSetting(new SeoSettings
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
@@ -5006,7 +5005,7 @@ namespace Grand.Services.Installation
                     },
             });
 
-            _settingService.SaveSetting(new AdminAreaSettings
+            await _settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
                 GridPageSizes = "10, 15, 20, 50, 100",
@@ -5017,7 +5016,7 @@ namespace Grand.Services.Installation
                 KendoLayout = "custom",
             });
 
-            _settingService.SaveSetting(new CatalogSettings
+            await _settingService.SaveSetting(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
@@ -5054,6 +5053,8 @@ namespace Grand.Services.Installation
                 PersonalizedProductsNumber = 6,
                 NewProductsNumber = 6,
                 NewProductsEnabled = true,
+                NewProductsOnHomePage = false,
+                NewProductsNumberOnHomePage = 6,
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
@@ -5096,7 +5097,7 @@ namespace Grand.Services.Installation
                 LimitOfFeaturedProducts = 30,
             });
 
-            _settingService.SaveSetting(new LocalizationSettings
+            await _settingService.SaveSetting(new LocalizationSettings
             {
                 DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                 UseImagesForLanguageSelection = false,
@@ -5108,7 +5109,7 @@ namespace Grand.Services.Installation
                 IgnoreRtlPropertyForAdminArea = false,
             });
 
-            _settingService.SaveSetting(new CustomerSettings
+            await _settingService.SaveSetting(new CustomerSettings
             {
                 UsernamesEnabled = false,
                 CheckUsernameAvailabilityEnabled = false,
@@ -5164,7 +5165,7 @@ namespace Grand.Services.Installation
                 AllowUsersToExportData = false
             });
 
-            _settingService.SaveSetting(new AddressSettings
+            await _settingService.SaveSetting(new AddressSettings
             {
                 CompanyEnabled = true,
                 StreetAddressEnabled = true,
@@ -5181,7 +5182,7 @@ namespace Grand.Services.Installation
                 FaxEnabled = true,
             });
 
-            _settingService.SaveSetting(new StoreInformationSettings
+            await _settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
@@ -5197,13 +5198,13 @@ namespace Grand.Services.Installation
                 HidePoweredByGrandNode = false
             });
 
-            _settingService.SaveSetting(new ExternalAuthenticationSettings
+            await _settingService.SaveSetting(new ExternalAuthenticationSettings
             {
                 AutoRegisterEnabled = true,
                 RequireEmailValidation = false
             });
 
-            _settingService.SaveSetting(new RewardPointsSettings
+            await _settingService.SaveSetting(new RewardPointsSettings
             {
                 Enabled = true,
                 ExchangeRate = 1,
@@ -5216,7 +5217,7 @@ namespace Grand.Services.Installation
                 PointsAccumulatedForAllStores = true,
             });
 
-            _settingService.SaveSetting(new CurrencySettings
+            await _settingService.SaveSetting(new CurrencySettings
             {
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
@@ -5225,13 +5226,13 @@ namespace Grand.Services.Installation
                 AutoUpdateEnabled = false
             });
 
-            _settingService.SaveSetting(new MeasureSettings
+            await _settingService.SaveSetting(new MeasureSettings
             {
                 BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
                 BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
             });
 
-            _settingService.SaveSetting(new MessageTemplatesSettings
+            await _settingService.SaveSetting(new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false,
                 Color1 = "#b9babe",
@@ -5240,7 +5241,7 @@ namespace Grand.Services.Installation
                 PictureSize = 50,
             });
 
-            _settingService.SaveSetting(new ShoppingCartSettings
+            await _settingService.SaveSetting(new ShoppingCartSettings
             {
                 DisplayCartAfterAddingProduct = false,
                 DisplayWishlistAfterAddingProduct = false,
@@ -5264,7 +5265,7 @@ namespace Grand.Services.Installation
                 RenderAssociatedAttributeValueQuantity = false
             });
 
-            _settingService.SaveSetting(new OrderSettings
+            await _settingService.SaveSetting(new OrderSettings
             {
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
@@ -5291,7 +5292,7 @@ namespace Grand.Services.Installation
                 UserCanCancelUnpaidOrder = false,
             });
 
-            _settingService.SaveSetting(new ShippingSettings
+            await _settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.ByWeight" },
                 ShipToSameAddress = false,
@@ -5309,7 +5310,7 @@ namespace Grand.Services.Installation
                 UseCubeRootMethod = true
             });
 
-            _settingService.SaveSetting(new PaymentSettings
+            await _settingService.SaveSetting(new PaymentSettings
             {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
@@ -5323,7 +5324,7 @@ namespace Grand.Services.Installation
                 SkipPaymentInfoStepForRedirectionPaymentMethods = false,
             });
 
-            _settingService.SaveSetting(new TaxSettings
+            await _settingService.SaveSetting(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
@@ -5351,13 +5352,13 @@ namespace Grand.Services.Installation
                 EuVatEmailAdminWhenNewVatSubmitted = false
             });
 
-            _settingService.SaveSetting(new DateTimeSettings
+            await _settingService.SaveSetting(new DateTimeSettings
             {
                 DefaultStoreTimeZoneId = "",
                 AllowCustomersToSetTimeZone = false
             });
 
-            _settingService.SaveSetting(new BlogSettings
+            await _settingService.SaveSetting(new BlogSettings
             {
                 Enabled = true,
                 PostsPageSize = 10,
@@ -5370,20 +5371,20 @@ namespace Grand.Services.Installation
                 MaxTextSizeHomePage = 200
             });
 
-            _settingService.SaveSetting(new KnowledgebaseSettings
+            await _settingService.SaveSetting(new KnowledgebaseSettings
             {
                 Enabled = false,
                 AllowNotRegisteredUsersToLeaveComments = true,
                 NotifyAboutNewArticleComments = false
             });
 
-            _settingService.SaveSetting(new PushNotificationsSettings
+            await _settingService.SaveSetting(new PushNotificationsSettings
             {
                 Enabled = false,
                 AllowGuestNotifications = true
             });
 
-            _settingService.SaveSetting(new AdminSearchSettings
+            await _settingService.SaveSetting(new AdminSearchSettings
             {
                 BlogsDisplayOrder = 0,
                 CategoriesDisplayOrder = 0,
@@ -5407,7 +5408,7 @@ namespace Grand.Services.Installation
                 MenuDisplayOrder = -1
             });
 
-            _settingService.SaveSetting(new NewsSettings
+            await _settingService.SaveSetting(new NewsSettings
             {
                 Enabled = true,
                 AllowNotRegisteredUsersToLeaveComments = true,
@@ -5418,7 +5419,7 @@ namespace Grand.Services.Installation
                 ShowHeaderRssUrl = false,
             });
 
-            _settingService.SaveSetting(new ForumSettings
+            await _settingService.SaveSetting(new ForumSettings
             {
                 ForumsEnabled = false,
                 RelativeDateTimeFormattingEnabled = true,
@@ -5455,7 +5456,7 @@ namespace Grand.Services.Installation
                 ForumSearchTermMinimumLength = 3,
             });
 
-            _settingService.SaveSetting(new VendorSettings
+            await _settingService.SaveSetting(new VendorSettings
             {
                 DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
@@ -5472,17 +5473,17 @@ namespace Grand.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
-            _settingService.SaveSetting(new EmailAccountSettings
+            await _settingService.SaveSetting(new EmailAccountSettings
             {
                 DefaultEmailAccountId = eaGeneral.Id
             });
 
-            _settingService.SaveSetting(new WidgetSettings
+            await _settingService.SaveSetting(new WidgetSettings
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.Slider" },
             });
 
-            _settingService.SaveSetting(new GoogleAnalyticsSettings()
+            await _settingService.SaveSetting(new GoogleAnalyticsSettings()
             {
                 gaprivateKey = "",
                 gaserviceAccountEmail = "",
@@ -5490,7 +5491,7 @@ namespace Grand.Services.Installation
             });
         }
 
-        protected virtual void InstallCheckoutAttributes()
+        protected virtual async Task InstallCheckoutAttributes()
         {
             var ca1 = new CheckoutAttribute
             {
@@ -5500,7 +5501,7 @@ namespace Grand.Services.Installation
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1,
             };
-            _checkoutAttributeRepository.Insert(ca1);
+            await _checkoutAttributeRepository.InsertAsync(ca1);
             ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
             {
                 Name = "No",
@@ -5517,17 +5518,17 @@ namespace Grand.Services.Installation
                 DisplayOrder = 2,
                 CheckoutAttributeId = ca1.Id,
             });
-            _checkoutAttributeRepository.Update(ca1);
+            await _checkoutAttributeRepository.UpdateAsync(ca1);
         }
 
-        protected virtual void InstallSpecificationAttributes()
+        protected virtual async Task InstallSpecificationAttributes()
         {
             var sa1 = new SpecificationAttribute
             {
                 Name = "Screensize",
                 DisplayOrder = 1,
             };
-            _specificationAttributeRepository.Insert(sa1);
+            await _specificationAttributeRepository.InsertAsync(sa1);
 
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
@@ -5555,14 +5556,14 @@ namespace Grand.Services.Installation
                 Name = "15.6''",
                 DisplayOrder = 5,
             });
-            _specificationAttributeRepository.Update(sa1);
+            await _specificationAttributeRepository.UpdateAsync(sa1);
 
             var sa2 = new SpecificationAttribute
             {
                 Name = "CPU Type",
                 DisplayOrder = 2,
             };
-            _specificationAttributeRepository.Insert(sa2);
+            await _specificationAttributeRepository.InsertAsync(sa2);
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
@@ -5575,14 +5576,14 @@ namespace Grand.Services.Installation
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
             });
-            _specificationAttributeRepository.Update(sa2);
+            await _specificationAttributeRepository.UpdateAsync(sa2);
 
             var sa3 = new SpecificationAttribute
             {
                 Name = "Memory",
                 DisplayOrder = 3,
             };
-            _specificationAttributeRepository.Insert(sa3);
+            await _specificationAttributeRepository.InsertAsync(sa3);
 
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
@@ -5599,14 +5600,14 @@ namespace Grand.Services.Installation
                 Name = "16 GB",
                 DisplayOrder = 3,
             });
-            _specificationAttributeRepository.Update(sa3);
+            await _specificationAttributeRepository.UpdateAsync(sa3);
 
             var sa4 = new SpecificationAttribute
             {
                 Name = "Hardrive",
                 DisplayOrder = 5,
             };
-            _specificationAttributeRepository.Insert(sa4);
+            await _specificationAttributeRepository.InsertAsync(sa4);
 
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
@@ -5623,11 +5624,11 @@ namespace Grand.Services.Installation
                 Name = "1 TB",
                 DisplayOrder = 3,
             });
-            _specificationAttributeRepository.Update(sa4);
+            await _specificationAttributeRepository.UpdateAsync(sa4);
 
         }
 
-        protected virtual void InstallProductAttributes()
+        protected virtual async Task InstallProductAttributes()
         {
             var productAttributes = new List<ProductAttribute>
             {
@@ -5664,7 +5665,7 @@ namespace Grand.Services.Installation
                     Name = "Software",
                 },
             };
-            _productAttributeRepository.Insert(productAttributes);
+            await _productAttributeRepository.InsertAsync(productAttributes);
         }
 
         protected virtual async Task InstallCategories()
@@ -5971,12 +5972,12 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryGiftCards);
 
-            _categoryRepository.Insert(allCategories);
+            await _categoryRepository.InsertAsync(allCategories);
             //search engine names
             foreach (var category in allCategories)
             {
                 category.SeName = SeoExtensions.GetSeName(category.Name, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = category.Id,
                     EntityName = "Category",
@@ -5984,7 +5985,7 @@ namespace Grand.Services.Installation
                     IsActive = true,
                     Slug = category.SeName,
                 });
-                _categoryRepository.Update(category);
+                await _categoryRepository.UpdateAsync(category);
             }
         }
 
@@ -6014,7 +6015,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerAsus);
+            await _manufacturerRepository.InsertAsync(manufacturerAsus);
             allManufacturers.Add(manufacturerAsus);
 
 
@@ -6031,7 +6032,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerHp);
+            await _manufacturerRepository.InsertAsync(manufacturerHp);
             allManufacturers.Add(manufacturerHp);
 
 
@@ -6048,14 +6049,14 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerNike);
+            await _manufacturerRepository.InsertAsync(manufacturerNike);
             allManufacturers.Add(manufacturerNike);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
             {
                 manufacturer.SeName = SeoExtensions.GetSeName(manufacturer.Name, false, true);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
                     EntityName = "Manufacturer",
@@ -6063,7 +6064,7 @@ namespace Grand.Services.Installation
                     IsActive = true,
                     Slug = manufacturer.SeName
                 });
-                _manufacturerRepository.Update(manufacturer);
+                await _manufacturerRepository.UpdateAsync(manufacturer);
             }
         }
 
@@ -6281,7 +6282,7 @@ namespace Grand.Services.Installation
             var Picture1 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
             var Picture2 = await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
 
-            _productRepository.Insert(productBuildComputer);
+            await _productRepository.InsertAsync(productBuildComputer);
 
             var productpicture1 = new ProductPicture
             {
@@ -6297,7 +6298,7 @@ namespace Grand.Services.Installation
             };
             productBuildComputer.ProductPictures.Add(productpicture1);
             productBuildComputer.ProductPictures.Add(productpicture2);
-            _productRepository.Update(productBuildComputer);
+            await _productRepository.UpdateAsync(productBuildComputer);
 
             var productDigitalStorm = new Product
             {
@@ -6342,7 +6343,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productDigitalStorm);
+            await _productRepository.InsertAsync(productDigitalStorm);
 
             var productLenovoIdeaCentre = new Product
             {
@@ -6387,7 +6388,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productLenovoIdeaCentre);
+            await _productRepository.InsertAsync(productLenovoIdeaCentre);
 
             #endregion
 
@@ -6479,7 +6480,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productAppleMacBookPro);
+            await _productRepository.InsertAsync(productAppleMacBookPro);
 
 
             var productAsusN551JK = new Product
@@ -6560,7 +6561,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productAsusN551JK);
+            await _productRepository.InsertAsync(productAsusN551JK);
 
 
             var productSamsungSeries = new Product
@@ -6641,7 +6642,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productSamsungSeries);
+            await _productRepository.InsertAsync(productSamsungSeries);
 
             var productHpSpectre = new Product
             {
@@ -6734,7 +6735,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productHpSpectre);
+            await _productRepository.InsertAsync(productHpSpectre);
 
 
             var productHpEnvy = new Product
@@ -6823,7 +6824,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productHpEnvy);
+            await _productRepository.InsertAsync(productHpEnvy);
 
 
             var productLenovoThinkpad = new Product
@@ -6888,7 +6889,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productLenovoThinkpad);
+            await _productRepository.InsertAsync(productLenovoThinkpad);
 
             #endregion
 
@@ -6938,7 +6939,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productAdobePhotoshop);
+            await _productRepository.InsertAsync(productAdobePhotoshop);
 
 
             var productWindows8Pro = new Product
@@ -6984,7 +6985,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productWindows8Pro);
+            await _productRepository.InsertAsync(productWindows8Pro);
 
 
             var productSoundForge = new Product
@@ -7030,7 +7031,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productSoundForge);
+            await _productRepository.InsertAsync(productSoundForge);
 
 
             #endregion
@@ -7087,7 +7088,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productNikonD5500DSLR);
+            await _productRepository.InsertAsync(productNikonD5500DSLR);
             var productNikonD5500DSLR_associated_1 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -7122,7 +7123,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNikonD5500DSLR_associated_1);
+            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_1);
             var productNikonD5500DSLR_associated_2 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -7157,7 +7158,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNikonD5500DSLR_associated_2);
+            await _productRepository.InsertAsync(productNikonD5500DSLR_associated_2);
 
             var productLeica = new Product
             {
@@ -7202,7 +7203,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productLeica);
+            await _productRepository.InsertAsync(productLeica);
 
 
             var productAppleICam = new Product
@@ -7256,7 +7257,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productAppleICam);
+            await _productRepository.InsertAsync(productAppleICam);
 
             #endregion
 
@@ -7308,7 +7309,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productHtcOne);
+            await _productRepository.InsertAsync(productHtcOne);
 
 
             var productHtcOneMini = new Product
@@ -7359,7 +7360,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productHtcOneMini);
+            await _productRepository.InsertAsync(productHtcOneMini);
 
 
             var productNokiaLumia = new Product
@@ -7405,7 +7406,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNokiaLumia);
+            await _productRepository.InsertAsync(productNokiaLumia);
 
 
             #endregion
@@ -7484,7 +7485,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productBeatsPill);
+            await _productRepository.InsertAsync(productBeatsPill);
 
 
             var productUniversalTabletCover = new Product
@@ -7530,7 +7531,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productUniversalTabletCover);
+            await _productRepository.InsertAsync(productUniversalTabletCover);
 
 
             var productPortableSoundSpeakers = new Product
@@ -7576,7 +7577,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productPortableSoundSpeakers);
+            await _productRepository.InsertAsync(productPortableSoundSpeakers);
 
 
             #endregion
@@ -7697,7 +7698,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productNikeFloral);
+            await _productRepository.InsertAsync(productNikeFloral);
 
 
             var productAdidas = new Product
@@ -7822,14 +7823,14 @@ namespace Grand.Services.Installation
             });
 
 
-            _productRepository.Insert(productAdidas);
+            await _productRepository.InsertAsync(productAdidas);
 
             var productAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").FirstOrDefault();
 
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Silver").First().PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
-            _productRepository.Update(productAdidas);
+            await _productRepository.UpdateAsync(productAdidas);
 
 
             var productNikeZoom = new Product
@@ -7883,7 +7884,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNikeZoom);
+            await _productRepository.InsertAsync(productNikeZoom);
 
 
             #endregion
@@ -7990,7 +7991,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNikeTailwind);
+            await _productRepository.InsertAsync(productNikeTailwind);
 
             var productOversizedWomenTShirt = new Product
             {
@@ -8053,7 +8054,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productOversizedWomenTShirt);
+            await _productRepository.InsertAsync(productOversizedWomenTShirt);
 
 
             var productCustomTShirt = new Product
@@ -8109,7 +8110,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productCustomTShirt);
+            await _productRepository.InsertAsync(productCustomTShirt);
 
 
             var productLeviJeans = new Product
@@ -8180,7 +8181,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productLeviJeans);
+            await _productRepository.InsertAsync(productLeviJeans);
 
 
             #endregion
@@ -8267,7 +8268,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productObeyHat);
+            await _productRepository.InsertAsync(productObeyHat);
 
 
 
@@ -8314,7 +8315,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productBelt);
+            await _productRepository.InsertAsync(productBelt);
 
 
 
@@ -8361,7 +8362,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productSunglasses);
+            await _productRepository.InsertAsync(productSunglasses);
 
             #endregion
 
@@ -8433,7 +8434,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productNightVision);
+            await _productRepository.InsertAsync(productNightVision);
 
 
 
@@ -8503,7 +8504,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productIfYouWait);
+            await _productRepository.InsertAsync(productIfYouWait);
 
 
             var downloadScienceAndFaith = new Download
@@ -8559,7 +8560,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productScienceAndFaith);
+            await _productRepository.InsertAsync(productScienceAndFaith);
 
 
 
@@ -8612,7 +8613,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productFahrenheit);
+            await _productRepository.InsertAsync(productFahrenheit);
 
 
 
@@ -8660,7 +8661,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productFirstPrizePies);
+            await _productRepository.InsertAsync(productFirstPrizePies);
 
             var productPrideAndPrejudice = new Product
             {
@@ -8706,7 +8707,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productPrideAndPrejudice);
+            await _productRepository.InsertAsync(productPrideAndPrejudice);
 
 
 
@@ -8758,7 +8759,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productElegantGemstoneNecklace);
+            await _productRepository.InsertAsync(productElegantGemstoneNecklace);
 
 
             var productFlowerGirlBracelet = new Product
@@ -8805,7 +8806,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productFlowerGirlBracelet);
+            await _productRepository.InsertAsync(productFlowerGirlBracelet);
 
 
             var productEngagementRing = new Product
@@ -8851,7 +8852,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productEngagementRing);
+            await _productRepository.InsertAsync(productEngagementRing);
 
 
 
@@ -8897,7 +8898,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(product25GiftCard);
+            await _productRepository.InsertAsync(product25GiftCard);
 
 
             var product50GiftCard = new Product
@@ -8944,7 +8945,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(product50GiftCard);
+            await _productRepository.InsertAsync(product50GiftCard);
 
 
             var product100GiftCard = new Product
@@ -8989,7 +8990,7 @@ namespace Grand.Services.Installation
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(product100GiftCard);
+            await _productRepository.InsertAsync(product100GiftCard);
 
             #endregion
 
@@ -8997,7 +8998,7 @@ namespace Grand.Services.Installation
             foreach (var product in allProducts)
             {
                 product.SeName = SeoExtensions.GetSeName(product.Name, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = product.Id,
                     EntityName = "Product",
@@ -9006,7 +9007,7 @@ namespace Grand.Services.Installation
                     Slug = product.SeName,
                 });
 
-                _productRepository.Update(product);
+                await _productRepository.UpdateAsync(product);
             }
 
 
@@ -9531,97 +9532,97 @@ namespace Grand.Services.Installation
             #region Product Tags
 
             //product tags
-            AddProductTag(product25GiftCard, "nice");
-            AddProductTag(product25GiftCard, "gift");
-            AddProductTag(productNikeTailwind, "cool");
-            AddProductTag(productNikeTailwind, "apparel");
-            AddProductTag(productNikeTailwind, "shirt");
-            AddProductTag(productBeatsPill, "computer");
-            AddProductTag(productBeatsPill, "cool");
-            AddProductTag(productNikeFloral, "cool");
-            AddProductTag(productNikeFloral, "shoes");
-            AddProductTag(productNikeFloral, "apparel");
-            AddProductTag(productAdobePhotoshop, "computer");
-            AddProductTag(productAdobePhotoshop, "awesome");
-            AddProductTag(productUniversalTabletCover, "computer");
-            AddProductTag(productUniversalTabletCover, "cool");
-            AddProductTag(productOversizedWomenTShirt, "cool");
-            AddProductTag(productOversizedWomenTShirt, "apparel");
-            AddProductTag(productOversizedWomenTShirt, "shirt");
-            AddProductTag(productAppleMacBookPro, "compact");
-            AddProductTag(productAppleMacBookPro, "awesome");
-            AddProductTag(productAppleMacBookPro, "computer");
-            AddProductTag(productAsusN551JK, "compact");
-            AddProductTag(productAsusN551JK, "awesome");
-            AddProductTag(productAsusN551JK, "computer");
-            AddProductTag(productFahrenheit, "awesome");
-            AddProductTag(productFahrenheit, "book");
-            AddProductTag(productFahrenheit, "nice");
-            AddProductTag(productHtcOne, "cell");
-            AddProductTag(productHtcOne, "compact");
-            AddProductTag(productHtcOne, "awesome");
-            AddProductTag(productBuildComputer, "awesome");
-            AddProductTag(productBuildComputer, "computer");
-            AddProductTag(productNikonD5500DSLR, "cool");
-            AddProductTag(productNikonD5500DSLR, "camera");
-            AddProductTag(productLeica, "camera");
-            AddProductTag(productLeica, "cool");
-            AddProductTag(productDigitalStorm, "cool");
-            AddProductTag(productDigitalStorm, "computer");
-            AddProductTag(productWindows8Pro, "awesome");
-            AddProductTag(productWindows8Pro, "computer");
-            AddProductTag(productCustomTShirt, "cool");
-            AddProductTag(productCustomTShirt, "shirt");
-            AddProductTag(productCustomTShirt, "apparel");
-            AddProductTag(productElegantGemstoneNecklace, "jewelry");
-            AddProductTag(productElegantGemstoneNecklace, "awesome");
-            AddProductTag(productFlowerGirlBracelet, "awesome");
-            AddProductTag(productFlowerGirlBracelet, "jewelry");
-            AddProductTag(productFirstPrizePies, "book");
-            AddProductTag(productAdidas, "cool");
-            AddProductTag(productAdidas, "shoes");
-            AddProductTag(productAdidas, "apparel");
-            AddProductTag(productLenovoIdeaCentre, "awesome");
-            AddProductTag(productLenovoIdeaCentre, "computer");
-            AddProductTag(productSamsungSeries, "nice");
-            AddProductTag(productSamsungSeries, "computer");
-            AddProductTag(productSamsungSeries, "compact");
-            AddProductTag(productHpSpectre, "nice");
-            AddProductTag(productHpSpectre, "computer");
-            AddProductTag(productHpEnvy, "computer");
-            AddProductTag(productHpEnvy, "cool");
-            AddProductTag(productHpEnvy, "compact");
-            AddProductTag(productObeyHat, "apparel");
-            AddProductTag(productObeyHat, "cool");
-            AddProductTag(productLeviJeans, "cool");
-            AddProductTag(productLeviJeans, "jeans");
-            AddProductTag(productLeviJeans, "apparel");
-            AddProductTag(productSoundForge, "game");
-            AddProductTag(productSoundForge, "computer");
-            AddProductTag(productSoundForge, "cool");
-            AddProductTag(productNightVision, "awesome");
-            AddProductTag(productNightVision, "digital");
-            AddProductTag(productSunglasses, "apparel");
-            AddProductTag(productSunglasses, "cool");
-            AddProductTag(productHtcOneMini, "awesome");
-            AddProductTag(productHtcOneMini, "compact");
-            AddProductTag(productHtcOneMini, "cell");
-            AddProductTag(productIfYouWait, "digital");
-            AddProductTag(productIfYouWait, "awesome");
-            AddProductTag(productNokiaLumia, "awesome");
-            AddProductTag(productNokiaLumia, "cool");
-            AddProductTag(productNokiaLumia, "camera");
-            AddProductTag(productScienceAndFaith, "digital");
-            AddProductTag(productScienceAndFaith, "awesome");
-            AddProductTag(productPrideAndPrejudice, "book");
-            AddProductTag(productLenovoThinkpad, "awesome");
-            AddProductTag(productLenovoThinkpad, "computer");
-            AddProductTag(productLenovoThinkpad, "compact");
-            AddProductTag(productNikeZoom, "jeans");
-            AddProductTag(productNikeZoom, "cool");
-            AddProductTag(productNikeZoom, "apparel");
-            AddProductTag(productEngagementRing, "jewelry");
-            AddProductTag(productEngagementRing, "awesome");
+            await AddProductTag(product25GiftCard, "nice");
+            await AddProductTag(product25GiftCard, "gift");
+            await AddProductTag(productNikeTailwind, "cool");
+            await AddProductTag(productNikeTailwind, "apparel");
+            await AddProductTag(productNikeTailwind, "shirt");
+            await AddProductTag(productBeatsPill, "computer");
+            await AddProductTag(productBeatsPill, "cool");
+            await AddProductTag(productNikeFloral, "cool");
+            await AddProductTag(productNikeFloral, "shoes");
+            await AddProductTag(productNikeFloral, "apparel");
+            await AddProductTag(productAdobePhotoshop, "computer");
+            await AddProductTag(productAdobePhotoshop, "awesome");
+            await AddProductTag(productUniversalTabletCover, "computer");
+            await AddProductTag(productUniversalTabletCover, "cool");
+            await AddProductTag(productOversizedWomenTShirt, "cool");
+            await AddProductTag(productOversizedWomenTShirt, "apparel");
+            await AddProductTag(productOversizedWomenTShirt, "shirt");
+            await AddProductTag(productAppleMacBookPro, "compact");
+            await AddProductTag(productAppleMacBookPro, "awesome");
+            await AddProductTag(productAppleMacBookPro, "computer");
+            await AddProductTag(productAsusN551JK, "compact");
+            await AddProductTag(productAsusN551JK, "awesome");
+            await AddProductTag(productAsusN551JK, "computer");
+            await AddProductTag(productFahrenheit, "awesome");
+            await AddProductTag(productFahrenheit, "book");
+            await AddProductTag(productFahrenheit, "nice");
+            await AddProductTag(productHtcOne, "cell");
+            await AddProductTag(productHtcOne, "compact");
+            await AddProductTag(productHtcOne, "awesome");
+            await AddProductTag(productBuildComputer, "awesome");
+            await AddProductTag(productBuildComputer, "computer");
+            await AddProductTag(productNikonD5500DSLR, "cool");
+            await AddProductTag(productNikonD5500DSLR, "camera");
+            await AddProductTag(productLeica, "camera");
+            await AddProductTag(productLeica, "cool");
+            await AddProductTag(productDigitalStorm, "cool");
+            await AddProductTag(productDigitalStorm, "computer");
+            await AddProductTag(productWindows8Pro, "awesome");
+            await AddProductTag(productWindows8Pro, "computer");
+            await AddProductTag(productCustomTShirt, "cool");
+            await AddProductTag(productCustomTShirt, "shirt");
+            await AddProductTag(productCustomTShirt, "apparel");
+            await AddProductTag(productElegantGemstoneNecklace, "jewelry");
+            await AddProductTag(productElegantGemstoneNecklace, "awesome");
+            await AddProductTag(productFlowerGirlBracelet, "awesome");
+            await AddProductTag(productFlowerGirlBracelet, "jewelry");
+            await AddProductTag(productFirstPrizePies, "book");
+            await AddProductTag(productAdidas, "cool");
+            await AddProductTag(productAdidas, "shoes");
+            await AddProductTag(productAdidas, "apparel");
+            await AddProductTag(productLenovoIdeaCentre, "awesome");
+            await AddProductTag(productLenovoIdeaCentre, "computer");
+            await AddProductTag(productSamsungSeries, "nice");
+            await AddProductTag(productSamsungSeries, "computer");
+            await AddProductTag(productSamsungSeries, "compact");
+            await AddProductTag(productHpSpectre, "nice");
+            await AddProductTag(productHpSpectre, "computer");
+            await AddProductTag(productHpEnvy, "computer");
+            await AddProductTag(productHpEnvy, "cool");
+            await AddProductTag(productHpEnvy, "compact");
+            await AddProductTag(productObeyHat, "apparel");
+            await AddProductTag(productObeyHat, "cool");
+            await AddProductTag(productLeviJeans, "cool");
+            await AddProductTag(productLeviJeans, "jeans");
+            await AddProductTag(productLeviJeans, "apparel");
+            await AddProductTag(productSoundForge, "game");
+            await AddProductTag(productSoundForge, "computer");
+            await AddProductTag(productSoundForge, "cool");
+            await AddProductTag(productNightVision, "awesome");
+            await AddProductTag(productNightVision, "digital");
+            await AddProductTag(productSunglasses, "apparel");
+            await AddProductTag(productSunglasses, "cool");
+            await AddProductTag(productHtcOneMini, "awesome");
+            await AddProductTag(productHtcOneMini, "compact");
+            await AddProductTag(productHtcOneMini, "cell");
+            await AddProductTag(productIfYouWait, "digital");
+            await AddProductTag(productIfYouWait, "awesome");
+            await AddProductTag(productNokiaLumia, "awesome");
+            await AddProductTag(productNokiaLumia, "cool");
+            await AddProductTag(productNokiaLumia, "camera");
+            await AddProductTag(productScienceAndFaith, "digital");
+            await AddProductTag(productScienceAndFaith, "awesome");
+            await AddProductTag(productPrideAndPrejudice, "book");
+            await AddProductTag(productLenovoThinkpad, "awesome");
+            await AddProductTag(productLenovoThinkpad, "computer");
+            await AddProductTag(productLenovoThinkpad, "compact");
+            await AddProductTag(productNikeZoom, "jeans");
+            await AddProductTag(productNikeZoom, "cool");
+            await AddProductTag(productNikeZoom, "apparel");
+            await AddProductTag(productEngagementRing, "jewelry");
+            await AddProductTag(productEngagementRing, "awesome");
 
 
             #endregion
@@ -9653,16 +9654,16 @@ namespace Grand.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow,
 
                 };
-                _productReviewRepository.Insert(productReview);
+                await _productReviewRepository.InsertAsync(productReview);
 
                 product.ApprovedRatingSum = rating;
                 product.ApprovedTotalReviews = product.ApprovedTotalReviews + 1;
 
             }
-            _productRepository.Update(allProducts);
+            await _productRepository.UpdateAsync(allProducts);
         }
 
-        protected virtual void InstallForums()
+        protected virtual async Task InstallForums()
         {
             var forumGroup = new ForumGroup
             {
@@ -9672,7 +9673,7 @@ namespace Grand.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow,
             };
 
-            _forumGroupRepository.Insert(forumGroup);
+            await _forumGroupRepository.InsertAsync(forumGroup);
 
             var newProductsForum = new Forum
             {
@@ -9687,7 +9688,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
-            _forumRepository.Insert(newProductsForum);
+            await _forumRepository.InsertAsync(newProductsForum);
 
             var mobileDevicesForum = new Forum
             {
@@ -9702,7 +9703,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
-            _forumRepository.Insert(mobileDevicesForum);
+            await _forumRepository.InsertAsync(mobileDevicesForum);
 
             var packagingShippingForum = new Forum
             {
@@ -9716,10 +9717,10 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
-            _forumRepository.Insert(packagingShippingForum);
+            await _forumRepository.InsertAsync(packagingShippingForum);
         }
 
-        protected virtual void InstallDiscounts()
+        protected virtual async Task InstallDiscounts()
         {
             var discounts = new List<Discount>
                                 {
@@ -9746,16 +9747,18 @@ namespace Grand.Services.Installation
                                             IsEnabled = true
                                         },
                                 };
-            _discountRepository.Insert(discounts);
-            var coupon1 = new DiscountCoupon();
-            coupon1.CouponCode = "123";
-            coupon1.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
-            _discountCouponRepository.Insert(coupon1);
+            await _discountRepository.InsertAsync(discounts);
+            var coupon1 = new DiscountCoupon {
+                CouponCode = "123",
+                DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id
+            };
+            await _discountCouponRepository.InsertAsync(coupon1);
 
-            var coupon2 = new DiscountCoupon();
-            coupon2.CouponCode = "456";
-            coupon2.DiscountId = _discountRepository.Table.Where(x => x.Name == "'20% order total' discount").FirstOrDefault().Id;
-            _discountCouponRepository.Insert(coupon2);
+            var coupon2 = new DiscountCoupon {
+                CouponCode = "456",
+                DiscountId = _discountRepository.Table.Where(x => x.Name == "'20% order total' discount").FirstOrDefault().Id
+            };
+            await _discountCouponRepository.InsertAsync(coupon2);
 
         }
 
@@ -9783,13 +9786,13 @@ namespace Grand.Services.Installation
                                              CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
                                         },
                                 };
-            _blogPostRepository.Insert(blogPosts);
+            await _blogPostRepository.InsertAsync(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
             {
                 var seName = SeoExtensions.GetSeName(blogPost.Title, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
@@ -9827,13 +9830,14 @@ namespace Grand.Services.Installation
                                              CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
                                         },
                                 };
-            _blogPostRepository.Insert(blogPosts);
+
+            await _blogPostRepository.InsertAsync(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
             {
                 blogPost.SeName = SeoExtensions.GetSeName(blogPost.Title, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
@@ -9879,13 +9883,13 @@ namespace Grand.Services.Installation
                                     },
 
                                 };
-            _newsItemRepository.Insert(news);
+            await _newsItemRepository.InsertAsync(news);
 
             //search engine names
             foreach (var newsItem in news)
             {
                 newsItem.SeName = SeoExtensions.GetSeName(newsItem.Title, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = newsItem.Id,
                     EntityName = "NewsItem",
@@ -9898,7 +9902,7 @@ namespace Grand.Services.Installation
 
         }
 
-        protected virtual void InstallPolls()
+        protected virtual async Task InstallPolls()
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var poll1 = new Poll
@@ -9936,10 +9940,10 @@ namespace Grand.Services.Installation
                 DisplayOrder = 5,
 
             });
-            _pollRepository.Insert(poll1);
+            await _pollRepository.InsertAsync(poll1);
         }
 
-        protected virtual void InstallActivityLogTypes()
+        protected virtual async Task InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>
                                       {
@@ -10492,10 +10496,10 @@ namespace Grand.Services.Installation
                                                   Name = "Delete knowledgebase category"
                                               },
                                       };
-            _activityLogTypeRepository.Insert(activityLogTypes);
+            await _activityLogTypeRepository.InsertAsync(activityLogTypes);
         }
 
-        protected virtual void InstallProductTemplates()
+        protected virtual async Task InstallProductTemplates()
         {
             var productTemplates = new List<ProductTemplate>
                                {
@@ -10512,10 +10516,10 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 100
                                        },
                                };
-            _productTemplateRepository.Insert(productTemplates);
+            await _productTemplateRepository.InsertAsync(productTemplates);
         }
 
-        protected virtual void InstallCategoryTemplates()
+        protected virtual async Task InstallCategoryTemplates()
         {
             var categoryTemplates = new List<CategoryTemplate>
                                {
@@ -10526,10 +10530,10 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            _categoryTemplateRepository.Insert(categoryTemplates);
+            await _categoryTemplateRepository.InsertAsync(categoryTemplates);
         }
 
-        protected virtual void InstallManufacturerTemplates()
+        protected virtual async Task InstallManufacturerTemplates()
         {
             var manufacturerTemplates = new List<ManufacturerTemplate>
                                {
@@ -10540,10 +10544,10 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            _manufacturerTemplateRepository.Insert(manufacturerTemplates);
+            await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplates);
         }
 
-        protected virtual void InstallTopicTemplates()
+        protected virtual async Task InstallTopicTemplates()
         {
             var topicTemplates = new List<TopicTemplate>
                                {
@@ -10554,10 +10558,10 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            _topicTemplateRepository.Insert(topicTemplates);
+            await _topicTemplateRepository.InsertAsync(topicTemplates);
         }
 
-        protected virtual void InstallScheduleTasks()
+        protected virtual async Task InstallScheduleTasks()
         {
             //these tasks are default - they are created in order to insert them into database
             //and nothing above it
@@ -10570,13 +10574,7 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.QueuedMessagesSendScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1
                 },
                 new ScheduleTask
                 {
@@ -10584,13 +10582,7 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.DeleteGuestsScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10598,27 +10590,15 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.ClearCacheScheduleTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 120
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Clear log",
-                    Type = "Grand.Services.Tasks.ClearLogScheduleTask",
+                    Type = "Grand.Services.Tasks.ClearLogScheduleTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10626,111 +10606,63 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.UpdateExchangeRateScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - AbandonedCart",
                     Type = "Grand.Services.Tasks.CustomerReminderAbandonedCartScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 20
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - RegisteredCustomer",
                     Type = "Grand.Services.Tasks.CustomerReminderRegisteredCustomerScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - LastActivity",
                     Type = "Grand.Services.Tasks.CustomerReminderLastActivityScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - LastPurchase",
                     Type = "Grand.Services.Tasks.CustomerReminderLastPurchaseScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Birthday",
                     Type = "Grand.Services.Tasks.CustomerReminderBirthdayScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Completed order",
                     Type = "Grand.Services.Tasks.CustomerReminderCompletedOrderScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
                     ScheduleTaskName = "Customer reminder - Unpaid order",
                     Type = "Grand.Services.Tasks.CustomerReminderUnpaidOrderScheduleTask, Grand.Services",
-                    Enabled = true,
+                    Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
-                    TimeInterval = 1,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 1440
                 },
                 new ScheduleTask
                 {
@@ -10738,19 +10670,13 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
-                    TimeInterval = 10,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
+                    TimeInterval = 60
                 },
             };
-            _scheduleTaskRepository.Insert(tasks);
+            await _scheduleTaskRepository.InsertAsync(tasks);
         }
 
-        protected virtual void InstallReturnRequestReasons()
+        protected virtual async Task InstallReturnRequestReasons()
         {
             var returnRequestReasons = new List<ReturnRequestReason>
                                 {
@@ -10770,9 +10696,9 @@ namespace Grand.Services.Installation
                                             DisplayOrder = 3
                                         }
                                 };
-            _returnRequestReasonRepository.Insert(returnRequestReasons);
+            await _returnRequestReasonRepository.InsertAsync(returnRequestReasons);
         }
-        protected virtual void InstallReturnRequestActions()
+        protected virtual async Task InstallReturnRequestActions()
         {
             var returnRequestActions = new List<ReturnRequestAction>
                                 {
@@ -10792,10 +10718,10 @@ namespace Grand.Services.Installation
                                             DisplayOrder = 3
                                         }
                                 };
-            _returnRequestActionRepository.Insert(returnRequestActions);
+            await _returnRequestActionRepository.InsertAsync(returnRequestActions);
         }
 
-        protected virtual void InstallWarehouses()
+        protected virtual async Task InstallWarehouses()
         {
             var warehouse1address = new Address
             {
@@ -10806,7 +10732,7 @@ namespace Grand.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _addressRepository.Insert(warehouse1address);
+            await _addressRepository.InsertAsync(warehouse1address);
             var warehouse2address = new Address
             {
                 Address1 = "300 South Spring Stree",
@@ -10816,7 +10742,7 @@ namespace Grand.Services.Installation
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _addressRepository.Insert(warehouse2address);
+            await _addressRepository.InsertAsync(warehouse2address);
             var warehouses = new List<Warehouse>
             {
                 new Warehouse
@@ -10831,10 +10757,10 @@ namespace Grand.Services.Installation
                 }
             };
 
-            _warehouseRepository.Insert(warehouses);
+            await _warehouseRepository.InsertAsync(warehouses);
         }
 
-        protected virtual void InstallPickupPoints()
+        protected virtual async Task InstallPickupPoints()
         {
             var addresspoint = new Address
             {
@@ -10845,14 +10771,14 @@ namespace Grand.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _addressRepository.Insert(addresspoint);
+            await _addressRepository.InsertAsync(addresspoint);
 
             var point = new PickupPoint()
             {
                 Address = addresspoint,
                 Name = "My Store - New York",
             };
-            _pickupPointsRepository.Insert(point);
+            await _pickupPointsRepository.InsertAsync(point);
         }
 
         protected virtual async Task InstallVendors()
@@ -10887,13 +10813,13 @@ namespace Grand.Services.Installation
                 }
             };
 
-            _vendorRepository.Insert(vendors);
+            await _vendorRepository.InsertAsync(vendors);
 
             //search engine names
             foreach (var vendor in vendors)
             {
                 var seName = SeoExtensions.GetSeName(vendor.Name, false, false);
-                _urlRecordRepository.Insert(new UrlRecord
+                await _urlRecordRepository.InsertAsync(new UrlRecord
                 {
                     EntityId = vendor.Id,
                     EntityName = "Vendor",
@@ -10906,7 +10832,7 @@ namespace Grand.Services.Installation
             }
         }
 
-        protected virtual void InstallAffiliates()
+        protected virtual async Task InstallAffiliates()
         {
             var affiliateAddress = new Address
             {
@@ -10922,16 +10848,16 @@ namespace Grand.Services.Installation
                 CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA").Id,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _addressRepository.Insert(affiliateAddress);
+            await _addressRepository.InsertAsync(affiliateAddress);
             var affilate = new Affiliate
             {
                 Active = true,
                 Address = affiliateAddress
             };
-            _affiliateRepository.Insert(affilate);
+            await _affiliateRepository.InsertAsync(affilate);
         }
 
-        private void AddProductTag(Product product, string tag)
+        private async Task AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
             if (productTag == null)
@@ -10942,19 +10868,20 @@ namespace Grand.Services.Installation
                     SeName = SeoExtensions.GetSeName(tag, false, false),
                 };
 
-                _productTagRepository.Insert(productTag);
+                await _productTagRepository.InsertAsync(productTag);
             }
             productTag.Count = productTag.Count + 1;
-            _productTagRepository.Update(productTag);
+            await _productTagRepository.UpdateAsync(productTag);
             product.ProductTags.Add(productTag.Name);
-            _productRepository.Update(product);
+            await _productRepository.UpdateAsync(product);
         }
 
         private async Task CreateIndexes()
         {
-            var indexOptionId = new CreateIndexOptions();
-            indexOptionId.Name = "db";
-            indexOptionId.Unique = true;
+            var indexOptionId = new CreateIndexOptions {
+                Name = "db",
+                Unique = true
+            };
             var grandNodeVersionIndex = new CreateIndexModel<GrandNodeVersion>((Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.DataBaseVersion)), indexOptionId);
 
             await _versionRepository.Collection.Indexes.CreateOneAsync(grandNodeVersionIndex);
@@ -11175,48 +11102,48 @@ namespace Grand.Services.Installation
             defaultUserEmail = defaultUserEmail.ToLower();
             await CreateTables(collation);
             await CreateIndexes();
-            InstallVersion();
-            InstallStores();
-            InstallMeasures();
-            InstallTaxCategories();
-            InstallLanguages();
-            InstallCurrencies();
-            InstallCountriesAndStates();
-            InstallShippingMethods();
-            InstallDeliveryDates();
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
-            InstallEmailAccounts();
-            InstallMessageTemplates();
-            InstallCustomerAction();
-            InstallSettings(installSampleData);
-            InstallTopicTemplates();
+            await InstallVersion();
+            await InstallStores();
+            await InstallMeasures();
+            await InstallTaxCategories();
+            await InstallLanguages();
+            await InstallCurrencies();
+            await InstallCountriesAndStates();
+            await InstallShippingMethods();
+            await InstallDeliveryDates();
+            await InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
+            await InstallEmailAccounts();
+            await InstallMessageTemplates();
+            await InstallCustomerAction();
+            await InstallSettings(installSampleData);
+            await InstallTopicTemplates();
             await InstallTopics();
-            InstallLocaleResources();
-            InstallActivityLogTypes();
-            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
-            InstallProductTemplates();
-            InstallCategoryTemplates();
-            InstallManufacturerTemplates();
-            InstallScheduleTasks();
-            InstallReturnRequestReasons();
-            InstallReturnRequestActions();
+            await InstallLocaleResources();
+            await InstallActivityLogTypes();
+            await HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
+            await InstallProductTemplates();
+            await InstallCategoryTemplates();
+            await InstallManufacturerTemplates();
+            await InstallScheduleTasks();
+            await InstallReturnRequestReasons();
+            await InstallReturnRequestActions();
             if (installSampleData)
             {
-                InstallCheckoutAttributes();
-                InstallSpecificationAttributes();
-                InstallProductAttributes();
+                await InstallCheckoutAttributes();
+                await InstallSpecificationAttributes();
+                await InstallProductAttributes();
                 await InstallCategories();
                 await InstallManufacturers();
                 await InstallProducts(defaultUserEmail);
-                InstallForums();
-                InstallDiscounts();
+                await InstallForums();
+                await InstallDiscounts();
                 await InstallBlogPosts();
                 await InstallNews();
-                InstallPolls();
-                InstallWarehouses();
-                InstallPickupPoints();
+                await InstallPolls();
+                await InstallWarehouses();
+                await InstallPickupPoints();
                 await InstallVendors();
-                InstallAffiliates();
+                await InstallAffiliates();
             }
         }
 

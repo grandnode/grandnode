@@ -63,6 +63,10 @@
                                     {
                                         <span class="custom-control-description pl-3 pt-1">
                                             @paymentMethod.Description
+                                            @if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                                            {
+                                                <text>(@paymentMethod.Fee)</text>
+                                            }
                                         </span>
                                     }
                                 </label>

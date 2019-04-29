@@ -76,9 +76,9 @@ namespace Grand.Services.Directory.Tests
                 IMongoCollection.InsertOne(currencyRUR);
 
                 tempCurrencyRepository.Setup(x => x.Table).Returns(IMongoCollection.AsQueryable());
-                tempCurrencyRepository.Setup(x => x.GetById(currencyUSD.Id)).Returns(currencyUSD);
-                tempCurrencyRepository.Setup(x => x.GetById(currencyEUR.Id)).Returns(currencyEUR);
-                tempCurrencyRepository.Setup(x => x.GetById(currencyRUR.Id)).Returns(currencyRUR);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyUSD.Id)).ReturnsAsync(currencyUSD);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyEUR.Id)).ReturnsAsync(currencyEUR);
+                tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyRUR.Id)).ReturnsAsync(currencyRUR);
                 tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyUSD.Id)).ReturnsAsync(currencyUSD);
                 tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyEUR.Id)).ReturnsAsync(currencyEUR);
                 tempCurrencyRepository.Setup(x => x.GetByIdAsync(currencyRUR.Id)).ReturnsAsync(currencyRUR);

@@ -18,6 +18,11 @@ namespace Grand.Core.Domain.Catalog
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the attribute xml
+        /// </summary>
+        public string AttributeXml { get; set; }
+
+        /// <summary>
         /// Gets or sets the warehouse identifier
         /// </summary>
         public string WarehouseId { get; set; }

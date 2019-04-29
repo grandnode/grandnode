@@ -13,6 +13,7 @@ namespace Grand.Web.Models.Catalog
         {
             ProductPrice = new ProductPriceModel();
             DefaultPictureModel = new PictureModel();
+            SecondPictureModel = new PictureModel();
             SpecificationAttributeModels = new List<ProductSpecificationModel>();
             ReviewOverviewModel = new ProductReviewOverviewModel();
         }
@@ -34,8 +35,11 @@ namespace Grand.Web.Models.Catalog
 
         //price
         public ProductPriceModel ProductPrice { get; set; }
+        
         //picture
         public PictureModel DefaultPictureModel { get; set; }
+        public PictureModel SecondPictureModel { get; set; }
+
         //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
         //price
