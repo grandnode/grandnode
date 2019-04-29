@@ -11,4 +11,5 @@ script:
  - dotnet restore GrandNode.sln
  - dotnet test ./Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
  - dotnet test ./Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
+ - dotnet test ./Tests/Grand.Plugin.Tests/Grand.Plugin.Tests.csproj
  - dotnet publish Grand.Web -c Release
