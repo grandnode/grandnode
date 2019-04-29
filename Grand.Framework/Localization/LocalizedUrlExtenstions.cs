@@ -4,6 +4,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Grand.Framework.Localization
         /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
         /// <param name="language">Language whose SEO code is in the URL if URL is localized</param>
         /// <returns>True if passed URL contains SEO code; otherwise false</returns>
-        public static bool IsLocalizedUrl(this string url, PathString pathBase, bool isRawPath, out Language language)
+        public static bool IsLocalizedUrl(this string url, PathString pathBase, bool isRawPath, IList<Language> languages, out Language language)
         {
             language = null;
             if (string.IsNullOrEmpty(url))
@@ -39,9 +40,7 @@ namespace Grand.Framework.Localization
                 return false;
 
             //suppose that the first segment is the language code and try to get language
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            language = languageService.GetAllLanguages().GetAwaiter().GetResult()
-                .FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.OrdinalIgnoreCase));
+            language = languages.FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.OrdinalIgnoreCase));
 
             //if language exists and published passed URL is localized
             return language.Return(urlLanguage => urlLanguage.Published, false);

@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
+using Grand.Services.Localization;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace Grand.Framework.Localization
         private readonly IRouter _target;
         private bool? _seoFriendlyUrlsForLanguagesEnabled;
         private bool? _seoFriendlyUrlsForPathEnabled;
+        private IList<Language> _languages;
+
         #endregion
 
         #region Ctor
 
-        public LocalizedRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults, 
+        public LocalizedRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults,
             IDictionary<string, object> constraints, RouteValueDictionary dataTokens, IInlineConstraintResolver inlineConstraintResolver)
             : base(target, routeName, routeTemplate, defaults, constraints, dataTokens, inlineConstraintResolver)
         {
@@ -48,9 +51,10 @@ namespace Grand.Framework.Localization
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return data;
 
+            PrepareLanguages().Wait();
             //add language code to page URL in case if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
-            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
                 data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
 
             return data;
@@ -61,26 +65,31 @@ namespace Grand.Framework.Localization
         /// </summary>
         /// <param name="context">A route context object</param>
         /// <returns>Task of the routing</returns>
-        public override Task RouteAsync(RouteContext context)
+        public override async Task RouteAsync(RouteContext context)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
-                return base.RouteAsync(context);
+            {
+                await base.RouteAsync(context);
+                return;
+            }
+
+            await PrepareLanguages();
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
-                return base.RouteAsync(context);
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
+            {
+                await base.RouteAsync(context);
+                return;
+            }
 
             //remove language code and application path from the path
             var newPath = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
             //set new request path and try to get route handler
             context.HttpContext.Request.Path = newPath;
-            base.RouteAsync(context).Wait();
+            await base.RouteAsync(context);
 
-            //then return the original request path
-            context.HttpContext.Request.Path = path;
-            return _target.RouteAsync(context);
         }
 
         /// <summary>
@@ -90,18 +99,16 @@ namespace Grand.Framework.Localization
         {
             _seoFriendlyUrlsForLanguagesEnabled = null;
         }
-        
+
         #endregion
-        
+
         #region Properties
 
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForLanguagesEnabled settings
         /// </summary>
-        protected bool SeoFriendlyUrlsForLanguagesEnabled
-        {
-            get
-            {
+        protected bool SeoFriendlyUrlsForLanguagesEnabled {
+            get {
                 if (!_seoFriendlyUrlsForLanguagesEnabled.HasValue)
                     _seoFriendlyUrlsForLanguagesEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForLanguagesEnabled;
 
@@ -112,16 +119,33 @@ namespace Grand.Framework.Localization
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForPathEnabled settings
         /// </summary>
-        protected bool SeoFriendlyUrlsForPathEnabled
-        {
-            get
-            {
+        protected bool SeoFriendlyUrlsForPathEnabled {
+            get {
                 if (!_seoFriendlyUrlsForPathEnabled.HasValue)
                     _seoFriendlyUrlsForPathEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForPathEnabled;
 
                 return _seoFriendlyUrlsForPathEnabled.Value;
             }
         }
+
+        protected async Task PrepareLanguages()
+        {
+            if (_languages == null)
+            {
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                _languages = await languageService.GetAllLanguages();
+            }
+        }
+
+        /// <summary>
+        /// Gets all languges
+        /// </summary>
+        protected IList<Language> Languages {
+            get {
+                return _languages;
+            }
+        }
+
         #endregion
     }
 }
