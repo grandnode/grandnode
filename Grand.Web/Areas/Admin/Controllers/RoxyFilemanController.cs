@@ -420,6 +420,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (fileExtension == ".swf" || fileExtension == ".flv")
                 fileType = "flash";
 
+            if (fileExtension == ".mp4" || fileExtension == ".avi" || fileExtension == ".mov")
+                fileType = "media";
+
             return fileType;
         }
 
