@@ -213,13 +213,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
-            if (!String.IsNullOrWhiteSpace(model.Email))
+            if (!string.IsNullOrWhiteSpace(model.Email))
             {
                 var cust2 = await _customerService.GetCustomerByEmail(model.Email);
                 if (cust2 != null)
                     ModelState.AddModelError("", "Email is already registered");
             }
-            if (!String.IsNullOrWhiteSpace(model.Username) & _customerSettings.UsernamesEnabled)
+
+            if (!string.IsNullOrWhiteSpace(model.Username) & _customerSettings.UsernamesEnabled)
             {
                 var cust2 = await _customerService.GetCustomerByUsername(model.Username);
                 if (cust2 != null)
@@ -233,27 +234,29 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = _customerViewModelService.ValidateCustomerRoles(newCustomerRoles);
-            if (!String.IsNullOrEmpty(customerRolesError))
+            if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
 
-            //password
-            if (!String.IsNullOrWhiteSpace(model.Password))
-            {
-                var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
-                var changePassResult = await _customerRegistrationService.ChangePassword(changePassRequest);
-                if (!changePassResult.Success)
-                {
-                    foreach (var changePassError in changePassResult.Errors)
-                        ErrorNotification(changePassError);
-                }
-            }
             if (ModelState.IsValid)
             {
                 model.CustomAttributes = await ParseCustomCustomerAttributes(form);
                 var customer = await _customerViewModelService.InsertCustomerModel(model);
+                
+                //password
+                if (!string.IsNullOrWhiteSpace(model.Password))
+                {
+                    var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
+                    var changePassResult = await _customerRegistrationService.ChangePassword(changePassRequest);
+                    if (!changePassResult.Success)
+                    {
+                        foreach (var changePassError in changePassResult.Errors)
+                            ErrorNotification(changePassError);
+                    }
+                }
+
                 if (customer.IsAdmin() && !String.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
