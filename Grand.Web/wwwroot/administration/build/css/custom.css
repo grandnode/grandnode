@@ -2719,6 +2719,10 @@ legend {
     border-left: 2px solid #E74C3C
 }
 
+.field-validation-error, .validation-summary-errors {
+    color: red;
+}
+
 p.parsley-success {
     color: #468847;
     background-color: #DFF0D8;
