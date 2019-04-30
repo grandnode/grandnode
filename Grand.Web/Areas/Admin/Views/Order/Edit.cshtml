@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
 }
-<form asp-controller="Order" asp-action="Edit" method="post" id = "order-form">
+<form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -60,21 +60,21 @@
                             }
                         </ul>
                         <div>
-                           <partial name="_OrderDetails.Info" model="Model" />
+                            <partial name="_OrderDetails.Info" model="Model" />
                         </div>
                         <div>
-                           <partial name="_OrderDetails.Billing" model="Model" />
+                            <partial name="_OrderDetails.Billing" model="Model" />
                         </div>
                         <div>
-                           <partial name="_OrderDetails.Shipping" model="Model" />
+                            <partial name="_OrderDetails.Shipping" model="Model" />
                         </div>
                         <div>
-                           <partial name="_OrderDetails.Products" model="Model" />
+                            <partial name="_OrderDetails.Products" model="Model" />
                         </div>
                         @if (!Model.IsLoggedInAsVendor)
                         {
                             <div>
-                               <partial name="_OrderDetails.Notes" model="Model" />
+                                <partial name="_OrderDetails.Notes" model="Model" />
                             </div>
                         }
                     </div>
@@ -103,7 +103,7 @@
         await eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
-            @eventBlock
+            <kendo-tab-append tab-strip-name="order-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
         }
     }
 

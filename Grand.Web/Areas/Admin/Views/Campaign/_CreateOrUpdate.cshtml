@@ -35,19 +35,19 @@
         </li>
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabConditions" model="Model" />
+        <partial name="_CreateOrUpdate.TabConditions" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabEmails" model="Model" />
+        <partial name="_CreateOrUpdate.TabEmails" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+        <partial name="_CreateOrUpdate.TabHistory" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabTest" model="Model" />
+        <partial name="_CreateOrUpdate.TabTest" model="Model" />
     </div>
 </div>
 <vc:admin-widget widget-zone="campaign_details_bottom" additional-data="Model" />
@@ -58,7 +58,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="campaign-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

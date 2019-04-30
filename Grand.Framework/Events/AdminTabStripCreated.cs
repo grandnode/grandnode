@@ -13,11 +13,11 @@ namespace Grand.Framework.Events
         {
             this.Helper = helper;
             this.TabStripName = tabStripName;
-            this.BlocksToRender = new List<IHtmlContent>();
+            this.BlocksToRender = new List<(string tabname,IHtmlContent content)>();
         }
 
         public IHtmlHelper Helper { get; private set; }
         public string TabStripName { get; private set; }
-        public IList<IHtmlContent> BlocksToRender { get; set; }
+        public IList<(string tabname, IHtmlContent content)> BlocksToRender { get; set; }
     }
 }

@@ -61,13 +61,14 @@
         <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
     </div>
 </div>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "category-edit");
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="category-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

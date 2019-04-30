@@ -30,12 +30,12 @@
         }
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.TabCustomers" model="Model" />
+            <partial name="_CreateOrUpdate.TabCustomers" model="Model" />
         </div>
         <div>
             @await Component.InvokeAsync("Affiliate", new { affiliateId = Model.Id })
@@ -48,7 +48,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="affiliate-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

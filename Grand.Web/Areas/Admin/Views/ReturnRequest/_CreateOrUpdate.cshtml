@@ -32,12 +32,12 @@
         }
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
     {
         <div>
-           <partial name="_CreateOrUpdate.TabAddress" model="Model" />
+            <partial name="_CreateOrUpdate.TabAddress" model="Model" />
         </div>
     }
 </div>
@@ -48,7 +48,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="returnrequest-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

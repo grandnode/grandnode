@@ -139,7 +139,7 @@
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.Activitylog" model="Model" />
+            <partial name="_CreateOrUpdate.Activitylog" model="Model" />
         </div>
         <div>
             <partial name="_CreateOrUpdate.PurchasedWithOrders" model="Model" />
@@ -155,7 +155,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="product-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

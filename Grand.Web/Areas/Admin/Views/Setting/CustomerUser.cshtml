@@ -41,19 +41,19 @@
                             </li>
                         </ul>
                         <div>
-                           <partial name="CustomerUser.TabCustomerSettings" model="Model" />
+                            <partial name="CustomerUser.TabCustomerSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="CustomerUser.TabCustomerFormFields" model="Model" />
+                            <partial name="CustomerUser.TabCustomerFormFields" model="Model" />
                         </div>
                         <div>
-                           <partial name="CustomerUser.TabAddressFormFields" model="Model" />
+                            <partial name="CustomerUser.TabAddressFormFields" model="Model" />
                         </div>
                         <div>
-                           <partial name="CustomerUser.TabDateTimeSettings" model="Model" />
+                            <partial name="CustomerUser.TabDateTimeSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="CustomerUser.TabExternalAuthenticationSettings" model="Model" />
+                            <partial name="CustomerUser.TabExternalAuthenticationSettings" model="Model" />
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
         $(document).ready(function () {
             $("#customersettings-edit").show();
             $("#customersettings-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -83,7 +83,7 @@
         await eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
-            @eventBlock
+            <kendo-tab-append tab-strip-name="customersettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
         }
     }
 

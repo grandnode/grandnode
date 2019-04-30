@@ -39,7 +39,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="template-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

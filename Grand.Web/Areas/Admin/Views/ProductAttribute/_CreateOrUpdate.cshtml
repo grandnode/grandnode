@@ -23,25 +23,25 @@
         </li>
         @if (!string.IsNullOrEmpty(Model.Id))
         {
-        <li tab-index="1">
-            @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
-        </li>
+            <li tab-index="1">
+                @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
+            </li>
         }
         <li tab-index="2">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
         </li>
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!string.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
+            <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
         </div>
     }
     <div>
-       <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
+        <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
     </div>
 </div>
 @{
@@ -50,7 +50,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="product-attribute-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

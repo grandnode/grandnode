@@ -101,10 +101,10 @@
         await eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
-        @eventBlock
+            <kendo-tab-append tab-strip-name="catalogsettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
         }
     }
 
-        @*save selected tab index*@
-        <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 </form>

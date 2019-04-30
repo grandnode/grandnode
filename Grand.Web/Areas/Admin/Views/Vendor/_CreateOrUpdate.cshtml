@@ -37,21 +37,21 @@
         }
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabSeo" model="Model" />
+        <partial name="_CreateOrUpdate.TabSeo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabDiscounts" model="Model" />
+        <partial name="_CreateOrUpdate.TabDiscounts" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.TabVendorNotes" model="Model" />
+            <partial name="_CreateOrUpdate.TabVendorNotes" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabVendorReviews" model="Model" />
+            <partial name="_CreateOrUpdate.TabVendorReviews" model="Model" />
         </div>
     }
 </div>
@@ -61,7 +61,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="vendor-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

@@ -53,33 +53,33 @@
         }
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabCouponCodes" model="Model" />
+        <partial name="_CreateOrUpdate.TabCouponCodes" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabRequirements" model="Model" />
+        <partial name="_CreateOrUpdate.TabRequirements" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
+        <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
+        <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
+        <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabAppliedToVendors" model="Model" />
+        <partial name="_CreateOrUpdate.TabAppliedToVendors" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
+        <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+            <partial name="_CreateOrUpdate.TabHistory" model="Model" />
         </div>
     }
 </div>
@@ -89,7 +89,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="discount-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

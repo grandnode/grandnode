@@ -38,7 +38,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="newslettercategory-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

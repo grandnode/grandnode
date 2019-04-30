@@ -33,7 +33,7 @@
     <div>
         <partial name="_CreateOrUpdate.TabSeo" model="Model" />
     </div>
-    <div>        
+    <div>
         <partial name="_TabStores" model="Model" />
     </div>
 </div>
@@ -43,7 +43,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="blog-post-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

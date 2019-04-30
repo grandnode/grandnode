@@ -43,10 +43,10 @@
                             </li>
                         </ul>
                         <div>
-                           <partial name="Restrictions.TabCountry" model="Model" />
+                            <partial name="Restrictions.TabCountry" model="Model" />
                         </div>
                         <div>
-                           <partial name="Restrictions.TabRole" model="Model" />
+                            <partial name="Restrictions.TabRole" model="Model" />
                         </div>
                     </div>
                     @{
@@ -55,7 +55,7 @@
                         await eventPublisher.Publish(eventMessage);
                         foreach (var eventBlock in eventMessage.BlocksToRender)
                         {
-                            @eventBlock
+                            <kendo-tab-append tab-strip-name="shippingrestriction-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
                         }
                     }
 

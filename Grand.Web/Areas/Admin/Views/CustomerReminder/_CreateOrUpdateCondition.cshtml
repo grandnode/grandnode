@@ -44,28 +44,28 @@
         </li>
     </ul>
     <div>
-       <partial name="_ConditionInfo" model="Model" />
+        <partial name="_ConditionInfo" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionProduct" model="Model" />
+        <partial name="_ConditionProduct" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionCategory" model="Model" />
+        <partial name="_ConditionCategory" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionManufacturer" model="Model" />
+        <partial name="_ConditionManufacturer" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionCustomerRole" model="Model" />
+        <partial name="_ConditionCustomerRole" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionCustomerTag" model="Model" />
+        <partial name="_ConditionCustomerTag" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionCustomerRegister" model="Model" />
+        <partial name="_ConditionCustomerRegister" model="Model" />
     </div>
     <div>
-       <partial name="_ConditionCustomCustomerAttribute" model="Model" />
+        <partial name="_ConditionCustomCustomerAttribute" model="Model" />
     </div>
 </div>
 @{
@@ -74,7 +74,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="customerremindercondition-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@

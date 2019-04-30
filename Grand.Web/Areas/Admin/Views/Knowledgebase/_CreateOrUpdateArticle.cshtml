@@ -63,7 +63,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="knowledgebasearticle-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 

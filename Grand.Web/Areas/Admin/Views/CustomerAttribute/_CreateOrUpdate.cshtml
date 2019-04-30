@@ -24,10 +24,10 @@
         </li>
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabValues" model="Model" />
+        <partial name="_CreateOrUpdate.TabValues" model="Model" />
     </div>
 </div>
 @{
@@ -36,7 +36,7 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        @eventBlock
+        <kendo-tab-append tab-strip-name="customerattribute-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
 @*save selected tab index*@
