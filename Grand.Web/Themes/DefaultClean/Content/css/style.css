@@ -3648,6 +3648,10 @@ span.product-quantity {
     border-radius: 0;
     margin-right: 5px;
 }
+#newsletter-email::-moz-placeholder {
+    color: #fff;
+}
+
 #newsletter-subscribe-button {
     border-width: 1px;
 }
