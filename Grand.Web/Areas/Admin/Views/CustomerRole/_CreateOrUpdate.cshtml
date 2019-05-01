@@ -5,15 +5,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         toggleRemoveButton();
-
-        $("#customerrole-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
     });
     function toggleRemoveButton() {
         if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() != '' ) {
@@ -25,22 +16,24 @@
     }
 </script>
 <vc:admin-widget widget-zone="customer_role_details_top" additional-data="Model" />
-<div id="customerrole-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerRoles.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Customers.CustomerRoles.Products")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabProducts" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="customerrole-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerRoles.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerRoles.Products")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 <vc:admin-widget widget-zone="customer_role_details_bottom" additional-data="Model" />
 @{
     //custom tabs
