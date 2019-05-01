@@ -65,6 +65,6 @@
     await eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
-        <kendo-tab-append tab-strip-name="customer-reports" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
+        <admin-tab-append tab-strip-name="customer-reports" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }

@@ -3,8 +3,8 @@ using System.Text;
 
 namespace Grand.Framework.TagHelpers.Admin
 {
-    [HtmlTargetElement("kendo-tab-append", Attributes = "tab-strip-name, tab-name, tab-content")]
-    public partial class AdminTabTagHelper : TagHelper
+    [HtmlTargetElement("admin-tab-append", Attributes = "tab-strip-name, tab-name, tab-content")]
+    public partial class AdminTabAppendTagHelper : TagHelper
     {
         private const string TabStripName = "tab-strip-name";
         private const string TabName = "tab-name";
@@ -20,7 +20,7 @@ namespace Grand.Framework.TagHelpers.Admin
         public string StripName { get; set; }
 
 
-        public AdminTabTagHelper()
+        public AdminTabAppendTagHelper()
         {
         }
 
