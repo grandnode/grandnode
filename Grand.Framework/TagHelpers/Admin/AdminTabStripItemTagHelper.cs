@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.TagHelpers.Admin
 {
-    [HtmlTargetElement("li", Attributes = ForAttributeName)]
-    public class TabTagHelper: TagHelper
+    [HtmlTargetElement("tabstrip-item", ParentTag = "items")]
+    public partial class AdminTabStripItemTagHelper : TagHelper
     {
-        private const string ForAttributeName = "tab-index";
-
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        [HtmlAttributeName(ForAttributeName)]
+        [HtmlAttributeName("Text")]
+        public string Text { get; set; }
+
+        [HtmlAttributeName("tab-index")]
         public int CurrentIndex { set; get; }
 
         private int GetSelectedTabIndex()
@@ -34,14 +36,19 @@ namespace Grand.Framework.TagHelpers.Admin
             return index;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var selectedIndex = GetSelectedTabIndex();
+            var content = await output.GetChildContentAsync();
+            output.TagName = "li";
 
+            var selectedIndex = GetSelectedTabIndex();
             if (selectedIndex == CurrentIndex)
             {
                 output.Attributes.SetAttribute("class", "k-state-active");
             }
+
+            output.Content.AppendHtml(Text);
         }
+
     }
 }
