@@ -4,107 +4,109 @@
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerActionId" type="hidden" />
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#customeractioncondition-edit").show();
-        $("#customeractioncondition-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select,
-        });
-    });
-</script>
-<div id="customeractioncondition-edit" style="display:none">
-    <ul>
-        <li tab-index="0" id="tab-info">
-            @T("Admin.Customers.CustomerActionCondition.Info")
-        </li>
-        <li tab-index="1" id="tab-product">
-            @T("Admin.Customers.CustomerActionCondition.Products")
-        </li>
-        <li tab-index="2" id="tab-category">
-            @T("Admin.Customers.CustomerActionCondition.Categories")
-        </li>
-        <li tab-index="3" id="tab-manufacturer">
-            @T("Admin.Customers.CustomerActionCondition.Manufacturers")
-        </li>
-        <li tab-index="4" id="tab-vendor">
-            @T("Admin.Customers.CustomerActionCondition.Vendors")
-        </li>
-        <li tab-index="5" id="tab-productAttribute">
-            @T("Admin.Customers.CustomerActionCondition.ProductAttributes")
-        </li>
-        <li tab-index="6" id="tab-productSpecification">
-            @T("Admin.Customers.CustomerActionCondition.ProductSpecifications")
-        </li>
-        <li tab-index="7" id="tab-customerRole">
-            @T("Admin.Customers.CustomerActionCondition.CustomerRole")
-        </li>
-        <li tab-index="8" id="tab-customerTag">
-            @T("Admin.Customers.CustomerActionCondition.CustomerTag")
-        </li>
-        <li tab-index="9" id="tab-customerRegister">
-            @T("Admin.Customers.CustomerActionCondition.CustomerRegister")
-        </li>
-        <li tab-index="10" id="tab-customAttribute">
-            @T("Admin.Customers.CustomerActionCondition.CustomCustomerAttribute")
-        </li>
-        <li tab-index="11" id="tab-urlReferrer">
-            @T("Admin.Customers.CustomerActionCondition.UrlReferrer")
-        </li>
-        <li tab-index="12" id="tab-urlCurrent">
-            @T("Admin.Customers.CustomerActionCondition.UrlCurrent")
-        </li>
-        <li tab-index="13" id="tab-store">
-            @T("Admin.Customers.CustomerActionCondition.Store")
-        </li>
-    </ul>
-    <div>
-        <partial name="_ConditionInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionProduct" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionCategory" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionManufacturer" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionVendor" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionProductAttribute" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionProductSpecification" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionCustomerRole" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionCustomerTag" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionCustomerRegister" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionCustomCustomerAttribute" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionUrlReferrer" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionUrlCurrent" model="Model" />
-    </div>
-    <div>
-        <partial name="_ConditionStore" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="customeractioncondition-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Info")" tab-index="0" id="tab-info">
+            <content>
+                <div>
+                    <partial name="_ConditionInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Products")" tab-index="1" id="tab-product">
+            <content>
+                <div>
+                    <partial name="_ConditionProduct" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Categories")" tab-index="2" id="tab-category">
+            <content>
+                <div>
+                    <partial name="_ConditionCategory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Manufacturers")" tab-index="3" id="tab-manufacturer">
+            <content>
+                <div>
+                    <partial name="_ConditionManufacturer" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Vendors")" tab-index="4" id="tab-vendor">
+            <content>
+                <div>
+                    <partial name="_ConditionVendor" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.ProductAttributes")" tab-index="5" id="tab-productAttribute">
+            <content>
+                <div>
+                    <partial name="_ConditionProductAttribute" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.ProductSpecifications")" tab-index="6" id="tab-productSpecification">
+            <content>
+                <div>
+                    <partial name="_ConditionProductSpecification" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.CustomerRole")" tab-index="7" id="tab-customerRole">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerRole" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.CustomerTag")" tab-index="8" id="tab-customerTag">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerTag" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.CustomerRegister")" tab-index="9" id="tab-customerRegister">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerRegister" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.CustomCustomerAttribute")" tab-index="10" id="tab-customAttribute">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomCustomerAttribute" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.UrlReferrer")" tab-index="11" id="tab-urlReferrer">
+            <content>
+                <div>
+                    <partial name="_ConditionUrlReferrer" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.UrlCurrent")" tab-index="12" id="tab-urlCurrent">
+            <content>
+                <div>
+                    <partial name="_ConditionUrlCurrent" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Store")" tab-index="13" id="tab-store">
+            <content>
+                <div>
+                    <partial name="_ConditionStore" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
+
 
 @{
     //custom tabs
