@@ -4,60 +4,49 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<script>
-    $(document).ready(function () {
-        $("#contactattribute-edit").show();
-        $("#contactattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-
-<div id="contactattribute-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.Attributes.ContactAttributes.Info")
-        </li>
-        <li tab-index="1" id="tab-contactAttributesValues">
-            @T("Admin.Catalog.Attributes.ContactAttributes.Values")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Catalog.Attributes.ContactAttributes.Stores")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Catalog.Attributes.ContactAttributes.Acl")
-        </li>
+<admin-tabstrip name="contactattribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ContactAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ContactAttributes.Values")" tab-index="1" id="tab-contactAttributesValues">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ContactAttributes.Stores")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ContactAttributes.Acl")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (Model.ConditionAllowed)
         {
-            <li tab-index="4">
-                @T("Admin.Catalog.Attributes.ContactAttributes.Condition")
-            </li>
+            <tabstrip-item text="@T("Admin.Catalog.Attributes.ContactAttributes.Condition")" tab-index="4">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabCondition" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabValues" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabAcl" model="Model" />
-    </div>
-    @if (Model.ConditionAllowed)
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabCondition" model="Model" />
-        </div>
-    }
-</div>
+    </items>
+</admin-tabstrip>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "contactattribute-edit");
