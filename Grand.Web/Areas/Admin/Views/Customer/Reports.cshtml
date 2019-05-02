@@ -18,28 +18,31 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="x_content">
-                            <div id="customer-reports">
-                                <ul>
-                                    <li tab-index="0">
-                                        @T("Admin.Customers.Reports.BestBy.BestByOrderTotal")
-                                    </li>
-                                    <li tab-index="1">
-                                        @T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")
-                                    </li>
-                                    <li tab-index="2">
-                                        @T("Admin.Customers.Reports.RegisteredCustomers")
-                                    </li>
-                                </ul>
-                                <div>
-                                    <partial name="Reports.TabBestByOrderTotal" model="Model" />
-                                </div>
-                                <div>
-                                    <partial name="Reports.TabBestByNumberOfOrders" model="Model" />
-                                </div>
-                                <div>
-                                    <partial name="Reports.TabRegisteredCustomers" model="Model" />
-                                </div>
-                            </div>
+                            <admin-tabstrip name="customer-reports">
+                                <items>
+                                    <tabstrip-item text="@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")" tab-index="0">
+                                        <content>
+                                            <div>
+                                                <partial name="Reports.TabBestByOrderTotal" model="Model" />
+                                            </div>
+                                        </content>
+                                    </tabstrip-item>
+                                    <tabstrip-item text="@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")" tab-index="1">
+                                        <content>
+                                            <div>
+                                                <partial name="Reports.TabBestByNumberOfOrders" model="Model" />
+                                            </div>
+                                        </content>
+                                    </tabstrip-item>
+                                    <tabstrip-item text="@T("Admin.Customers.Reports.RegisteredCustomers")" tab-index="2">
+                                        <content>
+                                            <div>
+                                                <partial name="Reports.TabRegisteredCustomers" model="Model" />
+                                            </div>
+                                        </content>
+                                    </tabstrip-item>
+                                </items>
+                            </admin-tabstrip>
                         </div>
                     </div>
                 </div>
@@ -47,18 +50,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#customer-reports").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
