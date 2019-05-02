@@ -3,36 +3,25 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
+<admin-tabstrip name="addressattribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Address.AddressAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Address.AddressAttributes.Values")" tab-index="1" id="tab-addressattributesvalues">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 
-<script>
-    $(document).ready(function () {
-        $("#addressattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="addressattribute-edit">
-
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Address.AddressAttributes.Info")
-        </li>
-        <li tab-index="1" id="tab-addressattributesvalues">
-            @T("Admin.Address.AddressAttributes.Values")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabValues" model="Model" />
-    </div>
-</div>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "addressattribute-edit");
