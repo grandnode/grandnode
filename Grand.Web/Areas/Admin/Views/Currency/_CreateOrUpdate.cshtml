@@ -2,7 +2,7 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
+<vc:admin-widget widget-zone="currency_details_top" additional-data="Model" />
 <admin-tabstrip name="currency-edit">
     <items>
         <tabstrip-item text="@T("Admin.Configuration.Currencies.Info")" tab-index="0">
@@ -21,7 +21,6 @@
         </tabstrip-item>
     </items>
 </admin-tabstrip>
-
 <vc:admin-widget widget-zone="currency_details_bottom" additional-data="Model" />
 @{
     //custom tabs
