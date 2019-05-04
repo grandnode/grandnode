@@ -2,42 +2,31 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#customertag-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-
-
-<div id="customertag-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerTags.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Customers.CustomerTags.Products")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Customers.CustomerTags.Customers")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabProducts" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabCustomers" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="customertag-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerTags.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerTags.Products")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerTags.Customers")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabCustomers" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customertag-edit");
