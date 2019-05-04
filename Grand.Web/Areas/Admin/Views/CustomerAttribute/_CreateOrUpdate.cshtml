@@ -2,34 +2,24 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#customerattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="customerattribute-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerAttributes.Info")
-        </li>
-        <li tab-index="1" id="tab-customerattributesvalues">
-            @T("Admin.Customers.CustomerAttributes.Values")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabValues" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="customerattribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAttributes.Values")" tab-index="1" id="tab-customerattributesvalues">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customerattribute-edit");
