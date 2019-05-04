@@ -6,83 +6,77 @@
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#discount-edit").show();
-        $("#discount-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="discount-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Promotions.Discounts.Info")
-        </li>
-        <li tab-index="1" id="tab-couponcode">
-            @T("Admin.Promotions.Discounts.CouponCodes")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Promotions.Discounts.Requirements")
-        </li>
-        <li tab-index="3" id="tab-applied-to-products">
-            @T("Admin.Promotions.Discounts.AppliedToProducts")
-        </li>
-        <li tab-index="4" id="tab-applied-to-categories">
-            @T("Admin.Promotions.Discounts.AppliedToCategories")
-        </li>
-        <li tab-index="5" id="tab-applied-to-manufacturers">
-            @T("Admin.Promotions.Discounts.AppliedToManufacturers")
-        </li>
-        <li tab-index="7" id="tab-applied-to-vendors">
-            @T("Admin.Promotions.Discounts.AppliedToVendors")
-        </li>
-        <li tab-index="8" id="tab-applied-to-stores">
-            @T("Admin.Promotions.Discounts.AppliedToStores")
-        </li>
+<admin-tabstrip name="discount-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.CouponCodes")" tab-index="1" id="tab-couponcode">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabCouponCodes" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.Requirements")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabRequirements" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToProducts")" tab-index="3" id="tab-applied-to-products">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToCategories")" tab-index="4" id="tab-applied-to-categories">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToManufacturers")" tab-index="5" id="tab-applied-to-manufacturers">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToVendors")" tab-index="7" id="tab-applied-to-vendors">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabAppliedToVendors" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToStores")" tab-index="8" id="tab-applied-to-stores">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="6">
-                @T("Admin.Promotions.Discounts.History")
-            </li>
+            <tabstrip-item text="@T("Admin.Promotions.Discounts.History")" tab-index="6">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabCouponCodes" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabRequirements" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabAppliedToVendors" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
-    </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabHistory" model="Model" />
-        </div>
-    }
-</div>
+    </items>
+</admin-tabstrip>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
