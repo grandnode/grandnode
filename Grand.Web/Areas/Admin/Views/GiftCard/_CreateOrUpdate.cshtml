@@ -2,40 +2,28 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#giftcard-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="giftcard-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.GiftCards.Info")
-        </li>
+<admin-tabstrip name="giftcard-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.GiftCards.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="1">
-                @T("Admin.GiftCards.History")
-            </li>
+            <tabstrip-item text="@T("Admin.GiftCards.History")" tab-index="1">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabHistory" model="Model" />
-        </div>
-    }
-</div>
+    </items>
+</admin-tabstrip>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "giftcard-edit");
