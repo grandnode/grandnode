@@ -2,36 +2,27 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#template-edit").show();
-        $("#template-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 <vc:admin-widget widget-zone="message_template_details_top" additional-data="Model" />
-<div id="template-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.ContentManagement.MessageTemplates.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.ContentManagement.MessageTemplates.Stores")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-</div>
+
+<admin-tabstrip name="template-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.ContentManagement.MessageTemplates.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.ContentManagement.MessageTemplates.Stores")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
+
 <vc:admin-widget widget-zone="message_template_details_bottom" additional-data="Model" />
 @{
     //custom tabs
