@@ -2,47 +2,38 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#topic-edit").show();
-        $("#topic-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="topic-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.ContentManagement.Topics.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Common.SEO")
-        </li>
-        <li tab-index="2">
-            @T("Admin.ContentManagement.Topics.Acl")
-        </li>
-        <li tab-index="3">
-            @T("Admin.ContentManagement.Topics.Stores")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabSeo" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabAcl" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="topic-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.ContentManagement.Topics.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.SEO")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabSeo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.ContentManagement.Topics.Acl")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.ContentManagement.Topics.Stores")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
