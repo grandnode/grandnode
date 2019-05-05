@@ -2,59 +2,48 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#vendor-edit").show();
-        $("#vendor-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="vendor-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Vendors.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Common.SEO")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Vendors.Discounts")
-        </li>
+<admin-tabstrip name="vendor-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Vendors.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.SEO")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabSeo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Vendors.Discounts")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabDiscounts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="3">
-                @T("Admin.Vendors.VendorNotes")
-            </li>
-            <li tab-index="4">
-                @T("Admin.Vendors.Reviews")
-            </li>
+            <tabstrip-item text="@T("Admin.Vendors.VendorNotes")" tab-index="3">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabVendorNotes" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Vendors.Reviews")" tab-index="4">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabVendorReviews" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabSeo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabDiscounts" model="Model" />
-    </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabVendorNotes" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabVendorReviews" model="Model" />
-        </div>
-    }
-</div>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");
