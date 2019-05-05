@@ -2,35 +2,24 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $('#interactiveform-edit').show();
-        $("#interactiveform-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="interactiveform-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Promotions.InteractiveForms.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Promotions.InteractiveForms.Attribute")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabValues" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="interactiveform-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Promotions.InteractiveForms.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.InteractiveForms.Attribute")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "interactiveform-edit");
