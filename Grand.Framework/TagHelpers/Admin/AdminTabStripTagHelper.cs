@@ -28,6 +28,7 @@ namespace Grand.Framework.TagHelpers.Admin
 
             output.TagName = "div";
             output.Attributes.SetAttribute("id", Name);
+            output.Attributes.SetAttribute("style", "display:none");
 
             var sb = new StringBuilder();
             sb.AppendLine("<script>");
@@ -44,6 +45,8 @@ namespace Grand.Framework.TagHelpers.Admin
 
             sb.AppendLine("   select: tabstrip_on_tab_select");
             sb.AppendLine("  });");
+            sb.AppendLine($"$('#{Name}').show();");
+
             sb.AppendLine("})");
 
             sb.AppendLine("</script>");
