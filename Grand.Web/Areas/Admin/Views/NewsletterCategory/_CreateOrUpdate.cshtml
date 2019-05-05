@@ -3,35 +3,24 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $('#newslettercategory-edit').show();
-        $("#newslettercategory-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="newslettercategory-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Promotions.NewsletterCategory.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Promotions.NewsletterCategory.Stores")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="newslettercategory-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Promotions.NewsletterCategory.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.NewsletterCategory.Stores")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "newslettercategory-edit");
