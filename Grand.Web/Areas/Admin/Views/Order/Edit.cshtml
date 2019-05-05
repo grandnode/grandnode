@@ -38,64 +38,53 @@
                     </div>
                 </div>
                 <div class="x_content form">
-                    <div id="order-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Orders.Info")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Orders.BillingInfo")
-                            </li>
-                            <li tab-index="2">
-                                @T("Admin.Orders.ShippingInfo")
-                            </li>
-                            <li tab-index="3">
-                                @T("Admin.Orders.Products")
-                            </li>
+                    <admin-tabstrip name="order-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Orders.Info")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Info" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Orders.BillingInfo")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Billing" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Orders.ShippingInfo")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Shipping" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Orders.Products")" tab-index="3">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Products" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <li tab-index="4">
-                                    @T("Admin.Orders.OrderNotes")
-                                </li>
+                                <tabstrip-item text="@T("Admin.Orders.OrderNotes")" tab-index="4">
+                                    <content>
+                                        <div>
+                                            <partial name="_OrderDetails.Notes" model="Model" />
+                                        </div>
+                                    </content>
+                                </tabstrip-item>
                             }
-                        </ul>
-                        <div>
-                            <partial name="_OrderDetails.Info" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="_OrderDetails.Billing" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="_OrderDetails.Shipping" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="_OrderDetails.Products" model="Model" />
-                        </div>
-                        @if (!Model.IsLoggedInAsVendor)
-                        {
-                            <div>
-                                <partial name="_OrderDetails.Notes" model="Model" />
-                            </div>
-                        }
-                    </div>
+                        </items>
+                    </admin-tabstrip>
                 </div>
             </div>
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-    <script>
-        $(document).ready(function () {
-            $('#order-edit').show();
-            $("#order-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
 
     @{
         //custom tabs
