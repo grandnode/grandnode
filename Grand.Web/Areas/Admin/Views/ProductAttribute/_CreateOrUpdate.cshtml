@@ -2,48 +2,34 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#product-attribute-edit').show();
-        $("#product-attribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-
-<div id="product-attribute-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.Attributes.ProductAttributes.Info")
-        </li>
+<admin-tabstrip name="product-attribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ProductAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!string.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="1">
-                @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
-            </li>
+            <tabstrip-item text="@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")" tab-index="1">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-        <li tab-index="2">
-            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    @if (!string.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
-        </div>
-    }
-    <div>
-        <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
-    </div>
-</div>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
