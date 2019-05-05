@@ -30,71 +30,65 @@
                 </div>
                 <div class="x_content form">
                     <vc:admin-widget widget-zone="catalog_settings_top" additional-data="null" />
-                    <div id="catalogsettings-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Settings.Catalog.General")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Settings.Catalog.Performance")
-                            </li>
-                            <li tab-index="2">
-                                @T("Admin.Configuration.Settings.Catalog.ProductReviews")
-                            </li>
-                            <li tab-index="3">
-                                @T("Admin.Configuration.Settings.Catalog.Search")
-                            </li>
-                            <li tab-index="4">
-                                @T("Admin.Configuration.Settings.Catalog.CompareProducts")
-                            </li>
-                            <li tab-index="5">
-                                @T("Admin.Configuration.Settings.Catalog.Sharing")
-                            </li>
-                            <li tab-index="6">
-                                @T("Admin.Configuration.Settings.Catalog.SortOptions")
-                            </li>
-                        </ul>
-                        <div>
-                            <partial name="Catalog.TabGeneralSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabPerformance" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabProductReviews" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabSearchSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabCompareProducts" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabSharing" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Catalog.TabSortOptions" model="Model" />
-                        </div>
-                    </div>
+                    <admin-tabstrip name="catalogsettings-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.General")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabGeneralSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.Performance")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabPerformance" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.ProductReviews")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabProductReviews" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.Search")" tab-index="3">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabSearchSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.CompareProducts")" tab-index="4">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabCompareProducts" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.Sharing")" tab-index="5">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabSharing" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Catalog.SortOptions")" tab-index="6">
+                                <content>
+                                    <div>
+                                        <partial name="Catalog.TabSortOptions" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
+                    <vc:admin-widget widget-zone="catalog_settings_bottom" additional-data="null" />
                 </div>
-                <vc:admin-widget widget-zone="catalog_settings_bottom" additional-data="null" />
             </div>
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#catalogsettings-edit").show();
-            $("#catalogsettings-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
     @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "catalogsettings-edit");
