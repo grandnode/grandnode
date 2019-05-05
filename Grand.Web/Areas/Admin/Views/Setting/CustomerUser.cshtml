@@ -22,40 +22,45 @@
                     <vc:admin-widget widget-zone="customer_user_settings_buttons" additional-data="null" />
                 </div>
                 <div class="x_content form">
-                    <div id="customersettings-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")
-                            </li>
-                            <li tab-index="2">
-                                @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")
-                            </li>
-                            <li tab-index="3">
-                                @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings")
-                            </li>
-                            <li tab-index="4">
-                                @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings")
-                            </li>
-                        </ul>
-                        <div>
-                            <partial name="CustomerUser.TabCustomerSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="CustomerUser.TabCustomerFormFields" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="CustomerUser.TabAddressFormFields" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="CustomerUser.TabDateTimeSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="CustomerUser.TabExternalAuthenticationSettings" model="Model" />
-                        </div>
-                    </div>
+                    <admin-tabstrip name="customersettings-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="CustomerUser.TabCustomerSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="CustomerUser.TabCustomerFormFields" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="CustomerUser.TabAddressFormFields" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings")" tab-index="3">
+                                <content>
+                                    <div>
+                                        <partial name="CustomerUser.TabDateTimeSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings")" tab-index="4">
+                                <content>
+                                    <div>
+                                        <partial name="CustomerUser.TabExternalAuthenticationSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
                 </div>
             </div>
         </div>
@@ -63,19 +68,6 @@
 
     <div asp-validation-summary="All"></div>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#customersettings-edit").show();
-            $("#customersettings-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
 
     @{
         //custom tabs
