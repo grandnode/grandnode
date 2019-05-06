@@ -3,11 +3,6 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="Ticks" type="hidden" />
-<script>
-    $('body').addClass('page-sidebar-closed');
-    $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
-</script>
-
 <admin-tabstrip name="product-edit" SetTabPos="true">
     <items>
         <tabstrip-item text="@T("Admin.Catalog.Products.Info")" tab-index="0">
@@ -160,5 +155,3 @@
         <admin-tab-append tab-strip-name="product-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
     }
 }
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

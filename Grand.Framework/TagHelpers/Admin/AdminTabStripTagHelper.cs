@@ -50,8 +50,31 @@ namespace Grand.Framework.TagHelpers.Admin
             sb.AppendLine("})");
 
             sb.AppendLine("</script>");
+            sb.AppendLine($"<input type='hidden' id='selected-tab-index' name='selected-tab-index' value='{GetSelectedTabIndex()}'>");
             output.PostContent.AppendHtml(string.Concat(list));
             output.PostElement.AppendHtml(sb.ToString());
+        }
+
+        private int GetSelectedTabIndex()
+        {
+            //keep this method synchornized with
+            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseGrandController.cs
+            int index = 0;
+            string dataKey = "Grand.selected-tab-index";
+            if (ViewContext.ViewData[dataKey] is int)
+            {
+                index = (int)ViewContext.ViewData[dataKey];
+            }
+            if (ViewContext.TempData[dataKey] is int)
+            {
+                index = (int)ViewContext.TempData[dataKey];
+            }
+
+            //ensure it's not negative
+            if (index < 0)
+                index = 0;
+
+            return index;
         }
 
     }
