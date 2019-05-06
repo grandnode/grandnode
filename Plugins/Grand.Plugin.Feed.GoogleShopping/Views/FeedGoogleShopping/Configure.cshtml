@@ -8,32 +8,22 @@
 @using Grand.Framework.UI;
 <form asp-controller="FeedGoogleShopping" asp-action="Configure" method="post">
     <antiforgery-token />
-    <div id="googlebase-configure">
-        <ul>
-            <li tab-index="0">
-                @T("Plugins.Feed.GoogleShopping.General")
-            </li>
-            <li tab-index="1">
-                @T("Plugins.Feed.GoogleShopping.Override")
-            </li>
-        </ul>
-        <div>
-            <partial name="TabGeneral.Configure.cshtml" />
-        </div>
-        <div>
-            <partial name="TabOverride.Configure.cshtml" />
-        </div>
-    </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#googlebase-configure").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
+    <admin-tabstrip name="googlebase-configure">
+        <items>
+            <tabstrip-item text="@T("Plugins.Feed.GoogleShopping.General")" tab-index="0">
+                <content>
+                    <div>
+                        <partial name="TabGeneral.Configure.cshtml" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Plugins.Feed.GoogleShopping.Override")" tab-index="1">
+                <content>
+                    <div>
+                        <partial name="TabOverride.Configure.cshtml" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        </items>
+    </admin-tabstrip>
 </form>
