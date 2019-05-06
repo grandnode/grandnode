@@ -1,5 +1,5 @@
 ﻿@model ShippingMethodRestrictionModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;
@@ -38,15 +38,6 @@
                             </tabstrip-item>
                         </items>
                     </admin-tabstrip>
-                    @{
-                        //custom tabs
-                        var eventMessage = new AdminTabStripCreated(this.Html, "shippingrestriction-edit");
-                        await eventPublisher.Publish(eventMessage);
-                        foreach (var eventBlock in eventMessage.BlocksToRender)
-                        {
-                            <admin-tab-append tab-strip-name="shippingrestriction-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-                        }
-                    }
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 ﻿@model DiscountModel
-@inject IEventPublisher eventPublisher
+
 @using Grand.Framework.UI;
 @{
     Html.AddScriptParts("~/scripts/jquery.tmpl.min.js", excludeFromBundle: true);
@@ -76,13 +76,3 @@
         }
     </items>
 </admin-tabstrip>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="discount-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

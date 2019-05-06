@@ -1,5 +1,5 @@
 ﻿@model GeneralCommonSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
@@ -97,15 +97,6 @@
         </div>
     </div>
 
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "generalsettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            <admin-tab-append tab-strip-name="generalsettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-        }
-    }
 </form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">

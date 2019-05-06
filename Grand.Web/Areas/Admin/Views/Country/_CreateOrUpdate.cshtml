@@ -1,17 +1,8 @@
 ﻿@model CountryModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "country-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="country-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}
 <admin-tabstrip name="country-edit">
     <items>
         <tabstrip-item text="@T("Admin.Configuration.Countries.Info")" tab-index="0">

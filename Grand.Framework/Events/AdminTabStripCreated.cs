@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace Grand.Framework.Events
@@ -9,14 +8,12 @@ namespace Grand.Framework.Events
     /// </summary>
     public class AdminTabStripCreated
     {
-        public AdminTabStripCreated(IHtmlHelper helper, string tabStripName)
+        public AdminTabStripCreated(string tabStripName)
         {
-            this.Helper = helper;
             this.TabStripName = tabStripName;
-            this.BlocksToRender = new List<(string tabname,IHtmlContent content)>();
+            this.BlocksToRender = new List<(string tabname, IHtmlContent content)>();
         }
 
-        public IHtmlHelper Helper { get; private set; }
         public string TabStripName { get; private set; }
         public IList<(string tabname, IHtmlContent content)> BlocksToRender { get; set; }
     }

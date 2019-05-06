@@ -1,5 +1,5 @@
 ﻿@model AffiliateModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <admin-tabstrip name="affiliate-edit">
@@ -30,12 +30,3 @@
         }
     </items>
 </admin-tabstrip>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="affiliate-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

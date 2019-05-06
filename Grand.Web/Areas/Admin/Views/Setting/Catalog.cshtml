@@ -1,5 +1,5 @@
 ﻿@model CatalogSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Catalog").Text;
@@ -89,14 +89,4 @@
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "catalogsettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            <admin-tab-append tab-strip-name="catalogsettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-        }
-    }
-
 </form>

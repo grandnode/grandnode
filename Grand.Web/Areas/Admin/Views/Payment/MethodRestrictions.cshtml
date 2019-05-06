@@ -1,5 +1,5 @@
 ﻿@model PaymentMethodRestrictionModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
@@ -45,16 +45,6 @@
                             </tabstrip-item>
                         </items>
                     </admin-tabstrip>
-                    @{
-                        //custom tabs
-                        var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
-                        await eventPublisher.Publish(eventMessage);
-                        foreach (var eventBlock in eventMessage.BlocksToRender)
-                        {
-                            <admin-tab-append tab-strip-name="paymentrestriction-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-                        }
-                    }
-
                     <vc:admin-widget widget-zone="payment_method_restrictions_bottom" additional-data="Model" />
                 </div>
             </div>

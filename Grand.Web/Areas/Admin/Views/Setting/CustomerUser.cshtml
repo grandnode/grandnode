@@ -1,5 +1,5 @@
 ﻿@model CustomerUserSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
@@ -67,16 +67,4 @@
     </div>
 
     <div asp-validation-summary="All"></div>
-
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            <admin-tab-append tab-strip-name="customersettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-        }
-    }
-
 </form>

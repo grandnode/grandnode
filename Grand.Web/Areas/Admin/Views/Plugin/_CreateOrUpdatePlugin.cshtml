@@ -1,5 +1,5 @@
 ﻿@model PluginModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="SystemName" type="hidden" />
 @if (ViewBag.RefreshPage == true)
@@ -32,12 +32,3 @@
 </admin-tabstrip>
 
 <vc:admin-widget widget-zone="plugin_details_bottom" additional-data="Model" />
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "plugin-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="plugin-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

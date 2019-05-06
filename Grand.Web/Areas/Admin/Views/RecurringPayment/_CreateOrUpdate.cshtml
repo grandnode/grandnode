@@ -1,5 +1,5 @@
 ﻿@model RecurringPaymentModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <admin-tabstrip name="recurringpayment-edit">
@@ -20,12 +20,3 @@
         </tabstrip-item>
     </items>
 </admin-tabstrip>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="recurringpayment-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

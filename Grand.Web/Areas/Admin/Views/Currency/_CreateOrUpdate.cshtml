@@ -1,5 +1,5 @@
 ﻿@model CurrencyModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <vc:admin-widget widget-zone="currency_details_top" additional-data="Model" />
@@ -22,12 +22,3 @@
     </items>
 </admin-tabstrip>
 <vc:admin-widget widget-zone="currency_details_bottom" additional-data="Model" />
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "currency-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="currency-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

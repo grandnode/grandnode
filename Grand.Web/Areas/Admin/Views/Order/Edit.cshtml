@@ -1,5 +1,5 @@
 ﻿@model OrderModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
@@ -85,16 +85,6 @@
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            <admin-tab-append tab-strip-name="order-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-        }
-    }
 
 </form>
 @Html.DeleteConfirmation("order-delete")

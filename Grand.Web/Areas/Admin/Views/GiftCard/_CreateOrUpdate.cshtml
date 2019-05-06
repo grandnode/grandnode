@@ -1,5 +1,5 @@
 ﻿@model GiftCardModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <admin-tabstrip name="giftcard-edit">
@@ -23,13 +23,3 @@
         }
     </items>
 </admin-tabstrip>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "giftcard-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="giftcard-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

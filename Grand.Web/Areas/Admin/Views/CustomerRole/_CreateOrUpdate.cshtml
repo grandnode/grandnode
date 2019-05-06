@@ -1,5 +1,5 @@
 ﻿@model CustomerRoleModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <script type="text/javascript">
@@ -35,12 +35,3 @@
     </items>
 </admin-tabstrip>
 <vc:admin-widget widget-zone="customer_role_details_bottom" additional-data="Model" />
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customerrole-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="customerrole-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

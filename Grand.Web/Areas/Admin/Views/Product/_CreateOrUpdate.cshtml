@@ -1,5 +1,5 @@
 ﻿@model ProductModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="Ticks" type="hidden" />
@@ -145,13 +145,3 @@
         }
     </items>
 </admin-tabstrip>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="product-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

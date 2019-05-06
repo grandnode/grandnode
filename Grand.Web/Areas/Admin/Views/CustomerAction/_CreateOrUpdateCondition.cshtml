@@ -1,5 +1,5 @@
 ﻿@model CustomerActionConditionModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerActionId" type="hidden" />
@@ -107,13 +107,3 @@
     </items>
 </admin-tabstrip>
 
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customeractioncondition-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        <admin-tab-append tab-strip-name="customeractioncondition-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-    }
-}

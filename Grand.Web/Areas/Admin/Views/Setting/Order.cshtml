@@ -1,5 +1,5 @@
 ﻿@model OrderSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
@@ -54,16 +54,5 @@
             </div>
         </div>
     </div>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            <admin-tab-append tab-strip-name="ordersettings-edit" tab-name="@eventBlock.tabname" tab-content="@eventBlock.content" />
-        }
-    }
-
 </form>
 
