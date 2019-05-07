@@ -127,7 +127,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             var builder = Builders<Product>.Update;
-            var updatefilter = builder.Pull(x => x.ProductTags, productTag.Id);
+            var updatefilter = builder.Pull(x => x.ProductTags, productTag.Name);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
             await _productTagRepository.DeleteAsync(productTag);

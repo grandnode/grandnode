@@ -196,8 +196,11 @@ namespace Grand.Web.Areas.Admin.Services
             }
             foreach (var productTag in productTagsToRemove)
             {
-                productTag.ProductId = product.Id;
-                await _productService.DeleteProductTag(productTag);
+                if (productTag != null)
+                {
+                    productTag.ProductId = product.Id;
+                    await _productService.DeleteProductTag(productTag);
+                }
             }
             foreach (string productTagName in productTags)
             {
