@@ -102,54 +102,6 @@ namespace Grand.Framework
             }
         }
 
-        public static IHtmlContent DeleteConfirmation<T>(this IHtmlHelper<T> helper, string buttonsSelector) where T : BaseGrandEntityModel
-        {
-            return DeleteConfirmation(helper, "", buttonsSelector);
-        }
-
-        public static IHtmlContent DeleteConfirmation<T>(this IHtmlHelper<T> helper, string actionName,
-                    string buttonsSelector) where T : BaseGrandEntityModel
-        {
-            if (String.IsNullOrEmpty(actionName))
-                actionName = "Delete";
-
-            var modalId = new HtmlString(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation").ToHtmlString();
-
-
-            var deleteConfirmationModel = new DeleteConfirmationModel
-            {
-                Id = helper.ViewData.Model.Id.ToString(),
-                ControllerName = helper.ViewContext.RouteData.Values["controller"].ToString(),
-                ActionName = actionName,
-                WindowId = modalId
-            };
-
-            var window = new StringBuilder();
-            window.AppendLine(string.Format("<div id='{0}' style='display:none;'>", modalId));
-            window.AppendLine(helper.PartialAsync("Delete", deleteConfirmationModel).Result.ToHtmlString());
-            window.AppendLine("</div>");
-            window.AppendLine("<script>");
-            window.AppendLine("$(document).ready(function() {");
-            window.AppendLine(string.Format("$('#{0}').click(function (e) ", buttonsSelector));
-            window.AppendLine("{");
-            window.AppendLine("e.preventDefault();");
-            window.AppendLine(string.Format("var window = $('#{0}');", modalId));
-            window.AppendLine("if (!window.data('kendoWindow')) {");
-            window.AppendLine("window.kendoWindow({");
-            window.AppendLine("modal: true,");
-            window.AppendLine(string.Format("title: '{0}',", EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.AreYouSure")));
-            window.AppendLine("actions: ['Close']");
-            window.AppendLine("});");
-            window.AppendLine("}");
-            window.AppendLine("window.data('kendoWindow').center().open();");
-            window.AppendLine("});");
-            window.AppendLine("});");
-            window.AppendLine("</script>");
-
-            return new HtmlString(window.ToString());
-        }
-
-        
         public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,

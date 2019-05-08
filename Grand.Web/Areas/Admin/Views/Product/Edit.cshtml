@@ -39,7 +39,8 @@
     </div>
 </form>
 
-    @Html.DeleteConfirmation("product-delete")
+<admin-delete-confirmation button-id="product-delete"/>
+
     @*copy product form*@
     <div id="copyproduct-window" style="display:none;">
         <form asp-controller="Product" asp-action="CopyProduct" method="post">
