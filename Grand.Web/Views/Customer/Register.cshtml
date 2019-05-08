@@ -103,16 +103,15 @@
                             <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
                             <div class="row">
                                 <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
-                                @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
-                                            Html.NameFor(x => x.DateOfBirthMonth),
-                                            Html.NameFor(x => x.DateOfBirthYear),
-                                            DateTime.Now.Year - 110,
-                                            DateTime.Now.Year,
-                                            Model.DateOfBirthDay,
-                                            Model.DateOfBirthMonth,
-                                            Model.DateOfBirthYear,
-                                            false,
-                                            new { @class = "col custom-select" })
+                                <date-picker-dropdown control-day="@Html.IdFor(x => x.DateOfBirthDay)"
+                                                      control-month="@Html.IdFor(x => x.DateOfBirthMonth)"
+                                                      control-year="@Html.IdFor(x => x.DateOfBirthYear)"
+                                                      begin-year="@(DateTime.Now.Year - 100)"
+                                                      end-year="DateTime.Now.Year"
+                                                      selected-day="0"
+                                                      selected-month="0"
+                                                      selected-year="0"
+                                                      class="col-12 input-group" />
                             </div>
                             <div class="row">
                                 <span asp-validation-for="DateOfBirthDay"></span>

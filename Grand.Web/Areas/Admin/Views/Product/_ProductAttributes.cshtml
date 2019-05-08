@@ -1,5 +1,4 @@
 ﻿@model IList<ProductAttributeCombinationModel.ProductAttributeModel>
-@using Grand.Framework;
 @using Grand.Core.Domain.Catalog;
 @if (Model.Count > 0)
 {
@@ -77,7 +76,12 @@
                             break;
                         case AttributeControlType.Datepicker:
                             {
-                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                                <date-picker-dropdown control-day="@(controlId + "_day")"
+                                                      control-month="@(controlId + "_month")"
+                                                      control-year="@(controlId + "_year")"
+                                                      begin-year="@(DateTime.Now.Year)"
+                                                      end-year="@(DateTime.Now.Year+1)"
+                                                      class="col-12 input-group" />
                             }
                             break;
                         case AttributeControlType.FileUpload:
