@@ -20,6 +20,7 @@ namespace Grand.Web.Interfaces
         Task SetStore(string storeid);
         Task<int> GetUnreadPrivateMessages();
         Task<HeaderLinksModel> PrepareHeaderLinks(Customer customer);
+        Task<ShoppingCartLinksModel> PrepareShoppingCartLinks(Customer customer);
         Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer);
         Task<FooterModel> PrepareFooter();
         Task<ContactUsModel> PrepareContactUs();
