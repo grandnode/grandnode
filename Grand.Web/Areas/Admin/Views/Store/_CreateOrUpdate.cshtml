@@ -60,7 +60,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="SslEnabled" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="SslEnabled"></span>
             </div>
@@ -145,6 +145,13 @@
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="DefaultWarehouseId" asp-items="Model.AvailableWarehouses" />
                 <span asp-validation-for="DefaultWarehouseId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DefaultCountryId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="DefaultCountryId" asp-items="Model.AvailableCountries" />
+                <span asp-validation-for="DefaultCountryId"></span>
             </div>
         </div>
     </div>

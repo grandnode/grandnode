@@ -28,6 +28,7 @@ namespace Grand.Web.Services
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IGenericAttributeService _genericAttributeService;
 
         private readonly AddressSettings _addressSettings;
@@ -39,19 +40,21 @@ namespace Grand.Web.Services
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IGenericAttributeService genericAttributeService,
             AddressSettings addressSettings
             )
         {
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
-            this._countryService = countryService;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._addressSettings = addressSettings;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
+            _countryService = countryService;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _genericAttributeService = genericAttributeService;
+            _addressSettings = addressSettings;
         }
 
         public virtual AddressSettings AddressSettings()
@@ -155,7 +158,7 @@ namespace Grand.Web.Services
                     {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
+                        Selected = !string.IsNullOrEmpty(model.CountryId) ? c.Id == model.CountryId : (c.Id == _storeContext.CurrentStore.DefaultCountryId)
                     });
                 }
 
@@ -163,7 +166,7 @@ namespace Grand.Web.Services
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
                     var states = await _stateProvinceService
-                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId);
+                        .GetStateProvincesByCountryId(!string.IsNullOrEmpty(model.CountryId) ? model.CountryId : _storeContext.CurrentStore.DefaultCountryId, languageId);
                         
                     if (states.Any())
                     {

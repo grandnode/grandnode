@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Stores;
 using Grand.Services.Configuration;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
@@ -19,13 +20,16 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IShippingService _shippingService;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
+        private readonly ICountryService _countryService;
 
-        public StoreViewModelService(ILanguageService languageService, IShippingService shippingService, IStoreService storeService, ISettingService settingService)
+        public StoreViewModelService(ILanguageService languageService, IShippingService shippingService, IStoreService storeService, ISettingService settingService,
+            ICountryService countryService)
         {
             _languageService = languageService;
             _shippingService = shippingService;
             _storeService = storeService;
             _settingService = settingService;
+            _countryService = countryService;
         }
 
         public virtual async Task PrepareLanguagesModel(StoreModel model)
@@ -55,7 +59,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            //templates
+            //warehouse
             model.AvailableWarehouses.Add(new SelectListItem
             {
                 Text = "---",
@@ -68,6 +72,26 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     Text = warehouse.Name,
                     Value = warehouse.Id.ToString()
+                });
+            }
+        }
+        public virtual async Task PrepareCountryModel(StoreModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //countries
+            model.AvailableCountries.Add(new SelectListItem {
+                Text = "---",
+                Value = ""
+            });
+
+            var countries = await _countryService.GetAllCountries();
+            foreach (var country in countries)
+            {
+                model.AvailableCountries.Add(new SelectListItem {
+                    Text = country.Name,
+                    Value = country.Id.ToString()
                 });
             }
         }

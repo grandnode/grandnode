@@ -45,9 +45,14 @@ namespace Grand.Core.Domain.Stores
         public string DefaultLanguageId { get; set; }
 
         /// <summary>
-        /// ets or sets the identifier of the default waregouse for this store
+        /// Gets or sets the identifier of the default waregouse for this store
         /// </summary>
         public string DefaultWarehouseId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the default country for this store
+        /// </summary>
+        public string DefaultCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
