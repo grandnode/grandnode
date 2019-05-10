@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Core;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
@@ -8,12 +9,11 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Topics;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Core;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -73,15 +73,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 topicModels = topicModels.Where
                     (x => x.SystemName.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()) ||
-                    x.Title.ToLowerInvariant().Contains(model.Name.ToLowerInvariant())).ToList();
+                    (x.Title != null && x.Title.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()))).ToList();
             }
             //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
             foreach (var topic in topicModels)
             {
                 topic.Body = "";
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = topicModels,
                 Total = topicModels.Count
             };
