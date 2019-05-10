@@ -9054,6 +9054,12 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
     <Value>Stores</Value>
   </LocaleResource>
@@ -9077,6 +9083,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.Customer">
     <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.ProductName">
+    <Value>Product name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums">
     <Value>Forums</Value>
@@ -15783,6 +15795,9 @@
   </LocaleResource>
   <LocaleResource Name="Blog.MoreInfo">
     <Value>details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Products">
+    <Value>Products related with this blog post</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.ResultsFor">
     <Value>Results for</Value>

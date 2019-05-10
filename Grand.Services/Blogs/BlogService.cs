@@ -22,6 +22,7 @@ namespace Grand.Services.Blogs
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogCategory> _blogCategoryRepository;
+        private readonly IRepository<BlogProduct> _blogProductRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -32,12 +33,14 @@ namespace Grand.Services.Blogs
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogCategory> blogCategoryRepository,
+            IRepository<BlogProduct> blogProductRepository,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
             this._blogCategoryRepository = blogCategoryRepository;
+            this._blogProductRepository = blogProductRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -390,6 +393,86 @@ namespace Grand.Services.Blogs
         }
 
         #endregion
+
+        #region Blog post product
+
+        /// <summary>
+        /// Gets a blog product
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>Blog product</returns>
+        public virtual Task<BlogProduct> GetBlogProductById(string id)
+        {
+            return _blogProductRepository.GetByIdAsync(id);
+        }
+
+        /// <summary>
+        /// Insert an blog product
+        /// </summary>
+        /// <param name="blogProduct">Blog product</param>
+        public virtual async Task InsertBlogProduct(BlogProduct blogProduct)
+        {
+            if (blogProduct == null)
+                throw new ArgumentNullException("blogProduct");
+
+            await _blogProductRepository.InsertAsync(blogProduct);
+
+            //event notification
+            await _eventPublisher.EntityInserted(blogProduct);
+
+        }
+
+        /// <summary>
+        /// Update an blog product
+        /// </summary>
+        /// <param name="blogPostProduct">Blog product</param>
+        public virtual async Task UpdateBlogProduct(BlogProduct blogProduct)
+        {
+            if (blogProduct == null)
+                throw new ArgumentNullException("blogProduct");
+
+            await _blogProductRepository.UpdateAsync(blogProduct);
+
+            //event notification
+            await _eventPublisher.EntityUpdated(blogProduct);
+
+        }
+
+        /// <summary>
+        /// Delete an blog product
+        /// </summary>
+        /// <param name="blogProduct">Blog product</param>
+        public virtual async Task DeleteBlogProduct(BlogProduct blogProduct)
+        {
+            if (blogProduct == null)
+                throw new ArgumentNullException("blogProduct");
+
+            await _blogProductRepository.DeleteAsync(blogProduct);
+
+            //event notification
+            await _eventPublisher.EntityDeleted(blogProduct);
+
+        }
+
+        /// <summary>
+        /// Get all product by blog post id
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IList<BlogProduct>> GetProductsByBlogPostId(string blogPostId)
+        {
+            if (string.IsNullOrEmpty(blogPostId))
+                return new List<BlogProduct>();
+
+            var query = from bp in _blogProductRepository.Table
+                        where bp.BlogPostId == blogPostId
+                        orderby bp.DisplayOrder
+                        select bp;
+
+            return await query.ToListAsync();
+        }
+
+        #endregion
+
 
         #endregion
     }

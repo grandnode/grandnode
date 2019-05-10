@@ -18,7 +18,14 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.ContentManagement.News.NewsItems.Stores")" tab-index="2">
+        <tabstrip-item text="@T("Admin.ContentManagement.Blog.BlogPosts.Products")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.ContentManagement.Blog.BlogPosts.Stores")" tab-index="2">
             <content>
                 <div>
                     <partial name="_TabStores" model="Model" />

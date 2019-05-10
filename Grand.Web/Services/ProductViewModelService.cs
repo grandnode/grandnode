@@ -1821,5 +1821,20 @@ namespace Grand.Web.Services
                 productThumbPictureSize));
             return model;
         }
+
+        public virtual async Task<IList<ProductOverviewModel>> PrepareIdsProducts(string[] productIds, int? productThumbPictureSize)
+        {
+            //load products
+            var products = await _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+        }
     }
 }

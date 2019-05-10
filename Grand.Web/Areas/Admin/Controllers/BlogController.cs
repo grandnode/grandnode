@@ -419,5 +419,64 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
         #endregion
+
+        #region Products
+
+        [HttpPost]
+        public async Task<IActionResult> Products(string blogPostId, DataSourceRequest command)
+        {
+            var model = await _blogViewModelService.PrepareBlogProductsModel(blogPostId, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
+                Data = model.blogProducts,
+                Total = model.totalCount,
+            };
+            return Json(gridModel);
+        }
+
+        public async Task<IActionResult> ProductAddPopup(string blogPostId)
+        {
+            var model = await _blogViewModelService.PrepareBlogModelAddProductModel(blogPostId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, BlogProductModel.AddProductModel model)
+        {
+            var products = await _blogViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+
+            var gridModel = new DataSourceResult {
+                Data = products.products.ToList(),
+                Total = products.totalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public async Task<IActionResult> ProductAddPopup(string blogPostId, BlogProductModel.AddProductModel model)
+        {
+            if (model.SelectedProductIds != null)
+            {
+                await _blogViewModelService.InsertProductModel(blogPostId, model);
+            }
+
+            ViewBag.RefreshPage = true;
+            return View(model);
+        }
+
+        public async Task<IActionResult> UpdateProduct(BlogProductModel model)
+        {
+            await _blogViewModelService.UpdateProductModel(model);
+            return new NullJsonResult();
+        }
+
+        public async Task<IActionResult> DeleteProduct(string id)
+        {
+            await _blogViewModelService.DeleteProductModel(id);
+            return new NullJsonResult();
+        }
+
+        #endregion
     }
 }

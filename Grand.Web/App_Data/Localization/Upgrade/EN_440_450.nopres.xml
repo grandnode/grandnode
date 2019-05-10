@@ -176,4 +176,20 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCountry.Hint">
     <Value>This property allows a store owner to specify a default country for a store.</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Products">
+    <Value>Products related with this blog post</Value>
+  </LocaleResource>
 </Language>
