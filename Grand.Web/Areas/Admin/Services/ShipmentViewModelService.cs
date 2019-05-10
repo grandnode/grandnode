@@ -382,21 +382,24 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         //multiple warehouses supported
                         shipmentItemModel.AllowToChooseWarehouse = true;
-                        foreach (var pwi in product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == orderItem.AttributesXml)?.WarehouseInventory
-                            .OrderBy(w => w.WarehouseId).ToList())
+                        var comb = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == orderItem.AttributesXml);
+                        if (comb != null)
                         {
-
-                            var warehouse = await _shippingService.GetWarehouseById(pwi.WarehouseId);
-                            if (warehouse != null)
+                            foreach (var pwi in comb.WarehouseInventory
+                                .OrderBy(w => w.WarehouseId).ToList())
                             {
-                                shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+
+                                var warehouse = await _shippingService.GetWarehouseById(pwi.WarehouseId);
+                                if (warehouse != null)
                                 {
-                                    WarehouseId = warehouse.Id,
-                                    WarehouseName = warehouse.Name,
-                                    StockQuantity = pwi.StockQuantity,
-                                    ReservedQuantity = pwi.ReservedQuantity,
-                                    PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
-                                });
+                                    shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo {
+                                        WarehouseId = warehouse.Id,
+                                        WarehouseName = warehouse.Name,
+                                        StockQuantity = pwi.StockQuantity,
+                                        ReservedQuantity = pwi.ReservedQuantity,
+                                        PlannedQuantity = await _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
+                                    });
+                                }
                             }
                         }
                     }
