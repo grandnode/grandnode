@@ -18,6 +18,29 @@
         <div class="main_menu_side hidden-print main_menu" id="sidebar-menu">
             <div class="menu_section">
                 <ul class="nav side-menu page-sidebar-menu">
+                    <li class="sidebar-search-wrapper" id="SearchLi">
+                         
+                            <a class="nav-link">
+                                <i class="icon-magnifier"></i>
+                                <span class="title"> <input type="search" style="width:90%" id="slidesearch" placeholder="@T("Search")" /></span>
+                            </a> 
+                        
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#slidesearch").on("keyup", function () {
+                            if (this.value.length > 0) {
+                                $("#sidebar-menu li").not("#SearchLi").hide().filter(function () {
+                                    return $(this).text().toLowerCase().indexOf($("#slidesearch").val().toLowerCase()) != -1;
+                                }).show().find("ul").show();
+                            }
+                            else {
+                                $("li").show();
+                            }
+                        });
+                    });
+                        </script>
+                    </li>
                     @{
                         //standard (default) items
                         var rootNode = siteMap.RootNode;
