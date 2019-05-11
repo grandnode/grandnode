@@ -18,11 +18,9 @@
 }
 <antiforgery-token />
 <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
-
 @if (!Model.IsLoggedInAsVendor && canManageOrders)
 {
     <div class="row top_tiles">
-
         <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user"></i></div>
@@ -211,9 +209,8 @@
     </div>
 }
 <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
-
 <script type="text/javascript">
-    $(document).ready(function (e) {
+$(document).ready(function (e) {
         var site = site || {};
         site.baseUrl = site.baseUrl || "";
         $(".partialContents").each(function (index, item) {
@@ -275,7 +272,7 @@
                         ],
                         "firstDay": 1
                     },
-                    opens: ('left'),
+                    opens: ($('html').css('direction') === 'rtl' ?  'right': 'left'),
                 }, function (start, end, label) {
                     $('#dashboard-report-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 });
@@ -308,6 +305,4 @@
                 $(item).load(url);
             }
         });
-    });
-
-</script>
+    });</script>
