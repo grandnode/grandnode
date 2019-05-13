@@ -192,4 +192,13 @@
   <LocaleResource Name="Blog.Products">
     <Value>Products related with this blog post</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.Yes">
+    <Value>Please select combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.No">
+    <Value>Please select combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Combination.NotExist">
+    <Value>This combination doesn't exist</Value>
+  </LocaleResource>
 </Language>

@@ -138,11 +138,11 @@ namespace Grand.Services.Catalog
                             stockMessage = localizationService.GetResource("Products.Availability.InStock");
                             if (product.AllowAddingOnlyExistingAttributeCombinations)
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                stockMessage = localizationService.GetResource("Products.Availability.AllowAddingOnlyExistingAttributeCombinations.Yes");
                             }
                             else
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                                stockMessage = localizationService.GetResource("Products.Availability.AllowAddingOnlyExistingAttributeCombinations.No");
                             }
                         }
 

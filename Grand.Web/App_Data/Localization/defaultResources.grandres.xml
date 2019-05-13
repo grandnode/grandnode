@@ -18346,6 +18346,12 @@
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.No">
+    <Value>Please select combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.Yes">
+    <Value>Please select combination</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.BasePrice">
     <Value>equates to {0} per {1} {2}</Value>
   </LocaleResource>
@@ -18960,6 +18966,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.ClearCart">
     <Value>Clear cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Combination.NotExist">
+    <Value>This combination doesn't exist</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.ConflictingShipmentSchedules">
     <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>

@@ -431,8 +431,7 @@ namespace Grand.Services.Orders
                                 //combination doesn't exist
                                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                                 {
-                                    //maybe, is it better  to display something like "No such product/combination" message?
-                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.Combination.NotExist"));
                                 }
                             }
                         }
