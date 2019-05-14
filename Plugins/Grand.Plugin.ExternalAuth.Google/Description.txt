@@ -1,0 +1,9 @@
+﻿Group: ExternalAuth methods
+FriendlyName: Google authentication
+SystemName: ExternalAuth.Google
+Version: 1.01
+SupportedVersions: 4.50
+Author: grandnode team
+DisplayOrder: 5
+FileName: Grand.Plugin.ExternalAuth.Google.dll
+Description: This plugin enables Google authentication (login using google account)
