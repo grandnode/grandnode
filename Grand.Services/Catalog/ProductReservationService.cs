@@ -124,7 +124,7 @@ namespace Grand.Services.Catalog
             if (crh == null)
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
-            await _customerReservationsHelperRepository.UpdateAsync(crh);
+            await _customerReservationsHelperRepository.InsertAsync(crh);
             await _eventPublisher.EntityInserted(crh);
         }
 
