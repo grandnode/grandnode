@@ -28,8 +28,8 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
                 var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
 
                 //no empty values allowed. otherwise, an exception could be thrown on application startup
-                options.AppId = !String.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
-                options.AppSecret = !String.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "000";
+                options.AppId = !string.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
+                options.AppSecret = !string.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "000";
                 options.SaveTokens = true;
 
                 //handles exception thrown by external auth provider
@@ -45,7 +45,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
                         errorCode = WebUtility.UrlEncode(errorCode);
                         errorMessage = WebUtility.UrlEncode(errorMessage);
 
-                        var urlToRedirect = $"{webHelper.GetStoreLocation()}signin-failed?error_code={errorCode}&error_message={errorMessage}";
+                        var urlToRedirect = $"{webHelper.GetStoreLocation()}fb-signin-failed?error_code={errorCode}&error_message={errorMessage}";
 
                         ctx.Response.Redirect(urlToRedirect);
                         ctx.HandleResponse();
