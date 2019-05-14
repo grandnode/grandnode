@@ -20029,4 +20029,22 @@
   <LocaleResource Name="Admin.Review.Fields.ReviewText.Required">
     <Value>Review text is required</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.similarproducts">
+    <Value>Similar products</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.similarproducts.addnew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.similarproducts.fields.product">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.similarproducts.fields.displayorder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.similarproducts">
+    <Value>Similar products</Value>
+  </LocaleResource>
+<LocaleResource Name="admin.catalog.products.similarproducts.savebeforeedit">
+  <Value>You need to save the product before you can add similar products for this product page.</Value>
+</LocaleResource>
 </Language>

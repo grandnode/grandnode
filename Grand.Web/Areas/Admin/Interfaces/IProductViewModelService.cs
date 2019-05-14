@@ -27,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<ProductModel.AddRequiredProductModel> PrepareAddRequiredProductModel();
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRequiredProductModel model, int pageIndex, int pageSize);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRelatedProductModel model, int pageIndex, int pageSize);
+        Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddSimilarProductModel model, int pageIndex, int pageSize);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddCrossSellProductModel model, int pageIndex, int pageSize);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddAssociatedProductModel model, int pageIndex, int pageSize);
@@ -42,6 +43,9 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task InsertRelatedProductModel(ProductModel.AddRelatedProductModel model);
         Task UpdateRelatedProductModel(ProductModel.RelatedProductModel model);
         Task DeleteRelatedProductModel(ProductModel.RelatedProductModel model);
+        Task InsertSimilarProductModel(ProductModel.AddSimilarProductModel model);
+        Task UpdateSimilarProductModel(ProductModel.SimilarProductModel model);
+        Task DeleteSimilarProductModel(ProductModel.SimilarProductModel model);
         Task InsertBundleProductModel(ProductModel.AddBundleProductModel model);
         Task UpdateBundleProductModel(ProductModel.BundleProductModel model);
         Task DeleteBundleProductModel(ProductModel.BundleProductModel model);
@@ -50,6 +54,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task InsertAssociatedProductModel(ProductModel.AddAssociatedProductModel model);
         Task DeleteAssociatedProduct(Product product);
         Task<ProductModel.AddRelatedProductModel> PrepareRelatedProductModel();
+        Task<ProductModel.AddSimilarProductModel> PrepareSimilarProductModel();
         Task<ProductModel.AddBundleProductModel> PrepareBundleProductModel();
         Task<ProductModel.AddCrossSellProductModel> PrepareCrossSellProductModel();
         Task<ProductModel.AddAssociatedProductModel> PrepareAssociatedProductModel();

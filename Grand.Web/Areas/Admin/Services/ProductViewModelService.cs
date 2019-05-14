@@ -1126,6 +1126,15 @@ namespace Grand.Web.Areas.Admin.Services
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddSimilarProductModel model, int pageIndex, int pageSize)
+        {
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+        }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize)
         {
             //a vendor should have access only to his products
@@ -1419,6 +1428,74 @@ namespace Grand.Web.Areas.Admin.Services
             relatedProduct.ProductId1 = model.ProductId1;
             await _productService.DeleteRelatedProduct(relatedProduct);
         }
+        public virtual async Task InsertSimilarProductModel(ProductModel.AddSimilarProductModel model)
+        {
+            var productId1 = await _productService.GetProductById(model.ProductId);
+
+            foreach (string id in model.SelectedProductIds)
+            {
+                var product = await _productService.GetProductById(id);
+                if (product != null)
+                {
+                    //a vendor should have access only to his products
+                    if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                        continue;
+
+                    var existingSimilarProducts = productId1.SimilarProducts;
+                    if (model.ProductId != id)
+                        if (existingSimilarProducts.Where(x => x.ProductId2 == id).Count() == 0)
+                        {
+                            var similar = new SimilarProduct {
+                                ProductId1 = model.ProductId,
+                                ProductId2 = id,
+                                DisplayOrder = 1,
+                            };
+                            productId1.SimilarProducts.Add(similar);
+                            await _productService.InsertSimilarProduct(similar);
+                        }
+                }
+            }
+        }
+        public virtual async Task UpdateSimilarProductModel(ProductModel.SimilarProductModel model)
+        {
+            var product1 = await _productService.GetProductById(model.ProductId1);
+            var similarProduct = product1.SimilarProducts.Where(x => x.Id == model.Id).FirstOrDefault();
+            if (similarProduct == null)
+                throw new ArgumentException("No similar product found with the specified id");
+
+            var product2 = await _productService.GetProductById(similarProduct.ProductId2);
+            if (product2 == null)
+                throw new ArgumentException("No product found with the specified id");
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                if (product2 != null && product2.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    throw new ArgumentException("This is not your product");
+                }
+            }
+            similarProduct.ProductId1 = model.ProductId1;
+            similarProduct.DisplayOrder = model.DisplayOrder;
+            await _productService.UpdateSimilarProduct(similarProduct);
+        }
+        public virtual async Task DeleteSimilarProductModel(ProductModel.SimilarProductModel model)
+        {
+            var product = await _productService.GetProductById(model.ProductId1);
+            var similarProduct = product.SimilarProducts.Where(x => x.Id == model.Id).FirstOrDefault();
+            if (similarProduct == null)
+                throw new ArgumentException("No similar product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    throw new ArgumentException("This is not your product");
+                }
+            }
+            similarProduct.ProductId1 = model.ProductId1;
+            await _productService.DeleteSimilarProduct(similarProduct);
+        }
         public virtual async Task InsertBundleProductModel(ProductModel.AddBundleProductModel model)
         {
             var productId1 = await _productService.GetProductById(model.ProductId);
@@ -1554,6 +1631,39 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new ProductModel.AddRelatedProductModel
             {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in await _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            return model;
+        }
+        public virtual async Task<ProductModel.AddSimilarProductModel> PrepareSimilarProductModel()
+        {
+            var model = new ProductModel.AddSimilarProductModel {
                 //a vendor should have access only to his products
                 IsLoggedInAsVendor = _workContext.CurrentVendor != null
             };

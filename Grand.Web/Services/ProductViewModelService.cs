@@ -1799,6 +1799,25 @@ namespace Grand.Web.Services
 
             return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
         }
+        public virtual async Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize)
+        {
+            var productIds = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_SIMILAR_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+               async () =>
+                   (await _productService.GetProductById(productId)).SimilarProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
+                   );
+
+            //load products
+            var products = await _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+        }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel)
         {
             var preparePictureModel = productThumbPictureSize.HasValue;
