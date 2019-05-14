@@ -1,0 +1,15 @@
+﻿@model IList<ProductOverviewModel>
+@if (Model.Any())
+{
+    <div class="col-12 similar-products-grid product-grid px-0">
+        <h2 class="h3 generalTitle text-center">@T("Products.SimilarProducts")</h2>
+        <div class="flex-row d-flex row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-3 col-sm-6 col-6">
+                        <partial name="_ProductBox" model="item" />
+                    </div>
+                }
+         </div>
+    </div>
+}

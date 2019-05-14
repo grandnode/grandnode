@@ -194,6 +194,11 @@ namespace Grand.Services.Catalog
             var updatefilterRelated = builderRelated.PullFilter(x => x.RelatedProducts, y => y.ProductId2 == product.Id);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterRelated);
 
+            //delete similar product
+            var builderSimilar = Builders<Product>.Update;
+            var updatefilterSimilar = builderSimilar.PullFilter(x => x.SimilarProducts, y => y.ProductId2 == product.Id);
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterSimilar);
+
             //delete cross sales product
             var builderCross = Builders<Product>.Update;
             var updatefilterCross = builderCross.Pull(x => x.CrossSellProduct, product.Id);
@@ -1892,6 +1897,71 @@ namespace Grand.Services.Catalog
 
             //event notification
             await _eventPublisher.EntityUpdated(relatedProduct);
+        }
+
+        #endregion
+
+        #region Similar products
+
+        /// <summary>
+        /// Deletes a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        public virtual async Task DeleteSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.Pull(p => p.SimilarProducts, similarProduct);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", similarProduct.ProductId1), update);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _eventPublisher.EntityDeleted(similarProduct);
+        }
+
+
+        public virtual async Task InsertSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.AddToSet(p => p.SimilarProducts, similarProduct);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", similarProduct.ProductId1), update);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _eventPublisher.EntityInserted(similarProduct);
+        }
+
+        /// <summary>
+        /// Updates a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        public virtual async Task UpdateSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, similarProduct.ProductId1);
+            filter = filter & builder.ElemMatch(x => x.SimilarProducts, y => y.Id == similarProduct.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.SimilarProducts.ElementAt(-1).DisplayOrder, similarProduct.DisplayOrder);
+
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _eventPublisher.EntityUpdated(similarProduct);
         }
 
         #endregion

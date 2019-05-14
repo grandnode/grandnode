@@ -13,7 +13,6 @@ using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -67,6 +66,10 @@ namespace Grand.Web.Infrastructure.Cache
         IConsumer<EntityInserted<RelatedProduct>>,
         IConsumer<EntityUpdated<RelatedProduct>>,
         IConsumer<EntityDeleted<RelatedProduct>>,
+        //similar product
+        IConsumer<EntityInserted<SimilarProduct>>,
+        IConsumer<EntityUpdated<SimilarProduct>>,
+        IConsumer<EntityDeleted<SimilarProduct>>,
         //bundle product
         IConsumer<EntityInserted<BundleProduct>>,
         IConsumer<EntityUpdated<BundleProduct>>,
@@ -246,7 +249,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// {2} : category ID
         /// </remarks>
-        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Grand.pres.category.numberofproducts-{0}-{1}-{2}";        
+        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Grand.pres.category.numberofproducts-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
@@ -507,6 +510,16 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCTS_RELATED_IDS_KEY = "Grand.pres.related-{0}-{1}";
         public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Grand.pres.related";
+
+        /// <summary>
+        /// Key for "similar" product identifiers displayed on the product details page
+        /// </summary>
+        /// <remarks>
+        /// {0} : current product id
+        /// {1} : current store ID
+        /// </remarks>
+        public const string PRODUCTS_SIMILAR_IDS_KEY = "Grand.pres.similar-{0}-{1}";
+        public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar";
 
         /// <summary>
         /// Key for default product picture caching (all pictures)
@@ -906,6 +919,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
@@ -975,11 +989,11 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //categories
         public Task HandleEvent(EntityInserted<Category> eventMessage)
         {
-            
+
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
@@ -1029,7 +1043,7 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
         //product categories
-        
+
         public Task HandleEvent(EntityInserted<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -1051,7 +1065,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //products
         public Task HandleEvent(EntityInserted<Product> eventMessage)
         {
@@ -1063,6 +1077,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
             return Task.CompletedTask;
         }
@@ -1071,6 +1086,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
             return Task.CompletedTask;
         }
@@ -1096,7 +1112,7 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
         //related products
-        
+
         public Task HandleEvent(EntityInserted<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
@@ -1110,6 +1126,24 @@ namespace Grand.Web.Infrastructure.Cache
         public Task HandleEvent(EntityDeleted<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
+        }
+
+        //similar products
+
+        public Task HandleEvent(EntityInserted<SimilarProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
+        }
+        public Task HandleEvent(EntityUpdated<SimilarProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
+            return Task.CompletedTask;
+        }
+        public Task HandleEvent(EntityDeleted<SimilarProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             return Task.CompletedTask;
         }
 
@@ -1146,7 +1180,7 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
         //specification attribute options
-        
+
         public Task HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
@@ -1179,14 +1213,14 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //Product attributes
         public Task HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //Product attributes
         public Task HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
         {
@@ -1205,7 +1239,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //Topics
         public Task HandleEvent(EntityInserted<Topic> eventMessage)
         {
@@ -1312,7 +1346,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //Polls
         public Task HandleEvent(EntityInserted<Poll> eventMessage)
         {
@@ -1515,12 +1549,11 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             return Task.CompletedTask;
         }
-        
+
         //product reviews
         public Task HandleEvent(EntityDeleted<ProductReview> eventMessage)
         {
             return Task.CompletedTask;
         }
-
     }
 }

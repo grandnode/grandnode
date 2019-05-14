@@ -212,7 +212,8 @@
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
                 @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
                 @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
-                </div>
+                @await Component.InvokeAsync("SimilarProducts", new { productId = Model.Id })
+            </div>
         </form>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
 </div>

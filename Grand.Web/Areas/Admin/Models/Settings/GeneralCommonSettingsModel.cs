@@ -33,8 +33,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public DisplayMenuSettingsModel DisplayMenuSettings { get; set; }
         public KnowledgebaseSettingsModel KnowledgebaseSettings { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminLayout")]
-        public AdminLayout Layout { get; set; }
         [GrandResourceDisplayName("Admin.Configuration.Settings.GridLayout")]
         public KendoLayout GridLayout { get; set; }
 

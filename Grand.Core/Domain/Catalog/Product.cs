@@ -23,6 +23,7 @@ namespace Grand.Core.Domain.Catalog
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
         private ICollection<string> _crossSellProduct;
         private ICollection<RelatedProduct> _relatedProduct;
+        private ICollection<SimilarProduct> _similarProduct;
         private ICollection<BundleProduct> _bundleProduct;
         private ICollection<string> _productTags;
         public Product()
@@ -761,7 +762,10 @@ namespace Grand.Core.Domain.Catalog
             get { return _relatedProduct ?? (_relatedProduct = new List<RelatedProduct>()); }
             protected set { _relatedProduct = value; }
         }
-
+        public virtual ICollection<SimilarProduct> SimilarProducts {
+            get { return _similarProduct ?? (_similarProduct = new List<SimilarProduct>()); }
+            protected set { _similarProduct = value; }
+        }
         public virtual ICollection<BundleProduct> BundleProducts
         {
             get { return _bundleProduct ?? (_bundleProduct = new List<BundleProduct>()); }

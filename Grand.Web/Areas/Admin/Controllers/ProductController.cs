@@ -573,6 +573,91 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Similar products
+
+        [HttpPost]
+        public async Task<IActionResult> SimilarProductList(DataSourceRequest command, string productId)
+        {
+            var product = await _productService.GetProductById(productId);
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
+            var similarProducts = product.SimilarProducts.OrderBy(x => x.DisplayOrder);
+            var similarProductsModel = new List<ProductModel.SimilarProductModel>();
+            foreach (var x in similarProducts)
+            {
+                similarProductsModel.Add(new ProductModel.SimilarProductModel {
+                    Id = x.Id,
+                    ProductId1 = productId,
+                    ProductId2 = x.ProductId2,
+                    Product2Name = (await _productService.GetProductById(x.ProductId2)).Name,
+                    DisplayOrder = x.DisplayOrder
+                });
+            }
+
+            var gridModel = new DataSourceResult {
+                Data = similarProductsModel,
+                Total = similarProductsModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SimilarProductUpdate(ProductModel.SimilarProductModel model)
+        {
+            await _productViewModelService.UpdateSimilarProductModel(model);
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SimilarProductDelete(ProductModel.SimilarProductModel model)
+        {
+            await _productViewModelService.DeleteSimilarProductModel(model);
+            return new NullJsonResult();
+        }
+
+        public async Task<IActionResult> SimilarProductAddPopup(string productId)
+        {
+            var model = await _productViewModelService.PrepareSimilarProductModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SimilarProductAddPopupList(DataSourceRequest command, ProductModel.AddSimilarProductModel model)
+        {
+            var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
+                Data = products.ToList(),
+                Total = totalCount
+            };
+
+            return Json(gridModel);
+        }
+        [HttpPost]
+        [FormValueRequired("save")]
+        public async Task<IActionResult> SimilarProductAddPopup(ProductModel.AddSimilarProductModel model)
+        {
+            if (model.SelectedProductIds != null)
+            {
+                await _productViewModelService.InsertSimilarProductModel(model);
+            }
+
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            ViewBag.RefreshPage = true;
+            return View(model);
+        }
+
+        #endregion
+
         #region Bundle products
 
         [HttpPost]
