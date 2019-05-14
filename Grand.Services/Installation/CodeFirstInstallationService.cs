@@ -5012,7 +5012,6 @@ namespace Grand.Services.Installation
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 UseIsoDateTimeConverterInJson = true,
-                AdminLayout = "Darkblue",
                 KendoLayout = "custom",
             });
 

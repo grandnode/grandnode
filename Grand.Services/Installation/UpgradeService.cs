@@ -247,7 +247,6 @@ namespace Grand.Services.Installation
             #region Admin area settings
 
             var adminareasettings = _serviceProvider.GetRequiredService<AdminAreaSettings>();
-            adminareasettings.AdminLayout = "Default";
             adminareasettings.KendoLayout = "custom";
             await _settingService.SaveSetting(adminareasettings);
 
