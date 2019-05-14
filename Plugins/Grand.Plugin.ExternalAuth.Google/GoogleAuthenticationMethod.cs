@@ -68,6 +68,8 @@ namespace Grand.Plugin.ExternalAuth.Google
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.ClientSecret", "Client Secret");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.ClientSecret.Hint", "Enter your client secret here. You can find it on your Google Developers console page.");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.Title", "<h4>Configuring Google OAuth2</h4>");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Externalauth.Google.Failed", "Failed authentication");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Externalauth.Google.Failed.Errormessage", "Error message: ");
 
             await base.Install();
         }
@@ -88,6 +90,8 @@ namespace Grand.Plugin.ExternalAuth.Google
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.ClientSecret");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.ClientSecret.Hint");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.ExternalAuth.Google.Title");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Externalauth.Google.Failed");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Externalauth.Google.Failed.Errormessage");
 
             await base.Uninstall();
         }

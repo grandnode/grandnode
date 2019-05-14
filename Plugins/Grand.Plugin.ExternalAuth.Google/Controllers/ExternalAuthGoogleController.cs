@@ -135,6 +135,15 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
             //authenticate grand user
             return await _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
         }
+
+        public IActionResult SignInFailed(string error_message)
+        {
+            //handle exception and display message to user
+            var model = new FailedModel() {
+                ErrorMessage = error_message
+            };
+            return View("~/Plugins/ExternalAuth.Google/Views/SignInFailed.cshtml", model);
+        }
         #endregion
     }
 }
