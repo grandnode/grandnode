@@ -1,0 +1,47 @@
+﻿@model Grand.Plugin.ExternalAuth.Google.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+@inject Grand.Core.IWebHelper webHelper
+@using Grand.Framework;
+
+<form asp-controller="ExternalAuthGoogle" asp-action="Configure" method="post">
+    <antiforgery-token />
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Plugins.ExternalAuth.Google.Title")
+            </div>
+            <div class="panel-body">
+                    @T("Plugins.ExternalAuth.Google.Description")
+                <div class="form-group">
+                    <div class="col-md-3 col-sm-3 text-right">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientKeyIdentifier_OverrideForStore, model => model.ClientKeyIdentifier, Model.ActiveStoreScopeConfiguration)
+                        <admin-label asp-for="ClientKeyIdentifier" class="control-label" />
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="ClientKeyIdentifier" />
+                        <span asp-validation-for="ClientKeyIdentifier"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3 col-sm-3 text-right">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
+                        <admin-label asp-for="ClientSecret" class="control-label" />
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="ClientSecret" />
+                        <span asp-validation-for="ClientSecret"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                        <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

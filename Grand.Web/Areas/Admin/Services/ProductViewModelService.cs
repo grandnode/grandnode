@@ -159,11 +159,11 @@ namespace Grand.Web.Areas.Admin.Services
         protected virtual string[] ParseProductTags(string productTags)
         {
             var result = new List<string>();
-            if (!String.IsNullOrWhiteSpace(productTags))
+            if (!string.IsNullOrWhiteSpace(productTags))
             {
-                string[] values = productTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string val1 in values)
-                    if (!String.IsNullOrEmpty(val1.Trim()))
+                var values = productTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var val1 in values)
+                    if (!string.IsNullOrEmpty(val1.Trim()))
                         result.Add(val1.Trim());
             }
             return result.ToArray();
@@ -179,8 +179,8 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var existingProductTag in existingProductTags)
             {
                 var existingProductTagText = await _productTagService.GetProductTagByName(existingProductTag.ToLowerInvariant());
-                bool found = false;
-                foreach (string newProductTag in productTags)
+                var found = false;
+                foreach (var newProductTag in productTags)
                 {
                     if (existingProductTagText != null)
                         if (existingProductTagText.Name.Equals(newProductTag, StringComparison.OrdinalIgnoreCase))
@@ -202,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Services
                     await _productService.DeleteProductTag(productTag);
                 }
             }
-            foreach (string productTagName in productTags)
+            foreach (var productTagName in productTags)
             {
                 ProductTag productTag;
                 var productTag2 = await _productTagService.GetProductTagByName(productTagName);
@@ -581,7 +581,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (product != null)
             {
                 var result = new StringBuilder();
-                for (int i = 0; i < product.ProductTags.Count; i++)
+                for (var i = 0; i < product.ProductTags.Count; i++)
                 {
                     var pt = product.ProductTags.ToList()[i];
                     var productTag = await _productTagService.GetProductTagByName(pt);
@@ -830,11 +830,11 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             var categoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+            if (!string.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.Add(model.SearchCategoryId);
 
             //include subcategories
-            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
+            if (model.SearchIncludeSubCategories && !string.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(await GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -892,11 +892,11 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             var categoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+            if (!string.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.Add(model.SearchCategoryId);
 
             //include subcategories
-            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
+            if (model.SearchIncludeSubCategories && !string.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(await GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -994,8 +994,8 @@ namespace Grand.Web.Areas.Admin.Services
             var prevStockQuantity = product.GetTotalStockQuantity();
             var prevMultiWarehouseStock = product.ProductWarehouseInventory.Select(i => new ProductWarehouseInventory() { WarehouseId = i.WarehouseId, StockQuantity = i.StockQuantity, ReservedQuantity = i.ReservedQuantity }).ToList();
 
-            string prevDownloadId = product.DownloadId;
-            string prevSampleDownloadId = product.SampleDownloadId;
+            var prevDownloadId = product.DownloadId;
+            var prevSampleDownloadId = product.SampleDownloadId;
 
             //product
             product = model.ToEntity(product);
@@ -1042,14 +1042,14 @@ namespace Grand.Web.Areas.Admin.Services
             await BackInStockNotifications(product, model, prevStockQuantity, prevMultiWarehouseStock);
 
             //delete an old "download" file (if deleted or updated)
-            if (!String.IsNullOrEmpty(prevDownloadId) && prevDownloadId != product.DownloadId)
+            if (!string.IsNullOrEmpty(prevDownloadId) && prevDownloadId != product.DownloadId)
             {
                 var prevDownload = await _downloadService.GetDownloadById(prevDownloadId);
                 if (prevDownload != null)
                     await _downloadService.DeleteDownload(prevDownload);
             }
             //delete an old "sample download" file (if deleted or updated)
-            if (!String.IsNullOrEmpty(prevSampleDownloadId) && prevSampleDownloadId != product.SampleDownloadId)
+            if (!string.IsNullOrEmpty(prevSampleDownloadId) && prevSampleDownloadId != product.SampleDownloadId)
             {
                 var prevSampleDownload = await _downloadService.GetDownloadById(prevSampleDownloadId);
                 if (prevSampleDownload != null)
@@ -1069,7 +1069,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var products = new List<Product>();
             products.AddRange(await _productService.GetProductsByIds(selectedIds.ToArray()));
-            for (int i = 0; i < products.Count; i++)
+            for (var i = 0; i < products.Count; i++)
             {
                 var product = products[i];
                 //a vendor should have access only to his products
@@ -1363,7 +1363,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var productId1 = await _productService.GetProductById(model.ProductId);
 
-            foreach (string id in model.SelectedProductIds)
+            foreach (var id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
                 if (product != null)
@@ -1500,7 +1500,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var productId1 = await _productService.GetProductById(model.ProductId);
 
-            foreach (string id in model.SelectedProductIds)
+            foreach (var id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
                 if (product != null)
@@ -1571,7 +1571,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task InsertCrossSellProductModel(ProductModel.AddCrossSellProductModel model)
         {
             var crossSellProduct = await _productService.GetProductById(model.ProductId);
-            foreach (string id in model.SelectedProductIds)
+            foreach (var id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
                 if (product != null)
@@ -1595,7 +1595,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task DeleteCrossSellProduct(string productId, string crossSellProductId)
         {
-            CrossSellProduct crosssell = new CrossSellProduct()
+            var crosssell = new CrossSellProduct()
             {
                 ProductId1 = productId,
                 ProductId2 = crossSellProductId
@@ -1604,7 +1604,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertAssociatedProductModel(ProductModel.AddAssociatedProductModel model)
         {
-            foreach (string id in model.SelectedProductIds)
+            foreach (var id in model.SelectedProductIds)
             {
                 var product = await _productService.GetProductById(id);
                 if (product != null)
@@ -1817,13 +1817,13 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount)> PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize)
         {
-            string vendorId = "";
+            var vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
             var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+            if (!string.IsNullOrEmpty(model.SearchCategoryId))
                 searchCategoryIds.Add(model.SearchCategoryId);
 
             var products = (await _productService.SearchProducts(categoryIds: searchCategoryIds,
@@ -2081,7 +2081,7 @@ namespace Grand.Web.Areas.Admin.Services
                 if (conditionAttribute != null && conditionValue != null)
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeById(conditionAttribute.ProductAttributeId);
-                    string _paname = productAttribute != null ? productAttribute.Name : "";
+                    var _paname = productAttribute != null ? productAttribute.Name : "";
                     attributeModel.ConditionString = string.Format("{0}: {1}",
                         System.Net.WebUtility.HtmlEncode(_paname),
                         System.Net.WebUtility.HtmlEncode(conditionValue.Name));
@@ -2109,7 +2109,7 @@ namespace Grand.Web.Areas.Admin.Services
                 foreach (var lang in languages)
                 {
                     var name = predefinedValue.GetLocalized(x => x.Name, lang.Id, false, false);
-                    if (!String.IsNullOrEmpty(name))
+                    if (!string.IsNullOrEmpty(name))
                         pav.Locales.Add(new LocalizedProperty() { LanguageId = lang.Id, LocaleKey = "Name", LocaleValue = name });
                 }
 
@@ -2161,7 +2161,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new ProductAttributeConditionModel
             {
                 ProductAttributeMappingId = productAttributeMapping.Id,
-                EnableCondition = !String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml),
+                EnableCondition = !string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml),
                 ProductId = product.Id
             };
             //pre-select attribute and values
@@ -2218,7 +2218,7 @@ namespace Grand.Web.Areas.Admin.Services
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
                                 {
-                                    if (!String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                                    if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
                                     {
                                         //clear default selection
                                         foreach (var item in attributeModel.Values)
@@ -2257,7 +2257,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var attribute = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
-                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    var controlId = string.Format("product_attribute_{0}", attribute.Id);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -2266,7 +2266,7 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.ImageSquares:
                             {
                                 var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, ctrlAttributes);
@@ -2284,12 +2284,12 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.Checkboxes:
                             {
                                 var cblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(cblAttributes))
+                                if (!string.IsNullOrEmpty(cblAttributes))
                                 {
-                                    bool anyValueSelected = false;
+                                    var anyValueSelected = false;
                                     foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                     {
-                                        if (!String.IsNullOrEmpty(item))
+                                        if (!string.IsNullOrEmpty(item))
                                         {
                                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                                 attribute, item);
@@ -2344,7 +2344,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var pictureThumbnailUrl = await _pictureService.GetPictureUrl(string.IsNullOrEmpty(x.PictureId) ? x.ImageSquaresPictureId : x.PictureId, 75, false);
 
                 //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
-                if (String.IsNullOrEmpty(pictureThumbnailUrl))
+                if (string.IsNullOrEmpty(pictureThumbnailUrl))
                     pictureThumbnailUrl = await _pictureService.GetPictureUrl("", 1, true);
                 items.Add(new ProductModel.ProductAttributeValueModel
                 {
@@ -2396,7 +2396,7 @@ namespace Grand.Web.Areas.Admin.Services
                 DisplayOrder = pav.DisplayOrder,
                 PictureId = pav.PictureId
             };
-            if (model.DisplayColorSquaresRgb && String.IsNullOrEmpty(model.ColorSquaresRgb))
+            if (model.DisplayColorSquaresRgb && string.IsNullOrEmpty(model.ColorSquaresRgb))
             {
                 model.ColorSquaresRgb = "#000000";
             }
@@ -2502,7 +2502,7 @@ namespace Grand.Web.Areas.Admin.Services
                 //warnings
                 var warnings = await shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart, await _productService.GetProductById(product.Id), 1, x.AttributesXml, true);
-                for (int i = 0; i < warnings.Count; i++)
+                for (var i = 0; i < warnings.Count; i++)
                 {
                     pacModel.Warnings += warnings[i];
                     if (i != warnings.Count - 1)
@@ -2564,7 +2564,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<IList<string>> InsertOrUpdateProductAttributeCombinationPopup(Product product, ProductAttributeCombinationModel model, Dictionary<string, string> form)
         {
-            string attributesXml = "";
+            var attributesXml = "";
             var warnings = new List<string>();
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             async Task PrepareCombinationWarehouseInventory(ProductAttributeCombination combination)
@@ -2616,7 +2616,7 @@ namespace Grand.Web.Areas.Admin.Services
                 foreach (var attribute in attributes)
                 {
                     attribute.ProductId = product.Id;
-                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    var controlId = string.Format("product_attribute_{0}", attribute.Id);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -2625,7 +2625,7 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.ImageSquares:
                             {
                                 var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, ctrlAttributes);
@@ -2635,11 +2635,11 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.Checkboxes:
                             {
                                 var cblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(cblAttributes))
+                                if (!string.IsNullOrEmpty(cblAttributes))
                                 {
                                     foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                     {
-                                        if (!String.IsNullOrEmpty(item))
+                                        if (!string.IsNullOrEmpty(item))
                                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                                 attribute, item);
                                     }
@@ -2664,9 +2664,9 @@ namespace Grand.Web.Areas.Admin.Services
                         case AttributeControlType.MultilineTextbox:
                             {
                                 var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    string enteredText = ctrlAttributes.ToString().Trim();
+                                    var enteredText = ctrlAttributes.ToString().Trim();
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, enteredText);
                                 }
@@ -2680,7 +2680,7 @@ namespace Grand.Web.Areas.Admin.Services
                                 DateTime? selectedDate = null;
                                 try
                                 {
-                                    selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                    selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
                                 }
                                 catch { }
                                 if (selectedDate.HasValue)
@@ -2796,7 +2796,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var shoppingCartService = _serviceProvider.GetRequiredService<IShoppingCartService>();
             var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product, true);
-            int id = 1;
+            var id = 1;
             foreach (var attributesXml in allAttributesXml)
             {
                 var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
@@ -2841,7 +2841,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var x in product.ProductAttributeCombinations.Where(x => x.Id == productAttributeCombinationId).SelectMany(x => x.TierPrices))
             {
                 string storeName;
-                if (!String.IsNullOrEmpty(x.StoreId))
+                if (!string.IsNullOrEmpty(x.StoreId))
                 {
                     var store = await _storeService.GetStoreById(x.StoreId);
                     storeName = store != null ? store.Name : "Deleted";
@@ -2855,7 +2855,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     Id = x.Id,
                     CustomerRoleId = x.CustomerRoleId,
-                    CustomerRole = !String.IsNullOrEmpty(x.CustomerRoleId) ? (await _customerService.GetCustomerRoleById(x.CustomerRoleId)).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
+                    CustomerRole = !string.IsNullOrEmpty(x.CustomerRoleId) ? (await _customerService.GetCustomerRoleById(x.CustomerRoleId)).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
                     StoreId = x.StoreId,
                     Store = storeName,
                     Price = x.Price,
@@ -2867,19 +2867,19 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task InsertProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+            if (!string.IsNullOrEmpty(model.CustomerRoleId))
                 model.CustomerRoleId = model.CustomerRoleId.Trim();
             else
                 model.CustomerRoleId = "";
 
-            if (!String.IsNullOrEmpty(model.StoreId))
+            if (!string.IsNullOrEmpty(model.StoreId))
                 model.StoreId = model.StoreId.Trim();
             else
                 model.StoreId = "";
 
             if (productAttributeCombination != null)
             {
-                ProductCombinationTierPrices pctp = new ProductCombinationTierPrices
+                var pctp = new ProductCombinationTierPrices
                 {
                     Price = model.Price,
                     Quantity = model.Quantity,
@@ -2893,12 +2893,12 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task UpdateProductAttributeCombinationTierPricesModel(Product product, ProductAttributeCombination productAttributeCombination, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+            if (!string.IsNullOrEmpty(model.CustomerRoleId))
                 model.CustomerRoleId = model.CustomerRoleId.Trim();
             else
                 model.CustomerRoleId = "";
 
-            if (!String.IsNullOrEmpty(model.StoreId))
+            if (!string.IsNullOrEmpty(model.StoreId))
                 model.StoreId = model.StoreId.Trim();
             else
                 model.StoreId = "";

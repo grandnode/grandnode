@@ -764,7 +764,10 @@ namespace Grand.Web.Services
                 var customer = _workContext.CurrentCustomer;
                 var languageId = _workContext.WorkingLanguage.Id;
                 //countries
-                string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.CountryId : model.CountryId;
+                var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.CountryId : model.CountryId;
+                if (string.IsNullOrEmpty(defaultEstimateCountryId))
+                    defaultEstimateCountryId = _storeContext.CurrentStore.DefaultCountryId;
+
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in await _countryService.GetAllCountriesForShipping(languageId))
                     model.AvailableCountries.Add(new SelectListItem

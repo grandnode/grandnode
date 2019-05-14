@@ -975,6 +975,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<Store, StoreModel>()
                 .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<StoreModel, Store>()

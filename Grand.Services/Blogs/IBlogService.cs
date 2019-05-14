@@ -134,5 +134,37 @@ namespace Grand.Services.Blogs
         /// </summary>
         /// <param name="blogCategory">Blog category</param>
         Task DeleteBlogCategory(BlogCategory blogCategory);
+
+        /// <summary>
+        /// Gets a blog product
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>Blog product</returns>
+        Task<BlogProduct> GetBlogProductById(string id);
+
+        /// <summary>
+        /// Insert an blog product
+        /// </summary>
+        /// <param name="blogProduct">Blog product</param>
+        Task InsertBlogProduct(BlogProduct blogProduct);
+
+        /// <summary>
+        /// Update an blog product
+        /// </summary>
+        /// <param name="blogProduct">Blog product</param>
+        Task UpdateBlogProduct(BlogProduct blogProduct);
+
+        /// <summary>
+        /// Delete an blog product
+        /// </summary>
+        /// <param name="blogProduct">Blog product</param>
+        Task DeleteBlogProduct(BlogProduct blogProduct);
+
+        /// <summary>
+        /// Get all product by blog post id
+        /// </summary>
+        /// <returns></returns>
+        /// <param name="blogPostId">Blog post id</param>
+        Task<IList<BlogProduct>> GetProductsByBlogPostId(string blogPostId);
     }
 }

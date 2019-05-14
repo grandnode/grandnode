@@ -39,6 +39,9 @@
         </div>
     </div>
 
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_products", additionalData = Model.Id })
+    
+    @await Component.InvokeAsync("BlogPostProducts", new { blogPostId = Model.Id })
 
     @if (Model.Tags.Any())
     {
@@ -51,6 +54,7 @@
             }
         </div>
     }
+
     @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_comments", additionalData = Model.Id })
     @if (Model.AllowComments)
     {

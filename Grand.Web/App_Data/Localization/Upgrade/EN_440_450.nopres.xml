@@ -170,6 +170,37 @@
   <LocaleResource Name="HomePage.NewProducts">
     <Value>New Products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCountry">
+    <Value>Default country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultCountry.Hint">
+    <Value>This property allows a store owner to specify a default country for a store.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Product.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Products">
+    <Value>Products related with this blog post</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.Yes">
+    <Value>Please select combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.AllowAddingOnlyExistingAttributeCombinations.No">
+    <Value>Please select combination</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Combination.NotExist">
+    <Value>This combination doesn't exist</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.catalog.products.similarproducts">
     <Value>Similar products</Value>
   </LocaleResource>

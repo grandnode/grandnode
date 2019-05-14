@@ -1,0 +1,109 @@
+﻿@model BlogPostModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="blog_details_product_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="product-grid"></div>
+    </div>
+    <div class="panel-footer">
+        <input type="submit" id="btnAddNewProduct" value="@T("Admin.ContentManagement.Blog.BlogPosts.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Blog", new { blogPostId = Model.Id, btnId = "btnRefreshProducts", formId = "blog-edit" }))', 800, 800, true); return false;" class="k-button" />
+        <input type="button" id="btnRefreshProducts" style="display: none" />
+    </div>
+    <vc:admin-widget widget-zone="blog_details_product_bottom" additional-data="Model" />
+</div>
+    <script>
+        $(document).ready(function () {
+            $("#product-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Products", "Blog", new { blogPostId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("UpdateProduct", "Blog"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("DeleteProduct", "Blog"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductName: {editable: false, type: "string" },
+                                DisplayOrder: {editable: true, type: "number", format:"{0:n2}" },
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.ContentManagement.Blog.Product.Fields.ProductName")",
+                    width: 300,
+                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=ProductName#</a>'
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.ContentManagement.Blog.Product.Fields.DisplayOrder")",
+                    width: 100,
+                    type: "number",
+
+                }, {
+                command: [{
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                    update: "@T("Admin.Common.Update")",
+                cancel: "@T("Admin.Common.Cancel")"} }, {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                    }],
+                width: 200
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    var grid = $("#product-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+    </script>
+
+}

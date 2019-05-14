@@ -12,7 +12,6 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
@@ -52,7 +51,6 @@ namespace Grand.Web.Services
     {
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
         private readonly IThemeContext _themeContext;
         private readonly IPictureService _pictureService;
         private readonly IWebHelper _webHelper;
@@ -67,9 +65,6 @@ namespace Grand.Web.Services
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
-        private readonly ISitemapGenerator _sitemapGenerator;
-        private readonly IThemeProvider _themeProvider;
-        private readonly IForumService _forumservice;
         private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -91,7 +86,6 @@ namespace Grand.Web.Services
 
         public CommonViewModelService(ICacheManager cacheManager,
             IStoreContext storeContext,
-            IStoreService storeService,
             IThemeContext themeContext,
             IPictureService pictureService,
             IWebHelper webHelper,
@@ -106,9 +100,6 @@ namespace Grand.Web.Services
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
-            ISitemapGenerator sitemapGenerator,
-            IThemeProvider themeProvider,
-            IForumService forumservice,
             IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
             IHostingEnvironment hostingEnvironment,
@@ -125,72 +116,51 @@ namespace Grand.Web.Services
             VendorSettings vendorSettings,
             CommonSettings commonSettings,
             CaptchaSettings captchaSettings,
-            ShoppingCartSettings shoppingCartSettings
-            )
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._themeContext = themeContext;
-            this._pictureService = pictureService;
-            this._webHelper = webHelper;
-            this._languageService = languageService;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._permissionService = permissionService;
-            this._pageHeadBuilder = pageHeadBuilder;
-            this._topicService = topicService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationService = localizationService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._sitemapGenerator = sitemapGenerator;
-            this._themeProvider = themeProvider;
-            this._forumservice = forumservice;
-            this._contactAttributeService = contactAttributeService;
-            this._contactAttributeParser = contactAttributeParser;
-            this._hostingEnvironment = hostingEnvironment;
-            this._serviceProvider = serviceProvider;
-            this._storeInformationSettings = storeInformationSettings;
-            this._localizationSettings = localizationSettings;
-            this._taxSettings = taxSettings;
-            this._customerSettings = customerSettings;
-            this._forumSettings = forumSettings;
-            this._catalogSettings = catalogSettings;
-            this._blogSettings = blogSettings;
-            this._knowledgebaseSettings = knowledgebaseSettings;
-            this._newsSettings = newsSettings;
-            this._vendorSettings = vendorSettings;
-            this._commonSettings = commonSettings;
-            this._captchaSettings = captchaSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _pictureService = pictureService;
+            _webHelper = webHelper;
+            _languageService = languageService;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _permissionService = permissionService;
+            _pageHeadBuilder = pageHeadBuilder;
+            _topicService = topicService;
+            _workflowMessageService = workflowMessageService;
+            _localizationService = localizationService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _contactAttributeService = contactAttributeService;
+            _contactAttributeParser = contactAttributeParser;
+            _hostingEnvironment = hostingEnvironment;
+            _serviceProvider = serviceProvider;
+            _storeInformationSettings = storeInformationSettings;
+            _localizationSettings = localizationSettings;
+            _taxSettings = taxSettings;
+            _customerSettings = customerSettings;
+            _forumSettings = forumSettings;
+            _catalogSettings = catalogSettings;
+            _blogSettings = blogSettings;
+            _knowledgebaseSettings = knowledgebaseSettings;
+            _newsSettings = newsSettings;
+            _vendorSettings = vendorSettings;
+            _commonSettings = commonSettings;
+            _captchaSettings = captchaSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         protected async Task<HeaderLinksModel> prepareHeaderLinks(Customer customer)
         {
             var isRegister = customer.IsRegistered();
-            var model = new HeaderLinksModel
-            {
+            var model = new HeaderLinksModel {
                 IsAuthenticated = isRegister,
                 CustomerEmailUsername = isRegister ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
-                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
-                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
-
-                //performance optimization (use "HasShoppingCartItems" property)
-                ShoppingCartItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity) : 0,
-
-                WishlistItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
-                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
-                        .Sum(x => x.Quantity) : 0
             };
-
             if (_forumSettings.AllowPrivateMessages)
             {
                 var unreadMessageCount = await GetUnreadPrivateMessages();
@@ -214,11 +184,29 @@ namespace Grand.Web.Services
             return model;
         }
 
+        protected async Task<ShoppingCartLinksModel> prepareShoppingCartLinks(Customer customer)
+        {
+            var model = new ShoppingCartLinksModel {
+                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
+                //performance optimization (use "HasShoppingCartItems" property)
+                ShoppingCartItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
+                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
+                        .Sum(x => x.Quantity) : 0,
+
+                WishlistItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                        .LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id)
+                        .Sum(x => x.Quantity) : 0
+            };
+            return model;
+        }
 
         public virtual async Task<LogoModel> PrepareLogo()
         {
-            var model = new LogoModel
-            {
+            var model = new LogoModel {
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
 
@@ -247,8 +235,7 @@ namespace Grand.Web.Services
             {
                 var result = (await _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
-                    .Select(x => new LanguageModel
-                    {
+                    .Select(x => new LanguageModel {
                         Id = x.Id,
                         Name = x.Name,
                         FlagImageFileName = x.FlagImageFileName,
@@ -257,8 +244,7 @@ namespace Grand.Web.Services
                 return result;
             });
 
-            var model = new LanguageSelectorModel
-            {
+            var model = new LanguageSelectorModel {
                 CurrentLanguageId = _workContext.WorkingLanguage.Id,
                 AvailableLanguages = availableLanguages,
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
@@ -269,7 +255,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), 
+            var availableCurrencies = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
                 async () =>
             {
                 var result = (await _currencyService
@@ -283,8 +269,7 @@ namespace Grand.Web.Services
                         else
                             currencySymbol = x.CurrencyCode;
                         //model
-                        var currencyModel = new CurrencyModel
-                        {
+                        var currencyModel = new CurrencyModel {
                             Id = x.Id,
                             Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                             CurrencyCode = x.CurrencyCode,
@@ -296,8 +281,7 @@ namespace Grand.Web.Services
                 return result;
             });
 
-            var model = new CurrencySelectorModel
-            {
+            var model = new CurrencySelectorModel {
                 CurrentCurrencyId = _workContext.WorkingCurrency.Id,
                 AvailableCurrencies = availableCurrencies
             };
@@ -317,8 +301,7 @@ namespace Grand.Web.Services
             if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 return null;
 
-            var model = new TaxTypeSelectorModel
-            {
+            var model = new TaxTypeSelectorModel {
                 CurrentTaxType = _workContext.TaxDisplayType
             };
             return model;
@@ -337,9 +320,9 @@ namespace Grand.Web.Services
 
             var availableStores = await _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, async () =>
             {
-                var result = (await _storeService.GetAllStores())
-                    .Select(x => new StoreModel
-                    {
+                var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+                var result = (await storeService.GetAllStores())
+                    .Select(x => new StoreModel {
                         Id = x.Id,
                         Name = x.Name,
                     })
@@ -347,8 +330,7 @@ namespace Grand.Web.Services
                 return result;
             });
 
-            var model = new StoreSelectorModel
-            {
+            var model = new StoreSelectorModel {
                 CurrentStoreId = _storeContext.CurrentStore.Id,
                 AvailableStores = availableStores,
             };
@@ -360,7 +342,8 @@ namespace Grand.Web.Services
         {
             if (_commonSettings.AllowToSelectStore)
             {
-                var store = await _storeService.GetStoreById(storeid);
+                var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+                var store = await storeService.GetStoreById(storeid);
                 if (store != null)
                     _storeContext.CurrentStore = store;
             }
@@ -372,7 +355,8 @@ namespace Grand.Web.Services
             var customer = _workContext.CurrentCustomer;
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
-                var privateMessages = await _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+                var forumservice = _serviceProvider.GetRequiredService<IForumService>();
+                var privateMessages = await forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                     "", customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.Any())
@@ -388,10 +372,14 @@ namespace Grand.Web.Services
             return prepareHeaderLinks(customer);
         }
 
+        public virtual Task<ShoppingCartLinksModel> PrepareShoppingCartLinks(Customer customer)
+        {
+            return prepareShoppingCartLinks(customer);
+        }
+
         public virtual async Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer)
         {
-            var model = new AdminHeaderLinksModel
-            {
+            var model = new AdminHeaderLinksModel {
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
@@ -409,8 +397,7 @@ namespace Grand.Web.Services
             var cachedTopicModel = await _cacheManager.Get(topicCacheKey, async () =>
                 (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
-                .Select(t => new FooterModel.FooterTopicModel
-                {
+                .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
                     SeName = t.GetSeName(_workContext.WorkingLanguage.Id),
@@ -423,8 +410,7 @@ namespace Grand.Web.Services
 
             //model
             var currentstore = _storeContext.CurrentStore;
-            var model = new FooterModel
-            {
+            var model = new FooterModel {
                 StoreName = currentstore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                 CompanyEmail = currentstore.CompanyEmail,
                 CompanyAddress = currentstore.CompanyAddress,
@@ -660,8 +646,7 @@ namespace Grand.Web.Services
             var contactAttributes = await _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
             foreach (var attribute in contactAttributes)
             {
-                var attributeModel = new ContactUsModel.ContactAttributeModel
-                {
+                var attributeModel = new ContactUsModel.ContactAttributeModel {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     TextPrompt = attribute.GetLocalized(x => x.TextPrompt, _workContext.WorkingLanguage.Id),
@@ -682,8 +667,7 @@ namespace Grand.Web.Services
                     var attributeValues = attribute.ContactAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributeValueModel = new ContactUsModel.ContactAttributeValueModel
-                        {
+                        var attributeValueModel = new ContactUsModel.ContactAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
@@ -779,8 +763,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<ContactUsModel> PrepareContactUs()
         {
-            var model = new ContactUsModel
-            {
+            var model = new ContactUsModel {
                 Email = _workContext.CurrentCustomer.Email,
                 FullName = _workContext.CurrentCustomer.GetFullName(),
                 SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
@@ -806,8 +789,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<ContactVendorModel> PrepareContactVendor(Vendor vendor)
         {
-            var model = new ContactVendorModel
-            {
+            var model = new ContactVendorModel {
                 Email = _workContext.CurrentCustomer.Email,
                 FullName = _workContext.CurrentCustomer.GetFullName(),
                 SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
@@ -838,8 +820,7 @@ namespace Grand.Web.Services
                 _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
-                var model = new SitemapModel
-                {
+                var model = new SitemapModel {
                     BlogEnabled = _blogSettings.Enabled,
                     ForumEnabled = _forumSettings.ForumsEnabled,
                     NewsEnabled = _newsSettings.Enabled,
@@ -861,12 +842,11 @@ namespace Grand.Web.Services
                 if (_commonSettings.SitemapIncludeProducts)
                 {
                     //limit product to 200 until paging is supported on this page
-                    var products = (await _productService.SearchProducts( 
+                    var products = (await _productService.SearchProducts(
                         storeId: _storeContext.CurrentStore.Id,
                         visibleIndividuallyOnly: true,
                         pageSize: 200)).products;
-                    model.Products = products.Select(product => new ProductOverviewModel
-                    {
+                    model.Products = products.Select(product => new ProductOverviewModel {
                         Id = product.Id,
                         Name = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         ShortDescription = product.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
@@ -879,8 +859,7 @@ namespace Grand.Web.Services
                 var topics = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                     .Where(t => t.IncludeInSitemap)
                     .ToList();
-                model.Topics = topics.Select(topic => new TopicModel
-                {
+                model.Topics = topics.Select(topic => new TopicModel {
                     Id = topic.Id,
                     SystemName = topic.SystemName,
                     IncludeInSitemap = topic.IncludeInSitemap,
@@ -894,25 +873,26 @@ namespace Grand.Web.Services
         }
         public virtual async Task<string> SitemapXml(int? id, IUrlHelper url)
         {
+            var sitemapGenerator = _serviceProvider.GetRequiredService<ISitemapGenerator>();
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = await _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
+            var siteMap = await _cacheManager.Get(cacheKey, () => sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
             return siteMap;
         }
         public virtual StoreThemeSelectorModel PrepareStoreThemeSelector()
         {
             var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
-            model.CurrentStoreTheme = new StoreThemeModel
-            {
+            var themeProvider = _serviceProvider.GetRequiredService<IThemeProvider>();
+
+            var currentTheme = themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
+            model.CurrentStoreTheme = new StoreThemeModel {
                 Name = currentTheme.ThemeName,
                 Title = currentTheme.ThemeTitle
             };
-            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
-                .Select(x => new StoreThemeModel
-                {
+            model.AvailableStoreThemes = themeProvider.GetThemeConfigurations()
+                .Select(x => new StoreThemeModel {
                     Name = x.ThemeName,
                     Title = x.ThemeTitle
                 })

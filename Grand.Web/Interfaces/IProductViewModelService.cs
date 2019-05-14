@@ -39,5 +39,7 @@ namespace Grand.Web.Interfaces
         Task<IList<ProductOverviewModel>> PrepareProductsRelated(string productId, int? productThumbPictureSize);
         Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize);
         Task<IList<ProductOverviewModel>> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel);
+        Task<IList<ProductOverviewModel>> PrepareIdsProducts(string[] productIds, int? productThumbPictureSize);
+
     }
 }

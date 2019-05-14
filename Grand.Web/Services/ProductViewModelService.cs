@@ -1562,8 +1562,9 @@ namespace Grand.Web.Services
             {
                 var combination = _productAttributeParser.FindProductAttributeCombination(product, attributeXml);
 
-                if (product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
-                    model.DisplayBackInStockSubscription = true;
+                if (combination != null)
+                    if (product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
+                        model.DisplayBackInStockSubscription = true;
 
                 var backInStockSubscriptionService = _serviceProvider.GetRequiredService<IBackInStockSubscriptionService>();
                 var subscription = await backInStockSubscriptionService
@@ -1669,7 +1670,7 @@ namespace Grand.Web.Services
                 markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.NewProductsNumberOnHomePage)).products;
-            
+
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
@@ -1839,6 +1840,21 @@ namespace Grand.Web.Services
                 preparePictureModel,
                 productThumbPictureSize));
             return model;
+        }
+
+        public virtual async Task<IList<ProductOverviewModel>> PrepareIdsProducts(string[] productIds, int? productThumbPictureSize)
+        {
+            //load products
+            var products = await _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
         }
     }
 }
