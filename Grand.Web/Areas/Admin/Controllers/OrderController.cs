@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Services.Shipping;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -850,8 +851,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
         public async Task<IActionResult> DeleteOrderItem(string id, IFormCollection form, 
             [FromServices] IGiftCardService giftCardService,
-            [FromServices] IProductService productService
-            )
+            [FromServices] IProductService productService,
+            [FromServices] IShipmentService shipmentService)
         {
             var order = await _orderService.GetOrderById(id);
             if (order == null)
@@ -871,6 +872,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
+
+            var shipments = (await shipmentService.GetShipmentsByOrder(order.Id));
+            foreach (var shipment in shipments)
+            {
+                if(shipment.ShipmentItems.Where(x=>x.OrderItemId == orderItemId).Any())
+                {
+                    ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
+                    //selected tab
+                    SaveSelectedTabIndex(persistForTheNextRequest: false);
+                    var model = new OrderModel();
+                    await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+                    return View(model);
+                }
+            }
+
             var product = await productService.GetProductById(orderItem.ProductId);
             if ((await giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)).Count > 0)
             {
