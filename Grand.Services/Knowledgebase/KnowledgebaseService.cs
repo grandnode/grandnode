@@ -142,8 +142,8 @@ namespace Grand.Services.Knowledgebase
                 await UpdateKnowledgebaseCategory(child);
             }
 
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             await _eventPublisher.EntityDeleted(kc);
         }
@@ -156,8 +156,8 @@ namespace Grand.Services.Knowledgebase
         {
             kc.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseCategoryRepository.UpdateAsync(kc);
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             await _eventPublisher.EntityUpdated(kc);
         }
 
@@ -180,7 +180,7 @@ namespace Grand.Services.Knowledgebase
         {
             string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -214,8 +214,8 @@ namespace Grand.Services.Knowledgebase
             kc.CreatedOnUtc = DateTime.UtcNow;
             kc.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             await _eventPublisher.EntityInserted(kc);
         }
 
@@ -257,8 +257,8 @@ namespace Grand.Services.Knowledgebase
             ka.CreatedOnUtc = DateTime.UtcNow;
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.InsertAsync(ka);
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             await _eventPublisher.EntityInserted(ka);
         }
 
@@ -270,8 +270,8 @@ namespace Grand.Services.Knowledgebase
         {
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.UpdateAsync(ka);
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             await _eventPublisher.EntityUpdated(ka);
         }
 
@@ -282,8 +282,8 @@ namespace Grand.Services.Knowledgebase
         public virtual async Task DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             await _knowledgebaseArticleRepository.DeleteAsync(ka);
-            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             await _eventPublisher.EntityDeleted(ka);
         }
 
@@ -306,7 +306,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -339,7 +339,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -372,7 +372,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -404,7 +404,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -438,7 +438,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -484,7 +484,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(CATEGORIES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -530,7 +530,7 @@ namespace Grand.Services.Knowledgebase
         {
             var key = string.Format(HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;

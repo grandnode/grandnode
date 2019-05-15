@@ -87,7 +87,7 @@ namespace Grand.Services.Security
                 return false;
 
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var permissionRecord = await _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToListAsync();
                 if (permissionRecord.Any())
@@ -112,7 +112,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>

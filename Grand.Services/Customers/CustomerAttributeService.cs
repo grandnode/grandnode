@@ -95,8 +95,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.DeleteAsync(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(customerAttribute);
@@ -109,7 +109,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerAttribute>> GetAllCustomerAttributes()
         {
             string key = CUSTOMERATTRIBUTES_ALL_KEY;
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from ca in _customerAttributeRepository.Table
                             orderby ca.DisplayOrder
@@ -126,7 +126,7 @@ namespace Grand.Services.Customers
         public virtual Task<CustomerAttribute> GetCustomerAttributeById(string customerAttributeId)
         {
             string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
-            return _cacheManager.Get(key, () => _customerAttributeRepository.GetByIdAsync(customerAttributeId));
+            return _cacheManager.GetAsync(key, () => _customerAttributeRepository.GetByIdAsync(customerAttributeId));
         }
 
         /// <summary>
@@ -140,8 +140,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.InsertAsync(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(customerAttribute);
@@ -158,8 +158,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.UpdateAsync(customerAttribute);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(customerAttribute);
@@ -178,8 +178,8 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.CustomerAttributeValues, customerAttributeValue);
             await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(customerAttributeValue);
@@ -198,8 +198,8 @@ namespace Grand.Services.Customers
             var update = updatebuilder.AddToSet(p => p.CustomerAttributeValues, customerAttributeValue);
             await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(customerAttributeValue);
@@ -225,8 +225,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.Collection.UpdateManyAsync(filter, update);
 
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(customerAttributeValue);

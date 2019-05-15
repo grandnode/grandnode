@@ -438,7 +438,7 @@ namespace Grand.Web.Services
                     #region Prepare product picture
                     //prepare picture model
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                    model.DefaultPictureModel = await _cacheManager.Get(defaultProductPictureCacheKey, async () =>
+                    model.DefaultPictureModel = await _cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
                     {
                         var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
@@ -464,7 +464,7 @@ namespace Grand.Web.Services
                     if (_catalogSettings.SecondPictureOnCatalogPages)
                     {
                         var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                        model.SecondPictureModel = await _cacheManager.Get(secondProductPictureCacheKey, async () =>
+                        model.SecondPictureModel = await _cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
                         {
                             var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
                             if (picture == null)
@@ -511,7 +511,7 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("product");
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
-            return await _cacheManager.Get(cacheKey, async () =>
+            return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var spa = new List<ProductSpecificationModel>();
                 foreach (var item in product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x => x.DisplayOrder))
@@ -558,7 +558,7 @@ namespace Grand.Web.Services
             {
                 string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_REVIEWS_MODEL_KEY, product.Id, _storeContext.CurrentStore.Id);
 
-                productReview = await _cacheManager.Get(cacheKey, async () =>
+                productReview = await _cacheManager.GetAsync(cacheKey, async () =>
                 {
                     return new ProductReviewOverviewModel {
                         RatingSum = await _productService.RatingSumProduct(product.Id, _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : ""),
@@ -587,7 +587,7 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("product");
 
             var templateCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_TEMPLATE_MODEL_KEY, productTemplateId);
-            var productTemplateViewPath = await _cacheManager.Get(templateCacheKey, async () =>
+            var productTemplateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _productTemplateService.GetProductTemplateById(productTemplateId);
                 if (template == null)
@@ -737,7 +737,7 @@ namespace Grand.Web.Services
                     _workContext.WorkingLanguage.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
-                model.Breadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                model.Breadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                 {
                     var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel {
 
@@ -775,7 +775,7 @@ namespace Grand.Web.Services
             if (!isAssociatedProduct)
             {
                 var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-                model.ProductTags = await _cacheManager.Get(productTagsCacheKey, async () =>
+                model.ProductTags = await _cacheManager.GetAsync(productTagsCacheKey, async () =>
                 {
                     List<ProductTagModel> tags = new List<ProductTagModel>();
                     foreach (var item in product.ProductTags)
@@ -807,7 +807,7 @@ namespace Grand.Web.Services
                 _mediaSettings.ProductDetailsPictureSize;
             //prepare picture models
             var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var cachedPictures = await _cacheManager.Get(productPicturesCacheKey, async () =>
+            var cachedPictures = await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
                 var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                 if (defaultPicture == null)
@@ -1098,7 +1098,7 @@ namespace Grand.Web.Services
                             attributeValue.ImageSquaresPictureId,
                             _webHelper.IsCurrentConnectionSecured(),
                             _storeContext.CurrentStore.Id);
-                            valueModel.ImageSquaresPictureModel = await _cacheManager.Get(productAttributeImageSquarePictureCacheKey, async () =>
+                            valueModel.ImageSquaresPictureModel = await _cacheManager.GetAsync(productAttributeImageSquarePictureCacheKey, async () =>
                             {
                                 var imageSquaresPicture = await _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
                                 if (imageSquaresPicture != null)
@@ -1119,7 +1119,7 @@ namespace Grand.Web.Services
                                 attributeValue.PictureId,
                                 _webHelper.IsCurrentConnectionSecured(),
                                 _storeContext.CurrentStore.Id);
-                            valueModel.PictureModel = await _cacheManager.Get(productAttributePictureCacheKey, async () =>
+                            valueModel.PictureModel = await _cacheManager.GetAsync(productAttributePictureCacheKey, async () =>
                             {
                                 var valuePicture = await _pictureService.GetPictureById(attributeValue.PictureId);
                                 if (valuePicture != null)
@@ -1262,7 +1262,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            model.ProductManufacturers = await _cacheManager.Get(manufacturersCacheKey, async () =>
+            model.ProductManufacturers = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
             {
                 var listManuf = new List<ManufacturerModel>();
                 foreach (var item in product.ProductManufacturers)
@@ -1374,7 +1374,7 @@ namespace Grand.Web.Services
                             p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
                             _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
 
-                        bundleProduct.DefaultPictureModel = await _cacheManager.Get(productbundlePicturesCacheKey, async () =>
+                        bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
                         {
                             var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                             if (picture == null)
@@ -1611,7 +1611,7 @@ namespace Grand.Web.Services
                 {
                     var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
                         pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                    var pictureModel = await _cacheManager.Get(productAttributePictureCacheKey, async () =>
+                    var pictureModel = await _cacheManager.GetAsync(productAttributePictureCacheKey, async () =>
                     {
                         var picture = await _pictureService.GetPictureById(pictureId);
                         return picture == null ? new PictureModel() : new PictureModel {
@@ -1694,7 +1694,7 @@ namespace Grand.Web.Services
         {
             //load and cache report
             var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
-            var report = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
+            var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
                 async () => await orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
@@ -1783,7 +1783,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRelated(string productId, int? productThumbPictureSize)
         {
-            var productIds = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                async () =>
                    (await _productService.GetProductById(productId)).RelatedProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );
@@ -1802,7 +1802,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize)
         {
-            var productIds = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_SIMILAR_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_SIMILAR_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                async () =>
                    (await _productService.GetProductById(productId)).SimilarProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );

@@ -147,7 +147,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -165,7 +165,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+                await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -181,7 +181,7 @@ namespace Grand.Services.Configuration
             await _settingRepository.DeleteAsync(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
         }
 
@@ -411,7 +411,7 @@ namespace Grand.Services.Configuration
             }
 
             //and now clear cache
-            ClearCache();
+            await ClearCache();
         }
 
         /// <summary>
@@ -498,9 +498,9 @@ namespace Grand.Services.Configuration
         /// <summary>
         /// Clear cache
         /// </summary>
-        public virtual void ClearCache()
+        public virtual async Task ClearCache()
         {
-            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
         }
 
         #endregion

@@ -286,8 +286,8 @@ namespace Grand.Services.Forums
 
             await _forumGroupRepository.DeleteAsync(forumGroup);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(forumGroup);
@@ -310,7 +310,7 @@ namespace Grand.Services.Forums
         public virtual async Task<IList<ForumGroup>> GetAllForumGroups()
         {
             string key = string.Format(FORUMGROUP_ALL_KEY);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from fg in _forumGroupRepository.Table
                             orderby fg.DisplayOrder
@@ -333,8 +333,8 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.InsertAsync(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(forumGroup);
@@ -354,8 +354,8 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.UpdateAsync(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(forumGroup);
@@ -402,8 +402,8 @@ namespace Grand.Services.Forums
             //delete forum
             await _forumRepository.DeleteAsync(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(forum);
@@ -427,7 +427,7 @@ namespace Grand.Services.Forums
         public virtual async Task<IList<Forum>> GetAllForumsByGroupId(string forumGroupId)
         {
             string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from f in _forumRepository.Table
                             orderby f.DisplayOrder
@@ -450,8 +450,8 @@ namespace Grand.Services.Forums
 
             await _forumRepository.InsertAsync(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(forum);
@@ -470,8 +470,8 @@ namespace Grand.Services.Forums
 
             await _forumRepository.UpdateAsync(forum);
             
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(forum);
@@ -517,8 +517,8 @@ namespace Grand.Services.Forums
             await UpdateForumStats(forumId);
             await UpdateCustomerStats(customerId);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(forumTopic);
@@ -664,8 +664,8 @@ namespace Grand.Services.Forums
             await UpdateForumStats(forumTopic.ForumId);
 
             //cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(forumTopic);
@@ -707,8 +707,8 @@ namespace Grand.Services.Forums
 
             await _forumTopicRepository.UpdateAsync(forumTopic);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(forumTopic);
@@ -790,8 +790,8 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(forumPost);
@@ -887,8 +887,8 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(forumPost);
@@ -936,8 +936,8 @@ namespace Grand.Services.Forums
 
             await _forumPostRepository.UpdateAsync(forumPost);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(forumPost);

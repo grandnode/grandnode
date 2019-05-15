@@ -157,7 +157,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                 await _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 

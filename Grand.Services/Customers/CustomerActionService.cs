@@ -142,7 +142,7 @@ namespace Grand.Services.Customers
             await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
-            _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
+            await _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
             //event notification
             await _eventPublisher.EntityUpdated(customerActionType);
         }

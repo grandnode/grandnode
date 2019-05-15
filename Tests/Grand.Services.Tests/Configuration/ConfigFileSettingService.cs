@@ -97,8 +97,9 @@ namespace Grand.Services.Tests.Configuration
             return settings;
         }
 
-        public override void ClearCache()
+        public override Task ClearCache()
         {
+            return Task.CompletedTask;
         }
     }
 }

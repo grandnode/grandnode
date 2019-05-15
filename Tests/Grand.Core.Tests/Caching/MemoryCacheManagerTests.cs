@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Caching.Tests
 {
@@ -29,13 +30,13 @@ namespace Grand.Core.Caching.Tests
         }
 
         [TestMethod()]
-        public void Removing_one_item_of_Cache()
+        public async Task Removing_one_item_of_Cache()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            memoryCacheManager.Set("exampleKey15", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey15", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey15"));
-            memoryCacheManager.Remove("exampleKey15");
+            await memoryCacheManager.Remove("exampleKey15");
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey15"));
         }
 
@@ -56,17 +57,17 @@ namespace Grand.Core.Caching.Tests
         }
 
         [TestMethod()]
-        public void RemoveByPatternTest()
+        public async Task RemoveByPatternTest()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            memoryCacheManager.Set("exampleKey025", 5, int.MaxValue);
-            memoryCacheManager.Set("exampleKey026", 5, int.MaxValue);
-            memoryCacheManager.Set("exampleKey027", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey025", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey026", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey027", 5, int.MaxValue);
 
-            memoryCacheManager.Set("exampleKey127", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey127", 5, int.MaxValue);
 
             string pattern = @"exampleKey0\d\d";
-            memoryCacheManager.RemoveByPattern(pattern);
+            await memoryCacheManager.RemoveByPattern(pattern);
 
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey025"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey026"));

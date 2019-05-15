@@ -32,20 +32,17 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         }
 
         //tax rates
-        public Task HandleEvent(EntityInserted<TaxRate> eventMessage)
+        public async Task HandleEvent(EntityInserted<TaxRate> eventMessage)
         {
-            _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<TaxRate> eventMessage)
+        public async Task HandleEvent(EntityUpdated<TaxRate> eventMessage)
         {
-            _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<TaxRate> eventMessage)
+        public async Task HandleEvent(EntityDeleted<TaxRate> eventMessage)
         {
-            _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
     }
 }

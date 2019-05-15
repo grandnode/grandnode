@@ -38,7 +38,7 @@ namespace Grand.Web.Services
                 { "additionalData", additionalData}
             };
 
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 //model
                 var model = new List<RenderWidgetModel>();

@@ -108,7 +108,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.DeleteAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(currency);
@@ -122,7 +122,7 @@ namespace Grand.Services.Directory
         public virtual Task<Currency> GetCurrencyById(string currencyId)
         {
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            return _cacheManager.Get(key, () => _currencyRepository.GetByIdAsync(currencyId));
+            return _cacheManager.GetAsync(key, () => _currencyRepository.GetByIdAsync(currencyId));
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<Currency>> GetAllCurrencies(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
-            var currencies = await _cacheManager.Get(key, () =>
+            var currencies = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _currencyRepository.Table;
 
@@ -200,7 +200,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.InsertAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(currency);
@@ -217,7 +217,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.UpdateAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(currency);

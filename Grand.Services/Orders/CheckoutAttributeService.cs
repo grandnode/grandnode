@@ -112,8 +112,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.DeleteAsync(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(checkoutAttribute);
@@ -128,7 +128,7 @@ namespace Grand.Services.Orders
         public virtual async Task<IList<CheckoutAttribute>> GetAllCheckoutAttributes(string storeId = "", bool excludeShippableAttributes = false, bool ignorAcl = false)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes, ignorAcl);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _checkoutAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
@@ -164,7 +164,7 @@ namespace Grand.Services.Orders
         public virtual Task<CheckoutAttribute> GetCheckoutAttributeById(string checkoutAttributeId)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
-            return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId));
+            return _cacheManager.GetAsync(key, () => _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId));
         }
 
         /// <summary>
@@ -178,8 +178,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.InsertAsync(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(checkoutAttribute);
@@ -196,8 +196,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.UpdateAsync(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(checkoutAttribute);

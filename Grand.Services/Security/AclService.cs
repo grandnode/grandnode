@@ -82,7 +82,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.DeleteAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(aclRecord);
@@ -111,7 +111,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.InsertAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(aclRecord);
@@ -129,7 +129,7 @@ namespace Grand.Services.Security
             await _aclRecordRepository.UpdateAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(aclRecord);

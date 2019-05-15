@@ -84,7 +84,7 @@ namespace Grand.Services.Stores
             await _storeRepository.DeleteAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
             await _eventPublisher.EntityDeleted(store);
@@ -99,7 +99,7 @@ namespace Grand.Services.Stores
             if (_allStores == null)
             {
                 string key = STORES_ALL_KEY;
-                _allStores = await _cacheManager.Get(key, () =>
+                _allStores = await _cacheManager.GetAsync(key, () =>
                 {
                     return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
                 });
@@ -115,7 +115,7 @@ namespace Grand.Services.Stores
         public virtual Task<Store> GetStoreById(string storeId)
         {
             string key = string.Format(STORES_BY_ID_KEY, storeId);
-            return _cacheManager.Get(key, () => _storeRepository.GetByIdAsync(storeId));
+            return _cacheManager.GetAsync(key, () => _storeRepository.GetByIdAsync(storeId));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Grand.Services.Stores
             await _storeRepository.InsertAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
             await _eventPublisher.EntityInserted(store);
@@ -148,7 +148,7 @@ namespace Grand.Services.Stores
             await _storeRepository.UpdateAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
             await _eventPublisher.EntityUpdated(store);

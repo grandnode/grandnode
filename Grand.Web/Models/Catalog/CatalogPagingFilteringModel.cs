@@ -297,7 +297,7 @@ namespace Grand.Web.Models.Catalog
                     ? string.Join(",", filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds)) : string.Empty;
                 var cacheKey = string.Format(ModelCacheEventConsumer.SPECS_FILTER_MODEL_KEY, optionIds, workContext.WorkingLanguage.Id);
 
-                var allFilters = await cacheManager.Get(cacheKey, async () =>
+                var allFilters = await cacheManager.GetAsync(cacheKey, async () =>
                 {
                     var _allFilters = new List<SpecificationAttributeOptionFilter>();
                     foreach (var sao in filterableSpecificationAttributeOptionIds.Union(alreadyFilteredSpecOptionIds))

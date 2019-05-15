@@ -119,7 +119,7 @@ namespace Grand.Services.Common
                 return null;
 
             string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
-            return await _cacheManager.Get(key, () => _addressRepository.GetByIdAsync(addressId));
+            return await _cacheManager.GetAsync(key, () => _addressRepository.GetByIdAsync(addressId));
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Grand.Services.Common
             await _addressRepository.InsertAsync(address);
 
             //cache
-            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(address);
@@ -153,7 +153,7 @@ namespace Grand.Services.Common
             await _addressRepository.UpdateAsync(address);
 
             //cache
-            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(address);

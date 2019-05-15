@@ -34,15 +34,13 @@ namespace Grand.Services.Discounts.Cache
         }
 
         //discounts
-        public Task HandleEvent(EntityUpdated<Discount> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Discount> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
     }

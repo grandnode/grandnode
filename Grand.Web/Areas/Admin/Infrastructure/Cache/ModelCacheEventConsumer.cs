@@ -71,71 +71,59 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Cache
         }
 
         //specification attributes
-        public Task HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
+        public async Task HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
         {
-            _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public async Task HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
-            _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public async Task HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
         {
-            _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
 
         //categories
-        public Task HandleEvent(EntityInserted<Category> eventMessage)
+        public async Task HandleEvent(EntityInserted<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Category> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Category> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
 
         //manufacturers
-        public Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
 
         //vendors
-        public Task HandleEvent(EntityInserted<Vendor> eventMessage)
+        public async Task HandleEvent(EntityInserted<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
     }
 }

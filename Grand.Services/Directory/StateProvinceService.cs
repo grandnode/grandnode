@@ -70,7 +70,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.DeleteAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(stateProvince);
@@ -99,7 +99,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryId(string countryId, string languageId = "", bool showHidden = false)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
@@ -145,7 +145,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.InsertAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(stateProvince);
@@ -162,7 +162,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.UpdateAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(stateProvince);

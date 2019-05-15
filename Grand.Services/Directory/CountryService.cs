@@ -85,7 +85,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.DeleteAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(country);
@@ -101,7 +101,7 @@ namespace Grand.Services.Directory
         {
             string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
 
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var builder = Builders<Country>.Filter;
                 var filter = builder.Empty;
@@ -220,7 +220,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.InsertAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(country);
@@ -237,7 +237,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.UpdateAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(country);

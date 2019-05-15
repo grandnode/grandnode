@@ -691,7 +691,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-                _cacheManager.Clear();
+                await _cacheManager.Clear();
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;

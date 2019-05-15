@@ -88,7 +88,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             await _settingService.SaveSetting(_facebookExternalAuthSettings);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 

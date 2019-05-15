@@ -91,8 +91,8 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.DeleteAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(taxCategory);
@@ -105,7 +105,7 @@ namespace Grand.Services.Tax
         public virtual async Task<IList<TaxCategory>> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
                             orderby tc.DisplayOrder
@@ -122,7 +122,7 @@ namespace Grand.Services.Tax
         public virtual Task<TaxCategory> GetTaxCategoryById(string taxCategoryId)
         {
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
+            return _cacheManager.GetAsync(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.InsertAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(taxCategory);
@@ -153,7 +153,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.UpdateAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(taxCategory);

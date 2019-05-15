@@ -307,7 +307,7 @@ namespace Grand.Web.Services
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(cacheKey, async () =>
+            return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var categoriesIds = new List<string>();
                 var categories = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
@@ -327,7 +327,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(""));
+            return await _cacheManager.GetAsync(cacheKey, () => PrepareCategorySimpleModels(""));
         }
 
         public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(string rootCategoryId,
@@ -361,7 +361,7 @@ namespace Grand.Web.Services
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id,
                         category.Id);
-                    categoryModel.NumberOfProducts = await _cacheManager.Get(cacheKey, async () =>
+                    categoryModel.NumberOfProducts = await _cacheManager.GetAsync(cacheKey, async () =>
                      {
                          var categoryIds = new List<string>();
                          categoryIds.Add(category.Id);
@@ -412,7 +412,7 @@ namespace Grand.Web.Services
         public virtual async Task<string> PrepareCategoryTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
-            var templateViewPath = await _cacheManager.Get(templateCacheKey, async () =>
+            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _categoryTemplateService.GetCategoryTemplateById(templateId);
                 if (template == null)
@@ -468,7 +468,7 @@ namespace Grand.Web.Services
                     string.Join(",", customer.GetCustomerRoleIds()),
                     storeId,
                     languageId);
-                model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                     (await category
                     .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                     .Select(catBr => new CategoryModel
@@ -488,7 +488,7 @@ namespace Grand.Web.Services
                 storeId,
                 languageId,
                 connectionSecured);
-            model.SubCategories = await _cacheManager.Get(subCategoriesCacheKey, async () =>
+            model.SubCategories = await _cacheManager.GetAsync(subCategoriesCacheKey, async () =>
             {
                 var subCategories = new List<CategoryModel.SubCategoryModel>();
                 foreach (var x in (await _categoryService.GetAllCategoriesByParentCategoryId(category.Id)).Where(x => !x.HideOnCatalog))
@@ -537,7 +537,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -597,7 +597,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
 
-            var model = await _cacheManager.Get(categoriesCacheKey, async () =>
+            var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
             {
                 var cat = new List<CategoryModel>();
                 foreach (var x in (await _categoryService.GetAllCategoriesDisplayedOnHomePage()))
@@ -627,7 +627,7 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
 
-            var model = await _cacheManager.Get(categoriesCacheKey, async () =>
+            var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
             {
                 var catlistmodel = new List<CategoryModel>();
                 foreach (var x in await _categoryService.GetAllCategoriesFeaturedProductsOnHomePage())
@@ -667,7 +667,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -703,7 +703,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = await _cacheManager.Get(topicCacheKey, async () =>
+            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
                 (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => t.IncludeInTopMenu)
                 .Select(t => new TopMenuModel.TopMenuTopicModel
@@ -718,7 +718,7 @@ namespace Grand.Web.Services
             string manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
-            var cachedManufacturerModel = await _cacheManager.Get(manufacturerCacheKey, async () =>
+            var cachedManufacturerModel = await _cacheManager.GetAsync(manufacturerCacheKey, async () =>
                     (await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id))
                     .Where(x => x.IncludeInTopMenu)
                     .Select(t => new TopMenuModel.TopMenuManufacturerModel
@@ -765,7 +765,7 @@ namespace Grand.Web.Services
         public virtual async Task<string> PrepareManufacturerTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
-            var templateViewPath = await _cacheManager.Get(templateCacheKey, async () => 
+            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () => 
             {
                 var template = await _manufacturerTemplateService.GetManufacturerTemplateById(templateId);
                 if (template == null)
@@ -806,9 +806,9 @@ namespace Grand.Web.Services
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id);
 
-            List<ManufacturerModel> model = await _cacheManager.Get(manufacturersCacheKey, async () =>
+            List<ManufacturerModel> model = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
             {
-                List<ManufacturerModel> modelManuf = new List<ManufacturerModel>();
+                var modelManuf = new List<ManufacturerModel>();
                 var manuf = await _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
                 foreach (var x in manuf.Where(x => x.ShowOnHomePage))
                 {
@@ -836,7 +836,7 @@ namespace Grand.Web.Services
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY,
                 currentManufacturerId, languageId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var currentManufacturer = await _manufacturerService.GetManufacturerById(currentManufacturerId);
                 var manufacturers = await _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay, storeId: _storeContext.CurrentStore.Id);
@@ -867,7 +867,7 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
 
-            var model = await _cacheManager.Get(manufCacheKey, async () =>
+            var model = await _cacheManager.GetAsync(manufCacheKey, async () =>
             {
                 var manufList = new List<ManufacturerModel>();
                 var manufmodel = await _manufacturerService.GetAllManufacturerFeaturedProductsOnHomePage();
@@ -910,7 +910,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -984,7 +984,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -1047,7 +1047,7 @@ namespace Grand.Web.Services
             //prepare picture model
             int pictureSize = _mediaSettings.VendorThumbPictureSize;
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            model.PictureModel = await _cacheManager.Get(pictureCacheKey, async () =>
+            model.PictureModel = await _cacheManager.GetAsync(pictureCacheKey, async () =>
             {
                 var picture = await _pictureService.GetPictureById(vendor.PictureId);
                 var pictureModel = new PictureModel
@@ -1112,7 +1112,7 @@ namespace Grand.Web.Services
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                vendorModel.PictureModel = await _cacheManager.Get(pictureCacheKey, async () =>
+                vendorModel.PictureModel = await _cacheManager.GetAsync(pictureCacheKey, async () =>
                 {
                     var picture = await _pictureService.GetPictureById(vendor.PictureId);
                     var pictureModel = new PictureModel
@@ -1132,7 +1132,7 @@ namespace Grand.Web.Services
         public virtual async Task<VendorNavigationModel> PrepareVendorNavigation()
         {
             string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var vendors = await _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
                 var model = new VendorNavigationModel
@@ -1197,7 +1197,7 @@ namespace Grand.Web.Services
         {
             var languageId = _workContext.WorkingLanguage.Id;
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, languageId, _storeContext.CurrentStore.Id);
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new PopularProductTagsModel();
 
@@ -1414,7 +1414,7 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
 
-            return await _cacheManager.Get(cacheKey, async () =>
+            return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var searchbocategories = await _categoryService.GetAllCategoriesSearchBox();
                 searchbocategories = searchbocategories
@@ -1473,7 +1473,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var categories = await _cacheManager.Get(cacheKey, async () =>
+            var categories = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories

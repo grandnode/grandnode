@@ -17,7 +17,7 @@ namespace Grand.Services.Tasks
             var cacheManagers = EngineContext.Current.ResolveAll<ICacheManager>();
             foreach (var cacheManager in cacheManagers)
             {
-                cacheManager.Clear();
+                await cacheManager.Clear();
             }
             await Task.CompletedTask;
         }

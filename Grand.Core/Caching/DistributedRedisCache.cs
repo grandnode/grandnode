@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Caching
 {
@@ -70,17 +71,17 @@ namespace Grand.Core.Caching
             return (item, true);
         }
 
-        public virtual void Remove(string key)
+        public virtual async Task Remove(string key)
         {
-            _distributedCache.Remove(key);
+            await _distributedCache.RemoveAsync(key);
         }
 
-        public virtual void RemoveByPattern(string pattern)
+        public virtual async Task RemoveByPattern(string pattern)
         {
-            _distributedRedisCacheExtended.RemoveByPatternAsync(pattern);
+            await _distributedRedisCacheExtended.RemoveByPatternAsync(pattern);
         }
 
-        public virtual void Set(string key, object data, int cacheTime)
+        public virtual async Task Set(string key, object data, int cacheTime)
         {
             if (data == null)
                 return;
@@ -89,7 +90,7 @@ namespace Grand.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            _distributedCache.SetString(key, serializedItem, GetDistributedCacheEntryOptions(cacheTime));
+            await _distributedCache.SetStringAsync(key, serializedItem, GetDistributedCacheEntryOptions(cacheTime));
         }
 
         public bool IsSet(string key)
@@ -97,9 +98,9 @@ namespace Grand.Core.Caching
             return _distributedCache.Get(key)?.Length > 0;
         }
 
-        public virtual void Clear()
+        public virtual async Task Clear()
         {
-            _distributedRedisCacheExtended.ClearAsync();
+            await _distributedRedisCacheExtended.ClearAsync();
         }
 
 
