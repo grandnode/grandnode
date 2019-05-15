@@ -219,4 +219,7 @@
   <LocaleResource Name="admin.catalog.products.similarproducts.savebeforeedit">
     <Value>You need to save the product before you can add similar products for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.PreventDeleted">
+    <Value>You can't remove gift card because was used in the order.</Value>
+  </LocaleResource>
 </Language>

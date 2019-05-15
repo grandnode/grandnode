@@ -164,6 +164,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (giftCard == null)
                 //No gift card found with the specified id
                 return RedirectToAction("List");
+
+            if (giftCard.GiftCardUsageHistory.Any())
+                ModelState.AddModelError("", _localizationService.GetResource("Admin.GiftCards.PreventDeleted"));
+
             if (ModelState.IsValid)
             {
                 await _giftCardViewModelService.DeleteGiftCard(giftCard);
