@@ -407,7 +407,7 @@ namespace Grand.Services.Orders
 
             var builder = Builders<Order>.Filter;
 
-            var filter = builder.Where(x => true);
+            var filter = builder.Where(x => !x.Deleted);
 
             if (!String.IsNullOrEmpty(orderId))
                 filter = filter & builder.Where(o => o.Id == orderId);
