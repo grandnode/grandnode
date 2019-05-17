@@ -1500,7 +1500,7 @@ namespace Grand.Services.Catalog
                 foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
                 {
                     var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
-                    if (qty - selectQty <= 0)
+                    if (qty - selectQty < 0)
                         break;
 
                     item.ReservedQuantity += selectQty;
@@ -1563,7 +1563,7 @@ namespace Grand.Services.Catalog
             foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
             {
                 var selectQty = Math.Min(item.ReservedQuantity, qty);
-                if (qty - selectQty <= 0)
+                if (qty - selectQty < 0)
                     break;
 
                 item.ReservedQuantity -= selectQty;
@@ -1576,6 +1576,7 @@ namespace Grand.Services.Catalog
             {
                 var pwi = productInventory[0];
                 pwi.StockQuantity += qty;
+               
             }
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
@@ -1617,7 +1618,7 @@ namespace Grand.Services.Catalog
             foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
             {
                 var selectQty = Math.Min(item.ReservedQuantity, qty);
-                if (qty - selectQty <= 0)
+                if (qty - selectQty < 0)
                     break;
 
                 item.ReservedQuantity -= selectQty;
