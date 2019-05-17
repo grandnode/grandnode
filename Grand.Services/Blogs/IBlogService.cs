@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Blogs;
+using Grand.Core.Domain.Seo;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Grand.Services.Blogs
         /// Deletes a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        Task DeleteBlogPost(BlogPost blogPost);
+        Task DeleteBlogPost(BlogPost blogPost, UrlRecord urlRecord);
 
         /// <summary>
         /// Gets a blog post

@@ -29,19 +29,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
         #region Constructors
 
         public BlogController(IBlogService blogService, IBlogViewModelService blogViewModelService, ILanguageService languageService, ILocalizationService localizationService,
-            IStoreService storeService)
+            IStoreService storeService, IUrlRecordService urlRecordService)
         {
             this._blogService = blogService;
             this._blogViewModelService = blogViewModelService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._storeService = storeService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -162,9 +164,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
+            var urlRecord = await _urlRecordService.GetBySlug(blogPost.SeName);
+            if (urlRecord == null)
+            {
+                //No url record found with the SeName
+                return RedirectToAction("List");
+            }
+
             if (ModelState.IsValid)
             {
-                await _blogService.DeleteBlogPost(blogPost);
+                urlRecord.IsActive = false;
+                await _blogService.DeleteBlogPost(blogPost, urlRecord);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
                 return RedirectToAction("List");

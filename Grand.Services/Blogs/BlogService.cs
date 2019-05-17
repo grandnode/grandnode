@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Seo;
 using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -23,6 +24,7 @@ namespace Grand.Services.Blogs
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogCategory> _blogCategoryRepository;
         private readonly IRepository<BlogProduct> _blogProductRepository;
+        private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -34,6 +36,7 @@ namespace Grand.Services.Blogs
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogCategory> blogCategoryRepository,
             IRepository<BlogProduct> blogProductRepository,
+            IRepository<UrlRecord> urlRecordRepository,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
@@ -41,6 +44,7 @@ namespace Grand.Services.Blogs
             this._blogCommentRepository = blogCommentRepository;
             this._blogCategoryRepository = blogCategoryRepository;
             this._blogProductRepository = blogProductRepository;
+            this._urlRecordRepository = urlRecordRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -53,12 +57,14 @@ namespace Grand.Services.Blogs
         /// Deletes a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public virtual async Task DeleteBlogPost(BlogPost blogPost)
+        public virtual async Task DeleteBlogPost(BlogPost blogPost, UrlRecord urlRecord)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
 
             await _blogPostRepository.DeleteAsync(blogPost);
+
+            await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //event notification
             await _eventPublisher.EntityDeleted(blogPost);
