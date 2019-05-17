@@ -1257,14 +1257,7 @@ namespace Grand.Services.Orders
                                     warehouseId = product.WarehouseId;
                                 }
                             }
-                            else
-                            {
-                                if (string.IsNullOrEmpty(warehouseId))
-                                {
-                                    if (product.ProductWarehouseInventory.Any())
-                                        warehouseId = product.ProductWarehouseInventory.FirstOrDefault().WarehouseId;
-                                }
-                            }
+
                             //save order item
                             var orderItem = new OrderItem {
                                 OrderItemGuid = Guid.NewGuid(),
