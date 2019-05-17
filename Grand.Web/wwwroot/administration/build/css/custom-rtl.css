@@ -97,7 +97,10 @@ IF you want all numbers in persian use this
   font-weight: "normal";
   font-style: "normal";
 }
-
+/*Grid Header Fix*/
+.k-grid .k-grid-header .k-header {
+    text-align: right;
+}
 .body {
   background-color: #2A3F54;
   direction: rtl;
