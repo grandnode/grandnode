@@ -1073,6 +1073,8 @@ namespace Grand.Services.ExportImport
                 sb.Append(subscription.CreatedOnUtc);
                 sb.Append(separator);
                 sb.Append(subscription.StoreId);
+                sb.Append(separator);
+                sb.Append(string.Join(';', subscription.Categories));
                 sb.Append(Environment.NewLine);  //new line
             }
             return sb.ToString();
