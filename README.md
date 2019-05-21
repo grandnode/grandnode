@@ -41,6 +41,8 @@ Active development version: 4.50 (branch [develop](https://github.com/grandnode/
 
 ## How to contribute code ##
 
+:star: Star us on GitHub - it's the first step to become a GrandNode supporter!
+
 GrandNode is an open source online shopping solution, each developer is welcome and encouraged to contribute with their own improvements and enhancements. 
 
 GrandNode is mostly written in ASP.NET. Other languages used in the project are HTML, CSS, JavaScript, MongoDB. 
