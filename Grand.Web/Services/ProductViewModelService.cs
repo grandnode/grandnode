@@ -926,11 +926,13 @@ namespace Grand.Web.Services
                         if (product.ProductType == ProductType.Auction)
                         {
                             model.ProductPrice.IsAuction = true;
-                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(product.HighestBid);
-                            model.ProductPrice.HighestBidValue = product.HighestBid;
+                            decimal highestBid = await _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, _workContext.WorkingCurrency);
+                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(highestBid);
+                            model.ProductPrice.HighestBidValue = highestBid;
                             model.ProductPrice.DisableBuyButton = product.DisableBuyButton;
-                            model.ProductPrice.StartPriceValue = product.StartPrice;
-                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(product.StartPrice);
+                            decimal startPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, _workContext.WorkingCurrency);
+                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(startPrice);
+                            model.ProductPrice.StartPriceValue = startPrice;
                         }
                     }
                 }
