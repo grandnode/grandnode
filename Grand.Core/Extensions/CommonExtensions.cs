@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Extensions
 {
@@ -19,11 +20,11 @@ namespace Grand.Core.Extensions
             return o == null ? failureValue : evaluator(o);
         }
 
-        public static void RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
+        public static async Task RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (var key in keys.Where(p => regex.IsMatch(p)))
-                obj.Remove(key);
+                await obj.Remove(key);
         }       
 
     }

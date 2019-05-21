@@ -113,194 +113,144 @@ namespace Grand.Services.Catalog.Cache
 
         public PriceCacheEventConsumer(IServiceProvider serviceProvider)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
+            _cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //settings
-        public Task HandleEvent(EntityUpdated<Setting> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Setting> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
 
         //categories
-        public Task HandleEvent(EntityInserted<Category> eventMessage)
+        public async Task HandleEvent(EntityInserted<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Category> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Category> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Category> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
 
         //manufacturers
-        public Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
 
         //discounts
-        public Task HandleEvent(EntityInserted<Discount> eventMessage)
+        public async Task HandleEvent(EntityInserted<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Discount> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Discount> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Discount> eventMessage)
         {
-            _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(DISCOUNT_CATEGORY_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
         }
 
         //product categories
-        public Task HandleEvent(EntityInserted<ProductCategory> eventMessage)
+        public async Task HandleEvent(EntityInserted<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<ProductCategory> eventMessage)
+        public async Task HandleEvent(EntityUpdated<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<ProductCategory> eventMessage)
+        public async Task HandleEvent(EntityDeleted<ProductCategory> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_CATEGORY_IDS_PATTERN_KEY);
         }
 
         //product manufacturers
-        public Task HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
+        public async Task HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
+        public async Task HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
+        public async Task HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(DISCOUNT_PRODUCT_MANUFACTURER_IDS_PATTERN_KEY);
         }
 
         //products
-        public Task HandleEvent(EntityInserted<Product> eventMessage)
+        public async Task HandleEvent(EntityInserted<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Product> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Product> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Product> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
 
         //tier prices
-        public Task HandleEvent(EntityInserted<TierPrice> eventMessage)
+        public async Task HandleEvent(EntityInserted<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<TierPrice> eventMessage)
+        public async Task HandleEvent(EntityUpdated<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<TierPrice> eventMessage)
+        public async Task HandleEvent(EntityDeleted<TierPrice> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
 
         //orders
-        public Task HandleEvent(EntityInserted<Order> eventMessage)
+        public async Task HandleEvent(EntityInserted<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityUpdated<Order> eventMessage)
+        public async Task HandleEvent(EntityUpdated<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
-        public Task HandleEvent(EntityDeleted<Order> eventMessage)
+        public async Task HandleEvent(EntityDeleted<Order> eventMessage)
         {
-            _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
-            return Task.CompletedTask;
-
+            await _cacheManager.RemoveByPattern(PRODUCT_PRICE_PATTERN_KEY);
         }
     }
 }

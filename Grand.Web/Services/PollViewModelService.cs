@@ -62,7 +62,7 @@ namespace Grand.Web.Services
         public virtual async Task<PollModel> PreparePollBySystemName(string systemKeyword)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 Poll poll = await _pollService.GetPollBySystemKeyword(systemKeyword, _storeContext.CurrentStore.Id);
                 //ACL (access control list)
@@ -90,7 +90,7 @@ namespace Grand.Web.Services
         public virtual async Task<List<PollModel>> PrepareHomePagePoll()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var pollModels = new List<PollModel>();
                 var polls = await _pollService.GetPolls(_storeContext.CurrentStore.Id, true);

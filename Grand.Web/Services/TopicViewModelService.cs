@@ -72,7 +72,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
                 {
                     var topic = await _topicService.GetTopicById(topicId);
                     if (topic == null)
@@ -99,7 +99,7 @@ namespace Grand.Web.Services
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
 
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 //load by store
                 var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
@@ -118,7 +118,7 @@ namespace Grand.Web.Services
                 systemName,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cacheModel = await _cacheManager.Get(cacheKey, async () =>
+            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 //load by store
                 var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
@@ -138,7 +138,7 @@ namespace Grand.Web.Services
         public virtual async Task<string> PrepareTopicTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, templateId);
-            var templateViewPath = await _cacheManager.Get(templateCacheKey, async () =>
+            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _topicTemplateService.GetTopicTemplateById(templateId);
                 if (template == null)

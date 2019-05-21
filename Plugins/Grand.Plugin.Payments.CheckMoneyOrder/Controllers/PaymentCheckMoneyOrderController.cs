@@ -106,7 +106,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
                 await _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 

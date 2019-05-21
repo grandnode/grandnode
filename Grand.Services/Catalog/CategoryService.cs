@@ -170,8 +170,8 @@ namespace Grand.Services.Catalog
 
             await _categoryRepository.DeleteAsync(category);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(category);
@@ -237,7 +237,7 @@ namespace Grand.Services.Catalog
             var storeId = _storeContext.CurrentStore.Id;
             var customer = _workContext.CurrentCustomer;
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, customer.Id, storeId, includeAllLevels);
-            return await _cacheManager.Get(key, async () => 
+            return await _cacheManager.GetAsync(key, async () => 
             {
                 var builder = Builders<Category>.Filter;
                 var filter = builder.Where(c => c.ParentCategoryId == parentCategoryId);
@@ -357,7 +357,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<Category> GetCategoryById(string categoryId)
         {
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            return await _cacheManager.Get(key, () => _categoryRepository.GetByIdAsync(categoryId));
+            return await _cacheManager.GetAsync(key, () => _categoryRepository.GetByIdAsync(categoryId));
         }
 
         /// <summary>
@@ -372,9 +372,9 @@ namespace Grand.Services.Catalog
             await _categoryRepository.InsertAsync(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(category);
@@ -406,9 +406,9 @@ namespace Grand.Services.Catalog
             await _categoryRepository.UpdateAsync(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(category);
@@ -428,9 +428,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
             await _eventPublisher.EntityDeleted(productCategory);
@@ -452,7 +452,7 @@ namespace Grand.Services.Catalog
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _productRepository.Table.Where(x => x.ProductCategories.Any(y => y.CategoryId == categoryId));
 
@@ -513,9 +513,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
             await _eventPublisher.EntityInserted(productCategory);
@@ -541,9 +541,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
             await _eventPublisher.EntityUpdated(productCategory);

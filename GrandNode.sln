@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Tests", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.ExternalAuth.Google", "Plugins\Grand.Plugin.ExternalAuth.Google\Grand.Plugin.ExternalAuth.Google.csproj", "{B531A73A-A00D-49DC-8265-D3CAC8160C49}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.BrainTree", "Plugins\Grand.Plugin.Payments.BrainTree\Grand.Plugin.Payments.BrainTree.csproj", "{EC08558B-8993-49DC-8DB7-F96369740732}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,10 @@ Global
 		{B531A73A-A00D-49DC-8265-D3CAC8160C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B531A73A-A00D-49DC-8265-D3CAC8160C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B531A73A-A00D-49DC-8265-D3CAC8160C49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC08558B-8993-49DC-8DB7-F96369740732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC08558B-8993-49DC-8DB7-F96369740732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC08558B-8993-49DC-8DB7-F96369740732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC08558B-8993-49DC-8DB7-F96369740732}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,6 +215,7 @@ Global
 		{66673B1E-AA53-43DC-9905-90DC30EABE96} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{6DB6C66B-EC0F-43C0-8CC5-24804C872F6A} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{B531A73A-A00D-49DC-8265-D3CAC8160C49} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{EC08558B-8993-49DC-8DB7-F96369740732} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65BA1180-F5CC-42E1-B689-71E14D588393}

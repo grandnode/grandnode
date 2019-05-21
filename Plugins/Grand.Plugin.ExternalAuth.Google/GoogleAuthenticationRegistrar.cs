@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
-using System;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
 {
@@ -23,7 +27,24 @@ namespace Grand.Plugin.ExternalAuth.Google.Infrastructure
                 var settings = EngineContext.Current.Resolve<GoogleExternalAuthSettings>();
                 options.ClientId = !string.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
                 options.ClientSecret = !string.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "000";
-                options.SaveTokens = true;                
+                options.SaveTokens = true;
+
+                //handles exception thrown by external auth provider
+                options.Events = new OAuthEvents() {
+                    OnRemoteFailure = ctx =>
+                    {
+                        ctx.HandleResponse();
+                        var errorMessage = ctx.Failure.Message;
+                        var state = ctx.Request.Query["state"].FirstOrDefault();
+
+                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        errorMessage = WebUtility.UrlEncode(errorMessage);
+
+                        ctx.Response.Redirect($"/google-signin-failed?error_message={errorMessage}");
+
+                        return Task.FromResult(0);
+                    }
+                };
             });
 
         }

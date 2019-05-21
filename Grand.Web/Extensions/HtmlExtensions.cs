@@ -236,7 +236,7 @@ namespace Grand.Web.Extensions
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
-            var cachedSeName = await cacheManager.Get(cacheKey, async () =>
+            var cachedSeName = await cacheManager.GetAsync(cacheKey, async () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();
                 var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);

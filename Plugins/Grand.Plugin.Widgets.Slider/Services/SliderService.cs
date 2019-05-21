@@ -52,7 +52,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }
@@ -73,7 +73,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
         public virtual async Task<IList<PictureSlider>> GetPictureSliders(SliderType sliderType, string objectEntry = "")
         {
             string cacheKey = string.Format(SLIDERS_MODEL_KEY, _storeContext.CurrentStore.Id, sliderType.ToString(), objectEntry);
-            return await _cacheManager.Get(cacheKey, async () =>
+            return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var query = from s in _reporistoryPictureSlider.Table
                             where s.SliderTypeId == (int)sliderType && s.Published
@@ -108,7 +108,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.InsertAsync(slide);
         }
@@ -123,7 +123,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.UpdateAsync(slide);
         }
@@ -138,7 +138,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }

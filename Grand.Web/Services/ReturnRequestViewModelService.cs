@@ -86,7 +86,7 @@ namespace Grand.Web.Services
             model.OrderId = order.Id;
             model.OrderNumber = (await _orderService.GetOrderById(order.Id)).OrderNumber;
             //return reasons
-            model.AvailableReturnReasons = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnReasons = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
@@ -100,7 +100,7 @@ namespace Grand.Web.Services
                 });
 
             //return actions
-            model.AvailableReturnActions = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnActions = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
@@ -160,42 +160,43 @@ namespace Grand.Web.Services
                     }
                 }
             }
-
-            //existing addresses
-            var addresses = new List<Address>();
-            foreach (var item in _workContext.CurrentCustomer.Addresses)
+            if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
             {
-                if (string.IsNullOrEmpty(item.CountryId))
+                //existing addresses
+                var addresses = new List<Address>();
+                foreach (var item in _workContext.CurrentCustomer.Addresses)
                 {
-                    addresses.Add(item);
-                    continue;
+                    if (string.IsNullOrEmpty(item.CountryId))
+                    {
+                        addresses.Add(item);
+                        continue;
+                    }
+                    var country = await _countryService.GetCountryById(item.CountryId);
+                    if (country == null || (country.AllowsShipping && _storeMappingService.Authorize(country)))
+                    {
+                        addresses.Add(item);
+                        continue;
+                    }
                 }
-                var country = await _countryService.GetCountryById(item.CountryId);
-                if (country == null || (country.AllowsShipping && _storeMappingService.Authorize(country)))
+
+                foreach (var address in addresses)
                 {
-                    addresses.Add(item);
-                    continue;
+                    var addressModel = new AddressModel();
+                    await _addressViewModelService.PrepareModel(model: addressModel,
+                        address: address,
+                        excludeProperties: false);
+                    model.ExistingAddresses.Add(addressModel);
                 }
+
+                //new address
+                var countries = await _countryService.GetAllCountriesForShipping();
+                await _addressViewModelService.PrepareModel(model: model.NewAddress,
+                    address: null,
+                    excludeProperties: false,
+                    loadCountries: () => countries,
+                    prePopulateWithCustomerFields: true,
+                    customer: _workContext.CurrentCustomer);
             }
-
-            foreach (var address in addresses)
-            {
-                var addressModel = new AddressModel();
-                await _addressViewModelService.PrepareModel(model: addressModel,
-                    address: address,
-                    excludeProperties: false);
-                model.ExistingAddresses.Add(addressModel);
-            }
-
-            //new address
-            var countries = await _countryService.GetAllCountriesForShipping();
-            await _addressViewModelService.PrepareModel(model: model.NewAddress,
-                address: null,
-                excludeProperties: false,
-                loadCountries: () => countries,
-                prePopulateWithCustomerFields: true,
-                customer: _workContext.CurrentCustomer);
-
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
             model.PickupDateRequired = _orderSettings.ReturnRequests_PickupDateRequired;

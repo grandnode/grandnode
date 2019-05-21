@@ -7,62 +7,67 @@
     <ol class="carousel-indicators">
         @foreach (var item in Model.Slide)
         {
-        if (!string.IsNullOrEmpty(item.PictureUrl))
-        {
-        <li data-target="#GrandCarousel" data-slide-to="" class="active"></li>
-        }
+            if (!string.IsNullOrEmpty(item.PictureUrl))
+            {
+                <li data-target="#GrandCarousel" data-slide-to="" class="active"></li>
+            }
         }
     </ol>
     <div class="carousel-inner">
         @foreach (var item in Model.Slide)
         {
-        if (string.IsNullOrEmpty(item.PictureUrl))
-        {
-        if (!string.IsNullOrEmpty(item.Link))
-        {
-        <div class="carousel-item img-desc no-wide-img">
-            <div class="carousel-caption">
-                @Html.Raw(item.Description)
-            </div>
-        </div>
-        }
-        else
-        {
-        <div class="carousel-item img-desc wide-img">
-            <div class="carousel-caption">
-                @Html.Raw(item.Description)
-            </div>
-        </div>
-        }
-        }
-        else
-        {
-        if (!string.IsNullOrEmpty(item.Link))
-        {
-        <div class="carousel-item no-wide-img">
-            <div class="container">
-                <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>@item.Name</h5>
-                    @Html.Raw(item.Description)
-                </div>
-            </div>
-        </div>
-        }
-        else
-        {
-        <div class="carousel-item wide-img">
-            <a href="@item.Link">
-                <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
-            </a>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>@item.Name</h5>
-                @Html.Raw(item.Description)
-            </div>
-        </div>
-        }
-        }
+            if (string.IsNullOrEmpty(item.PictureUrl))
+            {
+                //without background
+                if (item.FullWidth)
+                {
+                    <div class="carousel-item img-desc wide-img ">
+                        <div class="carousel-caption">
+                            @Html.Raw(item.Description)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item img-desc no-wide-img">
+                        <div class="container">
+                            <div class="carousel-caption">
+                                @Html.Raw(item.Description)
+                            </div>
+                        </div>
+                    </div>
+                }
 
+            }
+            else
+            {
+                //with background
+                if (item.FullWidth)
+                {
+                    <div class="carousel-item wide-img with-bg">
+                        <a href="@item.Link">
+                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>@item.Name</h5>
+                            @Html.Raw(item.Description)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item no-wide-img with-bg">
+                        <div class="container">
+                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>@item.Name</h5>
+                                @Html.Raw(item.Description)
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
         }
     </div>
     <a class="carousel-control-prev" href="#GrandCarousel" role="button" data-slide="prev">

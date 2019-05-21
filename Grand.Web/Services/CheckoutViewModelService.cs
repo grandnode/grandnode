@@ -177,6 +177,7 @@ namespace Grand.Web.Services
                             amount = await _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                             pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
                         }
+                        model.PickupPoints.Add(pickupPointModel);
                     }
                 }
 

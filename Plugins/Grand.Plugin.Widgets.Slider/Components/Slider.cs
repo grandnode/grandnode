@@ -38,7 +38,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
         {
 
             string cacheKey = string.Format(PICTURE_URL_MODEL_KEY, pictureId);
-            return await _cacheManager.Get(cacheKey, async () =>
+            return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
                 if (url == null)
@@ -59,6 +59,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
                     PictureUrl = await GetPictureUrl(item.PictureId),
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
+                    FullWidth = item.FullWidth,
                     CssClass = i == 1 ? "active" : ""
                 });
                 i++;

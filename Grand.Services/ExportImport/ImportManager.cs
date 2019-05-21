@@ -38,6 +38,7 @@ namespace Grand.Services.ExportImport
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreContext _storeContext;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IVendorService _vendorService;
@@ -62,6 +63,7 @@ namespace Grand.Services.ExportImport
             IUrlRecordService urlRecordService,
             IStoreContext storeContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INewsletterCategoryService newsletterCategoryService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             IVendorService vendorService,
@@ -82,6 +84,7 @@ namespace Grand.Services.ExportImport
             this._urlRecordService = urlRecordService;
             this._storeContext = storeContext;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._newsletterCategoryService = newsletterCategoryService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._vendorService = vendorService;
@@ -211,16 +214,16 @@ namespace Grand.Services.ExportImport
 
                     Product product = null;
 
-                    if(!String.IsNullOrEmpty(sku))
+                    if (!String.IsNullOrEmpty(sku))
                         product = await _productService.GetProductBySku(sku);
 
-                    if(!String.IsNullOrEmpty(productid))
+                    if (!String.IsNullOrEmpty(productid))
                         product = await _productService.GetProductById(productid);
 
                     var isNew = product == null;
 
                     product = product ?? new Product();
-                    
+
                     if (isNew)
                     {
                         product.CreatedOnUtc = DateTime.UtcNow;
@@ -244,7 +247,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "parentgroupedproductid":
                                 var parentgroupedproductid = property.StringValue;
-                                if(_productService.GetProductById(parentgroupedproductid)!=null)
+                                if (_productService.GetProductById(parentgroupedproductid) != null)
                                     product.ParentGroupedProductId = property.StringValue;
                                 break;
                             case "visibleindividually":
@@ -261,12 +264,12 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "vendorid":
                                 var vendorid = property.StringValue;
-                                if(_vendorService.GetVendorById(vendorid) != null)
+                                if (_vendorService.GetVendorById(vendorid) != null)
                                     product.VendorId = property.StringValue;
                                 break;
                             case "producttemplateid":
                                 var templateid = property.StringValue;
-                                if(templates.FirstOrDefault(x => x.Id == templateid) != null)
+                                if (templates.FirstOrDefault(x => x.Id == templateid) != null)
                                     product.ProductTemplateId = property.StringValue;
                                 break;
                             case "showonhomepage":
@@ -377,7 +380,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "deliverydateId":
                                 var deliverydateid = property.StringValue;
-                                if(deliveryDates.FirstOrDefault(x=>x.Id == deliverydateid) != null)
+                                if (deliveryDates.FirstOrDefault(x => x.Id == deliverydateid) != null)
                                     product.DeliveryDateId = deliverydateid;
                                 break;
                             case "istaxexempt":
@@ -385,7 +388,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "taxcategoryid":
                                 var taxcategoryid = property.StringValue;
-                                if(taxes.FirstOrDefault(x=>x.Id == taxcategoryid) != null)
+                                if (taxes.FirstOrDefault(x => x.Id == taxcategoryid) != null)
                                     product.TaxCategoryId = property.StringValue;
                                 break;
                             case "istelecommunicationsorbroadcastingorelectronicservices":
@@ -399,7 +402,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "warehouseid":
                                 var warehouseid = property.StringValue;
-                                if(warehouses.FirstOrDefault(x=>x.Id == warehouseid) != null)
+                                if (warehouses.FirstOrDefault(x => x.Id == warehouseid) != null)
                                     product.WarehouseId = property.StringValue;
                                 break;
                             case "stockquantity":
@@ -509,7 +512,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "unitid":
                                 var unitid = property.StringValue;
-                                if(units.FirstOrDefault(x=>x.Id == unitid) != null)
+                                if (units.FirstOrDefault(x => x.Id == unitid) != null)
                                     product.UnitId = property.StringValue;
                                 break;
                             case "weight":
@@ -532,8 +535,8 @@ namespace Grand.Services.ExportImport
 
                     product.LowStock = product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity;
 
-                    var categoryIds = manager.GetProperty("categoryids") !=null ? manager.GetProperty("categoryids").StringValue : string.Empty;
-                    var manufacturerIds = manager.GetProperty("manufacturerids") !=null ? manager.GetProperty("manufacturerids").StringValue : string.Empty;
+                    var categoryIds = manager.GetProperty("categoryids") != null ? manager.GetProperty("categoryids").StringValue : string.Empty;
+                    var manufacturerIds = manager.GetProperty("manufacturerids") != null ? manager.GetProperty("manufacturerids").StringValue : string.Empty;
 
                     var picture1 = manager.GetProperty("picture1") != null ? manager.GetProperty("picture1").StringValue : string.Empty;
                     var picture2 = manager.GetProperty("picture2") != null ? manager.GetProperty("picture2").StringValue : string.Empty;
@@ -551,7 +554,7 @@ namespace Grand.Services.ExportImport
                     }
 
                     //search engine name
-                    var seName = manager.GetProperty("sename")!=null ? manager.GetProperty("sename").StringValue : product.Name;
+                    var seName = manager.GetProperty("sename") != null ? manager.GetProperty("sename").StringValue : product.Name;
                     await _urlRecordService.SaveSlug(product, await product.ValidateSeName(seName, product.Name, true, _seoSetting, _urlRecordService, _languageService), "");
                     var _seName = await product.ValidateSeName(seName, product.Name, true, _seoSetting, _urlRecordService, _languageService);
                     //search engine name
@@ -569,8 +572,7 @@ namespace Grand.Services.ExportImport
                                 var category = await _categoryService.GetCategoryById(id);
                                 if (category != null)
                                 {
-                                    var productCategory = new ProductCategory
-                                    {
+                                    var productCategory = new ProductCategory {
                                         ProductId = product.Id,
                                         CategoryId = category.Id,
                                         IsFeaturedProduct = false,
@@ -593,8 +595,7 @@ namespace Grand.Services.ExportImport
                                 var manufacturer = await _manufacturerService.GetManufacturerById(id);
                                 if (manufacturer != null)
                                 {
-                                    var productManufacturer = new ProductManufacturer
-                                    {
+                                    var productManufacturer = new ProductManufacturer {
                                         ProductId = product.Id,
                                         ManufacturerId = manufacturer.Id,
                                         IsFeaturedProduct = false,
@@ -638,8 +639,7 @@ namespace Grand.Services.ExportImport
                             if (!pictureAlreadyExists)
                             {
                                 var picture = await _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
-                                var productPicture = new ProductPicture
-                                {
+                                var productPicture = new ProductPicture {
                                     PictureId = picture.Id,
                                     ProductId = product.Id,
                                     DisplayOrder = 1,
@@ -650,12 +650,11 @@ namespace Grand.Services.ExportImport
                         else
                         {
                             byte[] fileBinary = DownloadUrl.DownloadFile(picturePath).Result;
-                            if (fileBinary!=null)
+                            if (fileBinary != null)
                             {
                                 var mimeType = GetMimeTypeFromFilePath(picturePath);
                                 var picture = await _pictureService.InsertPicture(fileBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
-                                var productPicture = new ProductPicture
-                                {
+                                var productPicture = new ProductPicture {
                                     PictureId = picture.Id,
                                     ProductId = product.Id,
                                     DisplayOrder = 1,
@@ -684,12 +683,14 @@ namespace Grand.Services.ExportImport
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-                    if (String.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
                     string[] tmp = line.Split(',');
 
                     var email = "";
                     bool isActive = true;
+                    var categories = new List<string>();
+                    bool iscategories = false;
                     string storeId = _storeContext.CurrentStore.Id;
                     //parse
                     if (tmp.Length == 1)
@@ -710,6 +711,27 @@ namespace Grand.Services.ExportImport
                         isActive = Boolean.Parse(tmp[1].Trim());
                         storeId = tmp[2].Trim();
                     }
+                    else if (tmp.Length == 4)
+                    {
+                        //"email" and "active" and "storeId" and categories fields specified
+                        email = tmp[0].Trim();
+                        isActive = Boolean.Parse(tmp[1].Trim());
+                        storeId = tmp[2].Trim();
+                        try
+                        {
+                            var items = tmp[3].Trim().Split(';').ToList();
+                            foreach (var item in items)
+                            {
+                                if (!string.IsNullOrEmpty(item))
+                                {
+                                    if (_newsletterCategoryService.GetNewsletterCategoryById(item) != null)
+                                        categories.Add(item);
+                                }
+                            }
+                            iscategories = true;
+                        }
+                        catch { };
+                    }
                     else
                         throw new GrandException("Wrong file format");
 
@@ -719,18 +741,29 @@ namespace Grand.Services.ExportImport
                     {
                         subscription.Email = email;
                         subscription.Active = isActive;
+                        if (iscategories)
+                        {
+                            subscription.Categories.Clear();
+                            foreach (var item in categories)
+                            {
+                                subscription.Categories.Add(item);
+                            }
+                        }
                         await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
                     }
                     else
                     {
-                        subscription = new NewsLetterSubscription
-                        {
+                        subscription = new NewsLetterSubscription {
                             Active = isActive,
                             CreatedOnUtc = DateTime.UtcNow,
                             Email = email,
                             StoreId = storeId,
                             NewsLetterSubscriptionGuid = Guid.NewGuid()
                         };
+                        foreach (var item in categories)
+                        {
+                            subscription.Categories.Add(item);
+                        }
                         await _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
                     }
                     count++;
@@ -787,8 +820,7 @@ namespace Grand.Services.ExportImport
                     }
                     else
                     {
-                        state = new StateProvince
-                        {
+                        state = new StateProvince {
                             CountryId = country.Id,
                             Name = name,
                             Abbreviation = abbreviation,
@@ -882,7 +914,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "manufacturertemplateid":
                                 var manufacturerTemplateId = property.StringValue;
-                                if(templates.FirstOrDefault(x => x.Id == manufacturerTemplateId) != null)
+                                if (templates.FirstOrDefault(x => x.Id == manufacturerTemplateId) != null)
                                     manufacturer.ManufacturerTemplateId = property.StringValue;
                                 break;
                             case "metakeywords":
@@ -1031,7 +1063,7 @@ namespace Grand.Services.ExportImport
                                 break;
                             case "categorytemplateid":
                                 var categorytemplateid = property.StringValue;
-                                if(templates.FirstOrDefault(x => x.Id == categorytemplateid) != null)
+                                if (templates.FirstOrDefault(x => x.Id == categorytemplateid) != null)
                                     category.CategoryTemplateId = property.StringValue;
                                 break;
                             case "metakeywords":
@@ -1089,14 +1121,14 @@ namespace Grand.Services.ExportImport
                                 category.Icon = property.StringValue;
                                 break;
                             case "parentcategoryid":
-                                if(!string.IsNullOrEmpty(property.StringValue) && property.StringValue!="0")
+                                if (!string.IsNullOrEmpty(property.StringValue) && property.StringValue != "0")
                                     category.ParentCategoryId = property.StringValue;
                                 break;
 
                         }
                     }
 
-                    if(!string.IsNullOrEmpty(picture))
+                    if (!string.IsNullOrEmpty(picture))
                     {
                         var _picture = await LoadPicture(picture, category.Name, isNew ? "" : category.PictureId);
                         if (_picture != null)

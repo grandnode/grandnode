@@ -108,7 +108,7 @@ namespace Grand.Services.Localization
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(language);
@@ -123,7 +123,7 @@ namespace Grand.Services.Localization
         public virtual async Task<IList<Language>> GetAllLanguages(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
-            var languages = await _cacheManager.Get(key, () =>
+            var languages = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _languageRepository.Table;
 
@@ -151,7 +151,7 @@ namespace Grand.Services.Localization
         public virtual Task<Language> GetLanguageById(string languageId)
         {
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            return _cacheManager.Get(key, () => _languageRepository.GetByIdAsync(languageId));
+            return _cacheManager.GetAsync(key, () => _languageRepository.GetByIdAsync(languageId));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(language);
@@ -185,7 +185,7 @@ namespace Grand.Services.Localization
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(language);

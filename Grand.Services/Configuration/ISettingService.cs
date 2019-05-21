@@ -138,6 +138,6 @@ namespace Grand.Services.Configuration
         /// <summary>
         /// Clear cache
         /// </summary>
-        void ClearCache();
+        Task ClearCache();
     }
 }

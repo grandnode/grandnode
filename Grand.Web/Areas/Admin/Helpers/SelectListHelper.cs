@@ -31,7 +31,7 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_LIST_KEY, showHidden);
-            var listItems = await cacheManager.Get(cacheKey, async () =>
+            var listItems = await cacheManager.GetAsync(cacheKey, async () =>
             {
                 var categories = await categoryService.GetAllCategories(showHidden: showHidden);
                 return categories.Select(c => new SelectListItem
@@ -71,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURERS_LIST_KEY, showHidden);
-            var listItems = await cacheManager.Get(cacheKey, async () =>
+            var listItems = await cacheManager.GetAsync(cacheKey, async () =>
             {
                 var manufacturers = await manufacturerService.GetAllManufacturers(showHidden: showHidden);
                 return manufacturers.Select(m => new SelectListItem
@@ -111,7 +111,7 @@ namespace Grand.Web.Areas.Admin.Helpers
                 throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.VENDORS_LIST_KEY, showHidden);
-            var listItems = await cacheManager.Get(cacheKey, async () =>
+            var listItems = await cacheManager.GetAsync(cacheKey, async () =>
             {
                 var vendors = await vendorService.GetAllVendors(showHidden: showHidden);
                 return vendors.Select(v => new SelectListItem

@@ -113,8 +113,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.DeleteAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(contactAttribute);
@@ -129,7 +129,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<ContactAttribute>> GetAllContactAttributes(string storeId = "", bool ignorAcl = false)
         {
             string key = string.Format(CONTACTATTRIBUTES_ALL_KEY, storeId, ignorAcl);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _contactAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
@@ -165,7 +165,7 @@ namespace Grand.Services.Messages
         public virtual Task<ContactAttribute> GetContactAttributeById(string contactAttributeId)
         {
             string key = string.Format(CONTACTATTRIBUTES_BY_ID_KEY, contactAttributeId);
-            return _cacheManager.Get(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
+            return _cacheManager.GetAsync(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
         }
 
         /// <summary>
@@ -179,8 +179,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.InsertAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(contactAttribute);
@@ -197,8 +197,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.UpdateAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(contactAttribute);

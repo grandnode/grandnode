@@ -124,9 +124,6 @@ namespace Grand.Core.Infrastructure
                 }
             });
 
-            //register AutoMapper
-            services.AddAutoMapper();
-
             //register
             AutoMapperConfiguration.Init(config);
         }

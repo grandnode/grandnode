@@ -467,7 +467,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                 //specification attributes
                 model.AddSpecificationAttributeModel.AvailableAttributes = await _cacheManager
-                    .Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, async () =>
+                    .GetAsync(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, async () =>
                     {
                         var availableSpecificationAttributes = new List<SelectListItem>();
                         foreach (var sa in await _specificationAttributeService.GetSpecificationAttributes())

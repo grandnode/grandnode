@@ -479,7 +479,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult ClearCache(bool memory, string returnUrl = "")
+        public async Task<IActionResult> ClearCache(bool memory, string returnUrl = "")
         {
             var cacheManagers = EngineContext.Current.ResolveAll<ICacheManager>();
             foreach (var cacheManager in cacheManagers)
@@ -487,12 +487,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (memory)
                 {
                     if (cacheManager is MemoryCacheManager)
-                        cacheManager.Clear();
+                        await cacheManager.Clear();
                 }
                 else
                 {
                     if (!(cacheManager is MemoryCacheManager))
-                        cacheManager.Clear();
+                        await cacheManager.Clear();
                 }
             }
             //home page

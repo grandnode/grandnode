@@ -204,7 +204,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(shippingMethod);
@@ -227,9 +227,9 @@ namespace Grand.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual async Task<IList<ShippingMethod>> GetAllShippingMethods(string filterByCountryId = "", Customer customer = null)
         {
-            List<ShippingMethod> shippingMethods = new List<ShippingMethod>();
+            var shippingMethods = new List<ShippingMethod>();
 
-            shippingMethods = await _cacheManager.Get(SHIPPINGMETHOD_PATTERN_KEY, () =>
+            shippingMethods = await _cacheManager.GetAsync(SHIPPINGMETHOD_PATTERN_KEY, () =>
             {
                 var query = from sm in _shippingMethodRepository.Table
                             orderby sm.DisplayOrder
@@ -261,7 +261,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(shippingMethod);
@@ -279,7 +279,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(shippingMethod);
@@ -305,7 +305,7 @@ namespace Grand.Services.Shipping
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(deliveryDate);
@@ -389,8 +389,8 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(warehouse);
@@ -404,7 +404,7 @@ namespace Grand.Services.Shipping
         public virtual Task<Warehouse> GetWarehouseById(string warehouseId)
         {
             string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
-            return _cacheManager.Get(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
+            return _cacheManager.GetAsync(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(warehouse);
@@ -449,7 +449,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(warehouse);
@@ -509,7 +509,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(pickupPoint);
@@ -527,7 +527,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(pickupPoint);
@@ -543,7 +543,7 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
-            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(pickupPoint);

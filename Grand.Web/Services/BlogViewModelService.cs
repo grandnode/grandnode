@@ -93,7 +93,7 @@ namespace Grand.Web.Services
         public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();
 
@@ -114,7 +114,7 @@ namespace Grand.Web.Services
                     {
                         int pictureSize = _mediaSettings.BlogThumbPictureSize;
                         var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, post.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                        item.PictureModel = await _cacheManager.Get(categoryPictureCacheKey, async () =>
+                        item.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                         {
                             var picture = await _pictureService.GetPictureById(post.PictureId);
                             var pictureModel = new PictureModel
@@ -246,7 +246,7 @@ namespace Grand.Web.Services
             {
                 int pictureSize = _mediaSettings.BlogThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, blogPost.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                model.PictureModel = await _cacheManager.Get(categoryPictureCacheKey, async () =>
+                model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var picture = await _pictureService.GetPictureById(blogPost.PictureId);
                     var pictureModel = new PictureModel
@@ -265,7 +265,7 @@ namespace Grand.Web.Services
         public async Task<BlogPostTagListModel> PrepareBlogPostTagListModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new BlogPostTagListModel();
 
@@ -291,7 +291,7 @@ namespace Grand.Web.Services
         public async Task<List<BlogPostYearModel>> PrepareBlogPostYearModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
@@ -349,7 +349,7 @@ namespace Grand.Web.Services
         public async Task<List<BlogPostCategoryModel>> PrepareBlogPostCategoryModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostCategoryModel>();
                 var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);

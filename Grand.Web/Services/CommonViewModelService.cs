@@ -211,7 +211,7 @@ namespace Grand.Web.Services
             };
 
             var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
-            model.LogoPath = await _cacheManager.Get(cacheKey, async () =>
+            model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
                 var logoPictureId = _storeInformationSettings.LogoPictureId;
@@ -231,7 +231,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelector()
         {
-            var availableLanguages = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
+            var availableLanguages = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
             {
                 var result = (await _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
@@ -255,7 +255,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
+            var availableCurrencies = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
                 async () =>
             {
                 var result = (await _currencyService
@@ -318,7 +318,7 @@ namespace Grand.Web.Services
             if (!_commonSettings.AllowToSelectStore)
                 return null;
 
-            var availableStores = await _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, async () =>
+            var availableStores = await _cacheManager.GetAsync(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, async () =>
             {
                 var storeService = _serviceProvider.GetRequiredService<IStoreService>();
                 var result = (await storeService.GetAllStores())
@@ -394,7 +394,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = await _cacheManager.Get(topicCacheKey, async () =>
+            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
                 (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
                 .Select(t => new FooterModel.FooterTopicModel {
@@ -818,7 +818,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
+            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new SitemapModel {
                     BlogEnabled = _blogSettings.Enabled,
@@ -878,7 +878,7 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = await _cacheManager.Get(cacheKey, () => sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
+            var siteMap = await _cacheManager.GetAsync(cacheKey, () => sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
             return siteMap;
         }
         public virtual StoreThemeSelectorModel PrepareStoreThemeSelector()

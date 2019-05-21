@@ -217,7 +217,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerTagProduct>> GetCustomerTagProducts(string customerTagId)
         {
             string key = string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from cr in _customerTagProductRepository.Table
                             where (cr.CustomerTagId == customerTagId)
@@ -264,8 +264,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.InsertAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
             await _eventPublisher.EntityInserted(customerTagProduct);
@@ -283,8 +283,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.UpdateAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
             await _eventPublisher.EntityUpdated(customerTagProduct);
@@ -302,8 +302,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.DeleteAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
             //event notification
             await _eventPublisher.EntityDeleted(customerTagProduct);
         }

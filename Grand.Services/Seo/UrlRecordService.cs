@@ -100,7 +100,7 @@ namespace Grand.Services.Seo
         {
             //cache
             string key = string.Format(URLRECORD_ALL_KEY);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = _urlRecordRepository.Table;
                 var urlRecords = await query.ToListAsync();
@@ -145,7 +145,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.DeleteAsync(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.InsertAsync(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Grand.Services.Seo
 
             //gradual loading
             string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var urlRecord = await GetBySlug(slug);
                 if (urlRecord == null)
@@ -272,7 +272,7 @@ namespace Grand.Services.Seo
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return await _cacheManager.Get(key, async () =>
+                return await _cacheManager.GetAsync(key, async () =>
                 {
                     //load all records (we know they are cached)
                     var source = await GetAllUrlRecordsCached();

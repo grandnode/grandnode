@@ -105,7 +105,7 @@ namespace Grand.Services.Customers
         #region Utilities
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
-            return await _cacheManager.Get(CUSTOMER_ACTION_TYPE, () =>
+            return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>
             {
                 return _customerActionTypeRepository.Table.ToListAsync();
             });

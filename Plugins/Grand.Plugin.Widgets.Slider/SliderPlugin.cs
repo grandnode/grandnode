@@ -59,6 +59,7 @@ namespace Grand.Plugin.Widgets.Slider
                 DisplayOrder = 0,
                 Link = "",
                 Name = "Sample slider 1",
+                FullWidth = true,
                 Published = true,
                 PictureId = "",
                 Description = "<div class=\"row slideRow\"><div class=\"col-lg-6 offset-lg-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-center px-0\"><div class=\"slide-title animated fadeInRight delay-1s\"><h2 class=\"mb-0 text-white\">GrandNode 4.40 Release</h2></div><div class=\"slide-content mt-3 animated fadeInRight delay-1-5s\"><p>Open Source Cross Platform E-Commerce Solution based on .NET Core 2.2</p></div><div class=\"slide-button mt-3 animated fadeInRight delay-2s\"><a class=\"btn btn-outline-white\" href=\"https://grandnode.com\">Read More</a></div></div></div><p><img src=\"/Plugins/Widgets.Slider/Content/slider/sample-images/banner1.jpg\" alt=\"\" /></p>"
@@ -94,6 +95,8 @@ namespace Grand.Plugin.Widgets.Slider
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.Fields.Picture", "Picture");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.Fields.Published", "Published");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.Fields.Title", "Title");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.FullWidth", "Full width");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.FullWidth.hint", "Full width");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.Info", "Info");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.LimitedToStores", "Limited to stores");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.LimitedToStores.Hint", "Determines whether the slider is available only at certain stores.");

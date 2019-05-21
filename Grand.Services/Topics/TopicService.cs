@@ -92,7 +92,7 @@ namespace Grand.Services.Topics
             await _topicRepository.DeleteAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
             await _eventPublisher.EntityDeleted(topic);
         }
@@ -105,7 +105,7 @@ namespace Grand.Services.Topics
         public virtual Task<Topic> GetTopicById(string topicId)
         {
             string key = string.Format(TOPICS_BY_ID_KEY, topicId);
-            return _cacheManager.Get(key, () => _topicRepository.GetByIdAsync(topicId));
+            return _cacheManager.GetAsync(key, () => _topicRepository.GetByIdAsync(topicId));
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Grand.Services.Topics
         public virtual async Task<IList<Topic>> GetAllTopics(string storeId, bool ignorAcl = false)
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _topicRepository.Table;
 
@@ -180,7 +180,7 @@ namespace Grand.Services.Topics
             await _topicRepository.InsertAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
             await _eventPublisher.EntityInserted(topic);
         }
@@ -197,7 +197,7 @@ namespace Grand.Services.Topics
             await _topicRepository.UpdateAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(topic);

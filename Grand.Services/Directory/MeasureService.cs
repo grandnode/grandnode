@@ -131,7 +131,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.DeleteAsync(measureDimension);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(measureDimension);
@@ -145,7 +145,7 @@ namespace Grand.Services.Directory
         public virtual Task<MeasureDimension> GetMeasureDimensionById(string measureDimensionId)
         {
             string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
-            return _cacheManager.Get(key, () => _measureDimensionRepository.GetByIdAsync(measureDimensionId));
+            return _cacheManager.GetAsync(key, () => _measureDimensionRepository.GetByIdAsync(measureDimensionId));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<MeasureDimension>> GetAllMeasureDimensions()
         {
             string key = MEASUREDIMENSIONS_ALL_KEY;
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from md in _measureDimensionRepository.Table
                             orderby md.DisplayOrder
@@ -192,7 +192,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.InsertAsync(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(measure);
@@ -209,7 +209,7 @@ namespace Grand.Services.Directory
 
             await _measureDimensionRepository.UpdateAsync(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(measure);
@@ -306,7 +306,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.DeleteAsync(measureWeight);
 
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(measureWeight);
@@ -320,7 +320,7 @@ namespace Grand.Services.Directory
         public virtual Task<MeasureWeight> GetMeasureWeightById(string measureWeightId)
         {
             string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
-            return _cacheManager.Get(key, () => _measureWeightRepository.GetByIdAsync(measureWeightId));
+            return _cacheManager.GetAsync(key, () => _measureWeightRepository.GetByIdAsync(measureWeightId));
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<MeasureWeight>> GetAllMeasureWeights()
         {
             string key = MEASUREWEIGHTS_ALL_KEY;
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from mw in _measureWeightRepository.Table
                             orderby mw.DisplayOrder
@@ -367,7 +367,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.InsertAsync(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(measure);
@@ -384,7 +384,7 @@ namespace Grand.Services.Directory
 
             await _measureWeightRepository.UpdateAsync(measure);
             
-            _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(measure);
@@ -488,8 +488,8 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.DeleteAsync(measureUnit);
 
-            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(measureUnit);
@@ -503,7 +503,7 @@ namespace Grand.Services.Directory
         public virtual Task<MeasureUnit> GetMeasureUnitById(string measureUnitId)
         {
             string key = string.Format(MEASUREUNITS_BY_ID_KEY, measureUnitId);
-            return _cacheManager.Get(key, () => _measureUnitRepository.GetByIdAsync(measureUnitId));
+            return _cacheManager.GetAsync(key, () => _measureUnitRepository.GetByIdAsync(measureUnitId));
         }
 
         
@@ -514,7 +514,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<MeasureUnit>> GetAllMeasureUnits()
         {
             string key = MEASUREUNITS_ALL_KEY;
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from md in _measureUnitRepository.Table
                             orderby md.DisplayOrder
@@ -534,7 +534,7 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.InsertAsync(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(measure);
@@ -551,7 +551,7 @@ namespace Grand.Services.Directory
 
             await _measureUnitRepository.UpdateAsync(measure);
 
-            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(measure);

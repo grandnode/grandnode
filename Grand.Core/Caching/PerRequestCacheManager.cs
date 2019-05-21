@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Caching
 {
@@ -77,14 +78,16 @@ namespace Grand.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual void Set(string key, object data, int cacheTime)
+        public virtual Task Set(string key, object data, int cacheTime)
         {
             var items = GetItems();
             if (items == null)
-                return;
+                return Task.CompletedTask;
 
             if (data != null)
                 items[key] = data;
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -103,34 +106,37 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual void Remove(string key)
+        public virtual Task Remove(string key)
         {
             var items = GetItems();
 
             items?.Remove(key);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Removes items by key pattern
         /// </summary>
         /// <param name="pattern">String key pattern</param>
-        public virtual void RemoveByPattern(string pattern)
+        public virtual async Task RemoveByPattern(string pattern)
         {
             var items = GetItems();
             if (items == null)
                 return;
 
-            this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
+            await this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
         }
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual void Clear()
+        public virtual Task Clear()
         {
             var items = GetItems();
 
             items?.Clear();
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

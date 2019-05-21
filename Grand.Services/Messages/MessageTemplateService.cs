@@ -93,7 +93,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.DeleteAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityDeleted(messageTemplate);
@@ -110,7 +110,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.InsertAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityInserted(messageTemplate);
@@ -127,7 +127,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.UpdateAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _eventPublisher.EntityUpdated(messageTemplate);
@@ -155,7 +155,7 @@ namespace Grand.Services.Messages
                 throw new ArgumentException("messageTemplateName");
 
             string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = _messageTemplateRepository.Table;
 
@@ -184,7 +184,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplates(string storeId)
         {
             string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
 
