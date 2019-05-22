@@ -537,6 +537,7 @@ namespace Grand.Web.Areas.Admin.Services
                         DeliveryDateUtc = null,
                         AdminComment = adminComment,
                         CreatedOnUtc = DateTime.UtcNow,
+                        StoreId = order.StoreId,
                     };
                     if (_workContext.CurrentVendor != null)
                     {

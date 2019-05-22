@@ -16,6 +16,11 @@ namespace Grand.Core.Domain.Shipping
         public string OrderId { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public string StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
         public string VendorId { get; set; }

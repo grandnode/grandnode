@@ -11,6 +11,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
 using Grand.Data;
@@ -679,10 +680,25 @@ namespace Grand.Services.Installation
                     task.TimeInterval = 1440;
                     await tasks.UpdateAsync(task);
                 }
-                if(task.Type == "Grand.Services.Tasks.ClearLogScheduleTask")
+                if (task.Type == "Grand.Services.Tasks.ClearLogScheduleTask")
                 {
                     task.Type = "Grand.Services.Tasks.ClearLogScheduleTask, Grand.Services";
                     await tasks.UpdateAsync(task);
+                }
+            }
+            #endregion
+
+            #region Update shipments - storeId
+
+            var shipments = _serviceProvider.GetRequiredService<IRepository<Shipment>>();
+            var orders = _serviceProvider.GetRequiredService<IRepository<Order>>();
+            foreach (var shipment in shipments.Table)
+            {
+                var order = orders.Table.Where(x => x.Id == shipment.OrderId).FirstOrDefault();
+                if (order != null)
+                {
+                    shipment.StoreId = order.StoreId;
+                    await shipments.UpdateAsync(shipment);
                 }
             }
             #endregion
