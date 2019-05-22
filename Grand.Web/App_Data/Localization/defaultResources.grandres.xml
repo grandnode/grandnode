@@ -18988,6 +18988,9 @@
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
     <Value>Sorry, you've used this discount already</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedInStore">
+    <Value>This coupon code can't be used in this store.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithGiftCards">
     <Value>Sorry, this discount cannot be used with gift cards in the cart</Value>
   </LocaleResource>

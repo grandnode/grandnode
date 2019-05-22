@@ -222,4 +222,7 @@
   <LocaleResource Name="Admin.GiftCards.PreventDeleted">
     <Value>You can't remove gift card because was used in the order.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedInStore">
+    <Value>This coupon code can't be used in this store.</Value>
+  </LocaleResource>
 </Language>
