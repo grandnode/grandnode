@@ -575,6 +575,16 @@ namespace Grand.Services.Discounts
                 //check coupon code
                 if (discount.RequiresCouponCode)
                 {
+                    //Do not allow use coupon code in the store
+                    if (discount.DiscountType == DiscountType.AssignedToStores)
+                    {
+                        if (_storeContext.CurrentStore.AppliedDiscounts.FirstOrDefault(x => x == discount.Id) == null)
+                        {
+                            result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedInStore");
+                            return result;
+                        }
+                    }
+
                     if (couponCodesToValidate == null || !couponCodesToValidate.Any())
                         return result;
                     var exists = false;
