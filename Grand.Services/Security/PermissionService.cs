@@ -242,6 +242,35 @@ namespace Grand.Services.Security
         }
 
         /// <summary>
+        /// Install missing permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        public virtual async Task InstallNewPermissions(IPermissionProvider permissionProvider)
+        {
+            //install new permissions
+            var permissions = permissionProvider.GetPermissions();
+            foreach (var permission in permissions)
+            {
+                var permission1 = await GetPermissionRecordBySystemName(permission.SystemName);
+                if (permission1 == null)
+                {
+                    //new permission (install it)
+                    permission1 = new PermissionRecord {
+                        Name = permission.Name,
+                        SystemName = permission.SystemName,
+                        Category = permission.Category,
+                    };
+
+                    //save new permission
+                    await InsertPermissionRecord(permission1);
+
+                    //save localization
+                    await permission1.SaveLocalizedPermissionName(_localizationService, _languageService);
+                }
+            }
+        }
+
+        /// <summary>
         /// Uninstall permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>

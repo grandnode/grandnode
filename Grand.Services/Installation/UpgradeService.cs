@@ -702,6 +702,13 @@ namespace Grand.Services.Installation
                 }
             }
             #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
+
+            #endregion
         }
 
         private async Task InstallStringResources(string filenames)

@@ -18031,6 +18031,9 @@
   <LocaleResource Name="Permission.ManageCustomers">
     <Value>Admin area. Manage Customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageCustomerRoles">
+    <Value>Admin area. Manage Customer roles</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageDiscounts">
     <Value>Admin area. Manage Discounts</Value>
   </LocaleResource>

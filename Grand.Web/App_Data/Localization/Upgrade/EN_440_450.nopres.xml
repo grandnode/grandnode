@@ -225,4 +225,7 @@
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedInStore">
     <Value>This coupon code can't be used in this store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageCustomerRoles">
+    <Value>Admin area. Manage Customer roles</Value>
+  </LocaleResource>
 </Language>

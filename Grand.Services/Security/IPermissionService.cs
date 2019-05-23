@@ -55,6 +55,12 @@ namespace Grand.Services.Security
         Task InstallPermissions(IPermissionProvider permissionProvider);
 
         /// <summary>
+        /// Install missing permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        Task InstallNewPermissions(IPermissionProvider permissionProvider);
+
+        /// <summary>
         /// Uninstall permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
