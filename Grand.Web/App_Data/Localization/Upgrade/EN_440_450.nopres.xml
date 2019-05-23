@@ -228,4 +228,10 @@
   <LocaleResource Name="Permission.ManageCustomerRoles">
     <Value>Admin area. Manage Customer roles</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Installed">
+    <Value>Missing permissions has been installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.InstallMissingPermisions">
+    <Value>Install permissions</Value>
+  </LocaleResource>
 </Language>
