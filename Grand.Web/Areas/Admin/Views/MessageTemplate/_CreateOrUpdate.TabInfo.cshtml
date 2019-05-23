@@ -98,15 +98,6 @@
                         }
                     </div>
                     <admin-input asp-for="Body" asp-template="Codemirror" />
-                    @*<script>
-                        var textarea_Body = document.getElementById('Body');
-                        $(window).bind('load', function () {
-                            var editor = CodeMirror.fromTextArea(textarea_Body, {
-                                mode: "xml",
-                                lineNumbers: true
-                            });
-                        })
-                    </script>*@
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
