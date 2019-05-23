@@ -69,7 +69,7 @@ namespace Grand.Framework.TagHelpers.Admin
 
 
             output.PostContent.AppendHtml(string.Concat(list));
-            output.PostElement.AppendHtml(sb.ToString());
+            output.PreElement.AppendHtml(sb.ToString());
         }
 
         private int GetSelectedTabIndex()
