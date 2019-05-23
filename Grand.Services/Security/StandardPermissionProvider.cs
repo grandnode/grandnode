@@ -30,7 +30,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = PermissionSystemName.RecurringPayments, Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = PermissionSystemName.GiftCards, Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = PermissionSystemName.ReturnRequests, Category = "Orders" };
-        public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = PermissionSystemName.OrderCountryReport, Category = "Orders" };
+        public static readonly PermissionRecord ManageReports = new PermissionRecord { Name = "Admin area. Manage Reports", SystemName = PermissionSystemName.Reports, Category = "Reports" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = PermissionSystemName.Affiliates, Category = "Promo" };
         public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = PermissionSystemName.PushNotifications, Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = PermissionSystemName.Campaigns, Category = "Promo" };
@@ -101,7 +101,7 @@ namespace Grand.Services.Security
                 ManageRecurringPayments,
                 ManageGiftCards,
                 ManageReturnRequests,
-                OrderCountryReport,
+                ManageReports,
                 ManageAffiliates,
                 ManagePushNotifications,
                 ManageCampaigns,
@@ -171,7 +171,7 @@ namespace Grand.Services.Security
                         ManageRecurringPayments,
                         ManageGiftCards,
                         ManageReturnRequests,
-                        OrderCountryReport,
+                        ManageReports,
                         ManageAffiliates,
                         ManagePushNotifications,
                         ManageCampaigns,

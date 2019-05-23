@@ -5,8 +5,10 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
+using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -14,8 +16,10 @@ using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,11 +30,14 @@ using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Reports)]
     public class ReportsController : BaseAdminController
     {
 
         private readonly IOrderService _orderService;
         private readonly IOrderReportService _orderReportService;
+        private readonly ICustomerReportService _customerReportService;
+        private readonly ICustomerViewModelService _customerViewModelService;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
@@ -45,6 +52,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public ReportsController(IOrderService orderService,
         IOrderReportService orderReportService,
+        ICustomerReportService customerReportService,
+        ICustomerViewModelService customerViewModelService,
         IPermissionService permissionService,
         IWorkContext workContext,
         IPriceFormatter priceFormatter,
@@ -59,6 +68,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             _orderService = orderService;
             _orderReportService = orderReportService;
+            _customerReportService = customerReportService;
+            _customerViewModelService = customerViewModelService;
             _permissionService = permissionService;
             _workContext = workContext;
             _priceFormatter = priceFormatter;
@@ -117,7 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var reportperiod7days = await _orderReportService.GetOrderPeriodReport(7);
             report.Add(new OrderPeriodReportLineModel
             {
-                Period = _localizationService.GetResource("Admin.SalesReport.Period.7days"),
+                Period = _localizationService.GetResource("Admin.Reports.Period.7days"),
                 Count = reportperiod7days.Count,
                 Amount = reportperiod7days.Amount
             });
@@ -125,7 +136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var reportperiod14days = await _orderReportService.GetOrderPeriodReport(14);
             report.Add(new OrderPeriodReportLineModel
             {
-                Period = _localizationService.GetResource("Admin.SalesReport.Period.14days"),
+                Period = _localizationService.GetResource("Admin.Reports.Period.14days"),
                 Count = reportperiod14days.Count,
                 Amount = reportperiod14days.Amount
             });
@@ -133,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var reportperiodmonth = await _orderReportService.GetOrderPeriodReport(30);
             report.Add(new OrderPeriodReportLineModel
             {
-                Period = _localizationService.GetResource("Admin.SalesReport.Period.month"),
+                Period = _localizationService.GetResource("Admin.Reports.Period.month"),
                 Count = reportperiodmonth.Count,
                 Amount = reportperiodmonth.Amount
             });
@@ -141,7 +152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var reportperiodyear = await _orderReportService.GetOrderPeriodReport(365);
             report.Add(new OrderPeriodReportLineModel
             {
-                Period = _localizationService.GetResource("Admin.SalesReport.Period.year"),
+                Period = _localizationService.GetResource("Admin.Reports.Period.year"),
                 Count = reportperiodyear.Count,
                 Amount = reportperiodyear.Amount
             });
@@ -443,7 +454,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var psPending = await _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
-                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
+                Item = _localizationService.GetResource("Admin.Reports.Incomplete.TotalUnpaidOrders"),
                 Count = psPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
                 ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
@@ -452,7 +463,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var ssPending = await _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
-                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
+                Item = _localizationService.GetResource("Admin.Reports.Incomplete.TotalNotShippedOrders"),
                 Count = ssPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
                 ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
@@ -461,7 +472,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var osPending = await _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
-                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
+                Item = _localizationService.GetResource("Admin.Reports.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
                 ViewLink = Url.Action("List", "Order", new { orderStatusId = ((int)OrderStatus.Pending).ToString() })
@@ -476,14 +487,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public async Task<IActionResult> CountryReport()
+        public IActionResult CountryReport()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return AccessDeniedView();
-
             var model = new CountryReportModel
             {
-
                 //order statuses
                 AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
             };
@@ -499,9 +506,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CountryReportList(DataSourceRequest command, CountryReportModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return Content("");
-
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -617,6 +621,61 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+
+        #region Customer Reports
+
+        public IActionResult Customer()
+        {
+            var model = _customerViewModelService.PrepareCustomerReportsModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
+        {
+            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 1, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
+                Data = bestCustomerReportLineModels.ToList(),
+                Total = totalCount
+            };
+            return Json(gridModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
+        {
+            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 2, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
+                Data = bestCustomerReportLineModels.ToList(),
+                Total = totalCount
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReportRegisteredCustomersList(DataSourceRequest command)
+        {
+            var model = await _customerViewModelService.GetReportRegisteredCustomersModel();
+            var gridModel = new DataSourceResult {
+                Data = model,
+                Total = model.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        {
+            var model = await _customerReportService.GetCustomerByTimeReport(startDate, endDate);
+            var gridModel = new DataSourceResult {
+                Data = model
+            };
+            return Json(gridModel);
+        }
+
+        #endregion
+
+
 
     }
 }
