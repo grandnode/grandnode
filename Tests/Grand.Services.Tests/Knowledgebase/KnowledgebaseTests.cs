@@ -40,7 +40,7 @@ namespace Grand.Services.Tests.Knowledgebase
             _articleCommentRepository = new MongoDBRepositoryTest<KnowledgebaseArticleComment>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var customer = new Customer() { Username = "username" };

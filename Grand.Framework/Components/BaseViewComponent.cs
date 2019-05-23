@@ -10,24 +10,20 @@ namespace Grand.Framework.Components
     {
         public new ViewViewComponentResult View<TModel>(string viewName, TModel model)
         {
-            //TO DO
-            //EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(viewName, model, this);
+            EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(viewName, model, this);
             return base.View<TModel>(viewName, model);
         }
 
         public new ViewViewComponentResult View<TModel>(TModel model)
         {
-            //TO DO
-            //EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(model, this);
+            EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(model, this);
             return base.View<TModel>(model);
         }
 
         public new ViewViewComponentResult View(string viewName)
         {
-            //TO DO
-            //EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(viewName, this);
+            EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(viewName, this);
             return base.View(viewName);
         }
-
     }
 }

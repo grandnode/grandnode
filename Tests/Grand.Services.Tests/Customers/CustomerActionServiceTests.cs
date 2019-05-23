@@ -28,7 +28,7 @@ namespace Grand.Services.Customers.Tests
         public void TestInitialize()
         {
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _customerActionRepository = new MongoDBRepositoryTest<CustomerAction>();

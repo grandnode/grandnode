@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 public class OrderTokenTest : IConsumer<EntityTokensAddedEvent<Order>>
 {
 
-    public Task HandleEvent(EntityTokensAddedEvent<Order> eventMessage)
+    public Task HandleEventAsync(EntityTokensAddedEvent<Order> eventMessage)
     {
         //in message templates you can put new token {{AdditionalTokens["NewOrderNumber"]}}
         eventMessage.LiquidObject.AdditionalTokens.Add("NewOrderNumber", $"{eventMessage.Entity.CreatedOnUtc.Year}/{eventMessage.Entity.OrderNumber}");
         return Task.CompletedTask;
     }
+    public void HandleEvent(EntityTokensAddedEvent<Order> eventMessage) { }
 }
 
 

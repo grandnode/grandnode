@@ -198,7 +198,7 @@ namespace Grand.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    await EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await EngineContext.Current.Resolve<IEventPublisher>().PublishAsync(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;

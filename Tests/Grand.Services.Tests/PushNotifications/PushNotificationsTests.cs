@@ -30,7 +30,7 @@ namespace Grand.Services.Tests.PushNotifications
             _messageRepository = new MongoDBRepositoryTest<PushMessage>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var pushNotificationsSettings = new Mock<PushNotificationsSettings>();

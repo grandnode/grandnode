@@ -403,7 +403,7 @@ namespace Grand.Framework.Controllers
         {
             // do something before the action executes
             // event notification
-            await EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);
+            await EngineContext.Current.Resolve<IEventPublisher>().PublishAsync<ActionExecutingContext>(context);
             await next();
         }
 

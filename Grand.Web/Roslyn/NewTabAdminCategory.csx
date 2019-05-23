@@ -20,7 +20,7 @@ public class AdminTabEvent : IConsumer<AdminTabStripCreated>
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public Task HandleEvent(AdminTabStripCreated eventMessage)
+    public Task HandleEventAsync(AdminTabStripCreated eventMessage)
     {
         if (eventMessage.TabStripName == "category-edit")
         {
@@ -29,4 +29,5 @@ public class AdminTabEvent : IConsumer<AdminTabStripCreated>
         }
         return Task.CompletedTask;
     }
+    public void HandleEvent(AdminTabStripCreated eventMessage) { }
 }

@@ -17,8 +17,10 @@ namespace Grand.Framework.Validators
         /// </summary>
         protected virtual void PostInitialize()
         {
-            //TO DO
-           //EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
         }
+
     }
+
+
 }

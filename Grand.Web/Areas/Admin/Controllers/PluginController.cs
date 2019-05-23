@@ -363,7 +363,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _customerActivityService.InsertActivity("UploadNewPlugin", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
 
-                await _eventPublisher.Publish(new PluginUploadedEvent(descriptor));
+                await _eventPublisher.PublishAsync(new PluginUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Plugins.Uploaded");
                 SuccessNotification(message);
@@ -414,7 +414,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _customerActivityService.InsertActivity("UploadNewTheme", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
 
-                await _eventPublisher.Publish(new ThemeUploadedEvent(descriptor));
+                await _eventPublisher.PublishAsync(new ThemeUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Themes.Uploaded");
                 SuccessNotification(message);

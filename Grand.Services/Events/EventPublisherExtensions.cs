@@ -8,17 +8,17 @@ namespace Grand.Services.Events
     {
         public static async Task EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            await eventPublisher.Publish(new EntityInserted<T>(entity));
+            await eventPublisher.PublishAsync(new EntityInserted<T>(entity));
         }
 
         public static async Task EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            await eventPublisher.Publish(new EntityUpdated<T>(entity));
+            await eventPublisher.PublishAsync(new EntityUpdated<T>(entity));
         }
 
         public static async Task EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : ParentEntity
         {
-            await eventPublisher.Publish(new EntityDeleted<T>(entity));
+            await eventPublisher.PublishAsync(new EntityDeleted<T>(entity));
         }
 
     }

@@ -22,18 +22,18 @@ namespace Grand.Services.Events
         #region Methods
 
         /// <summary>
-        /// Publish event to consumers
+        /// Task publish event to consumers
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        public virtual async Task Publish<T>(T eventMessaget)
+        public virtual async Task PublishAsync<T>(T eventMessaget)
         {
             var consumers = _serviceProvider.GetServices<IConsumer<T>>().ToList();
             foreach (var consumer in consumers)
             {
                 try
                 {
-                    await consumer.HandleEvent(eventMessaget);
+                    await consumer.HandleEventAsync(eventMessaget);
                 }
                 catch (Exception exception)
                 {
@@ -47,6 +47,31 @@ namespace Grand.Services.Events
 
         }
 
+        /// <summary>
+        /// Publish event to consumers
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="eventMessage">Event message</param>
+        public virtual void Publish<T>(T eventMessaget)
+        {
+            var consumers = _serviceProvider.GetServices<IConsumer<T>>().ToList();
+            foreach (var consumer in consumers)
+            {
+                try
+                {
+                    consumer.HandleEvent(eventMessaget);
+                }
+                catch (Exception exception)
+                {
+                    try
+                    {
+                        _serviceProvider.GetRequiredService<ILogger>()?.Error(exception.Message, exception);
+                    }
+                    catch { }
+                }
+            }
+
+        }
         #endregion
 
     }

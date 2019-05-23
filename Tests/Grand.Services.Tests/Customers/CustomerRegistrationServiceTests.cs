@@ -129,7 +129,7 @@ namespace Grand.Services.Customers.Tests
             //trying to recreate
 
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _storeService = new Mock<IStoreService>().Object;
