@@ -487,8 +487,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CountryReport()
+        public async Task<IActionResult> CountryReport()
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var model = new CountryReportModel
             {
                 //order statuses
@@ -624,8 +627,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Customer Reports
 
-        public IActionResult Customer()
+        public async Task<IActionResult> Customer()
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var model = _customerViewModelService.PrepareCustomerReportsModel();
             return View(model);
         }
