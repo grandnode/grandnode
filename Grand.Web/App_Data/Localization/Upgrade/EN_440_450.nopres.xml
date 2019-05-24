@@ -519,5 +519,7 @@
   <LocaleResource Name="Permission.ManageReports">
     <Value>Admin area. Manage Reports</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Dashboard.Summary">
+    <Value>Summary</Value>
+  </LocaleResource>
 </Language>

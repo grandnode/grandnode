@@ -11832,6 +11832,9 @@
   <LocaleResource Name="Admin.Dashboard.StoreStatistics">
     <Value>Store Statistics</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.Summary">
+    <Value>Summary</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.TodayOrders">
     <Value>Today orders</Value>
   </LocaleResource>
