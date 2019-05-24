@@ -165,7 +165,7 @@ namespace Grand.Services.Messages
                 campaign.CustomerHasShoppingCartCondition != CampaignCondition.All || campaign.CustomerHasShoppingCartCondition != CampaignCondition.All ||
                 campaign.CustomerLastActivityDateFrom.HasValue || campaign.CustomerLastActivityDateTo.HasValue ||
                 campaign.CustomerLastPurchaseDateFrom.HasValue || campaign.CustomerLastPurchaseDateTo.HasValue ||
-                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0 || campaign.NewsletterCategories.Count > 0)
+                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0)
             {
 
                 var query = from o in _newsLetterSubscriptionRepository.Table
@@ -246,8 +246,16 @@ namespace Grand.Services.Messages
             else
             {
                 var query = from o in _newsLetterSubscriptionRepository.Table
-                            where o.Active && (o.StoreId == campaign.StoreId || String.IsNullOrEmpty(campaign.StoreId))
+                            where o.Active && (o.StoreId == campaign.StoreId || string.IsNullOrEmpty(campaign.StoreId))
                             select o;
+
+                if (campaign.NewsletterCategories.Count > 0)
+                {
+                    foreach (var item in campaign.NewsletterCategories)
+                    {
+                        query = query.Where(x => x.Categories.Contains(item));
+                    }
+                }
                 model = await PagedList<NewsLetterSubscription>.Create(query, pageIndex, pageSize);
             }
 
