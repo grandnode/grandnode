@@ -49,7 +49,7 @@
         <div class="col-md-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Summary</h2>
+                    <h2>@("Admin.Dashboard.Summary")</h2>
                     <div class="filter">
                         <div class="page-bar" style="height:43px;">
                             <div class="page-toolbar">
@@ -199,6 +199,30 @@
         </div>
     }
 }
+@if (Model.IsLoggedInAsVendor)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>@("Admin.Dashboard.Summary")</h2>
+                    <div class="filter">
+                        <div class="page-bar" style="height:43px;">
+                            <div class="page-toolbar">
+                                <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
+                                    <i class="icon-calendar"></i>&nbsp;
+                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @if (canManageOrders)
 {
     <div class="row">
@@ -297,8 +321,13 @@
     Dashboard.init();
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
-        initReportCustomerTimeChart(false);
-        initReportOrderTimeChart(false);
+        if ($.fn.initReportCustomerTimeChart) {
+            initReportCustomerTimeChart(false);
+        };
+
+        if ($.fn.initReportOrderTimeChart) {
+            initReportOrderTimeChart(false);
+        };
 
         var gridOrders = $('#latest-orders-grid').data('kendoGrid');
         if (gridOrders != undefined) {

@@ -11,13 +11,6 @@
 	font-style: normal;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	@font-face {
-		font-family: 'Simple-Line-Icons';
-		src: url('fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
-	}
-}
-
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 [data-icon]:before {
 	font-family: 'Simple-Line-Icons';
