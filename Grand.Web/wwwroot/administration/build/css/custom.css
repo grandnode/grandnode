@@ -1362,6 +1362,9 @@ h2 {
     align-items: center;
 }
 
+.level-caption {
+    padding: 10px 0px 10px 5px !important;
+}
 .x_title .filter {
     width: 40%;
     margin-left: auto;
