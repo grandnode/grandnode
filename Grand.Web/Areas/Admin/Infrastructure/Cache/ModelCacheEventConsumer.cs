@@ -10,7 +10,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Cache
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
-    public partial class ModelCacheEventConsumer :
+    public class ModelCacheEventConsumer :
         //specification attributes
         IConsumer<EntityInserted<SpecificationAttribute>>,
         IConsumer<EntityUpdated<SpecificationAttribute>>,
@@ -70,58 +70,71 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Cache
             this._cacheManager = cacheManager;
         }
 
+        public void HandleEvent(EntityInserted<SpecificationAttribute> eventMessage) { }
+        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage) { }
+        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage) { }
+        public void HandleEvent(EntityInserted<Category> eventMessage) { }
+        public void HandleEvent(EntityUpdated<Category> eventMessage) { }
+        public void HandleEvent(EntityDeleted<Category> eventMessage) { }
+        public void HandleEvent(EntityInserted<Manufacturer> eventMessage) { }
+        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage) { }
+        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage) { }
+        public void HandleEvent(EntityInserted<Vendor> eventMessage) { }
+        public void HandleEvent(EntityUpdated<Vendor> eventMessage) { }
+        public void HandleEvent(EntityDeleted<Vendor> eventMessage) { }
+
         //specification attributes
-        public async Task HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
+        public async Task HandleEventAsync(EntityInserted<SpecificationAttribute> eventMessage)
         {
             await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public async Task HandleEventAsync(EntityUpdated<SpecificationAttribute> eventMessage)
         {
             await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public async Task HandleEventAsync(EntityDeleted<SpecificationAttribute> eventMessage)
         {
             await _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
 
         //categories
-        public async Task HandleEvent(EntityInserted<Category> eventMessage)
+        public async Task HandleEventAsync(EntityInserted<Category> eventMessage)
         {
             await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdated<Category> eventMessage)
+        public async Task HandleEventAsync(EntityUpdated<Category> eventMessage)
         {
             await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<Category> eventMessage)
+        public async Task HandleEventAsync(EntityDeleted<Category> eventMessage)
         {
             await _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
 
         //manufacturers
-        public async Task HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public async Task HandleEventAsync(EntityInserted<Manufacturer> eventMessage)
         {
             await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public async Task HandleEventAsync(EntityUpdated<Manufacturer> eventMessage)
         {
             await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public async Task HandleEventAsync(EntityDeleted<Manufacturer> eventMessage)
         {
             await _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
 
         //vendors
-        public async Task HandleEvent(EntityInserted<Vendor> eventMessage)
+        public async Task HandleEventAsync(EntityInserted<Vendor> eventMessage)
         {
             await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public async Task HandleEventAsync(EntityUpdated<Vendor> eventMessage)
         {
             await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public async Task HandleEventAsync(EntityDeleted<Vendor> eventMessage)
         {
             await _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }

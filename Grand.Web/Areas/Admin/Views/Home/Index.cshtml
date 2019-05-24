@@ -7,10 +7,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
-
+    var canAccessReports = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageReports);
     var canManageOrders = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
     var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1)).TotalCount;
     var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
     var ordersToday = await orderReportService.GetOrderPeriodReport(0);
@@ -51,7 +49,7 @@
         <div class="col-md-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Summary</h2>
+                    <h2>@("Admin.Dashboard.Summary")</h2>
                     <div class="filter">
                         <div class="page-bar" style="height:43px;">
                             <div class="page-toolbar">
@@ -66,9 +64,12 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <div class="col-xs-12 col-sm-12 col-lg-8 col-md-12 whiteBg">
-                        @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
-                    </div>
+                    @if (canAccessReports)
+                    {
+                        <div class="col-xs-12 col-sm-12 col-lg-8 col-md-12 whiteBg">
+                            @await Component.InvokeAsync("CustomerReportCustomerTimeChart")
+                        </div>
+                    }
                     <div class="col-cs-12 col-sm-12 col-lg-4 col-md-12">
                         <div class="x_panel">
                             <div class="x_title">
@@ -108,15 +109,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-lg-8 col-md-12 whiteBg">
-                    @await Component.InvokeAsync("OrderReportOrderTimeChart")
-                </div>
+                @if (canAccessReports)
+                {
+                    <div class="col-sm-12 col-lg-8 col-md-12 whiteBg sssss">
+                        @await Component.InvokeAsync("OrderReportOrderTimeChart")
+                    </div>
+                }
             }
             else
             {
-                <div class="col-sm-12 col-lg-12 col-md-12 whiteBg">
-                    @await Component.InvokeAsync("OrderReportOrderTimeChart")
-                </div>
+                @if (canAccessReports)
+                {
+                    <div class="col-sm-12 col-lg-12 col-md-12 whiteBg">
+                        @await Component.InvokeAsync("OrderReportOrderTimeChart")
+                    </div>
+                }
             }
         </div>
     </div>
@@ -192,6 +199,30 @@
         </div>
     }
 }
+@if (Model.IsLoggedInAsVendor)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>@("Admin.Dashboard.Summary")</h2>
+                    <div class="filter">
+                        <div class="page-bar" style="height:43px;">
+                            <div class="page-toolbar">
+                                <div id="dashboard-report-range" class="pull-right btn btn-fit-height green" data-original-title="Change dashboard date range">
+                                    <i class="icon-calendar"></i>&nbsp;
+                                    <span class="thin uppercase hidden-xs"></span>&nbsp;
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @if (canManageOrders)
 {
     <div class="row">
@@ -210,7 +241,7 @@
 }
 <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null" />
 <script type="text/javascript">
-$(document).ready(function (e) {
+    $(document).ready(function (e) {
         var site = site || {};
         site.baseUrl = site.baseUrl || "";
         $(".partialContents").each(function (index, item) {
@@ -272,7 +303,7 @@ $(document).ready(function (e) {
                         ],
                         "firstDay": 1
                     },
-                    opens: ($('html').css('direction') === 'rtl' ?  'right': 'left'),
+                    opens: ($('html').css('direction') === 'rtl' ? 'right' : 'left'),
                 }, function (start, end, label) {
                     $('#dashboard-report-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 });
@@ -290,8 +321,13 @@ $(document).ready(function (e) {
     Dashboard.init();
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
-        initReportCustomerTimeChart(false);
-        initReportOrderTimeChart(false);
+        if ($.fn.initReportCustomerTimeChart) {
+            initReportCustomerTimeChart(false);
+        };
+
+        if ($.fn.initReportOrderTimeChart) {
+            initReportOrderTimeChart(false);
+        };
 
         var gridOrders = $('#latest-orders-grid').data('kendoGrid');
         if (gridOrders != undefined) {

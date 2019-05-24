@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.Reports").Text;
+    ViewBag.Title = T("Admin.Reports.Customers").Text;
 }
 <antiforgery-token />
 <div class="row">
@@ -11,7 +11,7 @@
             <div class="x_title">
                 <div class="caption">
                     <i class="fa fa-bar-chart-o"></i>
-                    @T("Admin.Customers.Reports")
+                    @T("Admin.Reports.Customers")
                 </div>
             </div>
             <div class="x_content form">
@@ -20,24 +20,24 @@
                         <div class="x_content">
                             <admin-tabstrip name="customer-reports">
                                 <items>
-                                    <tabstrip-item text="@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")" tab-index="0">
+                                    <tabstrip-item text="@T("Admin.Reports.Customers.BestBy.BestByOrderTotal")" tab-index="0">
                                         <content>
                                             <div>
-                                                <partial name="Reports.TabBestByOrderTotal" model="Model" />
+                                                <partial name="Customer.TabBestByOrderTotal" model="Model" />
                                             </div>
                                         </content>
                                     </tabstrip-item>
-                                    <tabstrip-item text="@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")" tab-index="1">
+                                    <tabstrip-item text="@T("Admin.Reports.Customers.BestBy.BestByNumberOfOrders")" tab-index="1">
                                         <content>
                                             <div>
-                                                <partial name="Reports.TabBestByNumberOfOrders" model="Model" />
+                                                <partial name="Customer.TabBestByNumberOfOrders" model="Model" />
                                             </div>
                                         </content>
                                     </tabstrip-item>
-                                    <tabstrip-item text="@T("Admin.Customers.Reports.RegisteredCustomers")" tab-index="2">
+                                    <tabstrip-item text="@T("Admin.Reports.Customers.RegisteredCustomers")" tab-index="2">
                                         <content>
                                             <div>
-                                                <partial name="Reports.TabRegisteredCustomers" model="Model" />
+                                                <partial name="Customer.TabRegisteredCustomers" model="Model" />
                                             </div>
                                         </content>
                                     </tabstrip-item>

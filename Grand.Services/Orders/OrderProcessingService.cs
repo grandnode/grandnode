@@ -825,7 +825,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             //raise event
-            await _eventPublisher.Publish(new OrderPaidEvent(order));
+            await _eventPublisher.PublishAsync(new OrderPaidEvent(order));
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1758,7 +1758,7 @@ namespace Grand.Services.Orders
                     //Update field last update cart
                     await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
                     //raise event       
-                    await _eventPublisher.Publish(new OrderPlacedEvent(order));
+                    await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
                     await _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
@@ -2257,7 +2257,7 @@ namespace Grand.Services.Orders
             //cancel discount
             await _discountService.CancelDiscount(order.Id);
 
-            await _eventPublisher.Publish(new OrderCancelledEvent(order));
+            await _eventPublisher.PublishAsync(new OrderCancelledEvent(order));
 
         }
 
@@ -2561,7 +2561,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    await _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
+                    await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
             }
@@ -2685,7 +2685,7 @@ namespace Grand.Services.Orders
             }
 
             //raise event       
-            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2791,7 +2791,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+                    await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2913,7 +2913,7 @@ namespace Grand.Services.Orders
                 });
             }
             //raise event       
-            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _eventPublisher.PublishAsync(new OrderRefundedEvent(order, amountToRefund));
         }
 
 

@@ -177,7 +177,7 @@ namespace Grand.Web.Controllers
                             await _authenticationService.SignIn(customer, model.RememberMe);
 
                             //raise event       
-                            await _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
+                            await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
 
                             //activity log
                             await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
@@ -576,7 +576,7 @@ namespace Grand.Web.Controllers
                     await customerActionEventService.Registration(customer);
 
                     //raise event       
-                    await _eventPublisher.Publish(new CustomerRegisteredEvent(customer));
+                    await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
 
                     switch (_customerSettings.UserRegistrationType)
                     {

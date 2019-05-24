@@ -517,7 +517,7 @@ namespace Grand.Web.Controllers
 
                 //raise event
                 if (productReview.IsApproved)
-                    await eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                    await eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
 
                 await _productViewModelService.PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;

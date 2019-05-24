@@ -30,7 +30,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 
         #region Methods
 
-        public async Task HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
+        public async Task HandleEventAsync(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
         {
             if (eventMessage?.Customer == null || eventMessage.AuthenticationParameters == null)
                 return;
@@ -48,6 +48,9 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
             if (!string.IsNullOrEmpty(lastName))
                 await _genericAttributeService.SaveAttribute(eventMessage.Customer, SystemCustomerAttributeNames.LastName, lastName);
         }
+
+        public void HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage) { }
+
 
         #endregion
     }

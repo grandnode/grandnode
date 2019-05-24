@@ -6065,3 +6065,11 @@ form>h4 {
         width: 75%;
     }
 }
+
+.AllowedTokens {
+    height: 200px;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: 3px;
+    margin-top: 5px;
+}

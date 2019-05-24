@@ -51,7 +51,7 @@ namespace Grand.Framework.TagHelpers.Admin
             sb.AppendLine($"$('#{Name}').show();");
 
             var eventMessage = new AdminTabStripCreated(Name);
-            await _eventPublisher.Publish(eventMessage);
+            await _eventPublisher.PublishAsync(eventMessage);
             int i = 0;
             foreach (var eventBlock in eventMessage.BlocksToRender)
             {
@@ -69,7 +69,7 @@ namespace Grand.Framework.TagHelpers.Admin
 
 
             output.PostContent.AppendHtml(string.Concat(list));
-            output.PostElement.AppendHtml(sb.ToString());
+            output.PreElement.AppendHtml(sb.ToString());
         }
 
         private int GetSelectedTabIndex()

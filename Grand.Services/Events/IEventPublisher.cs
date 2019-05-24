@@ -8,10 +8,17 @@ namespace Grand.Services.Events
     public interface IEventPublisher
     {
         /// <summary>
+        /// Task Publish event
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="eventMessage">Event message</param>
+        Task PublishAsync<T>(T eventMessage);
+
+        /// <summary>
         /// Publish event
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        Task Publish<T>(T eventMessage);
+        void Publish<T>(T eventMessage);
     }
 }

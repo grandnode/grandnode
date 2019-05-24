@@ -51,7 +51,7 @@ namespace Grand.Services.Localization.Tests
             _settingService = new Mock<ISettingService>().Object;
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             _localizationSettings = new LocalizationSettings();

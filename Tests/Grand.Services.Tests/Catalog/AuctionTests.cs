@@ -29,7 +29,7 @@ namespace Grand.Services.Tests.Catalog
             _bidRepository = new MongoDBRepositoryTest<Bid>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var productService = new Mock<IProductService>();

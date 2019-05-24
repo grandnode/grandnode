@@ -7,11 +7,11 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 {
     public partial class NeverSoldReportModel : BaseGrandModel
     {
-        [GrandResourceDisplayName("Admin.SalesReport.NeverSold.StartDate")]
+        [GrandResourceDisplayName("Admin.Reports.NeverSold.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.NeverSold.EndDate")]
+        [GrandResourceDisplayName("Admin.Reports.NeverSold.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
     }

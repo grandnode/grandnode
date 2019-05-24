@@ -6,13 +6,13 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 {
     public partial class OrderPeriodReportLineModel : BaseGrandModel
     {
-        [GrandResourceDisplayName("Admin.SalesReport.Period.Name")]
+        [GrandResourceDisplayName("Admin.Reports.Period.Name")]
         public string Period { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Period.Count")]
+        [GrandResourceDisplayName("Admin.Reports.Period.Count")]
         public int Count { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Period.Amount")]
+        [GrandResourceDisplayName("Admin.Reports.Period.Amount")]
         public decimal Amount { get; set; }
 
     }

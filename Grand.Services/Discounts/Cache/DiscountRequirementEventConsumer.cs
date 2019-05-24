@@ -11,7 +11,7 @@ namespace Grand.Services.Discounts.Cache
     /// <summary>
     /// Cache event consumer (used for caching of discount requirements)
     /// </summary>
-    public partial class DiscountRequirementEventConsumer :
+    public abstract class DiscountRequirementEventConsumer :
         //discounts
         IConsumer<EntityUpdated<Discount>>,
         IConsumer<EntityDeleted<Discount>>
@@ -33,12 +33,15 @@ namespace Grand.Services.Discounts.Cache
             this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
+        public abstract void HandleEvent(EntityUpdated<Discount> eventMessage);
+        public abstract void HandleEvent(EntityDeleted<Discount> eventMessage);
+
         //discounts
-        public async Task HandleEvent(EntityUpdated<Discount> eventMessage)
+        public async Task HandleEventAsync(EntityUpdated<Discount> eventMessage)
         {
             await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<Discount> eventMessage)
+        public async Task HandleEventAsync(EntityDeleted<Discount> eventMessage)
         {
             await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }

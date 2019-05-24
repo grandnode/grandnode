@@ -30,7 +30,7 @@ namespace Grand.Services.Tests.Catalog
             _workContext = new Mock<IWorkContext>().Object;
 
             var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _productReservationService = new ProductReservationService(_productReservationRepository,

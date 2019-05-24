@@ -151,7 +151,7 @@ namespace Grand.Services.Directory.Tests
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             _serviceProvider = new Mock<IServiceProvider>().Object;

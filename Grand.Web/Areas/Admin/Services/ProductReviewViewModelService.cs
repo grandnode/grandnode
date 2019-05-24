@@ -143,7 +143,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                     //raise event (only if it wasn't approved before)
                     if (!previousIsApproved)
-                        await _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                        await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
                 }
             }
         }
