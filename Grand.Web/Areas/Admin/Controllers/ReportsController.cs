@@ -186,9 +186,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> BestsellersReport()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var model = new BestsellersReportModel
             {
                 //vendor
@@ -226,9 +223,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -316,20 +310,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public async Task<IActionResult> NeverSoldReport()
+        public IActionResult NeverSoldReport()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var model = new NeverSoldReportModel();
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
             //a vendor should have access only to his products
             string vendorId = "";
             if (_workContext.CurrentVendor != null)
@@ -546,19 +534,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Low stock reports
 
-        public async Task<IActionResult> LowStockReport()
+        public IActionResult LowStockReport()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> LowStockReportList(DataSourceRequest command)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             string vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
