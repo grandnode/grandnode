@@ -102,7 +102,7 @@
                                 Email: { editable: true, type: "string" },
                                 Active: { editable: true, type: "boolean" },
                                 StoreName: { editable: false, type: "string" },
-                                CreatedOn: { editable: false, type: "date" },
+                                CreatedOn: { editable: false, type: "string" },
                                 Categories: { editable: false, type: "string"}
                             }
                         }
@@ -155,8 +155,7 @@
                         field: "CreatedOn",
                         title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
                         width: 150,
-                        type: "date",
-                        format: "{0:G}"
+                        type: "string"
                     }, {
                         command: [
                             {
