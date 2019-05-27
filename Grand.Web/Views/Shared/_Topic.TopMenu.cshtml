@@ -1,0 +1,21 @@
+﻿@model IEnumerable<TopMenuModel.TopMenuTopicModel>
+
+@foreach (var topic in Model)
+{
+    if (!topic.Children.Any())
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Topic", new { SeName=topic.SeName })">@topic.Name</a></li>
+    }
+    else
+    {
+        <li class="nav-item dropdown">
+            <span class="pl-3 nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">@topic.Name</span>
+            <ul class="dropdown-menu">
+                <li class="nav-item-back">
+                    <span class="pl-3 nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="False">&larr; @T("Common.Back")</span>
+                </li>
+                <partial name="_Topic.TopMenu" model="topic.Children" />
+            </ul>
+        </li>
+    }
+}

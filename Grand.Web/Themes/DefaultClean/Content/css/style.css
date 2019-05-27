@@ -949,8 +949,13 @@ ul.ui-autocomplete li img {
 	padding-top: 0;
 	padding-bottom: 0;
 }
+
+.mainNav .nav-item-back {
+    display: none;
+}
+
 .navbar-inner {
-	min-height: 60px;
+    min-height: 60px;
 }
 .navbar .brand {
 	padding: 0 10px;
@@ -4599,7 +4604,18 @@ footer .socicon-pinterest:hover {
         padding: 14px 25px;
         color: #1D1F20;
         font-size: 14px;
+        cursor: pointer;
     }
+
+    .mobile-menu .nav-item-back .nav-link {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 25px;
+        color: #1D1F20;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
     .mobile-menu .nav-item .nav-link .arrow-down {
         color: #1D1F20;
         transform: rotate(-90deg);

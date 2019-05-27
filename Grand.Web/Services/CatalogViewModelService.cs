@@ -692,6 +692,18 @@ namespace Grand.Web.Services
 
         #region Top menu
 
+        protected virtual IEnumerable<TopMenuModel.TopMenuTopicModel> GatherTopMenuItems(IList<Core.Domain.Topics.Topic> allItems, string languageId, string parentTopicId)
+        {
+            return allItems.Where(t => (string.IsNullOrEmpty(parentTopicId) && string.IsNullOrEmpty(t.ParentTopicId)) || t.ParentTopicId == parentTopicId)
+                           .Select(t => new TopMenuModel.TopMenuTopicModel {
+                               Id = t.Id,
+                               Name = t.GetLocalized(x => x.Title, languageId),
+                               SeName = t.GetSeName(languageId),
+                               SystemName = t.SystemName,
+                               Children = GatherTopMenuItems(allItems, languageId, t.SystemName).ToList()
+                           }).ToList();
+        }
+
         public virtual async Task<TopMenuModel> PrepareTopMenu()
         {
             var languageId = _workContext.WorkingLanguage.Id;
@@ -699,23 +711,19 @@ namespace Grand.Web.Services
             //categories
             var cachedCategoriesModel = PrepareCategorySimpleModels();
             //top menu topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY,
+            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
-                (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
-                .Where(t => t.IncludeInTopMenu)
-                .Select(t => new TopMenuModel.TopMenuTopicModel
-                {
-                    Id = t.Id,
-                    Name = t.GetLocalized(x => x.Title, languageId),
-                    SeName = t.GetSeName(languageId)
-                })
-                .ToList()
-            );
 
-            string manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
+            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
+            {
+                var allItems = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id)).Where(t => t.IncludeInTopMenu).ToList();
+
+                return GatherTopMenuItems(allItems, languageId, null).ToList();
+            });
+
+            var manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedManufacturerModel = await _cacheManager.GetAsync(manufacturerCacheKey, async () =>

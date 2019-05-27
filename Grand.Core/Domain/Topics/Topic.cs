@@ -105,6 +105,7 @@ namespace Grand.Core.Domain.Topics
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
+
         public IList<string> Stores { get; set; }
 
         /// <summary>
@@ -116,7 +117,12 @@ namespace Grand.Core.Domain.Topics
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
+
         public IList<string> CustomerRoles { get; set; }
 
+        /// <summary>
+        /// Gets or sets optional parent topic id, under which this topic should be nested
+        /// </summary>
+        public string ParentTopicId { get; set; }
     }
 }

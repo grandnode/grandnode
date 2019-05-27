@@ -34,6 +34,8 @@ namespace Grand.Web.Models.Catalog
         {
             public string Name { get; set; }
             public string SeName { get; set; }
+            public string SystemName { get; set; }
+            public IList<TopMenuTopicModel> Children { get; set; } = new List<TopMenuTopicModel>();
         }
 
         public class TopMenuManufacturerModel : BaseGrandEntityModel

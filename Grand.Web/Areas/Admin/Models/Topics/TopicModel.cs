@@ -32,6 +32,9 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         
         public string SystemName { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.ParentTopicId")]
+        public string ParentTopicId { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInSitemap")]
         public bool IncludeInSitemap { get; set; }
 

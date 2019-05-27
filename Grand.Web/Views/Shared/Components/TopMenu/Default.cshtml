@@ -1,79 +1,78 @@
 ﻿@model TopMenuModel
-    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
-    @if (Model.DisplayHomePageMenu)
-    {
-        <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-    }
-    @{
-        var rootCategories = Model.Categories.ToList();
-    }
-    @foreach (var category in rootCategories)
-    {
-        var categoryLineModel = new TopMenuModel.CategoryLineModel
-        {
-            Category = category
-        };
-        <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
-    }
 
-    @foreach (var topic in Model.Topics)
+@await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
+@if (Model.DisplayHomePageMenu)
+{
+    <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+}
+@{
+    var rootCategories = Model.Categories.ToList();
+}
+@foreach (var category in rootCategories)
+{
+    var categoryLineModel = new TopMenuModel.CategoryLineModel
     {
-        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Topic", new { SeName=topic.SeName })">@topic.Name</a></li>
-    }
-    @if (Model.Manufacturers.Any())
+        Category = category
+    };
+    <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
+}
+
+<partial name="_Topic.TopMenu" model="Model.Topics"/>
+
+@if (Model.Manufacturers.Any())
+{
+    <li class="nav-item dropdown manufacturer-items d-lg-flex d-none">
+        <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>@T("Manufacturers.Menu")</span>
+            <span class="mdi mdi-chevron-down arrow-down"></span>
+        </a>
+        <ul class="dropdown-menu manufacturer-dropdown first-level">
+            @foreach (var manuf in Model.Manufacturers)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.RouteUrl("Manufacturer", new { SeName = manuf.SeName })">
+                        @if (!string.IsNullOrEmpty(manuf.Icon))
+                        {
+                            <span class="category-icon @manuf.Icon"></span>
+                        }
+                        @manuf.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </li>
+}
+@if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayForumsMenu | Model.DisplayContactUsMenu)
+{
+    <li class="blank-link"></li>
+    @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
     {
-        <li class="nav-item dropdown manufacturer-items d-lg-flex d-none">
-            <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span>@T("Manufacturers.Menu")</span>
-                <span class="mdi mdi-chevron-down arrow-down"></span>
-            </a>
-            <ul class="dropdown-menu manufacturer-dropdown first-level">
-                @foreach (var manuf in Model.Manufacturers)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.RouteUrl("Manufacturer", new { SeName = manuf.SeName })">
-                            @if (!string.IsNullOrEmpty(manuf.Icon))
-                            {
-                                <span class="category-icon @manuf.Icon"></span>
-                            }
-                            @manuf.Name
-                        </a>
-                    </li>
-                }
-            </ul>
+        <li class="nav-item solo-link-item">
+            <a class="nav-link" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
         </li>
     }
-    @if (Model.DisplaySearchMenu | Model.DisplayNewProductsMenu | Model.DisplayCustomerMenu | Model.DisplayBlogMenu | Model.DisplayForumsMenu | Model.DisplayContactUsMenu)
+    @if (Model.DisplaySearchMenu)
     {
-                <li class="blank-link"></li>
-                @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
-                {
-                    <li class="nav-item solo-link-item">
-                        <a class="nav-link" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
-                    </li>
-                }
-                @if (Model.DisplaySearchMenu)
-                {
-                    <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
-                }
-                @if (Model.DisplayCustomerMenu)
-                {
-                    <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-                }
-                @if (Model.BlogEnabled && Model.DisplayBlogMenu)
-                {
-                    <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-                }
-                @if (Model.ForumEnabled && Model.DisplayForumsMenu)
-                {
-                    <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-                }
-                @if (Model.DisplayContactUsMenu)
-                {
-                    <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
-                }
+        <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+    @if (Model.DisplayCustomerMenu)
+    {
+        <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+    }
+    @if (Model.BlogEnabled && Model.DisplayBlogMenu)
+    {
+        <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+    }
+    @if (Model.ForumEnabled && Model.DisplayForumsMenu)
+    {
+        <li class="nav-item"><a class="nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+    }
+    @if (Model.DisplayContactUsMenu)
+    {
+        <li class="nav-item solo-link-item"><a class="nav-link" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+    }
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
 
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
