@@ -4,6 +4,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -82,7 +83,7 @@ namespace Grand.Services.Directory
         private readonly IRepository<MeasureUnit> _measureUnitRepository;
         private readonly ICacheManager _cacheManager;
         private readonly MeasureSettings _measureSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -102,7 +103,7 @@ namespace Grand.Services.Directory
             IRepository<MeasureWeight> measureWeightRepository,
             IRepository<MeasureUnit> measureUnitRepository,
             MeasureSettings measureSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IServiceProvider serviceProvider)
         {
             _cacheManager = cacheManager;
@@ -110,7 +111,7 @@ namespace Grand.Services.Directory
             _measureWeightRepository = measureWeightRepository;
             _measureUnitRepository = measureUnitRepository;
             _measureSettings = measureSettings;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _serviceProvider = serviceProvider;
         }
 
@@ -134,7 +135,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(measureDimension);
+            await _mediator.EntityDeleted(measureDimension);
         }
         
         /// <summary>
@@ -195,7 +196,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(measure);
+            await _mediator.EntityInserted(measure);
         }
 
         /// <summary>
@@ -212,7 +213,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(measure);
+            await _mediator.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -309,7 +310,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(measureWeight);
+            await _mediator.EntityDeleted(measureWeight);
         }
 
         /// <summary>
@@ -370,7 +371,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(measure);
+            await _mediator.EntityInserted(measure);
         }
 
         /// <summary>
@@ -387,7 +388,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(measure);
+            await _mediator.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -492,7 +493,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(measureUnit);
+            await _mediator.EntityDeleted(measureUnit);
         }
 
         /// <summary>
@@ -537,7 +538,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(measure);
+            await _mediator.EntityInserted(measure);
         }
 
         /// <summary>
@@ -554,7 +555,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(measure);
+            await _mediator.EntityUpdated(measure);
         }
         #endregion
 

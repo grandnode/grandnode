@@ -26,6 +26,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Grand.Web.Controllers
 {
@@ -259,7 +260,7 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid, 
-            [FromServices] IOrderService orderService, [FromServices] IEventPublisher eventPublisher, [FromServices] CaptchaSettings captchaSettings)
+            [FromServices] IOrderService orderService, [FromServices] IMediator eventPublisher, [FromServices] CaptchaSettings captchaSettings)
         {
             var vendor = await _vendorService.GetVendorById(vendorId);
             if (vendor == null || !vendor.Active || !vendor.AllowCustomerReviews)
@@ -289,7 +290,7 @@ namespace Grand.Web.Controllers
 
                 //raise event
                 if (vendorReview.IsApproved)
-                    await eventPublisher.PublishAsync(new VendorReviewApprovedEvent(vendorReview));
+                    await eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
 
                 await _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
                 model.AddVendorReview.Title = null;

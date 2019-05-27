@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -52,7 +53,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -68,11 +69,11 @@ namespace Grand.Services.Catalog
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<Product> productRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _productRepository = productRepository;
         }
 
@@ -126,7 +127,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(specificationAttribute);
+            await _mediator.EntityDeleted(specificationAttribute);
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(specificationAttribute);
+            await _mediator.EntityInserted(specificationAttribute);
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(specificationAttribute);
+            await _mediator.EntityUpdated(specificationAttribute);
         }
 
         #endregion
@@ -210,7 +211,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(specificationAttributeOption);
+            await _mediator.EntityDeleted(specificationAttributeOption);
         }
 
 
@@ -236,7 +237,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productSpecificationAttribute);
+            await _mediator.EntityDeleted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -257,7 +258,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productSpecificationAttribute);
+            await _mediator.EntityInserted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -288,7 +289,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productSpecificationAttribute);
+            await _mediator.EntityUpdated(productSpecificationAttribute);
         }
 
         /// <summary>

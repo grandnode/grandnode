@@ -2,6 +2,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -57,7 +58,7 @@ namespace Grand.Services.Common
         #region Fields
 
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         
         #endregion
@@ -72,11 +73,11 @@ namespace Grand.Services.Common
         /// <param name="eventPublisher">Event published</param>
         public AddressAttributeService(ICacheManager cacheManager,
             IRepository<AddressAttribute> addressAttributeRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._addressAttributeRepository = addressAttributeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -98,7 +99,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(addressAttribute);
+            await _mediator.EntityDeleted(addressAttribute);
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(addressAttribute);
+            await _mediator.EntityInserted(addressAttribute);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(addressAttribute);
+            await _mediator.EntityUpdated(addressAttribute);
         }
 
         /// <summary>
@@ -184,7 +185,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(addressAttributeValue);
+            await _mediator.EntityDeleted(addressAttributeValue);
         }
 
         /// <summary>
@@ -204,7 +205,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(addressAttributeValue);
+            await _mediator.EntityInserted(addressAttributeValue);
         }
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(addressAttributeValue);
+            await _mediator.EntityUpdated(addressAttributeValue);
         }
         
         #endregion

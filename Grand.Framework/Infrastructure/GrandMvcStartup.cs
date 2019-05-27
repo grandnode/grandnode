@@ -30,6 +30,9 @@ namespace Grand.Framework.Infrastructure
             //add WebMarkupMin
             services.AddHtmlMinification();
 
+            //add mediatR
+            services.AddMediator();
+
             //add and configure MVC feature
             services.AddGrandMvc();
 

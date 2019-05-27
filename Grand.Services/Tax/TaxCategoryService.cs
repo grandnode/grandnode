@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -46,7 +47,7 @@ namespace Grand.Services.Tax
         #region Fields
 
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<Product> _productRepository;
 
@@ -62,11 +63,11 @@ namespace Grand.Services.Tax
         /// <param name="eventPublisher">Event published</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
-            IEventPublisher eventPublisher, IRepository<Product> productRepository)
+            IMediator mediator, IRepository<Product> productRepository)
         {
             _cacheManager = cacheManager;
             _taxCategoryRepository = taxCategoryRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _productRepository = productRepository;
         }
 
@@ -95,7 +96,7 @@ namespace Grand.Services.Tax
             await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(taxCategory);
+            await _mediator.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace Grand.Services.Tax
             await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(taxCategory);
+            await _mediator.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace Grand.Services.Tax
             await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(taxCategory);
+            await _mediator.EntityUpdated(taxCategory);
         }
         #endregion
     }

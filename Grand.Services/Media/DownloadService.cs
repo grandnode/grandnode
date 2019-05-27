@@ -7,6 +7,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
 using Grand.Services.Orders;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -25,7 +26,7 @@ namespace Grand.Services.Media
         #region Fields
 
         private readonly IRepository<Download> _downloadRepository;
-        private readonly IEventPublisher _eventPubisher;
+        private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -37,10 +38,10 @@ namespace Grand.Services.Media
         /// <param name="downloadRepository">Download repository</param>
         /// <param name="eventPubisher"></param>
         public DownloadService(IRepository<Download> downloadRepository,
-            IEventPublisher eventPubisher, IServiceProvider serviceProvider)
+            IMediator mediator, IServiceProvider serviceProvider)
         {
             _downloadRepository = downloadRepository;
-            _eventPubisher = eventPubisher;
+            _mediator = mediator;
             _serviceProvider = serviceProvider;
         }
 
@@ -102,7 +103,7 @@ namespace Grand.Services.Media
 
             await _downloadRepository.DeleteAsync(download);
 
-            await _eventPubisher.EntityDeleted(download);
+            await _mediator.EntityDeleted(download);
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace Grand.Services.Media
             download.DownloadBinary = null;
             await _downloadRepository.InsertAsync(download);
 
-            await _eventPubisher.EntityInserted(download);
+            await _mediator.EntityInserted(download);
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Grand.Services.Media
 
             await _downloadRepository.UpdateAsync(download);
 
-            await _eventPubisher.EntityUpdated(download);
+            await _mediator.EntityUpdated(download);
         }
 
         /// <summary>

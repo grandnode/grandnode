@@ -1,8 +1,9 @@
 using DotLiquid;
+using MediatR;
 
 namespace Grand.Core.Domain.Messages
 {
-    public class EmailSubscribedEvent
+    public class EmailSubscribedEvent : INotification
     {
         private readonly string _email;
 
@@ -42,7 +43,7 @@ namespace Grand.Core.Domain.Messages
         }
     }
 
-    public class EmailUnsubscribedEvent
+    public class EmailUnsubscribedEvent : INotification
     {
         private readonly string _email;
 
@@ -88,7 +89,7 @@ namespace Grand.Core.Domain.Messages
     /// <typeparam name="T">Entity type</typeparam>
     /// <param name="liquidDrop">DotLiquid Drop, e.g. LiquidOrder</param>
     /// <param name="liquidObject">An object that acumulates all DotLiquid Drops</param>
-    public class EntityTokensAddedEvent<T> where T : ParentEntity
+    public class EntityTokensAddedEvent<T> : INotification where T : ParentEntity
     {
         private readonly T _entity;
         private readonly Drop _liquidDrop;
@@ -110,7 +111,7 @@ namespace Grand.Core.Domain.Messages
     /// A container for tokens that are added.
     /// </summary>
     /// <typeparam name="U"></typeparam>
-    public class MessageTokensAddedEvent
+    public class MessageTokensAddedEvent : INotification
     {
         private readonly MessageTemplate _message;
         private readonly LiquidObject _liquidObject;

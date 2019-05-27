@@ -5,6 +5,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -47,7 +48,7 @@ namespace Grand.Services.Directory
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly CurrencySettings _currencySettings;
         private Currency _primaryCurrency;
         private Currency _primaryExchangeRateCurrency;
@@ -70,14 +71,14 @@ namespace Grand.Services.Directory
             IStoreMappingService storeMappingService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._storeMappingService = storeMappingService;
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -111,7 +112,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(currency);
+            await _mediator.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -203,7 +204,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(currency);
+            await _mediator.EntityInserted(currency);
         }
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(currency);
+            await _mediator.EntityUpdated(currency);
         }
 
 

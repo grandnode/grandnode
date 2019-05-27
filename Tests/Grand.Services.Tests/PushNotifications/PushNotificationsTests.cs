@@ -9,6 +9,7 @@ using Grand.Services.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Grand.Services.Tests.PushNotifications
 {
@@ -18,7 +19,7 @@ namespace Grand.Services.Tests.PushNotifications
         private IRepository<PushRegistration> _registrationRepository;
         private IRepository<PushMessage> _messageRepository;
         private IPushNotificationsService _pushNotificationsService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private PushNotificationsSettings _pushNotificationsSettings;
         private ILocalizationService _localizationService;
         private ILogger _logger;
@@ -29,8 +30,8 @@ namespace Grand.Services.Tests.PushNotifications
             _registrationRepository = new MongoDBRepositoryTest<PushRegistration>();
             _messageRepository = new MongoDBRepositoryTest<PushMessage>();
 
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.PublishAsync(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var pushNotificationsSettings = new Mock<PushNotificationsSettings>();

@@ -6,6 +6,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -65,7 +66,7 @@ namespace Grand.Services.Messages
 
         private readonly IRepository<ContactAttribute> _contactAttributeRepository;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
@@ -84,14 +85,14 @@ namespace Grand.Services.Messages
         public ContactAttributeService(ICacheManager cacheManager,
             IRepository<ContactAttribute> contactAttributeRepository,
             IStoreMappingService storeMappingService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._contactAttributeRepository = contactAttributeRepository;
             this._storeMappingService = storeMappingService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._workContext = workContext;
             this._catalogSettings = catalogSettings;
         }
@@ -117,7 +118,7 @@ namespace Grand.Services.Messages
             await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(contactAttribute);
+            await _mediator.EntityDeleted(contactAttribute);
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace Grand.Services.Messages
             await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(contactAttribute);
+            await _mediator.EntityInserted(contactAttribute);
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace Grand.Services.Messages
             await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(contactAttribute);
+            await _mediator.EntityUpdated(contactAttribute);
         }
 
         #endregion

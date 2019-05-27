@@ -1,9 +1,10 @@
 ﻿using Grand.Core.Domain.Orders;
+using MediatR;
 using System.Collections.Generic;
 
 namespace Grand.Services.Events.Web
 {
-    public class ShoppingCartWarningsEvent<T, U> where U : ShoppingCartItem
+    public class ShoppingCartWarningsEvent<T, U> : INotification where U : ShoppingCartItem
     {
         private readonly IList<T> _warnings;
         private readonly IList<U> _shoppingCartItems;

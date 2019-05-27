@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Grand.Web.Controllers
 {
@@ -488,7 +489,7 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid,
-            [FromServices] IOrderService orderService, [FromServices] IEventPublisher eventPublisher)
+            [FromServices] IOrderService orderService, [FromServices] IMediator mediator)
         {
             var product = await _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -517,7 +518,7 @@ namespace Grand.Web.Controllers
 
                 //raise event
                 if (productReview.IsApproved)
-                    await eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
+                    await mediator.Publish(new ProductReviewApprovedEvent(productReview));
 
                 await _productViewModelService.PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;

@@ -15,6 +15,7 @@ using Grand.Services.Authentication.External;
 using Grand.Services.Configuration;
 using Grand.Services.Logging;
 using Grand.Services.Security;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -31,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
@@ -402,6 +404,19 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
             });
+        }
+
+        /// <summary>
+        /// Adds services for mediatR
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddMediator(this IServiceCollection services)
+        {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+            var typeFinder = new WebAppTypeFinder();
+            var assemblies = typeFinder.GetAssemblies();
+            services.AddMediatR(assemblies.ToArray());
         }
     }
 }

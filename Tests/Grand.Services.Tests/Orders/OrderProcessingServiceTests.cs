@@ -35,6 +35,7 @@ using Grand.Services.Stores;
 using Grand.Core.Tests.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -86,7 +87,7 @@ namespace Grand.Services.Orders.Tests
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private IOrderProcessingService _orderProcessingService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private CurrencySettings _currencySettings;
         private IAffiliateService _affiliateService;
         private IVendorService _vendorService;
@@ -142,9 +143,9 @@ namespace Grand.Services.Orders.Tests
                 _productAttributeParser, _productService, _customerService,
                 cacheManager, _vendorService, _storeService, _currencyService, _shoppingCartSettings, _catalogSettings);
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
 

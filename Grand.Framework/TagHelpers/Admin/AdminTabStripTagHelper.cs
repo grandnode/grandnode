@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Events;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -13,11 +14,11 @@ namespace Grand.Framework.TagHelpers.Admin
     [HtmlTargetElement("admin-tabstrip")]
     public partial class AdminTabStripTagHelper : TagHelper
     {
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
-        public AdminTabStripTagHelper(IEventPublisher eventPublisher)
+        public AdminTabStripTagHelper(IMediator mediator)
         {
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
         }
 
         [HtmlAttributeName("SetTabPos")]
@@ -51,7 +52,7 @@ namespace Grand.Framework.TagHelpers.Admin
             sb.AppendLine($"$('#{Name}').show();");
 
             var eventMessage = new AdminTabStripCreated(Name);
-            await _eventPublisher.PublishAsync(eventMessage);
+            await _mediator.Publish(eventMessage);
             int i = 0;
             foreach (var eventBlock in eventMessage.BlocksToRender)
             {

@@ -4,6 +4,7 @@ using Grand.Core.Domain.Localization;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -48,7 +49,7 @@ namespace Grand.Services.Localization
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -68,14 +69,14 @@ namespace Grand.Services.Localization
             IStoreMappingService storeMappingService,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
             this._storeMappingService = storeMappingService;
             this._settingService = settingService;
             this._localizationSettings = localizationSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -111,7 +112,7 @@ namespace Grand.Services.Localization
             await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(language);
+            await _mediator.EntityDeleted(language);
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace Grand.Services.Localization
             await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(language);
+            await _mediator.EntityInserted(language);
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace Grand.Services.Localization
             await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(language);
+            await _mediator.EntityUpdated(language);
         }
 
         #endregion

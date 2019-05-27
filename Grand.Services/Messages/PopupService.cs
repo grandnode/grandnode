@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
@@ -13,7 +14,7 @@ namespace Grand.Services.Messages
     {
         private readonly IRepository<PopupActive> _popupActiveRepository;
         private readonly IRepository<PopupArchive> _popupArchiveRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
@@ -23,11 +24,11 @@ namespace Grand.Services.Messages
         /// <param name="eventPublisher">Event published</param>
         public PopupService(IRepository<PopupActive> popupActiveRepository,
             IRepository<PopupArchive> popupArchiveRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._popupActiveRepository = popupActiveRepository;
             this._popupArchiveRepository = popupArchiveRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Grand.Services.Messages
             await _popupActiveRepository.InsertAsync(popup);
 
             //event notification
-            await _eventPublisher.EntityInserted(popup);
+            await _mediator.EntityInserted(popup);
         }
 
 

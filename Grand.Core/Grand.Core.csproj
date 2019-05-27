@@ -36,5 +36,7 @@
     <PackageReference Include="MongoDB.Driver.Core" Version="2.8.1" />
     <PackageReference Include="MongoDB.Driver.GridFS" Version="2.8.1" />
     <PackageReference Include="DotLiquid" Version="2.0.314" />
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
 </Project>

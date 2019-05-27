@@ -6,6 +6,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -32,7 +33,7 @@ namespace Grand.Services.Orders
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -55,7 +56,7 @@ namespace Grand.Services.Orders
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<Customer> customerRepository,
             IRepository<ReturnRequest> returnRequestRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IRepository<ProductAlsoPurchased> productAlsoPurchasedRepository,
             IRepository<ProductDeleted> productDeletedRepository)
         {
@@ -65,7 +66,7 @@ namespace Grand.Services.Orders
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._customerRepository = customerRepository;
             this._returnRequestRepository = returnRequestRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._productAlsoPurchasedRepository = productAlsoPurchasedRepository;
             this._productDeletedRepository = productDeletedRepository;
         }
@@ -290,7 +291,7 @@ namespace Grand.Services.Orders
             await _orderRepository.InsertAsync(order);
 
             //event notification
-            await _eventPublisher.EntityInserted(order);
+            await _mediator.EntityInserted(order);
         }
 
         /// <summary>
@@ -330,7 +331,7 @@ namespace Grand.Services.Orders
             await _orderRepository.UpdateAsync(order);
 
             //event notification
-            await _eventPublisher.EntityUpdated(order);
+            await _mediator.EntityUpdated(order);
         }
 
         /// <summary>
@@ -473,7 +474,7 @@ namespace Grand.Services.Orders
             await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
             //event notification
-            await _eventPublisher.EntityDeleted(orderItem);
+            await _mediator.EntityDeleted(orderItem);
         }
 
         #endregion
@@ -492,7 +493,7 @@ namespace Grand.Services.Orders
             await _orderNoteRepository.DeleteAsync(orderNote);
 
             //event notification
-            await _eventPublisher.EntityDeleted(orderNote);
+            await _mediator.EntityDeleted(orderNote);
         }
 
         /// <summary>
@@ -507,7 +508,7 @@ namespace Grand.Services.Orders
             await _orderNoteRepository.InsertAsync(orderNote);
 
             //event notification
-            await _eventPublisher.EntityInserted(orderNote);
+            await _mediator.EntityInserted(orderNote);
         }
 
         public virtual async Task<IList<OrderNote>> GetOrderNotes(string orderId)
@@ -570,7 +571,7 @@ namespace Grand.Services.Orders
             await _recurringPaymentRepository.InsertAsync(recurringPayment);
 
             //event notification
-            await _eventPublisher.EntityInserted(recurringPayment);
+            await _mediator.EntityInserted(recurringPayment);
         }
 
         /// <summary>
@@ -585,7 +586,7 @@ namespace Grand.Services.Orders
             await _recurringPaymentRepository.UpdateAsync(recurringPayment);
 
             //event notification
-            await _eventPublisher.EntityUpdated(recurringPayment);
+            await _mediator.EntityUpdated(recurringPayment);
         }
 
         /// <summary>

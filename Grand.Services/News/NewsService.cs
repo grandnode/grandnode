@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MediatR;
 
 namespace Grand.Services.News
 {
@@ -22,7 +23,7 @@ namespace Grand.Services.News
 
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -31,12 +32,12 @@ namespace Grand.Services.News
 
         public NewsService(IRepository<NewsItem> newsItemRepository, 
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkContext workContext)
         {
             this._newsItemRepository = newsItemRepository;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._workContext = workContext;
         }
 
@@ -56,7 +57,7 @@ namespace Grand.Services.News
             await _newsItemRepository.DeleteAsync(newsItem);
             
             //event notification
-            await _eventPublisher.EntityDeleted(newsItem);
+            await _mediator.EntityDeleted(newsItem);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Grand.Services.News
             await _newsItemRepository.InsertAsync(news);
 
             //event notification
-            await _eventPublisher.EntityInserted(news);
+            await _mediator.EntityInserted(news);
         }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace Grand.Services.News
             await _newsItemRepository.UpdateAsync(news);
             
             //event notification
-            await _eventPublisher.EntityUpdated(news);
+            await _mediator.EntityUpdated(news);
         }
         
         /// <summary>

@@ -6,6 +6,7 @@ using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
 using ImageMagick;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Drawing;
@@ -34,7 +35,7 @@ namespace Grand.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ILogger _logger;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -57,7 +58,7 @@ namespace Grand.Services.Media
             ISettingService settingService,
             IWebHelper webHelper,
             ILogger logger,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             MediaSettings mediaSettings,
             IHostingEnvironment hostingEnvironment)
         {
@@ -65,7 +66,7 @@ namespace Grand.Services.Media
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._logger = logger;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._mediaSettings = mediaSettings;
             this._hostingEnvironment = hostingEnvironment;
         }
@@ -636,7 +637,7 @@ namespace Grand.Services.Media
             await _pictureRepository.DeleteAsync(picture);
 
             //event notification
-            await _eventPublisher.EntityDeleted(picture);
+            await _mediator.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -718,7 +719,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            await _eventPublisher.EntityInserted(picture);
+            await _mediator.EntityInserted(picture);
 
             return picture;
         }
@@ -768,7 +769,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            await _eventPublisher.EntityUpdated(picture);
+            await _mediator.EntityUpdated(picture);
 
             return picture;
         }

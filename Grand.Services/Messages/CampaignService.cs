@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
@@ -29,7 +30,7 @@ namespace Grand.Services.Messages
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ICustomerService _customerService;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly IServiceProvider _serviceProvider;
@@ -41,7 +42,7 @@ namespace Grand.Services.Messages
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
             ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
             ICustomerService customerService, IStoreContext storeContext,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             IServiceProvider serviceProvider)
@@ -56,7 +57,7 @@ namespace Grand.Services.Messages
             this._queuedEmailService = queuedEmailService;
             this._storeContext = storeContext;
             this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._serviceProvider = serviceProvider;
@@ -74,7 +75,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.InsertAsync(campaign);
 
             //event notification
-            await _eventPublisher.EntityInserted(campaign);
+            await _mediator.EntityInserted(campaign);
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.UpdateAsync(campaign);
 
             //event notification
-            await _eventPublisher.EntityUpdated(campaign);
+            await _mediator.EntityUpdated(campaign);
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace Grand.Services.Messages
             await _campaignRepository.DeleteAsync(campaign);
 
             //event notification
-            await _eventPublisher.EntityDeleted(campaign);
+            await _mediator.EntityDeleted(campaign);
         }
 
         /// <summary>

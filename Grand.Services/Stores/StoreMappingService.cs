@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
+using MediatR;
 using System;
 using System.Linq;
 
@@ -34,7 +35,7 @@ namespace Grand.Services.Stores
 
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -51,12 +52,12 @@ namespace Grand.Services.Stores
         public StoreMappingService(ICacheManager cacheManager, 
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion

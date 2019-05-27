@@ -5,6 +5,7 @@ using Grand.Core.Plugins;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
@@ -20,7 +21,7 @@ namespace Grand.Services.Directory.Tests
         private IRepository<Currency> _currencyRepository;
         private IStoreMappingService _storeMappingService;
         private CurrencySettings _currencySettings;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private ICurrencyService _currencyService;
         private IServiceProvider _serviceProvider;
 
@@ -93,9 +94,9 @@ namespace Grand.Services.Directory.Tests
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
             _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             

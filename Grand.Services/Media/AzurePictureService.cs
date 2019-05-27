@@ -5,6 +5,7 @@ using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -33,7 +34,7 @@ namespace Grand.Services.Media
             ISettingService settingService,
             IWebHelper webHelper,
             ILogger logger,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             MediaSettings mediaSettings,
             IHostingEnvironment hostingEnvironment,
             GrandConfig config)
@@ -41,7 +42,7 @@ namespace Grand.Services.Media
                 settingService,
                 webHelper,
                 logger,
-                eventPublisher,
+                mediator,
                 mediaSettings,
                 hostingEnvironment)
         {

@@ -1,6 +1,4 @@
 using FluentValidation;
-using Grand.Core.Infrastructure;
-using Grand.Services.Events;
 
 namespace Grand.Framework.Validators
 {
@@ -17,7 +15,7 @@ namespace Grand.Framework.Validators
         /// </summary>
         protected virtual void PostInitialize()
         {
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
+            //TO DO
         }
 
     }

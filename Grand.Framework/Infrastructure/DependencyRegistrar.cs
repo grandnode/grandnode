@@ -299,18 +299,6 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
-            //Register event consumers
-            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
-            foreach (var consumer in consumers)
-            {
-                builder.RegisterType(consumer)
-                    .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
-                    {
-                        var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                        return isMatch;
-                    }, typeof(IConsumer<>)))
-                    .InstancePerLifetimeScope();
-            }
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)
             {
@@ -318,8 +306,6 @@ namespace Grand.Framework.Infrastructure
             }
 
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
-
-            builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
 
             //Register task
             builder.RegisterType<QueuedMessagesSendScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();

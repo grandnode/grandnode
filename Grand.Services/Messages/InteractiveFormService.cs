@@ -7,13 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
     public partial class InteractiveFormService : IInteractiveFormService
     {
         private readonly IRepository<InteractiveForm> _formRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
@@ -21,10 +22,10 @@ namespace Grand.Services.Messages
         /// <param name="FormRepository">Form repository</param>
         /// <param name="eventPublisher">Event published</param>
         public InteractiveFormService(IRepository<InteractiveForm> formRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._formRepository = formRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Grand.Services.Messages
 
             await _formRepository.InsertAsync(form);
             //event notification
-            await _eventPublisher.EntityInserted(form);
+            await _mediator.EntityInserted(form);
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace Grand.Services.Messages
             await _formRepository.UpdateAsync(form);
 
             //event notification
-            await _eventPublisher.EntityUpdated(form);
+            await _mediator.EntityUpdated(form);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Grand.Services.Messages
 
             await _formRepository.DeleteAsync(form);
             //event notification
-            await _eventPublisher.EntityDeleted(form);
+            await _mediator.EntityDeleted(form);
         }
 
         /// <summary>
