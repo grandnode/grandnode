@@ -14,6 +14,7 @@ using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
+using Grand.Framework.Validators;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
@@ -303,6 +304,19 @@ namespace Grand.Framework.Infrastructure
             foreach (var validator in validators)
             {
                 builder.RegisterType(validator);
+            }
+
+            //validator consumers
+            var validatorconsumers = typeFinder.FindClassesOfType(typeof(IValidatorConsumer<>)).ToList();
+            foreach (var consumer in validatorconsumers)
+            {
+                builder.RegisterType(consumer)
+                    .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
+                    {
+                        var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                        return isMatch;
+                    }, typeof(IValidatorConsumer<>)))
+                    .InstancePerLifetimeScope();
             }
 
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
