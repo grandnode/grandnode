@@ -11,15 +11,11 @@ using Grand.Web.Models.Common;
 using System.Threading.Tasks;
 
 /* Sample code to validate ZIP Code field in the Address */
-public class ZipCodeValidation : IConsumer<BaseGrandValidator<AddressModel>>
+public class ZipCodeValidation : IValidatorConsumer<AddressModel>
 {
-	public Task HandleEventAsync(BaseGrandValidator<AddressModel> eventMessage)
-	{
-        return Task.CompletedTask;
-    }
-
-    public void HandleEvent(BaseGrandValidator<AddressModel> eventMessage) {
-        eventMessage.RuleFor(x => x.ZipPostalCode).Matches(@"^[0-9]{2}\-[0-9]{3}$")
+    public void AddRules(BaseGrandValidator<AddressModel> validator)
+    {
+        validator.RuleFor(x => x.ZipPostalCode).Matches(@"^[0-9]{2}\-[0-9]{3}$")
             .WithMessage("Provided zip code is invalid");
     }
 }

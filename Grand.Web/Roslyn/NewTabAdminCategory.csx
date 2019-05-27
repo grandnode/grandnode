@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 /* Sample code to create new tab on category edit page */
-public class AdminTabEvent : IConsumer<AdminTabStripCreated>
+public class AdminTabEvent : INotificationHandler<AdminTabStripCreated>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -20,7 +22,7 @@ public class AdminTabEvent : IConsumer<AdminTabStripCreated>
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public Task HandleEventAsync(AdminTabStripCreated eventMessage)
+    public Task Handle(AdminTabStripCreated eventMessage, CancellationToken cancellationToken)
     {
         if (eventMessage.TabStripName == "category-edit")
         {
@@ -29,5 +31,5 @@ public class AdminTabEvent : IConsumer<AdminTabStripCreated>
         }
         return Task.CompletedTask;
     }
-    public void HandleEvent(AdminTabStripCreated eventMessage) { }
 }
+
