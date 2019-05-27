@@ -412,8 +412,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddMediator(this IServiceCollection services)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
             var typeFinder = new WebAppTypeFinder();
             var assemblies = typeFinder.GetAssemblies();
             services.AddMediatR(assemblies.ToArray());
