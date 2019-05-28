@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Vendors;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -21,7 +22,7 @@ namespace Grand.Services.Vendors
 
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<VendorReview> _vendorReviewRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -33,11 +34,11 @@ namespace Grand.Services.Vendors
         /// <param name="vendorRepository">Vendor repository</param>
         /// <param name="eventPublisher">Event published</param>
         public VendorService(IRepository<Vendor> vendorRepository, IRepository<VendorReview> vendorReviewRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._vendorRepository = vendorRepository;
             this._vendorReviewRepository = vendorReviewRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -101,7 +102,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.InsertAsync(vendor);
 
             //event notification
-            await _eventPublisher.EntityInserted(vendor);
+            await _mediator.EntityInserted(vendor);
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.UpdateAsync(vendor);
 
             //event notification
-            await _eventPublisher.EntityUpdated(vendor);
+            await _mediator.EntityUpdated(vendor);
         }
 
 
@@ -146,7 +147,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            await _eventPublisher.EntityInserted(vendorNote);
+            await _mediator.EntityInserted(vendorNote);
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
-            await _eventPublisher.EntityDeleted(vendorNote);
+            await _mediator.EntityDeleted(vendorNote);
         }
 
         /// <summary>
@@ -277,7 +278,7 @@ namespace Grand.Services.Vendors
             await _vendorRepository.Collection.UpdateOneAsync(filter, update);
            
             //event notification
-            await _eventPublisher.EntityUpdated(vendor);
+            await _mediator.EntityUpdated(vendor);
         }
 
         public virtual async Task UpdateVendorReview(VendorReview vendorreview)
@@ -295,7 +296,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.Collection.UpdateManyAsync(filter, update);
 
             //event notification
-            await _eventPublisher.EntityUpdated(vendorreview);
+            await _mediator.EntityUpdated(vendorreview);
         }
 
         /// <summary>
@@ -310,7 +311,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.InsertAsync(vendorReview);
 
             //event notification
-            await _eventPublisher.EntityInserted(vendorReview);
+            await _mediator.EntityInserted(vendorReview);
         }
 
         /// <summary>
@@ -325,7 +326,7 @@ namespace Grand.Services.Vendors
             await _vendorReviewRepository.DeleteAsync(vendorReview);
 
             //event notification
-            await _eventPublisher.EntityDeleted(vendorReview);
+            await _mediator.EntityDeleted(vendorReview);
         }
 
         /// <summary>

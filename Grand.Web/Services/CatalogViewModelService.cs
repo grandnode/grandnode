@@ -25,6 +25,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -52,7 +53,6 @@ namespace Grand.Web.Services
         private readonly ICurrencyService _currencyService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISearchTermService _searchTermService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
@@ -86,7 +86,6 @@ namespace Grand.Web.Services
             ICurrencyService currencyService,
             IHttpContextAccessor httpContextAccessor,
             ISearchTermService searchTermService,
-            IEventPublisher eventPublisher,
             IAclService aclService,
             IPermissionService permissionService,
             IStoreMappingService storeMappingService,
@@ -119,7 +118,6 @@ namespace Grand.Web.Services
             this._currencyService = currencyService;
             this._httpContextAccessor = httpContextAccessor;
             this._searchTermService = searchTermService;
-            this._eventPublisher = eventPublisher;
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._storeMappingService = storeMappingService;
@@ -1660,17 +1658,6 @@ namespace Grand.Web.Services
                             await _searchTermService.InsertSearchTerm(searchTerm);
                         }
                     }
-
-                    //event
-                    await _eventPublisher.PublishAsync(new ProductSearchEvent
-                    {
-                        SearchTerm = searchTerms,
-                        SearchInDescriptions = searchInDescriptions,
-                        CategoryIds = categoryIds,
-                        ManufacturerId = manufacturerId,
-                        WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                        VendorId = vendorId
-                    });
                 }
             }
 

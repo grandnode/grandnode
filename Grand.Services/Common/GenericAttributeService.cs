@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -20,7 +21,7 @@ namespace Grand.Services.Common
 
         private readonly IRepository<BaseEntity> _baseRepository;
         private readonly IRepository<GenericAttributeBaseEntity> _genericattributeBaseEntitRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
@@ -34,11 +35,11 @@ namespace Grand.Services.Common
         public GenericAttributeService(
             IRepository<BaseEntity> baseRepository,
             IRepository<GenericAttributeBaseEntity> genericattributeBaseEntitRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._baseRepository = baseRepository;
             this._genericattributeBaseEntitRepository = genericattributeBaseEntitRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion

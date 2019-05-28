@@ -12,6 +12,7 @@ using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Tests;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -25,7 +26,7 @@ namespace Grand.Services.Discounts.Tests
         private IRepository<Discount> _discountRepo;
         private IRepository<DiscountCoupon> _discountCouponRepo;
         private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IGenericAttributeService _genericAttributeService;
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
@@ -65,9 +66,9 @@ namespace Grand.Services.Discounts.Tests
             _discountRepo.Insert(discount2);
 
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             _storeContext = new Mock<IStoreContext>().Object;

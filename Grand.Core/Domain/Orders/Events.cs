@@ -1,9 +1,11 @@
+using MediatR;
+
 namespace Grand.Core.Domain.Orders
 {
     /// <summary>
     /// Order paid event
     /// </summary>
-    public class OrderPaidEvent
+    public class OrderPaidEvent : INotification
     {
         public OrderPaidEvent(Order order)
         {
@@ -19,7 +21,7 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Order placed event
     /// </summary>
-    public class OrderPlacedEvent
+    public class OrderPlacedEvent : INotification
     {
         public OrderPlacedEvent(Order order)
         {
@@ -35,7 +37,7 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Order cancelled event
     /// </summary>
-    public class OrderCancelledEvent
+    public class OrderCancelledEvent : INotification
     {
         public OrderCancelledEvent(Order order)
         {
@@ -51,7 +53,7 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Order refunded event
     /// </summary>
-    public class OrderRefundedEvent
+    public class OrderRefundedEvent : INotification
     {
         public OrderRefundedEvent(Order order, decimal amount)
         {

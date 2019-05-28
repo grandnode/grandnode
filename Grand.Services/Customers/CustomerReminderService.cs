@@ -13,6 +13,7 @@ using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -32,7 +33,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly CustomerSettings _customerSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -54,7 +55,7 @@ namespace Grand.Services.Customers
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
             CustomerSettings customerSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ITokenizer tokenizer,
             IEmailAccountService emailAccountService,
             IQueuedEmailService queuedEmailService,
@@ -71,7 +72,7 @@ namespace Grand.Services.Customers
             this._customerRepository = customerRepository;
             this._orderRepository = orderRepository;
             this._customerSettings = customerSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
             this._messageTokenProvider = messageTokenProvider;
@@ -623,7 +624,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.InsertAsync(customerReminder);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerReminder);
+            await _mediator.EntityInserted(customerReminder);
 
         }
 
@@ -639,7 +640,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.DeleteAsync(customerReminder);
 
             //event notification
-            await _eventPublisher.EntityDeleted(customerReminder);
+            await _mediator.EntityDeleted(customerReminder);
 
         }
 
@@ -655,7 +656,7 @@ namespace Grand.Services.Customers
             await _customerReminderRepository.UpdateAsync(customerReminder);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerReminder);
+            await _mediator.EntityUpdated(customerReminder);
         }
 
 

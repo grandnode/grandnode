@@ -2,6 +2,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -40,7 +41,7 @@ namespace Grand.Services.Stores
         #region Fields
         
         private readonly IRepository<Store> _storeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         private List<Store> _allStores;
@@ -57,11 +58,11 @@ namespace Grand.Services.Stores
         /// <param name="eventPublisher">Event published</param>
         public StoreService(ICacheManager cacheManager,
             IRepository<Store> storeRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._storeRepository = storeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -87,7 +88,7 @@ namespace Grand.Services.Stores
             await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityDeleted(store);
+            await _mediator.EntityDeleted(store);
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace Grand.Services.Stores
             await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityInserted(store);
+            await _mediator.EntityInserted(store);
         }
 
         /// <summary>
@@ -151,7 +152,7 @@ namespace Grand.Services.Stores
             await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityUpdated(store);
+            await _mediator.EntityUpdated(store);
         }
 
         /// <summary>

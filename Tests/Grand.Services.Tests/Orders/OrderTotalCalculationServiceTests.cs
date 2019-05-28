@@ -24,6 +24,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -62,7 +63,7 @@ namespace Grand.Services.Orders.Tests
         private IRepository<PickupPoint> _pickupPointRepository;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private Store _store;
         private IProductService _productService;
         private IGeoLookupService _geoLookupService;
@@ -118,9 +119,9 @@ namespace Grand.Services.Orders.Tests
                 cacheManager, _vendorService, _storeService, _currencyService,
                 _shoppingCartSettings, _catalogSettings);
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
 

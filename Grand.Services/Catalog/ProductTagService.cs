@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Catalog
 {
@@ -47,7 +48,7 @@ namespace Grand.Services.Catalog
         private readonly IDataProvider _dataProvider;
         private readonly CommonSettings _commonSettings;
         private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -67,14 +68,14 @@ namespace Grand.Services.Catalog
             IDataProvider dataProvider, 
             CommonSettings commonSettings,
             ICacheManager cacheManager,
-            IEventPublisher eventPublisher
+            IMediator mediator
             )
         {
             this._productTagRepository = productTagRepository;
             this._dataProvider = dataProvider;
             this._commonSettings = commonSettings;
             this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._productRepository = productRepository;
         }
 
@@ -137,7 +138,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(productTag);
+            await _mediator.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(productTag);
+            await _mediator.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(productTag);
+            await _mediator.EntityUpdated(productTag);
         }
 
         /// <summary>

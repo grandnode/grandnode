@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -18,17 +19,17 @@ namespace Grand.Services.Catalog
     {
         private readonly IRepository<ProductReservation> _productReservationRepository;
         private readonly IRepository<CustomerReservationsHelper> _customerReservationsHelperRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IWorkContext _workContext;
 
         public ProductReservationService(IRepository<ProductReservation> productReservationRepository,
             IRepository<CustomerReservationsHelper> customerReservationsHelperRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkContext workContext)
         {
             _productReservationRepository = productReservationRepository;
             _customerReservationsHelperRepository = customerReservationsHelperRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _workContext = workContext;
         }
 
@@ -42,7 +43,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productReservation");
 
             await _productReservationRepository.DeleteAsync(productReservation);
-            await _eventPublisher.EntityDeleted(productReservation);
+            await _mediator.EntityDeleted(productReservation);
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.InsertAsync(productReservation);
-            await _eventPublisher.EntityInserted(productReservation);
+            await _mediator.EntityInserted(productReservation);
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             await _productReservationRepository.UpdateAsync(productReservation);
-            await _eventPublisher.EntityInserted(productReservation);
+            await _mediator.EntityInserted(productReservation);
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.InsertAsync(crh);
-            await _eventPublisher.EntityInserted(crh);
+            await _mediator.EntityInserted(crh);
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("CustomerReservationsHelper");
 
             await _customerReservationsHelperRepository.DeleteAsync(crh);
-            await _eventPublisher.EntityDeleted(crh);
+            await _mediator.EntityDeleted(crh);
         }
 
 

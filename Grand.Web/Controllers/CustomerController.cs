@@ -28,6 +28,7 @@ using Grand.Services.Tax;
 using Grand.Web.Extensions;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Customer;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -55,7 +56,7 @@ namespace Grand.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressViewModelService _addressViewModelService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -82,7 +83,7 @@ namespace Grand.Web.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICustomerActivityService customerActivityService,
             IAddressViewModelService addressViewModelService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkflowMessageService workflowMessageService,
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
@@ -111,7 +112,7 @@ namespace Grand.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -177,7 +178,7 @@ namespace Grand.Web.Controllers
                             await _authenticationService.SignIn(customer, model.RememberMe);
 
                             //raise event       
-                            await _eventPublisher.PublishAsync(new CustomerLoggedinEvent(customer));
+                            await _mediator.Publish(new CustomerLoggedinEvent(customer));
 
                             //activity log
                             await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
@@ -576,7 +577,7 @@ namespace Grand.Web.Controllers
                     await customerActionEventService.Registration(customer);
 
                     //raise event       
-                    await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
+                    await _mediator.Publish(new CustomerRegisteredEvent(customer));
 
                     switch (_customerSettings.UserRegistrationType)
                     {

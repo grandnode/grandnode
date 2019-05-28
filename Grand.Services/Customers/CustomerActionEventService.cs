@@ -11,6 +11,7 @@ using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -34,7 +35,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<PopupActive> _popupActiveRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IMessageTemplateService _messageTemplateService;
@@ -61,7 +62,7 @@ namespace Grand.Services.Customers
             IRepository<PopupActive> popupActiveRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             IMessageTemplateService messageTemplateService,
@@ -85,7 +86,7 @@ namespace Grand.Services.Customers
             this._popupActiveRepository = popupActiveRepository;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
             this._messageTemplateService = messageTemplateService;

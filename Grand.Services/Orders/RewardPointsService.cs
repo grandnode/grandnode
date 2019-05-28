@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -21,7 +22,7 @@ namespace Grand.Services.Orders
         private readonly IRepository<RewardPointsHistory> _rphRepository;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -37,12 +38,12 @@ namespace Grand.Services.Orders
         public RewardPointsService(IRepository<RewardPointsHistory> rphRepository,
             RewardPointsSettings rewardPointsSettings,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._rphRepository = rphRepository;
             this._rewardPointsSettings = rewardPointsSettings;
             this._storeContext = storeContext;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
         #endregion
 
@@ -96,7 +97,7 @@ namespace Grand.Services.Orders
             await _rphRepository.InsertAsync(rewardPointsHistory);
 
             //event notification
-            await _eventPublisher.EntityInserted(rewardPointsHistory);
+            await _mediator.EntityInserted(rewardPointsHistory);
 
             return rewardPointsHistory;
         }

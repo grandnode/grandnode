@@ -28,6 +28,7 @@ using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace Grand.Services.Messages
         private readonly ShippingSettings _shippingSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly MediaSettings _mediaSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -94,7 +95,7 @@ namespace Grand.Services.Messages
             ShippingSettings shippingSettings,
             StoreInformationSettings storeInformationSettings,
             MediaSettings mediaSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IServiceProvider serviceProvider)
         {
             this._languageService = languageService;
@@ -120,7 +121,7 @@ namespace Grand.Services.Messages
             this._currencySettings = currencySettings;
             this._storeInformationSettings = storeInformationSettings;
             this._mediaSettings = mediaSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._serviceProvider = serviceProvider;
         }
 
@@ -208,7 +209,7 @@ namespace Grand.Services.Messages
 
             liquidObject.Store = liquidStore;
 
-            await _eventPublisher.EntityTokensAdded(store, liquidStore, liquidObject);
+            await _mediator.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
         public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
@@ -453,7 +454,7 @@ namespace Grand.Services.Messages
 
             liquidObject.Order = liquidOrder;
 
-            await _eventPublisher.EntityTokensAdded(order, liquidOrder, liquidObject);
+            await _mediator.EntityTokensAdded(order, liquidOrder, liquidObject);
         }
 
         public async Task AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, Order order, Store store, Language language)
@@ -475,7 +476,7 @@ namespace Grand.Services.Messages
                 liquidShipment.ShipmentItems.Add(liquidshipmentItems);
             }
             liquidObject.Shipment = liquidShipment;
-            await _eventPublisher.EntityTokensAdded(shipment, liquidShipment, liquidObject);
+            await _mediator.EntityTokensAdded(shipment, liquidShipment, liquidObject);
         }
 
         public async Task AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment)
@@ -483,7 +484,7 @@ namespace Grand.Services.Messages
             var liquidRecurringPayment = new LiquidRecurringPayment(recurringPayment);
             liquidObject.RecurringPayment = liquidRecurringPayment;
 
-            await _eventPublisher.EntityTokensAdded(recurringPayment, liquidRecurringPayment, liquidObject);
+            await _mediator.EntityTokensAdded(recurringPayment, liquidRecurringPayment, liquidObject);
         }
 
         public async Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order order, Language language)
@@ -551,7 +552,7 @@ namespace Grand.Services.Messages
 
             liquidObject.ReturnRequest = liquidReturnRequest;
 
-            await _eventPublisher.EntityTokensAdded(returnRequest, liquidReturnRequest, liquidObject);
+            await _mediator.EntityTokensAdded(returnRequest, liquidReturnRequest, liquidObject);
         }
 
         public async Task AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard)
@@ -560,7 +561,7 @@ namespace Grand.Services.Messages
             liquidGiftCart.Amount = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             liquidObject.GiftCard = liquidGiftCart;
 
-            await _eventPublisher.EntityTokensAdded(giftCard, liquidGiftCart, liquidObject);
+            await _mediator.EntityTokensAdded(giftCard, liquidGiftCart, liquidObject);
         }
 
         public async Task AddCustomerTokens(LiquidObject liquidObject, Customer customer, Store store, Language language, CustomerNote customerNote = null)
@@ -568,8 +569,8 @@ namespace Grand.Services.Messages
             var liquidCustomer = new LiquidCustomer(customer, store, language, customerNote);
             liquidObject.Customer = liquidCustomer;
 
-            await _eventPublisher.EntityTokensAdded(customer, liquidCustomer, liquidObject);
-            await _eventPublisher.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
+            await _mediator.EntityTokensAdded(customer, liquidCustomer, liquidObject);
+            await _mediator.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
         }
 
         public async Task AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, Store store, Language language,
@@ -642,7 +643,7 @@ namespace Grand.Services.Messages
 
             liquidObject.ShoppingCart = liquidShoppingCart;
 
-            await _eventPublisher.EntityTokensAdded(customer, liquidShoppingCart, liquidObject);
+            await _mediator.EntityTokensAdded(customer, liquidShoppingCart, liquidObject);
         }
 
         public async Task AddVendorTokens(LiquidObject liquidObject, Vendor vendor, Language language)
@@ -657,7 +658,7 @@ namespace Grand.Services.Messages
 
             liquidObject.Vendor = liquidVendor;
 
-            await _eventPublisher.EntityTokensAdded(vendor, liquidVendor, liquidObject);
+            await _mediator.EntityTokensAdded(vendor, liquidVendor, liquidObject);
         }
 
         public async Task AddNewsLetterSubscriptionTokens(LiquidObject liquidObject, NewsLetterSubscription subscription, Store store)
@@ -665,7 +666,7 @@ namespace Grand.Services.Messages
             var liquidNewsletterSubscription = new LiquidNewsLetterSubscription(subscription, store);
             liquidObject.NewsLetterSubscription = liquidNewsletterSubscription;
 
-            await _eventPublisher.EntityTokensAdded(subscription, liquidNewsletterSubscription, liquidObject);
+            await _mediator.EntityTokensAdded(subscription, liquidNewsletterSubscription, liquidObject);
         }
 
         public async Task AddProductReviewTokens(LiquidObject liquidObject, Product product, ProductReview productReview)
@@ -673,7 +674,7 @@ namespace Grand.Services.Messages
             var liquidProductReview = new LiquidProductReview(product, productReview);
             liquidObject.ProductReview = liquidProductReview;
 
-            await _eventPublisher.EntityTokensAdded(productReview, liquidProductReview, liquidObject);
+            await _mediator.EntityTokensAdded(productReview, liquidProductReview, liquidObject);
         }
 
         public async Task AddVendorReviewTokens(LiquidObject liquidObject, Vendor vendor, VendorReview vendorReview)
@@ -681,7 +682,7 @@ namespace Grand.Services.Messages
             var liquidVendorReview = new LiquidVendorReview(vendor, vendorReview);
             liquidObject.VendorReview = liquidVendorReview;
 
-            await _eventPublisher.EntityTokensAdded(vendorReview, liquidVendorReview, liquidObject);
+            await _mediator.EntityTokensAdded(vendorReview, liquidVendorReview, liquidObject);
         }
 
         public async Task AddBlogCommentTokens(LiquidObject liquidObject, BlogPost blogPost, BlogComment blogComment, Store store, Language language)
@@ -689,7 +690,7 @@ namespace Grand.Services.Messages
             var liquidBlogComment = new LiquidBlogComment(blogComment, blogPost, store, language);
             liquidObject.BlogComment = liquidBlogComment;
 
-            await _eventPublisher.EntityTokensAdded(blogComment, liquidBlogComment, liquidObject);
+            await _mediator.EntityTokensAdded(blogComment, liquidBlogComment, liquidObject);
         }
 
         public async Task AddArticleCommentTokens(LiquidObject liquidObject, KnowledgebaseArticle article, KnowledgebaseArticleComment articleComment, Store store, Language language)
@@ -697,7 +698,7 @@ namespace Grand.Services.Messages
             var liquidKnowledgebase = new LiquidKnowledgebase(article, articleComment, store, language);
             liquidObject.Knowledgebase = liquidKnowledgebase;
 
-            await _eventPublisher.EntityTokensAdded(articleComment, liquidKnowledgebase, liquidObject);
+            await _mediator.EntityTokensAdded(articleComment, liquidKnowledgebase, liquidObject);
         }
 
         public async Task AddNewsCommentTokens(LiquidObject liquidObject, NewsItem newsItem, NewsComment newsComment, Store store, Language language)
@@ -705,7 +706,7 @@ namespace Grand.Services.Messages
             var liquidNewsComment = new LiquidNewsComment(newsItem, newsComment, store, language);
             liquidObject.NewsComment = liquidNewsComment;
 
-            await _eventPublisher.EntityTokensAdded(newsComment, liquidNewsComment, liquidObject);
+            await _mediator.EntityTokensAdded(newsComment, liquidNewsComment, liquidObject);
         }
 
         public async Task AddProductTokens(LiquidObject liquidObject, Product product, Language language, Store store)
@@ -713,7 +714,7 @@ namespace Grand.Services.Messages
             var liquidProduct = new LiquidProduct(product, language, store);
             liquidObject.Product = liquidProduct;
 
-            await _eventPublisher.EntityTokensAdded(product, liquidProduct, liquidObject);
+            await _mediator.EntityTokensAdded(product, liquidProduct, liquidObject);
         }
 
         public async Task AddAttributeCombinationTokens(LiquidObject liquidObject, Customer customer, Product product, ProductAttributeCombination combination)
@@ -724,7 +725,7 @@ namespace Grand.Services.Messages
             liquidAttributeCombination.SKU = product.FormatSku(combination.AttributesXml, _productAttributeParser);
             liquidObject.AttributeCombination = liquidAttributeCombination;
 
-            await _eventPublisher.EntityTokensAdded(combination, liquidAttributeCombination, liquidObject);
+            await _mediator.EntityTokensAdded(combination, liquidAttributeCombination, liquidObject);
         }
 
         public async Task AddForumTokens(LiquidObject liquidObject, Customer customer, Store store, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
@@ -733,9 +734,9 @@ namespace Grand.Services.Messages
             var liquidForum = new LiquidForums(forum, forumTopic, forumPost, customer, store, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
             liquidObject.Forums = liquidForum;
 
-            await _eventPublisher.EntityTokensAdded(forum, liquidForum, liquidObject);
-            await _eventPublisher.EntityTokensAdded(forumTopic, liquidForum, liquidObject);
-            await _eventPublisher.EntityTokensAdded(forumPost, liquidForum, liquidObject);
+            await _mediator.EntityTokensAdded(forum, liquidForum, liquidObject);
+            await _mediator.EntityTokensAdded(forumTopic, liquidForum, liquidObject);
+            await _mediator.EntityTokensAdded(forumPost, liquidForum, liquidObject);
         }
 
         public async Task AddPrivateMessageTokens(LiquidObject liquidObject, PrivateMessage privateMessage)
@@ -743,7 +744,7 @@ namespace Grand.Services.Messages
             var liquidPrivateMessage = new LiquidPrivateMessage(privateMessage);
             liquidObject.PrivateMessage = liquidPrivateMessage;
 
-            await _eventPublisher.EntityTokensAdded(privateMessage, liquidPrivateMessage, liquidObject);
+            await _mediator.EntityTokensAdded(privateMessage, liquidPrivateMessage, liquidObject);
         }
 
         public async Task AddBackInStockTokens(LiquidObject liquidObject, Product product, BackInStockSubscription subscription, Store store, Language language)
@@ -751,7 +752,7 @@ namespace Grand.Services.Messages
             var liquidBackInStockSubscription = new LiquidBackInStockSubscription(product, subscription, store, language);
             liquidObject.BackInStockSubscription = liquidBackInStockSubscription;
 
-            await _eventPublisher.EntityTokensAdded(subscription, liquidBackInStockSubscription, liquidObject);
+            await _mediator.EntityTokensAdded(subscription, liquidBackInStockSubscription, liquidObject);
         }
 
         public async Task AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
@@ -763,7 +764,7 @@ namespace Grand.Services.Messages
 
             liquidObject.Auctions = liquidAuctions;
 
-            await _eventPublisher.EntityTokensAdded(bid, liquidAuctions, liquidObject);
+            await _mediator.EntityTokensAdded(bid, liquidAuctions, liquidObject);
         }
 
         #endregion

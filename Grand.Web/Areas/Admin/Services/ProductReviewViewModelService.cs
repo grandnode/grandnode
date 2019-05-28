@@ -10,6 +10,7 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -25,17 +26,17 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IStoreService _storeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         public ProductReviewViewModelService(IProductService productService, ICustomerService customerService, IStoreService storeService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IEventPublisher eventPublisher)
+            ILocalizationService localizationService, IMediator mediator)
         {
             _productService = productService;
             _customerService = customerService;
             _storeService = storeService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
         }
 
         public virtual async Task PrepareProductReviewModel(ProductReviewModel model,
@@ -143,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                     //raise event (only if it wasn't approved before)
                     if (!previousIsApproved)
-                        await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
+                        await _mediator.Publish(new ProductReviewApprovedEvent(productReview));
                 }
             }
         }

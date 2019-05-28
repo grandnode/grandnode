@@ -12,6 +12,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Tax;
 using Grand.Services.Tests;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +25,7 @@ namespace Grand.Services.Catalog.Tests
         private IRepository<ProductAttribute> _productAttributeRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
 
         private IWorkContext _workContext;
         private ICurrencyService _currencyService;
@@ -128,9 +129,9 @@ namespace Grand.Services.Catalog.Tests
             _product.ProductAttributeMappings.Add(pam3_1);
             _productRepo.Insert(_product); //26 april
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
 

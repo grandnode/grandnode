@@ -1,9 +1,11 @@
-﻿namespace Grand.Core.Plugins
+﻿using MediatR;
+
+namespace Grand.Core.Plugins
 {
     /// <summary>
     /// Plugin uploaded event
     /// </summary>
-    public class PluginUploadedEvent
+    public class PluginUploadedEvent : INotification
     {
         /// <summary>
         /// Uploaded plugin

@@ -8,6 +8,7 @@ using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Grand.Services.Common
 {
@@ -37,7 +38,7 @@ namespace Grand.Services.Common
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly AddressSettings _addressSettings;
         private readonly ICacheManager _cacheManager;
 
@@ -60,7 +61,7 @@ namespace Grand.Services.Common
             ICountryService countryService, 
             IStateProvinceService stateProvinceService,
             IAddressAttributeService addressAttributeService,
-            IEventPublisher eventPublisher, 
+            IMediator mediator, 
             AddressSettings addressSettings)
         {
             this._cacheManager = cacheManager;
@@ -68,7 +69,7 @@ namespace Grand.Services.Common
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._addressAttributeService = addressAttributeService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._addressSettings = addressSettings;
         }
 
@@ -138,7 +139,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(address);
+            await _mediator.EntityInserted(address);
         }
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace Grand.Services.Common
             await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(address);
+            await _mediator.EntityUpdated(address);
         }
 
         /// <summary>

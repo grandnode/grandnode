@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -34,7 +35,7 @@ namespace Grand.Services.Directory
         #region Fields
 
         private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -49,11 +50,11 @@ namespace Grand.Services.Directory
         /// <param name="eventPublisher">Event published</param>
         public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _stateProvinceRepository = stateProvinceRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
         }
 
         #endregion
@@ -73,7 +74,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(stateProvince);
+            await _mediator.EntityDeleted(stateProvince);
         }
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(stateProvince);
+            await _mediator.EntityInserted(stateProvince);
         }
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace Grand.Services.Directory
             await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(stateProvince);
+            await _mediator.EntityUpdated(stateProvince);
         }
 
         #endregion

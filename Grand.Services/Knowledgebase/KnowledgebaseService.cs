@@ -6,6 +6,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -98,7 +99,7 @@ namespace Grand.Services.Knowledgebase
 
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
@@ -113,13 +114,13 @@ namespace Grand.Services.Knowledgebase
         /// <param name="knowledgebaseArticleRepository"></param>
         /// <param name="eventPublisher"></param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
-            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings,
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IMediator mediator, CommonSettings commonSettings,
             CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext,
             IRepository<KnowledgebaseArticleComment> articleCommentRepository)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
             this._workContext = workContext;
@@ -145,7 +146,7 @@ namespace Grand.Services.Knowledgebase
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
-            await _eventPublisher.EntityDeleted(kc);
+            await _mediator.EntityDeleted(kc);
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseCategoryRepository.UpdateAsync(kc);
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            await _eventPublisher.EntityUpdated(kc);
+            await _mediator.EntityUpdated(kc);
         }
 
         /// <summary>
@@ -216,7 +217,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            await _eventPublisher.EntityInserted(kc);
+            await _mediator.EntityInserted(kc);
         }
 
         /// <summary>
@@ -259,7 +260,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.InsertAsync(ka);
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            await _eventPublisher.EntityInserted(ka);
+            await _mediator.EntityInserted(ka);
         }
 
         /// <summary>
@@ -272,7 +273,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.UpdateAsync(ka);
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            await _eventPublisher.EntityUpdated(ka);
+            await _mediator.EntityUpdated(ka);
         }
 
         /// <summary>
@@ -284,7 +285,7 @@ namespace Grand.Services.Knowledgebase
             await _knowledgebaseArticleRepository.DeleteAsync(ka);
             await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            await _eventPublisher.EntityDeleted(ka);
+            await _mediator.EntityDeleted(ka);
         }
 
         /// <summary>
@@ -622,7 +623,7 @@ namespace Grand.Services.Knowledgebase
             await _articleCommentRepository.InsertAsync(articleComment);
 
             //event notification
-            await _eventPublisher.EntityInserted(articleComment);
+            await _mediator.EntityInserted(articleComment);
         }
 
         /// <summary>

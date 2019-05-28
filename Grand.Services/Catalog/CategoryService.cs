@@ -7,6 +7,7 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -94,7 +95,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
@@ -124,7 +125,7 @@ namespace Grand.Services.Catalog
             IRepository<AclRecord> aclRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IStoreMappingService storeMappingService,
             IAclService aclService,
             CatalogSettings catalogSettings,
@@ -136,7 +137,7 @@ namespace Grand.Services.Catalog
             this._aclRepository = aclRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._catalogSettings = catalogSettings;
@@ -174,7 +175,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(category);
+            await _mediator.EntityDeleted(category);
         }
 
         /// <summary>
@@ -377,7 +378,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(category);
+            await _mediator.EntityInserted(category);
         }
 
         /// <summary>
@@ -411,7 +412,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(category);
+            await _mediator.EntityUpdated(category);
         }
 
         /// <summary>
@@ -433,7 +434,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productCategory);
+            await _mediator.EntityDeleted(productCategory);
 
         }
 
@@ -518,7 +519,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productCategory);
+            await _mediator.EntityInserted(productCategory);
         }
 
         /// <summary>
@@ -546,7 +547,7 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productCategory);
+            await _mediator.EntityUpdated(productCategory);
         }
         #endregion
 
