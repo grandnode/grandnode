@@ -27,17 +27,21 @@ namespace Grand.Services.Tasks
             if (!_currencySettings.AutoUpdateEnabled)
                 return;
 
-            var primaryCurrencyCode = (await _currencyService.GetPrimaryExchangeRateCurrency()).CurrencyCode;
-            var exchangeRates = await _currencyService.GetCurrencyLiveRates(primaryCurrencyCode);
+            var primaryCurrency = (await _currencyService.GetPrimaryExchangeRateCurrency());
 
-            foreach (var exchageRate in exchangeRates)
+            if (primaryCurrency != null)
             {
-                var currency = await _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
-                if (currency != null)
+                var exchangeRates = await _currencyService.GetCurrencyLiveRates(primaryCurrency.CurrencyCode);
+
+                foreach (var exchageRate in exchangeRates)
                 {
-                    currency.Rate = exchageRate.Rate;
-                    currency.UpdatedOnUtc = DateTime.UtcNow;
-                    await _currencyService.UpdateCurrency(currency);
+                    var currency = await _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
+                    if (currency != null && exchageRate.Rate > 0)
+                    {
+                        currency.Rate = primaryCurrency.Rate / exchageRate.Rate;
+                        currency.UpdatedOnUtc = DateTime.UtcNow;
+                        await _currencyService.UpdateCurrency(currency);
+                    }
                 }
             }
         }
