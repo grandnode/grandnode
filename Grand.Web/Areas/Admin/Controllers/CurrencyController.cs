@@ -128,13 +128,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ApplyRate(string currencyCode, string rate)
         {
             var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
+            var baseCurrency = await _currencyService.GetPrimaryExchangeRateCurrency();
             var currency = await _currencyService.GetCurrencyByCode(currencyCode);
-            if (currency != null)
+
+            if (baseCurrency != null && currency != null && _rate > 0)
             {
-                currency.Rate = _rate;
+                currency.Rate = baseCurrency.Rate / _rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 await _currencyService.UpdateCurrency(currency);
             }
+
             return Json(new { result = true });
         }
 
