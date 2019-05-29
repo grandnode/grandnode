@@ -6,12 +6,10 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
@@ -82,7 +80,6 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -93,18 +90,13 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly ILanguageService _languageService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IDataProvider _dataProvider;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMediator _mediator;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -117,7 +109,6 @@ namespace Grand.Services.Catalog
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
-            IRepository<AclRecord> aclRepository,
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
@@ -127,17 +118,12 @@ namespace Grand.Services.Catalog
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
-            IDataProvider dataProvider,
             IWorkContext workContext,
-            IStoreContext storeContext,
             LocalizationSettings localizationSettings,
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
             IMediator mediator,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IRepository<ProductTag> productTagRepository,
             IServiceProvider serviceProvider
             )
@@ -145,7 +131,6 @@ namespace Grand.Services.Catalog
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productReviewRepository = productReviewRepository;
-            this._aclRepository = aclRepository;
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
@@ -154,17 +139,12 @@ namespace Grand.Services.Catalog
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
             this._workflowMessageService = workflowMessageService;
-            this._dataProvider = dataProvider;
             this._workContext = workContext;
-            this._storeContext = storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
             this._mediator = mediator;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
             this._productTagRepository = productTagRepository;
             this._customerProductRepository = customerProductRepository;
             this._serviceProvider = serviceProvider;
@@ -594,10 +574,10 @@ namespace Grand.Services.Catalog
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
-            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+            if (!string.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
                 //Store mapping
-                var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                var currentStoreId = new List<string> { storeId };
                 filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
             }
 
@@ -1027,12 +1007,14 @@ namespace Grand.Services.Catalog
             //ACL mapping
             if (!showHidden)
             {
-                products = products.Where(x => _aclService.Authorize(x)).ToList();
+                var aclService = _serviceProvider.GetRequiredService<IAclService>();
+                products = products.Where(x => aclService.Authorize(x)).ToList();
             }
             //Store mapping
-            if (!showHidden && !String.IsNullOrEmpty(storeId))
+            if (!showHidden && !string.IsNullOrEmpty(storeId))
             {
-                products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+                var storeMappingService = _serviceProvider.GetRequiredService<IStoreMappingService>();
+                products = products.Where(x => storeMappingService.Authorize(x, storeId)).ToList();
             }
 
             return products;
@@ -1577,7 +1559,7 @@ namespace Grand.Services.Catalog
             {
                 var pwi = productInventory[0];
                 pwi.StockQuantity += qty;
-               
+
             }
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);

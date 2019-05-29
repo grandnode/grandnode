@@ -92,14 +92,12 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
-        private readonly IProductService _productService;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -111,8 +109,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="categoryRepository">Category repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="aclRepository">ACL record repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event publisher</param>
@@ -122,26 +118,22 @@ namespace Grand.Services.Catalog
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<Product> productRepository,
-            IRepository<AclRecord> aclRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
             IMediator mediator,
             IStoreMappingService storeMappingService,
             IAclService aclService,
-            CatalogSettings catalogSettings,
-            IProductService productService)
+            CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
             this._productRepository = productRepository;
-            this._aclRepository = aclRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._mediator = mediator;
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._catalogSettings = catalogSettings;
-            this._productService = productService;
         }
 
         #endregion

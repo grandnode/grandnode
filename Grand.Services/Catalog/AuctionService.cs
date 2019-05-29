@@ -5,7 +5,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
 using Grand.Services.Messages;
 using MediatR;
@@ -59,7 +58,7 @@ namespace Grand.Services.Catalog
             var highestBid = _bid.OrderByDescending(x => x.Amount).FirstOrDefault();
             if (productToUpdate != null)
             {
-                await UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount: 0, highestBid != null ? highestBid.CustomerId : "");
+                await UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount : 0, highestBid != null ? highestBid.CustomerId : "");
             }
         }
 
@@ -154,8 +153,7 @@ namespace Grand.Services.Catalog
         public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
         {
             var latestbid = await GetLatestBid(product.Id);
-            await InsertBid(new Bid
-            {
+            await InsertBid(new Bid {
                 Date = DateTime.UtcNow,
                 Amount = amount,
                 CustomerId = customer.Id,

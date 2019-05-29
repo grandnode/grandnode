@@ -71,7 +71,6 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
@@ -91,7 +90,6 @@ namespace Grand.Services.Catalog
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productRepository">Product repository</param>
-        /// <param name="aclRepository">ACL record repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
@@ -101,7 +99,6 @@ namespace Grand.Services.Catalog
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
-            IRepository<AclRecord> aclRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
@@ -112,7 +109,6 @@ namespace Grand.Services.Catalog
             this._cacheManager = cacheManager;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
-            this._aclRepository = aclRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
