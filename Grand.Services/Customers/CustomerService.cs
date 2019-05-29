@@ -80,13 +80,9 @@ namespace Grand.Services.Customers
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IDataProvider _dataProvider;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
-
-        private readonly CustomerSettings _customerSettings;
-        private readonly CommonSettings _commonSettings;
 
         #endregion
 
@@ -106,11 +102,8 @@ namespace Grand.Services.Customers
             IRepository<BlogComment> blogCommentRepository,
             IRepository<ProductReview> productReviewRepository,
             IGenericAttributeService genericAttributeService,
-            IDataProvider dataProvider,
             IMediator mediator,
-            IServiceProvider serviceProvider,
-            CustomerSettings customerSettings,
-            CommonSettings commonSettings)
+            IServiceProvider serviceProvider)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
@@ -126,11 +119,8 @@ namespace Grand.Services.Customers
             this._blogCommentRepository = blogCommentRepository;
             this._productReviewRepository = productReviewRepository;
             this._genericAttributeService = genericAttributeService;
-            this._dataProvider = dataProvider;
             this._mediator = mediator;
             this._serviceProvider = serviceProvider;
-            this._customerSettings = customerSettings;
-            this._commonSettings = commonSettings;
         }
 
         #endregion
