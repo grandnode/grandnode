@@ -5,6 +5,7 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
 using Grand.Services.Events;
 using Grand.Services.Seo;
+using MediatR;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using System;
@@ -198,7 +199,7 @@ namespace Grand.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    await EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await EngineContext.Current.Resolve<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;

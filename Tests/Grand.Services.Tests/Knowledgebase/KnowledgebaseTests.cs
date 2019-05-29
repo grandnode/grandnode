@@ -9,6 +9,7 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
 using Grand.Services.Knowledgebase;
+using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -25,7 +26,7 @@ namespace Grand.Services.Tests.Knowledgebase
         private IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
         private IRepository<KnowledgebaseCategory> _categoryRepository;
         private IKnowledgebaseService _knowledgebaseService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IWorkContext _workContext;
         private IStoreContext _storeContext;
         private ICacheManager _cacheManager;
@@ -39,8 +40,8 @@ namespace Grand.Services.Tests.Knowledgebase
             _categoryRepository = new MongoDBRepositoryTest<KnowledgebaseCategory>();
             _articleCommentRepository = new MongoDBRepositoryTest<KnowledgebaseArticleComment>();
 
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var customer = new Customer() { Username = "username" };

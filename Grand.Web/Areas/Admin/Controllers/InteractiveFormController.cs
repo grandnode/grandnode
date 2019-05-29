@@ -52,7 +52,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (i != tokens.Length - 1)
                     sb.Append(", ");
             }
-
+            sb.Append(", %sendbutton%");
+            sb.Append(", %errormessage%");
             return sb.ToString();
         }
         #endregion

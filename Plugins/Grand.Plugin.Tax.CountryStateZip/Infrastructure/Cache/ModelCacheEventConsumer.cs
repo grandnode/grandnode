@@ -1,9 +1,10 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Events;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
-using Grand.Services.Events;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
@@ -13,9 +14,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         //tax rates
-        IConsumer<EntityInserted<TaxRate>>,
-        IConsumer<EntityUpdated<TaxRate>>,
-        IConsumer<EntityDeleted<TaxRate>>
+        INotificationHandler<EntityInserted<TaxRate>>,
+        INotificationHandler<EntityUpdated<TaxRate>>,
+        INotificationHandler<EntityDeleted<TaxRate>>
     {
         /// <summary>
         /// Key for caching
@@ -32,17 +33,22 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         }
 
         //tax rates
-        public async Task HandleEvent(EntityInserted<TaxRate> eventMessage)
+        public async Task Handle(EntityInserted<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdated<TaxRate> eventMessage)
+        public async Task Handle(EntityUpdated<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeleted<TaxRate> eventMessage)
+        public async Task Handle(EntityDeleted<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(ALL_TAX_RATES_PATTERN_KEY);
         }
+
+        public void HandleEvent(EntityInserted<TaxRate> eventMessage) { }
+        public void HandleEvent(EntityUpdated<TaxRate> eventMessage) { }
+        public void HandleEvent(EntityDeleted<TaxRate> eventMessage) { }
+
     }
 }

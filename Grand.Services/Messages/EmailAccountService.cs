@@ -8,13 +8,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
     public partial class EmailAccountService : IEmailAccountService
     {
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
@@ -22,10 +23,10 @@ namespace Grand.Services.Messages
         /// <param name="emailAccountRepository">Email account repository</param>
         /// <param name="eventPublisher">Event published</param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._emailAccountRepository = emailAccountRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.InsertAsync(emailAccount);
 
             //event notification
-            await _eventPublisher.EntityInserted(emailAccount);
+            await _mediator.EntityInserted(emailAccount);
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.UpdateAsync(emailAccount);
 
             //event notification
-            await _eventPublisher.EntityUpdated(emailAccount);
+            await _mediator.EntityUpdated(emailAccount);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace Grand.Services.Messages
             await _emailAccountRepository.DeleteAsync(emailAccount);
 
             //event notification
-            await _eventPublisher.EntityDeleted(emailAccount);
+            await _mediator.EntityDeleted(emailAccount);
         }
 
         /// <summary>

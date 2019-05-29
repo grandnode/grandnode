@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -19,7 +20,7 @@ namespace Grand.Services.Orders
         #region Fields
 
         private readonly IRepository<GiftCard> _giftCardRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -30,10 +31,10 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
         /// <param name="eventPublisher">Event published</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher)
+        public GiftCardService(IRepository<GiftCard> giftCardRepository, IMediator mediator)
         {
             _giftCardRepository = giftCardRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.DeleteAsync(giftCard);
 
             //event notification
-            await _eventPublisher.EntityDeleted(giftCard);
+            await _mediator.EntityDeleted(giftCard);
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.InsertAsync(giftCard);
 
             //event notification
-            await _eventPublisher.EntityInserted(giftCard);
+            await _mediator.EntityInserted(giftCard);
         }
 
         /// <summary>
@@ -140,7 +141,7 @@ namespace Grand.Services.Orders
             await _giftCardRepository.UpdateAsync(giftCard);
 
             //event notification
-            await _eventPublisher.EntityUpdated(giftCard);
+            await _mediator.EntityUpdated(giftCard);
         }
 
         /// <summary>

@@ -1,9 +1,11 @@
+using MediatR;
+
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
     /// Product review approved event
     /// </summary>
-    public class ProductReviewApprovedEvent
+    public class ProductReviewApprovedEvent : INotification
     {
         public ProductReviewApprovedEvent(ProductReview productReview)
         {

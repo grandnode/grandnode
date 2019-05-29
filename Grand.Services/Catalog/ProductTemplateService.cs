@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
+using MediatR;
 
 namespace Grand.Services.Catalog
 {
@@ -18,7 +19,7 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
         
@@ -30,10 +31,10 @@ namespace Grand.Services.Catalog
         /// <param name="productTemplateRepository">Product template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._productTemplateRepository = productTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace Grand.Services.Catalog
             await _productTemplateRepository.DeleteAsync(productTemplate);
 
             //event notification
-            await _eventPublisher.EntityDeleted(productTemplate);
+            await _mediator.EntityDeleted(productTemplate);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Grand.Services.Catalog
             await _productTemplateRepository.InsertAsync(productTemplate);
 
             //event notification
-            await _eventPublisher.EntityInserted(productTemplate);
+            await _mediator.EntityInserted(productTemplate);
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Grand.Services.Catalog
             await _productTemplateRepository.UpdateAsync(productTemplate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(productTemplate);
+            await _mediator.EntityUpdated(productTemplate);
         }
         
         #endregion

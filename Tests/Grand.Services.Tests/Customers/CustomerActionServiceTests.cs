@@ -4,6 +4,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Tests;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,7 +20,7 @@ namespace Grand.Services.Customers.Tests
         private IRepository<CustomerAction> _customerActionRepository;
         private IRepository<CustomerActionType> _customerActionTypeRepository;
         private IRepository<CustomerActionHistory> _customerActionHistoryRepository;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private ICustomerActionService _customerActionService;
         private string _Id_CustomerAction;
         private string _Id_CustomerActionType;
@@ -27,8 +28,8 @@ namespace Grand.Services.Customers.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _customerActionRepository = new MongoDBRepositoryTest<CustomerAction>();

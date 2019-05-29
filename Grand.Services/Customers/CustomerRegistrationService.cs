@@ -7,6 +7,7 @@ using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MediatR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Grand.Services.Customers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IRewardPointsService _rewardPointsService;
@@ -51,7 +52,7 @@ namespace Grand.Services.Customers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService,
             IStoreService storeService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
             IRewardPointsService rewardPointsService)
@@ -61,7 +62,7 @@ namespace Grand.Services.Customers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
             this._storeService = storeService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
             this._rewardPointsService = rewardPointsService;
@@ -224,7 +225,7 @@ namespace Grand.Services.Customers
             }
 
             //event notification
-            await _eventPublisher.CustomerRegistrationEvent(result, request);
+            await _mediator.CustomerRegistrationEvent(result, request);
 
             //return if exist errors
             if (result.Errors.Any())

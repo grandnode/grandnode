@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -24,7 +25,7 @@ namespace Grand.Services.Blogs
         private readonly IRepository<BlogCategory> _blogCategoryRepository;
         private readonly IRepository<BlogProduct> _blogProductRepository;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -35,14 +36,14 @@ namespace Grand.Services.Blogs
             IRepository<BlogCategory> blogCategoryRepository,
             IRepository<BlogProduct> blogProductRepository,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
             this._blogCategoryRepository = blogCategoryRepository;
             this._blogProductRepository = blogProductRepository;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -61,7 +62,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.DeleteAsync(blogPost);
 
             //event notification
-            await _eventPublisher.EntityDeleted(blogPost);
+            await _mediator.EntityDeleted(blogPost);
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.InsertAsync(blogPost);
 
             //event notification
-            await _eventPublisher.EntityInserted(blogPost);
+            await _mediator.EntityInserted(blogPost);
         }
 
         /// <summary>
@@ -229,7 +230,7 @@ namespace Grand.Services.Blogs
             await _blogCommentRepository.InsertAsync(blogComment);
 
             //event notification
-            await _eventPublisher.EntityInserted(blogComment);
+            await _mediator.EntityInserted(blogComment);
         }
 
         /// <summary>
@@ -244,7 +245,7 @@ namespace Grand.Services.Blogs
             await _blogPostRepository.UpdateAsync(blogPost);
 
             //event notification
-            await _eventPublisher.EntityUpdated(blogPost);
+            await _mediator.EntityUpdated(blogPost);
         }
 
         /// <summary>
@@ -355,7 +356,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.InsertAsync(blogCategory);
 
             //event notification
-            await _eventPublisher.EntityInserted(blogCategory);
+            await _mediator.EntityInserted(blogCategory);
 
             return blogCategory;
         }
@@ -372,7 +373,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.UpdateAsync(blogCategory);
 
             //event notification
-            await _eventPublisher.EntityUpdated(blogCategory);
+            await _mediator.EntityUpdated(blogCategory);
 
             return blogCategory;
         }
@@ -389,7 +390,7 @@ namespace Grand.Services.Blogs
             await _blogCategoryRepository.DeleteAsync(blogCategory);
 
             //event notification
-            await _eventPublisher.EntityDeleted(blogCategory);
+            await _mediator.EntityDeleted(blogCategory);
         }
 
         #endregion
@@ -418,7 +419,7 @@ namespace Grand.Services.Blogs
             await _blogProductRepository.InsertAsync(blogProduct);
 
             //event notification
-            await _eventPublisher.EntityInserted(blogProduct);
+            await _mediator.EntityInserted(blogProduct);
 
         }
 
@@ -434,7 +435,7 @@ namespace Grand.Services.Blogs
             await _blogProductRepository.UpdateAsync(blogProduct);
 
             //event notification
-            await _eventPublisher.EntityUpdated(blogProduct);
+            await _mediator.EntityUpdated(blogProduct);
 
         }
 
@@ -450,7 +451,7 @@ namespace Grand.Services.Blogs
             await _blogProductRepository.DeleteAsync(blogProduct);
 
             //event notification
-            await _eventPublisher.EntityDeleted(blogProduct);
+            await _mediator.EntityDeleted(blogProduct);
 
         }
 

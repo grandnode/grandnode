@@ -101,9 +101,19 @@ namespace Grand.Framework.Menu
             var permissionNames = GetStringValueFromAttribute(xmlNode, "PermissionNames");
             if (!string.IsNullOrEmpty(permissionNames))
             {
-                var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
+                var fullpermissions = GetStringValueFromAttribute(xmlNode, "AllPermissions");
+                if (!string.IsNullOrEmpty(fullpermissions) && fullpermissions == "true")
+                {
+                    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                       .All(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
+                }
+                else
+                {
+                    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                       .Any(permissionName => permissionService.Authorize(permissionName.Trim()).Result);
+                }
             }
             else
             {

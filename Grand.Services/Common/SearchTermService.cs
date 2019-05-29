@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Common
 {
@@ -18,17 +19,17 @@ namespace Grand.Services.Common
         #region Fields
 
         private readonly IRepository<SearchTerm> _searchTermRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
         public SearchTermService(IRepository<SearchTerm> searchTermRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._searchTermRepository = searchTermRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -47,7 +48,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.DeleteAsync(searchTerm);
 
             //event notification
-            await _eventPublisher.EntityDeleted(searchTerm);
+            await _mediator.EntityDeleted(searchTerm);
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.InsertAsync(searchTerm);
 
             //event notification
-            await _eventPublisher.EntityInserted(searchTerm);
+            await _mediator.EntityInserted(searchTerm);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Grand.Services.Common
             await _searchTermRepository.UpdateAsync(searchTerm);
 
             //event notification
-            await _eventPublisher.EntityUpdated(searchTerm);
+            await _mediator.EntityUpdated(searchTerm);
         }
         
         #endregion

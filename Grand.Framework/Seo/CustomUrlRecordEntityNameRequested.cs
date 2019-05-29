@@ -1,4 +1,5 @@
 ﻿using Grand.Services.Seo;
+using MediatR;
 using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Framework.Seo
@@ -6,7 +7,7 @@ namespace Grand.Framework.Seo
     /// <summary>
     /// Represents event to handle unknow URL record entity names
     /// </summary>
-    public class CustomUrlRecordEntityNameRequested
+    public class CustomUrlRecordEntityNameRequested : INotification
     {
         #region Properties
 

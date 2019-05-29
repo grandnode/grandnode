@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.PushNotifications
 {
@@ -21,17 +22,17 @@ namespace Grand.Services.PushNotifications
     {
         private readonly IRepository<PushRegistration> _pushRegistratiosnRepository;
         private readonly IRepository<PushMessage> _pushMessagesRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly PushNotificationsSettings _pushNotificationsSettings;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
 
         public PushNotificationsService(IRepository<PushRegistration> pushRegistratiosnRepository, IRepository<PushMessage> pushMessagesRepository,
-            IEventPublisher eventPublisher, PushNotificationsSettings pushNotificationsSettings, ILocalizationService localizationService, ILogger logger)
+            IMediator mediator, PushNotificationsSettings pushNotificationsSettings, ILocalizationService localizationService, ILogger logger)
         {
             this._pushRegistratiosnRepository = pushRegistratiosnRepository;
             this._pushMessagesRepository = pushMessagesRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._pushNotificationsSettings = pushNotificationsSettings;
             this._localizationService = localizationService;
             this._logger = logger;
@@ -44,7 +45,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task InsertPushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.InsertAsync(registration);
-            await _eventPublisher.EntityInserted(registration);
+            await _mediator.EntityInserted(registration);
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task DeletePushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.DeleteAsync(registration);
-            await _eventPublisher.EntityDeleted(registration);
+            await _mediator.EntityDeleted(registration);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task UpdatePushReceiver(PushRegistration registration)
         {
             await _pushRegistratiosnRepository.UpdateAsync(registration);
-            await _eventPublisher.EntityUpdated(registration);
+            await _mediator.EntityUpdated(registration);
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace Grand.Services.PushNotifications
         public virtual async Task InsertPushMessage(PushMessage message)
         {
             await _pushMessagesRepository.InsertAsync(message);
-            await _eventPublisher.EntityInserted(message);
+            await _mediator.EntityInserted(message);
         }
 
         /// <summary>

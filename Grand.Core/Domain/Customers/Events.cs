@@ -1,9 +1,11 @@
-﻿namespace Grand.Core.Domain.Customers
+﻿using MediatR;
+
+namespace Grand.Core.Domain.Customers
 {
     /// <summary>
     /// Customer logged-in event
     /// </summary>
-    public class CustomerLoggedinEvent
+    public class CustomerLoggedinEvent : INotification
     {
         public CustomerLoggedinEvent(Customer customer)
         {
@@ -22,7 +24,7 @@
     /// <summary>
     /// Customer registered event
     /// </summary>
-    public class CustomerRegisteredEvent
+    public class CustomerRegisteredEvent : INotification
     {
         public CustomerRegisteredEvent(Customer customer)
         {

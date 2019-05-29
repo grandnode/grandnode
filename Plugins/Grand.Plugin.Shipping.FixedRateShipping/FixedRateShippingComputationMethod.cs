@@ -163,11 +163,6 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             return await Task.FromResult(false);
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(Controllers.ShippingFixedRateController);
-        }
-
         #endregion
 
         #region Properties
@@ -199,12 +194,6 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
         {
             //you can implement here any validation logic
             return await Task.FromResult(new List<string>());
-        }
-
-        public JsonResult GetFormPartialView(string shippingOption)
-        {
-            //you can use here any view 
-            return new JsonResult("");
         }
 
         public void GetPublicViewComponent(out string viewComponentName)

@@ -6,10 +6,10 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.UI;
 using Grand.Services.Common;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -398,14 +398,6 @@ namespace Grand.Framework.Controllers
         }
 
         #endregion
-
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            // do something before the action executes
-            // event notification
-            await EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);
-            await next();
-        }
 
     }
 }

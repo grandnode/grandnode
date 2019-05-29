@@ -11,6 +11,7 @@ using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -34,7 +35,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<PopupActive> _popupActiveRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IMessageTemplateService _messageTemplateService;
@@ -48,7 +49,7 @@ namespace Grand.Services.Customers
         private readonly ICacheManager _cacheManager;
         private readonly IPopupService _popupService;
         private readonly IStoreContext _storeContext;
-
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
@@ -61,7 +62,7 @@ namespace Grand.Services.Customers
             IRepository<PopupActive> popupActiveRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             IMessageTemplateService messageTemplateService,
@@ -74,7 +75,8 @@ namespace Grand.Services.Customers
             IHttpContextAccessor httpContextAccessor,
             ICacheManager cacheManager,
             IPopupService popupService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            ILocalizationService localizationService)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
@@ -84,7 +86,7 @@ namespace Grand.Services.Customers
             this._popupActiveRepository = popupActiveRepository;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
             this._messageTemplateService = messageTemplateService;
@@ -98,6 +100,7 @@ namespace Grand.Services.Customers
             this._cacheManager = cacheManager;
             this._popupService = popupService;
             this._storeContext = storeContext;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -622,8 +625,7 @@ namespace Grand.Services.Customers
         }
         protected async Task PrepareBanner(CustomerAction action, Banner banner, string customerId)
         {
-            var banneractive = new PopupActive()
-            {
+            var banneractive = new PopupActive() {
                 Body = banner.GetLocalized(x => x.Body, _workContext.WorkingLanguage.Id),
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
@@ -639,8 +641,7 @@ namespace Grand.Services.Customers
 
             var body = PrepareDataInteractiveForm(form);
 
-            var formactive = new PopupActive()
-            {
+            var formactive = new PopupActive() {
                 Body = body,
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
@@ -723,6 +724,9 @@ namespace Grand.Services.Customers
                     body = body.Replace(string.Format("%{0}%", item.SystemName), radio);
                 }
             }
+
+            body = body.Replace("%sendbutton%", "<input type=\"submit\" id=\"send-interactive-form\" class=\"btn btn-success interactive-form-button\" value=\"" + _localizationService.GetResource("PopupInteractiveForm.Send", _workContext.WorkingLanguage.Id) + " \" />");
+            body = body.Replace("%errormessage%", "<div class=\"message-error\"><div class=\"validation-summary-errors\"><div id=\"errorMessages\"></div></div></div>");
 
             return body;
         }

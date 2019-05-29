@@ -1,6 +1,5 @@
 ﻿@inject AdminAreaSettings adminAreaSettings
 @model ShoppingCartModel
-@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.CurrentCartWishlists").Text;
@@ -10,7 +9,7 @@
     <div class="col-md-12">
         <div class="x_panel light form-fit">
             <div class="x_title">
-                <div class="caption">
+                <div class="caption level-caption">
                     <i class="fa fa-cart-plus"></i>
                     @T("Admin.CurrentCartWishlists")
                 </div>

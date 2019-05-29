@@ -2,6 +2,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -57,7 +58,7 @@ namespace Grand.Services.Customers
         #region Fields
 
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         
         #endregion
@@ -73,11 +74,11 @@ namespace Grand.Services.Customers
         /// <param name="eventPublisher">Event published</param>
         public CustomerAttributeService(ICacheManager cacheManager,
             IRepository<CustomerAttribute> customerAttributeRepository,            
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._customerAttributeRepository = customerAttributeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -99,7 +100,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(customerAttribute);
+            await _mediator.EntityDeleted(customerAttribute);
         }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerAttribute);
+            await _mediator.EntityInserted(customerAttribute);
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerAttribute);
+            await _mediator.EntityUpdated(customerAttribute);
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(customerAttributeValue);
+            await _mediator.EntityDeleted(customerAttributeValue);
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerAttributeValue);
+            await _mediator.EntityInserted(customerAttributeValue);
         }
 
         /// <summary>
@@ -229,7 +230,7 @@ namespace Grand.Services.Customers
             await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerAttributeValue);
+            await _mediator.EntityUpdated(customerAttributeValue);
         }
         
         #endregion

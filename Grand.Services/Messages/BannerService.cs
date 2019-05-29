@@ -7,13 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
     public partial class BannerService : IBannerService
     {
         private readonly IRepository<Banner> _bannerRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
@@ -21,10 +22,10 @@ namespace Grand.Services.Messages
         /// <param name="bannerRepository">Banner repository</param>
         /// <param name="eventPublisher">Event published</param>
         public BannerService(IRepository<Banner> bannerRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._bannerRepository = bannerRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.InsertAsync(banner);
 
             //event notification
-            await _eventPublisher.EntityInserted(banner);
+            await _mediator.EntityInserted(banner);
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.UpdateAsync(banner);
 
             //event notification
-            await _eventPublisher.EntityUpdated(banner);
+            await _mediator.EntityUpdated(banner);
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace Grand.Services.Messages
             await _bannerRepository.DeleteAsync(banner);
 
             //event notification
-            await _eventPublisher.EntityDeleted(banner);
+            await _mediator.EntityDeleted(banner);
         }
 
         /// <summary>

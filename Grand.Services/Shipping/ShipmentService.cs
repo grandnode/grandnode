@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -20,7 +21,7 @@ namespace Grand.Services.Shipping
         #region Fields
 
         private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         
         #endregion
 
@@ -32,10 +33,10 @@ namespace Grand.Services.Shipping
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._shipmentRepository = shipmentRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -54,7 +55,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.DeleteAsync(shipment);
 
             //event notification
-            await _eventPublisher.EntityDeleted(shipment);
+            await _mediator.EntityDeleted(shipment);
         }
         
         /// <summary>
@@ -162,7 +163,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.InsertAsync(shipment);
 
             //event notification
-            await _eventPublisher.EntityInserted(shipment);
+            await _mediator.EntityInserted(shipment);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Grand.Services.Shipping
             await _shipmentRepository.UpdateAsync(shipment);
 
             //event notification
-            await _eventPublisher.EntityUpdated(shipment);
+            await _mediator.EntityUpdated(shipment);
         }
 
         /// <summary>

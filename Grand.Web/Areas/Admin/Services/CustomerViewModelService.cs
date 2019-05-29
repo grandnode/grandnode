@@ -1262,23 +1262,23 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 new RegisteredCustomerReportLineModel
                 {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
+                    Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days"),
                     Customers = await _customerReportService.GetRegisteredCustomersReport(7)
                 },
 
                 new RegisteredCustomerReportLineModel
                 {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
+                    Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days"),
                     Customers = await _customerReportService.GetRegisteredCustomersReport(14)
                 },
                 new RegisteredCustomerReportLineModel
                 {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
+                    Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month"),
                     Customers = await _customerReportService.GetRegisteredCustomersReport(30)
                 },
                 new RegisteredCustomerReportLineModel
                 {
-                    Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
+                    Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year"),
                     Customers = await _customerReportService.GetRegisteredCustomersReport(365)
                 }
             };

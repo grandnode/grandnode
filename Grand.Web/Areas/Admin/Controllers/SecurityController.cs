@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -24,10 +25,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        #endregion
 
-		#endregion
-
-		#region Constructors
+        #region Constructors
 
         public SecurityController(ILogger logger, IWorkContext workContext,
             IPermissionService permissionService,
@@ -38,7 +38,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._customerService = customerService;
             this._localizationService = localizationService;
-		}
+        }
 
 		#endregion 
 
@@ -93,45 +93,52 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Permissions")]
-        public async Task<IActionResult> PermissionsSave(IFormCollection form)
+        [HttpPost, ActionName("Permissions"), ParameterBasedOnFormName("save-continue", "install")]
+        public async Task<IActionResult> PermissionsSave(IFormCollection form, bool install)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var permissionRecords = await _permissionService.GetAllPermissionRecords();
-            var customerRoles = await _customerService.GetAllCustomerRoles(true);
-
-
-            foreach (var cr in customerRoles)
+            if (!install)
             {
-                string formKey = "allow_" + cr.Id;
-                var permissionRecordSystemNamesToRestrict = form[formKey].ToString() != null ? form[formKey].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
-                foreach (var pr in permissionRecords)
-                {
+                var permissionRecords = await _permissionService.GetAllPermissionRecords();
+                var customerRoles = await _customerService.GetAllCustomerRoles(true);
 
-                    bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
-                    if (allow)
+                foreach (var cr in customerRoles)
+                {
+                    string formKey = "allow_" + cr.Id;
+                    var permissionRecordSystemNamesToRestrict = form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+                    foreach (var pr in permissionRecords)
                     {
-                        
-                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) == null)
+
+                        bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+                        if (allow)
                         {
-                            pr.CustomerRoles.Add(cr.Id);
-                            await _permissionService.UpdatePermissionRecord(pr);
+
+                            if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) == null)
+                            {
+                                pr.CustomerRoles.Add(cr.Id);
+                                await _permissionService.UpdatePermissionRecord(pr);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) != null)
+                        else
                         {
-                            pr.CustomerRoles.Remove(cr.Id);
-                            await _permissionService.UpdatePermissionRecord(pr);
+                            if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) != null)
+                            {
+                                pr.CustomerRoles.Remove(cr.Id);
+                                await _permissionService.UpdatePermissionRecord(pr);
+                            }
                         }
                     }
                 }
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
             }
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
+            else
+            {
+                IPermissionProvider provider = new StandardPermissionProvider();
+                await _permissionService.InstallNewPermissions(provider);
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Installed"));
+            }
             return RedirectToAction("Permissions");
         }
 

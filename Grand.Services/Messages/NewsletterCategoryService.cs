@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Messages
 {
@@ -15,16 +16,16 @@ namespace Grand.Services.Messages
         #region Fields
 
         private readonly IRepository<NewsletterCategory> _newsletterCategoryRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public NewsletterCategoryService(IRepository<NewsletterCategory> newsletterCategoryRepository, IEventPublisher eventPublisher)
+        public NewsletterCategoryService(IRepository<NewsletterCategory> newsletterCategoryRepository, IMediator mediator)
         {
             this._newsletterCategoryRepository = newsletterCategoryRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
         #endregion
 
@@ -41,7 +42,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.InsertAsync(newslettercategory);
 
             //event notification
-            await _eventPublisher.EntityInserted(newslettercategory);
+            await _mediator.EntityInserted(newslettercategory);
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.UpdateAsync(newslettercategory);
 
             //event notification
-            await _eventPublisher.EntityUpdated(newslettercategory);
+            await _mediator.EntityUpdated(newslettercategory);
 
         }
 
@@ -72,7 +73,7 @@ namespace Grand.Services.Messages
             await _newsletterCategoryRepository.DeleteAsync(newslettercategory);
 
             //event notification
-            await _eventPublisher.EntityDeleted(newslettercategory);
+            await _mediator.EntityDeleted(newslettercategory);
 
         }
 

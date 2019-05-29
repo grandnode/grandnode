@@ -26,6 +26,7 @@ using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace Grand.Services.Orders
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IPdfService _pdfService;
         private readonly IRewardPointsService _rewardPointsService;
         private readonly IReturnRequestService _returnRequestService;
@@ -119,7 +120,7 @@ namespace Grand.Services.Orders
             ICustomerActionEventService customerActionEventService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IPdfService pdfService,
             IRewardPointsService rewardPointsService,
             IReturnRequestService returnRequestService,
@@ -163,7 +164,7 @@ namespace Grand.Services.Orders
             this._customerActionEventService = customerActionEventService;
             this._currencyService = currencyService;
             this._affiliateService = affiliateService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._pdfService = pdfService;
             this._rewardPointsService = rewardPointsService;
             this._returnRequestService = returnRequestService;
@@ -825,7 +826,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             //raise event
-            await _eventPublisher.Publish(new OrderPaidEvent(order));
+            await _mediator.Publish(new OrderPaidEvent(order));
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1038,7 +1039,7 @@ namespace Grand.Services.Orders
                 var details = await PreparePlaceOrderDetails(processPaymentRequest);
 
                 // event notification
-                await _eventPublisher.PlaceOrderDetailsEvent(result, details);
+                await _mediator.PlaceOrderDetailsEvent(result, details);
 
                 //return if exist errors
                 if (result.Errors.Any())
@@ -1758,7 +1759,7 @@ namespace Grand.Services.Orders
                     //Update field last update cart
                     await _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
                     //raise event       
-                    await _eventPublisher.Publish(new OrderPlacedEvent(order));
+                    await _mediator.Publish(new OrderPlacedEvent(order));
                     await _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
@@ -2111,7 +2112,7 @@ namespace Grand.Services.Orders
             }
 
             //event
-            await _eventPublisher.PublishShipmentSent(shipment);
+            await _mediator.PublishShipmentSent(shipment);
 
             //check order status
             await CheckOrderStatus(order);
@@ -2169,7 +2170,7 @@ namespace Grand.Services.Orders
             }
 
             //event
-            await _eventPublisher.PublishShipmentDelivered(shipment);
+            await _mediator.PublishShipmentDelivered(shipment);
 
             //check order status
             await CheckOrderStatus(order);
@@ -2257,7 +2258,7 @@ namespace Grand.Services.Orders
             //cancel discount
             await _discountService.CancelDiscount(order.Id);
 
-            await _eventPublisher.Publish(new OrderCancelledEvent(order));
+            await _mediator.Publish(new OrderCancelledEvent(order));
 
         }
 
@@ -2561,7 +2562,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    await _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
+                    await _mediator.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
             }
@@ -2685,7 +2686,7 @@ namespace Grand.Services.Orders
             }
 
             //raise event       
-            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _mediator.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2791,7 +2792,7 @@ namespace Grand.Services.Orders
                     }
 
                     //raise event       
-                    await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+                    await _mediator.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2913,7 +2914,7 @@ namespace Grand.Services.Orders
                 });
             }
             //raise event       
-            await _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
+            await _mediator.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
 

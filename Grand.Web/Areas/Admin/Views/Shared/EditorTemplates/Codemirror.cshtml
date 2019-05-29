@@ -2,15 +2,12 @@
 <div class="mt-5">
 <textarea id="@Html.IdForModel()" name="@Html.NameForModel()">@Model</textarea>
 </div>
-
 <script>
-    var textarea = $('#@Html.IdForModel()')[0];
-    $(window).bind('load', function () {
-        var editor = CodeMirror.fromTextArea(textarea, {
+    $(document).ready(function () {
+        var editor = CodeMirror.fromTextArea(document.getElementById('@Html.IdForModel()'), {
             mode: "xml",
             lineNumbers: true
         });
-
-    })
+    });
 </script>
 

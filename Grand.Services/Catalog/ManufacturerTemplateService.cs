@@ -1,6 +1,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -17,7 +18,7 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -29,10 +30,10 @@ namespace Grand.Services.Catalog
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -51,7 +52,7 @@ namespace Grand.Services.Catalog
             await _manufacturerTemplateRepository.DeleteAsync(manufacturerTemplate);
 
             //event notification
-            await _eventPublisher.EntityDeleted(manufacturerTemplate);
+            await _mediator.EntityDeleted(manufacturerTemplate);
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace Grand.Services.Catalog
             await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplate);
 
             //event notification
-            await _eventPublisher.EntityInserted(manufacturerTemplate);
+            await _mediator.EntityInserted(manufacturerTemplate);
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace Grand.Services.Catalog
             await _manufacturerTemplateRepository.UpdateAsync(manufacturerTemplate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(manufacturerTemplate);
+            await _mediator.EntityUpdated(manufacturerTemplate);
         }
 
         #endregion

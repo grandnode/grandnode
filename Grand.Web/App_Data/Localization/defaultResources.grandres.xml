@@ -2472,9 +2472,6 @@
   <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
     <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.LowStockReport">
-    <Value>Low stock report</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
@@ -4613,6 +4610,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL">
     <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.Installed">
+    <Value>Missing permissions has been installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ACL.InstallMissingPermisions">
+    <Value>Install permissions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL.Permission">
     <Value>Permission name</Value>
@@ -11757,78 +11760,6 @@
   <LocaleResource Name="Admin.Customers.Products.AddNew">
     <Value>Add new</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports">
-    <Value>Customer reports</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByNumberOfOrders">
-    <Value>Customers by number of orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByOrderTotal">
-    <Value>Customers by order total</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.Customer">
-    <Value>Customer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.OrderCount">
-    <Value>Number of orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.Fields.OrderTotal">
-    <Value>Order total</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.OrderStatus">
-    <Value>Order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.OrderStatus.Hint">
-    <Value>Search by a specific order status e.g. Complete.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.PaymentStatus">
-    <Value>Payment status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.PaymentStatus.Hint">
-    <Value>Search by a specific payment status e.g. Paid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.ShippingStatus">
-    <Value>Shipping status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.ShippingStatus.Hint">
-    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.BestBy.StartDate.Hint">
-    <Value>The start date for the search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers">
-    <Value>Registered customers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Customers">
-    <Value>Count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period">
-    <Value>Period</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days">
-    <Value>In the last 14 days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days">
-    <Value>In the last 7 days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month">
-    <Value>In the last month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year">
-    <Value>In the last year</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Reports.RunReport">
-    <Value>Run report</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
@@ -11900,6 +11831,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.StoreStatistics">
     <Value>Store Statistics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.Summary">
+    <Value>Summary</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.TodayOrders">
     <Value>Today orders</Value>
@@ -14047,6 +13981,288 @@
   <LocaleResource Name="Admin.RecurringPayments.Updated">
     <Value>The payment has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports">
+    <Value>Reports</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average">
+    <Value>Order totals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.OrderStatus">
+    <Value>Order Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.SumAllTimeOrders">
+    <Value>All time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.SumThisMonthOrders">
+    <Value>This Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.SumThisWeekOrders">
+    <Value>This Week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.SumThisYearOrders">
+    <Value>This Year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Average.SumTodayOrders">
+    <Value>Today</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers">
+    <Value>Bestsellers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.BillingCountry.Hint">
+    <Value>Filter by order billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.ByAmount">
+    <Value>Bestsellers by amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.ByQuantity">
+    <Value>Bestsellers by quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Category.Hint">
+    <Value>Search in a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Fields.TotalAmount">
+    <Value>Total amount (excl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Fields.TotalQuantity">
+    <Value>Total quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Manufacturer.Hint">
+    <Value>Search in a specific manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Store.Hint">
+    <Value>Filter report by orders placed in a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Bestsellers.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country">
+    <Value>Country report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers">
+    <Value>Customer reports</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.BestByNumberOfOrders">
+    <Value>Customers by number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.BestByOrderTotal">
+    <Value>Customers by order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.OrderCount">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.Fields.OrderTotal">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.ShippingStatus">
+    <Value>Shipping status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.ShippingStatus.Hint">
+    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.BestBy.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers">
+    <Value>Registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Customers">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period">
+    <Value>Period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days">
+    <Value>In the last 14 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days">
+    <Value>In the last 7 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month">
+    <Value>In the last month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year">
+    <Value>In the last year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Customers.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.Fields.CountryName">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.Fields.SumOrders">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.Fields.TotalOrders">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Country.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete">
+    <Value>Incomplete orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.Count">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.Item">
+    <Value>Item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.Total">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.TotalIncompleteOrders">
+    <Value>Total incomplete orders (pending order status)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.TotalNotShippedOrders">
+    <Value>Total not yet shipped orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.TotalUnpaidOrders">
+    <Value>Total unpaid orders (pending payment status)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Incomplete.View">
+    <Value>view all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold">
+    <Value>Products never purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.NeverSold.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.LowStockReport">
+    <Value>Low stock report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period">
+    <Value>Sales report in period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.14days">
+    <Value>In the last 14 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.7days">
+    <Value>In the last 7 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.Count">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.month">
+    <Value>In the last month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.Name">
+    <Value>Period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Period.year">
+    <Value>In the last year</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests">
     <Value>Return requests</Value>
   </LocaleResource>
@@ -14163,210 +14379,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Sales">
     <Value>Sales</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average">
-    <Value>Order totals</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.OrderStatus">
-    <Value>Order Status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.SumAllTimeOrders">
-    <Value>All time</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.SumThisMonthOrders">
-    <Value>This Month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.SumThisWeekOrders">
-    <Value>This Week</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.SumThisYearOrders">
-    <Value>This Year</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Average.SumTodayOrders">
-    <Value>Today</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers">
-    <Value>Bestsellers</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry">
-    <Value>Billing country</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry.Hint">
-    <Value>Filter by order billing country</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.ByAmount">
-    <Value>Bestsellers by amount</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.ByQuantity">
-    <Value>Bestsellers by quantity</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category">
-    <Value>Category</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category.Hint">
-    <Value>Search in a specific category.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.TotalAmount">
-    <Value>Total amount (excl tax)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Fields.TotalQuantity">
-    <Value>Total quantity</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer">
-    <Value>Manufacturer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer.Hint">
-    <Value>Search in a specific manufacturer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.OrderStatus">
-    <Value>Order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.OrderStatus.Hint">
-    <Value>Search by a specific order status e.g. Complete.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.PaymentStatus">
-    <Value>Payment status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.PaymentStatus.Hint">
-    <Value>Search by a specific payment status e.g. Paid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.RunReport">
-    <Value>Run report</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate.Hint">
-    <Value>The start date for the search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store.Hint">
-    <Value>Filter report by orders placed in a specific store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor">
-    <Value>Vendor</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor.Hint">
-    <Value>Search by a specific vendor.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country">
-    <Value>Country report</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.Fields.CountryName">
-    <Value>Country</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.Fields.SumOrders">
-    <Value>Order total</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.Fields.TotalOrders">
-    <Value>Number of orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus">
-    <Value>Order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus.Hint">
-    <Value>Search by a specific order status e.g. Complete.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus">
-    <Value>Payment status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus.Hint">
-    <Value>Search by a specific payment status e.g. Paid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.RunReport">
-    <Value>Run report</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Country.StartDate.Hint">
-    <Value>The start date for the search</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete">
-    <Value>Incomplete orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.Count">
-    <Value>Count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.Item">
-    <Value>Item</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.Total">
-    <Value>Total</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.TotalIncompleteOrders">
-    <Value>Total incomplete orders (pending order status)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.TotalNotShippedOrders">
-    <Value>Total not yet shipped orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.TotalUnpaidOrders">
-    <Value>Total unpaid orders (pending payment status)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Incomplete.View">
-    <Value>view all</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold">
-    <Value>Products never purchased</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.RunReport">
-    <Value>Run report</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate.Hint">
-    <Value>The start date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period">
-    <Value>Sales report in period</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.14days">
-    <Value>In the last 14 days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.7days">
-    <Value>In the last 7 days</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.Amount">
-    <Value>Amount</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.Count">
-    <Value>Count</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.month">
-    <Value>In the last month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.Name">
-    <Value>Period</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.SalesReport.Period.year">
-    <Value>In the last year</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SearchTermReport">
     <Value>Popular search keywords</Value>
@@ -18031,6 +18043,9 @@
   <LocaleResource Name="Permission.ManageCustomers">
     <Value>Admin area. Manage Customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageCustomerRoles">
+    <Value>Admin area. Manage Customer roles</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageDiscounts">
     <Value>Admin area. Manage Discounts</Value>
   </LocaleResource>
@@ -18097,6 +18112,9 @@
   <LocaleResource Name="Permission.ManageRecurringPayments">
     <Value>Admin area. Manage Recurring Payments</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.ManageReports">
+    <Value>Admin area. Manage Reports</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.ManageReturnRequests">
     <Value>Admin area. Manage Return Requests</Value>
   </LocaleResource>
@@ -18126,9 +18144,6 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageWidgets">
     <Value>Admin area. Manage Widgets</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.OrderCountryReport">
-    <Value>Admin area. Access order country report.</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.PublicStoreAllowNavigation">
     <Value>Public store. Allow navigation</Value>
@@ -18987,6 +19002,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
     <Value>Sorry, you've used this discount already</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedInStore">
+    <Value>This coupon code can't be used in this store.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithGiftCards">
     <Value>Sorry, this discount cannot be used with gift cards in the cart</Value>

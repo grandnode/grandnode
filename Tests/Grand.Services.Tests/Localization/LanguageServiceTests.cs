@@ -6,6 +6,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Stores;
 using Grand.Services.Tests;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -20,7 +21,7 @@ namespace Grand.Services.Localization.Tests
         private IStoreMappingService _storeMappingService;
         private ILanguageService _languageService;
         private ISettingService _settingService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private LocalizationSettings _localizationSettings;
 
         [TestInitialize()]
@@ -49,9 +50,9 @@ namespace Grand.Services.Localization.Tests
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
             _settingService = new Mock<ISettingService>().Object;
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             _localizationSettings = new LocalizationSettings();

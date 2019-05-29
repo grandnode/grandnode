@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Customers)]
+    [PermissionAuthorize(PermissionSystemName.CustomerRoles)]
     public partial class CustomerRoleController : BaseAdminController
     {
         #region Fields

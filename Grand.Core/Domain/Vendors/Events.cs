@@ -1,9 +1,11 @@
+using MediatR;
+
 namespace Grand.Core.Domain.Vendors
 {
     /// <summary>
     /// Vendor review approved event
     /// </summary>
-    public class VendorReviewApprovedEvent
+    public class VendorReviewApprovedEvent : INotification
     {
         public VendorReviewApprovedEvent(VendorReview vendorReview)
         {

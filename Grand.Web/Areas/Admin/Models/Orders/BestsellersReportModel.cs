@@ -19,26 +19,26 @@ namespace Grand.Web.Areas.Admin.Models.Orders
 
         }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.Store")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.Store")]
         public string StoreId { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.EndDate")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
 
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.BillingCountry")]
         public string BillingCountryId { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.Vendor")]
+        [GrandResourceDisplayName("Admin.Reports.Bestsellers.Vendor")]
         public string VendorId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 

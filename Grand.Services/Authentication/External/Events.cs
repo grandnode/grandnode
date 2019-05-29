@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Customers;
+using MediatR;
 
 namespace Grand.Services.Authentication.External
 {
     /// <summary>
     /// Customer auto registered by external authentication method event
     /// </summary>
-    public class CustomerAutoRegisteredByExternalMethodEvent
+    public class CustomerAutoRegisteredByExternalMethodEvent : INotification
     {
         public CustomerAutoRegisteredByExternalMethodEvent(Customer customer, ExternalAuthenticationParameters parameters)
         {

@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -17,7 +18,7 @@ namespace Grand.Services.Messages
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly IDataProvider _dataProvider;
         private readonly CommonSettings _commonSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Ctor
@@ -28,14 +29,14 @@ namespace Grand.Services.Messages
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
         public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IDataProvider dataProvider, 
             CommonSettings commonSettings)
         {
             _queuedEmailRepository = queuedEmailRepository;
-            _eventPublisher = eventPublisher;
-            this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
+            _mediator = mediator;
+            _dataProvider = dataProvider;
+            _commonSettings = commonSettings;
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.InsertAsync(queuedEmail);
 
             //event notification
-            await _eventPublisher.EntityInserted(queuedEmail);
+            await _mediator.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.UpdateAsync(queuedEmail);
 
             //event notification
-            await _eventPublisher.EntityUpdated(queuedEmail);
+            await _mediator.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Grand.Services.Messages
             await _queuedEmailRepository.DeleteAsync(queuedEmail);
 
             //event notification
-            await _eventPublisher.EntityDeleted(queuedEmail);
+            await _mediator.EntityDeleted(queuedEmail);
         }
 
         /// <summary>

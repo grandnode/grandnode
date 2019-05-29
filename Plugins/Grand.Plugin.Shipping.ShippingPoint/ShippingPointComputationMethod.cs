@@ -269,13 +269,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         public override string GetConfigurationPageUrl()
         {
             return $"{_webHelper.GetStoreLocation()}Admin/ShippingPoint/Configure";
-        }
-
-
-        //public JsonResult GetFormPartialView(string shippingOption)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        }        
 
         #endregion
 

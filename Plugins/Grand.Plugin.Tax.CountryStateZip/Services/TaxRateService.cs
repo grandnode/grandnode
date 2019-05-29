@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
+using MediatR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IRepository<TaxRate> _taxRateRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -35,13 +36,13 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
-        public TaxRateService(IEventPublisher eventPublisher,
+        public TaxRateService(IMediator mediator,
             ICacheManager cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._cacheManager = cacheManager;
-            this._taxRateRepository = taxRateRepository;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _taxRateRepository = taxRateRepository;
         }
 
         #endregion
@@ -62,7 +63,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(taxRate);
+            await _mediator.EntityDeleted(taxRate);
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(taxRate);
+            await _mediator.EntityInserted(taxRate);
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
             await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(taxRate);
+            await _mediator.EntityUpdated(taxRate);
         }
         #endregion
     }

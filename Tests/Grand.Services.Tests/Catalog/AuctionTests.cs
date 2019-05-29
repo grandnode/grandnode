@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -17,7 +18,7 @@ namespace Grand.Services.Tests.Catalog
         private IRepository<Product> _productRepository;
         private IRepository<Bid> _bidRepository;
         private IAuctionService _auctionService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IProductService _productService;
         private ICacheManager _cacheManager;
         private IServiceProvider _serviceProvider;
@@ -28,8 +29,8 @@ namespace Grand.Services.Tests.Catalog
             _productRepository = new MongoDBRepositoryTest<Product>();
             _bidRepository = new MongoDBRepositoryTest<Bid>();
 
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             var productService = new Mock<IProductService>();

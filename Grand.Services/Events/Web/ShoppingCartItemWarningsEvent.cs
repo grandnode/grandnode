@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using MediatR;
 using System.Collections.Generic;
 
 namespace Grand.Services.Events.Web
 {
-    public class ShoppingCartItemWarningsEvent<C, S, P> where C : Customer where S : ShoppingCartItem where P : Product
+    public class ShoppingCartItemWarningsEvent<C, S, P> : INotification where C : Customer where S : ShoppingCartItem where P : Product
     {
         private readonly IList<string> _warnings;
         private readonly C _customer;

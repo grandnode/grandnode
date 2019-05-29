@@ -4,6 +4,7 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -38,7 +39,7 @@ namespace Grand.Services.Configuration
         #region Fields
 
         private readonly IRepository<Setting> _settingRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IServiceProvider _serviceProvider;
 
@@ -54,11 +55,11 @@ namespace Grand.Services.Configuration
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(IEnumerable<ICacheManager> cacheManager, IEventPublisher eventPublisher,
+        public SettingService(IEnumerable<ICacheManager> cacheManager, IMediator mediator,
             IRepository<Setting> settingRepository, IServiceProvider serviceProvider)
         {
             this._cacheManager = cacheManager.FirstOrDefault();
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._settingRepository = settingRepository;
             this._serviceProvider = serviceProvider;
         }

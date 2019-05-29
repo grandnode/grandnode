@@ -28,6 +28,5 @@ namespace Grand.Framework.Components
             //EngineContext.Current.Resolve<IEventPublisher>().ViewComponentEvent(viewName, this);
             return base.View(viewName);
         }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using MediatR;
+using Microsoft.AspNetCore.Html;
 using System.Collections.Generic;
 
 namespace Grand.Framework.Events
@@ -6,7 +7,7 @@ namespace Grand.Framework.Events
     /// <summary>
     /// Admin tabstrip created event
     /// </summary>
-    public class AdminTabStripCreated
+    public class AdminTabStripCreated : INotification
     {
         public AdminTabStripCreated(string tabStripName)
         {

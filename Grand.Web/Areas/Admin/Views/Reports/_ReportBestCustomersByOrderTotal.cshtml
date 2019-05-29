@@ -38,7 +38,7 @@
     <div class="form-actions">
         <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
             <button class="btn btn-success filter-submit" id="search-best-customers-ordertotal">
-                <i class="fa fa-search"></i> @T("Admin.Customers.Reports.RunReport")
+                <i class="fa fa-search"></i> @T("Admin.Reports.Customers.RunReport")
             </button>
         </div>
     </div>
@@ -51,7 +51,7 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "@Html.Raw(Url.Action("ReportBestCustomersByOrderTotalList", "Customer"))",
+                        url: "@Html.Raw(Url.Action("ReportBestCustomersByOrderTotalList", "Reports"))",
                         type: "POST",
                         dataType: "json",
                         data: bestCustomersOrderTotalAdditionalData
@@ -83,14 +83,14 @@
             scrollable: false,
             columns: [{
                 field: "CustomerName",
-                title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")",
+                title: "@T("Admin.Reports.Customers.BestBy.Fields.Customer")",
                 template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerName#</a>',
             }, {
                 field: "OrderTotal",
-                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
+                title: "@T("Admin.Reports.Customers.BestBy.Fields.OrderTotal")"
             }, {
                 field: "OrderCount",
-                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
+                title: "@T("Admin.Reports.Customers.BestBy.Fields.OrderCount")"
             }]
         });
     });

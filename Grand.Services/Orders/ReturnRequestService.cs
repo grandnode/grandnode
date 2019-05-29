@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -21,7 +22,7 @@ namespace Grand.Services.Orders
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -37,12 +38,12 @@ namespace Grand.Services.Orders
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._returnRequestRepository = returnRequestRepository;
             this._returnRequestActionRepository = returnRequestActionRepository;
             this._returnRequestReasonRepository = returnRequestReasonRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -61,7 +62,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.DeleteAsync(returnRequest);
 
             //event notification
-            await _eventPublisher.EntityDeleted(returnRequest);
+            await _mediator.EntityDeleted(returnRequest);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.DeleteAsync(returnRequestAction);
 
             //event notification
-            await _eventPublisher.EntityDeleted(returnRequestAction);
+            await _mediator.EntityDeleted(returnRequestAction);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.InsertAsync(returnRequestAction);
 
             //event notification
-            await _eventPublisher.EntityInserted(returnRequestAction);
+            await _mediator.EntityInserted(returnRequestAction);
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.InsertAsync(returnRequest);
 
             //event notification
-            await _eventPublisher.EntityInserted(returnRequest);
+            await _mediator.EntityInserted(returnRequest);
         }
         /// <summary>
         /// Updates the  return request action
@@ -199,7 +200,7 @@ namespace Grand.Services.Orders
             await _returnRequestActionRepository.UpdateAsync(returnRequestAction);
 
             //event notification
-            await _eventPublisher.EntityUpdated(returnRequestAction);
+            await _mediator.EntityUpdated(returnRequestAction);
         }
 
 
@@ -217,7 +218,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.DeleteAsync(returnRequestReason);
 
             //event notification
-            await _eventPublisher.EntityDeleted(returnRequestReason);
+            await _mediator.EntityDeleted(returnRequestReason);
         }
 
         /// <summary>
@@ -254,7 +255,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.InsertAsync(returnRequestReason);
 
             //event notification
-            await _eventPublisher.EntityInserted(returnRequestReason);
+            await _mediator.EntityInserted(returnRequestReason);
         }
 
         /// <summary>
@@ -269,7 +270,7 @@ namespace Grand.Services.Orders
             await _returnRequestReasonRepository.UpdateAsync(returnRequestReason);
 
             //event notification
-            await _eventPublisher.EntityUpdated(returnRequestReason);
+            await _mediator.EntityUpdated(returnRequestReason);
         }
 
         /// <summary>
@@ -284,7 +285,7 @@ namespace Grand.Services.Orders
             await _returnRequestRepository.UpdateAsync(returnRequest);
 
             //event notification
-            await _eventPublisher.EntityUpdated(returnRequest);
+            await _mediator.EntityUpdated(returnRequest);
         }
         #endregion
     }
