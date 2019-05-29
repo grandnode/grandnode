@@ -44,6 +44,8 @@ function mainMenuReplace() {
     if ($(window).width() < 991) {
         var Menu = $('.mainNav .navbar-nav'),
             HeaderLinks = $('.header-links'),
+            CartIcon = $('.cart-container'),
+            WishlistIcon = $('.wishlist-container'),
             Logo = $('.header-logo .store-logo'),
             Dropdowns = $('.header-links .dropdowns-container'),
             Manufacturers = $('.navbar-nav .manufacturer-dropdown'),
@@ -51,6 +53,8 @@ function mainMenuReplace() {
 
         Logo.prependTo('.logo-mobile');
         Menu.prependTo('#pills-menu');
+        WishlistIcon.prependTo(HeaderLinks);
+        CartIcon.prependTo(HeaderLinks);
         Dropdowns.insertAfter('#pills-mobile-tabContent');
         if ($('.mobile-menu .manufacturer-dropdown').length) {
             Manufacturers.prependTo('#pills-manufacturers');
@@ -83,6 +87,9 @@ function mainMenuReplace() {
     else {
         var Menu = $('.mobile-menu #pills-menu .navbar-nav'),
             HeaderLinks = $('.header-links'),
+            CartIcon = $('.cart-container'),
+            WishlistIcon = $('.wishlist-container'),
+            ShoppingLinks = $('.shopping-links');
             Logo = $('.logo-mobile .store-logo'),
             Dropdowns = $('.mobile-menu .dropdowns-container'),
             Manufacturers = $('.mobile-menu .manufacturer-dropdown'),
@@ -90,6 +97,8 @@ function mainMenuReplace() {
 
         Logo.prependTo('.header-logo');
         Menu.prependTo('.mainNav .navbar-collapse');
+        CartIcon.prependTo(ShoppingLinks);
+        WishlistIcon.prependTo(ShoppingLinks);
         Dropdowns.insertAfter('.header-links .menu-open-button')
         Manufacturers.insertAfter('.mainNav .manufacturer-items .dropdown-toggle');
         $(Links.get().reverse()).each(function () {
@@ -240,11 +249,6 @@ $(document).ready(function () {
             $("#newsletter-subscribe-button").trigger("click")
             return false;
         }
-    });
-
-    $("#small-searchterms").click(function (e) {
-        $(".formSearch").removeClass("col-lg-6");
-        e.stopPropagation();
     });
 
     $('#small-searchterms').blur(function () {
