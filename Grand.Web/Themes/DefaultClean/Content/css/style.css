@@ -1298,7 +1298,8 @@ pagination .pagination a:not([href]) {
     color: #000;
 }
 .shopping-links .nav-link .mdi {
-    font-size: 24px;
+    color: #000;
+    font-size: 34px;
 }
 
 /* catalog selectors */
@@ -3533,22 +3534,19 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 }
 #topcartlink .cart-qty,
 .wishlist-qty {
-	border-radius: 100%;
-	background: #0091b5;
-	color: #fff;
-	font-size: 10px;
-	font-weight: 300;
-	width: 20px;
-	height: 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: absolute;
-	left: -5px;
-	top: -7px;
-}
-.wishlist-qty {
-	left: 12px;
+    border-radius: 100%;
+    background: #0091b5;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 300;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 36px;
+    top: -5px;
 }
 span.product-quantity {
 	min-width: 60px;
