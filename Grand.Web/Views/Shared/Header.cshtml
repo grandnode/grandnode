@@ -34,11 +34,9 @@
                 @await Component.InvokeAsync("Logo")
             </div>
             <div class="col formSearch ml-auto pr-0 d-none d-lg-inline-flex align-items-end">
-                @await Component.InvokeAsync("SearchBox")
-                <ul class="shopping-links">
-                    @await Component.InvokeAsync("ShoppingCartLinks")
-                </ul>                
-            </div>
+                @await Component.InvokeAsync("SearchBox")            
+            </div>    
+            @await Component.InvokeAsync("ShoppingCartLinks")
         </div>
     </div>
 </header>
