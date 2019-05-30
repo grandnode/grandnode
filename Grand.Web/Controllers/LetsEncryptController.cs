@@ -13,7 +13,7 @@ namespace Grand.Web.Controllers
             if (fileName == null)
                 return Content("");
 
-            var file = Path.Combine(CommonHelper.MapPath("~/wwwroot/content/acme/"), fileName);
+            var file = Path.GetFullPath(CommonHelper.MapPath("~/wwwroot/content/acme/") + fileName);
             if (System.IO.File.Exists(file))
             {
                 return new PhysicalFileResult(file, "text/plain");
