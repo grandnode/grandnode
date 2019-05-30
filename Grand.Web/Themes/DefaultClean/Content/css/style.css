@@ -4839,6 +4839,19 @@ footer .socicon-pinterest:hover {
         align-items: center;
         text-align: center;
         padding: 0;
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        max-width: 100%;
+    }
+    .cart-container,
+    .wishlist-container {
+        display: none;
+    }
+    .header-links .cart-container,
+    .header-links .wishlist-container {
+        display: list-item
     }
     .header-links .nav-item .nav-link {
         flex-direction: column;
