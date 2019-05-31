@@ -249,20 +249,21 @@ namespace Grand.Services.Directory
         public virtual async Task<decimal> ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             if (sourceCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
             if (targetCurrencyCode == null)
-                throw new ArgumentNullException("targetCurrencyCode");
+                throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            decimal result = amount;
-            if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
+            var result = amount;
+
+            if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != targetCurrencyCode.Id)
-            {
-                result = await ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
-                result = await ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
-            }
+
+            result = await ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
+            result = await ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
+
             return result;
+
         }
 
         /// <summary>
@@ -281,13 +282,10 @@ namespace Grand.Services.Directory
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
             decimal result = amount;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
-            {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
-                result = result / exchangeRate;
-            }
+            decimal exchangeRate = sourceCurrencyCode.Rate;
+            if (exchangeRate == decimal.Zero)
+                throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
+            result = result / exchangeRate;
             return result;
         }
 
@@ -307,13 +305,13 @@ namespace Grand.Services.Directory
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
             decimal result = amount;
-            if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
-            {
-                decimal exchangeRate = targetCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
-                result = result * exchangeRate;
-            }
+
+            decimal exchangeRate = targetCurrencyCode.Rate;
+            if (exchangeRate == decimal.Zero)
+                throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
+
+            result = result * exchangeRate;
+
             return result;
         }
 

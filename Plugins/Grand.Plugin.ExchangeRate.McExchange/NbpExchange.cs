@@ -37,13 +37,11 @@ namespace Grand.Plugin.ExchangeRate.McExchange
                 foreach (XmlNode node2 in ratesNode.ChildNodes)
                 {
                     var rate = decimal.Parse(node2.SelectSingleNode("Mid").InnerText, provider);
-                    exchangeRates.Add(new Core.Domain.Directory.ExchangeRate
-                        {
-                            CurrencyCode = node2.SelectSingleNode("Code").InnerText,
-                            Rate = Math.Round(rate, 4, MidpointRounding.AwayFromZero),
-                            UpdatedOn = updateDate
-                        }
-                    );
+                    exchangeRates.Add(new Core.Domain.Directory.ExchangeRate {
+                        CurrencyCode = node2.SelectSingleNode("Code").InnerText,
+                        Rate = Math.Round(1m / rate, 4, MidpointRounding.AwayFromZero),
+                        UpdatedOn = updateDate
+                    });
                 }
                 return exchangeRates;
             }
