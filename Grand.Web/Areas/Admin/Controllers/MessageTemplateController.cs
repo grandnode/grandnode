@@ -90,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var x in messageTemplates)
             {
                 var templateModel = x.ToModel();
-                await templateModel.PrepareStoresMappingModel(x, false, _storeService);
+                await templateModel.PrepareStoresMappingModel(x, _storeService, false);
                 var stores =(await _storeService
                         .GetAllStores())
                         .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
@@ -117,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new MessageTemplateModel();
 
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
@@ -160,7 +160,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             return View(model);
         }
 
@@ -179,7 +179,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            await model.PrepareStoresMappingModel(messageTemplate, false, _storeService);
+            await model.PrepareStoresMappingModel(messageTemplate, _storeService, false);
 
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -234,7 +234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in await _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            await model.PrepareStoresMappingModel(messageTemplate, true, _storeService);
+            await model.PrepareStoresMappingModel(messageTemplate, _storeService, true);
 
             return View(model);
         }

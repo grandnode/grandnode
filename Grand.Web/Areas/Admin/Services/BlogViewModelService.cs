@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new BlogPostModel();
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //default values
             model.AllowComments = true;
             //locales
@@ -92,13 +92,13 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel)
         {
-            await blogPostmodel.PrepareStoresMappingModel(null, true, _storeService);
+            await blogPostmodel.PrepareStoresMappingModel(null, _storeService, true);
             return blogPostmodel;
         }
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel, BlogPost blogPost)
         {
             //Store
-            await blogPostmodel.PrepareStoresMappingModel(blogPost, true, _storeService);
+            await blogPostmodel.PrepareStoresMappingModel(blogPost, _storeService, true);
             return blogPostmodel;
         }
 
@@ -106,7 +106,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = blogPost.ToModel();
             //Store
-            await model.PrepareStoresMappingModel(blogPost, false, _storeService);
+            await model.PrepareStoresMappingModel(blogPost, _storeService, false);
             return model;
         }
 

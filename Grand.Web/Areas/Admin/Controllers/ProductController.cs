@@ -126,7 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _productViewModelService.PrepareProductModel(model, null, true, true);
             await AddLocales(_languageService, model.Locales);
             await model.PrepareACLModel(null, false, _customerService);
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             return View(model);
         }
 
@@ -143,7 +143,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _productViewModelService.PrepareProductModel(model, null, false, true);
             await model.PrepareACLModel(null, true, _customerService);
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
 
             return View(model);
         }
@@ -176,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             await model.PrepareACLModel(product, false, _customerService);
-            await model.PrepareStoresMappingModel(product, false, _storeService);
+            await model.PrepareStoresMappingModel(product, _storeService, false);
 
             return View(model);
         }
@@ -213,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _productViewModelService.PrepareProductModel(model, product, false, true);
             await model.PrepareACLModel(product, true, _customerService);
-            await model.PrepareStoresMappingModel(product, true, _storeService);
+            await model.PrepareStoresMappingModel(product, _storeService, true);
 
             return View(model);
         }

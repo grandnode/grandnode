@@ -84,7 +84,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
 
             //default values
             model.Published = true;
@@ -109,7 +109,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
 
@@ -126,7 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
             //Store
-            await model.PrepareStoresMappingModel(newsItem, false, _storeService);
+            await model.PrepareStoresMappingModel(newsItem, _storeService, false);
             //ACL
             await model.PrepareACLModel(newsItem, false, _customerService);
             //locales
@@ -169,7 +169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             //Store
-            await model.PrepareStoresMappingModel(newsItem, true, _storeService);
+            await model.PrepareStoresMappingModel(newsItem, _storeService, true);
             //ACL
             await model.PrepareACLModel(newsItem, true, _customerService);
 

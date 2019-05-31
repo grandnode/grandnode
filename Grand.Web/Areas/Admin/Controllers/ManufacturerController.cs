@@ -107,7 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //default values
             model.PageSize = catalogSettings.DefaultManufacturerPageSize;
             model.PageSizeOptions = catalogSettings.DefaultManufacturerPageSizeOptions;
@@ -135,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
 
             return View(model);
         }
@@ -165,7 +165,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(manufacturer, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(manufacturer, false, _storeService);
+            await model.PrepareStoresMappingModel(manufacturer, _storeService, false);
 
             return View(model);
         }
@@ -202,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(manufacturer, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(manufacturer, true, _storeService);
+            await model.PrepareStoresMappingModel(manufacturer, _storeService, true);
 
             return View(model);
         }

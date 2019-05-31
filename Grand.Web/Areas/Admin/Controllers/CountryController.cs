@@ -89,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             
             return View(model);
         }
@@ -105,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
 
             return View(model);
         }
@@ -124,7 +124,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            await model.PrepareStoresMappingModel(country, false, _storeService);
+            await model.PrepareStoresMappingModel(country, _storeService, false);
 
             return View(model);
         }
@@ -152,7 +152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(country, true, _storeService);
+            await model.PrepareStoresMappingModel(country, _storeService, true);
 
             return View(model);
         }
