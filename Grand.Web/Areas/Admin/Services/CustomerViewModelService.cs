@@ -333,6 +333,25 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
+        protected virtual async Task PrepareStoresModel(CustomerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores.Add(new SelectListItem {
+                Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.StaffStore.None"),
+                Value = ""
+            });
+            var stores = await _storeService.GetAllStores();
+            foreach (var store in stores)
+            {
+                model.AvailableStores.Add(new SelectListItem {
+                    Text = store.Name,
+                    Value = store.Id.ToString()
+                });
+            }
+        }
+
         protected virtual async Task PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
         {
             var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
@@ -475,6 +494,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.Email = customer.Email;
                     model.Username = customer.Username;
                     model.VendorId = customer.VendorId;
+                    model.StaffStoreId = customer.StaffStoreId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.FreeShipping = customer.FreeShipping;
@@ -556,6 +576,10 @@ namespace Grand.Web.Areas.Admin.Services
 
             //vendors
             await PrepareVendorsModel(model);
+
+            //stores
+            await PrepareStoresModel(model);
+
             //customer attributes
             await PrepareCustomerAttributeModel(model, customer);
 
@@ -698,6 +722,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Email = model.Email,
                 Username = model.Username,
                 VendorId = model.VendorId,
+                StaffStoreId = model.StaffStoreId,
                 AdminComment = model.AdminComment,
                 IsTaxExempt = model.IsTaxExempt,
                 FreeShipping = model.FreeShipping,
@@ -879,6 +904,9 @@ namespace Grand.Web.Areas.Admin.Services
 
             //vendor
             customer.VendorId = model.VendorId;
+
+            //staff store
+            customer.StaffStoreId = model.StaffStoreId;
 
             //form fields
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)

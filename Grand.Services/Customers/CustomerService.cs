@@ -613,7 +613,8 @@ namespace Grand.Services.Customers
                 .Set(x => x.CustomerRoles, customer.CustomerRoles)
                 .Set(x => x.Addresses, customer.Addresses)
                 .Set(x => x.FreeShipping, customer.FreeShipping)
-                .Set(x => x.VendorId, customer.VendorId);
+                .Set(x => x.VendorId, customer.VendorId)
+                .Set(x => x.StaffStoreId, customer.StaffStoreId);
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
             //event notification
