@@ -4,6 +4,7 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
+using Grand.Core.Extensions;
 using Grand.Framework.Security;
 using Grand.Services.Installation;
 using Grand.Services.Logging;
@@ -18,8 +19,10 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Grand.Framework.Extensions;
 
 namespace Grand.Web.Controllers
 {
@@ -52,7 +55,7 @@ namespace Grand.Web.Controllers
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
         /// </summary>
-        protected bool UseMars
+        protected bool UseMars 
         {
             get { return false; }
         }
@@ -67,7 +70,7 @@ namespace Grand.Web.Controllers
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
 
-            var model = new InstallModel
+            var model = new InstallModel 
             {
                 AdminEmail = "admin@yourstore.com",
                 InstallSampleData = false,
@@ -76,7 +79,7 @@ namespace Grand.Web.Controllers
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem
+                model.AvailableLanguages.Add(new SelectListItem 
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
@@ -86,13 +89,15 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem
+                model.AvailableCollation.Add(new SelectListItem 
                 {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
                 });
             }
+
+            model.SslProtocols = SslProtocols.Tls12.ToSelectList();
             return View(model);
         }
 
@@ -141,7 +146,19 @@ namespace Grand.Web.Controllers
             {
                 try
                 {
-                    var client = new MongoClient(connectionString);
+                    MongoClientSettings settings = new MongoClientSettings();
+                    settings.Server = new MongoServerAddress(model.MongoDBServerName, model.MongoDBServerPort);
+                    settings.UseSsl = true;
+                    settings.SslSettings = new SslSettings();
+                    settings.SslSettings.EnabledSslProtocols = SslProtocols.Tls12;
+
+                    MongoIdentity identity = new MongoInternalIdentity(model.MongoDBDatabaseName, model.MongoDBUsername);
+                    MongoIdentityEvidence evidence = new PasswordEvidence(model.MongoDBPassword);
+
+                    settings.Credential = new MongoCredential("SCRAM-SHA-1", identity, evidence);
+
+                    var client = new MongoClient(settings);
+
                     var databaseName = new MongoUrl(connectionString).DatabaseName;
                     var database = client.GetDatabase(databaseName);
                     database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
@@ -179,7 +196,7 @@ namespace Grand.Web.Controllers
                 try
                 {
                     //save settings
-                    var settings = new DataSettings
+                    var settings = new DataSettings 
                     {
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString
@@ -267,7 +284,7 @@ namespace Grand.Web.Controllers
             //prepare language list
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem
+                model.AvailableLanguages.Add(new SelectListItem 
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
@@ -278,13 +295,15 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem
+                model.AvailableCollation.Add(new SelectListItem 
                 {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
                 });
             }
+
+            model.SslProtocols = SslProtocols.Tls12.ToSelectList();
 
             return View(model);
         }

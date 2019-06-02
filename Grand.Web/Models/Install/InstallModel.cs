@@ -24,6 +24,13 @@ namespace Grand.Web.Models.Install
         public string DataProvider { get; set; }
         public bool MongoDBConnectionInfo { get; set; }
         public string MongoDBServerName { get; set; }
+
+        public bool SslEnabled { get; set; } = true;
+
+        public System.Security.Authentication.SslProtocols SslProtocol { get; set; } = System.Security.Authentication.SslProtocols.Tls12;
+
+        public int MongoDBServerPort { get; set; } = 10255;
+
         public string MongoDBDatabaseName { get; set; }
         public string MongoDBUsername { get; set; }
         [DataType(DataType.Password)]
@@ -34,5 +41,7 @@ namespace Grand.Web.Models.Install
         public string Collation { get; set; }
         public List<SelectListItem> AvailableLanguages { get; set; }
         public List<SelectListItem> AvailableCollation { get; set; }
+        public SelectList SslProtocols { get; set; }
+
     }
 }
