@@ -97,7 +97,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            model.SslProtocols = SslProtocols.Tls12.ToSelectList();
+            model.SslProtocols = SslProtocols.Tls12.ToSelectListItems();
             return View(model);
         }
 
@@ -148,14 +148,18 @@ namespace Grand.Web.Controllers
                 {
                     MongoClientSettings settings = new MongoClientSettings();
                     settings.Server = new MongoServerAddress(model.MongoDBServerName, model.MongoDBServerPort);
-                    settings.UseSsl = true;
-                    settings.SslSettings = new SslSettings();
-                    settings.SslSettings.EnabledSslProtocols = SslProtocols.Tls12;
+
+                    if (model.SslProtocol != SslProtocols.None)
+                    {
+                        settings.UseSsl = true;
+                        settings.SslSettings = new SslSettings();
+                        settings.SslSettings.EnabledSslProtocols = model.SslProtocol;
+                    }
 
                     MongoIdentity identity = new MongoInternalIdentity(model.MongoDBDatabaseName, model.MongoDBUsername);
                     MongoIdentityEvidence evidence = new PasswordEvidence(model.MongoDBPassword);
 
-                    settings.Credential = new MongoCredential("SCRAM-SHA-1", identity, evidence);
+                    settings.Credential = new MongoCredential(model.MongoCredentialMechanism, identity, evidence);
 
                     var client = new MongoClient(settings);
 
@@ -303,8 +307,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            model.SslProtocols = SslProtocols.Tls12.ToSelectList();
-
+            model.SslProtocols = SslProtocols.Tls12.ToSelectListItems();
             return View(model);
         }
 
