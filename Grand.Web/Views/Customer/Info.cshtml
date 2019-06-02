@@ -117,24 +117,24 @@
                 {
                     <fieldset class="form-group date-of-birth">
                         <legend class="sr-only">@T("account.fields.dateofbirth")</legend>
-                            <span class="col-form-label">
-                                @T("Account.Fields.DateOfBirth"):
-                            </span>
-                            @if (Model.DateOfBirthRequired)
-                            {
-                                <span class="required">*</span>
-                            }
+                        <span class="col-form-label">
+                            @T("Account.Fields.DateOfBirth"):
+                        </span>
+                        @if (Model.DateOfBirthRequired)
+                        {
+                            <span class="required">*</span>
+                        }
                         <div class="input-group">
-                            @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
-                                                  Html.NameFor(x => x.DateOfBirthMonth),
-                                                  Html.NameFor(x => x.DateOfBirthYear),
-                                                  DateTime.Now.Year - 110,
-                                                  DateTime.Now.Year,
-                                                  Model.DateOfBirthDay,
-                                                  Model.DateOfBirthMonth,
-                                                  Model.DateOfBirthYear,
-                                                  false,
-                                                  new { @class = "col-4 custom-select dateHelper" })
+                            <date-picker-dropdown control-day="@Html.IdFor(x => x.DateOfBirthDay)"
+                                                  control-month="@Html.IdFor(x => x.DateOfBirthMonth)"
+                                                  control-year="@Html.IdFor(x => x.DateOfBirthYear)"
+                                                  begin-year="@(DateTime.Now.Year - 100)"
+                                                  end-year="DateTime.Now.Year"
+                                                  selected-day="(Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0)"
+                                                  selected-month="(Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0)"
+                                                  selected-year="(Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0)"
+                                                  class="col-12 input-group" />
+
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
                             <span asp-validation-for="DateOfBirthYear"></span>
@@ -211,10 +211,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-        Model.StreetAddress2Enabled ||
-        Model.ZipPostalCodeEnabled ||
-        Model.CityEnabled ||
-        Model.CountryEnabled)
+       Model.StreetAddress2Enabled ||
+       Model.ZipPostalCodeEnabled ||
+       Model.CityEnabled ||
+       Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">

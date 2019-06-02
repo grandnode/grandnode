@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -34,7 +35,7 @@ namespace Grand.Services.Directory
         #region Fields
 
         private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -49,11 +50,11 @@ namespace Grand.Services.Directory
         /// <param name="eventPublisher">Event published</param>
         public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             _cacheManager = cacheManager;
             _stateProvinceRepository = stateProvinceRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
         }
 
         #endregion
@@ -70,10 +71,10 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.DeleteAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(stateProvince);
+            await _mediator.EntityDeleted(stateProvince);
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryId(string countryId, string languageId = "", bool showHidden = false)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
@@ -145,10 +146,10 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.InsertAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(stateProvince);
+            await _mediator.EntityInserted(stateProvince);
         }
 
         /// <summary>
@@ -162,10 +163,10 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.UpdateAsync(stateProvince);
 
-            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(stateProvince);
+            await _mediator.EntityUpdated(stateProvince);
         }
 
         #endregion

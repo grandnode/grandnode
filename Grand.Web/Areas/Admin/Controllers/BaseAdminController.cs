@@ -27,7 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!index.HasValue)
             {
                 int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
+                if (int.TryParse(this.Request.Form["selected-tab-index"][0], out tmp))
                 {
                     index = tmp;
                 }

@@ -19,6 +19,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = PermissionSystemName.ProductTags, Category = "Catalog" };
         public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = PermissionSystemName.Attributes, Category = "Catalog" };
         public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = PermissionSystemName.Customers, Category = "Customers" };
+        public static readonly PermissionRecord ManageCustomerRoles = new PermissionRecord { Name = "Admin area. Manage Customer Roles", SystemName = PermissionSystemName.CustomerRoles, Category = "Customers" };
         public static readonly PermissionRecord ManageActions = new PermissionRecord { Name = "Admin area. Manage Customers Actions", SystemName = PermissionSystemName.Actions, Category = "Customers" };
         public static readonly PermissionRecord ManageReminders = new PermissionRecord { Name = "Admin area. Manage Customers Reminders", SystemName = PermissionSystemName.Reminders, Category = "Customers" };
         public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = PermissionSystemName.Vendors, Category = "Customers" };
@@ -29,7 +30,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = PermissionSystemName.RecurringPayments, Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = PermissionSystemName.GiftCards, Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = PermissionSystemName.ReturnRequests, Category = "Orders" };
-        public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = PermissionSystemName.OrderCountryReport, Category = "Orders" };
+        public static readonly PermissionRecord ManageReports = new PermissionRecord { Name = "Admin area. Manage Reports", SystemName = PermissionSystemName.Reports, Category = "Reports" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = PermissionSystemName.Affiliates, Category = "Promo" };
         public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = PermissionSystemName.PushNotifications, Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = PermissionSystemName.Campaigns, Category = "Promo" };
@@ -87,6 +88,7 @@ namespace Grand.Services.Security
                 ManageProductTags,
                 ManageAttributes,
                 ManageCustomers,
+                ManageCustomerRoles,
                 ManageActions,
                 ManageReminders,
                 ManageBanners,
@@ -99,7 +101,7 @@ namespace Grand.Services.Security
                 ManageRecurringPayments,
                 ManageGiftCards,
                 ManageReturnRequests,
-                OrderCountryReport,
+                ManageReports,
                 ManageAffiliates,
                 ManagePushNotifications,
                 ManageCampaigns,
@@ -160,6 +162,7 @@ namespace Grand.Services.Security
                         ManageProductTags,
                         ManageAttributes,
                         ManageCustomers,
+                        ManageCustomerRoles,
                         ManageVendors,
                         ManageVendorReviews,
                         ManageCurrentCarts,
@@ -168,7 +171,7 @@ namespace Grand.Services.Security
                         ManageRecurringPayments,
                         ManageGiftCards,
                         ManageReturnRequests,
-                        OrderCountryReport,
+                        ManageReports,
                         ManageAffiliates,
                         ManagePushNotifications,
                         ManageCampaigns,

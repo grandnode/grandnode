@@ -6,6 +6,7 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,7 +20,7 @@ namespace Grand.Services.Tests.Configuration
     public class ConfigFileSettingService : SettingService
     {
         public ConfigFileSettingService(IEnumerable<ICacheManager> cacheManager,
-            IEventPublisher eventPublisher,
+            IMediator eventPublisher,
             IRepository<Setting> settingRepository,
             IServiceProvider serviceProvider) :
             base(cacheManager, eventPublisher, settingRepository, serviceProvider)
@@ -97,8 +98,9 @@ namespace Grand.Services.Tests.Configuration
             return settings;
         }
 
-        public override void ClearCache()
+        public override Task ClearCache()
         {
+            return Task.CompletedTask;
         }
     }
 }

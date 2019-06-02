@@ -87,7 +87,7 @@ namespace Grand.Services.Security
                 return false;
 
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var permissionRecord = await _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToListAsync();
                 if (permissionRecord.Any())
@@ -112,7 +112,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -231,6 +231,35 @@ namespace Grand.Services.Security
                             permission1.CustomerRoles.Add(customerRole.Id);
                         }
                     }
+
+                    //save new permission
+                    await InsertPermissionRecord(permission1);
+
+                    //save localization
+                    await permission1.SaveLocalizedPermissionName(_localizationService, _languageService);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Install missing permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        public virtual async Task InstallNewPermissions(IPermissionProvider permissionProvider)
+        {
+            //install new permissions
+            var permissions = permissionProvider.GetPermissions();
+            foreach (var permission in permissions)
+            {
+                var permission1 = await GetPermissionRecordBySystemName(permission.SystemName);
+                if (permission1 == null)
+                {
+                    //new permission (install it)
+                    permission1 = new PermissionRecord {
+                        Name = permission.Name,
+                        SystemName = permission.SystemName,
+                        Category = permission.Category,
+                    };
 
                     //save new permission
                     await InsertPermissionRecord(permission1);

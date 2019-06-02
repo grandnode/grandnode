@@ -4,6 +4,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Polls;
 using Grand.Services.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -20,7 +21,7 @@ namespace Grand.Services.Polls
         #region Fields
 
         private readonly IRepository<Poll> _pollRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
 
@@ -29,12 +30,12 @@ namespace Grand.Services.Polls
         #region Ctor
 
         public PollService(IRepository<Poll> pollRepository, 
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
             this._pollRepository = pollRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._workContext = workContext;
             this._catalogSettings = catalogSettings;
         }
@@ -130,7 +131,7 @@ namespace Grand.Services.Polls
             await _pollRepository.DeleteAsync(poll);
 
             //event notification
-            await _eventPublisher.EntityDeleted(poll);
+            await _mediator.EntityDeleted(poll);
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace Grand.Services.Polls
             await _pollRepository.InsertAsync(poll);
 
             //event notification
-            await _eventPublisher.EntityInserted(poll);
+            await _mediator.EntityInserted(poll);
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Grand.Services.Polls
             await _pollRepository.UpdateAsync(poll);
 
             //event notification
-            await _eventPublisher.EntityUpdated(poll);
+            await _mediator.EntityUpdated(poll);
         }
         
         

@@ -6,16 +6,15 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -81,7 +80,6 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -92,18 +90,13 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly ILanguageService _languageService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IDataProvider _dataProvider;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -116,7 +109,6 @@ namespace Grand.Services.Catalog
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
-            IRepository<AclRecord> aclRepository,
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
@@ -126,17 +118,12 @@ namespace Grand.Services.Catalog
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
-            IDataProvider dataProvider,
             IWorkContext workContext,
-            IStoreContext storeContext,
             LocalizationSettings localizationSettings,
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
+            IMediator mediator,
             IRepository<ProductTag> productTagRepository,
             IServiceProvider serviceProvider
             )
@@ -144,7 +131,6 @@ namespace Grand.Services.Catalog
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productReviewRepository = productReviewRepository;
-            this._aclRepository = aclRepository;
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
@@ -153,17 +139,12 @@ namespace Grand.Services.Catalog
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
             this._workflowMessageService = workflowMessageService;
-            this._dataProvider = dataProvider;
             this._workContext = workContext;
-            this._storeContext = storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
+            this._mediator = mediator;
             this._productTagRepository = productTagRepository;
             this._customerProductRepository = customerProductRepository;
             this._serviceProvider = serviceProvider;
@@ -193,6 +174,11 @@ namespace Grand.Services.Catalog
             var builderRelated = Builders<Product>.Update;
             var updatefilterRelated = builderRelated.PullFilter(x => x.RelatedProducts, y => y.ProductId2 == product.Id);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterRelated);
+
+            //delete similar product
+            var builderSimilar = Builders<Product>.Update;
+            var updatefilterSimilar = builderSimilar.PullFilter(x => x.SimilarProducts, y => y.ProductId2 == product.Id);
+            await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterSimilar);
 
             //delete cross sales product
             var builderCross = Builders<Product>.Update;
@@ -232,7 +218,7 @@ namespace Grand.Services.Catalog
             await _productDeletedRepository.InsertAsync(productDeleted);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
         }
 
@@ -260,7 +246,7 @@ namespace Grand.Services.Catalog
             if (String.IsNullOrEmpty(productId))
                 return null;
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
-            return await _cacheManager.Get(key, () => _productRepository.GetByIdAsync(productId));
+            return await _cacheManager.GetAsync(key, () => _productRepository.GetByIdAsync(productId));
         }
 
         /// <summary>
@@ -345,10 +331,10 @@ namespace Grand.Services.Catalog
             await _productRepository.InsertAsync(product);
 
             //clear cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(product);
+            await _mediator.EntityInserted(product);
         }
 
         /// <summary>
@@ -509,10 +495,10 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
         public virtual async Task UpdateStockProduct(Product product)
@@ -529,24 +515,24 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
         public virtual async Task UpdateMostView(string productId, int qty)
         {
             var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Viewed, qty);
             await _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
         }
 
         public virtual async Task UpdateSold(string productId, int qty)
         {
             var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Sold, qty);
             await _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
         }
 
         public virtual async Task UnpublishProduct(string productId)
@@ -556,7 +542,7 @@ namespace Grand.Services.Catalog
                     .Set(x => x.Published, false)
                     .CurrentDate("UpdatedOnUtc");
             await _productRepository.Collection.UpdateOneAsync(filter, update);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
 
         }
 
@@ -588,10 +574,10 @@ namespace Grand.Services.Catalog
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
-            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+            if (!string.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
                 //Store mapping
-                var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                var currentStoreId = new List<string> { storeId };
                 filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
             }
 
@@ -1021,12 +1007,14 @@ namespace Grand.Services.Catalog
             //ACL mapping
             if (!showHidden)
             {
-                products = products.Where(x => _aclService.Authorize(x)).ToList();
+                var aclService = _serviceProvider.GetRequiredService<IAclService>();
+                products = products.Where(x => aclService.Authorize(x)).ToList();
             }
             //Store mapping
-            if (!showHidden && !String.IsNullOrEmpty(storeId))
+            if (!showHidden && !string.IsNullOrEmpty(storeId))
             {
-                products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+                var storeMappingService = _serviceProvider.GetRequiredService<IStoreMappingService>();
+                products = products.Where(x => storeMappingService.Authorize(x, storeId)).ToList();
             }
 
             return products;
@@ -1059,8 +1047,7 @@ namespace Grand.Services.Catalog
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                            (vendorId == "" || p.VendorId == vendorId)
                            from c in p.ProductAttributeCombinations
-                           select new ProductAttributeCombination()
-                           {
+                           select new ProductAttributeCombination() {
                                ProductId = p.Id,
                                StockQuantity = c.StockQuantity,
                                AttributesXml = c.AttributesXml,
@@ -1139,10 +1126,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
         public virtual async Task UpdateProductReview(ProductReview productreview)
@@ -1166,7 +1153,7 @@ namespace Grand.Services.Catalog
             await _productReviewRepository.Collection.UpdateManyAsync(filter, update);
 
             //event notification
-            await _eventPublisher.EntityUpdated(productreview);
+            await _mediator.EntityUpdated(productreview);
         }
 
         public virtual async Task UpdateAssociatedProduct(Product product)
@@ -1183,10 +1170,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
 
         }
 
@@ -1211,10 +1198,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
         }
 
@@ -1274,10 +1261,10 @@ namespace Grand.Services.Catalog
                                     .CurrentDate("UpdatedOnUtc");
                             await _productRepository.Collection.UpdateOneAsync(filter, update);
                             //cache
-                            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+                            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
                             //event notification
-                            await _eventPublisher.EntityUpdated(product);
+                            await _mediator.EntityUpdated(product);
 
                             break;
                         case LowStockActivity.Unpublish:
@@ -1289,12 +1276,12 @@ namespace Grand.Services.Catalog
                             await _productRepository.Collection.UpdateOneAsync(filter2, update2);
 
                             //cache
-                            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+                            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
                             if (product.ShowOnHomePage)
-                                _cacheManager.RemoveByPattern(PRODUCTS_SHOWONHOMEPAGE);
+                                await _cacheManager.RemoveByPattern(PRODUCTS_SHOWONHOMEPAGE);
 
                             //event notification
-                            await _eventPublisher.EntityUpdated(product);
+                            await _mediator.EntityUpdated(product);
 
                             break;
                         default:
@@ -1317,7 +1304,7 @@ namespace Grand.Services.Catalog
                                         .CurrentDate("UpdatedOnUtc");
                                 await _productRepository.Collection.UpdateOneAsync(filter, update);
                                 //cache
-                                _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+                                await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
                                 break;
                             case LowStockActivity.Unpublish:
                                 product.Published = false;
@@ -1328,9 +1315,9 @@ namespace Grand.Services.Catalog
                                 await _productRepository.Collection.UpdateOneAsync(filter2, update2);
 
                                 //cache
-                                _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+                                await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
                                 if (product.ShowOnHomePage)
-                                    _cacheManager.RemoveByPattern(PRODUCTS_SHOWONHOMEPAGE);
+                                    await _cacheManager.RemoveByPattern(PRODUCTS_SHOWONHOMEPAGE);
 
                                 break;
                             default:
@@ -1431,9 +1418,11 @@ namespace Grand.Services.Catalog
                 foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
                 {
                     var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                    if (qty - selectQty < 0)
+                        break;
+
                     item.ReservedQuantity += selectQty;
                     qty -= selectQty;
-
                     if (qty <= 0)
                         break;
                 }
@@ -1456,10 +1445,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
 
@@ -1494,9 +1483,11 @@ namespace Grand.Services.Catalog
                 foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
                 {
                     var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                    if (qty - selectQty < 0)
+                        break;
+
                     item.ReservedQuantity += selectQty;
                     qty -= selectQty;
-
                     if (qty <= 0)
                         break;
                 }
@@ -1511,7 +1502,7 @@ namespace Grand.Services.Catalog
                 var pwi = productInventory[0];
                 pwi.ReservedQuantity += qty;
             }
-            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity-x.ReservedQuantity);
+            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity - x.ReservedQuantity);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, combination.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
@@ -1523,10 +1514,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
         /// <summary>
@@ -1555,9 +1546,11 @@ namespace Grand.Services.Catalog
             foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
             {
                 var selectQty = Math.Min(item.ReservedQuantity, qty);
+                if (qty - selectQty < 0)
+                    break;
+
                 item.ReservedQuantity -= selectQty;
                 qty -= selectQty;
-
                 if (qty <= 0)
                     break;
             }
@@ -1566,6 +1559,7 @@ namespace Grand.Services.Catalog
             {
                 var pwi = productInventory[0];
                 pwi.StockQuantity += qty;
+
             }
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
@@ -1575,10 +1569,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
 
@@ -1607,9 +1601,11 @@ namespace Grand.Services.Catalog
             foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
             {
                 var selectQty = Math.Min(item.ReservedQuantity, qty);
+                if (qty - selectQty < 0)
+                    break;
+
                 item.ReservedQuantity -= selectQty;
                 qty -= selectQty;
-
                 if (qty <= 0)
                     break;
             }
@@ -1632,10 +1628,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
         }
 
         /// <summary>
@@ -1721,9 +1717,9 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
 
         }
 
@@ -1821,10 +1817,10 @@ namespace Grand.Services.Catalog
                 }
             }
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _eventPublisher.EntityUpdated(product);
+            await _mediator.EntityUpdated(product);
 
             return qty;
         }
@@ -1847,10 +1843,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", relatedProduct.ProductId1), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
 
             //event notification
-            await _eventPublisher.EntityDeleted(relatedProduct);
+            await _mediator.EntityDeleted(relatedProduct);
         }
 
 
@@ -1864,10 +1860,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", relatedProduct.ProductId1), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
 
             //event notification
-            await _eventPublisher.EntityInserted(relatedProduct);
+            await _mediator.EntityInserted(relatedProduct);
         }
 
         /// <summary>
@@ -1888,10 +1884,75 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
 
             //event notification
-            await _eventPublisher.EntityUpdated(relatedProduct);
+            await _mediator.EntityUpdated(relatedProduct);
+        }
+
+        #endregion
+
+        #region Similar products
+
+        /// <summary>
+        /// Deletes a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        public virtual async Task DeleteSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.Pull(p => p.SimilarProducts, similarProduct);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", similarProduct.ProductId1), update);
+
+            //cache
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _mediator.EntityDeleted(similarProduct);
+        }
+
+
+        public virtual async Task InsertSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.AddToSet(p => p.SimilarProducts, similarProduct);
+            await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", similarProduct.ProductId1), update);
+
+            //cache
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _mediator.EntityInserted(similarProduct);
+        }
+
+        /// <summary>
+        /// Updates a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        public virtual async Task UpdateSimilarProduct(SimilarProduct similarProduct)
+        {
+            if (similarProduct == null)
+                throw new ArgumentNullException("similarProduct");
+
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, similarProduct.ProductId1);
+            filter = filter & builder.ElemMatch(x => x.SimilarProducts, y => y.Id == similarProduct.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.SimilarProducts.ElementAt(-1).DisplayOrder, similarProduct.DisplayOrder);
+
+            await _productRepository.Collection.UpdateManyAsync(filter, update);
+
+            //cache
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, similarProduct.ProductId1));
+
+            //event notification
+            await _mediator.EntityUpdated(similarProduct);
         }
 
         #endregion
@@ -1912,10 +1973,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", bundleProduct.ProductBundleId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(bundleProduct);
+            await _mediator.EntityDeleted(bundleProduct);
         }
 
         /// <summary>
@@ -1932,10 +1993,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", bundleProduct.ProductBundleId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
 
             //event notification
-            await _eventPublisher.EntityInserted(bundleProduct);
+            await _mediator.EntityInserted(bundleProduct);
 
         }
 
@@ -1958,10 +2019,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(bundleProduct);
+            await _mediator.EntityUpdated(bundleProduct);
 
         }
 
@@ -1983,10 +2044,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", crossSellProduct.ProductId1), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
 
             //event notification
-            await _eventPublisher.EntityDeleted(crossSellProduct);
+            await _mediator.EntityDeleted(crossSellProduct);
         }
 
 
@@ -2004,10 +2065,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", crossSellProduct.ProductId1), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
 
             //event notification
-            await _eventPublisher.EntityInserted(crossSellProduct);
+            await _mediator.EntityInserted(crossSellProduct);
         }
 
 
@@ -2078,10 +2139,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(tierPrice);
+            await _mediator.EntityDeleted(tierPrice);
         }
 
         /// <summary>
@@ -2098,10 +2159,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(tierPrice);
+            await _mediator.EntityInserted(tierPrice);
         }
 
         /// <summary>
@@ -2129,10 +2190,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(tierPrice);
+            await _mediator.EntityUpdated(tierPrice);
         }
 
         #endregion
@@ -2153,10 +2214,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productPicture);
+            await _mediator.EntityDeleted(productPicture);
         }
 
         /// <summary>
@@ -2173,10 +2234,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productPicture);
+            await _mediator.EntityInserted(productPicture);
         }
 
         /// <summary>
@@ -2199,10 +2260,10 @@ namespace Grand.Services.Catalog
             await _productTagRepository.Collection.UpdateManyAsync(filter, updateTag);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productTag);
+            await _mediator.EntityInserted(productTag);
         }
 
         public virtual async Task DeleteProductTag(ProductTag productTag)
@@ -2221,10 +2282,10 @@ namespace Grand.Services.Catalog
             await _productTagRepository.Collection.UpdateManyAsync(filter, updateTag);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productTag.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productTag);
+            await _mediator.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -2249,10 +2310,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productPicture);
+            await _mediator.EntityUpdated(productPicture);
         }
 
         #endregion
@@ -2267,7 +2328,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<IList<Product>> GetRecommendedProducts(string[] customerRoleIds)
         {
 
-            return await _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)),
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)),
                 async () =>
                 {
                     var query = from cr in _customerRoleProductRepository.Table
@@ -2299,7 +2360,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<IList<Product>> GetSuggestedProducts(string[] customerTagIds)
         {
 
-            return await _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)),
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)),
                 async () =>
                 {
                     var query = from cr in _customerTagProductRepository.Table
@@ -2330,7 +2391,7 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetPersonalizedProducts(string customerId)
         {
-            return await _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId),
+            return await _cacheManager.GetAsync(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId),
                 async () =>
                 {
                     var query = from cr in _customerProductRepository.Table
@@ -2423,7 +2484,7 @@ namespace Grand.Services.Catalog
             await _productReviewRepository.InsertAsync(productReview);
 
             //event notification
-            await _eventPublisher.EntityInserted(productReview);
+            await _mediator.EntityInserted(productReview);
         }
 
 
@@ -2439,7 +2500,7 @@ namespace Grand.Services.Catalog
             await _productReviewRepository.DeleteAsync(productReview);
 
             //event notification
-            await _eventPublisher.EntityDeleted(productReview);
+            await _mediator.EntityDeleted(productReview);
         }
 
         /// <summary>
@@ -2470,7 +2531,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
 
         }
 
@@ -2484,10 +2545,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(pwi);
+            await _mediator.EntityInserted(pwi);
         }
 
         public virtual async Task UpdateProductWarehouseInventory(ProductWarehouseInventory pwi)
@@ -2505,9 +2566,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
             //event notification
-            await _eventPublisher.EntityUpdated(pwi);
+            await _mediator.EntityUpdated(pwi);
         }
 
 
@@ -2521,7 +2582,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
         }
 
         public virtual async Task InsertDiscount(string discountId, string productId)
@@ -2534,7 +2595,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
         }
 
         #endregion

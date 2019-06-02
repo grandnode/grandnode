@@ -6,6 +6,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -65,7 +66,7 @@ namespace Grand.Services.Messages
 
         private readonly IRepository<ContactAttribute> _contactAttributeRepository;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
@@ -84,14 +85,14 @@ namespace Grand.Services.Messages
         public ContactAttributeService(ICacheManager cacheManager,
             IRepository<ContactAttribute> contactAttributeRepository,
             IStoreMappingService storeMappingService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._contactAttributeRepository = contactAttributeRepository;
             this._storeMappingService = storeMappingService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._workContext = workContext;
             this._catalogSettings = catalogSettings;
         }
@@ -113,11 +114,11 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.DeleteAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(contactAttribute);
+            await _mediator.EntityDeleted(contactAttribute);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<ContactAttribute>> GetAllContactAttributes(string storeId = "", bool ignorAcl = false)
         {
             string key = string.Format(CONTACTATTRIBUTES_ALL_KEY, storeId, ignorAcl);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _contactAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
@@ -165,7 +166,7 @@ namespace Grand.Services.Messages
         public virtual Task<ContactAttribute> GetContactAttributeById(string contactAttributeId)
         {
             string key = string.Format(CONTACTATTRIBUTES_BY_ID_KEY, contactAttributeId);
-            return _cacheManager.Get(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
+            return _cacheManager.GetAsync(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
         }
 
         /// <summary>
@@ -179,11 +180,11 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.InsertAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(contactAttribute);
+            await _mediator.EntityInserted(contactAttribute);
         }
 
         /// <summary>
@@ -197,11 +198,11 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.UpdateAsync(contactAttribute);
 
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(contactAttribute);
+            await _mediator.EntityUpdated(contactAttribute);
         }
 
         #endregion

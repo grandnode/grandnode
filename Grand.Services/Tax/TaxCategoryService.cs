@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -46,7 +47,7 @@ namespace Grand.Services.Tax
         #region Fields
 
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<Product> _productRepository;
 
@@ -62,11 +63,11 @@ namespace Grand.Services.Tax
         /// <param name="eventPublisher">Event published</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
-            IEventPublisher eventPublisher, IRepository<Product> productRepository)
+            IMediator mediator, IRepository<Product> productRepository)
         {
             _cacheManager = cacheManager;
             _taxCategoryRepository = taxCategoryRepository;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _productRepository = productRepository;
         }
 
@@ -91,11 +92,11 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.DeleteAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(taxCategory);
+            await _mediator.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Grand.Services.Tax
         public virtual async Task<IList<TaxCategory>> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
                             orderby tc.DisplayOrder
@@ -122,7 +123,7 @@ namespace Grand.Services.Tax
         public virtual Task<TaxCategory> GetTaxCategoryById(string taxCategoryId)
         {
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
+            return _cacheManager.GetAsync(key, () => _taxCategoryRepository.GetByIdAsync(taxCategoryId));
         }
 
         /// <summary>
@@ -136,10 +137,10 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.InsertAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(taxCategory);
+            await _mediator.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -153,10 +154,10 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.UpdateAsync(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(taxCategory);
+            await _mediator.EntityUpdated(taxCategory);
         }
         #endregion
     }

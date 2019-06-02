@@ -164,7 +164,7 @@ namespace Grand.Web.Services
             int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var model = await _cacheManager.Get(pictureCacheKey, async () =>
+            var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
                 {
                     var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
                     return new PictureModel
@@ -764,7 +764,10 @@ namespace Grand.Web.Services
                 var customer = _workContext.CurrentCustomer;
                 var languageId = _workContext.WorkingLanguage.Id;
                 //countries
-                string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.CountryId : model.CountryId;
+                var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.CountryId : model.CountryId;
+                if (string.IsNullOrEmpty(defaultEstimateCountryId))
+                    defaultEstimateCountryId = _storeContext.CurrentStore.DefaultCountryId;
+
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in await _countryService.GetAllCountriesForShipping(languageId))
                     model.AvailableCountries.Add(new SelectListItem
@@ -831,7 +834,7 @@ namespace Grand.Web.Services
                     //3. we have at least one checkout attribute
                     var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
                         storeId, requiresShipping);
-                    var checkoutAttributesExist = await _cacheManager.Get(checkoutAttributesExistCacheKey,
+                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey,
                         async () =>
                         {
                             var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);

@@ -99,7 +99,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     await _settingService.SaveSetting(_widgetSettings);
                 }
             }
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
             var pluginDescriptor = widget.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;

@@ -15,18 +15,18 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             AvailablePaymentStatuses = new List<SelectListItem>();
         }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Country.StartDate")]
+        [GrandResourceDisplayName("Admin.Reports.Country.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [GrandResourceDisplayName("Admin.SalesReport.Country.EndDate")]
+        [GrandResourceDisplayName("Admin.Reports.Country.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
 
-        [GrandResourceDisplayName("Admin.SalesReport.Country.OrderStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Country.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [GrandResourceDisplayName("Admin.SalesReport.Country.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Country.PaymentStatus")]
         public int PaymentStatusId { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }

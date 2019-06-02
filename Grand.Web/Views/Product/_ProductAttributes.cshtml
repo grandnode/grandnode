@@ -101,7 +101,15 @@
                                 break;
                             case AttributeControlType.Datepicker:
                                 {
-                                    @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear)
+                                    <date-picker-dropdown control-day="@(controlId + "_day")"
+                                        control-month="@(controlId + "_month")"
+                                        control-year="@(controlId + "_year")"
+                                        begin-year="@(DateTime.Now.Year)"
+                                        end-year="@(DateTime.Now.Year+1)"
+                                        selected-day="(attribute.SelectedDay.HasValue ? attribute.SelectedDay.Value : 0)"
+                                        selected-month="(attribute.SelectedMonth.HasValue ? attribute.SelectedMonth.Value : 0)"
+                                        selected-year="(attribute.SelectedYear.HasValue ? attribute.SelectedYear.Value : 0)"
+                                        class="col-12 input-group" />
                                 }
                                 break;
                             case AttributeControlType.FileUpload:

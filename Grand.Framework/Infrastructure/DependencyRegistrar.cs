@@ -14,6 +14,7 @@ using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
+using Grand.Framework.Validators;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
@@ -299,27 +300,26 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
-            //Register event consumers
-            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
-            foreach (var consumer in consumers)
-            {
-                builder.RegisterType(consumer)
-                    .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
-                    {
-                        var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                        return isMatch;
-                    }, typeof(IConsumer<>)))
-                    .InstancePerLifetimeScope();
-            }
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)
             {
                 builder.RegisterType(validator);
             }
 
-            builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
+            //validator consumers
+            var validatorconsumers = typeFinder.FindClassesOfType(typeof(IValidatorConsumer<>)).ToList();
+            foreach (var consumer in validatorconsumers)
+            {
+                builder.RegisterType(consumer)
+                    .As(consumer.GetTypeInfo().FindInterfaces((type, criteria) =>
+                    {
+                        var isMatch = type.GetTypeInfo().IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                        return isMatch;
+                    }, typeof(IValidatorConsumer<>)))
+                    .InstancePerLifetimeScope();
+            }
 
-            builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
+            builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
 
             //Register task
             builder.RegisterType<QueuedMessagesSendScheduleTask>().As<IScheduleTask>().InstancePerLifetimeScope();

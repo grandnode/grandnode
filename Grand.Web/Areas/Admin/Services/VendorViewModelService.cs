@@ -18,6 +18,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -38,14 +39,14 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ILanguageService _languageService;
         private readonly SeoSettings _seoSettings;
         private readonly VendorSettings _vendorSettings;
 
         public VendorViewModelService(IDiscountService discountService, IVendorService vendorService, ICustomerService customerService, ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper, ICountryService countryService, IStateProvinceService stateProvinceService, IStoreService storeService, IUrlRecordService urlRecordService,
-            IPictureService pictureService, IEventPublisher eventPublisher, VendorSettings vendorSettings, ILanguageService languageService, 
+            IPictureService pictureService, IMediator mediator, VendorSettings vendorSettings, ILanguageService languageService, 
             SeoSettings seoSettings)
         {
             _discountService = discountService;
@@ -58,7 +59,7 @@ namespace Grand.Web.Areas.Admin.Services
             _storeService = storeService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
-            _eventPublisher = eventPublisher;
+            _mediator = mediator;
             _languageService = languageService;
             _vendorSettings = vendorSettings;
             _seoSettings = seoSettings;
@@ -383,7 +384,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                     //raise event (only if it wasn't approved before)
                     if (!previousIsApproved)
-                        await _eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
+                        await _mediator.Publish(new VendorReviewApprovedEvent(vendorReview));
                 }
             }
         }

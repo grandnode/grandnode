@@ -1,46 +1,24 @@
 ﻿@model CurrencyModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $("#currency-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 <vc:admin-widget widget-zone="currency_details_top" additional-data="Model" />
-<div id="currency-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Configuration.Currencies.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Configuration.Currencies.Stores")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-</div>
+<admin-tabstrip name="currency-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Configuration.Currencies.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Configuration.Currencies.Stores")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 <vc:admin-widget widget-zone="currency_details_bottom" additional-data="Model" />
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "currency-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

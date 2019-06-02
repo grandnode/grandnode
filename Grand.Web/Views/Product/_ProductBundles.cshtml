@@ -14,7 +14,7 @@
                             </div>
                             <div class="col-md-9 col-9">
                                 <h6 class="card-title">@item.Quantity x <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })"> @item.Name </a>(@item.Price)</h6>
-                                <p class="card-text small">@item.ShortDescription</p>
+                                <p class="card-text small">@Html.Raw(item.ShortDescription)</p>
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver.Linq;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,13 +14,13 @@ namespace Grand.Services.Customers
         #region Fields
 
         private readonly IRepository<UserApi> _userRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
-        public UserApiService(IRepository<UserApi> userRepository, IEventPublisher eventPublisher)
+        public UserApiService(IRepository<UserApi> userRepository, IMediator mediator)
         {
             this._userRepository = userRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
         
         /// <summary>
@@ -49,7 +50,7 @@ namespace Grand.Services.Customers
             await _userRepository.InsertAsync(userApi);
 
             //event notification
-            await _eventPublisher.EntityInserted(userApi);
+            await _mediator.EntityInserted(userApi);
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Grand.Services.Customers
             await _userRepository.UpdateAsync(userApi);
 
             //event notification
-            await _eventPublisher.EntityUpdated(userApi);
+            await _mediator.EntityUpdated(userApi);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Grand.Services.Customers
             await _userRepository.DeleteAsync(userApi);
 
             //event notification
-            await _eventPublisher.EntityDeleted(userApi);
+            await _mediator.EntityDeleted(userApi);
 
         }
 

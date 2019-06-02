@@ -93,7 +93,7 @@ namespace Grand.Services.Logging
         {
             //cache
             string key = string.Format(ACTIVITYTYPE_ALL_KEY);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var result = new List<ActivityLogTypeForCaching>();
                 var activityLogTypes = await GetAllActivityTypes();
@@ -126,7 +126,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.InsertAsync(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.UpdateAsync(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Grand.Services.Logging
                 throw new ArgumentNullException("activityLogType");
 
             await _activityLogTypeRepository.DeleteAsync(activityLogType);
-            _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>

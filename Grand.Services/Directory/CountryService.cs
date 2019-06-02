@@ -5,6 +5,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -41,7 +42,7 @@ namespace Grand.Services.Directory
         private readonly IRepository<Country> _countryRepository;
         private readonly IStoreContext _storeContext;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -61,13 +62,13 @@ namespace Grand.Services.Directory
             IRepository<Country> countryRepository,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._countryRepository = countryRepository;
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -85,10 +86,10 @@ namespace Grand.Services.Directory
 
             await _countryRepository.DeleteAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(country);
+            await _mediator.EntityDeleted(country);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace Grand.Services.Directory
         {
             string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
 
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var builder = Builders<Country>.Filter;
                 var filter = builder.Empty;
@@ -220,10 +221,10 @@ namespace Grand.Services.Directory
 
             await _countryRepository.InsertAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(country);
+            await _mediator.EntityInserted(country);
         }
 
         /// <summary>
@@ -237,10 +238,10 @@ namespace Grand.Services.Directory
 
             await _countryRepository.UpdateAsync(country);
 
-            _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(country);
+            await _mediator.EntityUpdated(country);
         }
 
         #endregion

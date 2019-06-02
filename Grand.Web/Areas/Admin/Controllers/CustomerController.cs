@@ -42,7 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerViewModelService _customerViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
-        private readonly ICustomerReportService _customerReportService;
         private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
@@ -65,7 +64,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerViewModelService customerViewModelService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
-            ICustomerReportService customerReportService,
             ILocalizationService localizationService,
             CustomerSettings customerSettings,
             IWorkContext workContext,
@@ -77,24 +75,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             IDownloadService downloadService)
         {
-            this._customerService = customerService;
-            this._productService = productService;
-            this._productReviewViewModelService = productReviewViewModelService;
-            this._productViewModelService = productViewModelService;
-            this._customerViewModelService = customerViewModelService;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._customerReportService = customerReportService;
-            this._localizationService = localizationService;
-            this._customerSettings = customerSettings;
-            this._workContext = workContext;
-            this._exportManager = exportManager;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._workflowMessageService = workflowMessageService;
-            this._downloadService = downloadService;
+            _customerService = customerService;
+            _productService = productService;
+            _productReviewViewModelService = productReviewViewModelService;
+            _productViewModelService = productViewModelService;
+            _customerViewModelService = customerViewModelService;
+            _genericAttributeService = genericAttributeService;
+            _customerRegistrationService = customerRegistrationService;
+            _localizationService = localizationService;
+            _customerSettings = customerSettings;
+            _workContext = workContext;
+            _exportManager = exportManager;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _workflowMessageService = workflowMessageService;
+            _downloadService = downloadService;
         }
 
         #endregion
@@ -770,63 +767,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             await _productReviewViewModelService.DeleteProductReview(productReview);
             return new NullJsonResult();
-        }
-
-        #endregion
-
-        #region Reports
-
-        public IActionResult Reports()
-        {
-            var model = _customerViewModelService.PrepareCustomerReportsModel();
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
-        {
-            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 1, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = bestCustomerReportLineModels.ToList(),
-                Total = totalCount
-            };
-            return Json(gridModel);
-        }
-        [HttpPost]
-        public async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
-        {
-            var (bestCustomerReportLineModels, totalCount) = await _customerViewModelService.PrepareBestCustomerReportLineModel(model, 2, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = bestCustomerReportLineModels.ToList(),
-                Total = totalCount
-            };
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ReportRegisteredCustomersList(DataSourceRequest command)
-        {
-            var model = await _customerViewModelService.GetReportRegisteredCustomersModel();
-            var gridModel = new DataSourceResult
-            {
-                Data = model,
-                Total = model.Count
-            };
-
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
-        {
-            var model = await _customerReportService.GetCustomerByTimeReport(startDate, endDate);
-            var gridModel = new DataSourceResult
-            {
-                Data = model
-            };
-            return Json(gridModel);
         }
 
         #endregion

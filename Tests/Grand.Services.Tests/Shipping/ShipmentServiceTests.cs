@@ -13,6 +13,7 @@ using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -33,7 +34,7 @@ namespace Grand.Services.Shipping.Tests
         private IProductAttributeParser _productAttributeParser;
         private ICheckoutAttributeParser _checkoutAttributeParser;
         private ShippingSettings _shippingSettings;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private ILocalizationService _localizationService;
         private IAddressService _addressService;
         private IGenericAttributeService _genericAttributeService;
@@ -74,9 +75,9 @@ namespace Grand.Services.Shipping.Tests
             _currencyService = new Mock<ICurrencyService>().Object;
             _productService = new Mock<IProductService>().Object;
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
 

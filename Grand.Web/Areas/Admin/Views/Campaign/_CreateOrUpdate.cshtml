@@ -1,66 +1,47 @@
 ﻿@model CampaignModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <vc:admin-widget widget-zone="campaign_details_top" additional-data="Model" />
-<script>
-    $(document).ready(function () {
-        $('#campaign-edit').show();
-        $("#campaign-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="campaign-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Promotions.Campaigns.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Promotions.Campaigns.Conditions")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Promotions.Campaigns.Emails")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Promotions.Campaigns.History")
-        </li>
-        <li tab-index="4">
-            @T("Admin.Promotions.Campaigns.Test")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabConditions" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabEmails" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabHistory" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabTest" model="Model" />
-    </div>
-</div>
+
+<admin-tabstrip name="campaign-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Promotions.Campaigns.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Campaigns.Conditions")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabConditions" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Campaigns.Emails")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabEmails" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Campaigns.History")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Campaigns.Test")" tab-index="4">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabTest" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
+
 <vc:admin-widget widget-zone="campaign_details_bottom" additional-data="Model" />
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "campaign-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

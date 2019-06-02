@@ -323,6 +323,28 @@ namespace Grand.Services.Catalog
 
         #endregion
 
+        #region Similar products
+
+        /// <summary>
+        /// Deletes a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        Task DeleteSimilarProduct(SimilarProduct similarProduct);
+
+        /// <summary>
+        /// Inserts a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        Task InsertSimilarProduct(SimilarProduct similarProduct);
+
+        /// <summary>
+        /// Updates a similar product
+        /// </summary>
+        /// <param name="similarProduct">Similar product</param>
+        Task UpdateSimilarProduct(SimilarProduct similarProduct);
+
+        #endregion
+
         #region Cross-sell products
 
         /// <summary>

@@ -1,36 +1,26 @@
 ﻿@model ProductModel
-@using Grand.Core.Domain.Catalog
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     if (Model.AvailableProductAttributes.Count > 0)
     {
-        <script>
-            $(document).ready(function () {
-                $("#productattribute-edit").kendoTabStrip({
-                    animation: {
-                        open: {
-                            effects: "fadeIn"
-                        }
-                    }
-                });
-            });
-        </script>
-        <div id="productattribute-edit">
-            <ul>
-                <li class="k-state-active">
-                    @T("Admin.Catalog.Products.ProductAttributes.Attributes")
-                </li>
-                <li>
-                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")
-                </li>
-            </ul>
-            <div>
-               <partial name="_CreateOrUpdate.ProductAttributes.TabAttributes" model="Model" />
-            </div>
-            <div>
-               <partial name="_CreateOrUpdate.ProductAttributes.TabAttributeCombinations" model="Model" />
-            </div>
-        </div>
+        <admin-tabstrip name="productattribute-edit">
+            <items>
+                <tabstrip-item text="@T("Admin.Catalog.Products.ProductAttributes.Attributes")" tab-index="100" class="k-state-active">
+                    <content>
+                        <div>
+                            <partial name="_CreateOrUpdate.ProductAttributes.TabAttributes" model="Model" />
+                        </div>
+                    </content>
+                </tabstrip-item>
+                <tabstrip-item text="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")" tab-index="101">
+                    <content>
+                        <div>
+                            <partial name="_CreateOrUpdate.ProductAttributes.TabAttributeCombinations" model="Model" />
+                        </div>
+                    </content>
+                </tabstrip-item>
+            </items>
+        </admin-tabstrip>
     }
     else
     {

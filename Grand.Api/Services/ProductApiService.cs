@@ -182,6 +182,7 @@ namespace Grand.Api.Services
                         if (existingPwI != null)
                         {
                             existingPwI.StockQuantity = stock;
+                            existingPwI.ProductId = product.Id;
                             await _productService.UpdateProductWarehouseInventory(existingPwI);
                         }
                         else

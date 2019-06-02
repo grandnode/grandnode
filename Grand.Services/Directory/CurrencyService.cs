@@ -5,6 +5,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -47,7 +48,7 @@ namespace Grand.Services.Directory
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly CurrencySettings _currencySettings;
         private Currency _primaryCurrency;
         private Currency _primaryExchangeRateCurrency;
@@ -70,14 +71,14 @@ namespace Grand.Services.Directory
             IStoreMappingService storeMappingService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._storeMappingService = storeMappingService;
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -108,10 +109,10 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.DeleteAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(currency);
+            await _mediator.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace Grand.Services.Directory
         public virtual Task<Currency> GetCurrencyById(string currencyId)
         {
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            return _cacheManager.Get(key, () => _currencyRepository.GetByIdAsync(currencyId));
+            return _cacheManager.GetAsync(key, () => _currencyRepository.GetByIdAsync(currencyId));
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<Currency>> GetAllCurrencies(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
-            var currencies = await _cacheManager.Get(key, () =>
+            var currencies = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _currencyRepository.Table;
 
@@ -200,10 +201,10 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.InsertAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(currency);
+            await _mediator.EntityInserted(currency);
         }
 
         /// <summary>
@@ -217,10 +218,10 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.UpdateAsync(currency);
 
-            _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(currency);
+            await _mediator.EntityUpdated(currency);
         }
 
 
@@ -248,20 +249,21 @@ namespace Grand.Services.Directory
         public virtual async Task<decimal> ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             if (sourceCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
             if (targetCurrencyCode == null)
-                throw new ArgumentNullException("targetCurrencyCode");
+                throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            decimal result = amount;
-            if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
+            var result = amount;
+
+            if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != targetCurrencyCode.Id)
-            {
-                result = await ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
-                result = await ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
-            }
+
+            result = await ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
+            result = await ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
+
             return result;
+
         }
 
         /// <summary>
@@ -280,13 +282,10 @@ namespace Grand.Services.Directory
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
             decimal result = amount;
-            if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
-            {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
-                result = result / exchangeRate;
-            }
+            decimal exchangeRate = sourceCurrencyCode.Rate;
+            if (exchangeRate == decimal.Zero)
+                throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
+            result = result / exchangeRate;
             return result;
         }
 
@@ -306,13 +305,13 @@ namespace Grand.Services.Directory
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
             decimal result = amount;
-            if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
-            {
-                decimal exchangeRate = targetCurrencyCode.Rate;
-                if (exchangeRate == decimal.Zero)
-                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
-                result = result * exchangeRate;
-            }
+
+            decimal exchangeRate = targetCurrencyCode.Rate;
+            if (exchangeRate == decimal.Zero)
+                throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
+
+            result = result * exchangeRate;
+
             return result;
         }
 

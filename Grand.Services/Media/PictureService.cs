@@ -5,6 +5,8 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
+using ImageMagick;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Drawing;
@@ -33,7 +35,7 @@ namespace Grand.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ILogger _logger;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -56,7 +58,7 @@ namespace Grand.Services.Media
             ISettingService settingService,
             IWebHelper webHelper,
             ILogger logger,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             MediaSettings mediaSettings,
             IHostingEnvironment hostingEnvironment)
         {
@@ -64,7 +66,7 @@ namespace Grand.Services.Media
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._logger = logger;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._mediaSettings = mediaSettings;
             this._hostingEnvironment = hostingEnvironment;
         }
@@ -124,6 +126,51 @@ namespace Grand.Services.Media
 
             //we invoke Math.Round to ensure that no white background is rendered 
             return new Size((int)Math.Round(width), (int)Math.Round(height));
+        }
+
+        protected virtual MagickGeometry CalculateDimensions(MagickImage originalSize, int targetSize,
+            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
+        {
+            float width, height;
+
+            switch (resizeType)
+            {
+                case ResizeType.LongestSide:
+                    if (originalSize.Height > originalSize.Width)
+                    {
+                        // portrait
+                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                        height = targetSize;
+                    }
+                    else
+                    {
+                        // landscape or square
+                        width = targetSize;
+                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
+                    }
+                    break;
+                case ResizeType.Width:
+                    width = targetSize;
+                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
+                    break;
+                case ResizeType.Height:
+                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                    height = targetSize;
+                    break;
+                default:
+                    throw new Exception("Not supported ResizeType");
+            }
+
+            if (ensureSizePositive)
+            {
+                if (width < 1)
+                    width = 1;
+                if (height < 1)
+                    height = 1;
+            }
+
+            //we invoke Math.Round to ensure that no white background is rendered 
+            return new MagickGeometry((int)Math.Round(width), (int)Math.Round(height));
         }
 
         /// <summary>
@@ -396,7 +443,7 @@ namespace Grand.Services.Media
             }
             if (targetSize == 0)
             {
-                string url = (!String.IsNullOrEmpty(storeLocation)
+                string url = (!string.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
                                  + "content/images/" + defaultImageFileName;
@@ -417,13 +464,12 @@ namespace Grand.Services.Media
                         return GetThumbUrl(thumbFileName, storeLocation);
 
                     mutex.WaitOne();
-                    using (var b = Image.FromFile(filePath))
+                    using (var image = new MagickImage(filePath))
                     {
                         var pictureBinary = File.ReadAllBytes(filePath);
 
-                        pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
-                        b.Dispose();
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                        pictureBinary = await ApplyResize(image, targetSize);
+                        image.Write(thumbFilePath);
                     }
                     mutex.ReleaseMutex();
                 }
@@ -509,43 +555,29 @@ namespace Grand.Services.Media
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         mutex.WaitOne();
-
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-
                         mutex.ReleaseMutex();
                     }
                 }
             }
             else
             {
-                thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
+                thumbFileName = !string.IsNullOrEmpty(seoFileName) ?
                     string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
                     string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                using (var mutex = new System.Threading.Mutex(false, thumbFileName))
+                using (var mutex = new Mutex(false, thumbFileName))
                 {
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         mutex.WaitOne();
-                        using (var stream = new MemoryStream(pictureBinary))
+                        using (var image = new MagickImage(pictureBinary))
                         {
-                            Image b = null;
-                            try
-                            {
-                                b = Image.FromStream(stream);
-                            }
-                            catch (ArgumentException exc)
-                            {
-                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
-                            }
-                            if (b == null)
-                            {
-                                return url;
-                            }
-
-                            pictureBinary = await ApplyResize(pictureBinary, targetSize, new Size(b.Width, b.Height));
-                            b.Dispose();
-                            SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                            var size = CalculateDimensions(image, targetSize);
+                            size.IgnoreAspectRatio = true;
+                            image.Resize(size);
+                            // Save the result
+                            image.Write(thumbFilePath);
                         }
                         mutex.ReleaseMutex();
                     }
@@ -565,8 +597,8 @@ namespace Grand.Services.Media
         public virtual async Task<string> GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
             string url = await GetPictureUrl(picture, targetSize, showDefaultPicture);
-            if (String.IsNullOrEmpty(url))
-                return String.Empty;
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
 
             return GetThumbLocalPath(Path.GetFileName(url));
         }
@@ -605,7 +637,7 @@ namespace Grand.Services.Media
             await _pictureRepository.DeleteAsync(picture);
 
             //event notification
-            await _eventPublisher.EntityDeleted(picture);
+            await _mediator.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -687,7 +719,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            await _eventPublisher.EntityInserted(picture);
+            await _mediator.EntityInserted(picture);
 
             return picture;
         }
@@ -737,7 +769,7 @@ namespace Grand.Services.Media
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
-            await _eventPublisher.EntityUpdated(picture);
+            await _mediator.EntityUpdated(picture);
 
             return picture;
         }
@@ -778,60 +810,46 @@ namespace Grand.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual async Task<byte[]> ValidatePicture(byte[] byteArray, string mimeType)
         {
-            using (MemoryStream ms = new MemoryStream(byteArray))
+            try
             {
-                var image = Image.FromStream(ms);
-                if (image.Width >= image.Height)
+                using (var ms = new MemoryStream(byteArray))
                 {
-                    //horizontal rectangle or square
-                    if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
-                        byteArray = await ApplyResize(byteArray, _mediaSettings.MaximumImageSize, new Size(image.Width, image.Height));
+                    using (var image = new MagickImage(byteArray))
+                    {
+                        if (image.Width >= image.Height)
+                        {
+                            //horizontal rectangle or square
+                            if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
+                                byteArray = await ApplyResize(image, _mediaSettings.MaximumImageSize);
+                        }
+                        else if (image.Width < image.Height)
+                        {
+                            //vertical rectangle
+                            if (image.Width > _mediaSettings.MaximumImageSize)
+                                byteArray = await ApplyResize(image, _mediaSettings.MaximumImageSize);
+                        }
+                        return byteArray;
+                    }
                 }
-                else if (image.Width < image.Height)
-                {
-                    //vertical rectangle
-                    if (image.Width > _mediaSettings.MaximumImageSize)
-                        byteArray = await ApplyResize(byteArray, _mediaSettings.MaximumImageSize, new Size(image.Width, image.Height));
-                }
+            }
+            catch
+            {
                 return byteArray;
             }
         }
 
-        protected async Task<byte[]> ApplyResize(byte[] byteArray, int targetSize, Size originalSize = default(Size))
+        protected async Task<byte[]> ApplyResize(MagickImage image, int targetSize)
         {
-            using (MemoryStream ms = new MemoryStream(byteArray))
+            if (targetSize <= 0)
             {
-                if (targetSize <= 0)
-                {
-                    targetSize = 800;
-                }
-
-                var image = Image.FromStream(ms);
-                var size = default(Size);
-                if (originalSize != default(Size))
-                {
-                    size = CalculateDimensions(originalSize, targetSize);
-                }
-                else
-                {
-                    size = new Size(targetSize, targetSize);
-                }
-
-                var resized = new Bitmap(size.Width, size.Height);
-                using (var graphics = Graphics.FromImage(resized))
-                {
-                    graphics.CompositingQuality = CompositingQuality.HighSpeed;
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.CompositingMode = CompositingMode.SourceCopy;
-                    graphics.DrawImage(image, 0, 0, size.Width, size.Height);
-                }
-                using (var ms2 = new MemoryStream())
-                {
-                    resized.Save(ms2, image.RawFormat);
-                    return await Task.FromResult(ms2.ToArray());
-                }
+                targetSize = 800;
             }
+            var size = CalculateDimensions(image, targetSize);
+            size.IgnoreAspectRatio = true;
+            image.Resize(size);
+            return await Task.FromResult(image.ToByteArray());
         }
+
         #endregion
 
         #region Properties

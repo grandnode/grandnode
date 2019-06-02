@@ -1,6 +1,5 @@
 using FluentValidation;
 using Grand.Core.Infrastructure;
-using Grand.Services.Events;
 
 namespace Grand.Framework.Validators
 {
@@ -11,14 +10,17 @@ namespace Grand.Framework.Validators
             PostInitialize();
         }
 
-        /// <summary>
-        /// Developers can override this method in custom partial classes
-        /// in order to add some custom initialization code to constructors
-        /// </summary>
         protected virtual void PostInitialize()
         {
-            //TO DO
-           //EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
+            var validator = EngineContext.Current.ResolveAll<IValidatorConsumer<T>>();
+            foreach (var item in validator)
+            {
+                item.AddRules(this);
+            }
+
         }
+
     }
+
+
 }

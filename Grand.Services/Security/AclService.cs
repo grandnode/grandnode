@@ -5,6 +5,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Security;
 using Grand.Services.Events;
+using MediatR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace Grand.Services.Security
         private readonly IRepository<AclRecord> _aclRecordRepository;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -56,13 +57,13 @@ namespace Grand.Services.Security
         public AclService(ICacheManager cacheManager, 
             IWorkContext workContext,
             IRepository<AclRecord> aclRecordRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._workContext = workContext;
             this._aclRecordRepository = aclRecordRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._catalogSettings = catalogSettings;
         }
 
@@ -82,10 +83,10 @@ namespace Grand.Services.Security
             await _aclRecordRepository.DeleteAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(aclRecord);
+            await _mediator.EntityDeleted(aclRecord);
         }
 
         /// <summary>
@@ -111,10 +112,10 @@ namespace Grand.Services.Security
             await _aclRecordRepository.InsertAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(aclRecord);
+            await _mediator.EntityInserted(aclRecord);
         }
 
         /// <summary>
@@ -129,10 +130,10 @@ namespace Grand.Services.Security
             await _aclRecordRepository.UpdateAsync(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(aclRecord);
+            await _mediator.EntityUpdated(aclRecord);
         }
 
         /// <summary>

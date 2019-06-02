@@ -7,6 +7,7 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -91,14 +92,12 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
-        private readonly IProductService _productService;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -110,8 +109,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="categoryRepository">Category repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="aclRepository">ACL record repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event publisher</param>
@@ -121,26 +118,22 @@ namespace Grand.Services.Catalog
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<Product> productRepository,
-            IRepository<AclRecord> aclRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IStoreMappingService storeMappingService,
             IAclService aclService,
-            CatalogSettings catalogSettings,
-            IProductService productService)
+            CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
             this._productRepository = productRepository;
-            this._aclRepository = aclRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
             this._catalogSettings = catalogSettings;
-            this._productService = productService;
         }
 
         #endregion
@@ -170,11 +163,11 @@ namespace Grand.Services.Catalog
 
             await _categoryRepository.DeleteAsync(category);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(category);
+            await _mediator.EntityDeleted(category);
         }
 
         /// <summary>
@@ -237,7 +230,7 @@ namespace Grand.Services.Catalog
             var storeId = _storeContext.CurrentStore.Id;
             var customer = _workContext.CurrentCustomer;
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, customer.Id, storeId, includeAllLevels);
-            return await _cacheManager.Get(key, async () => 
+            return await _cacheManager.GetAsync(key, async () => 
             {
                 var builder = Builders<Category>.Filter;
                 var filter = builder.Where(c => c.ParentCategoryId == parentCategoryId);
@@ -357,7 +350,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<Category> GetCategoryById(string categoryId)
         {
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            return await _cacheManager.Get(key, () => _categoryRepository.GetByIdAsync(categoryId));
+            return await _cacheManager.GetAsync(key, () => _categoryRepository.GetByIdAsync(categoryId));
         }
 
         /// <summary>
@@ -372,12 +365,12 @@ namespace Grand.Services.Catalog
             await _categoryRepository.InsertAsync(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(category);
+            await _mediator.EntityInserted(category);
         }
 
         /// <summary>
@@ -406,12 +399,12 @@ namespace Grand.Services.Catalog
             await _categoryRepository.UpdateAsync(category);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(category);
+            await _mediator.EntityUpdated(category);
         }
 
         /// <summary>
@@ -428,12 +421,12 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productCategory);
+            await _mediator.EntityDeleted(productCategory);
 
         }
 
@@ -452,7 +445,7 @@ namespace Grand.Services.Catalog
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _productRepository.Table.Where(x => x.ProductCategories.Any(y => y.CategoryId == categoryId));
 
@@ -513,12 +506,12 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productCategory);
+            await _mediator.EntityInserted(productCategory);
         }
 
         /// <summary>
@@ -541,12 +534,12 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
+            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productCategory.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productCategory);
+            await _mediator.EntityUpdated(productCategory);
         }
         #endregion
 

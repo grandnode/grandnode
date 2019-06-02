@@ -5,6 +5,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -46,7 +47,7 @@ namespace Grand.Services.Messages
         private readonly ILanguageService _languageService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -68,14 +69,14 @@ namespace Grand.Services.Messages
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._languageService = languageService;
             this._storeMappingService = storeMappingService;
             this._messageTemplateRepository = messageTemplateRepository;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -93,10 +94,10 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.DeleteAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(messageTemplate);
+            await _mediator.EntityDeleted(messageTemplate);
         }
 
         /// <summary>
@@ -110,10 +111,10 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.InsertAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(messageTemplate);
+            await _mediator.EntityInserted(messageTemplate);
         }
 
         /// <summary>
@@ -127,10 +128,10 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.UpdateAsync(messageTemplate);
 
-            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(messageTemplate);
+            await _mediator.EntityUpdated(messageTemplate);
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace Grand.Services.Messages
                 throw new ArgumentException("messageTemplateName");
 
             string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = _messageTemplateRepository.Table;
 
@@ -184,7 +185,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplates(string storeId)
         {
             string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
 

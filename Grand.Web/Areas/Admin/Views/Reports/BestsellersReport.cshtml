@@ -2,16 +2,16 @@
 @inject AdminAreaSettings adminAreaSettings
 @{
     //page title
-    ViewBag.Title = T("Admin.SalesReport.Bestsellers").Text;
+    ViewBag.Title = T("Admin.Reports.Bestsellers").Text;
 }
 <antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
             <div class="x_title">
-                <div class="caption">
+                <div class="caption level-caption">
                     <i class="fa fa-list-alt"></i>
-                    @T("Admin.SalesReport.Bestsellers")
+                    @T("Admin.Reports.Bestsellers")
                 </div>
 
             </div>
@@ -69,7 +69,7 @@
                                     <div class="row">
                                         <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
                                             <button class="btn btn-success filter-submit" id="search-salesreport">
-                                                <i class="fa fa-search"></i> @T("Admin.SalesReport.Bestsellers.RunReport")
+                                                <i class="fa fa-search"></i> @T("Admin.Reports.Bestsellers.RunReport")
                                             </button>
                                         </div>
                                     </div>
@@ -124,14 +124,14 @@
             scrollable: false,
             columns: [{
                 field: "ProductName",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")",
+                title: "@T("Admin.Reports.Bestsellers.Fields.Name")",
                 template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
             }, {
                 field: "TotalQuantity",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+                title: "@T("Admin.Reports.Bestsellers.Fields.TotalQuantity")"
             },{
                 field: "TotalAmount",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
+                title: "@T("Admin.Reports.Bestsellers.Fields.TotalAmount")"
             }]
         });
     });

@@ -31,7 +31,7 @@
     </div>
 </form>
 
-@Html.DeleteConfirmation("customerreminder-delete")
+<admin-delete-confirmation button-id="customerreminder-delete"/>
 
 @*run report*@
 <form asp-controller="CustomerReminder" asp-action="Run" method="post" id="run-form">

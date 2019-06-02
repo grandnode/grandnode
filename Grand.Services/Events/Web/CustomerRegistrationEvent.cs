@@ -1,8 +1,9 @@
 ﻿using Grand.Services.Customers;
+using MediatR;
 
 namespace Grand.Services.Events.Web
 {
-    public class CustomerRegistrationEvent<C, R> where C : CustomerRegistrationResult where R : CustomerRegistrationRequest
+    public class CustomerRegistrationEvent<C, R> : INotification where C : CustomerRegistrationResult where R : CustomerRegistrationRequest
     {
         private readonly C _result;
         private readonly R _request;

@@ -5,9 +5,9 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
-using Grand.Core.Infrastructure;
 using Grand.Services.Events;
 using Grand.Services.Messages;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System;
@@ -23,7 +23,7 @@ namespace Grand.Services.Catalog
     public partial class AuctionService : IAuctionService
     {
         private readonly IRepository<Bid> _bidRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IProductService _productService;
         private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
@@ -31,14 +31,14 @@ namespace Grand.Services.Catalog
         private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
         public AuctionService(IRepository<Bid> bidRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IProductService productService,
             IRepository<Product> productRepository,
             ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
             this._bidRepository = bidRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._productService = productService;
             this._productRepository = productRepository;
             this._cacheManager = cacheManager;
@@ -51,14 +51,14 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.DeleteAsync(bid);
-            await _eventPublisher.EntityDeleted(bid);
+            await _mediator.EntityDeleted(bid);
 
             var productToUpdate = await _productService.GetProductById(bid.ProductId);
             var _bid = await GetBidsByProductId(bid.ProductId);
             var highestBid = _bid.OrderByDescending(x => x.Amount).FirstOrDefault();
             if (productToUpdate != null)
             {
-                await UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount: 0, highestBid != null ? highestBid.CustomerId : "");
+                await UpdateHighestBid(productToUpdate, highestBid != null ? highestBid.Amount : 0, highestBid != null ? highestBid.CustomerId : "");
             }
         }
 
@@ -93,7 +93,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.InsertAsync(bid);
-            await _eventPublisher.EntityInserted(bid);
+            await _mediator.EntityInserted(bid);
         }
 
         public virtual async Task UpdateBid(Bid bid)
@@ -102,7 +102,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("bid");
 
             await _bidRepository.UpdateAsync(bid);
-            await _eventPublisher.EntityUpdated(bid);
+            await _mediator.EntityUpdated(bid);
         }
 
         public virtual async Task UpdateHighestBid(Product product, decimal bid, string highestBidder)
@@ -113,8 +113,8 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _eventPublisher.EntityUpdated(product);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _mediator.EntityUpdated(product);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
         public virtual async Task<IList<Product>> GetAuctionsToEnd()
@@ -137,8 +137,8 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _eventPublisher.EntityUpdated(product);
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+            await _mediator.EntityUpdated(product);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
 
@@ -153,8 +153,7 @@ namespace Grand.Services.Catalog
         public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
         {
             var latestbid = await GetLatestBid(product.Id);
-            await InsertBid(new Bid
-            {
+            await InsertBid(new Bid {
                 Date = DateTime.UtcNow,
                 Amount = amount,
                 CustomerId = customer.Id,

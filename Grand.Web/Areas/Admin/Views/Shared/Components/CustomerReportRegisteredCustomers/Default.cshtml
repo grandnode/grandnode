@@ -6,7 +6,7 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ReportRegisteredCustomersList", "Customer"))",
+                            url: "@Html.Raw(Url.Action("ReportRegisteredCustomersList", "Reports"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -39,10 +39,10 @@
                 scrollable: false,
                 columns: [{
                     field: "Period",
-                    title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")"
+                    title: "@T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period")"
                 }, {
                     field: "Customers",
-                    title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Customers")",
+                    title: "@T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers")",
                     width: 50
                 }]
             });

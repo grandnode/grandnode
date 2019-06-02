@@ -24,7 +24,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Html.Raw(Url.Action("ReportCustomerTimeChart", "Customer"))",
+            url: "@Html.Raw(Url.Action("ReportCustomerTimeChart", "Reports"))",
             dataType: "json",
             data: add,
             success: function (data) {

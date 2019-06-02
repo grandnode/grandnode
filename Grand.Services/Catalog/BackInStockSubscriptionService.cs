@@ -6,6 +6,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Messages;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver.Linq;
 using System;
@@ -23,7 +24,7 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -37,12 +38,12 @@ namespace Grand.Services.Catalog
         /// <param name="eventPublisher">Event publisher</param>
         public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IWorkflowMessageService workflowMessageService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IServiceProvider serviceProvider)
         {
             this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             this._workflowMessageService = workflowMessageService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._serviceProvider = serviceProvider;
         }
 
@@ -62,7 +63,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.DeleteAsync(subscription);
 
             //event notification
-            await _eventPublisher.EntityDeleted(subscription);
+            await _mediator.EntityDeleted(subscription);
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
 
             //event notification
-            await _eventPublisher.EntityInserted(subscription);
+            await _mediator.EntityInserted(subscription);
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace Grand.Services.Catalog
             await _backInStockSubscriptionRepository.UpdateAsync(subscription);
 
             //event notification
-            await _eventPublisher.EntityUpdated(subscription);
+            await _mediator.EntityUpdated(subscription);
         }
 
         /// <summary>

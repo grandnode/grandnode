@@ -1,5 +1,5 @@
 ﻿@model OrderSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
@@ -31,52 +31,28 @@
                 </div>
                 <div class="x_content form">
                     <vc:admin-widget widget-zone="order_settings_top" additional-data="null" />
-                    <div id="ordersettings-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Settings.Order.OrderSettings")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
-                            </li>
-                        </ul>
-                        <div>
-                            <partial name="Order.TabOrderSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="Order.TabReturnRequestSettings" model="Model" />
-                        </div>
-                    </div>
+                    <admin-tabstrip name="ordersettings-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Order.OrderSettings")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="Order.TabOrderSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="Order.TabReturnRequestSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
                     <vc:admin-widget widget-zone="order_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#ordersettings-edit").show();
-            $("#ordersettings-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-           @eventBlock
-        }
-    }
-
-        @*save selected tab index*@
-        <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 </form>
 

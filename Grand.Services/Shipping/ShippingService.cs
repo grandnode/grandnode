@@ -14,6 +14,7 @@ using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -80,7 +81,7 @@ namespace Grand.Services.Shipping
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -107,7 +108,7 @@ namespace Grand.Services.Shipping
             IStateProvinceService stateProvinceService,
             IPluginFinder pluginFinder,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICurrencyService currencyService,
             ICacheManager cacheManager,
             IRepository<Product> productRepository,
@@ -130,7 +131,7 @@ namespace Grand.Services.Shipping
             this._pluginFinder = pluginFinder;
             this._storeContext = storeContext;
             this._currencyService = currencyService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -204,10 +205,10 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(shippingMethod);
+            await _mediator.EntityDeleted(shippingMethod);
         }
 
         /// <summary>
@@ -227,9 +228,9 @@ namespace Grand.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual async Task<IList<ShippingMethod>> GetAllShippingMethods(string filterByCountryId = "", Customer customer = null)
         {
-            List<ShippingMethod> shippingMethods = new List<ShippingMethod>();
+            var shippingMethods = new List<ShippingMethod>();
 
-            shippingMethods = await _cacheManager.Get(SHIPPINGMETHOD_PATTERN_KEY, () =>
+            shippingMethods = await _cacheManager.GetAsync(SHIPPINGMETHOD_PATTERN_KEY, () =>
             {
                 var query = from sm in _shippingMethodRepository.Table
                             orderby sm.DisplayOrder
@@ -261,10 +262,10 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(shippingMethod);
+            await _mediator.EntityInserted(shippingMethod);
         }
 
         /// <summary>
@@ -279,10 +280,10 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(shippingMethod);
+            await _mediator.EntityUpdated(shippingMethod);
         }
 
         #endregion
@@ -305,10 +306,10 @@ namespace Grand.Services.Shipping
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(deliveryDate);
+            await _mediator.EntityDeleted(deliveryDate);
         }
 
         /// <summary>
@@ -345,7 +346,7 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.InsertAsync(deliveryDate);
 
             //event notification
-            await _eventPublisher.EntityInserted(deliveryDate);
+            await _mediator.EntityInserted(deliveryDate);
         }
 
         /// <summary>
@@ -360,7 +361,7 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(deliveryDate);
+            await _mediator.EntityUpdated(deliveryDate);
         }
 
         #endregion
@@ -389,11 +390,11 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(warehouse);
+            await _mediator.EntityDeleted(warehouse);
         }
 
         /// <summary>
@@ -404,7 +405,7 @@ namespace Grand.Services.Shipping
         public virtual Task<Warehouse> GetWarehouseById(string warehouseId)
         {
             string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
-            return _cacheManager.Get(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
+            return _cacheManager.GetAsync(key, () => _warehouseRepository.GetByIdAsync(warehouseId));
         }
 
         /// <summary>
@@ -431,10 +432,10 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(warehouse);
+            await _mediator.EntityInserted(warehouse);
         }
 
         /// <summary>
@@ -449,10 +450,10 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(warehouse);
+            await _mediator.EntityUpdated(warehouse);
         }
 
         #endregion
@@ -509,10 +510,10 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(pickupPoint);
+            await _mediator.EntityInserted(pickupPoint);
         }
 
         /// <summary>
@@ -527,10 +528,10 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(pickupPoint);
+            await _mediator.EntityUpdated(pickupPoint);
         }
 
         /// <summary>
@@ -543,10 +544,10 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
-            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(pickupPoint);
+            await _mediator.EntityDeleted(pickupPoint);
         }
 
 

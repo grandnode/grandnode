@@ -1,47 +1,26 @@
 ﻿@model ProductTagModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <vc:admin-widget widget-zone="product_details_tag_top" additional-data="Model" />
 
-<script>
-    $(document).ready(function () {
-        $("#tag-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="tag-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.ProductTags.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Catalog.ProductTags.Products")
-        </li>
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabProducts" model="Model" />
-    </div>
-</div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "tag-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-
+<admin-tabstrip name="tag-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.ProductTags.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.ProductTags.Products")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
 <vc:admin-widget widget-zone="product_details_tag_bottom" additional-data="Model" />

@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model ConfigurationModel
+@using Grand.Plugin.Payments.BrainTree.Models;
+
+<form asp-controller="PaymentBrainTree" asp-action="Configure" method="post">
+    <antiforgery-token />
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="UseSandBox" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="UseSandBox" />
+                    <span asp-validation-for="UseSandBox"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="MerchantId" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="MerchantId" />
+                    <span asp-validation-for="MerchantId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="PrivateKey" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="PrivateKey" />
+                    <span asp-validation-for="PrivateKey"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="PublicKey" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="PublicKey" />
+                    <span asp-validation-for="PublicKey"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="AdditionalFee" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="AdditionalFee" />
+                    <span asp-validation-for="AdditionalFee"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    <admin-label asp-for="AdditionalFeePercentage" class="control-label" />
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="AdditionalFeePercentage" />
+                    <span asp-validation-for="AdditionalFeePercentage"></span>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                        <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

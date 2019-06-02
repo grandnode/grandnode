@@ -7,6 +7,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Messages;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -60,7 +61,7 @@ namespace Grand.Services.Forums
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -97,24 +98,24 @@ namespace Grand.Services.Forums
             ICustomerService customerService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            IEventPublisher eventPublisher
+            IMediator mediator
             )
         {
-            this._cacheManager = cacheManager;
-            this._forumGroupRepository = forumGroupRepository;
-            this._forumRepository = forumRepository;
-            this._forumTopicRepository = forumTopicRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
-            this._forumSubscriptionRepository = forumSubscriptionRepository;
-            this._forumPostVoteRepository = forumPostVoteRepository;
-            this._forumSettings = forumSettings;
-            this._customerRepository = customerRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            _eventPublisher = eventPublisher;
+            _cacheManager = cacheManager;
+            _forumGroupRepository = forumGroupRepository;
+            _forumRepository = forumRepository;
+            _forumTopicRepository = forumTopicRepository;
+            _forumPostRepository = forumPostRepository;
+            _forumPrivateMessageRepository = forumPrivateMessageRepository;
+            _forumSubscriptionRepository = forumSubscriptionRepository;
+            _forumPostVoteRepository = forumPostVoteRepository;
+            _forumSettings = forumSettings;
+            _customerRepository = customerRepository;
+            _genericAttributeService = genericAttributeService;
+            _customerService = customerService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _mediator = mediator;
         }
         #endregion
 
@@ -286,11 +287,11 @@ namespace Grand.Services.Forums
 
             await _forumGroupRepository.DeleteAsync(forumGroup);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(forumGroup);
+            await _mediator.EntityDeleted(forumGroup);
         }
 
         /// <summary>
@@ -310,7 +311,7 @@ namespace Grand.Services.Forums
         public virtual async Task<IList<ForumGroup>> GetAllForumGroups()
         {
             string key = string.Format(FORUMGROUP_ALL_KEY);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from fg in _forumGroupRepository.Table
                             orderby fg.DisplayOrder
@@ -333,11 +334,11 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.InsertAsync(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(forumGroup);
+            await _mediator.EntityInserted(forumGroup);
         }
 
         /// <summary>
@@ -354,11 +355,11 @@ namespace Grand.Services.Forums
             await _forumGroupRepository.UpdateAsync(forumGroup);
 
             //cache
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(forumGroup);
+            await _mediator.EntityUpdated(forumGroup);
         }
 
         /// <summary>
@@ -385,7 +386,7 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                await _eventPublisher.EntityDeleted(fs);
+                await _mediator.EntityDeleted(fs);
             }
 
             //delete forum subscriptions (forum)
@@ -396,17 +397,17 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs2);
                 //event notification
-                await _eventPublisher.EntityDeleted(fs2);
+                await _mediator.EntityDeleted(fs2);
             }
 
             //delete forum
             await _forumRepository.DeleteAsync(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(forum);
+            await _mediator.EntityDeleted(forum);
         }
 
         /// <summary>
@@ -427,7 +428,7 @@ namespace Grand.Services.Forums
         public virtual async Task<IList<Forum>> GetAllForumsByGroupId(string forumGroupId)
         {
             string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from f in _forumRepository.Table
                             orderby f.DisplayOrder
@@ -450,11 +451,11 @@ namespace Grand.Services.Forums
 
             await _forumRepository.InsertAsync(forum);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(forum);
+            await _mediator.EntityInserted(forum);
         }
 
         /// <summary>
@@ -470,11 +471,11 @@ namespace Grand.Services.Forums
 
             await _forumRepository.UpdateAsync(forum);
             
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(forum);
+            await _mediator.EntityUpdated(forum);
         }
 
         /// <summary>
@@ -510,18 +511,18 @@ namespace Grand.Services.Forums
             {
                 await _forumSubscriptionRepository.DeleteAsync(fs);
                 //event notification
-                await _eventPublisher.EntityDeleted(fs);
+                await _mediator.EntityDeleted(fs);
             }
 
             //update stats
             await UpdateForumStats(forumId);
             await UpdateCustomerStats(customerId);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(forumTopic);
+            await _mediator.EntityDeleted(forumTopic);
         }
 
         /// <summary>
@@ -664,11 +665,11 @@ namespace Grand.Services.Forums
             await UpdateForumStats(forumTopic.ForumId);
 
             //cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(forumTopic);
+            await _mediator.EntityInserted(forumTopic);
 
             //send notifications
             if (sendNotifications)
@@ -707,11 +708,11 @@ namespace Grand.Services.Forums
 
             await _forumTopicRepository.UpdateAsync(forumTopic);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(forumTopic);
+            await _mediator.EntityUpdated(forumTopic);
         }
 
         /// <summary>
@@ -790,11 +791,11 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(forumPost);
+            await _mediator.EntityDeleted(forumPost);
 
         }
 
@@ -887,11 +888,11 @@ namespace Grand.Services.Forums
             await UpdateCustomerStats(customerId);
 
             //clear cache            
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(forumPost);
+            await _mediator.EntityInserted(forumPost);
 
             //notifications
             if (sendNotifications)
@@ -936,11 +937,11 @@ namespace Grand.Services.Forums
 
             await _forumPostRepository.UpdateAsync(forumPost);
 
-            _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(forumPost);
+            await _mediator.EntityUpdated(forumPost);
         }
 
         /// <summary>
@@ -957,7 +958,7 @@ namespace Grand.Services.Forums
             await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
 
             //event notification
-            await _eventPublisher.EntityDeleted(privateMessage);
+            await _mediator.EntityDeleted(privateMessage);
         }
 
         /// <summary>
@@ -1026,7 +1027,7 @@ namespace Grand.Services.Forums
             await _forumPrivateMessageRepository.InsertAsync(privateMessage);
 
             //event notification
-            await _eventPublisher.EntityInserted(privateMessage);
+            await _mediator.EntityInserted(privateMessage);
 
             var customerTo = await _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
@@ -1057,13 +1058,13 @@ namespace Grand.Services.Forums
             {
                 await _forumPrivateMessageRepository.DeleteAsync(privateMessage);
                 //event notification
-                await _eventPublisher.EntityDeleted(privateMessage);
+                await _mediator.EntityDeleted(privateMessage);
             }
             else
             {
                 await _forumPrivateMessageRepository.UpdateAsync(privateMessage);
                 //event notification
-                await _eventPublisher.EntityUpdated(privateMessage);
+                await _mediator.EntityUpdated(privateMessage);
             }
         }
 
@@ -1081,7 +1082,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.DeleteAsync(forumSubscription);
 
             //event notification
-            await _eventPublisher.EntityDeleted(forumSubscription);
+            await _mediator.EntityDeleted(forumSubscription);
         }
 
         /// <summary>
@@ -1135,7 +1136,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.InsertAsync(forumSubscription);
 
             //event notification
-            await _eventPublisher.EntityInserted(forumSubscription);
+            await _mediator.EntityInserted(forumSubscription);
         }
 
         /// <summary>
@@ -1152,7 +1153,7 @@ namespace Grand.Services.Forums
             await _forumSubscriptionRepository.UpdateAsync(forumSubscription);
 
             //event notification
-            await _eventPublisher.EntityUpdated(forumSubscription);
+            await _mediator.EntityUpdated(forumSubscription);
         }
 
         /// <summary>
@@ -1507,7 +1508,7 @@ namespace Grand.Services.Forums
             await UpdatePost(post);
 
             //event notification
-            await _eventPublisher.EntityInserted(postVote);
+            await _mediator.EntityInserted(postVote);
         }
 
         /// <summary>
@@ -1522,7 +1523,7 @@ namespace Grand.Services.Forums
             await _forumPostVoteRepository.UpdateAsync(postVote);
 
             //event notification
-            await _eventPublisher.EntityUpdated(postVote);
+            await _mediator.EntityUpdated(postVote);
         }
 
         /// <summary>
@@ -1542,7 +1543,7 @@ namespace Grand.Services.Forums
             await UpdatePost(post);
 
             //event notification
-            await _eventPublisher.EntityDeleted(postVote);
+            await _mediator.EntityDeleted(postVote);
         }
 
         #endregion

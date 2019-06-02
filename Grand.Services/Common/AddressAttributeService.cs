@@ -2,6 +2,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -57,7 +58,7 @@ namespace Grand.Services.Common
         #region Fields
 
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         
         #endregion
@@ -72,11 +73,11 @@ namespace Grand.Services.Common
         /// <param name="eventPublisher">Event published</param>
         public AddressAttributeService(ICacheManager cacheManager,
             IRepository<AddressAttribute> addressAttributeRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._addressAttributeRepository = addressAttributeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -94,11 +95,11 @@ namespace Grand.Services.Common
 
             await _addressAttributeRepository.DeleteAsync(addressAttribute);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(addressAttribute);
+            await _mediator.EntityDeleted(addressAttribute);
         }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace Grand.Services.Common
         public virtual async Task<IList<AddressAttribute>> GetAllAddressAttributes()
         {
             string key = ADDRESSATTRIBUTES_ALL_KEY;
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from aa in _addressAttributeRepository.Table
                             orderby aa.DisplayOrder
@@ -128,7 +129,7 @@ namespace Grand.Services.Common
                 return null;
 
             string key = string.Format(ADDRESSATTRIBUTES_BY_ID_KEY, addressAttributeId);
-            return await _cacheManager.Get(key, () => _addressAttributeRepository.GetByIdAsync(addressAttributeId));
+            return await _cacheManager.GetAsync(key, () => _addressAttributeRepository.GetByIdAsync(addressAttributeId));
         }
 
         /// <summary>
@@ -142,11 +143,11 @@ namespace Grand.Services.Common
 
             await _addressAttributeRepository.InsertAsync(addressAttribute);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(addressAttribute);
+            await _mediator.EntityInserted(addressAttribute);
         }
 
         /// <summary>
@@ -160,11 +161,11 @@ namespace Grand.Services.Common
 
             await _addressAttributeRepository.UpdateAsync(addressAttribute);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(addressAttribute);
+            await _mediator.EntityUpdated(addressAttribute);
         }
 
         /// <summary>
@@ -180,11 +181,11 @@ namespace Grand.Services.Common
             var update = updatebuilder.Pull(p => p.AddressAttributeValues, addressAttributeValue);
             await _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(addressAttributeValue);
+            await _mediator.EntityDeleted(addressAttributeValue);
         }
 
         /// <summary>
@@ -200,11 +201,11 @@ namespace Grand.Services.Common
             var update = updatebuilder.AddToSet(p => p.AddressAttributeValues, addressAttributeValue);
             await _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(addressAttributeValue);
+            await _mediator.EntityInserted(addressAttributeValue);
         }
 
         /// <summary>
@@ -227,11 +228,11 @@ namespace Grand.Services.Common
 
             await _addressAttributeRepository.Collection.UpdateManyAsync(filter, update);
 
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(addressAttributeValue);
+            await _mediator.EntityUpdated(addressAttributeValue);
         }
         
         #endregion

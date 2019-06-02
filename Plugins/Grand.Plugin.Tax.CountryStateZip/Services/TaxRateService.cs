@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Plugin.Tax.CountryStateZip.Domain;
 using Grand.Services.Events;
+using MediatR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IRepository<TaxRate> _taxRateRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -35,13 +36,13 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
-        public TaxRateService(IEventPublisher eventPublisher,
+        public TaxRateService(IMediator mediator,
             ICacheManager cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._cacheManager = cacheManager;
-            this._taxRateRepository = taxRateRepository;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _taxRateRepository = taxRateRepository;
         }
 
         #endregion
@@ -59,10 +60,10 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.DeleteAsync(taxRate);
 
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(taxRate);
+            await _mediator.EntityDeleted(taxRate);
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         public virtual async Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
-            return await _cacheManager.Get(key, async () =>
+            return await _cacheManager.GetAsync(key, async () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
@@ -102,10 +103,10 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.InsertAsync(taxRate);
 
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(taxRate);
+            await _mediator.EntityInserted(taxRate);
         }
 
         /// <summary>
@@ -119,10 +120,10 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.UpdateAsync(taxRate);
 
-            _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(taxRate);
+            await _mediator.EntityUpdated(taxRate);
         }
         #endregion
     }

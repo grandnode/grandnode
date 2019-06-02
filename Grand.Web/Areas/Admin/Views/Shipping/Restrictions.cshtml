@@ -1,5 +1,5 @@
 ﻿@model ShippingMethodRestrictionModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;
@@ -20,47 +20,24 @@
                     </div>
                 </div>
                 <div class="x_content form">
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#shippingrestriction-edit').show();
-                            $("#shippingrestriction-edit").kendoTabStrip({
-                                animation: {
-                                    open: {
-                                        effects: "fadeIn"
-                                    }
-                                },
-                                select: tabstrip_on_tab_select
-                            });
-                        });
-                    </script>
-                    <div id="shippingrestriction-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Shipping.Restrictions.Country")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Shipping.Restrictions.Role")
-                            </li>
-                        </ul>
-                        <div>
-                           <partial name="Restrictions.TabCountry" model="Model" />
-                        </div>
-                        <div>
-                           <partial name="Restrictions.TabRole" model="Model" />
-                        </div>
-                    </div>
-                    @{
-                        //custom tabs
-                        var eventMessage = new AdminTabStripCreated(this.Html, "shippingrestriction-edit");
-                        await eventPublisher.Publish(eventMessage);
-                        foreach (var eventBlock in eventMessage.BlocksToRender)
-                        {
-                            @eventBlock
-                        }
-                    }
-
-                    @*save selected tab index*@
-                    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+                    <admin-tabstrip name="shippingrestriction-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Shipping.Restrictions.Country")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="Restrictions.TabCountry" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Shipping.Restrictions.Role")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="Restrictions.TabRole" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
                 </div>
             </div>
         </div>

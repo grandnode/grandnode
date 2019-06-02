@@ -61,6 +61,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
             await _storeViewModelService.PrepareWarehouseModel(model);
+            //countries
+            await _storeViewModelService.PrepareCountryModel(model);
 
             return View(model);
         }
@@ -78,6 +80,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
             await _storeViewModelService.PrepareWarehouseModel(model);
+            //countries
+            await _storeViewModelService.PrepareCountryModel(model);
 
             //If we got this far, something failed, redisplay form
             return View(model);
@@ -95,6 +99,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
             await _storeViewModelService.PrepareWarehouseModel(model);
+            //countries
+            await _storeViewModelService.PrepareCountryModel(model);
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -124,6 +130,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _storeViewModelService.PrepareLanguagesModel(model);
             //warehouses
             await _storeViewModelService.PrepareWarehouseModel(model);
+            //countries
+            await _storeViewModelService.PrepareCountryModel(model);
 
             return View(model);
         }

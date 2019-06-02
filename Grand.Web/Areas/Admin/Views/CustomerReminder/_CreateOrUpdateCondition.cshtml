@@ -1,81 +1,66 @@
 ﻿@model CustomerReminderModel.ConditionModel
-@inject IEventPublisher eventPublisher
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerReminderId" type="hidden" />
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#customerremindercondition-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="customerremindercondition-edit">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerReminder.Condition.Info")
-        </li>
-        <li tab-index="1" id="tab-product">
-            @T("Admin.Customers.CustomerActionCondition.Products")
-        </li>
-        <li tab-index="2" id="tab-category">
-            @T("Admin.Customers.CustomerReminder.Condition.Categories")
-        </li>
-        <li tab-index="3" id="tab-manufacturer">
-            @T("Admin.Customers.CustomerReminder.Condition.Manufacturers")
-        </li>
-        <li tab-index="4" id="tab-customerRole">
-            @T("Admin.Customers.CustomerReminder.Condition.CustomerRole")
-        </li>
-        <li tab-index="5" id="tab-customerTag">
-            @T("Admin.Customers.CustomerReminder.Condition.CustomerTag")
-        </li>
-        <li tab-index="6" id="tab-customerRegister">
-            @T("Admin.Customers.CustomerReminder.Condition.CustomerRegister")
-        </li>
-        <li tab-index="7" id="tab-customAttribute">
-            @T("Admin.Customers.CustomerReminder.Condition.CustomCustomerAttribute")
-        </li>
-    </ul>
-    <div>
-       <partial name="_ConditionInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionProduct" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionCategory" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionManufacturer" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionCustomerRole" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionCustomerTag" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionCustomerRegister" model="Model" />
-    </div>
-    <div>
-       <partial name="_ConditionCustomCustomerAttribute" model="Model" />
-    </div>
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customerremindercondition-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+<admin-tabstrip name="customerremindercondition-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_ConditionInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerActionCondition.Products")" tab-index="1" id="tab-product">
+            <content>
+                <div>
+                    <partial name="_ConditionProduct" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.Categories")" tab-index="2" id="tab-category">
+            <content>
+                <div>
+                    <partial name="_ConditionCategory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.Manufacturers")" tab-index="3" id="tab-manufacturer">
+            <content>
+                <div>
+                    <partial name="_ConditionManufacturer" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.CustomerRole")" tab-index="4" id="tab-customerRole">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerRole" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.CustomerTag")" tab-index="5" id="tab-customerTag">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerTag" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.CustomerRegister")" tab-index="6" id="tab-customerRegister">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomerRegister" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Condition.CustomCustomerAttribute")" tab-index="7" id="tab-customAttribute">
+            <content>
+                <div>
+                    <partial name="_ConditionCustomCustomerAttribute" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>

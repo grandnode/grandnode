@@ -4,6 +4,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -25,7 +26,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly CommonSettings _commonSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
@@ -49,14 +50,14 @@ namespace Grand.Services.Customers
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<Customer> customerRepository,
             CommonSettings commonSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICacheManager cacheManager
             )
         {
             this._customerTagRepository = customerTagRepository;
             this._customerTagProductRepository = customerTagProductRepository;
             this._commonSettings = commonSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._customerRepository = customerRepository;
             this._cacheManager = cacheManager;
         }
@@ -91,7 +92,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.DeleteAsync(customerTag);
 
             //event notification
-            await _eventPublisher.EntityDeleted(customerTag);
+            await _mediator.EntityDeleted(customerTag);
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.InsertAsync(customerTag);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerTag);
+            await _mediator.EntityInserted(customerTag);
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace Grand.Services.Customers
             await _customerTagRepository.UpdateAsync(customerTag);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerTag);
+            await _mediator.EntityUpdated(customerTag);
         }
 
         /// <summary>
@@ -217,7 +218,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerTagProduct>> GetCustomerTagProducts(string customerTagId)
         {
             string key = string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagId);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from cr in _customerTagProductRepository.Table
                             where (cr.CustomerTagId == customerTagId)
@@ -264,11 +265,11 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.InsertAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerTagProduct);
+            await _mediator.EntityInserted(customerTagProduct);
         }
 
         /// <summary>
@@ -283,11 +284,11 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.UpdateAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerTagProduct);
+            await _mediator.EntityUpdated(customerTagProduct);
         }
 
         /// <summary>
@@ -302,10 +303,10 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.DeleteAsync(customerTagProduct);
 
             //clear cache
-            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
+            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
             //event notification
-            await _eventPublisher.EntityDeleted(customerTagProduct);
+            await _mediator.EntityDeleted(customerTagProduct);
         }
 
         #endregion

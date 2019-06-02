@@ -1,0 +1,15 @@
+﻿@model IList<ProductOverviewModel>
+
+<div class="col-12 product-grid blogpost-product-grid px-0">
+    <h2 class="h3 generalTitle text-center">
+        @T("Blog.Products")
+    </h2>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-sm-6 col-6 product-container">
+                    <partial name="_ProductBox" model="item" />
+                </div>
+            }
+        </div>
+</div>

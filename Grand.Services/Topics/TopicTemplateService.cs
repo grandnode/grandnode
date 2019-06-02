@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MediatR;
 
 namespace Grand.Services.Topics
 {
@@ -18,7 +19,7 @@ namespace Grand.Services.Topics
         #region Fields
 
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
         
@@ -30,10 +31,10 @@ namespace Grand.Services.Topics
         /// <param name="topicTemplateRepository">Topic template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository, 
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._topicTemplateRepository = topicTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.DeleteAsync(topicTemplate);
 
             //event notification
-            await _eventPublisher.EntityDeleted(topicTemplate);
+            await _mediator.EntityDeleted(topicTemplate);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.InsertAsync(topicTemplate);
 
             //event notification
-            await _eventPublisher.EntityInserted(topicTemplate);
+            await _mediator.EntityInserted(topicTemplate);
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Grand.Services.Topics
             await _topicTemplateRepository.UpdateAsync(topicTemplate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(topicTemplate);
+            await _mediator.EntityUpdated(topicTemplate);
         }
         
         #endregion

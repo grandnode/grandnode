@@ -113,7 +113,7 @@ namespace Grand.Web.Controllers
 
             string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY, category.Id,
             string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id);
-            model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+            model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                 (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                 .Select(catBr => new KnowledgebaseCategoryModel
                 {
@@ -246,7 +246,7 @@ namespace Grand.Web.Controllers
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id);
-                model.CategoryBreadcrumb = await _cacheManager.Get(breadcrumbCacheKey, async () =>
+                model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                     (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                     .Select(catBr => new KnowledgebaseCategoryModel
                     {

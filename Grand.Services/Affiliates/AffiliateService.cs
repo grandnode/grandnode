@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Grand.Services.Affiliates
 
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -33,11 +34,11 @@ namespace Grand.Services.Affiliates
         /// <param name="eventPublisher">Event published</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
-            this._affiliateRepository = affiliateRepository;
-            this._orderRepository = orderRepository;
-            this._eventPublisher = eventPublisher;
+            _affiliateRepository = affiliateRepository;
+            _orderRepository = orderRepository;
+            _mediator = mediator;
         }
 
         #endregion
@@ -143,7 +144,7 @@ namespace Grand.Services.Affiliates
             await _affiliateRepository.InsertAsync(affiliate);
 
             //event notification
-            await _eventPublisher.EntityInserted(affiliate);
+            await _mediator.EntityInserted(affiliate);
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace Grand.Services.Affiliates
             await _affiliateRepository.UpdateAsync(affiliate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(affiliate);
+            await _mediator.EntityUpdated(affiliate);
         }
 
         #endregion

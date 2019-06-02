@@ -16,19 +16,19 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             AvailableShippingStatuses = new List<SelectListItem>();
         }
 
-        [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.StartDate")]
+        [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.EndDate")]
+        [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-        [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.OrderStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.ShippingStatus")]
+        [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.ShippingStatus")]
         public int ShippingStatusId { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }

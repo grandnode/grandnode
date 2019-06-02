@@ -62,18 +62,18 @@
                     dataType: "html",
                     success: function (result) {
                         $(placeholderName).html(result);
-                        App.stopPageLoading();
+                        StopPageLoading();
                     },
                     error:function (xhr, ajaxOptions, thrownError) {
                         $(placeholderName).html('Failed to load requirement content.');
-                        App.stopPageLoading();
+                        StopPageLoading();
                     }
                 });
             }
 
             //load HTML for adding requirement
             function loadNewRequirementBox() {
-                App.startPageLoading();
+                StartPageLoading();
                 //load URL
                 var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
                 var discountId = '@Model.Id';
@@ -94,7 +94,7 @@
                 }
                 else {
                     $('#addrequirementplaceholder').html('');
-                    App.stopPageLoading();
+                    StopPageLoading();
                 }
             }
 
@@ -110,7 +110,7 @@
 
             //load HTML for exisiting requirements
             function loadExistingRequirements() {
-                App.startPageLoading();
+                StartPageLoading();
                 $("#discountRequirementContainer").html('');
                 $("#discountRequirementTemplate").tmpl(discountRequirements).appendTo("#discountRequirementContainer");
 
@@ -122,7 +122,7 @@
                     $(placeholderName).html('loading...');
                     loadRequirement(url, placeholderName);
                 }
-                App.stopPageLoading();
+                StopPageLoading();
             }
 
             //delete requirement rule

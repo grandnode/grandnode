@@ -5,6 +5,7 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
 using Grand.Services.Events;
 using Grand.Services.Seo;
+using MediatR;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using System;
@@ -43,18 +44,22 @@ namespace Grand.Framework.Seo
         /// </summary>
         /// <param name="context">Route context</param>
         /// <returns>Route values</returns>
-        protected RouteValueDictionary GetRouteValues(RouteContext context)
+        protected async Task<RouteValueDictionary> GetRouteValues(RouteContext context)
         {
             var path = context.HttpContext.Request.Path.Value;
-            if (this.SeoFriendlyUrlsForPathEnabled && !this.SeoFriendlyUrlsForLanguagesEnabled)
+            if (this.SeoFriendlyUrlsForPathEnabled && !SeoFriendlyUrlsForLanguagesEnabled)
             {
                 string lastpath = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).LastOrDefault();
                 path = $"/{lastpath}";
             }
-            //remove language code from the path if it's localized URL
-            if (this.SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
-                path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
+            //remove language code from the path if it's localized URL
+            if (SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                await PrepareLanguages();
+                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
+                    path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
+            }
             //parse route data
             var routeValues = new RouteValueDictionary(this.ParsedTemplate.Parameters
                 .Where(parameter => parameter.DefaultValue != null)
@@ -80,7 +85,7 @@ namespace Grand.Framework.Seo
                 return;
 
             //try to get slug from the route data
-            var routeValues = GetRouteValues(context);
+            var routeValues = await GetRouteValues(context);
             if (!routeValues.TryGetValue("GenericSeName", out object slugValue) || string.IsNullOrEmpty(slugValue as string))
                 return;
 
@@ -194,7 +199,7 @@ namespace Grand.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    await EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await EngineContext.Current.Resolve<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;

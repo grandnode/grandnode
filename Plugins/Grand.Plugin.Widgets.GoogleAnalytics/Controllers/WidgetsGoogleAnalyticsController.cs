@@ -129,7 +129,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 await _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
             
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCache();
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 

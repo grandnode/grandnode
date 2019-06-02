@@ -1,5 +1,5 @@
 ﻿@model GeneralCommonSettingsModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
@@ -31,90 +31,71 @@
                 </div>
                 <div class="x_content form">
                     <vc:admin-widget widget-zone="general_common_settings_top" additional-data="null" />
-                    <div id="generalsettings-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")
-                            </li>
-                            <li tab-index="2">
-                                @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")
-                            </li>
-                            <li tab-index="3">
-                                @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")
-                            </li>
-                            <li tab-index="4">
-                                @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")
-                            </li>
-                            <li tab-index="5">
-                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
-                            </li>
-                            <li tab-index="6">
-                                @T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics")
-                            </li>
-                            <li tab-index="7">
-                                @T("Admin.Configuration.Settings.GeneralCommon.DisplayTopMenu")
-                            </li>
-                        </ul>
-                        <div>
-                            <partial name="GeneralCommon.TabStoreInformationSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabSEOSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabSecuritySettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabPdfSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabLocalizationSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabFullTextSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabGoogleAnalyticsSettings" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="GeneralCommon.TabTopMenuSettings" model="Model" />
-                        </div>
-                    </div>
+                    <admin-tabstrip name="generalsettings-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabStoreInformationSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabSEOSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")" tab-index="2">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabSecuritySettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")" tab-index="3">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabPdfSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")" tab-index="4">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabLocalizationSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")" tab-index="5">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabFullTextSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics")" tab-index="6">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabGoogleAnalyticsSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Settings.GeneralCommon.DisplayTopMenu")" tab-index="7">
+                                <content>
+                                    <div>
+                                        <partial name="GeneralCommon.TabTopMenuSettings" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
                     <vc:admin-widget widget-zone="general_common_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>
     </div>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#generalsettings-edit").show();
-            $("#generalsettings-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "generalsettings-edit");
-        await eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            @eventBlock
-        }
-    }
-
-    @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 </form>
 

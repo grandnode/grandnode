@@ -1,45 +1,23 @@
 ﻿@model InteractiveFormAttributeModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="FormId" type="hidden" />
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#attribute-edit').show();
-        $("#attribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="attribute-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Promotions.InteractiveForms.Attribute.Info")
-        </li>
-        <li tab-index="1" id="tab-values">
-            @T("Admin.Promotions.InteractiveForms.Attribute.Values")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdateAttribute.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdateAttribute.TabValues" model="Model" />
-    </div>
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "attribute-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<admin-tabstrip name="attribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Promotions.InteractiveForms.Attribute.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdateAttribute.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.InteractiveForms.Attribute.Values")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdateAttribute.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>

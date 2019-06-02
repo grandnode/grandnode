@@ -59,7 +59,7 @@ namespace Grand.Plugin.Tax.CountryStateZip
             }
 
             const string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
-            var allTaxRates = await _cacheManager.Get(cacheKey, async () =>
+            var allTaxRates = await _cacheManager.GetAsync(cacheKey, async () =>
                 {
                     var taxes = await _taxRateService.GetAllTaxRates();
                     return taxes.Select(x => new TaxRateForCaching

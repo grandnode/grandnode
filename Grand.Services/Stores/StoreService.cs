@@ -2,6 +2,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -40,7 +41,7 @@ namespace Grand.Services.Stores
         #region Fields
         
         private readonly IRepository<Store> _storeRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         private List<Store> _allStores;
@@ -57,11 +58,11 @@ namespace Grand.Services.Stores
         /// <param name="eventPublisher">Event published</param>
         public StoreService(ICacheManager cacheManager,
             IRepository<Store> storeRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._storeRepository = storeRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -84,10 +85,10 @@ namespace Grand.Services.Stores
             await _storeRepository.DeleteAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityDeleted(store);
+            await _mediator.EntityDeleted(store);
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Grand.Services.Stores
             if (_allStores == null)
             {
                 string key = STORES_ALL_KEY;
-                _allStores = await _cacheManager.Get(key, () =>
+                _allStores = await _cacheManager.GetAsync(key, () =>
                 {
                     return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
                 });
@@ -115,7 +116,7 @@ namespace Grand.Services.Stores
         public virtual Task<Store> GetStoreById(string storeId)
         {
             string key = string.Format(STORES_BY_ID_KEY, storeId);
-            return _cacheManager.Get(key, () => _storeRepository.GetByIdAsync(storeId));
+            return _cacheManager.GetAsync(key, () => _storeRepository.GetByIdAsync(storeId));
         }
 
         /// <summary>
@@ -130,10 +131,10 @@ namespace Grand.Services.Stores
             await _storeRepository.InsertAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityInserted(store);
+            await _mediator.EntityInserted(store);
         }
 
         /// <summary>
@@ -148,10 +149,10 @@ namespace Grand.Services.Stores
             await _storeRepository.UpdateAsync(store);
 
             //clear cache
-            _cacheManager.Clear();
+            await _cacheManager.Clear();
 
             //event notification
-            await _eventPublisher.EntityUpdated(store);
+            await _mediator.EntityUpdated(store);
         }
 
         /// <summary>

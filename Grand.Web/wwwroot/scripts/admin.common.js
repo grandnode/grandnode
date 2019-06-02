@@ -103,10 +103,23 @@ function addAntiForgeryToken(data) {
 
 
 // Ajax activity indicator bound to ajax start/stop document events
-/*
+
 $(document).ajaxStart(function () {
-    App.startPageLoading();
+    StartPageLoading();
 }).ajaxStop(function () {
-    App.stopPageLoading();
+    StopPageLoading();
 });
-*/
+
+function StartPageLoading(options) {
+    if (options && options.animate) {
+        $('.page-spinner-bar').remove();
+        $('body').append('<div class="page-spinner-bar"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+    } else {
+        $('.page-loading').remove();
+        $('body').append('<div class="page-loading"><img src="/administration/build/images/loading.gif"/>&nbsp;&nbsp;<span>' + (options && options.message ? options.message : 'Loading...') + '</span></div>');
+    }
+}
+
+function StopPageLoading() {
+    $('.page-loading, .page-spinner-bar').remove();
+}

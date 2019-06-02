@@ -7,6 +7,7 @@ using Grand.Core.Domain.Topics;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -52,7 +53,7 @@ namespace Grand.Services.Topics
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -64,7 +65,7 @@ namespace Grand.Services.Topics
             IWorkContext workContext,
             IStoreMappingService storeMappingService,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICacheManager cacheManager)
         {
             this._topicRepository = topicRepository;
@@ -72,7 +73,7 @@ namespace Grand.Services.Topics
             this._workContext = workContext;
             this._storeMappingService = storeMappingService;
             this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._cacheManager = cacheManager;
         }
 
@@ -92,9 +93,9 @@ namespace Grand.Services.Topics
             await _topicRepository.DeleteAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
-            await _eventPublisher.EntityDeleted(topic);
+            await _mediator.EntityDeleted(topic);
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Grand.Services.Topics
         public virtual Task<Topic> GetTopicById(string topicId)
         {
             string key = string.Format(TOPICS_BY_ID_KEY, topicId);
-            return _cacheManager.Get(key, () => _topicRepository.GetByIdAsync(topicId));
+            return _cacheManager.GetAsync(key, () => _topicRepository.GetByIdAsync(topicId));
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace Grand.Services.Topics
         public virtual async Task<IList<Topic>> GetAllTopics(string storeId, bool ignorAcl = false)
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = _topicRepository.Table;
 
@@ -180,9 +181,9 @@ namespace Grand.Services.Topics
             await _topicRepository.InsertAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
             //event notification
-            await _eventPublisher.EntityInserted(topic);
+            await _mediator.EntityInserted(topic);
         }
 
         /// <summary>
@@ -197,10 +198,10 @@ namespace Grand.Services.Topics
             await _topicRepository.UpdateAsync(topic);
 
             //cache
-            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(topic);
+            await _mediator.EntityUpdated(topic);
         }
 
         #endregion

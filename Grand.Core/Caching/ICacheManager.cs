@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Caching
 {
@@ -28,7 +29,7 @@ namespace Grand.Core.Caching
         /// <param name="key">key</param>
         /// <param name="data">Data</param>
         /// <param name="cacheTime">Cache time</param>
-        void Set(string key, object data, int cacheTime);
+        Task Set(string key, object data, int cacheTime);
 
         /// <summary>
         /// Gets a value indicating whether the value associated with the specified key is cached
@@ -41,17 +42,17 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        void Remove(string key);
+        Task Remove(string key);
 
         /// <summary>
         /// Removes items by pattern
         /// </summary>
         /// <param name="pattern">pattern</param>
-        void RemoveByPattern(string pattern);
+        Task RemoveByPattern(string pattern);
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        void Clear();
+        Task Clear();
     }
 }

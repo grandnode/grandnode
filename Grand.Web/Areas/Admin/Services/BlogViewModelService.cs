@@ -1,16 +1,22 @@
 ﻿using Grand.Core.Domain.Blogs;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
+using Grand.Framework.Extensions;
 using Grand.Services.Blogs;
+using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
+using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Blogs;
+using Grand.Web.Areas.Admin.Models.Catalog;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +33,18 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPictureService _pictureService;
         private readonly ICustomerService _customerService;
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IVendorService _vendorService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService,
+            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, 
+            ILocalizationService localizationService, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
+            IVendorService vendorService,
             ILanguageService languageService, SeoSettings seoSettings)
         {
             _blogService = blogService;
@@ -43,6 +55,10 @@ namespace Grand.Web.Areas.Admin.Services
             _pictureService = pictureService;
             _customerService = customerService;
             _localizationService = localizationService;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _vendorService = vendorService;
             _languageService = languageService;
             _seoSettings = seoSettings;
         }
@@ -170,6 +186,94 @@ namespace Grand.Web.Areas.Admin.Services
                 commentsList.Add(commentModel);
             }
             return (commentsList, comments.Count);
+        }
+
+        public virtual async Task<(IEnumerable<BlogProductModel> blogProducts, int totalCount)> PrepareBlogProductsModel(string filterByBlogPostId, int pageIndex, int pageSize)
+        {
+            var productModels = new List<BlogProductModel>();
+            var blogproducts = await _blogService.GetProductsByBlogPostId(filterByBlogPostId);
+            foreach (var item in blogproducts.Skip((pageIndex - 1) * pageSize).Take(pageSize))
+            {
+                productModels.Add(new BlogProductModel() {
+                    Id = item.Id,
+                    DisplayOrder = item.DisplayOrder,
+                    ProductId = item.ProductId,
+                    ProductName = (await _productService.GetProductById(item.ProductId))?.Name
+                });
+            }
+            return (productModels, blogproducts.Count);
+        }
+
+        public virtual async Task<BlogProductModel.AddProductModel> PrepareBlogModelAddProductModel(string blogPostId)
+        {
+            var model = new BlogProductModel.AddProductModel();
+            model.BlogPostId = blogPostId;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in await _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var v in await _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+
+            return model;
+        }
+
+        public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(BlogProductModel.AddProductModel model, int pageIndex, int pageSize)
+        {
+            var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+        }
+
+        public virtual async Task InsertProductModel(string blogPostId, BlogProductModel.AddProductModel model)
+        {
+            foreach (var id in model.SelectedProductIds)
+            {
+                var products = await _blogService.GetProductsByBlogPostId(blogPostId);
+                var product = await _productService.GetProductById(id);
+                if (product != null)
+                {
+                    if(products.FirstOrDefault(x=>x.ProductId == id) == null)
+                    {
+                        await _blogService.InsertBlogProduct(new BlogProduct() {
+                            BlogPostId = blogPostId,
+                            ProductId = id,
+                            DisplayOrder = 0
+                        });
+                    }
+                }
+            }
+        }
+
+        public virtual async Task UpdateProductModel(BlogProductModel model)
+        {
+            var bp = await _blogService.GetBlogProductById(model.Id);
+            bp.DisplayOrder = model.DisplayOrder;
+            await _blogService.UpdateBlogProduct(bp);
+        }
+
+        public virtual async Task DeleteProductModel(string id)
+        {
+            var bp = await _blogService.GetBlogProductById(id);
+            await _blogService.DeleteBlogProduct(bp);
         }
     }
 }

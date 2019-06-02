@@ -1,6 +1,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         #endregion
         
@@ -29,10 +30,10 @@ namespace Grand.Services.Catalog
         /// <param name="categoryTemplateRepository">Category template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._categoryTemplateRepository = categoryTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -51,7 +52,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
 
             //event notification
-            await _eventPublisher.EntityDeleted(categoryTemplate);
+            await _mediator.EntityDeleted(categoryTemplate);
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.InsertAsync(categoryTemplate);
 
             //event notification
-            await _eventPublisher.EntityInserted(categoryTemplate);
+            await _mediator.EntityInserted(categoryTemplate);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace Grand.Services.Catalog
             await _categoryTemplateRepository.UpdateAsync(categoryTemplate);
 
             //event notification
-            await _eventPublisher.EntityUpdated(categoryTemplate);
+            await _mediator.EntityUpdated(categoryTemplate);
         }
         
         #endregion

@@ -1,5 +1,5 @@
 ﻿@model CustomerModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 @{
@@ -9,22 +9,6 @@
     Html.AppendScriptParts("~/scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }
 <script>
-    $(document).ready(function() {
-        var tabPos = 'left';
-        if (window.devicePixelRatio == 2)
-            tabPos = 'top';
-
-        $('#customer-edit').show();
-        $("#customer-edit").kendoTabStrip({
-            animation:  {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            tabPosition: tabPos,
-            select: tabstrip_on_tab_select
-        });
-    });
     //tags
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.CustomerTags)").tagEditor({
@@ -42,109 +26,106 @@
 
 
 </script>
-<div id="customer-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.Customers.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Customers.Customers.CustomerRoles")
-        </li>
+
+<admin-tabstrip name="customer-edit" SetTabPos="true">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.Customers.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.Customers.CustomerRoles")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="2">
-                @T("Admin.Customers.Customers.Orders")
-            </li>
-            <li tab-index="3">
-                @T("Admin.Customers.Customers.Reviews")
-            </li>
-            <li tab-index="4">
-                @T("Admin.Customers.Customers.Addresses")
-            </li>
-            <li tab-index="5">
-                @T("Admin.Customers.Customers.ShoppingCartWishlist")
-            </li>
-            <li tab-index="6">
-                @T("Admin.Customers.Customers.PersonalizedProduct")
-            </li>
-            <li tab-index="7">
-                @T("Admin.Customers.Customers.ProductPrice")
-            </li>
-            <li tab-index="8">
-                @T("Admin.Customers.Customers.CustomerNotes")
-            </li>
-            <li tab-index="9">
-                @T("Admin.Customers.Customers.ActivityLog")
-            </li>
-            <li tab-index="10">
-                @T("Admin.Customers.Customers.Impersonate")
-            </li>
-            <li tab-index="11">
-                @T("Admin.Customers.Customers.BackInStockSubscriptions")
-            </li>
+            <tabstrip-item text="@T("Admin.Customers.Customers.Orders")" tab-index="2">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabOrders" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.Reviews")" tab-index="3">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabReviews" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.Addresses")" tab-index="4">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.ShoppingCartWishlist")" tab-index="5">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
+                        <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.PersonalizedProduct")" tab-index="6">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabProduct" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.ProductPrice")" tab-index="7">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.CustomerNotes")" tab-index="8">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabNotes" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.ActivityLog")" tab-index="9">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.Impersonate")" tab-index="10">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabImpersonate" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Customers.Customers.BackInStockSubscriptions")" tab-index="11">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            @if (Model.DisplayRewardPointsHistory)
+            {
+                <tabstrip-item text="@T("Admin.Customers.Customers.RewardPoints")" tab-index="12">
+                    <content>
+                        <div>
+                            <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
+                        </div>
+                    </content>
+                </tabstrip-item>
+            }
         }
-        @if (Model.DisplayRewardPointsHistory)
-        {
-            <li>
-                @T("Admin.Customers.Customers.RewardPoints")
-            </li>
-        }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
-    </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabOrders" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabReviews" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
-            <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabProduct" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabNotes" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabImpersonate" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
-        </div>
-    }
-    @if (Model.DisplayRewardPointsHistory)
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
-        </div>
-    }
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    </items>
+</admin-tabstrip>

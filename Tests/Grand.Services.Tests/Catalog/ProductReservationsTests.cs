@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -18,7 +19,7 @@ namespace Grand.Services.Tests.Catalog
         private IRepository<Product> _productRepository;
         private IRepository<ProductReservation> _productReservationRepository;
         private IRepository<CustomerReservationsHelper> _customerReservationsHelperRepository;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IWorkContext _workContext;
 
         [TestInitialize()]
@@ -29,8 +30,8 @@ namespace Grand.Services.Tests.Catalog
             _customerReservationsHelperRepository = new MongoDBRepositoryTest<CustomerReservationsHelper>();
             _workContext = new Mock<IWorkContext>().Object;
 
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _productReservationService = new ProductReservationService(_productReservationRepository,

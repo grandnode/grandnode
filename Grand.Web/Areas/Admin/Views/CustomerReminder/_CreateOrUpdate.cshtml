@@ -1,24 +1,11 @@
 ﻿@model CustomerReminderModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#customerreminder-edit").show();
-        $("#customerreminder-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-
         $("#@Html.FieldIdFor(model => model.AllowRenew)").change(toggleAllowRenew);
-
         toggleAllowRenew();
-
         function toggleAllowRenew() {
             if ($('#@Html.FieldIdFor(model => model.AllowRenew)').is(':checked')) {
                 $('#pnlAllowRenew').show();
@@ -26,47 +13,38 @@
                 $('#pnlAllowRenew').hide();
             }
         }
-
     });
 </script>
 
-
-<div id="customerreminder-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerReminder.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Customers.CustomerReminder.Conditions")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Customers.CustomerReminder.Levels")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Customers.CustomerReminder.History")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabConditions" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabLevels" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabHistory" model="Model" />
-    </div>
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customerreminder-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<admin-tabstrip name="customerreminder-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Conditions")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabConditions" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.Levels")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabLevels" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerReminder.History")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>

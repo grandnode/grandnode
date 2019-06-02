@@ -1,45 +1,22 @@
 ﻿@model SpecificationAttributeModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
-    $(document).ready(function () {
-        $('#specificationattribute-edit').show();
-        $("#specificationattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-
-<div id="specificationattribute-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.Options")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabOptions" model="Model" />
-    </div>
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "specificationattribute-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<admin-tabstrip name="specificationattribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabOptions" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>

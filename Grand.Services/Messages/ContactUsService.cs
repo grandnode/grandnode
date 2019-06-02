@@ -2,6 +2,7 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
@@ -15,14 +16,14 @@ namespace Grand.Services.Messages
     {
 
         private readonly IRepository<ContactUs> _contactusRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
 
         public ContactUsService(
             IRepository<ContactUs> contactusRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._contactusRepository = contactusRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
         /// <summary>
         /// Deletes a contactus item
@@ -36,7 +37,7 @@ namespace Grand.Services.Messages
             await _contactusRepository.DeleteAsync(contactus);
 
             //event notification
-            await _eventPublisher.EntityDeleted(contactus);
+            await _mediator.EntityDeleted(contactus);
 
         }
 
@@ -109,7 +110,7 @@ namespace Grand.Services.Messages
             await _contactusRepository.InsertAsync(contactus);
 
             //event notification
-            await _eventPublisher.EntityInserted(contactus);
+            await _mediator.EntityInserted(contactus);
 
         }
 

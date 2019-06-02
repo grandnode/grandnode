@@ -12,6 +12,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace Grand.Services.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
@@ -85,7 +86,7 @@ namespace Grand.Services.Orders
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
             ShoppingCartSettings shoppingCartSettings,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IPermissionService permissionService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -106,7 +107,7 @@ namespace Grand.Services.Orders
             this._priceFormatter = priceFormatter;
             this._customerService = customerService;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._permissionService = permissionService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
@@ -172,7 +173,7 @@ namespace Grand.Services.Orders
             }
 
             //event notification
-            await _eventPublisher.EntityDeleted(shoppingCartItem);
+            await _mediator.EntityDeleted(shoppingCartItem);
         }
 
 
@@ -431,8 +432,7 @@ namespace Grand.Services.Orders
                                 //combination doesn't exist
                                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                                 {
-                                    //maybe, is it better  to display something like "No such product/combination" message?
-                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.Combination.NotExist"));
                                 }
                             }
                         }
@@ -898,7 +898,7 @@ namespace Grand.Services.Orders
                 warnings.AddRange(await GetReservationProductWarnings(customer, product, shoppingCartItem));
 
             //event notification
-            await _eventPublisher.ShoppingCartItemWarningsAdded(warnings, customer, shoppingCartItem, product);
+            await _mediator.ShoppingCartItemWarningsAdded(warnings, customer, shoppingCartItem, product);
 
             return warnings;
         }
@@ -1033,7 +1033,7 @@ namespace Grand.Services.Orders
             }
 
             //event notification
-            await _eventPublisher.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
+            await _mediator.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
 
             return warnings;
         }
@@ -1244,7 +1244,7 @@ namespace Grand.Services.Orders
                     await _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                     //event notification
-                    await _eventPublisher.EntityUpdated(shoppingCartItem);
+                    await _mediator.EntityUpdated(shoppingCartItem);
                 }
             }
             else
@@ -1307,7 +1307,7 @@ namespace Grand.Services.Orders
 
                     await _customerActionEventService.AddToCart(shoppingCartItem, product, customer);
                     //event notification
-                    await _eventPublisher.EntityInserted(shoppingCartItem);
+                    await _mediator.EntityInserted(shoppingCartItem);
                 }
             }
 
@@ -1397,7 +1397,7 @@ namespace Grand.Services.Orders
                         await _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                         //event notification
-                        await _eventPublisher.EntityUpdated(shoppingCartItem);
+                        await _mediator.EntityUpdated(shoppingCartItem);
                     }
                 }
                 else

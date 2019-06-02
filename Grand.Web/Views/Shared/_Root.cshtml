@@ -56,7 +56,7 @@
     </div>
 </div>
 <script asp-location="Footer">
-    AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');
+    AjaxCart.init('.cart-qty', '.wishlist-qty', '.flyout-cart');
 </script>
 @await Component.InvokeAsync("EuCookieLaw")
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

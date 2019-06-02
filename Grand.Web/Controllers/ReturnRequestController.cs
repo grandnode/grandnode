@@ -119,25 +119,27 @@ namespace Grand.Web.Controllers
             }
 
             string pickupAddressId = form["pickup_address_id"];
-            Address address = new Address();
-            if (!String.IsNullOrEmpty(pickupAddressId))
+            var address = new Address();
+            if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
             {
-                address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == pickupAddressId);
-            }
-            else
-            {
-                var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
-                var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
-                foreach (var error in customAttributeWarnings)
+                if (!string.IsNullOrEmpty(pickupAddressId))
                 {
-                    ModelState.AddModelError("", error);
+                    address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == pickupAddressId);
                 }
-                address = model.NewAddress.ToEntity();
-                model.NewAddressPreselected = true;
-                address.CustomAttributes = customAttributes;
-                address.CreatedOnUtc = DateTime.UtcNow;
+                else
+                {
+                    var customAttributes = await _addressViewModelService.ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = await _addressViewModelService.GetAttributeWarnings(customAttributes);
+                    foreach (var error in customAttributeWarnings)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                    address = model.NewAddress.ToEntity();
+                    model.NewAddressPreselected = true;
+                    address.CustomAttributes = customAttributes;
+                    address.CreatedOnUtc = DateTime.UtcNow;
+                }
             }
-
             if (!ModelState.IsValid && ModelState.ErrorCount > 0)
             {
                 model.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());

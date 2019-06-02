@@ -1,5 +1,5 @@
 ﻿@model CustomerActionModel
-@inject IEventPublisher eventPublisher
+
 <input asp-for="Id" type="hidden" />
 @{
     var validationSummary = Html.ValidationSummary(false);
@@ -10,16 +10,6 @@
 }
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#customeraction-edit").show();
-        $("#customeraction-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-
         $("#@Html.FieldIdFor(model => model.ReactionTypeId)").change(toggleReaction);
         toggleReaction();
 
@@ -66,50 +56,39 @@
                 $('#plnTag').show();
             }
         }
-
-
     });
-
-
-
 </script>
 
-<div id="customeraction-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Customers.CustomerAction.Info")
-        </li>
-        <li tab-index="1">
-            @T("Admin.Customers.CustomerAction.Conditions")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Customers.CustomerAction.Reaction")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Customers.CustomerAction.History")
-        </li>
-    </ul>
-    <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabConditions" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabReaction" model="Model" />
-    </div>
-    <div>
-       <partial name="_CreateOrUpdate.TabHistory" model="Model" />
-    </div>
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customeraction-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<admin-tabstrip name="customeraction-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAction.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAction.Conditions")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabConditions" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAction.Reaction")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabReaction" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerAction.History")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabHistory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+    </items>
+</admin-tabstrip>
+

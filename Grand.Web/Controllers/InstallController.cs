@@ -256,7 +256,7 @@ namespace Grand.Web.Controllers
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
-                    _cacheManager.Clear();
+                    await _cacheManager.Clear();
 
                     System.IO.File.Delete(CommonHelper.MapPath("~/App_Data/Settings.txt"));
 

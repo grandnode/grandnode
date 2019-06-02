@@ -63,7 +63,7 @@ namespace Grand.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = await _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                 () =>
                     _orderReportService
                     .GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)

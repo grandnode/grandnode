@@ -4,6 +4,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Grand.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
         private readonly ICustomerService _customerService;
         private readonly IHistoryService _historyService;
@@ -29,12 +30,12 @@ namespace Grand.Services.Messages
 
         public NewsLetterSubscriptionService(
             IRepository<NewsLetterSubscription> subscriptionRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICustomerService customerService,
             IHistoryService historyService)
         {
             this._subscriptionRepository = subscriptionRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._customerService = customerService;
             this._historyService = historyService;
         }
@@ -55,11 +56,11 @@ namespace Grand.Services.Messages
             {
                 if (isSubscribe)
                 {
-                    await _eventPublisher.PublishNewsletterSubscribe(email);
+                    await _mediator.PublishNewsletterSubscribe(email);
                 }
                 else
                 {
-                    await _eventPublisher.PublishNewsletterUnsubscribe(email);
+                    await _mediator.PublishNewsletterUnsubscribe(email);
                 }
             }
         }
@@ -95,7 +96,7 @@ namespace Grand.Services.Messages
             await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            await _eventPublisher.EntityInserted(newsLetterSubscription);
+            await _mediator.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace Grand.Services.Messages
             await newsLetterSubscription.SaveHistory<NewsLetterSubscription>(_historyService);
 
             //Publish event
-            await _eventPublisher.EntityUpdated(newsLetterSubscription);
+            await _mediator.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace Grand.Services.Messages
             await PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
 
             //event notification
-            await _eventPublisher.EntityDeleted(newsLetterSubscription);
+            await _mediator.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
             routeBuilder.MapRoute("Plugin.ExternalAuth.Facebook.SignInFacebook",
-                 "signin-failed",
+                 "fb-signin-failed",
                  new { controller = "FacebookAuthentication", action = "SignInFailed" }
             );
         }

@@ -13,6 +13,7 @@ using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -42,7 +43,7 @@ namespace Grand.Services.Customers.Tests
         private IRewardPointsService _rewardPointsService;
         private CustomerSettings _customerSettings;
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
@@ -128,8 +129,8 @@ namespace Grand.Services.Customers.Tests
 
             //trying to recreate
 
-            var eventPublisher = new Mock<IEventPublisher>();
-            eventPublisher.Setup(x => x.Publish(new object()));
+            var eventPublisher = new Mock<IMediator>();
+            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _storeService = new Mock<IStoreService>().Object;
@@ -159,8 +160,8 @@ namespace Grand.Services.Customers.Tests
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
             _customerService = new CustomerService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _customerRepo, _customerRoleRepo, _customerProductRepo, _customerProductPriceRepo,
-                _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, _orderRepo, _forumPostRepo, _forumTopicRepo, null, null, _genericAttributeService, null,
-                _eventPublisher, _serviceProvider, _customerSettings, _commonSettings);
+                _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, _orderRepo, _forumPostRepo, _forumTopicRepo, null, null, _genericAttributeService,
+                _eventPublisher, _serviceProvider);
 
             _customerRegistrationService = new CustomerRegistrationService(
                 _customerService,

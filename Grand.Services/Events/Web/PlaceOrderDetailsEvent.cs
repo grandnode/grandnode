@@ -1,8 +1,9 @@
 ﻿using Grand.Services.Orders;
+using MediatR;
 
 namespace Grand.Services.Events.Web
 {
-    public class PlaceOrderDetailsEvent<R, O> where R : PlaceOrderResult where O : PlaceOrderContainter
+    public class PlaceOrderDetailsEvent<R, O> : INotification where R : PlaceOrderResult where O : PlaceOrderContainter
     {
         private readonly R _result;
         private readonly O _containter;

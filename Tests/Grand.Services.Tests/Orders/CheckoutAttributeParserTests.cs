@@ -11,6 +11,7 @@ using Grand.Services.Events;
 using Grand.Services.Media;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
@@ -23,7 +24,7 @@ namespace Grand.Services.Orders.Tests
     [TestClass()]
     public class CheckoutAttributeParserTests {
         private IRepository<CheckoutAttribute> _checkoutAttributeRepo;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IStoreMappingService _storeMappingService;
         private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
@@ -125,9 +126,9 @@ namespace Grand.Services.Orders.Tests
 
 
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
 

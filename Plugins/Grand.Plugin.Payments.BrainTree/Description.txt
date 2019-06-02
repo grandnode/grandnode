@@ -1,0 +1,9 @@
+﻿Group: Payment methods
+FriendlyName: BrainTree
+SystemName: Payments.BrainTree
+Version: 1.01
+SupportedVersions: 4.50
+Author: grandnode team, nopCommerce team
+DisplayOrder: 1
+FileName: Grand.Plugin.Payments.BrainTree.dll
+Description: This plugin allows paying with Credit Card

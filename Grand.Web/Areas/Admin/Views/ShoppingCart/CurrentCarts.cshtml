@@ -1,6 +1,5 @@
 ﻿@inject AdminAreaSettings adminAreaSettings
 @model ShoppingCartModel
-@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.CurrentCartWishlists").Text;
@@ -10,48 +9,32 @@
     <div class="col-md-12">
         <div class="x_panel light form-fit">
             <div class="x_title">
-                <div class="caption">
+                <div class="caption level-caption">
                     <i class="fa fa-cart-plus"></i>
                     @T("Admin.CurrentCartWishlists")
                 </div>
                 <vc:admin-widget widget-zone="current_shopping_cart_list_buttons" additional-data="null" />
             </div>
             <div class="x_content form">
-                <div id="shoppingcarts-list" style="display:none">
-                    <ul>
-                        <li tab-index="0">
-                            @T("Admin.CurrentCarts")
-                        </li>
-                        <li tab-index="1">
-                            @T("Admin.CurrentWishlists")
-                        </li>
-                    </ul>
-                    <div>
-                       <partial name="_CurrentCarts.TabCurrentCarts" model="Model" />
-                    </div>
-                    <div>
-                       <partial name="_CurrentCarts.TabCurrentWishlists" model="Model" />
-                    </div>
-                </div>
+                <admin-tabstrip name="shoppingcarts-list">
+                    <items>
+                        <tabstrip-item text="@T("Admin.CurrentCarts")" tab-index="0">
+                            <content>
+                                <div>
+                                    <partial name="_CurrentCarts.TabCurrentCarts" model="Model" />
+                                </div>
+                            </content>
+                        </tabstrip-item>
+                        <tabstrip-item text="@T("Admin.CurrentWishlists")" tab-index="1">
+                            <content>
+                                <div>
+                                    <partial name="_CurrentCarts.TabCurrentWishlists" model="Model" />
+                                </div>
+                            </content>
+                        </tabstrip-item>
+                    </items>
+                </admin-tabstrip>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        var tabPos = 'top';
-        if (window.devicePixelRatio == 2)
-            tabPos = 'top';
-
-        $('#shoppingcarts-list').show();
-        $("#shoppingcarts-list").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            tabPosition: tabPos,
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>

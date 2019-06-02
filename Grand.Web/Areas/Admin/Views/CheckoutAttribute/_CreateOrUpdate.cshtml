@@ -1,72 +1,47 @@
 ﻿@model CheckoutAttributeModel
-@inject IEventPublisher eventPublisher
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<script>
-    $(document).ready(function () {
-        $("#checkoutattribute-edit").show();
-        $("#checkoutattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-
-<div id="checkoutattribute-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
-        </li>
-        <li tab-index="1" id="tab-checkoutAttributesValues">
-            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Catalog.Attributes.CheckoutAttributes.Acl")
-        </li>
+<admin-tabstrip name="checkoutattribute-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")" tab-index="1" id="tab-checkoutAttributesValues">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabValues" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Acl")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (Model.ConditionAllowed)
-        {
-            <li tab-index="4">
-                @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")
-            </li>
-        }
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.TabValues" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabStores" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabAcl" model="Model" />
-    </div>
-    @if (Model.ConditionAllowed)
-    {
-        <div>
-            <partial name="_CreateOrUpdate.TabCondition" model="Model" />
-        </div>
-    }
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+        { 
+            <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" tab-index="4">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabCondition" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+         }
+    </items>
+</admin-tabstrip>

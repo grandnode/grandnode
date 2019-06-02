@@ -1021,12 +1021,11 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("Company", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company));
 
                 xmlWriter.WriteElementString("CountryId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId));
+                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId).ToString());
                 xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress));
                 xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2));
                 xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode));
                 xmlWriter.WriteElementString("City", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City));
-                xmlWriter.WriteElementString("CountryId", null, customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.CountryId).ToString());
-                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.StateProvinceId).ToString());
                 xmlWriter.WriteElementString("Phone", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone));
                 xmlWriter.WriteElementString("Fax", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax));
                 xmlWriter.WriteElementString("VatNumber", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber));
@@ -1074,6 +1073,8 @@ namespace Grand.Services.ExportImport
                 sb.Append(subscription.CreatedOnUtc);
                 sb.Append(separator);
                 sb.Append(subscription.StoreId);
+                sb.Append(separator);
+                sb.Append(string.Join(';', subscription.Categories));
                 sb.Append(Environment.NewLine);  //new line
             }
             return sb.ToString();

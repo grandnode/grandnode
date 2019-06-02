@@ -35,6 +35,9 @@ namespace Grand.Plugin.Widgets.Slider.Models
         [GrandResourceDisplayName("Plugins.Widgets.Slider.Published")]
         public bool Published { get; set; }
 
+        [GrandResourceDisplayName("Plugins.Widgets.Slider.FullWidth")]
+        public bool FullWidth { get; set; }
+
         [GrandResourceDisplayName("Plugins.Widgets.Slider.SliderType")]
         public int SliderTypeId { get; set; }
 

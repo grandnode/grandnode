@@ -1,162 +1,154 @@
 ﻿@model ProductModel
-@inject IEventPublisher eventPublisher
+
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="Ticks" type="hidden" />
-<script>
-    $('body').addClass('page-sidebar-closed');
-    $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
-    var tabPos = 'left';
-    if (window.devicePixelRatio == 2)
-        tabPos = 'top';
-    $(document).ready(function () {
-        $('#product-edit').show();
-        $("#product-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            tabPosition: tabPos,
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
-<div id="product-edit" style="display:none">
-    <ul>
-        <li tab-index="0">
-            @T("Admin.Catalog.Products.Info")
-        </li>
-        <li tab-index="1" id="tab-price-product">
-            @T("Admin.Catalog.Products.Prices")
-        </li>
-        <li tab-index="2">
-            @T("Admin.Catalog.Products.Additional")
-        </li>
-        <li tab-index="3">
-            @T("Admin.Common.SEO")
-        </li>
-        <li tab-index="4">
-            @T("Admin.Catalog.Products.Pictures")
-        </li>
-        <li tab-index="5">
-            @T("Admin.Catalog.Products.Mappings")
-        </li>
-        <li tab-index="6" id="tab-inventory-product">
-            @T("Admin.Catalog.Products.Inventory")
-        </li>
-        <li tab-index="7">
-            @T("Admin.Catalog.Products.SpecificationAttributes")
-        </li>
-        <li tab-index="8" id="tab-attributes-product">
-            @T("Admin.Catalog.Products.ProductAttributes")
-        </li>
-        <li tab-index="9" id="tab-bundle-products">
-            @T("Admin.Catalog.Products.BundleProducts")
-        </li>
-        <li tab-index="10" id="tab-calendar">
-            @T("Admin.Catalog.Products.Calendar")
-        </li>
-        <li tab-index="11" id="tab-bids">
-            @T("Admin.Catalog.Products.Bids")
-        </li>
-        <li tab-index="12">
-            @T("Admin.Catalog.Products.AclStores")
-        </li>
-        <li tab-index="13">
-            @T("Admin.Catalog.Products.RelatedProducts")
-        </li>
-        <li tab-index="14">
-            @T("Admin.Catalog.Products.CrossSells")
-        </li>
-        <li tab-index="15" id="tab-associated-products">
-            @T("Admin.Catalog.Products.AssociatedProducts")
-        </li>
+<admin-tabstrip name="product-edit" SetTabPos="true">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Info" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Prices")" tab-index="1" id="tab-price-product">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Prices" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Additional")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Additional" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.SEO")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.SEO" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Pictures")" tab-index="4">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Pictures" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Mappings")" tab-index="5">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Categories" model="Model" />
+                    <partial name="_CreateOrUpdate.Manufacturers" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Inventory")" tab-index="6" id="tab-inventory-product">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Inventory" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.SpecificationAttributes")" tab-index="7">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.SpecificationAttributes" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.ProductAttributes")" tab-index="8" id="tab-attributes-product">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.ProductAttributes" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.BundleProducts")" tab-index="9" id="tab-bundle-products">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.BundleProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Calendar")" tab-index="10" id="tab-calendar">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Calendar" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.Bids")" tab-index="11" id="tab-bids">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Bids" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.AclStores")" tab-index="12">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.RelatedProducts")" tab-index="13">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.RelatedProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.SimilarProducts")" tab-index="14">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.SimilarProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.CrossSells")" tab-index="15">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.CrossSells" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Products.AssociatedProducts")" tab-index="16" id="tab-associated-products">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.AssociatedProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li tab-index="16">
-                @T("Admin.Catalog.Products.ActivityLog")
-            </li>
-            <li tab-index="17" id="tab-purchased-product">
-                @T("Admin.Catalog.Products.PurchasedWithOrders")
-            </li>
-            <li tab-index="18">
-                @T("Admin.Catalog.Products.Reviews")
-            </li>
+            <tabstrip-item text="@T("Admin.Catalog.Products.ActivityLog")" tab-index="17">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.Activitylog" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Catalog.Products.PurchasedWithOrders")" tab-index="18" id="tab-purchased-product">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.PurchasedWithOrders" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="@T("Admin.Catalog.Products.Reviews")" tab-index="19">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.Reviews" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
         }
-
-    </ul>
-    <div>
-        <partial name="_CreateOrUpdate.Info" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Prices" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Additional" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.SEO" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Pictures" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Categories" model="Model" />
-        <partial name="_CreateOrUpdate.Manufacturers" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Inventory" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.SpecificationAttributes" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.ProductAttributes" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.BundleProducts" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Calendar" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.Bids" model="Model" />
-    </div>
-    <div>
-        <partial name="_TabAcl" model="Model" />
-        <partial name="_TabStores" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.RelatedProducts" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.CrossSells" model="Model" />
-    </div>
-    <div>
-        <partial name="_CreateOrUpdate.AssociatedProducts" model="Model" />
-    </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div>
-           <partial name="_CreateOrUpdate.Activitylog" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.PurchasedWithOrders" model="Model" />
-        </div>
-        <div>
-            <partial name="_CreateOrUpdate.Reviews" model="Model" />
-        </div>
-    }
-</div>
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    await eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    </items>
+</admin-tabstrip>

@@ -3,6 +3,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
@@ -19,7 +20,7 @@ namespace Grand.Services.Directory.Tests
         private IRepository<MeasureWeight> _measureWeightRepository;
         private IRepository<MeasureUnit> _measureUnitRepository;
         private MeasureSettings _measureSettings;
-        private IEventPublisher _eventPublisher;
+        private IMediator _eventPublisher;
         private IMeasureService _measureService;
         private IServiceProvider _serviceProvider;
 
@@ -149,9 +150,9 @@ namespace Grand.Services.Directory.Tests
             _measureSettings.BaseDimensionId = _measureDimensionInches.Id; //inch(es) because all other dimensions are in relation to  inches
             _measureSettings.BaseWeightId = _measureWeightPounds.Id; //lb(s) because all other weights are in relation to pounds
 
-            var tempEventPublisher = new Mock<IEventPublisher>();
+            var tempEventPublisher = new Mock<IMediator>();
             {
-                tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
                 _eventPublisher = tempEventPublisher.Object;
             }
             _serviceProvider = new Mock<IServiceProvider>().Object;

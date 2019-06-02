@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Media;
 using Grand.Framework.Security;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -18,16 +19,21 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;
+        private readonly MediaSettings _mediaSettings;
 
-        public JbimagesController(IPermissionService permissionService)
+        public JbimagesController(IPermissionService permissionService, MediaSettings mediaSettings)
         {
             this._permissionService = permissionService;
+            this._mediaSettings = mediaSettings;
         }
 
         [NonAction]
         protected virtual IList<string> GetAllowedFileTypes()
         {
-            return new List<string> {".gif", ".jpg", ".jpeg", ".png", ".bmp"};
+            if (string.IsNullOrEmpty(_mediaSettings.AllowedFileTypes))
+                return new List<string> { ".gif", ".jpg", ".jpeg", ".png", ".bmp", ".webp" };
+            else
+                return _mediaSettings.AllowedFileTypes.Split(',');
         }
 
         [HttpPost]

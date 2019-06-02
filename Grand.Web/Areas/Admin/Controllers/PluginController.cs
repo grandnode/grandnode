@@ -26,6 +26,7 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Plugins;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -51,7 +52,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreService _storeService;
         private readonly IThemeProvider _themeProvider;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -70,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IStoreService storeService,
             IThemeProvider themeProvider,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICacheManager cacheManager,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
@@ -86,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._storeService = storeService;
             this._themeProvider = themeProvider;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._cacheManager = cacheManager;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
@@ -363,7 +364,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _customerActivityService.InsertActivity("UploadNewPlugin", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
 
-                await _eventPublisher.Publish(new PluginUploadedEvent(descriptor));
+                await _mediator.Publish(new PluginUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Plugins.Uploaded");
                 SuccessNotification(message);
@@ -414,7 +415,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _customerActivityService.InsertActivity("UploadNewTheme", "",
                            string.Format(_localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
 
-                await _eventPublisher.Publish(new ThemeUploadedEvent(descriptor));
+                await _mediator.Publish(new ThemeUploadedEvent(descriptor));
 
                 var message = _localizationService.GetResource("Admin.Configuration.Themes.Uploaded");
                 SuccessNotification(message);
@@ -691,7 +692,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-                _cacheManager.Clear();
+                await _cacheManager.Clear();
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;

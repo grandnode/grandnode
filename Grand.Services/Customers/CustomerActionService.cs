@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -19,7 +20,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -29,13 +30,13 @@ namespace Grand.Services.Customers
         public CustomerActionService(IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             ICacheManager cacheManager)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
             this._customerActionHistoryRepository = customerActionHistoryRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._cacheManager = cacheManager;
         }
 
@@ -76,7 +77,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.InsertAsync(customerAction);
 
             //event notification
-            await _eventPublisher.EntityInserted(customerAction);
+            await _mediator.EntityInserted(customerAction);
 
         }
 
@@ -92,7 +93,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.DeleteAsync(customerAction);
 
             //event notification
-            await _eventPublisher.EntityDeleted(customerAction);
+            await _mediator.EntityDeleted(customerAction);
 
         }
 
@@ -108,7 +109,7 @@ namespace Grand.Services.Customers
             await _customerActionRepository.UpdateAsync(customerAction);
 
             //event notification
-            await _eventPublisher.EntityUpdated(customerAction);
+            await _mediator.EntityUpdated(customerAction);
         }
 
         #endregion
@@ -142,9 +143,9 @@ namespace Grand.Services.Customers
             await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
-            _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
+            await _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
             //event notification
-            await _eventPublisher.EntityUpdated(customerActionType);
+            await _mediator.EntityUpdated(customerActionType);
         }
 
         #endregion

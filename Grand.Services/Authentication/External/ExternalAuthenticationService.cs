@@ -10,6 +10,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -34,7 +35,7 @@ namespace Grand.Services.Authentication.External
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
@@ -56,7 +57,7 @@ namespace Grand.Services.Authentication.External
             ICustomerActivityService customerActivityService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
-            IEventPublisher eventPublisher,
+            IMediator mediator,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
@@ -74,7 +75,7 @@ namespace Grand.Services.Authentication.External
             this._customerActivityService = customerActivityService;
             this._customerRegistrationService = customerRegistrationService;
             this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
             this._genericAttributeService = genericAttributeService;
             this._httpContextAccessor = httpContextAccessor;
             this._localizationService = localizationService;
@@ -176,10 +177,10 @@ namespace Grand.Services.Authentication.External
                 return Error(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
-            await _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
+            await _mediator.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
 
             //raise vustomer registered event
-            await _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
+            await _mediator.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
@@ -230,7 +231,7 @@ namespace Grand.Services.Authentication.External
             await _authenticationService.SignIn(user, false);
 
             //raise event       
-            await _eventPublisher.Publish(new CustomerLoggedinEvent(user));
+            await _mediator.Publish(new CustomerLoggedinEvent(user));
 
             // activity log
             await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);

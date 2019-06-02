@@ -30,12 +30,13 @@
     </nav>
     <div class="container">
         <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
-            <div class="header-logo pr-0 pl-0 d-lg-block d-none">
+            <div class="header-logo pr-0 pl-0 d-lg-inline-flex align-items-center d-none">
                 @await Component.InvokeAsync("Logo")
             </div>
-            <div class="col-lg-6 col formSearch ml-auto pr-0 d-none d-lg-block">
-                @await Component.InvokeAsync("SearchBox")
-            </div>
+            <div class="col formSearch ml-auto pr-0 d-none d-lg-inline-flex align-items-end">
+                @await Component.InvokeAsync("SearchBox")            
+            </div>    
+            @await Component.InvokeAsync("ShoppingCartLinks")
         </div>
     </div>
 </header>

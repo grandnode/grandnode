@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -105,7 +106,7 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
 
@@ -123,12 +124,12 @@ namespace Grand.Services.Catalog
         public ProductAttributeService(ICacheManager cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,            
             IRepository<Product> productRepository,
-            IEventPublisher eventPublisher)
+            IMediator mediator)
         {
             this._cacheManager = cacheManager;
             this._productAttributeRepository = productAttributeRepository;
             this._productRepository = productRepository;
-            this._eventPublisher = eventPublisher;
+            this._mediator = mediator;
         }
 
         #endregion
@@ -152,14 +153,14 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.DeleteAsync(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityDeleted(productAttribute);
+            await _mediator.EntityDeleted(productAttribute);
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
-            return await _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, () =>
             {
                 var query = from pa in _productAttributeRepository.Table
                             orderby pa.Name
@@ -188,7 +189,7 @@ namespace Grand.Services.Catalog
         public virtual Task<ProductAttribute> GetProductAttributeById(string productAttributeId)
         {
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
-            return _cacheManager.Get(key, () => _productAttributeRepository.GetByIdAsync(productAttributeId));
+            return _cacheManager.GetAsync(key, () => _productAttributeRepository.GetByIdAsync(productAttributeId));
         }
 
         /// <summary>
@@ -203,13 +204,13 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.InsertAsync(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityInserted(productAttribute);
+            await _mediator.EntityInserted(productAttribute);
         }
 
         /// <summary>
@@ -224,13 +225,13 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.UpdateAsync(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
-            await _eventPublisher.EntityUpdated(productAttribute);
+            await _mediator.EntityUpdated(productAttribute);
         }
 
         #endregion
@@ -251,10 +252,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productAttributeMapping);
+            await _mediator.EntityDeleted(productAttributeMapping);
         }
 
         /// <summary>
@@ -271,10 +272,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productAttributeMapping);
+            await _mediator.EntityInserted(productAttributeMapping);
         }
 
         /// <summary>
@@ -305,10 +306,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productAttributeMapping);
+            await _mediator.EntityUpdated(productAttributeMapping);
         }
 
         #endregion
@@ -344,10 +345,10 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(productAttributeValue);
+            await _mediator.EntityDeleted(productAttributeValue);
         }
 
 
@@ -370,10 +371,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(productAttributeValue);
+            await _mediator.EntityInserted(productAttributeValue);
         }
 
         /// <summary>
@@ -421,10 +422,10 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(productAttributeValue);
+            await _mediator.EntityUpdated(productAttributeValue);
         }
 
         #endregion
@@ -466,10 +467,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            await _eventPublisher.EntityDeleted(combination);
+            await _mediator.EntityDeleted(combination);
         }
 
         /// <summary>
@@ -486,10 +487,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            await _eventPublisher.EntityInserted(combination);
+            await _mediator.EntityInserted(combination);
         }
 
         /// <summary>
@@ -520,10 +521,10 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
-            await _eventPublisher.EntityUpdated(combination);
+            await _mediator.EntityUpdated(combination);
         }
 
         #endregion

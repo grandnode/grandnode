@@ -1,9 +1,11 @@
+using MediatR;
+
 namespace Grand.Core.Domain.Shipping
 {
     /// <summary>
     /// Shipment sent event
     /// </summary>
-    public class ShipmentSentEvent
+    public class ShipmentSentEvent : INotification
     {
         public ShipmentSentEvent(Shipment shipment)
         {
@@ -19,7 +21,7 @@ namespace Grand.Core.Domain.Shipping
     /// <summary>
     /// Shipment delivered event
     /// </summary>
-    public class ShipmentDeliveredEvent
+    public class ShipmentDeliveredEvent : INotification
     {
         public ShipmentDeliveredEvent(Shipment shipment)
         {

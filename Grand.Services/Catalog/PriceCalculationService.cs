@@ -84,11 +84,11 @@ namespace Grand.Services.Catalog
         {
             public ProductPriceForCaching()
             {
-                AppliedDiscountIds = new List<string>();
+                AppliedDiscounts = new List<AppliedDiscount>();
             }
             public decimal Price { get; set; }
             public decimal AppliedDiscountAmount { get; set; }
-            public List<string> AppliedDiscountIds { get; set; }
+            public IList<AppliedDiscount> AppliedDiscounts { get; set; }
         }
         #endregion
 
@@ -508,7 +508,7 @@ namespace Grand.Services.Catalog
 
                     if (tmpAppliedDiscounts != null)
                     {
-                        result.AppliedDiscountIds = tmpAppliedDiscounts.Select(x => x.DiscountId).ToList();
+                        result.AppliedDiscounts = tmpAppliedDiscounts.ToList();
                         result.AppliedDiscountAmount = tmpDiscountAmount;
                     }
                 }
@@ -532,12 +532,7 @@ namespace Grand.Services.Catalog
 
             if (includeDiscounts)
             {
-                foreach (var appliedDiscountId in cachedPrice.AppliedDiscountIds)
-                {
-                    var appliedDiscount = await _discountService.GetDiscountById(appliedDiscountId);
-                    if (appliedDiscount != null)
-                        appliedDiscounts.Add(new AppliedDiscount() { DiscountId = appliedDiscount.Id, IsCumulative = appliedDiscount.IsCumulative });
-                }
+                appliedDiscounts = cachedPrice.AppliedDiscounts.ToList();
                 if (appliedDiscounts.Any())
                 {
                     discountAmount = cachedPrice.AppliedDiscountAmount;

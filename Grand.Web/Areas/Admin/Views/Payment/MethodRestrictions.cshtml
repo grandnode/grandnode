@@ -1,5 +1,5 @@
 ﻿@model PaymentMethodRestrictionModel
-@inject IEventPublisher eventPublisher
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
@@ -20,54 +20,31 @@
                 </div>
                 <div class="x_content form">
                     <vc:admin-widget widget-zone="payment_method_restrictions_top" additional-data="Model" />
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#paymentrestriction-edit').show();
-                            $("#paymentrestriction-edit").kendoTabStrip({
-                                animation: {
-                                    open: {
-                                        effects: "fadeIn"
-                                    }
-                                },
-                                select: tabstrip_on_tab_select
-                            });
-                        });
-                    </script>
-
-                    <div id="paymentrestriction-edit" style="display:none">
-                        <ul>
-                            <li tab-index="0">
-                                @T("Admin.Configuration.Payment.MethodRestrictions.Country")
-                            </li>
-                            <li tab-index="1">
-                                @T("Admin.Configuration.Payment.MethodRestrictions.Role")
-                            </li>
-                            <li tab-index="2">
-                                @T("Admin.Configuration.Payment.MethodRestrictions.Shipping")
-                            </li>
-                        </ul>
-                        <div>
-                            <partial name="MethodRestrictions.TabCountry" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="MethodRestrictions.TabRole" model="Model" />
-                        </div>
-                        <div>
-                            <partial name="MethodRestrictions.TabShipping" model="Model" />
-                        </div>
-                    </div>
-                    @{
-                        //custom tabs
-                        var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
-                        await eventPublisher.Publish(eventMessage);
-                        foreach (var eventBlock in eventMessage.BlocksToRender)
-                        {
-                            @eventBlock
-                        }
-                    }
-
-                    @*save selected tab index*@
-                    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+                    <admin-tabstrip name="paymentrestriction-edit">
+                        <items>
+                            <tabstrip-item text="@T("Admin.Configuration.Payment.MethodRestrictions.Country")" tab-index="0">
+                                <content>
+                                    <div>
+                                        <partial name="MethodRestrictions.TabCountry" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Payment.MethodRestrictions.Role")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="MethodRestrictions.TabRole" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                            <tabstrip-item text="@T("Admin.Configuration.Payment.MethodRestrictions.Shipping")" tab-index="3">
+                                <content>
+                                    <div>
+                                        <partial name="MethodRestrictions.TabShipping" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+                        </items>
+                    </admin-tabstrip>
                     <vc:admin-widget widget-zone="payment_method_restrictions_bottom" additional-data="Model" />
                 </div>
             </div>
