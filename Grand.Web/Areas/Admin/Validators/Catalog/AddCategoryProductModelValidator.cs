@@ -29,7 +29,7 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
                         }
                     return true;
 
-                }).WithMessage("No permisions");
+                }).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
             }
         }
     }

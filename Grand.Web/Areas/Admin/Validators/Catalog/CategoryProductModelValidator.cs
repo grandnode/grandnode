@@ -21,7 +21,7 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
                     if (!category.LimitedToStores || (category.Stores.Where(z => z != workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
                         return false;
                     return true;
-                }).WithMessage("No permisions");
+                }).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
             }
         }
     }

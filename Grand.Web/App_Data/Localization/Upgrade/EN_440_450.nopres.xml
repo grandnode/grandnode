@@ -531,4 +531,7 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.None">
     <Value>Not a staff</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Permisions">
+    <Value>You can't edit this category, because it can be used in many stores.</Value>
+  </LocaleResource>
 </Language>

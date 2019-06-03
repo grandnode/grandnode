@@ -2436,6 +2436,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Manage">
     <Value>Manage Categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Permisions">
+    <Value>You can't edit this category, because it can be used in many stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products">
     <Value>Products</Value>
   </LocaleResource>

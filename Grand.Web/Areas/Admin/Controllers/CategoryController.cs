@@ -150,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentCustomer.IsStaff())
             {
                 if (!category.LimitedToStores || (category.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
-                    WarningNotification("You can't edit this category, because it can be used in many stores");
+                    WarningNotification(_localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
             }
 
             var model = category.ToModel();
