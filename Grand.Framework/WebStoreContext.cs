@@ -48,11 +48,6 @@ namespace Grand.Framework
             {
                 return _cachedStore;
             }
-            set
-            {
-                SetStoreCookie(value.Id);
-                _cachedStore = value;
-            }
 
         }
 
@@ -95,13 +90,13 @@ namespace Grand.Framework
         /// <summary>
         /// Set store cookie
         /// </summary>
-        /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual void SetStoreCookie(string storeId)
+        /// <param name="storeId">Store ident</param>
+        public virtual async Task SetStoreCookie(string storeId)
         {
             if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
                 return;
 
-            var store = _storeService.GetStoreById(storeId);
+            var store = await _storeService.GetStoreById(storeId);
             if (store == null)
                 return;
 

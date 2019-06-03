@@ -345,7 +345,7 @@ namespace Grand.Web.Services
                 var storeService = _serviceProvider.GetRequiredService<IStoreService>();
                 var store = await storeService.GetStoreById(storeid);
                 if (store != null)
-                    _storeContext.CurrentStore = store;
+                    await _storeContext.SetStoreCookie(storeid);
             }
         }
 
