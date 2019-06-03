@@ -2682,6 +2682,9 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Permisions">
+    <Value>You can't edit this manufacturer, because it can be used in many stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products">
     <Value>Products</Value>
   </LocaleResource>

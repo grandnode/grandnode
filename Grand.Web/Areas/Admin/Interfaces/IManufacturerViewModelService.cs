@@ -12,7 +12,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<Manufacturer> InsertManufacturerModel(ManufacturerModel model);
         Task<Manufacturer> UpdateManufacturerModel(Manufacturer manufacturer, ManufacturerModel model);
         Task DeleteManufacturer(Manufacturer manufacturer);
-        Task<ManufacturerModel.AddManufacturerProductModel> PrepareAddManufacturerProductModel();
+        Task<ManufacturerModel.AddManufacturerProductModel> PrepareAddManufacturerProductModel(string storeId);
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ManufacturerModel.AddManufacturerProductModel model, int pageIndex, int pageSize);
         Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize);
         Task ProductUpdate(ManufacturerModel.ManufacturerProductModel model);

@@ -22,6 +22,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -31,6 +32,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
         private readonly IManufacturerViewModelService _manufacturerViewModelService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
         private readonly IStoreService _storeService;
         private readonly ILanguageService _languageService;
@@ -44,6 +46,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ManufacturerController(
             IManufacturerViewModelService manufacturerViewModelService,
             IManufacturerService manufacturerService,
+            IWorkContext workContext,
             ICustomerService customerService,
             IStoreService storeService,
             ILanguageService languageService,
@@ -51,14 +54,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IExportManager exportManager,
             IImportManager importManager)
         {
-            this._manufacturerViewModelService = manufacturerViewModelService;
-            this._manufacturerService = manufacturerService;
-            this._customerService = customerService;
-            this._storeService = storeService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
+            _manufacturerViewModelService = manufacturerViewModelService;
+            _manufacturerService = manufacturerService;
+            _workContext = workContext;
+            _customerService = customerService;
+            _storeService = storeService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _exportManager = exportManager;
+            _importManager = importManager;
         }
 
         #endregion
@@ -69,9 +73,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> List()
         {
+            var storeId = _workContext.CurrentCustomer.StaffStoreId;
             var model = new ManufacturerListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             return View(model);
@@ -80,6 +85,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, ManufacturerListModel model)
         {
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
             var manufacturers = await _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
                 model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -107,7 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, _storeService, false);
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             //default values
             model.PageSize = catalogSettings.DefaultManufacturerPageSize;
             model.PageSizeOptions = catalogSettings.DefaultManufacturerPageSizeOptions;
@@ -122,6 +131,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 var manufacturer = await _manufacturerViewModelService.InsertManufacturerModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = manufacturer.Id }) : RedirectToAction("List");
@@ -135,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, _storeService, true);
+            await model.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -146,6 +161,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                    WarningNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Permisions"));
+            }
 
             var model = manufacturer.ToModel();
             //locales
@@ -165,7 +186,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(manufacturer, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(manufacturer, _storeService, false);
+            await model.PrepareStoresMappingModel(manufacturer, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -177,6 +198,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -202,7 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(manufacturer, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(manufacturer, _storeService, true);
+            await model.PrepareStoresMappingModel(manufacturer, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -214,6 +241,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (manufacturer == null)
                 //No manufacturer found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -234,7 +267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             try
             {
-                var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true);
+                var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true, storeId: _workContext.CurrentCustomer.StaffStoreId);
                 var xml = await _exportManager.ExportManufacturersToXml(manufacturers);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "manufacturers.xml");
             }
@@ -250,7 +283,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             try
             {
-                var bytes = _exportManager.ExportManufacturersToXlsx(await _manufacturerService.GetAllManufacturers(showHidden: true));
+                var bytes = _exportManager.ExportManufacturersToXlsx(await _manufacturerService.GetAllManufacturers(showHidden: true, storeId: _workContext.CurrentCustomer.StaffStoreId));
                 return File(bytes, "text/xls", "manufacturers.xlsx");
             }
             catch (Exception exc)
@@ -263,9 +296,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
         {
-            //a vendor cannot import manufacturers
-            if (workContext.CurrentVendor != null)
+            //a vendor and staff cannot import manufacturers
+            if (workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
+
             try
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
@@ -315,11 +349,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductDelete(string id, string productId)
+        public async Task<IActionResult> ProductDelete(ManufacturerModel.ManufacturerProductModel model)
         {
             if (ModelState.IsValid)
             {
-                await _manufacturerViewModelService.ProductDelete(id, productId);
+                await _manufacturerViewModelService.ProductDelete(model.Id, model.ProductId);
                 return new NullJsonResult();
             }
 
@@ -328,13 +362,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ProductAddPopup(string manufacturerId)
         {
-            var model = await _manufacturerViewModelService.PrepareAddManufacturerProductModel();
+            var model = await _manufacturerViewModelService.PrepareAddManufacturerProductModel(_workContext.CurrentCustomer.StaffStoreId);
+            model.ManufacturerId = manufacturerId;
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
             var products = await _manufacturerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -349,12 +388,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(ManufacturerModel.AddManufacturerProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _manufacturerViewModelService.InsertManufacturerProductModel(model);
+                if (model.SelectedProductIds != null)
+                {
+                    await _manufacturerViewModelService.InsertManufacturerProductModel(model);
+                }
+                ViewBag.RefreshPage = true;
             }
+            else
+                ErrorNotification(ModelState);
 
-            ViewBag.RefreshPage = true;
             return View(model);
         }
         #endregion
