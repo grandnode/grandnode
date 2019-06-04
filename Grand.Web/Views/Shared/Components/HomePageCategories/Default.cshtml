@@ -1,9 +1,10 @@
 ﻿@model IList<CategoryModel>
-<div class="categoryGrid">
+@inject DisplayOrderHomePage order
+<div class="categoryGrid order-@order.HomePageCategories">
     <div class="flex-grid row">
         @foreach (var item in Model)
         {
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-2">
+            <div class="col-xl-@order.Pc_Xl col-lg-@order.Pc_Lg col-md-@order.Pc_Md col-sm-@order.Pc_Sm col-@order.Pc_Col mb-2">
                 <div class="card pb-0">
                     <div class="list-picture">
                         <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">

@@ -1,10 +1,10 @@
 ﻿@model IList<ManufacturerModel>
-
-<div class="manufacturerGrid">
+@inject DisplayOrderHomePage order
+<div class="manufacturerGrid order-@order.HomePageManufacturers">
     <div class="flex-grid row">
         @foreach (var item in Model)
         {
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-2">
+            <div class="col-xl-@order.Pm_Xl col-lg-@order.Pm_Lg col-md-@order.Pm_Md col-sm-@order.Pm_Sm col-@order.Pm_Col  mb-2">
                 <div class="card pb-0">
                     <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                         <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
