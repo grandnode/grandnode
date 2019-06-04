@@ -132,7 +132,7 @@
                             </h3>
                             <div class="card-body">
                                 <div class="row mt-3">
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <label for="MongoDBServerName">
                                             @ILS.GetResource("MongoDBServerName"):
                                         </label>
@@ -143,6 +143,12 @@
                                             @ILS.GetResource("MongoDBServerPort"):
                                         </label>
                                         <input asp-for="MongoDBServerPort" class="form-control" />
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="ReplicaSet">
+                                            @ILS.GetResource("ReplicaSet"):
+                                        </label>
+                                        <input asp-for="ReplicaSet" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="row mt-3 mongoDBDatabaseName">
@@ -168,12 +174,6 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-3">
-                                        <label for="MongoCredentialMechanism">
-                                            @ILS.GetResource("MongoCredentialMechanism"):
-                                        </label>
-                                        <input asp-for="MongoCredentialMechanism" class="form-control" />
-                                    </div>
-                                    <div class="col-3">
                                         <label for="MongoDBUsername">
                                             @ILS.GetResource("MongoDBUsername"):
                                         </label>
@@ -184,6 +184,12 @@
                                             @ILS.GetResource("MongoDBPassword"):
                                         </label>
                                         <input asp-for="MongoDBPassword" class="form-control password" />
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="MongoCredentialMechanism">
+                                            @ILS.GetResource("MongoCredentialMechanism"):
+                                        </label>
+                                        <input asp-for="MongoCredentialMechanism" class="form-control" />
                                     </div>
                                 </div>
 

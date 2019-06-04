@@ -123,7 +123,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //override cookie name
             services.AddAntiforgery(options =>
             {
-                options.Cookie = new CookieBuilder()
+                options.Cookie = new CookieBuilder() 
                 {
                     Name = ".Grand.Antiforgery"
                 };
@@ -143,7 +143,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             services.AddSession(options =>
             {
-                options.Cookie = new CookieBuilder()
+                options.Cookie = new CookieBuilder() 
                 {
                     Name = ".Grand.Session",
                     HttpOnly = true,
@@ -360,9 +360,13 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             var hcBuilder = services.AddHealthChecks();
             hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
-            hcBuilder.AddMongoDb(DataSettingsHelper.ConnectionString(),
-                   name: "mongodb-check",
-                   tags: new string[] { "mongodb" });
+
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                hcBuilder.AddMongoDb(DataSettingsHelper.MongoClientSettings(),
+                       name: "mongodb-check",
+                       tags: new string[] { "mongodb" });
+            }
         }
 
         public static void AddHtmlMinification(this IServiceCollection services)

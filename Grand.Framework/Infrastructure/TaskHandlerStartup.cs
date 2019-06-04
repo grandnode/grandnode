@@ -38,7 +38,7 @@ namespace Grand.Framework.Infrastructure
                 try
                 {
                     var machineName = Environment.MachineName;
-                    var tasks = new MongoDBRepository<ScheduleTask>(DataSettingsHelper.ConnectionString()).Table;
+                    var tasks = new MongoDBRepository<ScheduleTask>(DataSettingsHelper.MongoClient()).Table;
                     foreach (var task in tasks)
                     {
                         if (task.Enabled)

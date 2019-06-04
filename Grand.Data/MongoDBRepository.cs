@@ -21,10 +21,10 @@ namespace Grand.Data
         /// <summary>
         /// Gets the collection
         /// </summary>
-        protected IMongoCollection<T> _collection;       
-        public IMongoCollection<T>  Collection
+        protected IMongoCollection<T> _collection;
+        public IMongoCollection<T> Collection 
         {
-            get
+            get 
             {
                 return _collection;
             }
@@ -36,7 +36,7 @@ namespace Grand.Data
         protected IMongoDatabase _database;
         public IMongoDatabase Database
         {
-            get
+            get 
             {
                 return _database;
             }
@@ -51,29 +51,15 @@ namespace Grand.Data
         /// </summary>
         public MongoDBRepository()
         {
-            string connectionString = DataSettingsHelper.ConnectionString();
-
-            if (!string.IsNullOrEmpty(connectionString))
-            {
-                var client = new MongoClient(connectionString);
-                var databaseName = new MongoUrl(connectionString).DatabaseName;
-                _database = client.GetDatabase(databaseName);
-                _collection = _database.GetCollection<T>(typeof(T).Name);
-            }
-        }
-        public MongoDBRepository(string connectionString)
-        {
-            var client = new MongoClient(connectionString);
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = client.GetDatabase(databaseName);
+            var client = DataSettingsHelper.MongoClient();
+            _database = client.GetDatabase();
             _collection = _database.GetCollection<T>(typeof(T).Name);
+
         }
 
         public MongoDBRepository(IMongoClient client)
         {
-            string connectionString = DataSettingsHelper.ConnectionString();
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = client.GetDatabase(databaseName);
+            _database = client.GetDatabase();
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
@@ -153,7 +139,7 @@ namespace Grand.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            this._collection.ReplaceOne(x=>x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
+            this._collection.ReplaceOne(x => x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
             return entity;
 
         }
@@ -200,7 +186,7 @@ namespace Grand.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            this._collection.FindOneAndDelete(e => e.Id == entity.Id); 
+            this._collection.FindOneAndDelete(e => e.Id == entity.Id);
         }
 
         /// <summary>
@@ -209,7 +195,7 @@ namespace Grand.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> DeleteAsync(T entity)
         {
-            await this._collection.DeleteOneAsync(e=>e.Id == entity.Id);
+            await this._collection.DeleteOneAsync(e => e.Id == entity.Id);
             return entity;
         }
 
@@ -328,7 +314,7 @@ namespace Grand.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IMongoQueryable<T> Table
+        public virtual IMongoQueryable<T> Table 
         {
             get { return this._collection.AsQueryable(); }
         }

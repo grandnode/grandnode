@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Grand.Core.Data
 {
@@ -51,7 +52,7 @@ namespace Grand.Core.Data
                         shellSettings.DataConnectionString = value;
                         break;
                     default:
-                        shellSettings.RawDataSettings.Add(key,value);
+                        shellSettings.RawDataSettings.Add(key, value);
                         break;
                 }
             }
@@ -69,11 +70,12 @@ namespace Grand.Core.Data
             if (settings == null)
                 return "";
 
-            return string.Format("DataProvider: {0}{2}DataConnectionString: {1}{2}",
+            var defaults = string.Format("DataProvider: {0}{2}DataConnectionString: {1}{2}",
                                  settings.DataProvider,
                                  settings.DataConnectionString,
-                                 Environment.NewLine
-                );
+                                 Environment.NewLine);
+
+            return defaults + string.Join(Environment.NewLine, settings.RawDataSettings.Select(x => $"{x.Key}: {x.Value}"));
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-           
+
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
@@ -110,7 +112,7 @@ namespace Grand.Core.Data
 
             Singleton<DataSettings>.Instance = settings;
 
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename); 
+            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
                 using (File.Create(filePath))
@@ -118,7 +120,7 @@ namespace Grand.Core.Data
                     //we use 'using' to close the file after it's created
                 }
             }
-            
+
             var text = ComposeSettings(settings);
             File.WriteAllText(filePath, text);
         }

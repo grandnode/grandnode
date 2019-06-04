@@ -79,8 +79,7 @@ namespace Grand.Web.Controllers
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem 
-                {
+                model.AvailableLanguages.Add(new SelectListItem {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
@@ -133,13 +132,18 @@ namespace Grand.Web.Controllers
                 {
                     ModelState.AddModelError("", _locService.GetResource("MongoDBServerNameRequired"));
                 }
-                string userNameandPassword = "";
-                if (!(String.IsNullOrEmpty(model.MongoDBUsername)))
+
+                connectionString = $"mongodb://{model.MongoDBUsername}:{model.MongoDBPassword}@{model.MongoDBServerName}:{model.MongoDBServerPort}/{model.MongoDBDatabaseName}";
+
+                var connParams = new List<string>();
+
+                if (model.SslProtocol != SslProtocols.None)
                 {
-                    userNameandPassword = model.MongoDBUsername + ":" + model.MongoDBPassword + "@";
+                    connParams.Add("ssl=true");
+
+                    connectionString = $"{connectionString}?ssl=true&replicaSet={model.ReplicaSet}";
                 }
 
-                connectionString = "mongodb://" + userNameandPassword + model.MongoDBServerName + "/" + model.MongoDBDatabaseName;
             }
 
             if (!string.IsNullOrEmpty(connectionString))
@@ -163,7 +167,7 @@ namespace Grand.Web.Controllers
 
                     var client = new MongoClient(settings);
 
-                    var databaseName = new MongoUrl(connectionString).DatabaseName;
+                    var databaseName = model.MongoDBDatabaseName;
                     var database = client.GetDatabase(databaseName);
                     database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
 
@@ -203,8 +207,17 @@ namespace Grand.Web.Controllers
                     var settings = new DataSettings 
                     {
                         DataProvider = "mongodb",
-                        DataConnectionString = connectionString
+                        DataConnectionString = connectionString,
+                        MongoCredentialMechanism = model.MongoCredentialMechanism,
+                        MongoDBDatabaseName = model.MongoDBDatabaseName,
+                        MongoDBPassword = model.MongoDBPassword,
+                        MongoDBServerName = model.MongoDBServerName,
+                        MongoDBServerPort = model.MongoDBServerPort,
+                        MongoDBUsername = model.MongoDBUsername,
+                        SslProtocol = model.SslProtocol,
+                        ReplicaSet=model.ReplicaSet
                     };
+
                     settingsManager.SaveSettings(settings);
 
                     var dataProviderInstance = _serviceProvider.GetRequiredService<BaseDataProviderManager>().LoadDataProvider();
@@ -215,6 +228,9 @@ namespace Grand.Web.Controllers
 
                     var installationService = _serviceProvider.GetRequiredService<IInstallationService>();
                     await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
+
+                    settings.Installed = true;
+                    settingsManager.SaveSettings(settings);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();

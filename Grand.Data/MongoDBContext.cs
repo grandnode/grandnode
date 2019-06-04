@@ -13,22 +13,17 @@ namespace Grand.Data
         protected IMongoDatabase _database;
         protected IMongoClient _client;
 
+        /// <summary>
+        /// Get a default instance by data settings
+        /// </summary>
         public MongoDBContext()
         {
-
+            _client = DataSettingsHelper.MongoClient();
+            _database = _client.GetDatabase();
         }
-        public MongoDBContext(string connectionString)
-        {
-            _client = new MongoClient(connectionString);
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = _client.GetDatabase(databaseName);
-        }
-
         public MongoDBContext(IMongoClient client)
         {
-            string connectionString = DataSettingsHelper.ConnectionString();
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
-            _database = client.GetDatabase(databaseName);
+            _database = client.GetDatabase();
             _client = client;
         }
 

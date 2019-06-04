@@ -55,6 +55,7 @@ using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Security.Authentication;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -88,10 +89,10 @@ namespace Grand.Framework.Infrastructure
 
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
-                var connectionString = dataProviderSettings.DataConnectionString;
-                var databaseName = new MongoUrl(connectionString).DatabaseName;
-                builder.Register(c => new MongoClient(connectionString).GetDatabase(databaseName)).SingleInstance();
-                builder.Register<IMongoDBContext>(c => new MongoDBContext(connectionString)).InstancePerLifetimeScope();
+                var client = DataSettingsHelper.MongoClient();
+
+                builder.Register(c => client.GetDatabase()).SingleInstance();
+                builder.Register<IMongoDBContext>(c => new MongoDBContext(client)).InstancePerLifetimeScope();
             }
             else
             {

@@ -12,7 +12,7 @@ namespace Grand.Data
         /// </summary>
         public virtual void InitDatabase()
         {
-            DataSettingsHelper.InitConnectionString();
+            DataSettingsHelper.InitMongoClientSettings();
         }
 
         #endregion
