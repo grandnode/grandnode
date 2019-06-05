@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -63,6 +64,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._exportManager = exportManager;
             this._workContext = workContext;
             this._importManager = importManager;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected (bool allow, string message) CheckAccessToCategory(Category category)
+        {
+            if (category == null)
+            {
+                return (false, "Category not exists");
+            }
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!(!category.LimitedToStores || (category.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && category.LimitedToStores)))
+                    return (false, "This is not your category");
+            }
+            return (true, null);
         }
 
         #endregion
@@ -149,8 +168,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!category.LimitedToStores || (category.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
+                if (!category.LimitedToStores || (category.LimitedToStores && category.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && category.Stores.Count > 1))
                     WarningNotification(_localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
+                else
+                {
+                    if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
             }
 
             var model = category.ToModel();
@@ -183,7 +207,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!category.LimitedToStores || (category.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
+                if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                     return RedirectToAction("Edit", new { id = category.Id });
             }
 
@@ -228,9 +252,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!category.LimitedToStores || (category.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
+                if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                     return RedirectToAction("Edit", new { id = category.Id });
             }
+
             if (ModelState.IsValid)
             {
                 await _categoryViewModelService.DeleteCategory(category);
@@ -306,6 +331,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string categoryId)
         {
+            var category = await _categoryService.GetCategoryById(categoryId);
+            var permission = CheckAccessToCategory(category);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var productCategories = await _categoryViewModelService.PrepareCategoryProductModel(categoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = productCategories.categoryProductModels,
@@ -382,6 +412,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string categoryId)
         {
+            var category = await _categoryService.GetCategoryById(categoryId);
+
+            var permission = CheckAccessToCategory(category);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var activityLog = await _categoryViewModelService.PrepareActivityLogModel(categoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = activityLog.activityLogModel,

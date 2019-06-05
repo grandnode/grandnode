@@ -4,8 +4,8 @@ using Grand.Core.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
-using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
@@ -19,17 +19,11 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
                 {
                     var manufacturer = await manufacturerService.GetManufacturerById(x.ManufacturerId);
                     if (manufacturer != null)
-                        if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(z => z != workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
-                        {
+                        if (!manufacturer.AccessToEntityByStore(workContext.CurrentCustomer.StaffStoreId))
                             return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    return true;
 
-                }).WithMessage(localizationService.GetResource("Admin.Catalog.Manufacturers.Permisions"));
+                    return true;
+                }).WithMessage(localizationService.GetResource("Admin.Catalog.Products.Permisions"));
             }
         }
     }

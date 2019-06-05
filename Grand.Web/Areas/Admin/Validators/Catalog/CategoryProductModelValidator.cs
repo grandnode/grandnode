@@ -4,8 +4,8 @@ using Grand.Core.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
-using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
@@ -15,11 +15,13 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
         {
             if (workContext.CurrentCustomer.IsStaff())
             {
-                RuleFor(x => x.CategoryId).MustAsync(async (x, y, context) =>
+                RuleFor(x => x).MustAsync(async (x, y, context) =>
                 {
                     var category = await categoryService.GetCategoryById(x.CategoryId);
-                    if (!category.LimitedToStores || (category.Stores.Where(z => z != workContext.CurrentCustomer.StaffStoreId).Any() && category.LimitedToStores))
-                        return false;
+                    if (category != null)
+                        if (!category.AccessToEntityByStore(workContext.CurrentCustomer.StaffStoreId))
+                            return false;
+
                     return true;
                 }).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
             }

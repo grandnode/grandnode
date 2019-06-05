@@ -67,6 +67,24 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Utilities
+
+        protected (bool allow, string message) CheckAccessToManufacturer(Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+            {
+                return (false, "Category not exists");
+            }
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!(!manufacturer.LimitedToStores || (manufacturer.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && manufacturer.LimitedToStores)))
+                    return (false, "This is not your category");
+            }
+            return (true, null);
+        }
+
+        #endregion
+
         #region List
 
         public IActionResult Index() => RedirectToAction("List");
@@ -164,8 +182,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                if (!manufacturer.LimitedToStores || (manufacturer.LimitedToStores && manufacturer.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && manufacturer.Stores.Count > 1))
                     WarningNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Permisions"));
+                else
+                {
+                    if (!manufacturer.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
             }
 
             var model = manufacturer.ToModel();
@@ -201,12 +224,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                if (!manufacturer.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                     return RedirectToAction("Edit", new { id = manufacturer.Id });
             }
-
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
                 manufacturer = await _manufacturerViewModelService.UpdateManufacturerModel(manufacturer, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
@@ -244,7 +271,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!manufacturer.LimitedToStores || (manufacturer.Stores.Where(x => x != _workContext.CurrentCustomer.StaffStoreId).Any() && manufacturer.LimitedToStores))
+                if (!manufacturer.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                     return RedirectToAction("Edit", new { id = manufacturer.Id });
             }
 
@@ -327,6 +354,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string manufacturerId)
         {
+            var manufacturer = await _manufacturerService.GetManufacturerById(manufacturerId);
+            var permission = CheckAccessToManufacturer(manufacturer);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var (manufacturerProductModels, totalCount) = await _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -408,6 +440,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string manufacturerId)
         {
+            var manufacturer = await _manufacturerService.GetManufacturerById(manufacturerId);
+            var permission = CheckAccessToManufacturer(manufacturer);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var (activityLogModels, totalCount) = await _manufacturerViewModelService.PrepareActivityLogModel(manufacturerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {

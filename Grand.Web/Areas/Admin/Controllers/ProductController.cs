@@ -232,12 +232,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff())
             {
-                if (!(product.LimitedToStores && product.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && product.Stores.Count == 1))
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                     return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -275,7 +275,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff())
