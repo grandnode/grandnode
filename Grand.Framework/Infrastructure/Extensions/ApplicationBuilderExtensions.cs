@@ -54,45 +54,42 @@ namespace Grand.Framework.Infrastructure.Extensions
             }
             else
             {
-                //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
-            }
-
-            //log errors
-            application.UseExceptionHandler(handler =>
-            {
-                handler.Run(context =>
+                //log errors
+                application.UseExceptionHandler(handler =>
                 {
-                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-                    if (exception == null)
-                        return Task.CompletedTask;
+                    handler.Run(context =>
+                    {
+                        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                        if (exception == null)
+                            return Task.CompletedTask;
 
-                    string authHeader = context.Request.Headers["Authorization"];
-                    var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
-                    if (apirequest)
-                    {
-                        context.Response.WriteAsync(exception.Message).Wait();
-                        return Task.CompletedTask;
-                    }
-                    try
-                    {
+                        string authHeader = context.Request.Headers["Authorization"];
+                        var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+                        if (apirequest)
+                        {
+                            context.Response.WriteAsync(exception.Message).Wait();
+                            return Task.CompletedTask;
+                        }
+                        try
+                        {
                         //check whether database is installed
                         if (DataSettingsHelper.DatabaseIsInstalled())
-                        {
+                            {
                             //get current customer
                             var currentCustomer = serviceProvider.GetRequiredService<IWorkContext>().CurrentCustomer;
 
                             //log error
                             serviceProvider.GetRequiredService<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            }
                         }
-                    }
-                    finally
-                    {
+                        finally
+                        {
                         //rethrow the exception to show the error page
                         throw exception;
-                    }
+                        }
+                    });
                 });
-            });
+            }
         }
 
         /// <summary>
@@ -118,8 +115,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
                         //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
-                        {
+                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature() {
                             OriginalPathBase = context.HttpContext.Request.PathBase.Value,
                             OriginalPath = originalPath.Value,
                             OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
@@ -206,8 +202,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseGrandStaticFiles(this IApplicationBuilder application, GrandConfig grandConfig)
         {
             //static files
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 OnPrepareResponse = ctx =>
                 {
                     if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
@@ -216,8 +211,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             });
 
             //themes
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Themes")),
                 RequestPath = new PathString("/Themes"),
                 OnPrepareResponse = ctx =>
@@ -227,8 +221,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 }
             });
             //plugins
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Plugins")),
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
@@ -264,8 +257,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandForwardedHeaders(this IApplicationBuilder application)
         {
-            application.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
+            application.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
         }

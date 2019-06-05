@@ -19,8 +19,7 @@ namespace Grand.Core.Data
         {
             if (!_databaseIsInstalled.HasValue)
             {
-                var manager = new DataSettingsManager();
-                var settings = manager.LoadSettings();
+                var settings = new DataSettingsManager().LoadSettings();
                 _databaseIsInstalled = settings != null && settings.IsValid() && settings.Installed;
                 if (settings.IsValid()) InitMongoClientSettings();
             }
@@ -28,13 +27,18 @@ namespace Grand.Core.Data
         }
         public static void InitConnectionString()
         {
-            var manager = new DataSettingsManager();
-            var settings = manager.LoadSettings();
+            var settings = new DataSettingsManager().LoadSettings();
             if (settings.IsValid()) InitMongoClientSettings();
         }
 
         public static MongoClient MongoClient()
         {
+            var settings = new DataSettingsManager().LoadSettings();
+
+            if (settings.UseConnectionString)
+            {
+                return new MongoClient(settings.DataConnectionString);
+            }
             return new MongoClient(MongoClientSettings());
         }
         public static void InitMongoClientSettings()

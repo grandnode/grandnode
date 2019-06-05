@@ -10694,7 +10694,7 @@ namespace Grand.Services.Installation
             await _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerReminderHistory>((Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId)), new CreateIndexOptions() { Name = "CustomerId", Unique = false }));
         }
 
-        private async Task CreateTables(string local)
+        private async Task CreateTables(string local = "en")
         {
             if (string.IsNullOrEmpty(local))
                 local = "en";
@@ -10733,7 +10733,7 @@ namespace Grand.Services.Installation
 
 
         public virtual async Task InstallData(string defaultUserEmail,
-            string defaultUserPassword, string collation, bool installSampleData = true)
+            string defaultUserPassword, string collation = "en", bool installSampleData = true)
         {
 
             defaultUserEmail = defaultUserEmail.ToLower();

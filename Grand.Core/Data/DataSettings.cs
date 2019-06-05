@@ -75,6 +75,11 @@ namespace Grand.Core.Data
             get => !string.IsNullOrEmpty(GetRawDataSetting("Installed")) && bool.Parse(GetRawDataSetting("Installed"));
             set => RawDataSettings["Installed"] = value.ToString();
         }
+
+        public bool UseConnectionString {
+            get => !string.IsNullOrEmpty(GetRawDataSetting("UseConnectionString")) && bool.Parse(GetRawDataSetting("UseConnectionString"));
+            set => RawDataSettings["UseConnectionString"] = value.ToString();
+        }
         private string GetRawDataSetting(string key)
         {
             if (!RawDataSettings.ContainsKey(key))

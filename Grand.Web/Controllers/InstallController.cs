@@ -70,8 +70,7 @@ namespace Grand.Web.Controllers
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
 
-            var model = new InstallModel 
-            {
+            var model = new InstallModel {
                 AdminEmail = "admin@yourstore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
@@ -88,8 +87,7 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem 
-                {
+                model.AvailableCollation.Add(new SelectListItem {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
@@ -167,8 +165,7 @@ namespace Grand.Web.Controllers
 
                     var client = new MongoClient(settings);
 
-                    var databaseName = model.MongoDBDatabaseName;
-                    var database = client.GetDatabase(databaseName);
+                    var database = client.GetDatabase();
                     database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
 
                     var filter = new BsonDocument("name", "GrandNodeVersion");
@@ -204,8 +201,7 @@ namespace Grand.Web.Controllers
                 try
                 {
                     //save settings
-                    var settings = new DataSettings 
-                    {
+                    var settings = new DataSettings {
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString,
                         MongoCredentialMechanism = model.MongoCredentialMechanism,
@@ -215,7 +211,8 @@ namespace Grand.Web.Controllers
                         MongoDBServerPort = model.MongoDBServerPort,
                         MongoDBUsername = model.MongoDBUsername,
                         SslProtocol = model.SslProtocol,
-                        ReplicaSet=model.ReplicaSet
+                        ReplicaSet = model.ReplicaSet,
+                        UseConnectionString = !string.IsNullOrEmpty(model.DatabaseConnectionString)
                     };
 
                     settingsManager.SaveSettings(settings);
@@ -227,13 +224,8 @@ namespace Grand.Web.Controllers
                     var dataProviderSettings = dataSettingsManager.LoadSettings(reloadSettings: true);
 
                     var installationService = _serviceProvider.GetRequiredService<IInstallationService>();
-                    await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
+                    await installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation ?? "en", model.InstallSampleData);
 
-                    settings.Installed = true;
-                    settingsManager.SaveSettings(settings);
-
-                    //reset cache
-                    DataSettingsHelper.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -277,6 +269,13 @@ namespace Grand.Web.Controllers
                         await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
                     }
 
+                    //if no exception happens before, the installation is done.
+                    settings.Installed = true;
+                    settingsManager.SaveSettings(settings);
+
+                    //reset cache
+                    DataSettingsHelper.ResetCache();
+
                     //restart application
                     if (Core.OperatingSystem.IsWindows())
                     {
@@ -304,8 +303,7 @@ namespace Grand.Web.Controllers
             //prepare language list
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem 
-                {
+                model.AvailableLanguages.Add(new SelectListItem {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
@@ -315,8 +313,7 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem 
-                {
+                model.AvailableCollation.Add(new SelectListItem {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
