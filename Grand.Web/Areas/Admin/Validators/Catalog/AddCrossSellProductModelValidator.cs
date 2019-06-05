@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
@@ -10,19 +9,10 @@ using Grand.Web.Areas.Admin.Models.Catalog;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
-    public class ProductAttributeValueModelValidator : BaseGrandValidator<ProductModel.ProductAttributeValueModel>
+    public class AddCrossSellProductModelValidator : BaseGrandValidator<ProductModel.AddCrossSellProductModel>
     {
-        public ProductAttributeValueModelValidator(ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
+        public AddCrossSellProductModelValidator(ILocalizationService localizationService, IProductService productService, IWorkContext workContext)
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name.Required"));
-
-            RuleFor(x => x.Quantity)
-                .GreaterThanOrEqualTo(1)
-                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1"))
-                .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct);
-
             if (workContext.CurrentCustomer.IsStaff())
             {
                 RuleFor(x => x).MustAsync(async (x, y, context) =>

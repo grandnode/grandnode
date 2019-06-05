@@ -537,4 +537,7 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Permisions">
     <Value>You can't edit this manufacturer, because it can be used in many stores.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Permisions">
+    <Value>You can't edit this product, because it can be used in many stores.</Value>
+  </LocaleResource>
 </Language>
