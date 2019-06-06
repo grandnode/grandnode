@@ -127,54 +127,53 @@ namespace Grand.Web.Areas.Admin.Services
             TaxSettings taxSettings,
             AddressSettings addressSettings)
         {
-            this._orderService = orderService;
-            this._orderReportService = orderReportService;
-            this._orderProcessingService = orderProcessingService;
-            this._priceCalculationService = priceCalculationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._encryptionService = encryptionService;
-            this._paymentService = paymentService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._productService = productService;
-            this._workflowMessageService = workflowMessageService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._giftCardService = giftCardService;
-            this._downloadService = downloadService;
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._affiliateService = affiliateService;
-            this._pictureService = pictureService;
-            this._taxService = taxService;
-            this._returnRequestService = returnRequestService;
-            this._customerActivityService = customerActivityService;
-            this._shipmentService = shipmentService;
-            this._serviceProvider = serviceProvider;
-            this._currencySettings = currencySettings;
-            this._taxSettings = taxSettings;
-            this._addressSettings = addressSettings;
-            this._customerService = customerService;
+            _orderService = orderService;
+            _orderReportService = orderReportService;
+            _orderProcessingService = orderProcessingService;
+            _priceCalculationService = priceCalculationService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _encryptionService = encryptionService;
+            _paymentService = paymentService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _productService = productService;
+            _workflowMessageService = workflowMessageService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeService = productAttributeService;
+            _productAttributeParser = productAttributeParser;
+            _giftCardService = giftCardService;
+            _downloadService = downloadService;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _affiliateService = affiliateService;
+            _pictureService = pictureService;
+            _taxService = taxService;
+            _returnRequestService = returnRequestService;
+            _customerActivityService = customerActivityService;
+            _shipmentService = shipmentService;
+            _serviceProvider = serviceProvider;
+            _currencySettings = currencySettings;
+            _taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _customerService = customerService;
         }
 
         #endregion
 
-        public virtual async Task<OrderListModel> PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
+        public virtual async Task<OrderListModel> PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null, string storeId = null)
         {
             //order statuses
-            var model = new OrderListModel
-            {
+            var model = new OrderListModel {
                 AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
             };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
@@ -210,7 +209,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
@@ -310,8 +309,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
 
-            var aggregate = new OrderAggreratorModel
-            {
+            var aggregate = new OrderAggreratorModel {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
                 aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
@@ -320,13 +318,14 @@ namespace Grand.Web.Areas.Admin.Services
             var items = new List<OrderModel>();
             foreach (var x in orders)
             {
+                var currency = await _currencyService.GetCurrencyByCode(x.CustomerCurrencyCode);
                 var store = await _storeService.GetStoreById(x.StoreId);
-                items.Add(new OrderModel
-                {
+                items.Add(new OrderModel {
                     Id = x.Id,
                     OrderNumber = x.OrderNumber,
                     StoreName = store != null ? store.Name : "Unknown",
-                    OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                    OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal * x.CurrencyRate, true, currency),
+                    CurrencyCode = x.CustomerCurrencyCode,
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                     ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -339,7 +338,7 @@ namespace Grand.Web.Areas.Admin.Services
             return (items, aggregate, orders.TotalCount);
         }
 
-       
+
         public virtual async Task PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
@@ -374,7 +373,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null || !_workContext.CurrentCustomer.IsStaff();
             //custom values
             model.CustomValues = order.DeserializeCustomValues();
 
@@ -422,8 +421,7 @@ namespace Grand.Web.Areas.Admin.Services
             bool displayTax = !displayTaxRates;
             foreach (var tr in order.TaxRatesDictionary)
             {
-                model.TaxRates.Add(new OrderModel.TaxRate
-                {
+                model.TaxRates.Add(new OrderModel.TaxRate {
                     Rate = _priceFormatter.FormatTaxRate(tr.Key),
                     Value = _priceFormatter.FormatPrice(tr.Value, true, false),
                 });
@@ -444,8 +442,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var giftCard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
                 if (giftCard != null)
                 {
-                    model.GiftCards.Add(new OrderModel.GiftCard
-                    {
+                    model.GiftCards.Add(new OrderModel.GiftCard {
                         CouponCode = giftCard.GiftCardCouponCode,
                         Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
                     });
@@ -462,6 +459,8 @@ namespace Grand.Web.Areas.Admin.Services
             //total
             model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
             model.OrderTotalValue = order.OrderTotal;
+            model.CurrencyRate = order.CurrencyRate;
+            model.CurrencyCode = order.CustomerCurrencyCode;
 
             //refunded amount
             if (order.RefundedAmount > decimal.Zero)
@@ -474,8 +473,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var discount = await _discountService.GetDiscountById(d.DiscountId);
                 if (discount != null)
                 {
-                    model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
-                    {
+                    model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel {
                         DiscountId = d.DiscountId,
                         DiscountName = discount.Name,
                     });
@@ -680,8 +678,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (product.IsDownload)
                         hasDownloadableItems = true;
 
-                    var orderItemModel = new OrderModel.OrderItemModel
-                    {
+                    var orderItemModel = new OrderModel.OrderItemModel {
                         Id = orderItem.Id,
                         ProductId = orderItem.ProductId,
                         ProductName = product.Name,
@@ -742,41 +739,36 @@ namespace Grand.Web.Areas.Admin.Services
             model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
         }
-        
+
         public virtual async Task<OrderModel.AddOrderProductModel> PrepareAddOrderProductModel(Order order)
         {
-            var model = new OrderModel.AddOrderProductModel
-            {
+            var model = new OrderModel.AddOrderProductModel {
                 OrderId = order.Id,
                 OrderNumber = order.OrderNumber
             };
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: order.StoreId);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true))
+            foreach (var m in await _manufacturerService.GetAllManufacturers(showHidden: true, storeId: order.StoreId))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return model;
         }
 
-        public virtual async Task<OrderModel.AddOrderProductModel.ProductDetailsModel> PrepareAddProductToOrderModel(string orderId, string productId)
+        public virtual async Task<OrderModel.AddOrderProductModel.ProductDetailsModel> PrepareAddProductToOrderModel(Order order, string productId)
         {
             var product = await _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-
-            var order = await _orderService.GetOrderById(orderId);
-            if (order == null)
-                throw new ArgumentException("No order found with the specified id");
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
 
@@ -785,10 +777,9 @@ namespace Grand.Web.Areas.Admin.Services
             decimal presetPriceInclTax = (await _taxService.GetProductPrice(product, presetPrice, true, customer)).productprice;
             decimal presetPriceExclTax = (await _taxService.GetProductPrice(product, presetPrice, false, customer)).productprice;
 
-            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
-            {
-                ProductId = productId,
-                OrderId = orderId,
+            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel {
+                ProductId = product.Id,
+                OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
                 Name = product.Name,
                 ProductType = product.ProductType,
@@ -804,8 +795,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var attribute in attributes)
             {
                 var productAttribute = await _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
-                var attributeModel = new OrderModel.AddOrderProductModel.ProductAttributeModel
-                {
+                var attributeModel = new OrderModel.AddOrderProductModel.ProductAttributeModel {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
                     Name = productAttribute.Name,
@@ -820,8 +810,7 @@ namespace Grand.Web.Areas.Admin.Services
                     var attributeValues = attribute.ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributeValueModel = new OrderModel.AddOrderProductModel.ProductAttributeValueModel
-                        {
+                        var attributeValueModel = new OrderModel.AddOrderProductModel.ProductAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.Name,
                             IsPreSelected = attributeValue.IsPreSelected
@@ -842,8 +831,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<OrderAddressModel> PrepareOrderAddressModel(Order order, Address address)
         {
-            var model = new OrderAddressModel
-            {
+            var model = new OrderAddressModel {
                 OrderId = order.Id,
                 Address = address.ToModel()
             };
@@ -900,8 +888,7 @@ namespace Grand.Web.Areas.Admin.Services
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
                 var download = await _downloadService.GetDownloadById(orderNote.DownloadId);
-                orderNoteModels.Add(new OrderModel.OrderNote
-                {
+                orderNoteModels.Add(new OrderModel.OrderNote {
                     Id = orderNote.Id,
                     OrderId = order.Id,
                     DownloadId = String.IsNullOrEmpty(orderNote.DownloadId) ? "" : orderNote.DownloadId,
@@ -917,8 +904,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task InsertOrderNote(Order order, string downloadId, bool displayToCustomer, string message)
         {
-            var orderNote = new OrderNote
-            {
+            var orderNote = new OrderNote {
                 DisplayToCustomer = displayToCustomer,
                 Note = message,
                 DownloadId = downloadId,
@@ -937,7 +923,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual async Task DeleteOrderNote(Order order, string id  )
+        public virtual async Task DeleteOrderNote(Order order, string id)
         {
             var orderNote = (await _orderService.GetOrderNotes(order.Id)).FirstOrDefault(on => on.Id == id);
             if (orderNote == null)
@@ -958,8 +944,7 @@ namespace Grand.Web.Areas.Admin.Services
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Address has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -1148,8 +1133,7 @@ namespace Grand.Web.Areas.Admin.Services
                 string attributeDescription = await productAttributeFormatter.FormatAttributes(product, attributesXml, customer);
 
                 //save item
-                var orderItem = new OrderItem
-                {
+                var orderItem = new OrderItem {
                     OrderItemGuid = Guid.NewGuid(),
                     ProductId = product.Id,
                     VendorId = product.VendorId,
@@ -1176,8 +1160,7 @@ namespace Grand.Web.Areas.Admin.Services
                 await _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "A new order item has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -1189,8 +1172,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     for (int i = 0; i < orderItem.Quantity; i++)
                     {
-                        var gc = new GiftCard
-                        {
+                        var gc = new GiftCard {
                             GiftCardType = product.GiftCardType,
                             PurchasedWithOrderItem = orderItem,
                             Amount = unitPriceExclTax,
@@ -1207,7 +1189,7 @@ namespace Grand.Web.Areas.Admin.Services
                         await _giftCardService.InsertGiftCard(gc);
                     }
                 }
-                
+
             }
             return warnings;
         }

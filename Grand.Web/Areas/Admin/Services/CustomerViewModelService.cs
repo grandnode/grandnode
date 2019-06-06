@@ -1284,30 +1284,30 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual async Task<IList<RegisteredCustomerReportLineModel>> GetReportRegisteredCustomersModel()
+        public virtual async Task<IList<RegisteredCustomerReportLineModel>> GetReportRegisteredCustomersModel(string storeId)
         {
             var report = new List<RegisteredCustomerReportLineModel>
             {
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(7)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 7)
                 },
 
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(14)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 14)
                 },
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(30)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 30)
                 },
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(365)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 365)
                 }
             };
 
@@ -1326,7 +1326,7 @@ namespace Grand.Web.Areas.Admin.Services
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
+            var items = _customerReportService.GetBestCustomersReport(model.StoreId, startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 2, pageIndex - 1, pageSize);
 
             var report = new List<BestCustomerReportLineModel>();

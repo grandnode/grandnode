@@ -98,7 +98,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string RefundedAmount { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.Profit")]
         public string Profit { get; set; }
-
+        public string CurrencyCode { get; set; }
+        public decimal CurrencyRate { get; set; }
         //edit totals
         [GrandResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
         public decimal OrderSubtotalInclTaxValue { get; set; }

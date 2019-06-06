@@ -4,14 +4,15 @@
 @inject Grand.Services.Customers.ICustomerService customerService
 @inject Grand.Services.Orders.IOrderReportService orderReportService
 @inject Grand.Services.Catalog.IPriceFormatter priceFormatter
+@inject Grand.Core.IWorkContext workContext
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
     var canAccessReports = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageReports);
     var canManageOrders = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
-    var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1)).TotalCount;
-    var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
-    var ordersToday = await orderReportService.GetOrderPeriodReport(0);
+    var customersOnline = (await customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1, workContext.CurrentCustomer.StaffStoreId)).TotalCount;
+    var customersShoppingCart = await customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes), workContext.CurrentCustomer.StaffStoreId);
+    var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
 <antiforgery-token />

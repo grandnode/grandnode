@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -14,9 +15,10 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
+using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,7 +27,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Grand.Services.Shipping;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -39,14 +40,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
-        private readonly IExportManager _exportManager;        
+        private readonly IExportManager _exportManager;
         #endregion
 
         #region Ctor
 
         public OrderController(
             IOrderViewModelService orderViewModelService,
-            IOrderService orderService, 
+            IOrderService orderService,
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
@@ -62,9 +63,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._pdfService = pdfService;
             this._exportManager = exportManager;
         }
-        
+
         #endregion
-       
+
         #region Order list
 
         public IActionResult Index() => RedirectToAction("List");
@@ -72,29 +73,34 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> List(int? orderStatusId = null,
             int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
         {
-            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate);
+            var model = await _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate, _workContext.CurrentCustomer.StaffStoreId);
             return View(model);
-		}
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> OrderList(DataSourceRequest command, OrderListModel model)
+        [HttpPost]
+        public async Task<IActionResult> OrderList(DataSourceRequest command, OrderListModel model)
         {
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
-            var (orderModels, aggreratorModel, totalCount) = await _orderViewModelService.PrepareOrderModel(model, command.Page, command.PageSize);
-            
-            var gridModel = new DataSourceResult
+
+            if (_workContext.CurrentCustomer.IsStaff())
             {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+
+            var (orderModels, aggreratorModel, totalCount) = await _orderViewModelService.PrepareOrderModel(model, command.Page, command.PageSize);
+
+            var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
                 ExtraData = aggreratorModel,
                 Total = totalCount
             };
             return Json(gridModel);
         }
-        
+
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
         public async Task<IActionResult> GoToOrderId(OrderListModel model)
@@ -102,6 +108,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             var order = await _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
             if (order == null)
                 return RedirectToAction("List", "Order");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
@@ -115,8 +126,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ExportXmlAll(OrderListModel model)
         {
             //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
 
             var orders = await _orderViewModelService.PrepareOrders(model);
             try
@@ -135,19 +151,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ExportXmlSelected(string selectedIds)
         {
             //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
 
             var orders = new List<Order>();
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
                 orders.AddRange(await _orderService.GetOrdersByIds(ids));
             }
-
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                orders = orders.Where(x => x.StoreId == _workContext.CurrentCustomer.StaffStoreId).ToList();
+            }
             var xml = await _exportManager.ExportOrdersToXml(orders);
             return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
         }
@@ -157,8 +176,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ExportExcelAll(OrderListModel model)
         {
             //a vendor cannot export orders
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
 
             //load orders
             var orders = await _orderViewModelService.PrepareOrders(model);
@@ -185,12 +209,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
                 orders.AddRange(await _orderService.GetOrdersByIds(ids));
             }
-
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                orders = orders.Where(x => x.StoreId == _workContext.CurrentCustomer.StaffStoreId).ToList();
+            }
             byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
             return File(bytes, "text/xls", "orders.xlsx");
         }
@@ -211,8 +238,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -242,8 +274,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -276,8 +313,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -307,8 +349,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -340,8 +387,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -371,8 +423,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -404,8 +461,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -424,7 +486,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return View(model);
             }
         }
-        
+
         public async Task<IActionResult> PartiallyRefundOrderPopup(string id, bool online)
         {
             var order = await _orderService.GetOrderById(id);
@@ -433,8 +495,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             var model = new OrderModel();
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
@@ -452,8 +519,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -504,8 +576,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -513,8 +590,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderService.UpdateOrder(order);
 
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = string.Format("Order status has been edited. New status: {0}", order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -548,8 +624,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             var model = new OrderModel();
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
@@ -565,9 +646,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            //a vendor or staff does not have access to this functionality
+            if (_workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
             if (ModelState.IsValid)
             {
                 await _orderProcessingService.DeleteOrder(order);
@@ -580,15 +662,20 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> PdfInvoice(string orderId)
         {
-            var vendorId = String.Empty;
+            var vendorId = string.Empty;
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
             var order = await _orderService.GetOrderById(orderId);
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var orders = new List<Order>
             {
                 order
@@ -613,6 +700,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //load orders
             var orders = await _orderViewModelService.PrepareOrders(model);
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                orders = orders.Where(x => x.StoreId == _workContext.CurrentCustomer.StaffStoreId).ToList();
+            }
 
             byte[] bytes;
             using (var stream = new MemoryStream())
@@ -630,17 +721,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
                 orders.AddRange(await _orderService.GetOrdersByIds(ids));
             }
-            var vendorId = String.Empty;
+            var vendorId = string.Empty;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 orders = orders.Where(_workContext.HasAccessToOrder).ToList();
                 vendorId = _workContext.CurrentVendor.Id;
+            }
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                orders = orders.Where(x => x.StoreId == _workContext.CurrentCustomer.StaffStoreId).ToList();
             }
 
             //ensure that we at least one order selected
@@ -669,8 +764,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -678,8 +778,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Credit card info has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -700,8 +799,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
 
             order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
             order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
@@ -718,8 +822,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order totals have been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -741,15 +844,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
 
             order.ShippingMethod = model.ShippingMethod;
             await _orderService.UpdateOrder(order);
 
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Shipping method has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -763,7 +870,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         public async Task<IActionResult> EditOrderItem(string id, IFormCollection form, [FromServices] IProductService productService)
@@ -774,8 +881,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
 
             //get order item identifier
             string orderItemId = "";
@@ -829,8 +941,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             order = await _orderService.GetOrderById(id);
             //add a note
-            await _orderService.InsertOrderNote(new OrderNote
-            {
+            await _orderService.InsertOrderNote(new OrderNote {
                 Note = "Order item has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -849,7 +960,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
-        public async Task<IActionResult> DeleteOrderItem(string id, IFormCollection form, 
+        public async Task<IActionResult> DeleteOrderItem(string id, IFormCollection form,
             [FromServices] IGiftCardService giftCardService,
             [FromServices] IProductService productService,
             [FromServices] IShipmentService shipmentService)
@@ -860,9 +971,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = id });
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
             //get order item identifier
             string orderItemId = "";
             foreach (var formValue in form.Keys)
@@ -876,7 +991,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var shipments = (await shipmentService.GetShipmentsByOrder(order.Id));
             foreach (var shipment in shipments)
             {
-                if(shipment.ShipmentItems.Where(x=>x.OrderItemId == orderItemId).Any())
+                if (shipment.ShipmentItems.Where(x => x.OrderItemId == orderItemId).Any())
                 {
                     ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
                     //selected tab
@@ -907,8 +1022,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             else
             {
                 //add a note
-                await _orderService.InsertOrderNote(new OrderNote
-                {
+                await _orderService.InsertOrderNote(new OrderNote {
                     Note = "Order item has been deleted",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -916,7 +1030,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
 
                 //adjust inventory
-                if(product!=null)
+                if (product != null)
                     await productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 await _orderService.DeleteOrderItem(orderItem);
@@ -941,6 +1055,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
+
             //get order item identifier
             string orderItemId = "";
             foreach (var formValue in form.Keys)
@@ -952,8 +1071,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
 
             orderItem.DownloadCount = 0;
             await _orderService.UpdateOrder(order);
@@ -969,13 +1089,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
-        
+
         public async Task<IActionResult> ActivateDownloadItem(string id, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
 
             //get order item identifier
             string orderItemId = "";
@@ -988,7 +1113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
@@ -1010,6 +1135,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
+
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
@@ -1020,11 +1150,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
-            var model = new OrderModel.UploadLicenseModel
-            {
+            var model = new OrderModel.UploadLicenseModel {
                 LicenseDownloadId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "",
                 OrderId = order.Id,
                 OrderItemId = orderItem.Id
@@ -1042,16 +1171,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = order.Id });
+            }
+
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == model.OrderItemId);
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem) && _workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             //attach license
-            if (!String.IsNullOrEmpty(model.LicenseDownloadId))
+            if (!string.IsNullOrEmpty(model.LicenseDownloadId))
                 orderItem.LicenseDownloadId = model.LicenseDownloadId;
             else
                 orderItem.LicenseDownloadId = null;
@@ -1073,12 +1207,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = model.OrderId });
+            }
+
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == model.OrderItemId);
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrderItem(orderItem) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             //attach license
@@ -1095,7 +1234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddProductToOrder(string orderId)
         {
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = await _orderService.GetOrderById(orderId);
@@ -1111,26 +1250,33 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model, [FromServices] IProductService productService)
         {
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return Content("");
+
             var categoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+            if (!string.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.Add(model.SearchCategoryId);
+
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+            }
 
             var gridModel = new DataSourceResult();
             var products = (await productService.SearchProducts(categoryIds: categoryIds,
+                storeId: storeId,
                 manufacturerId: model.SearchManufacturerId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName, 
-                pageIndex: command.Page - 1, 
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true)).products;
             gridModel.Data = products.Select(x =>
             {
-                var productModel = new OrderModel.AddOrderProductModel.ProductModel
-                {
+                var productModel = new OrderModel.AddOrderProductModel.ProductModel {
                     Id = x.Id,
-                    Name =  x.Name,
+                    Name = x.Name,
                     Sku = x.Sku,
                 };
 
@@ -1144,10 +1290,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddProductToOrderDetails(string orderId, string productId)
         {
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var model = await _orderViewModelService.PrepareAddProductToOrderModel(orderId, productId);
+            var order = await _orderService.GetOrderById(orderId);
+            if (order == null)
+                return RedirectToAction("List");
+
+            if (order == null)
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
+            var model = await _orderViewModelService.PrepareAddProductToOrderModel(order, productId);
             return View(model);
         }
 
@@ -1155,16 +1313,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddProductToOrderDetails(string orderId, string productId, IFormCollection form)
         {
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
+            var order = await _orderService.GetOrderById(orderId);
+            if (order == null)
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var warnings = await _orderViewModelService.AddProductToOrderDetails(orderId, productId, form);
-            if(!warnings.Any())
+            if (!warnings.Any())
                 //redirect to order details page
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             //errors
-            var model = await _orderViewModelService.PrepareAddProductToOrderModel(orderId, productId);
+            var model = await _orderViewModelService.PrepareAddProductToOrderModel(order, productId);
             model.Warnings.AddRange(warnings);
             return View(model);
         }
@@ -1182,9 +1349,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = orderId });
-            Address address = new Address();
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
+            var address = new Address();
             if (order.BillingAddress != null)
                 if (order.BillingAddress.Id == addressId)
                     address = order.BillingAddress;
@@ -1200,7 +1373,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddressEdit(OrderAddressModel model, IFormCollection form, 
+        public async Task<IActionResult> AddressEdit(OrderAddressModel model, IFormCollection form,
             [FromServices] IAddressAttributeService addressAttributeService,
             [FromServices] IAddressAttributeParser addressAttributeParser)
         {
@@ -1210,10 +1383,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
 
-            Address address = new Address();
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
+            var address = new Address();
             if (order.BillingAddress != null)
                 if (order.BillingAddress.Id == model.Address.Id)
                     address = order.BillingAddress;
@@ -1247,7 +1425,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Order notes
-        
+
         [HttpPost]
         public async Task<IActionResult> OrderNotesSelect(string orderId, DataSourceRequest command)
         {
@@ -1256,19 +1434,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return Content("");
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return Content("");
+            }
             //order notes
             var orderNoteModels = await _orderViewModelService.PrepareOrderNotes(order);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = orderNoteModels,
                 Total = orderNoteModels.Count
             };
             return Json(gridModel);
         }
-        
+
         public async Task<IActionResult> OrderNoteAdd(string orderId, string downloadId, bool displayToCustomer, string message)
         {
             var order = await _orderService.GetOrderById(orderId);
@@ -1276,9 +1457,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new { Result = false });
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return Json(new { Result = false });
 
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return Json(new { Result = false });
+            }
             await _orderViewModelService.InsertOrderNote(order, downloadId, displayToCustomer, message);
 
             return Json(new { Result = true });
@@ -1292,8 +1477,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = orderId });
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { Result = false });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return Json(new { Result = false });
+            }
 
             await _orderViewModelService.DeleteOrderNote(order, id);
 

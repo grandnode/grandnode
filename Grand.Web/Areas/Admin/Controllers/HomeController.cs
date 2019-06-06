@@ -82,16 +82,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            model.OrdersPending = (await _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending)).CountOrders;
-            model.AbandonedCarts = (await _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
+            model.OrdersPending = (await _orderReportService.GetOrderAverageReportLine(storeId: storeId, os: OrderStatus.Pending)).CountOrders;
+            model.AbandonedCarts = (await _customerService.GetAllCustomers(storeId: storeId, loadOnlyWithShoppingCart: true, pageSize: 1)).TotalCount;
 
             _serviceProvider.GetRequiredService<IProductService>()
-                .GetLowStockProducts(vendorId, out IList<Product> products, out IList<ProductAttributeCombination> combinations);
+                .GetLowStockProducts(vendorId, storeId, out IList <Product> products, out IList<ProductAttributeCombination> combinations);
 
             model.LowStockProducts = products.Count + combinations.Count;
 
-            model.ReturnRequests = (int)_returnRequestRepository.Table.Where(x=>x.ReturnRequestStatusId == 0).Count();
-            model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;
+            model.ReturnRequests = (int)_returnRequestRepository.Table.Where(x=>x.ReturnRequestStatusId == 0 && (string.IsNullOrEmpty(storeId) || x.StoreId == storeId)).Count();
+            model.TodayRegisteredCustomers = (await _customerService.GetAllCustomers(storeId: storeId, customerRoleIds: new string[] { (await _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered)).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1)).TotalCount;
             return model;
 
         }

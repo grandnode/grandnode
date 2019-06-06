@@ -118,10 +118,11 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get "order by time" report
         /// </summary>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual async Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(DateTime? startTimeUtc = null,
+        public virtual async Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(string storeId, DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null)
         {
             List<OrderByTimeReportLine> report = new List<OrderByTimeReportLine>();
@@ -136,6 +137,9 @@ namespace Grand.Services.Orders
 
             var filter = builder.Where(o => !o.Deleted);
             filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
+
+            if(!string.IsNullOrEmpty(storeId))
+                filter = filter & builder.Where(o => o.StoreId == storeId);
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
             if(daydiff > 31)
@@ -453,14 +457,15 @@ namespace Grand.Services.Orders
         /// Gets a report of orders in the last days
         /// </summary>
         /// <param name="days">Orders in the last days</param>
+        /// <param name="storeId">Store ident</param>
         /// <returns>ReportPeriodOrder</returns>
-        public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days)
+        public virtual async Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId)
         {
             DateTime date = days != 0 ? _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days).Date : _dateTimeHelper.ConvertToUserTime(DateTime.Now).Date ;
 
             var query = from o in _orderRepository.Table
-                        where !o.Deleted &&
-                        o.CreatedOnUtc >= date
+                        where !o.Deleted && o.CreatedOnUtc >= date
+                        && (string.IsNullOrEmpty(storeId) || o.StoreId == storeId)
                         group o by 1 into g
                         select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
             var report = (await query.ToListAsync())?.FirstOrDefault();
@@ -506,6 +511,7 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets a list of products that were never sold
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
@@ -513,7 +519,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual async Task<IPagedList<Product>> ProductsNeverSold(string vendorId = "",
+        public virtual async Task<IPagedList<Product>> ProductsNeverSold(string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -523,6 +529,7 @@ namespace Grand.Services.Orders
 
             var query = (await (from order in _orderRepository.Table
                          where
+                         (string.IsNullOrEmpty(storeId) || order.StoreId == storeId) &&
                          (createdFromUtc.Value <= order.CreatedOnUtc) &&
                          (createdToUtc.Value >= order.CreatedOnUtc) &&
                          (!order.Deleted)
