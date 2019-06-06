@@ -97,6 +97,8 @@ namespace Grand.Core.Data
 
             var text = File.ReadAllText(filePath);
             Singleton<DataSettings>.Instance = ParseSettings(text);
+
+            Singleton<DataSettings>.Instance.InstallMessage = null;
             return Singleton<DataSettings>.Instance;
 
         }

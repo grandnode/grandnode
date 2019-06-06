@@ -154,6 +154,8 @@ namespace Grand.Services.Installation
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly DataSettingsManager _settingsManager = new DataSettingsManager();
+        private DataSettings _dataSettings;
         #endregion
 
         #region Ctor
@@ -259,6 +261,8 @@ namespace Grand.Services.Installation
             _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
             _hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
             _serviceProvider = serviceProvider;
+
+            _dataSettings = _settingsManager.LoadSettings();
         }
 
         #endregion
@@ -303,6 +307,8 @@ namespace Grand.Services.Installation
             };
 
             await _storeRepository.InsertAsync(stores);
+            _dataSettings.RawDataSettings["InstallStores"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallMeasures()
@@ -395,6 +401,8 @@ namespace Grand.Services.Installation
             };
 
             await _measureUnitRepository.InsertAsync(measureUnits);
+            _dataSettings.RawDataSettings["InstallMeasures"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -429,6 +437,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _taxCategoryRepository.InsertAsync(taxCategories);
+            _dataSettings.RawDataSettings["InstallTaxCategories"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -443,6 +453,8 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1
             };
             await _languageRepository.InsertAsync(language);
+            _dataSettings.RawDataSettings["InstallLanguages"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallLocaleResources()
@@ -457,6 +469,8 @@ namespace Grand.Services.Installation
                 var localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
                 await localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
+            _dataSettings.RawDataSettings["InstallLocaleResources"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -550,6 +564,8 @@ namespace Grand.Services.Installation
                 },
             };
             await _currencyRepository.InsertAsync(currencies);
+            _dataSettings.RawDataSettings["InstallCurrencies"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallCountriesAndStates()
@@ -568,7 +584,7 @@ namespace Grand.Services.Installation
 
             var states = new List<StateProvince>();
             await _countryRepository.InsertAsync(cUsa);
-
+            #region add state
             states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "AA (Armed Forces Americas)",
@@ -1107,7 +1123,7 @@ namespace Grand.Services.Installation
                 Published = true,
                 DisplayOrder = 1,
             });
-
+            #endregion
             await _stateProvinceRepository.InsertAsync(states);
 
             var countries = new List<Country>
@@ -3934,6 +3950,10 @@ namespace Grand.Services.Installation
                                     },
                                 };
             await _countryRepository.InsertAsync(countries);
+
+            _dataSettings.RawDataSettings["InstallCountriesAndStates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
+
         }
 
         protected virtual async Task InstallShippingMethods()
@@ -3960,6 +3980,8 @@ namespace Grand.Services.Installation
                                         }
                                 };
             await _shippingMethodRepository.InsertAsync(shippingMethods);
+            _dataSettings.RawDataSettings["InstallShippingMethods"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallDeliveryDates()
@@ -3983,6 +4005,8 @@ namespace Grand.Services.Installation
                                         },
                                 };
             await _deliveryDateRepository.InsertAsync(deliveryDates);
+            _dataSettings.RawDataSettings["InstallDeliveryDates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
@@ -4098,6 +4122,8 @@ namespace Grand.Services.Installation
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             await _customerRepository.InsertAsync(backgroundTaskUser);
+            _dataSettings.RawDataSettings["InstallCustomersAndUsers"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -4148,6 +4174,8 @@ namespace Grand.Services.Installation
                 }
             };
             await _customerActionType.InsertAsync(customerActionType);
+            _dataSettings.RawDataSettings["InstallCustomerAction"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -4168,6 +4196,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _emailAccountRepository.InsertAsync(emailAccounts);
+            _dataSettings.RawDataSettings["InstallEmailAccounts"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallMessageTemplates()
@@ -4598,6 +4628,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _messageTemplateRepository.InsertAsync(messageTemplates);
+            _dataSettings.RawDataSettings["InstallMessageTemplates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallTopics()
@@ -4762,6 +4794,8 @@ namespace Grand.Services.Installation
                 topic.SeName = seName;
                 await _topicRepository.UpdateAsync(topic);
             }
+            _dataSettings.RawDataSettings["InstallTopics"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -5366,6 +5400,10 @@ namespace Grand.Services.Installation
                 gaserviceAccountEmail = "",
                 gaviewID = ""
             });
+
+            _dataSettings.RawDataSettings["InstallSettings"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
+
         }
 
         protected virtual async Task InstallCheckoutAttributes()
@@ -5393,6 +5431,8 @@ namespace Grand.Services.Installation
                 CheckoutAttributeId = ca1.Id,
             });
             await _checkoutAttributeRepository.UpdateAsync(ca1);
+            _dataSettings.RawDataSettings["InstallCheckoutAttributes"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallSpecificationAttributes()
@@ -5482,6 +5522,8 @@ namespace Grand.Services.Installation
                 DisplayOrder = 3,
             });
             await _specificationAttributeRepository.UpdateAsync(sa4);
+            _dataSettings.RawDataSettings["InstallSpecificationAttributes"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
 
@@ -5523,6 +5565,8 @@ namespace Grand.Services.Installation
                 },
             };
             await _productAttributeRepository.InsertAsync(productAttributes);
+            _dataSettings.RawDataSettings["InstallProductAttributes"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallCategories()
@@ -5827,6 +5871,10 @@ namespace Grand.Services.Installation
                 });
                 await _categoryRepository.UpdateAsync(category);
             }
+
+            _dataSettings.RawDataSettings["InstallCategories"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
+
         }
 
         protected virtual async Task InstallManufacturers()
@@ -5902,6 +5950,9 @@ namespace Grand.Services.Installation
                 });
                 await _manufacturerRepository.UpdateAsync(manufacturer);
             }
+
+            _dataSettings.RawDataSettings["InstallManufacturers"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallProducts(string defaultUserEmail)
@@ -9314,6 +9365,8 @@ namespace Grand.Services.Installation
 
             }
             await _productRepository.UpdateAsync(allProducts);
+            _dataSettings.RawDataSettings["InstallProducts"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallForums()
@@ -9367,6 +9420,8 @@ namespace Grand.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow,
             };
             await _forumRepository.InsertAsync(packagingShippingForum);
+            _dataSettings.RawDataSettings["InstallForums"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallDiscounts()
@@ -9409,6 +9464,8 @@ namespace Grand.Services.Installation
             };
             await _discountCouponRepository.InsertAsync(coupon2);
 
+            _dataSettings.RawDataSettings["InstallDiscounts"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallBlogPosts()
@@ -9452,6 +9509,8 @@ namespace Grand.Services.Installation
                 await _blogPostRepository.UpdateAsync(blogPost);
 
             }
+            _dataSettings.RawDataSettings["InstallBlogPosts"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallBlogPosts(string defaultUserEmail)
@@ -9494,6 +9553,8 @@ namespace Grand.Services.Installation
                 });
                 await _blogPostRepository.UpdateAsync(blogPost);
             }
+            _dataSettings.RawDataSettings["InstallBlogPosts(defaultUserEmail)"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
 
         }
         protected virtual async Task InstallNews()
@@ -9546,6 +9607,8 @@ namespace Grand.Services.Installation
                 await _newsItemRepository.UpdateAsync(newsItem);
             }
 
+            _dataSettings.RawDataSettings["InstallNews"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallPolls()
@@ -9581,6 +9644,8 @@ namespace Grand.Services.Installation
 
             });
             await _pollRepository.InsertAsync(poll1);
+            _dataSettings.RawDataSettings["InstallPolls"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallActivityLogTypes()
@@ -10137,6 +10202,8 @@ namespace Grand.Services.Installation
                                               },
                                       };
             await _activityLogTypeRepository.InsertAsync(activityLogTypes);
+            _dataSettings.RawDataSettings["InstallActivityLogTypes"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallProductTemplates()
@@ -10157,6 +10224,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _productTemplateRepository.InsertAsync(productTemplates);
+            _dataSettings.RawDataSettings["InstallProductTemplates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallCategoryTemplates()
@@ -10171,6 +10240,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _categoryTemplateRepository.InsertAsync(categoryTemplates);
+            _dataSettings.RawDataSettings["InstallCategoryTemplates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallManufacturerTemplates()
@@ -10185,6 +10256,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplates);
+            _dataSettings.RawDataSettings["InstallManufacturerTemplates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallTopicTemplates()
@@ -10199,6 +10272,8 @@ namespace Grand.Services.Installation
                                        },
                                };
             await _topicTemplateRepository.InsertAsync(topicTemplates);
+            _dataSettings.RawDataSettings["InstallTopicTemplates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallScheduleTasks()
@@ -10314,6 +10389,8 @@ namespace Grand.Services.Installation
                 },
             };
             await _scheduleTaskRepository.InsertAsync(tasks);
+            _dataSettings.RawDataSettings["InstallScheduleTasks"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallReturnRequestReasons()
@@ -10337,6 +10414,8 @@ namespace Grand.Services.Installation
                                         }
                                 };
             await _returnRequestReasonRepository.InsertAsync(returnRequestReasons);
+            _dataSettings.RawDataSettings["InstallReturnRequestReasons"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
         protected virtual async Task InstallReturnRequestActions()
         {
@@ -10359,6 +10438,8 @@ namespace Grand.Services.Installation
                                         }
                                 };
             await _returnRequestActionRepository.InsertAsync(returnRequestActions);
+            _dataSettings.RawDataSettings["InstallReturnRequestActions"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallWarehouses()
@@ -10396,6 +10477,8 @@ namespace Grand.Services.Installation
             };
 
             await _warehouseRepository.InsertAsync(warehouses);
+            _dataSettings.RawDataSettings["InstallWarehouses"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallPickupPoints()
@@ -10415,6 +10498,8 @@ namespace Grand.Services.Installation
                 Name = "My Store - New York",
             };
             await _pickupPointsRepository.InsertAsync(point);
+            _dataSettings.RawDataSettings["InstallPickupPoints"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallVendors()
@@ -10465,6 +10550,8 @@ namespace Grand.Services.Installation
                 vendor.SeName = seName;
                 await _vendorRepository.UpdateAsync(vendor);
             }
+            _dataSettings.RawDataSettings["InstallVendors"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         protected virtual async Task InstallAffiliates()
@@ -10488,6 +10575,8 @@ namespace Grand.Services.Installation
                 Address = affiliateAddress
             };
             await _affiliateRepository.InsertAsync(affilate);
+            _dataSettings.RawDataSettings["InstallAffiliates"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         private async Task AddProductTag(Product product, string tag)
@@ -10692,6 +10781,8 @@ namespace Grand.Services.Installation
 
             //customer reminder
             await _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerReminderHistory>((Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId)), new CreateIndexOptions() { Name = "CustomerId", Unique = false }));
+            _dataSettings.RawDataSettings["CreateIndexes"] = "Done";
+            _settingsManager.SaveSettings(_dataSettings);
         }
 
         private async Task CreateTables(string local = "en")
@@ -10701,29 +10792,38 @@ namespace Grand.Services.Installation
 
             try
             {
+                _dataSettings.RawDataSettings[$"CreatingTables"] = "Done";
                 var mongoDBContext = new MongoDBContext();
                 var typeFinder = _serviceProvider.GetRequiredService<ITypeFinder>();
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
-                foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Core.Domain")))
-                {
-                    if (item.BaseType != null)
-                        if (item.IsClass && item.BaseType == typeof(BaseEntity))
-                        {
-                            try
-                            {
-                                await mongoDBContext.Database().CreateCollectionAsync(item.Name);
-                            }
-                            catch (Exception ex)
-                            {
-                                //throw new GrandException(ex.Message);
-                            }
+                var tables = q.GetTypes()
+                    .Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Core.Domain"))
+                    .Where(item => item.BaseType != null && item.IsClass && item.BaseType == typeof(BaseEntity));
 
-                        }
+                foreach (var item in tables)
+                {
+                    try
+                    {
+                        await mongoDBContext.Database().CreateCollectionAsync(item.Name);
+                        _dataSettings.RawDataSettings[$"CreateTable-{item.Name}"] = "Done";
+                    }
+                    catch (Exception tableEx)
+                    {
+                        _dataSettings.RawDataSettings[$"CreateTable-{item.Name}"] = tableEx.Message;
+                    }
                 }
+                _dataSettings.RawDataSettings[$"CreatedTables"] = "Done";
+
             }
             catch (Exception ex)
             {
+                _dataSettings.RawDataSettings[$"CreateTablesException"] = ex.Message;
+
                 throw new GrandException(ex.Message);
+            }
+            finally
+            {
+                _settingsManager.SaveSettings(_dataSettings);
             }
         }
 

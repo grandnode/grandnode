@@ -45,12 +45,12 @@
                 });
 
                 $(document).ready(function () {
-                    $('input:checkbox[name=MongoDBConnectionInfo]').click(toggleMongoDBConnectionInfo);
-                    toggleMongoDBConnectionInfo();
+                    $('input:checkbox[name=UseConnectionString]').click(toggleUseConnectionString);
+                    toggleUseConnectionString();
 
                 });
-                function toggleMongoDBConnectionInfo() {
-                    if ($('#@Html.IdFor(model => model.MongoDBConnectionInfo)').is(':checked')) {
+                function toggleUseConnectionString() {
+                    if ($('#@Html.IdFor(model => model.UseConnectionString)').is(':checked')) {
                         $('#MongoDBDatabaseConnectionString').show();
                         $('#MongoDBSimpleData').hide();
                         var element = $('.collation').detach();
@@ -201,7 +201,7 @@
 
 
                     <label class="custom-control custom-checkbox my-3">
-                        <input asp-for="MongoDBConnectionInfo" class="custom-control-input" />
+                        <input asp-for="UseConnectionString" class="custom-control-input" />
                         <span class="custom-control-label"></span>
                         <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
                     </label>

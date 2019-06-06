@@ -20,7 +20,7 @@ namespace Grand.Core.Data
         /// <summary>
         /// Data provider
         /// </summary>
-        public string DataProvider { get; set; }
+        public string DataProvider { get; set; } = "mongodb";
 
         /// <summary>
         /// Connection string
@@ -72,13 +72,48 @@ namespace Grand.Core.Data
             set => RawDataSettings["SslProtocol"] = value.ToString();
         }
         public bool Installed {
-            get => !string.IsNullOrEmpty(GetRawDataSetting("Installed")) && bool.Parse(GetRawDataSetting("Installed"));
+            get => GetBoolenValue("Installed");
             set => RawDataSettings["Installed"] = value.ToString();
+        }
+        public bool DatabaseInstalled {
+            get => GetBoolenValue("DatabaseInstalled");
+            set => RawDataSettings["DatabaseInstalled"] = value.ToString();
+        }
+        public bool PluginsInstalled {
+            get => GetBoolenValue("PluginsInstalled");
+            set => RawDataSettings["PluginsInstalled"] = value.ToString();
+        }
+        public bool PermissionInstalled {
+            get => GetBoolenValue("PermissionInstalled");
+            set => RawDataSettings["PermissionInstalled"] = value.ToString();
         }
 
         public bool UseConnectionString {
-            get => !string.IsNullOrEmpty(GetRawDataSetting("UseConnectionString")) && bool.Parse(GetRawDataSetting("UseConnectionString"));
+            get => GetBoolenValue("UseConnectionString");
             set => RawDataSettings["UseConnectionString"] = value.ToString();
+        }
+        public bool InstallSampleData {
+            get => GetBoolenValue("InstallSampleData");
+            set => RawDataSettings["InstallSampleData"] = value.ToString();
+        }
+        public string InstallMessage {
+            get => GetRawDataSetting("InstallMessage");
+            set => RawDataSettings["InstallMessage"] = value;
+        }
+
+        public string AdminEmail {
+            get => GetRawDataSetting("AdminEmail") ?? "uubuyer@outlook.com";
+            set => RawDataSettings["AdminEmail"] = value;
+        }
+
+        public string AdminPassword {
+            get => GetRawDataSetting("AdminPassword") ?? "123456";
+            set => RawDataSettings["AdminPassword"] = value;
+        }
+
+        private bool GetBoolenValue(string key)
+        {
+            return !string.IsNullOrEmpty(GetRawDataSetting(key)) && bool.Parse(GetRawDataSetting(key));
         }
         private string GetRawDataSetting(string key)
         {
