@@ -11,10 +11,10 @@ namespace Grand.Web.Areas.Admin.Interfaces
             ProductReview productReview, bool excludeProperties, bool formatReviewText);
         Task<(IEnumerable<ProductReviewModel> productReviewModels, int totalCount)> PrepareProductReviewsModel(ProductReviewListModel model, int pageIndex, int pageSize);
         Task<ProductReview> UpdateProductReview(ProductReview productReview, ProductReviewModel model);
-        Task<ProductReviewListModel> PrepareProductReviewListModel();
+        Task<ProductReviewListModel> PrepareProductReviewListModel(string storeId);
         Task DeleteProductReview(ProductReview productReview);
-        Task ApproveSelected(IList<string> selectedIds);
-        Task DisapproveSelected(IList<string> selectedIds);
+        Task ApproveSelected(IList<string> selectedIds, string storeId);
+        Task DisapproveSelected(IList<string> selectedIds, string storeId);
 
     }
 }

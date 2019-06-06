@@ -1,13 +1,14 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Core;
+using Grand.Core.Domain.Customers;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +19,10 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ProductReviewController : BaseAdminController
     {
         #region Fields
+
         private readonly IProductReviewViewModelService _productReviewViewModelService;
         private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
 
         #endregion Fields
 
@@ -27,10 +30,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public ProductReviewController(
             IProductReviewViewModelService productReviewViewModelService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
-            this._productReviewViewModelService = productReviewViewModelService;
-            this._localizationService = localizationService;
+            _productReviewViewModelService = productReviewViewModelService;
+            _localizationService = localizationService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -42,16 +47,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> List()
         {
-            var model = await _productReviewViewModelService.PrepareProductReviewListModel();
+            var model = await _productReviewViewModelService.PrepareProductReviewListModel(_workContext.CurrentCustomer.StaffStoreId);
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, ProductReviewListModel model)
         {
+            //limit for store manager
+            if (_workContext.CurrentCustomer.IsStaff())
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+
             var (productReviewModels, totalCount) = await _productReviewViewModelService.PrepareProductReviewsModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productReviewModels.ToList(),
                 Total = totalCount,
             };
@@ -68,6 +76,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && productReview.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var model = new ProductReviewModel();
             await _productReviewViewModelService.PrepareProductReviewModel(model, productReview, false, false);
             return View(model);
@@ -80,6 +93,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && productReview.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             if (ModelState.IsValid)
             {
@@ -102,6 +120,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && productReview.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             if (ModelState.IsValid)
             {
                 await _productReviewViewModelService.DeleteProductReview(productReview);
@@ -117,7 +140,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (selectedIds != null)
             {
-                await _productReviewViewModelService.ApproveSelected(selectedIds.ToList());
+                await _productReviewViewModelService.ApproveSelected(selectedIds.ToList(), _workContext.CurrentCustomer.StaffStoreId);
             }
 
             return Json(new { Result = true });
@@ -128,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (selectedIds != null)
             {
-                await _productReviewViewModelService.DisapproveSelected(selectedIds.ToList());
+                await _productReviewViewModelService.DisapproveSelected(selectedIds.ToList(), _workContext.CurrentCustomer.StaffStoreId);
             }
 
             return Json(new { Result = true });
@@ -138,12 +161,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
         {
             const int searchTermMinimumLength = 3;
-            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
                 return Content("");
+
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
 
             //products
             const int productNumber = 15;
             var products = (await productService.SearchProducts(
+                storeId: storeId,
                 keywords: term,
                 pageSize: productNumber,
                 showHidden: true)).products;
