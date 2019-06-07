@@ -210,9 +210,6 @@
                     </div>
                 }
             </div>
-            <p class="card-text d-none">
-                @Html.Raw(Model.ShortDescription)
-            </p>
             </div>
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
