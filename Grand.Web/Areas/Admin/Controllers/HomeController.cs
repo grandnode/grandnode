@@ -108,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new DashboardModel
             {
-                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff()
             };
             if (string.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || 
                 string.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
@@ -122,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new DashboardModel
             {
-                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff()
             };
             return View(model);
         }
