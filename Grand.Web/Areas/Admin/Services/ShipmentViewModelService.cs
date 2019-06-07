@@ -244,13 +244,10 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            //a vendor should have access only to his products
-            string vendorId = "";
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
-
             //load shipments
-            var shipments = await _shipmentService.GetAllShipments(vendorId: vendorId,
+            var shipments = await _shipmentService.GetAllShipments(
+                storeId: model.StoreId,
+                vendorId: model.VendorId,
                 warehouseId: model.WarehouseId,
                 shippingCountryId: model.CountryId,
                 shippingStateId: model.StateProvinceId,

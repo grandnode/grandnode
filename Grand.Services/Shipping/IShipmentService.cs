@@ -21,6 +21,7 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Search shipments
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="warehouseId">Warehouse identifier, only shipments with products from a specified warehouse will be loaded; 0 to load all orders</param>
         /// <param name="shippingCountryId">Shipping country identifier; "" to load all records</param>
@@ -33,7 +34,7 @@ namespace Grand.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        Task<IPagedList<Shipment>> GetAllShipments(string vendorId = "", string warehouseId = "",
+        Task<IPagedList<Shipment>> GetAllShipments(string storeId = "", string vendorId = "", string warehouseId = "",
             string shippingCountryId = "",
             int shippingStateId = 0,
             string shippingCity = null,
