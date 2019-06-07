@@ -373,7 +373,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null || !_workContext.CurrentCustomer.IsStaff();
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff();
             //custom values
             model.CustomValues = order.DeserializeCustomValues();
 

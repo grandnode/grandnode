@@ -145,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Services
                 else
                     customerId = "00000000-0000-0000-0000-000000000000";
             }
-            var returnRequests = await _returnRequestService.SearchReturnRequests("", customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
+            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
