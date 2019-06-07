@@ -66,7 +66,7 @@ namespace Grand.Web.Areas.Admin.Services
             _seoSettings = seoSettings;
         }
 
-        protected virtual async Task PrepareAllCategoriesModel(CategoryModel model)
+        protected virtual async Task PrepareAllCategoriesModel(CategoryModel model, string storeId)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -75,7 +75,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "[None]",
                 Value = ""
             });
-            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
             foreach (var c in categories)
             {
                 model.AvailableCategories.Add(new SelectListItem {
@@ -186,7 +186,7 @@ namespace Grand.Web.Areas.Admin.Services
             //templates
             await PrepareTemplatesModel(model);
             //categories
-            await PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model, storeId);
             //discounts
             await PrepareDiscountModel(model, null, true);
             //ACL
@@ -203,12 +203,12 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category)
+        public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category, string storeId)
         {
             //templates
             await PrepareTemplatesModel(model);
             //categories
-            await PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model, storeId);
             //discounts
             await PrepareDiscountModel(model, category, false);
             return model;

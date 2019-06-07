@@ -150,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _categoryViewModelService.PrepareCategoryModel(model, null);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, null, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             //Stores
@@ -188,7 +188,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = category.GetSeName(languageId, false, false);
             });
-            model = await _categoryViewModelService.PrepareCategoryModel(model, category);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, category, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(category, false, _customerService);
             //Stores
@@ -233,7 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _categoryViewModelService.PrepareCategoryModel(model, category);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, category, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(category, true, _customerService);
             //Stores

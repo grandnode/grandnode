@@ -73,12 +73,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (manufacturer == null)
             {
-                return (false, "Category not exists");
+                return (false, "Manufacturer not exists");
             }
             if (_workContext.CurrentCustomer.IsStaff())
             {
                 if (!(!manufacturer.LimitedToStores || (manufacturer.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && manufacturer.LimitedToStores)))
-                    return (false, "This is not your category");
+                    return (false, "This is not your manufacturer");
             }
             return (true, null);
         }

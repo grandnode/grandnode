@@ -11,7 +11,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<List<TreeNode>> PrepareCategoryNodeListModel(string storeId);
         Task<(IEnumerable<CategoryModel> categoryListModel, int totalCount)> PrepareCategoryListModel(CategoryListModel model, int pageIndex, int pageSize);
         Task<CategoryModel> PrepareCategoryModel(string storeId);
-        Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category);
+        Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category, string storeId);
         Task<Category> InsertCategoryModel(CategoryModel model);
         Task<Category> UpdateCategoryModel(Category category, CategoryModel model);
         Task DeleteCategory(Category category);
