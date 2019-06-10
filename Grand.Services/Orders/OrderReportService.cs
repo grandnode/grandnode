@@ -541,9 +541,10 @@ namespace Grand.Services.Orders
             var qproducts = from p in _productRepository.Table
                          orderby p.Name
                          where (!query.Contains(p.Id)) &&
-                             //include only simple products
+                               //include only simple products
                                (p.ProductTypeId == simpleProductTypeId) &&                               
                                (vendorId == "" || p.VendorId == vendorId) &&
+                               (string.IsNullOrEmpty(storeId) || p.Stores.Contains(storeId) || p.LimitedToStores == false) &&
                                (showHidden || p.Published)
                          select p;
 
