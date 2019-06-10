@@ -694,7 +694,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> PdfInvoiceAll(OrderListModel model)
         {
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 model.VendorId = _workContext.CurrentVendor.Id;
             }

@@ -235,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             //a vendor should have access only to orders with his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff();
             if (startDate.HasValue)
                 model.StartDate = startDate.Value;
 
@@ -662,7 +662,7 @@ namespace Grand.Web.Areas.Admin.Services
             bool hasDownloadableItems = false;
             var products = order.OrderItems;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 products = products
                     .Where(orderItem => orderItem.VendorId == _workContext.CurrentVendor.Id)
