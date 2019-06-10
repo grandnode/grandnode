@@ -254,13 +254,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
 
-                if (customer.IsAdmin() && !String.IsNullOrEmpty(model.VendorId))
+                if (customer.IsAdmin() && !string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
-                if (customer.IsVendor() && !String.IsNullOrEmpty(model.VendorId))
+                if (customer.IsVendor() && !string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                }
+                if (customer.IsStaff() && !string.IsNullOrEmpty(model.VendorId))
+                {
+                    WarningNotification(_localizationService.GetResource("Admin.Customers.Customers.VendorShouldNotbeStaff"));
                 }
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
@@ -311,15 +315,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     model.CustomAttributes = await ParseCustomCustomerAttributes(form);
                     customer = await _customerViewModelService.UpdateCustomerModel(customer, model);
-                    if (customer.IsAdmin() && !String.IsNullOrEmpty(model.VendorId))
+                    if (customer.IsAdmin() && !string.IsNullOrEmpty(model.VendorId))
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
-                    if (customer.IsVendor() && String.IsNullOrEmpty(model.VendorId))
+                    if (customer.IsVendor() && string.IsNullOrEmpty(model.VendorId))
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
-
+                    if (customer.IsStaff() && !string.IsNullOrEmpty(model.VendorId))
+                    {
+                        WarningNotification(_localizationService.GetResource("Admin.Customers.Customers.VendorShouldNotbeStaff"));
+                    }
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
                     if (continueEditing)
                     {
