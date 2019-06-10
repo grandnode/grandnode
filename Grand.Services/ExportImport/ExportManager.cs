@@ -79,9 +79,8 @@ namespace Grand.Services.ExportImport
 
         #region Utilities
 
-        protected virtual async Task WriteCategories(XmlWriter xmlWriter, string parentCategoryId)
+        protected virtual async Task WriteCategories(XmlWriter xmlWriter, List<Category> categories)
         {
-            var categories = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
             if (categories != null && categories.Count > 0)
             {
                 foreach (var category in categories)
@@ -128,10 +127,6 @@ namespace Grand.Services.ExportImport
                             xmlWriter.WriteEndElement();
                         }
                     }
-                    xmlWriter.WriteEndElement();
-
-                    xmlWriter.WriteStartElement("SubCategories");
-                    await WriteCategories(xmlWriter, category.Id);
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteEndElement();
                 }
@@ -248,7 +243,7 @@ namespace Grand.Services.ExportImport
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
-        public virtual async Task<string> ExportCategoriesToXml()
+        public virtual async Task<string> ExportCategoriesToXml(IEnumerable<Category> categories)
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -261,7 +256,7 @@ namespace Grand.Services.ExportImport
             await xmlWriter.WriteStartDocumentAsync();
             xmlWriter.WriteStartElement("Categories");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
-            await WriteCategories(xmlWriter, "");
+            await WriteCategories(xmlWriter, categories.ToList());
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
             await xmlWriter.FlushAsync();

@@ -137,7 +137,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
 
         #region Nested classes
-
+        [Validator(typeof(CategoryProductModelValidator))]
         public partial class CategoryProductModel : BaseGrandEntityModel
         {
             public string CategoryId { get; set; }
@@ -153,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-
+        [Validator(typeof(AddCategoryProductModelValidator))]
         public partial class AddCategoryProductModel : BaseGrandModel
         {
             public AddCategoryProductModel()

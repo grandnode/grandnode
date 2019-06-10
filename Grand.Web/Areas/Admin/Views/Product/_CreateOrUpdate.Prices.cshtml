@@ -224,8 +224,8 @@
                                 CustomerRoleId: { editable: true, type: "string" },
                                 Quantity: { editable: true, type: "number" },
                                 Price: { editable: true, type: "number" },
-                                StartDateTime: { editable: true, type: "date" },
-                                EndDateTime: { editable: true, type: "date" },
+                                //StartDateTime: { editable: false, type: "date" },
+                                //EndDateTime: { editable: false, type: "date" },
                                 Id: { editable: false, type: "string" }
                             }
                         }
@@ -271,13 +271,9 @@
                 }, {
                     field: "StartDateTime",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTime")",
-                    type: "date",
-                    format: "{0:G}"
                 }, {
                     field: "EndDateTime",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTime")",
-                    type: "date",
-                    format: "{0:G}"
                 }, {
                     field: "Id",
                     title: "@T("Admin.Common.Edit")",

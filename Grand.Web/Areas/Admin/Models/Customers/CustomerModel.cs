@@ -23,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
             this.AvailableVendors = new List<SelectListItem>();
+            this.AvailableStores = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
             this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             this.RewardPointsAvailableStores = new List<SelectListItem>();
@@ -50,6 +51,10 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]
         public string VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
+
+        [GrandResourceDisplayName("Admin.Customers.Customers.Fields.StaffStore")]
+        public string StaffStoreId { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         //form fields & properties
         public bool GenderEnabled { get; set; }

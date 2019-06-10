@@ -80,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //condition
@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
 
@@ -125,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(contactAttribute, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(contactAttribute, _storeService, false);
             //condition
             await _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
 
@@ -155,7 +155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
+            await model.PrepareStoresMappingModel(contactAttribute, _storeService, true);
             //ACL
             await model.PrepareACLModel(contactAttribute, true, _customerService);
             await _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);

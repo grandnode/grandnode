@@ -3,7 +3,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
-using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
@@ -28,7 +27,8 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ILocalizationService _localizationService;
         private readonly IMediator _mediator;
 
-        public ProductReviewViewModelService(IProductService productService, ICustomerService customerService, IStoreService storeService, IDateTimeHelper dateTimeHelper,
+        public ProductReviewViewModelService(IProductService productService, ICustomerService customerService,
+            IStoreService storeService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IMediator mediator)
         {
             _productService = productService;
@@ -76,11 +76,12 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual async Task<ProductReviewListModel> PrepareProductReviewListModel()
+        public virtual async Task<ProductReviewListModel> PrepareProductReviewListModel(string storeId)
         {
             var model = new ProductReviewListModel();
+
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            var stores = (await _storeService.GetAllStores()).Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
+            var stores = (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)).Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
             foreach (var selectListItem in stores)
                 model.AvailableStores.Add(selectListItem);
             return model;
@@ -127,7 +128,7 @@ namespace Grand.Web.Areas.Admin.Services
             await _productService.UpdateProductReviewTotals(product);
         }
 
-        public virtual async Task ApproveSelected(IList<string> selectedIds)
+        public virtual async Task ApproveSelected(IList<string> selectedIds, string storeId)
         {
             foreach (var id in selectedIds)
             {
@@ -135,7 +136,7 @@ namespace Grand.Web.Areas.Admin.Services
                 string idProduct = id.Split(':').Last().ToString();
                 var product = await _productService.GetProductById(idProduct);
                 var productReview = await _productService.GetProductReviewById(idReview);
-                if (productReview != null)
+                if (productReview != null && (string.IsNullOrEmpty(storeId) || productReview.StoreId == storeId))
                 {
                     var previousIsApproved = productReview.IsApproved;
                     productReview.IsApproved = true;
@@ -149,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual async Task DisapproveSelected(IList<string> selectedIds)
+        public virtual async Task DisapproveSelected(IList<string> selectedIds, string storeId)
         {
             foreach (var id in selectedIds)
             {
@@ -158,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Services
 
                 var product = await _productService.GetProductById(idProduct);
                 var productReview = await _productService.GetProductReviewById(idReview);
-                if (productReview != null)
+                if (productReview != null && (string.IsNullOrEmpty(storeId) || productReview.StoreId == storeId))
                 {
                     productReview.IsApproved = false;
                     await _productService.UpdateProductReview(productReview);

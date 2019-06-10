@@ -21,6 +21,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.ReturnRequests.List.GoDirectlyToId")]
         public string GoDirectlyToId { get; set; }
 
+        public string StoreId { get; set; }
+
         public IList<SelectListItem> ReturnRequestStatus { get; set; }
     }
 }

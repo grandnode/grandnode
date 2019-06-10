@@ -29,7 +29,7 @@ namespace Grand.Services.ExportImport
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportCategoriesToXml();
+        Task<string> ExportCategoriesToXml(IEnumerable<Category> categories);
 
         /// <summary>
         /// Export category to XLSX

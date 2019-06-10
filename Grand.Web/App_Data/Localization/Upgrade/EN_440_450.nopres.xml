@@ -522,4 +522,25 @@
   <LocaleResource Name="Admin.Dashboard.Summary">
     <Value>Summary</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore">
+    <Value>Manager of store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.Hint">
+    <Value>Choose a manage store owner associated to this customer account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.None">
+    <Value>Not a staff</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Permisions">
+    <Value>You can't edit this category, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Permisions">
+    <Value>You can't edit this manufacturer, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Permisions">
+    <Value>You can't edit this product, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.VendorShouldNotbeStaff">
+    <Value>A customer with a vendor associated should not be a staff</Value>
+  </LocaleResource>
 </Language>

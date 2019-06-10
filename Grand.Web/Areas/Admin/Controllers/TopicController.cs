@@ -41,13 +41,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             IWorkContext workContext)
         {
-            this._topicViewModelService = topicViewModelService;
-            this._topicService = topicService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._customerService = customerService;
-            this._workContext = workContext;
+            _topicViewModelService = topicViewModelService;
+            _topicService = topicService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _customerService = customerService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -98,7 +98,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             await _topicViewModelService.PrepareTemplatesModel(model);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //locales
             await AddLocales(_languageService, model.Locales);
             //ACL
@@ -123,7 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             await _topicViewModelService.PrepareTemplatesModel(model);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             return View(model);
@@ -143,7 +143,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(topic, false, _customerService);
             //Store
-            await model.PrepareStoresMappingModel(topic, false, _storeService);
+            await model.PrepareStoresMappingModel(topic, _storeService, false);
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -184,7 +184,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             await _topicViewModelService.PrepareTemplatesModel(model);
             //Store
-            await model.PrepareStoresMappingModel(topic, true, _storeService);
+            await model.PrepareStoresMappingModel(topic, _storeService, true);
             //ACL
             await model.PrepareACLModel(topic, true, _customerService);
             return View(model);

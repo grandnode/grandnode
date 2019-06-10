@@ -47,5 +47,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.Orders.Shipments.List.Warehouse")]
         public string WarehouseId { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }
+
+        public string StoreId { get; set; }
+        public string VendorId { get; set; }
     }
 }

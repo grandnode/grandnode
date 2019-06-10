@@ -77,7 +77,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ShowOnHomePage = true
             };
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //locales
             await AddLocales(_languageService, model.Locales);
             //ACL
@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //locales
             await AddLocales(_languageService, model.Locales);
             //ACL
@@ -118,7 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
             var model = poll.ToModel();
             //Store
-            await model.PrepareStoresMappingModel(poll, false, _storeService);
+            await model.PrepareStoresMappingModel(poll, _storeService, false);
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -159,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Store
-            await model.PrepareStoresMappingModel(poll, true, _storeService);
+            await model.PrepareStoresMappingModel(poll, _storeService, true);
             //ACL
             await model.PrepareACLModel(poll, true, _customerService);
             //locales

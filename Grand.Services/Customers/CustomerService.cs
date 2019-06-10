@@ -136,6 +136,7 @@ namespace Grand.Services.Customers
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -152,7 +153,7 @@ namespace Grand.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         public virtual async Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "",
+            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "", string storeId = "",
             string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
@@ -165,10 +166,13 @@ namespace Grand.Services.Customers
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(affiliateId))
+            if (!string.IsNullOrEmpty(affiliateId))
                 query = query.Where(c => affiliateId == c.AffiliateId);
-            if (!String.IsNullOrEmpty(vendorId))
+            if (!string.IsNullOrEmpty(vendorId))
                 query = query.Where(c => vendorId == c.VendorId);
+            if (!string.IsNullOrEmpty(storeId))
+                query = query.Where(c => c.StoreId == storeId);
+
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Any(x => customerRoleIds.Contains(x.Id)));
@@ -179,12 +183,12 @@ namespace Grand.Services.Customers
                     query = query.Where(c => c.CustomerTags.Contains(item));
                 }
             }
-            if (!String.IsNullOrWhiteSpace(email))
+            if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email != null && c.Email.Contains(email.ToLower()));
-            if (!String.IsNullOrWhiteSpace(username))
+            if (!string.IsNullOrWhiteSpace(username))
                 query = query.Where(c => c.Username != null && c.Username.ToLower().Contains(username.ToLower()));
 
-            if (!String.IsNullOrWhiteSpace(firstName))
+            if (!string.IsNullOrWhiteSpace(firstName))
             {
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.FirstName && y.Value != null && y.Value.ToLower().Contains(firstName.ToLower())));
             }
@@ -247,25 +251,33 @@ namespace Grand.Services.Customers
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="storeId">Store ident</param>
         /// <returns>Customers</returns>
         public virtual async Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
+            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue, string storeId = "")
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
+
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
+
+            if (!string.IsNullOrEmpty(storeId))
+                query = query.Where(c => c.StoreId == storeId);
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             return await PagedList<Customer>.Create(query, pageIndex, pageSize);
         }
 
 
-        public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc)
+        public virtual Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc, string storeId)
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
+            if (!string.IsNullOrEmpty(storeId))
+                query = query.Where(c => c.StoreId == storeId);
+
             return query.CountAsync();
         }
 
@@ -613,7 +625,8 @@ namespace Grand.Services.Customers
                 .Set(x => x.CustomerRoles, customer.CustomerRoles)
                 .Set(x => x.Addresses, customer.Addresses)
                 .Set(x => x.FreeShipping, customer.FreeShipping)
-                .Set(x => x.VendorId, customer.VendorId);
+                .Set(x => x.VendorId, customer.VendorId)
+                .Set(x => x.StaffStoreId, customer.StaffStoreId);
 
             await _customerRepository.Collection.UpdateOneAsync(filter, update);
             //event notification

@@ -1,13 +1,14 @@
 ﻿@model ManufacturerModel
 @inject AdminAreaSettings adminAreaSettings
-@{
-<div class="panel panel-default">
-    <vc:admin-widget widget-zone="manufacturer_activity_log_top" additional-data="Model" />
-    <div class="panel-body">
-        <div id="activitylog-grid"></div>
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <vc:admin-widget widget-zone="manufacturer_activity_log_top" additional-data="Model" />
+        <div class="panel-body">
+            <div id="activitylog-grid"></div>
+        </div>
+        <vc:admin-widget widget-zone="manufacturer_activity_log_bottom" additional-data="Model" />
     </div>
-    <vc:admin-widget widget-zone="manufacturer_activity_log_bottom" additional-data="Model" />
-</div>
     <script>
         $(document).ready(function () {
             $("#activitylog-grid").kendoGrid({
@@ -65,5 +66,4 @@
             });
         });
     </script>
-
 }

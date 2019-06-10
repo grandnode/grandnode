@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -120,43 +121,43 @@ namespace Grand.Web.Areas.Admin.Controllers
             ShippingSettings shippingSettings,
             MediaSettings mediaSettings)
         {
-            this._shipmentViewModelService = shipmentViewModelService;
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._measureService = measureService;
-            this._pdfService = pdfService;
-            this._productService = productService;
-            this._exportManager = exportManager;
-            this._workflowMessageService = workflowMessageService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._shoppingCartService = shoppingCartService;
-            this._giftCardService = giftCardService;
-            this._downloadService = downloadService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._affiliateService = affiliateService;
-            this._pictureService = pictureService;
-            this._taxService = taxService;
-            this._returnRequestService = returnRequestService;
-            this._customerActivityService = customerActivityService;
-            this._currencySettings = currencySettings;
-            this._taxSettings = taxSettings;
-            this._measureSettings = measureSettings;
-            this._addressSettings = addressSettings;
-            this._shippingSettings = shippingSettings;
-            this._customerService = customerService;
-            this._mediaSettings = mediaSettings;
+             _shipmentViewModelService = shipmentViewModelService;
+             _orderService = orderService;
+             _orderProcessingService = orderProcessingService;
+             _localizationService = localizationService;
+             _workContext = workContext;
+             _measureService = measureService;
+             _pdfService = pdfService;
+             _productService = productService;
+             _exportManager = exportManager;
+             _workflowMessageService = workflowMessageService;
+             _categoryService = categoryService;
+             _manufacturerService = manufacturerService;
+             _productAttributeService = productAttributeService;
+             _productAttributeParser = productAttributeParser;
+             _productAttributeFormatter = productAttributeFormatter;
+             _shoppingCartService = shoppingCartService;
+             _giftCardService = giftCardService;
+             _downloadService = downloadService;
+             _shipmentService = shipmentService;
+             _shippingService = shippingService;
+             _storeService = storeService;
+             _vendorService = vendorService;
+             _addressAttributeParser = addressAttributeParser;
+             _addressAttributeService = addressAttributeService;
+             _addressAttributeFormatter = addressAttributeFormatter;
+             _affiliateService = affiliateService;
+             _pictureService = pictureService;
+             _taxService = taxService;
+             _returnRequestService = returnRequestService;
+             _customerActivityService = customerActivityService;
+             _currencySettings = currencySettings;
+             _taxSettings = taxSettings;
+             _measureSettings = measureSettings;
+             _addressSettings = addressSettings;
+             _shippingSettings = shippingSettings;
+             _customerService = customerService;
+             _mediaSettings = mediaSettings;
         }
 
         #region Shipments
@@ -170,6 +171,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                model.VendorId = _workContext.CurrentVendor.Id;
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+
             var shipments = await _shipmentViewModelService.PrepareShipments(model, command.Page, command.PageSize);
             var items = new List<ShipmentModel>();
             foreach (var item in shipments.shipments)
@@ -192,19 +202,34 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
                 return Content("");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return Content("");
+            }
 
             //shipments
             var shipmentModels = new List<ShipmentModel>();
-            var shipments = (await _shipmentService.GetShipmentsByOrder(orderId))
-                //a vendor should have access only to his products
-                .Where(s => _workContext.CurrentVendor == null || _workContext.HasAccessToShipment(order, s))
-                .OrderBy(s => s.CreatedOnUtc)
-                .ToList();
-            foreach (var shipment in shipments)
-                shipmentModels.Add(await _shipmentViewModelService.PrepareShipmentModel(shipment, false));
-            
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+            {
+                var shipments = (await _shipmentService.GetShipmentsByOrder(orderId))
+                    //a vendor should have access only to his products
+                    .Where(s => _workContext.CurrentVendor == null || _workContext.HasAccessToShipment(order, s))
+                    .OrderBy(s => s.CreatedOnUtc)
+                    .ToList();
+                foreach (var shipment in shipments)
+                    shipmentModels.Add(await _shipmentViewModelService.PrepareShipmentModel(shipment, false));
+            }
+            else
+            {
+                var shipments = (await _shipmentService.GetShipmentsByOrder(orderId))
+                   .OrderBy(s => s.CreatedOnUtc)
+                   .ToList();
+                foreach (var shipment in shipments)
+                    shipmentModels.Add(await _shipmentViewModelService.PrepareShipmentModel(shipment, false));
+            }
             var gridModel = new DataSourceResult
             {
                 Data = shipmentModels,
@@ -225,12 +250,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
                 return Content("");
 
-            //a vendor should have access only to his products
-            //if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
-            //    return Content("");
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return Content("");
+            }
 
             //shipments
             var shipmentModel = await _shipmentViewModelService.PrepareShipmentModel(shipment, true);
@@ -251,8 +277,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             var model = await _shipmentViewModelService.PrepareShipmentModel(order);
 
@@ -269,12 +300,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToOrder(order) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
 
             var orderItems = order.OrderItems;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 orderItems = orderItems.Where(_workContext.HasAccessToOrderItem).ToList();
             }
@@ -313,6 +349,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var orderId = shipment.OrderId;
             var order = await _orderService.GetOrderById(orderId);
             if (order == null)
@@ -320,7 +361,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             var model = await _shipmentViewModelService.PrepareShipmentModel(shipment, true, true);
@@ -335,6 +376,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var orderId = shipment.OrderId;
             var order = await _orderService.GetOrderById(orderId);
             if (order == null)
@@ -342,7 +388,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             foreach (var shipmentItem in shipment.ShipmentItems)
@@ -379,13 +425,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
@@ -403,13 +454,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             shipment.AdminComment = model.AdminComment;
@@ -427,13 +483,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             try
@@ -458,13 +519,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             try
@@ -494,13 +560,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             try
@@ -526,13 +597,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             try
@@ -560,13 +636,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //no shipment found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
             var order = await _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment))
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
 
             var shipments = new List<Shipment>
@@ -587,9 +668,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportpackagingslips-all")]
         public async Task<IActionResult> PdfPackagingSlipAll(ShipmentListModel model)
         {
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+
             //load shipments
             var shipments = await _shipmentViewModelService.PrepareShipments(model, 1, 100);
-
+            
             //ensure that we at least one shipment selected
             if (shipments.totalCount == 0)
             {
@@ -621,7 +707,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 foreach (var item in shipments)
                 {
@@ -632,8 +718,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             else
-                shipments_access = shipments;
-
+            {
+                var storeId = "";
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    storeId = _workContext.CurrentCustomer.StaffStoreId;
+                }
+                shipments_access = shipments.Where(x=>x.StoreId == storeId || string.IsNullOrEmpty(storeId)).ToList();
+            }
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)
             {
@@ -660,7 +752,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 shipments.AddRange(await _shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
             }
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 foreach (var item in shipments)
                 {
@@ -671,7 +763,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             else
-                shipments_access = shipments;
+            {
+                var storeId = "";
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    storeId = _workContext.CurrentCustomer.StaffStoreId;
+                }
+                shipments_access = shipments.Where(x => x.StoreId == storeId || string.IsNullOrEmpty(storeId)).ToList();
+            }
 
             foreach (var shipment in shipments_access)
             {
@@ -698,7 +797,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 shipments.AddRange(await _shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
             }
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 foreach (var item in shipments)
                 {
@@ -709,7 +808,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             else
-                shipments_access = shipments;
+            {
+                var storeId = "";
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    storeId = _workContext.CurrentCustomer.StaffStoreId;
+                }
+                shipments_access = shipments.Where(x => x.StoreId == storeId || string.IsNullOrEmpty(storeId)).ToList();
+            }
 
             foreach (var shipment in shipments_access)
             {

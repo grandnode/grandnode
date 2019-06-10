@@ -2436,6 +2436,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Manage">
     <Value>Manage Categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Permisions">
+    <Value>You can't edit this category, because it can be used in many stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Products">
     <Value>Products</Value>
   </LocaleResource>
@@ -2678,6 +2681,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Permisions">
+    <Value>You can't edit this manufacturer, because it can be used in many stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products">
     <Value>Products</Value>
@@ -3899,6 +3905,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Permisions">
+    <Value>You can't edit this product, because it can be used in many stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Prices">
     <Value>Prices</Value>
@@ -11364,6 +11373,15 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress2.Required">
     <Value>Street address 2 is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore">
+    <Value>Manager of store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.Hint">
+    <Value>Choose a manage store owner associated to this customer account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.None">
+    <Value>Not a staff</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
@@ -11663,6 +11681,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.VendorShouldNotbeStaff">
+    <Value>A customer with a vendor associated should not be a staff</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
     <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>

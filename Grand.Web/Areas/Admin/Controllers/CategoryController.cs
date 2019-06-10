@@ -1,4 +1,6 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -12,8 +14,8 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -66,22 +68,44 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Utilities
+
+        protected (bool allow, string message) CheckAccessToCategory(Category category)
+        {
+            if (category == null)
+            {
+                return (false, "Category not exists");
+            }
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!(!category.LimitedToStores || (category.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && category.LimitedToStores)))
+                    return (false, "This is not your category");
+            }
+            return (true, null);
+        }
+
+        #endregion
+
         #region List / tree
 
         public IActionResult Index() => RedirectToAction("List");
 
         public async Task<IActionResult> List()
         {
-            var model = await _categoryViewModelService.PrepareCategoryListModel();
+            var model = await _categoryViewModelService.PrepareCategoryListModel(_workContext.CurrentCustomer.StaffStoreId);
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, CategoryListModel model)
         {
-            var categories = await _categoryViewModelService.PrepareCategoryListModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
+            if (_workContext.CurrentCustomer.IsStaff())
             {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+
+            var categories = await _categoryViewModelService.PrepareCategoryListModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
                 Data = categories.categoryListModel,
                 Total = categories.totalCount
             };
@@ -92,7 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> NodeList()
         {
-            var model = await _categoryViewModelService.PrepareCategoryNodeListModel();
+            var model = await _categoryViewModelService.PrepareCategoryNodeListModel(_workContext.CurrentCustomer.StaffStoreId);
             return Json(model);
         }
 
@@ -102,7 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var model = await _categoryViewModelService.PrepareCategoryModel();
+            var model = await _categoryViewModelService.PrepareCategoryModel(_workContext.CurrentCustomer.StaffStoreId);
             //locales
             await AddLocales(_languageService, model.Locales);
 
@@ -114,17 +138,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 var category = await _categoryViewModelService.InsertCategoryModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _categoryViewModelService.PrepareCategoryModel(model, null);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, null, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -135,6 +165,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (category == null)
                 //No category found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!category.LimitedToStores || (category.LimitedToStores && category.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && category.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.Catalog.Categories.Permisions"));
+                else
+                {
+                    if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
 
             var model = category.ToModel();
             //locales
@@ -147,11 +188,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = category.GetSeName(languageId, false, false);
             });
-            model = await _categoryViewModelService.PrepareCategoryModel(model, category);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, category, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(category, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(category, false, _storeService);
+            await model.PrepareStoresMappingModel(category, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -164,8 +205,20 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No category found with the specified id
                 return RedirectToAction("List");
 
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = category.Id });
+            }
+
             if (ModelState.IsValid)
             {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    model.LimitedToStores = true;
+                    model.SelectedStoreIds = new string[] { _workContext.CurrentCustomer.StaffStoreId };
+                }
+
                 category = await _categoryViewModelService.UpdateCategoryModel(category, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Updated"));
@@ -180,11 +233,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _categoryViewModelService.PrepareCategoryModel(model, category);
+            model = await _categoryViewModelService.PrepareCategoryModel(model, category, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
             await model.PrepareACLModel(category, true, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(category, true, _storeService);
+            await model.PrepareStoresMappingModel(category, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -196,6 +249,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (category == null)
                 //No category found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = category.Id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -214,7 +273,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             try
             {
-                var xml = await _exportManager.ExportCategoriesToXml();
+                var xml = await _exportManager.ExportCategoriesToXml(await _categoryService.GetAllCategories(showHidden: true, storeId: _workContext.CurrentCustomer.StaffStoreId));
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "categories.xml");
             }
             catch (Exception exc)
@@ -228,8 +287,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             try
             {
-                var bytes = _exportManager.ExportCategoriesToXlsx(await _categoryService.GetAllCategories(showHidden: true));
-
+                var bytes = _exportManager.ExportCategoriesToXlsx(await _categoryService.GetAllCategories(showHidden: true, storeId: _workContext.CurrentCustomer.StaffStoreId));
                 return File(bytes, "text/xls", "categories.xlsx");
             }
             catch (Exception exc)
@@ -242,8 +300,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
         {
-            //a vendor cannot import categories
-            if (_workContext.CurrentVendor != null)
+            //a vendor and staff cannot import categories
+            if (_workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
 
             try
@@ -273,9 +331,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductList(DataSourceRequest command, string categoryId)
         {
+            var category = await _categoryService.GetCategoryById(categoryId);
+            var permission = CheckAccessToCategory(category);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var productCategories = await _categoryViewModelService.PrepareCategoryProductModel(categoryId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productCategories.categoryProductModels,
                 Total = productCategories.totalCount
             };
@@ -293,11 +355,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
-        public async Task<IActionResult> ProductDelete(string id, string productId)
+        public async Task<IActionResult> ProductDelete(CategoryModel.CategoryProductModel model)
         {
             if (ModelState.IsValid)
             {
-                await _categoryViewModelService.DeleteProductCategoryModel(id, productId);
+                await _categoryViewModelService.DeleteProductCategoryModel(model.Id, model.ProductId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -305,7 +367,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ProductAddPopup(string categoryId)
         {
-            var model = await _categoryViewModelService.PrepareAddCategoryProductModel();
+            var model = await _categoryViewModelService.PrepareAddCategoryProductModel(_workContext.CurrentCustomer.StaffStoreId);
+            model.CategoryId = categoryId;
             return View(model);
         }
 
@@ -313,6 +376,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
             var gridModel = new DataSourceResult();
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
             var products = await _categoryViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             gridModel.Data = products.products.ToList();
             gridModel.Total = products.totalCount;
@@ -324,11 +391,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> ProductAddPopup(CategoryModel.AddCategoryProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _categoryViewModelService.InsertCategoryProductModel(model);
+                if (model.SelectedProductIds != null)
+                {
+                    await _categoryViewModelService.InsertCategoryProductModel(model);
+                }
+                ViewBag.RefreshPage = true;
             }
-            ViewBag.RefreshPage = true;
+            else
+                ErrorNotification(ModelState);
+
             return View(model);
         }
 
@@ -339,9 +412,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string categoryId)
         {
+            var category = await _categoryService.GetCategoryById(categoryId);
+
+            var permission = CheckAccessToCategory(category);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var activityLog = await _categoryViewModelService.PrepareActivityLogModel(categoryId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = activityLog.activityLogModel,
                 Total = activityLog.totalCount
             };

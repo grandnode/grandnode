@@ -1,6 +1,7 @@
 ﻿@model CategoryModel
 @inject AdminAreaSettings adminAreaSettings
-@{
+@if (!String.IsNullOrEmpty(Model.Id))
+{ 
     <vc:admin-widget widget-zone="category_details_activity_top" additional-data="Model" />
     <div class="panel panel-default">
         <div class="panel-body">

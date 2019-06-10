@@ -116,7 +116,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
 
         #region Nested classes
-
+        [Validator(typeof(ManufacturerProductModelValidator))]
         public partial class ManufacturerProductModel : BaseGrandEntityModel
         {
             public string ManufacturerId { get; set; }
@@ -133,6 +133,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
+        [Validator(typeof(AddManufacturerProductModelValidator))]
         public partial class AddManufacturerProductModel : BaseGrandModel
         {
             public AddManufacturerProductModel()

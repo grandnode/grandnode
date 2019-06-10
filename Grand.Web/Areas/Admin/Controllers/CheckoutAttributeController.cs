@@ -95,7 +95,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
 
@@ -116,7 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             await _checkoutAttributeViewModelService.PrepareTaxCategories(model, null, true);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
 
@@ -142,14 +142,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             await _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
-            await model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, _storeService, false);
 
             //condition
             await _checkoutAttributeViewModelService.PrepareConditionAttributes(model, checkoutAttribute);
             //ACL
             await model.PrepareACLModel(checkoutAttribute, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, _storeService, false);
 
             return View(model);
         }
@@ -181,7 +181,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             await _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
-            await model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
+            await model.PrepareStoresMappingModel(checkoutAttribute, _storeService, true);
             //ACL
             await model.PrepareACLModel(checkoutAttribute, true, _customerService);
 

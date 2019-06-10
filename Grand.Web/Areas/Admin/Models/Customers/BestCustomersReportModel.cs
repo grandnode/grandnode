@@ -31,6 +31,8 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         [GrandResourceDisplayName("Admin.Reports.Customers.BestBy.ShippingStatus")]
         public int ShippingStatusId { get; set; }
 
+        public string StoreId { get; set; }
+
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
         public IList<SelectListItem> AvailableShippingStatuses { get; set; }

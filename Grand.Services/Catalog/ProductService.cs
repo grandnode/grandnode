@@ -1024,9 +1024,10 @@ namespace Grand.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <param name="products">Low stock products</param>
         /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(string vendorId,
+        public virtual void GetLowStockProducts(string vendorId, string storeId,
             out IList<Product> products,
             out IList<ProductAttributeCombination> combinations)
         {
@@ -1039,13 +1040,17 @@ namespace Grand.Services.Catalog
             if (!string.IsNullOrEmpty(vendorId))
                 query_products = query_products.Where(x => x.VendorId == vendorId);
 
+            if (!string.IsNullOrEmpty(storeId))
+                query_products = query_products.Where(x => x.Stores.Contains(storeId));
+
             products = query_products.ToList();
 
             //Track inventory for product by product attributes
             var query2_1 = from p in _productRepository.Table
                            where
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                           (vendorId == "" || p.VendorId == vendorId)
+                           (vendorId == "" || p.VendorId == vendorId) &&
+                           (storeId == "" || p.Stores.Contains(storeId)) 
                            from c in p.ProductAttributeCombinations
                            select new ProductAttributeCombination() {
                                ProductId = p.Id,

@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
@@ -17,8 +18,8 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -80,6 +81,28 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        protected (bool allow, string message) CheckAccessToProduct(Product product)
+        {
+            if (product == null)
+            {
+                return (false, "Product not exists");
+            }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+            {
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return (false, "This is not your product");
+                }
+            }
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!(!product.LimitedToStores || (product.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && product.LimitedToStores)))
+                    return (false, "This is not your product");
+            }
+            return (true, null);
+        }
+
         #region Product list / create / edit / delete
 
         //list products
@@ -95,8 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductList(DataSourceRequest command, ProductListModel model)
         {
             var (productModels, totalCount) = await _productViewModelService.PrepareProductsModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productModels.ToList(),
                 Total = totalCount
             };
@@ -113,8 +135,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             //try to load a product entity
             var product = await _productService.GetProductBySku(sku);
             if (product != null)
-                return RedirectToAction("Edit", "Product", new { id = product.Id });
+            {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    if (!product.LimitedToStores || (product.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && product.LimitedToStores))
+                        return RedirectToAction("Edit", new { id = product.Id });
+                    else
+                        return RedirectToAction("List", "Product");
+                }
 
+                return RedirectToAction("Edit", "Product", new { id = product.Id });
+            }
             //not found
             return RedirectToAction("List", "Product");
         }
@@ -126,7 +157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _productViewModelService.PrepareProductModel(model, null, true, true);
             await AddLocales(_languageService, model.Locales);
             await model.PrepareACLModel(null, false, _customerService);
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             return View(model);
         }
 
@@ -143,7 +174,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _productViewModelService.PrepareProductModel(model, null, false, true);
             await model.PrepareACLModel(null, true, _customerService);
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -157,8 +188,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!product.LimitedToStores || (product.LimitedToStores && product.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && product.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+                else
+                {
+                    if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
 
             var model = product.ToModel();
             model.Ticks = product.UpdatedOnUtc.Ticks;
@@ -176,7 +218,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             await model.PrepareACLModel(product, false, _customerService);
-            await model.PrepareStoresMappingModel(product, false, _storeService);
+            await model.PrepareStoresMappingModel(product, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -190,8 +232,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = product.Id });
+            }
 
             if (model.Ticks != product.UpdatedOnUtc.Ticks)
             {
@@ -213,7 +261,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _productViewModelService.PrepareProductModel(model, product, false, true);
             await model.PrepareACLModel(product, true, _customerService);
-            await model.PrepareStoresMappingModel(product, true, _storeService);
+            await model.PrepareStoresMappingModel(product, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
             return View(model);
         }
@@ -227,8 +275,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = product.Id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -320,18 +374,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                model.SearchVendorId = _workContext.CurrentVendor.Id;
-            }
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
-
             return Json(gridModel);
         }
 
@@ -344,17 +391,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var product = await _productService.GetProductById(productId);
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+                
             var productCategoriesModel = await _productViewModelService.PrepareProductCategoryModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productCategoriesModel,
                 Total = productCategoriesModel.Count
             };
@@ -399,11 +441,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductCategoryDelete(string id, string productId)
+        public async Task<IActionResult> ProductCategoryDelete(ProductModel.ProductCategoryModel model)
         {
             if (ModelState.IsValid)
             {
-                await _productViewModelService.DeleteProductCategory(id, productId);
+                await _productViewModelService.DeleteProductCategory(model.Id, model.ProductId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -417,18 +459,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductManufacturerList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
 
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var productManufacturersModel = await _productViewModelService.PrepareProductManufacturerModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productManufacturersModel,
                 Total = productManufacturersModel.Count
             };
@@ -473,11 +510,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductManufacturerDelete(string id, string productId)
+        public async Task<IActionResult> ProductManufacturerDelete(ProductModel.ProductManufacturerModel model)
         {
             if (ModelState.IsValid)
             {
-                await _productViewModelService.DeleteProductManufacturer(id, productId);
+                await _productViewModelService.DeleteProductManufacturer(model.Id, model.ProductId);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
@@ -491,32 +528,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RelatedProductList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
 
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var relatedProducts = product.RelatedProducts.OrderBy(x => x.DisplayOrder);
             var relatedProductsModel = new List<ProductModel.RelatedProductModel>();
             foreach (var x in relatedProducts)
             {
-                relatedProductsModel.Add(new ProductModel.RelatedProductModel
-                {
+                relatedProductsModel.Add(new ProductModel.RelatedProductModel {
                     Id = x.Id,
                     ProductId1 = productId,
                     ProductId2 = x.ProductId2,
-                    Product2Name = (await _productService.GetProductById(x.ProductId2)).Name,
+                    Product2Name = (await _productService.GetProductById(x.ProductId2))?.Name,
                     DisplayOrder = x.DisplayOrder
                 });
             }
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = relatedProductsModel,
                 Total = relatedProductsModel.Count
             };
@@ -527,20 +557,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
-            await _productViewModelService.UpdateRelatedProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.UpdateRelatedProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
         public async Task<IActionResult> RelatedProductDelete(ProductModel.RelatedProductModel model)
         {
-            await _productViewModelService.DeleteRelatedProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.DeleteRelatedProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> RelatedProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareRelatedProductModel();
+            model.ProductId = productId;
             return View(model);
         }
 
@@ -548,8 +587,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
@@ -560,14 +598,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _productViewModelService.InsertRelatedProductModel(model);
-            }
+                if (model.SelectedProductIds != null)
+                {
+                    await _productViewModelService.InsertRelatedProductModel(model);
+                }
 
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
+                //a vendor should have access only to his products
+                model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                ViewBag.RefreshPage = true;
+            }
+            else
+            {
+                ErrorNotification(ModelState);
+                model = await _productViewModelService.PrepareRelatedProductModel();
+                model.ProductId = model.ProductId;
+            }
             return View(model);
         }
 
@@ -579,15 +626,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> SimilarProductList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
 
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var similarProducts = product.SimilarProducts.OrderBy(x => x.DisplayOrder);
             var similarProductsModel = new List<ProductModel.SimilarProductModel>();
@@ -597,7 +639,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId1 = productId,
                     ProductId2 = x.ProductId2,
-                    Product2Name = (await _productService.GetProductById(x.ProductId2)).Name,
+                    Product2Name = (await _productService.GetProductById(x.ProductId2))?.Name,
                     DisplayOrder = x.DisplayOrder
                 });
             }
@@ -613,20 +655,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SimilarProductUpdate(ProductModel.SimilarProductModel model)
         {
-            await _productViewModelService.UpdateSimilarProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.UpdateSimilarProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
         public async Task<IActionResult> SimilarProductDelete(ProductModel.SimilarProductModel model)
         {
-            await _productViewModelService.DeleteSimilarProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.DeleteSimilarProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> SimilarProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareSimilarProductModel();
+            model.ProductId = productId;
             return View(model);
         }
 
@@ -645,14 +696,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> SimilarProductAddPopup(ProductModel.AddSimilarProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _productViewModelService.InsertSimilarProductModel(model);
+                if (model.SelectedProductIds != null)
+                {
+                    await _productViewModelService.InsertSimilarProductModel(model);
+                }
+                //a vendor should have access only to his products
+                model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                ViewBag.RefreshPage = true;
             }
-
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
+            else
+            {
+                ErrorNotification(ModelState);
+                model = await _productViewModelService.PrepareSimilarProductModel();
+                model.ProductId = model.ProductId;
+            }
             return View(model);
         }
 
@@ -664,31 +723,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BundleProductList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
 
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var bundleProducts = product.BundleProducts.OrderBy(x => x.DisplayOrder);
             var bundleProductsModel = new List<ProductModel.BundleProductModel>();
             foreach (var x in bundleProducts)
             {
-                bundleProductsModel.Add(new ProductModel.BundleProductModel
-                {
+                bundleProductsModel.Add(new ProductModel.BundleProductModel {
                     Id = x.Id,
                     ProductBundleId = productId,
                     ProductId = x.ProductId,
-                    ProductName = (await _productService.GetProductById(x.ProductId)).Name,
+                    ProductName = (await _productService.GetProductById(x.ProductId))?.Name,
                     DisplayOrder = x.DisplayOrder,
                     Quantity = x.Quantity
                 });
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = bundleProductsModel,
                 Total = bundleProductsModel.Count
             };
@@ -699,20 +752,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BundleProductUpdate(ProductModel.BundleProductModel model)
         {
-            await _productViewModelService.UpdateBundleProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.UpdateBundleProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
         public async Task<IActionResult> BundleProductDelete(ProductModel.BundleProductModel model)
         {
-            await _productViewModelService.DeleteBundleProductModel(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.DeleteBundleProductModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> BundleProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareBundleProductModel();
+            model.ProductId = productId;
             return View(model);
         }
 
@@ -720,8 +782,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BundleProductAddPopupList(DataSourceRequest command, ProductModel.AddBundleProductModel model)
         {
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
@@ -733,14 +794,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> BundleProductAddPopup(ProductModel.AddBundleProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _productViewModelService.InsertBundleProductModel(model);
-            }
+                if (model.SelectedProductIds != null)
+                {
+                    await _productViewModelService.InsertBundleProductModel(model);
+                }
 
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
+                //a vendor should have access only to his products
+                model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                ViewBag.RefreshPage = true;
+            }
+            else
+            {
+                ErrorNotification(ModelState);
+                model = await _productViewModelService.PrepareBundleProductModel();
+                model.ProductId = model.ProductId;
+            }
             return View(model);
         }
 
@@ -753,26 +823,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var product = await _productService.GetProductById(productId);
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var crossSellProducts = product.CrossSellProduct;
             var crossSellProductsModel = new List<ProductModel.CrossSellProductModel>();
             foreach (var x in crossSellProducts)
             {
-                crossSellProductsModel.Add(new ProductModel.CrossSellProductModel
-                {
+                crossSellProductsModel.Add(new ProductModel.CrossSellProductModel {
                     Id = x,
-                    Product2Name = (await _productService.GetProductById(x)).Name,
+                    ProductId = product.Id,
+                    Product2Name = (await _productService.GetProductById(x))?.Name,
                 });
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = crossSellProductsModel,
                 Total = crossSellProductsModel.Count
             };
@@ -781,29 +846,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrossSellProductDelete(string id, string productId)
+        public async Task<IActionResult> CrossSellProductDelete(ProductModel.CrossSellProductModel model)
         {
-            var product = await _productService.GetProductById(productId);
-
-            var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();
-            if (String.IsNullOrEmpty(crossSellProduct))
+            var product = await _productService.GetProductById(model.ProductId);
+            if (product == null)
+            {
+                throw new ArgumentException("Product not exists");
+            }
+            var crossSellProduct = product.CrossSellProduct.Where(x => x == model.Id).FirstOrDefault();
+            if (string.IsNullOrEmpty(crossSellProduct))
                 throw new ArgumentException("No cross-sell product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
+            if (ModelState.IsValid)
+            {                
+                await _productViewModelService.DeleteCrossSellProduct(product.Id, crossSellProduct);
+                return new NullJsonResult();
             }
-            await _productViewModelService.DeleteCrossSellProduct(productId, crossSellProduct);
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> CrossSellProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareCrossSellProductModel();
+            model.ProductId = productId;
             return View(model);
         }
 
@@ -811,8 +876,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
@@ -824,14 +888,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _productViewModelService.InsertCrossSellProductModel(model);
+                if (model.SelectedProductIds != null)
+                {
+                    await _productViewModelService.InsertCrossSellProductModel(model);
+                }
+                //a vendor should have access only to his products
+                model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                ViewBag.RefreshPage = true;
             }
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
-
+            else
+            {
+                ErrorNotification(ModelState);
+                model = await _productViewModelService.PrepareCrossSellProductModel();
+                model.ProductId = model.ProductId;
+            }
             return View(model);
         }
 
@@ -842,16 +914,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AssociatedProductList(DataSourceRequest command, string productId)
         {
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                var product = await _productService.GetProductById(productId);
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
-            //a vendor should have access only to his products
+            var product = await _productService.GetProductById(productId);
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var vendorId = "";
             if (_workContext.CurrentVendor != null)
             {
@@ -862,16 +930,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts
-                .Select(x => new ProductModel.AssociatedProductModel
-                {
+                .Select(x => new ProductModel.AssociatedProductModel {
                     Id = x.Id,
+                    ProductId = productId,
                     ProductName = x.Name,
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = associatedProductsModel,
                 Total = associatedProductsModel.Count
             };
@@ -882,36 +949,39 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
-            var associatedProduct = await _productService.GetProductById(model.Id);
-            if (associatedProduct == null)
-                throw new ArgumentException("No associated product found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
+            if (ModelState.IsValid)
             {
-                return Content("This is not your product");
+                var associatedProduct = await _productService.GetProductById(model.Id);
+                if (associatedProduct == null)
+                    throw new ArgumentException("No associated product found with the specified id");
+                
+                associatedProduct.DisplayOrder = model.DisplayOrder;
+                await _productService.UpdateAssociatedProduct(associatedProduct);
+
+                return new NullJsonResult();
             }
-
-            associatedProduct.DisplayOrder = model.DisplayOrder;
-            await _productService.UpdateAssociatedProduct(associatedProduct);
-
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssociatedProductDelete(string id)
+        public async Task<IActionResult> AssociatedProductDelete(ProductModel.AssociatedProductModel model)
         {
-            var product = await _productService.GetProductById(id);
-            if (product == null)
-                throw new ArgumentException("No associated product found with the specified id");
+            if (ModelState.IsValid)
+            {
+                var product = await _productService.GetProductById(model.Id);
+                if (product == null)
+                    throw new ArgumentException("No associated product found with the specified id");
 
-            await _productViewModelService.DeleteAssociatedProduct(product);
-            return new NullJsonResult();
+                await _productViewModelService.DeleteAssociatedProduct(product);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public async Task<IActionResult> AssociatedProductAddPopup(string productId)
         {
             var model = await _productViewModelService.PrepareAssociatedProductModel();
+            model.ProductId = productId;
             return View(model);
         }
 
@@ -919,8 +989,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
@@ -931,13 +1000,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
         {
-            if (model.SelectedProductIds != null)
+            if (ModelState.IsValid)
             {
-                await _productViewModelService.InsertAssociatedProductModel(model);
+                if (model.SelectedProductIds != null)
+                {
+                    await _productViewModelService.InsertAssociatedProductModel(model);
+                }
+                //a vendor should have access only to his products
+                model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                ViewBag.RefreshPage = true;
             }
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
+            else
+            {
+                ErrorNotification(ModelState);
+                model = await _productViewModelService.PrepareAssociatedProductModel();
+                model.ProductId = model.ProductId;
+            }
             return View(model);
         }
 
@@ -948,16 +1026,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             string overrideAltAttribute, string overrideTitleAttribute,
             string productId)
         {
-            if (String.IsNullOrEmpty(pictureId))
+            if (string.IsNullOrEmpty(pictureId))
                 throw new ArgumentException();
 
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List");
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { Result = false });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new { Result = false });
 
             await _productViewModelService.InsertProductPicture(product, pictureId, displayOrder, overrideAltAttribute, overrideTitleAttribute);
 
@@ -968,17 +1048,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductPictureList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var productPicturesModel = await _productViewModelService.PrepareProductPictureModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productPicturesModel,
                 Total = productPicturesModel.Count
             };
@@ -989,15 +1065,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
-            await _productViewModelService.UpdateProductPicture(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.UpdateProductPicture(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
         public async Task<IActionResult> ProductPictureDelete(ProductModel.ProductPictureModel model)
         {
-            await _productViewModelService.DeleteProductPicture(model);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                await _productViewModelService.DeleteProductPicture(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
         #endregion
 
@@ -1015,37 +1099,32 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(result);
         }
 
-        public async Task<IActionResult> ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model, string productId)
+        public async Task<IActionResult> ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model)
         {
-            var product = await _productService.GetProductById(productId);
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (ModelState.IsValid)
             {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return RedirectToAction("List");
-                }
-            }
-            await _productViewModelService.InsertProductSpecificationAttributeModel(model, product);
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    return Content("Product not exists");
 
-            return Json(new { Result = true });
+                await _productViewModelService.InsertProductSpecificationAttributeModel(model, product);
+
+                return Json(new { Result = true });
+            }
+            return Json(new { Result = false });
         }
 
         [HttpPost]
         public async Task<IActionResult> ProductSpecAttrList(DataSourceRequest command, string productId)
         {
-            //a vendor should have access only to his products
             var product = await _productService.GetProductById(productId);
-            if (_workContext.CurrentVendor != null)
-            {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
-            }
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var productrSpecsModel = await _productViewModelService.PrepareProductSpecificationAttributeModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = productrSpecsModel,
                 Total = productrSpecsModel.Count
             };
@@ -1055,61 +1134,56 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
-            var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();
-            if (psa == null)
-                return Content("No product specification attribute found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (ModelState.IsValid)
             {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    return Content("Product not exists");
+
+                var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();
+                if (psa == null)
+                    return Content("No product specification attribute found with the specified id");
+
+                await _productViewModelService.UpdateProductSpecificationAttributeModel(product, psa, model);
+                return new NullJsonResult();
             }
-            await _productViewModelService.UpdateProductSpecificationAttributeModel(product, psa, model);
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProductSpecAttrDelete(string id, string ProductSpecificationId, string productId)
+        public async Task<IActionResult> ProductSpecAttrDelete(ProductSpecificationAttributeModel model)
         {
-            var product = await _productService.GetProductById(productId);
-            var psa = product.ProductSpecificationAttributes.Where(x => x.Id == id && x.SpecificationAttributeId == ProductSpecificationId).FirstOrDefault();
-            if (psa == null)
-                throw new ArgumentException("No specification attribute found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (ModelState.IsValid)
             {
-                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
-                {
-                    return Content("This is not your product");
-                }
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    return Content("Product not exists");
+
+                var psa = product.ProductSpecificationAttributes.Where(x => x.Id == model.Id && x.SpecificationAttributeId == model.ProductSpecificationId).FirstOrDefault();
+                if (psa == null)
+                    throw new ArgumentException("No specification attribute found with the specified id");
+                
+                await _productViewModelService.DeleteProductSpecificationAttribute(product, psa);
+                return new NullJsonResult();
             }
-            await _productViewModelService.DeleteProductSpecificationAttribute(product, psa);
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
-        
+
         #region Purchased with order
 
         [HttpPost]
         public async Task<IActionResult> PurchasedWithOrders(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var (orderModels, totalCount) = await _productViewModelService.PrepareOrderModel(productId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = orderModels.ToList(),
                 Total = totalCount
             };
@@ -1125,15 +1199,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Reviews(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
 
             var productReviews = await _productService.GetAllProductReviews("", null,
-                null, null, "", null, productId);
+                null, null, "", storeId, productId);
 
             var items = new List<ProductReviewModel>();
             foreach (var item in productReviews.PagedForCommand(command))
@@ -1142,8 +1218,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _productViewModelService.PrepareProductReviewModel(m, item, false, true);
                 items.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = productReviews.Count,
             };
@@ -1262,8 +1337,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportExcel(IFormFile importexcelfile)
         {
-            //a vendor cannot import products
-            if (_workContext.CurrentVendor != null)
+            //a vendor ans staff cannot import products
+            if (_workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
                 return AccessDeniedView();
 
             try
@@ -1302,8 +1377,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
             var (bulkEditProductModels, totalCount) = await _productViewModelService.PrepareBulkEditProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = bulkEditProductModels.ToList(),
                 Total = totalCount
             };
@@ -1338,16 +1412,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> TierPriceList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var tierPricesModel = await _productViewModelService.PrepareTierPriceModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = tierPricesModel,
                 Total = tierPricesModel.Count
             };
@@ -1356,8 +1427,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> TierPriceCreatePopup(string productId)
         {
-            var model = new ProductModel.TierPriceModel
-            {
+            var model = new ProductModel.TierPriceModel {
                 ProductId = productId
             };
             await _productViewModelService.PrepareTierPriceModel(model);
@@ -1368,22 +1438,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public async Task<IActionResult> TierPriceCreatePopup(ProductModel.TierPriceModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
-
             if (ModelState.IsValid)
             {
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    throw new ArgumentException("No product found with the specified id");
+
                 var tierPrice = model.ToEntity();
                 await _productService.InsertTierPrice(tierPrice);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-
+            else
+            {
+                ErrorNotification(ModelState);
+            }
             //If we got this far, something failed, redisplay form
             await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
@@ -1397,11 +1466,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var tierPrice = product.TierPrices.Where(x => x.Id == id).FirstOrDefault();
             if (tierPrice == null)
-                return RedirectToAction("List", "Product");
+                return Content("Empty tier price");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Content("This is not your product");
 
             var model = tierPrice.ToModel();
             model.ProductId = productId;
@@ -1412,50 +1481,42 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
         {
-            var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var tierPrice = product.TierPrices.Where(x => x.Id == model.Id).FirstOrDefault();
-            if (tierPrice == null)
-                return RedirectToAction("List", "Product");
-
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
-
             if (ModelState.IsValid)
             {
+                var product = await _productService.GetProductById(productId);
+                if (product == null)
+                    throw new ArgumentException("No product found with the specified id");
+
+                var tierPrice = product.TierPrices.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (tierPrice == null)
+                    return Content("Empty tier price");
+
                 tierPrice = model.ToEntity(tierPrice);
                 await _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
+            ErrorNotification(ModelState);
             //stores
             await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> TierPriceDelete(string id, string productId)
+        public async Task<IActionResult> TierPriceDelete(ProductModel.TierPriceModel model)
         {
-            var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var tierPrice = product.TierPrices.Where(x => x.Id == id).FirstOrDefault();
-            if (tierPrice == null)
-                throw new ArgumentException("No tier price found with the specified id");
-            tierPrice.ProductId = product.Id;
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
-
             if (ModelState.IsValid)
             {
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    throw new ArgumentException("No product found with the specified id");
+
+                var tierPrice = product.TierPrices.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (tierPrice == null)
+                    throw new ArgumentException("No tier price found with the specified id");
+                tierPrice.ProductId = product.Id;
+
                 await _productService.DeleteTierPrice(tierPrice);
                 return new NullJsonResult();
             }
@@ -1470,16 +1531,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeMappingList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var attributesModel = await _productViewModelService.PrepareProductAttributeMappingModels(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = attributesModel,
                 Total = attributesModel.Count
             };
@@ -1490,12 +1548,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return Content(permission.message);
+
             if (string.IsNullOrEmpty(productAttributeMappingId))
             {
                 var model = await _productViewModelService.PrepareProductAttributeMappingModel(product);
@@ -1512,15 +1569,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
         {
-            var product = await _productService.GetProductById(model.ProductId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
             if (ModelState.IsValid)
             {
+                var product = await _productService.GetProductById(model.ProductId);
+                if (product == null)
+                    throw new ArgumentException("No product found with the specified id");
+
                 if (string.IsNullOrEmpty(model.Id))
                     await _productViewModelService.InsertProductAttributeMappingModel(model);
                 else
@@ -1529,7 +1583,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-
+            ErrorNotification(ModelState);
             model = await _productViewModelService.PrepareProductAttributeMappingModel(model);
             return View(model);
         }
@@ -1547,34 +1601,31 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             productAttributeMapping.ProductId = productId;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
 
-            if (ModelState.IsValid)
-            {
-                await productAttributeService.DeleteProductAttributeMapping(productAttributeMapping);
-                return new NullJsonResult();
-            }
-            return ErrorForKendoGridJson(ModelState);
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return ErrorForKendoGridJson(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
+            await productAttributeService.DeleteProductAttributeMapping(productAttributeMapping);
+            return new NullJsonResult();
         }
 
         //edit
         public async Task<IActionResult> ProductAttributeValidationRulesPopup(string id, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return Content(permission.message);
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();
             if (productAttributeMapping == null)
-                //No attribute value found with the specified id
-                return RedirectToAction("List", "Product");
+                return Content("No attribute value found with the specified id");
 
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
-
+           
             var model = await _productViewModelService.PrepareProductAttributeMappingModel(productAttributeMapping);
             return View(model);
         }
@@ -1588,12 +1639,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productAttributeMapping == null)
-                //No attribute value found with the specified id
-                return RedirectToAction("List", "Product");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+                throw new ArgumentException("No attribute value found with the specified id");
 
             if (ModelState.IsValid)
             {
@@ -1601,10 +1647,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-
-            //If we got this far, something failed, redisplay form
-            model.ValidationRulesAllowed = productAttributeMapping.ValidationRulesAllowed();
-            model.AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId;
+            ErrorNotification(ModelState);
+            model = await _productViewModelService.PrepareProductAttributeMappingModel(productAttributeMapping);
             return View(model);
         }
 
@@ -1615,17 +1659,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return Content(permission.message);
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 //No attribute value found with the specified id
-                return RedirectToAction("List", "Product");
+                return Content("No attribute value found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
             var model = await _productViewModelService.PrepareProductAttributeConditionModel(product, productAttributeMapping);
             return View(model);
         }
@@ -1639,12 +1682,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
-                //No attribute value found with the specified id
-                return RedirectToAction("List", "Product");
+                return Content("No attribute value found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Content(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             var formcollection = new Dictionary<string, string>();
             foreach (var item in form)
@@ -1672,12 +1718,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List", "Product");
 
-            var productAttribute = await productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
-            var model = new ProductModel.ProductAttributeValueListModel
+            if (_workContext.CurrentCustomer.IsStaff())
             {
+                if (!(!product.LimitedToStores || (product.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && product.LimitedToStores)))
+                    return Content("This is not your product");
+            }
+            var productAttribute = await productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
+            var model = new ProductModel.ProductAttributeValueListModel {
                 ProductName = product.Name,
                 ProductId = product.Id,
                 ProductAttributeName = productAttribute.Name,
@@ -1691,20 +1741,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
-
             var values = await _productViewModelService.PrepareProductAttributeValueModels(product, productAttributeMapping);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = values,
                 Total = values.Count()
             };
@@ -1715,19 +1762,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return Content(permission.message);
 
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
-
-            var model = new ProductModel.ProductAttributeValueModel
-            {
+            var model = new ProductModel.ProductAttributeValueModel {
                 ProductAttributeMappingId = productAttributeMappingId,
                 ProductId = productId,
 
@@ -1747,8 +1791,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //pictures
             foreach (var x in product.ProductPictures)
             {
-                model.ProductPictureModels.Add(new ProductModel.ProductPictureModel
-                {
+                model.ProductPictureModels.Add(new ProductModel.ProductPictureModel {
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
@@ -1770,21 +1813,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttributeMapping == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List", "Product");
-
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
-
+           
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
             }
 
             //ensure a picture is uploaded
-            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && String.IsNullOrEmpty(model.ImageSquaresPictureId))
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && string.IsNullOrEmpty(model.ImageSquaresPictureId))
             {
                 ModelState.AddModelError("", "Image is required");
             }
@@ -1804,8 +1842,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var pa = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (pa == null)
@@ -1816,9 +1856,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
             var model = await _productViewModelService.PrepareProductAttributeValueModel(pa, pav);
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -1841,15 +1878,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+           
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
             }
 
@@ -1884,9 +1918,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             pav.ProductAttributeMappingId = pam;
             pav.ProductId = productId;
+
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    ModelState.AddModelError("", _localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
             if (ModelState.IsValid)
             {
                 await productAttributeService.DeleteProductAttributeValue(pav);
@@ -1906,8 +1946,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             var (products, totalCount) = await _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = products.ToList(),
                 Total = totalCount
             };
@@ -1923,10 +1962,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("Cannot load a product");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
 
-            //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
             ViewBag.productId = associatedProduct.Id;
@@ -1942,16 +1980,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeCombinationList(DataSourceRequest command, string productId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var combinationsModel = await _productViewModelService.PrepareProductAttributeCombinationModel(product);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = combinationsModel,
                 Total = combinationsModel.Count
             };
@@ -1970,8 +2005,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product attribute combination found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             combination.ProductId = productId;
 
@@ -1990,20 +2029,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AttributeCombinationPopup(string productId, string Id)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                //No product found with the specified id
-                return RedirectToAction("List", "Product");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return RedirectToAction("List", "Product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return Content(permission.message);
+
             var model = await _productViewModelService.PrepareProductAttributeCombinationModel(product, Id);
             await _productViewModelService.PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
 
         [HttpPost]
-
         public async Task<IActionResult> AttributeCombinationPopup(string productId,
             ProductAttributeCombinationModel model, IFormCollection form)
         {
@@ -2013,8 +2049,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return RedirectToAction("List", "Product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             var formcollection = new Dictionary<string, string>();
             foreach (var item in form)
@@ -2041,8 +2081,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             await _productViewModelService.GenerateAllAttributeCombinations(product);
 
@@ -2059,6 +2103,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    ModelState.AddModelError("", _localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
             if (ModelState.IsValid)
             {
                 foreach (var combination in product.ProductAttributeCombinations.ToList())
@@ -2083,16 +2132,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
         {
             var product = await _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
 
             var tierPriceModel = await _productViewModelService.PrepareProductAttributeCombinationTierPricesModel(product, productAttributeCombinationId);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = tierPriceModel,
                 Total = tierPriceModel.Count
             };
@@ -2108,8 +2154,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content("", _localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
             var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
             if (combination != null)
                 await _productViewModelService.InsertProductAttributeCombinationTierPricesModel(product, combination, model);
@@ -2125,8 +2176,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Content("", _localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
             if (combination != null)
@@ -2143,8 +2198,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return ErrorForKendoGridJson(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
 
             var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
             if (combination != null)
@@ -2158,6 +2217,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         #endregion
+
         #endregion
 
         #region Activity log
@@ -2165,9 +2225,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListActivityLog(DataSourceRequest command, string productId)
         {
+            var product = await _productService.GetProductById(productId);
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var (activityLogModels, totalCount) = await _productViewModelService.PrepareActivityLogModel(productId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = activityLogModels.ToList(),
                 Total = totalCount
             };
@@ -2181,20 +2246,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListReservations(DataSourceRequest command, string productId)
         {
+            var product = await _productService.GetProductById(productId);
+
+            var permission = CheckAccessToProduct(product);
+            if (!permission.allow)
+                return ErrorForKendoGridJson(permission.message);
+
             var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null, command.Page - 1, command.PageSize);
             var reservationModel = reservations
-                .Select(x => new ProductModel.ReservationModel
-                {
+                .Select(x => new ProductModel.ReservationModel {
                     ReservationId = x.Id,
                     Date = x.Date,
                     OrderId = x.OrderId,
+                    ProductId = x.ProductId,
                     Parameter = x.Parameter,
                     Resource = x.Resource,
                     Duration = x.Duration
                 }).ToList();
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = reservationModel,
                 Total = reservations.TotalCount
             };
@@ -2205,13 +2275,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GenerateCalendar(string productId, ProductModel.GenerateCalendarModel model)
         {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Permisions") });
+
             var reservations = await _productReservationService.GetProductReservationsByProductId(productId, null, null);
             if (reservations.Any())
             {
-                var product = await _productService.GetProductById(productId);
-                if (product == null)
-                    throw new ArgumentNullException("product");
-
                 if (((product.IntervalUnitType == IntervalUnit.Minute || product.IntervalUnitType == IntervalUnit.Hour) && (IntervalUnit)model.Interval == IntervalUnit.Day) ||
                     (product.IntervalUnitType == IntervalUnit.Day) && (((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute || (IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)))
                 {
@@ -2322,8 +2400,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             if (counter++ > 1000)
                                 break;
 
-                            await _productReservationService.InsertProductReservation(new ProductReservation
-                            {
+                            await _productReservationService.InsertProductReservation(new ProductReservation {
                                 OrderId = "",
                                 Date = iterator,
                                 ProductId = productId,
@@ -2342,6 +2419,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ClearCalendar(string productId)
         {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Permisions") });
+
             var toDelete = await _productReservationService.GetProductReservationsByProductId(productId, true, null);
             foreach (var record in toDelete)
             {
@@ -2353,6 +2442,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ClearOld(string productId)
         {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Permisions") });
+
             var toDelete = (await _productReservationService.GetProductReservationsByProductId(productId, true, null)).Where(x => x.Date < DateTime.UtcNow);
             foreach (var record in toDelete)
             {
@@ -2365,6 +2466,18 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductReservationDelete(ProductModel.ReservationModel model)
         {
+            var product = await _productService.GetProductById(model.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return ErrorForKendoGridJson(_localizationService.GetResource("Admin.Catalog.Products.Permisions"));
+
             var toDelete = await _productReservationService.GetProductReservation(model.ReservationId);
             if (toDelete != null)
             {
@@ -2384,9 +2497,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ListBids(DataSourceRequest command, string productId)
         {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Permisions") });
+
             var (bidModels, totalCount) = await _productViewModelService.PrepareBidMode(productId, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = bidModels.ToList(),
                 Total = totalCount
             };
@@ -2396,13 +2520,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> BidDelete(ProductModel.BidModel model, [FromServices] ICustomerActivityService customerActivityService)
         {
+            var product = await _productService.GetProductById(model.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
+                return Json(new { errors = "This is not your product" });
+
+            if (_workContext.CurrentCustomer.IsStaff())
+                if (!product.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Permisions") });
+
             var toDelete = await _auctionService.GetBid(model.BidId);
             if (toDelete != null)
             {
-                var product = await _productService.GetProductById(toDelete.ProductId);
-                if (product == null)
-                    return Json(new DataSourceResult { Errors = "Product not exists" });
-
                 if (string.IsNullOrEmpty(toDelete.OrderId))
                 {
                     //activity log

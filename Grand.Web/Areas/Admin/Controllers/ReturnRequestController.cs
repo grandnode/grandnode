@@ -1,4 +1,6 @@
-﻿using Grand.Core.Domain.Orders;
+﻿using Grand.Core;
+using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -20,9 +22,11 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ReturnRequestController : BaseAdminController
     {
         #region Fields
+
         private readonly IReturnRequestViewModelService _returnRequestViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IReturnRequestService _returnRequestService;
+        private readonly IWorkContext _workContext;
 
         #endregion Fields
 
@@ -31,11 +35,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ReturnRequestController(
             IReturnRequestViewModelService returnRequestViewModelService,
             ILocalizationService localizationService,
-            IReturnRequestService returnRequestService)
+            IReturnRequestService returnRequestService,
+            IWorkContext workContext)
         {
-            this._returnRequestViewModelService = returnRequestViewModelService;
-            this._localizationService = localizationService;
-            this._returnRequestService = returnRequestService;
+            _returnRequestViewModelService = returnRequestViewModelService;
+            _localizationService = localizationService;
+            _returnRequestService = returnRequestService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -54,9 +60,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command, ReturnReqestListModel model)
         {
-            var returnRequestModels = await _returnRequestViewModelService.PrepareReturnRequestModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
+            if (_workContext.CurrentCustomer.IsStaff())
             {
+                model.StoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
+            var returnRequestModels = await _returnRequestViewModelService.PrepareReturnRequestModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
                 Data = returnRequestModels.returnRequestModels,
                 Total = returnRequestModels.totalCount,
             };
@@ -75,19 +84,31 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //try to load a product entity
             var returnRequest = await _returnRequestService.GetReturnRequestById(id);
-            if (returnRequest != null)
-                return RedirectToAction("Edit", "ReturnRequest", new { id = returnRequest.Id });
+            if (returnRequest == null)
+                //not found
+                return RedirectToAction("List", "ReturnRequest");
 
-            //not found
-            return RedirectToAction("List", "ReturnRequest");
+            if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List", "ReturnRequest");
+            }
+
+            return RedirectToAction("Edit", "ReturnRequest", new { id = returnRequest.Id });
         }
 
         [HttpPost]
         public async Task<IActionResult> ProductsForReturnRequest(string returnRequestId, DataSourceRequest command)
         {
-            var items = await _returnRequestViewModelService.PrepareReturnRequestItemModel(returnRequestId);
-            var gridModel = new DataSourceResult
+            var returnRequest = await _returnRequestService.GetReturnRequestById(returnRequestId);
+            if (returnRequest == null)
+                return ErrorForKendoGridJson("Return request not found");
+
+            if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
             {
+                return ErrorForKendoGridJson("Return request is not your");
+            }
+            var items = await _returnRequestViewModelService.PrepareReturnRequestItemModel(returnRequestId);
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = items.Count,
             };
@@ -102,6 +123,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List", "ReturnRequest");
+            }
 
             var model = new ReturnRequestModel();
             await _returnRequestViewModelService.PrepareReturnRequestModel(model, returnRequest, false);
@@ -120,6 +146,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List", "ReturnRequest");
+            }
 
             var customAddressAttributes = string.Empty;
             if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
@@ -152,6 +183,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && returnRequest.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List", "ReturnRequest");
+            }
+
             if (ModelState.IsValid)
             {
                 await _returnRequestViewModelService.DeleteReturnRequest(returnRequest);
