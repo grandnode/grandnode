@@ -374,7 +374,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("");
 
             //a vendor does have access to this report
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
                 return Content("");
 
             string storeId = "";
