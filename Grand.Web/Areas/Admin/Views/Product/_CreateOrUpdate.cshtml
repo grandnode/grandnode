@@ -98,24 +98,12 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Products.RelatedProducts")" tab-index="13">
+        <tabstrip-item text="@T("Admin.Catalog.Products.LinkedProducts")" tab-index="13">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.RelatedProducts" model="Model" />
-                </div>
-            </content>
-        </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Products.SimilarProducts")" tab-index="14">
-            <content>
-                <div>
-                    <partial name="_CreateOrUpdate.SimilarProducts" model="Model" />
-                </div>
-            </content>
-        </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Products.CrossSells")" tab-index="15">
-            <content>
-                <div>
                     <partial name="_CreateOrUpdate.CrossSells" model="Model" />
+                    <partial name="_CreateOrUpdate.SimilarProducts" model="Model" />
                 </div>
             </content>
         </tabstrip-item>

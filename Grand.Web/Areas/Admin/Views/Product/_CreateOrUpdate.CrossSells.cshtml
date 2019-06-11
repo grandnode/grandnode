@@ -3,17 +3,20 @@
 @if (!String.IsNullOrEmpty(Model.Id))
 {
 
-<div class="panel panel-default">
-    <vc:admin-widget widget-zone="product_details_cross_sells_top" additional-data="Model" />
-    <div class="panel-body">
-        <div id="crosssellproducts-grid"></div>
+    <div class="panel panel-default">
+        <vc:admin-widget widget-zone="product_details_cross_sells_top" additional-data="Model" />
+        <div class="panel-heading">
+            @T("Admin.Catalog.Products.CrossSells")
+        </div>
+        <div class="panel-body">
+            <div id="crosssellproducts-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
+        </div>
+        <vc:admin-widget widget-zone="product_details_cross_sells_bottom" additional-data="Model" />
     </div>
-    <div class="panel-footer">
-        <input type="submit" id="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
-        <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
-    </div>
-    <vc:admin-widget widget-zone="product_details_cross_sells_bottom" additional-data="Model" />
-</div>
 
     <script>
         $(document).ready(function () {
