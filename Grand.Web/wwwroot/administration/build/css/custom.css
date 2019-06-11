@@ -230,7 +230,9 @@ body {
     margin-left: 85px;
     z-index: 2
 }
-
+.row.top_tiles {
+    padding-left: 10px;
+}
 .nav-sm .navbar.nav_title {
     width: 85px
 }
@@ -2694,7 +2696,7 @@ span.section {
 }
 
 .form-horizontal .control-label {
-    padding: 8px 0
+    /*padding: 8px 0*/
 }
 
 .form-control:focus {
@@ -5966,8 +5968,8 @@ form>h4 {
         margin-top: -5px;
     }
     .control-label {
-        display: inline;
-        line-height: 20px;
+        /*display: inline;
+        line-height: 20px;*/
     }
     .caption {
         transform: translateY(10%);
