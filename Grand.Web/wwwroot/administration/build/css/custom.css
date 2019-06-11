@@ -226,7 +226,7 @@ body {
 }
 
 .nav-sm .container.body .right_col {
-    padding: 10px 20px;
+    padding: 5px 10px 0px 0px;
     margin-left: 85px;
     z-index: 2
 }
@@ -273,7 +273,8 @@ body {
 }
 
 .nav-sm .nav.child_menu li.active, .nav-sm .nav.side-menu li.active-sm {
-    border-right: 5px solid #1ABB9C
+    border-right: 5px solid #1ABB9C;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .nav-sm ul.nav.child_menu ul, .nav-sm .nav.side-menu li.active-sm ul ul {
@@ -421,7 +422,7 @@ body {
     float: left;
     background: white;
     border-bottom: 1px solid #D9DEE4;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     width: 100%;
     position: relative
 }
@@ -452,7 +453,7 @@ body .container.body .right_col {
 }
 
 .nav-md .container.body .right_col {
-    padding: 10px 20px 0;
+    padding: 5px 10px 0px 0px;
     margin-left: 230px
 }
 
