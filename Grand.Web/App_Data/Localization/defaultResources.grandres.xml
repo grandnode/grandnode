@@ -20113,4 +20113,7 @@
 <LocaleResource Name="admin.catalog.products.similarproducts.savebeforeedit">
   <Value>You need to save the product before you can add similar products for this product page.</Value>
 </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.LinkedProducts">
+    <Value>Linked products</Value>
+  </LocaleResource>
 </Language>

@@ -543,4 +543,7 @@
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldNotbeStaff">
     <Value>A customer with a vendor associated should not be a staff</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.LinkedProducts">
+    <Value>Linked products</Value>
+  </LocaleResource>
 </Language>
