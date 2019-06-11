@@ -1,3 +1,39 @@
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-regular.svg#SourceSansPro') format('svg'); /* Legacy iOS */
+}
+/* source-sans-pro-600 - latin */
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.eot'); /* IE9 Compat Modes */
+    src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-600.svg#SourceSansPro') format('svg'); /* Legacy iOS */
+}
+/* source-sans-pro-700 - latin */
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.eot'); /* IE9 Compat Modes */
+    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/font_sans_pro/source-sans-pro-v12-latin-700.svg#SourceSansPro') format('svg'); /* Legacy iOS */
+}
+
 html, body {
     height: 100%;
 }
@@ -412,7 +448,7 @@ body {
 }
 
 body .container.body .right_col {
-    background: #e4e5e6;
+    background: #fff;
 }
 
 .nav-md .container.body .right_col {
@@ -576,15 +612,12 @@ body .container.body .right_col {
 body {
     color: #333333;
     background: #2A3F54;
-    font-family: "Open Sans", sans-serif!important;
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.471
 }
 
-body, h1, h2, h3, h4, h5, h6 {
-    font-family: "Open Sans", sans-serif;
-}
 
 .main_container .top_nav {
     display: block;
@@ -1329,7 +1362,7 @@ h2 {
     padding: 10px 17px;
     display: inline-block;
     background: #fff;
-    border: 1px solid #E6E9ED;
+    /*border: 1px solid #E6E9ED;*/
     -webkit-column-break-inside: avoid;
     -moz-column-break-inside: avoid;
     column-break-inside: avoid;
@@ -1348,10 +1381,10 @@ h2 {
 }
 
 .x_title {
-    border-bottom: 2px solid #E6E9ED;
+    /*border-bottom: 2px solid #E6E9ED; */
     padding: 0px 5px;
     margin-bottom: 10px;
-    background-color: #f7f7f7;
+    /*background-color: #f7f7f7;*/
     align-items: center;
     justify-content: center;
 }
@@ -1391,7 +1424,6 @@ h2 {
     float: left;
     clear: both;
     margin-top: 5px;
-    font-family: "Open Sans", sans-serif;
 }
 
 .x_content h4 {
@@ -3755,7 +3787,7 @@ ul.project_files li a i {
 
 .caption {
     padding: 21px 5px 0px 5px;
-    background: #F7F7F7;
+    /*background: #F7F7F7;*/
 }
 
 .caption p {
@@ -5410,7 +5442,7 @@ a span.username {
     float: left;
     font-size: 18px;
     line-height: 18px;
-    font-weight: 300;
+    font-weight: 400;
     align-self: flex-start;
     margin-right: auto;
 }
@@ -5418,7 +5450,7 @@ a span.username {
 .x_title>.caption>i {
     color: #777;
     font-size: 15px;
-    font-weight: 300;
+    font-weight: 400;
     float: left;
     margin-right: 5px;
 }

@@ -5461,7 +5461,7 @@ namespace Grand.Services.Installation
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
-                AllowCustomersToApplyForVendorAccount = true,
+                AllowCustomersToApplyForVendorAccount = false,
                 AllowAnonymousUsersToReviewVendor = false,
                 DefaultVendorRatingValue = 5,
                 VendorReviewsMustBeApproved = true,
