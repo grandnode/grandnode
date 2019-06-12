@@ -2878,7 +2878,7 @@
     <Value>Add a new product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
-    <Value>Associated products (variants)</Value>
+    <Value>Associated products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.AddNew">
     <Value>Add new associated product</Value>
