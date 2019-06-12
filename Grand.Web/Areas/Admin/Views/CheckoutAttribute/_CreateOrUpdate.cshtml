@@ -34,7 +34,7 @@
             </content>
         </tabstrip-item>
         @if (Model.ConditionAllowed)
-        { 
+        {
             <tabstrip-item text="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")" tab-index="4">
                 <content>
                     <div>
@@ -42,6 +42,7 @@
                     </div>
                 </content>
             </tabstrip-item>
-         }
+        }
+        <vc:admin-widget widget-zone="checkoutattribute_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>
