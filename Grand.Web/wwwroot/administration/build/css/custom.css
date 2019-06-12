@@ -6127,3 +6127,11 @@ form>h4 {
 .k-grid .k-grid-header .k-header {
     white-space: normal;
 }
+.k-window-title
+{
+    color:#000;
+}
+
+.k-grid.k-widget {
+    overflow-x: auto;
+}
