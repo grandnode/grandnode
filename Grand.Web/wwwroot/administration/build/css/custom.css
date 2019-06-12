@@ -755,7 +755,7 @@ a, a:visited, a:focus, a:active, :visited, :focus, :active, .btn:focus, .btn:act
 }
 
 a:hover, a:focus {
-    text-decoration: none
+    text-decoration: underline;
 }
 
 .navbar {
@@ -6126,4 +6126,24 @@ form>h4 {
 }*/
 .k-grid .k-grid-header .k-header {
     white-space: normal;
+}
+.k-window-title
+{
+    color:#000;
+}
+
+.k-grid.k-widget {
+    overflow-x: auto;
+}
+a.k-link:hover
+{
+    text-decoration: underline;
+}
+
+.k-pager-numbers .k-link, .k-pager-numbers .k-state-selected {
+    border-width: 0px 0px 2px 0px;
+}
+
+.k-pager-numbers .k-state-selected {
+    border-color: transparent transparent #3f51b5 transparent;
 }
