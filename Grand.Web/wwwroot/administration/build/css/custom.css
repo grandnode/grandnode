@@ -903,12 +903,6 @@ a:hover, a:focus {
     .top_nav .navbar-right {
         width: 50%;
     }
-    .k-webkit .k-pager-numbers, .k-ff .k-pager-numbers, .k-ie11 .k-pager-numbers, .k-edge .k-pager-numbers, .k-safari .k-pager-numbers, .k-webkit .k-grid .k-pager-numbers, .k-ff .k-grid .k-pager-numbers, .k-ie11 .k-grid .k-pager-numbers, .k-edge .k-grid .k-pager-numbers, .k-safari .k-grid .k-pager-numbers {
-        left: 4.5em;
-    }
-    .k-webkit .k-pager-numbers+.k-link, .k-ff .k-pager-numbers+.k-link, .k-ie11 .k-pager-numbers+.k-link, .k-edge .k-pager-numbers+.k-link, .k-safari .k-pager-numbers+.k-link {
-        margin-left: 4.5em;
-    }
 }
 
 @media (max-width: 820px) {
@@ -5174,6 +5168,10 @@ select.form-control {
     padding-left: 20px;
 }
 
+.k-grid-header .k-header, .k-grid-header .k-header .k-link, .k-grid-header .k-link, .k-grid-header .k-link:link, .k-pager-info, .k-scheduler-agendaview .k-scheduler-datecolumn, .k-scheduler-header {
+    color: #000 !important;
+}
+
 .mt-checkbox, .mt-radio {
     margin-top: 0px;
 }
@@ -5184,14 +5182,6 @@ a span.username {
 
 .page-header-inner {
     padding: 0px 10px 0px 0px;
-}
-
-.k-grid .k-grid-header .k-header .k-link {
-    height: auto;
-}
-
-.k-grid .k-grid-header .k-header {
-    white-space: normal;
 }
 
 .form-control,
@@ -5224,10 +5214,6 @@ a span.username {
 
 #searchInput::placeholder {
     color: #23527c;
-}
-
-.k-grid.k-widget {
-    overflow-y: auto;
 }
 
 .scroll-to-top {
@@ -5689,13 +5675,6 @@ label {
     background-color: white;
 }
 
-.k-filter-row th, .k-grid-header th.k-header {
-    overflow: inherit;
-}
-
-.k-grid td {
-    overflow: inherit;
-}
 
 .tt-suggestion {
     cursor: pointer;
@@ -5868,9 +5847,7 @@ form>h4 {
     #searchInput {
         width: 300px;
     }
-    .k-grid-edit {
-        margin-bottom: 5px;
-    }
+
 }
 
 @media screen and (max-width:1120px) {
@@ -6110,4 +6087,43 @@ form>h4 {
     overflow-x: hidden;
     padding: 3px;
     margin-top: 5px;
+}
+
+/*kendo tabs*/
+.k-panelbar .k-tabstrip-items .k-state-active, .k-tabstrip-items .k-state-active {
+    background-color: #e6e6e6 !important;
+    border-bottom: 2px solid #1ABB9C;
+}
+.k-autocomplete, .k-draghandle, .k-dropdown-wrap, .k-header, .k-numeric-wrap, .k-panelbar .k-tabstrip-items .k-item, .k-picker-wrap, .k-progressbar, .k-state-highlight, .k-tabstrip-items .k-item, .k-textbox {
+    background-color: #f5f5f5;
+}
+.k-tabstrip-items .k-item .k-link
+{
+    color: #34495E
+}
+
+.k-link, .k-nav-current.k-state-hover {
+    color: #1ABB9C;
+}
+
+.k-tabstrip-top > .k-tabstrip-items > .k-item {
+    border-bottom-width: 3px;
+}
+
+.k-link, .k-nav-current.k-state-hover .k-link {
+    color: #428bca;
+}
+
+.k-tabstrip-items .k-item.k-state-hover {
+    background: #ccc;
+    border-color: #ccc;
+}
+.k-tabstrip > .k-button.k-bare {
+    color: #000
+}
+/*.k-grid .k-grid-header .k-header .k-link {
+    height: auto;
+}*/
+.k-grid .k-grid-header .k-header {
+    white-space: normal;
 }

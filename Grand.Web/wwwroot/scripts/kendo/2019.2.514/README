@@ -1,0 +1,111 @@
+﻿# Kendo UI for jQuery
+
+[![Build Status](https://travis-ci.org/telerik/kendo-ui-core.svg?branch=master)](https://travis-ci.org/telerik/kendo-ui-core)
+
+Kendo UI for jQuery delivers widgets for building websites and desktop and mobile applications with HTML5 and JavaScript.
+
+Kendo UI for jQuery is a commercial product but provides the [Kendo UI Core](https://github.com/telerik/kendo-ui-core) free and open-source bundle. Kendo UI Core delivers free access to only part of the Kendo UI for jQuery controls.
+
+* [Onboarding](https://github.com/telerik/k2/blob/master/docs/onboarding.md)
+* [Kendo UI for jQuery: Documentation](https://docs.telerik.com/kendo-ui/introduction)
+* [Kendo UI for jQuery: Demos](https://demos.telerik.com/kendo-ui/)
+* [Telerik UI for ASP.NET MVC: Documentation](https://docs.telerik.com/aspnet-core/introduction)
+* [Telerik UI for ASP.NET MVC: Demos](https://demos.telerik.com/aspnet-mvc/)
+* [Telerik UI for ASP.NET Core: Documentation](https://docs.telerik.com/aspnet-mvc/introduction)
+* [Telerik UI for ASP.NET Core: Demos](https://demos.telerik.com/aspnet-core)
+* [Kendo UI Core on GitHub](https://github.com/telerik/kendo-ui-core)
+
+## Table of Contents
+
+* [Available Widgets and Features (External)](https://github.com/telerik/kendo-ui-core/#features-of-kendo-ui-core)
+* [Compatibility](#compatibility)
+* [Initialization](#initialization)
+	* [Dependencies](#dependencies)
+	* [Build](#build)
+* [Source Code and Downloads](#source-code-and-downloads)
+* [Using with Static CDN](#using-with-static-cdn)
+* [Release Notes](#release-notes)
+* [License Information](#license-information)
+
+## Compatibility
+
+* [Supported jQuery versions (official Kendo UI for jQuery documentation)](https://docs.telerik.com/kendo-ui/intro/installation/prerequisites#supported-jquery-versions)
+* [JavaScript prerequisites (official Kendo UI for jQuery documentation)](https://docs.telerik.com/kendo-ui/intro/installation/prerequisites)
+
+## Initialization
+
+To get the source code for Kendo UI for jQuery, either:
+* Download a pre-built zip from [Telerik.com](https://www.telerik.com/account/product-download?product=KENDOUICOMPLETE&skucid=67), or
+* Build the source yourself by using Gulp. This approach provides an option for building a Kendo UI for jQuery distribution that includes only the widgets and framework features required by your application.
+
+### Dependencies
+
+* Node.js, version 4.x
+* git, version 2.x
+
+For Windows, download and install:
+
+* [Git for Windows](https://git-for-windows.github.io/)
+* [Node.js](http://nodejs.org/download/)
+* [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools)
+
+For Mac OS:
+
+1. Install [Homebrew](http://mxcl.github.com/homebrew/)
+1. Once Homebrew is installed, run `brew install git` to add Git
+1. Run `brew install node` to add Node.js
+
+For Linux, either:
+
+* Use the [distributions provided by NodeSource](https://github.com/nodesource/distributions), or
+* Use the NodeSource package managers to install `git` and `nodejs`.
+
+### Build
+
+To build the Kendo UI for jQuery package:
+
+1. Clone a copy of the repository by running the `git clone https://github.com/telerik/kendo-ui.git` command.
+1. Enter the repository directory with `cd kendo-ui`.
+1. Initialize the submodule repository with `git submodule update --init`.
+1. Run the build script with `npm run build`. The minified version of the scripts and styles of Kendo UI for jQuery will be distributed to the `dist/` subdirectory.
+
+
+To create a custom build or help with the Kendo UI for jQuery development:
+
+1. Install the [gulp command line interface](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md#1-install-gulp-globally) as a global package with `[sudo] npm install --global gulp`.
+1. Make sure you have `gulp` installed by testing `gulp --version`.
+1. Build the full version of Kendo UI for jQuery by running the `gulp build` command in the Kendo UI for jQuery directory. It works just like the `npm run build` command.
+1. To access other available tasks, run `gulp --tasks`.
+
+To build only the controls you need, run the `gulp custom` task. The task creates a custom `dist/kendo.custom.min.js` minified file which includes only the specified components. For example, the `gulp custom -c autocomplete,dropdownlist` command will include only the AutoComplete and DropDownList widgets.
+
+## Source Code and Downloads
+
+To skip building Kendo UI for jQuery yourself, head on over to [Telerik.com](https://www.telerik.com/account/product-download?product=KENDOUICOMPLETE&skucid=67) to grab the full source.
+
+## Using with Static CDN
+
+You can include Kendo UI for jQuery in your site or application by using the Kendo UI CDN. The main advantage of the CDN approach is that your users may be able to leverage a primed cache version of Kendo UI for jQuery if they have visited other sites which use the framework.
+
+```html
+<link href="http://kendo.cdn.telerik.com/2014.2.716/styles/kendo.common.min.css" rel="stylesheet" />
+<link href="http://kendo.cdn.telerik.com/2014.2.716/styles/kendo.default.min.css" rel="stylesheet" />
+<script src="http://kendo.cdn.telerik.com/2014.2.716/js/jquery.min.js"></script>
+<script src="http://kendo.cdn.telerik.com/2014.2.716/js/kendo.ui.core.min.js"></script>
+```
+
+## Release Notes
+
+For change logs and release notes, see the [online release notes at Telerik.com](http://www.telerik.com/support/whats-new/kendo-ui/release-history).
+
+## License Information 
+
+This project has been released under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html), the text of which is included below. This license applies ONLY to the source of this repository and does not extend to any other Kendo UI distribution or variant, or any other third party libraries used in a repository. For licensing information about Kendo UI, refer to the [License Agreements page](https://www.kendoui.com/purchase/license-agreement.aspx) at [KendoUI.com](http://www.kendoui.com).
+
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
+>
+>  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+*Copyright © 2019 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.*
+
+*Progress, Telerik, and certain product names used herein are trademarks or registered trademarks of Progress Software Corporation and/or one of its subsidiaries or affiliates in the U.S. and/or other countries.*

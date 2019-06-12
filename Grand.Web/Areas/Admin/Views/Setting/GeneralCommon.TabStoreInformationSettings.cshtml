@@ -5,14 +5,6 @@
     <div class="form-body">
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="GridLayout" class="control-label" />
-            </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="GridLayout" asp-items="((Grand.Web.Areas.Admin.Helpers.KendoLayout)Model.GridLayout).ToSelectList()" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.StoreClosed" class="control-label" />
             </div>

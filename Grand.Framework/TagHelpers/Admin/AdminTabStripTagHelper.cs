@@ -44,12 +44,12 @@ namespace Grand.Framework.TagHelpers.Admin
             var sb = new StringBuilder();
             sb.AppendLine("<script>");
             sb.AppendLine("$(document).ready(function () {");
+            sb.AppendLine($"$('#{Name}').show();");
             sb.AppendLine($"var tab_{rnd} = $('#{Name}').kendoTabStrip({{ ");
             sb.AppendLine($"     tabPosition: '{(SetTabPos ? "left" : "top")}',");
             sb.AppendLine($"     animation: {{ open: {{ effects: 'fadeIn'}} }},");
             sb.AppendLine("     select: tabstrip_on_tab_select");
             sb.AppendLine("  }).data('kendoTabStrip');");
-            sb.AppendLine($"$('#{Name}').show();");
 
             var eventMessage = new AdminTabStripCreated(Name);
             await _mediator.Publish(eventMessage);

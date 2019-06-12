@@ -245,14 +245,6 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Admin area settings
-
-            var adminareasettings = _serviceProvider.GetRequiredService<AdminAreaSettings>();
-            adminareasettings.KendoLayout = "custom";
-            await _settingService.SaveSetting(adminareasettings);
-
-            #endregion
-
             #region ActivityLog
 
             var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
