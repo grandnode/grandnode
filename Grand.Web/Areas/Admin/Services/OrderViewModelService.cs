@@ -327,6 +327,7 @@ namespace Grand.Web.Areas.Admin.Services
                     OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal * x.CurrencyRate, true, currency),
                     CurrencyCode = x.CustomerCurrencyCode,
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    OrderStatusId = x.OrderStatusId,
                     PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                     ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                     CustomerEmail = x.BillingAddress?.Email,
@@ -528,6 +529,7 @@ namespace Grand.Web.Areas.Admin.Services
             var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
             model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentStatusEnum = order.PaymentStatus;
 
             //payment method buttons
             model.CanCancelOrder = _orderProcessingService.CanCancelOrder(order);
