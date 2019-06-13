@@ -6147,3 +6147,7 @@ a.k-link:hover
 .k-pager-numbers .k-state-selected {
     border-color: transparent transparent #3f51b5 transparent;
 }
+
+.k-widget.k-tabstrip {
+    border-style: solid;
+}

@@ -30,11 +30,13 @@ namespace Grand.Framework.TagHelpers.Admin
             await base.ProcessAsync(context, output);
             output.TagName = "select";
             output.TagMode = TagMode.StartTagAndEndTag;
-            var classValue = output.Attributes.ContainsName("class")
-                                ? $"{output.Attributes["class"].Value}"
-                                : "form-control k-input";
+            var classValue = "form-control k-input ";
+            TagHelperAttribute forAttribute;
+            if (context.AllAttributes.TryGetAttribute("class", out forAttribute))
+            {
+                classValue += forAttribute.Value.ToString();
+            }
             output.Attributes.SetAttribute("class", classValue);
-            
         }
     }
 
