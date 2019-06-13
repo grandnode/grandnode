@@ -299,13 +299,12 @@
                             field: "OrderStatus",
                             title: "@T("Admin.Orders.Fields.OrderStatus")",
                             width: 120,
-                            //template: '<a class="k-link" href="Edit/#=Id#">#=OrderStatus#</a>'
-                        template: '<h4><a class="k-link" href="Edit/#=Id#"><span class="label label-' +
-                                '# if(OrderStatusId == 10) {#warning #} #' +
-                                '# if(OrderStatusId == 20) {#info #} #' +
-                                '# if(OrderStatusId == 30) {#success #} #' +
-                                '# if(OrderStatusId == 40) {#danger #} #' +
-                                '">#=OrderStatus#</span></a></h4>'
+                            template: '<h4><a class="k-link orderstatuslist" href="Edit/#=Id#"><span class="label label-' +
+                                    '# if(OrderStatusId == 10) {#warning #} #' +
+                                    '# if(OrderStatusId == 20) {#info #} #' +
+                                    '# if(OrderStatusId == 30) {#success #} #' +
+                                    '# if(OrderStatusId == 40) {#danger #} #' +
+                                    '">#=OrderStatus#</span></a></h4>'
                         },</text>
                                 }
                         {

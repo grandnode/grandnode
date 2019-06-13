@@ -4,8 +4,7 @@
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     if (Model.AvailableCategories.Count > 0)
-    {
-        <h6>&nbsp;</h6>        
+    { 
         <div class="panel panel-default">
             <vc:admin-widget widget-zone="product_details_categories_top" additional-data="Model" />
             <div class="panel-heading">

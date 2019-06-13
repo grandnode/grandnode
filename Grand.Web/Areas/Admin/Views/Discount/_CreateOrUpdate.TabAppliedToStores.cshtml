@@ -8,7 +8,7 @@
         <div id="stores-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewStore" value="@T("Admin.Promotions.Discounts.AppliedToStores.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StoreAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshStores", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+        <button type="submit" id="btnAddNewStore" onclick="javascript:OpenWindow('@(Url.Action("StoreAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshStores", formId = "discount-form" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Promotions.Discounts.AppliedToStores.AddNew")</button>
         <input type="button" id="btnRefreshStores" style="display: none" />
     </div>
     <vc:admin-widget widget-zone="discount_details_applied_to_stores_bottom" additional-data="Model" />

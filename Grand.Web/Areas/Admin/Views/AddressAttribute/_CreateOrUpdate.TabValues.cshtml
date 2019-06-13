@@ -9,7 +9,7 @@
                 <vc:admin-widget widget-zone="address_attribute_details_values_bottom" additional-data="Model" />
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewValue" value="@T("Admin.Address.AddressAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 350, true); return false;" class="btn green" />
+                <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 350, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Address.AddressAttributes.Values.AddNew")</button>
                 <input type="submit" id="btnRefresh" style="display: none" />
             </div>
         </div>
