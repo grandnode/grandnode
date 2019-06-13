@@ -229,7 +229,7 @@ function init_sidebar() {
             mouseWheel: { preventDefault: true }
         });
     }
-};
+}
 // /Sidebar
 
 var randNum = function () {
@@ -427,9 +427,6 @@ function gd(year, month, day) {
 }
 
 
-
-
-
 /* STARRR */
 
 function init_starrr() {
@@ -450,7 +447,7 @@ function init_starrr() {
         $('.stars-count-existing').html(value);
     });
 
-};
+}
 
 
 function init_JQVmap() {
@@ -494,7 +491,7 @@ function init_JQVmap() {
 
     }
 
-};
+}
 
 
 function init_skycons() {
@@ -633,7 +630,7 @@ function init_sparklines() {
     });
 
 
-};
+}
 
 
 /* AUTOCOMPLETE */
@@ -656,7 +653,7 @@ function init_autocomplete() {
         lookup: countriesArray
     });
 
-};
+}
 
 /* AUTOSIZE */
 
@@ -714,7 +711,7 @@ function init_parsley() {
         hljs.initHighlightingOnLoad();
     } catch (err) { }
 
-};
+}
 
 
 /* INPUTS */
@@ -742,7 +739,7 @@ function init_TagsInput() {
 
     }
 
-};
+}
 
 /* SELECT2 */
 
@@ -761,7 +758,7 @@ function init_select2() {
         allowClear: true
     });
 
-};
+}
 
 /* WYSIWYG EDITOR */
 
@@ -834,7 +831,7 @@ function init_wysiwyg() {
     window.prettyPrint;
     prettyPrint();
 
-};
+}
 
 /* CROPPER */
 
@@ -1066,7 +1063,7 @@ function init_cropper() {
     }
 
 
-};
+}
 
 /* CROPPER --- end */
 
@@ -1173,7 +1170,7 @@ function init_knob() {
         }
     });
 
-};
+}
 
 /* INPUT MASK */
 
@@ -1205,7 +1202,7 @@ function init_ColorPicker() {
 
     $('.demo-auto').colorpicker();
 
-};
+}
 
 
 /* ION RANGE SLIDER */
@@ -1275,7 +1272,7 @@ function init_IonRangeSlider() {
         }
     });
 
-};
+}
 
 
 /* DATERANGEPICKER */
@@ -1500,7 +1497,7 @@ function init_SmartWizard() {
     $('.buttonPrevious').addClass('btn btn-primary');
     $('.buttonFinish').addClass('btn btn-default');
 
-};
+}
 
 
 /* VALIDATOR */
@@ -1537,14 +1534,14 @@ function init_validator() {
         return false;
     });
 
-};
+}
 
 /* PNotify */
 
 function init_PNotify() {
 
     if (typeof (PNotify) === 'undefined') { return; }
-};
+}
 
 
 /* CUSTOM NOTIFICATION */
@@ -1600,7 +1597,7 @@ function init_CustomNotification() {
         $('#notif-group div').first().css('display', 'block');
     });
 
-};
+}
 
 /* EASYPIECHART */
 
@@ -1658,7 +1655,7 @@ function init_EasyPieChart() {
         }
     });
 
-};
+}
 
 /* COMPOSE */
 
@@ -1671,7 +1668,7 @@ function init_compose() {
         $('.compose').slideToggle();
     });
 
-};
+}
 
 /* CALENDAR */
 
@@ -1774,7 +1771,7 @@ function init_calendar() {
         }]
     });
 
-};
+}
 
 /* DATA TABLES */
 
@@ -1859,9 +1856,16 @@ function init_DataTables() {
 
     TableManageButtons.init();
 
-};
+}
 
-
+/* SCROLL */
+function init_scroll() {
+    $('.scroll-to-top').click(function (e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, 500);
+        return false;
+    });
+}
 
 $(document).ready(function () {
 
@@ -1893,7 +1897,7 @@ $(document).ready(function () {
     init_CustomNotification();
     init_autosize();
     init_autocomplete();
-
+    init_scroll();
+    
 });
-
 
