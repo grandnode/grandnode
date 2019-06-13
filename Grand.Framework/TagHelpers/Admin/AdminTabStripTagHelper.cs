@@ -1,5 +1,4 @@
 ﻿using Grand.Framework.Events;
-using Grand.Services.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Wangkanai.Detection;
 
 namespace Grand.Framework.TagHelpers.Admin
 {
@@ -15,10 +15,12 @@ namespace Grand.Framework.TagHelpers.Admin
     public partial class AdminTabStripTagHelper : TagHelper
     {
         private readonly IMediator _mediator;
+        private readonly IDevice _device;
 
-        public AdminTabStripTagHelper(IMediator mediator)
+        public AdminTabStripTagHelper(IMediator mediator, IDeviceResolver deviceResolver)
         {
             _mediator = mediator;
+            _device = deviceResolver.Device;
         }
 
         [HtmlAttributeName("SetTabPos")]
@@ -36,6 +38,8 @@ namespace Grand.Framework.TagHelpers.Admin
 
             var content = await output.GetChildContentAsync();
             var list = (List<string>)ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName];
+            if (_device.Type != DeviceType.Desktop && SetTabPos)
+                SetTabPos = false;
 
             output.TagName = "div";
             output.Attributes.SetAttribute("id", Name);
