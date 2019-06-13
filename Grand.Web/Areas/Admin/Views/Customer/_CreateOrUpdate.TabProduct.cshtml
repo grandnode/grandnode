@@ -8,7 +8,7 @@
         <div id="personalizedproduct-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewPersonalizedProduct" value="@T("Admin.Customers.Customers.PersonalizedProduct.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Customer", new { customerId = Model.Id, btnId = "btnRefreshPersonalizedProducts", formId = "customer-form", personalized = "true" }))', 800, 800, true); return false;" class="k-button" />
+        <button type="submit" id="btnAddNewPersonalizedProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Customer", new { customerId = Model.Id, btnId = "btnRefreshPersonalizedProducts", formId = "customer-form", personalized = "true" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Customers.PersonalizedProduct.AddNew")</button>
         <input type="submit" id="btnRefreshPersonalizedProducts" style="display: none" />
     </div>
     <vc:admin-widget widget-zone="customer_details_product_bottom" additional-data="Model" />
