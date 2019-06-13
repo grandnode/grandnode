@@ -2173,8 +2173,8 @@ var __meta__ = {
                 nextRow = newRow.next();
                 if (nextRow.hasClass("k-detail-row") && nextRow.is(":visible")) {
                     newRow.find(".k-hierarchy-cell .k-icon")
-                        .removeClass("k-plus")
-                        .addClass("k-minus");
+                        .removeClass("k-i-plus")
+                        .addClass("k-i-minus");
                 }
             }
         },
@@ -3718,7 +3718,7 @@ var __meta__ = {
                 }
 
                 if (hasDetails) {
-                    rowTemplate += '<td class="k-hierarchy-cell"><a class="k-icon k-plus" href="\\#" tabindex="-1"></a></td>';
+                    rowTemplate += '<td class="k-hierarchy-cell"><a class="k-icon k-i-plus" href="\\#" tabindex="-1"></a></td>';
                 }
 
                 for (idx = 0; idx < length; idx++) {
@@ -3975,17 +3975,17 @@ var __meta__ = {
                 throw new Error("Having both detail template and locked columns is not supported");
             }
 
-            that.table.on(CLICK + NS, ".k-hierarchy-cell .k-plus, .k-hierarchy-cell .k-minus", function(e) {
+            that.table.on(CLICK + NS, ".k-hierarchy-cell .k-i-plus, .k-hierarchy-cell .k-i-minus", function(e) {
                 var button = $(this),
-                    expanding = button.hasClass("k-plus"),
+                    expanding = button.hasClass("k-i-plus"),
                     masterRow = button.closest("tr.k-master-row"),
                     detailRow,
                     detailTemplate = that.detailTemplate,
                     data,
                     hasDetails = that._hasDetails();
 
-                button.toggleClass("k-plus", !expanding)
-                    .toggleClass("k-minus", expanding);
+                button.toggleClass("k-i-plus", !expanding)
+                    .toggleClass("k-i-minus", expanding);
 
                 if(hasDetails && !masterRow.next().hasClass("k-detail-row")) {
                     data = that.dataItem(masterRow);
@@ -4033,11 +4033,11 @@ var __meta__ = {
         },
 
         expandRow: function(tr) {
-            $(tr).find('> td .k-plus, > td .k-i-expand').click();
+            $(tr).find('> td .k-i-plus, > td .k-i-expand').click();
         },
 
         collapseRow: function(tr) {
-            $(tr).find('> td .k-minus, > td .k-i-collapse').click();
+            $(tr).find('> td .k-i-minus, > td .k-i-collapse').click();
         },
 
         _createHeaderCells: function(columns) {
