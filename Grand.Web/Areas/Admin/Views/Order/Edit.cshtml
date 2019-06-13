@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="x_content form">
-                    <admin-tabstrip name="order-edit">
+                    <admin-tabstrip name="order-edit" SetTabPos="true">
                         <items>
                             <tabstrip-item text="@T("Admin.Orders.Info")" tab-index="0">
                                 <content>
@@ -47,7 +47,16 @@
                                     </div>
                                 </content>
                             </tabstrip-item>
-                            <tabstrip-item text="@T("Admin.Orders.BillingInfo")" tab-index="1">
+
+                            <tabstrip-item text="@T("Admin.Orders.Addresses")" tab-index="1">
+                                <content>
+                                    <div>
+                                        <partial name="_OrderDetails.Addresses" model="Model" />
+                                    </div>
+                                </content>
+                            </tabstrip-item>
+
+                            @*<tabstrip-item text="@T("Admin.Orders.BillingInfo")" tab-index="1">
                                 <content>
                                     <div>
                                         <partial name="_OrderDetails.Billing" model="Model" />
@@ -60,7 +69,7 @@
                                         <partial name="_OrderDetails.Shipping" model="Model" />
                                     </div>
                                 </content>
-                            </tabstrip-item>
+                            </tabstrip-item>*@
                             <tabstrip-item text="@T("Admin.Orders.Products")" tab-index="3">
                                 <content>
                                     <div>

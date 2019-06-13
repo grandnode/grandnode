@@ -427,7 +427,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3"></label>
                     <div class="col-md-9 actions btn-group btn-group-devided">
-                        <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="k-button" />
+                        <button type="submit" id="btnEditOrderTotals" onclick=" toggleOrderTotals(true);return false; " name="btnEditOrderTotals" class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Orders.Fields.EditOrderTotals")</button>
                         <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="k-button" />
                     </div>
@@ -540,7 +540,7 @@
             <div class="form-group">
                 <label asp-for="PaymentStatus" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
-                    @{ 
+                    @{
                         var labelStatus = "";
                         switch (@Model.PaymentStatusEnum)
                         {
@@ -564,21 +564,20 @@
                                 break;
                         }
                     }
-                    
-                    
+
+
                     <h2><span class="label label-@labelStatus">@Model.PaymentStatus</span></h2>
 
                     @if (!Model.IsLoggedInAsVendor)
-                                {
-                                    if (Model.CanCapture)
-                                    {
+                    {
+                        if (Model.CanCapture)
+                        {
                             <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                             <text>&nbsp;</text>
                         }
                         if (Model.CanMarkOrderAsPaid)
                         {
-                            <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
+                            <button type="submit" id="markorderaspaid" name="markorderaspaid" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;@T("Admin.Orders.Fields.MarkAsPaid")</button>
                         }
                         if (Model.CanRefund)
                         {
