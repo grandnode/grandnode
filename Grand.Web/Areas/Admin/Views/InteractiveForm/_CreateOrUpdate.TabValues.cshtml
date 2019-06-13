@@ -8,7 +8,7 @@
                 <div id="interactiveformattributes-grid"></div>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewValue" value="@T("Admin.Promotions.InteractiveForms.Attribute.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddAttribute", "InteractiveForm", new { formId = Model.Id }))'); return false;" class="k-button" />
+                <button type="submit" id="btnAddNewValue" onclick="javascript:setLocation('@(Url.Action("AddAttribute", "InteractiveForm", new { formId = Model.Id }))'); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Promotions.InteractiveForms.Attribute.AddNew")</button>
             </div>
         </div>
 
