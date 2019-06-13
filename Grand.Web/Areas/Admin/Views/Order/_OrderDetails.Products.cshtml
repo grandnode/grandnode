@@ -370,7 +370,7 @@
 @if (!Model.IsLoggedInAsVendor)
 {
     <div class="form-actions">
-            <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))'); return false; " class="k-button" />
+        <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))'); return false; " class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Orders.Products.AddNew")</button>
     </div>
 }
 
