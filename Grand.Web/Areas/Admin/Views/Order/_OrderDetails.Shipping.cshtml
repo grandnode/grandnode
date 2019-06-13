@@ -241,9 +241,9 @@
 
                         </script>
                         <div id="divShippingMethod" style="display: inline-block;"><admin-input asp-for="ShippingMethod" /></div>
-                        <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn green" />
-                        <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn green" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                        <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="btn default" />
+                        <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="k-button" />
+                        <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="k-button" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="k-button" />
                     }
                     @if (!string.IsNullOrEmpty(Model.ShippingAdditionDescription))
                     {
