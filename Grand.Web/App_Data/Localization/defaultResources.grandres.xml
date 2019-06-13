@@ -20122,4 +20122,7 @@
   <LocaleResource Name="admin.system.developertools">
     <Value>Developer Tools</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Addresses">
+    <Value>Addresses</Value>
+  </LocaleResource>
 </Language>
