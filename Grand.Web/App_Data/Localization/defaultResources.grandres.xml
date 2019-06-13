@@ -20110,10 +20110,16 @@
   <LocaleResource Name="products.similarproducts">
     <Value>Similar products</Value>
   </LocaleResource>
-<LocaleResource Name="admin.catalog.products.similarproducts.savebeforeedit">
-  <Value>You need to save the product before you can add similar products for this product page.</Value>
-</LocaleResource>
+  <LocaleResource Name="admin.catalog.products.similarproducts.savebeforeedit">
+    <Value>You need to save the product before you can add similar products for this product page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.LinkedProducts">
     <Value>Linked products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.system.developertools">
+    <Value>Developer Tools</Value>
   </LocaleResource>
 </Language>
