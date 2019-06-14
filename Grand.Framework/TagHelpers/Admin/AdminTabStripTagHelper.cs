@@ -15,12 +15,12 @@ namespace Grand.Framework.TagHelpers.Admin
     public partial class AdminTabStripTagHelper : TagHelper
     {
         private readonly IMediator _mediator;
-        private readonly IDevice _device;
+        private readonly IDeviceResolver _resolver;
 
         public AdminTabStripTagHelper(IMediator mediator, IDeviceResolver deviceResolver)
         {
             _mediator = mediator;
-            _device = deviceResolver.Device;
+            _resolver = deviceResolver;
         }
 
         [HtmlAttributeName("SetTabPos")]
@@ -35,10 +35,9 @@ namespace Grand.Framework.TagHelpers.Admin
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName] = new List<string>();
-
             var content = await output.GetChildContentAsync();
             var list = (List<string>)ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName];
-            if (_device.Type != DeviceType.Desktop && SetTabPos)
+            if (_resolver.Device.Type != DeviceType.Desktop && SetTabPos)
                 SetTabPos = false;
 
             output.TagName = "div";

@@ -6154,3 +6154,14 @@ a.k-link.orderstatuslist:hover {
 .k-widget.k-tabstrip {
     border-style: solid;
 }
+.k-pager-wrap {
+    justify-content: flex-end;
+}
+
+.k-pager-wrap .k-pager-refresh {
+    margin-right: 0em; 
+}
+
+.k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
+    color: #000;
+}
