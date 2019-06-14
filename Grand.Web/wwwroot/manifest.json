@@ -1,0 +1,25 @@
+{
+  "name": "Grandnode Application",
+  "short_name": "GrandNode",
+  "description": "Open Source Cross Platform E-Commerce Solution based on .NET Core and MondoDB",
+  "icons": [{
+        "src": "content/images/icons/144x144.png",
+          "sizes": "144x144",
+          "type": "image/png"
+      },
+      {
+        "src": "content/images/icons/512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+	  {
+        "src": "content/images/icons/192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ],
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#fff",
+  "theme_color": "#fff"
+}
