@@ -422,5 +422,24 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             services.AddDetectionCore().AddDevice();
         }
+
+        /// <summary>
+        /// Add Progressive Web App
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddPWA(this IServiceCollection services)
+        {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            if (config.EnableProgressiveWebApp)
+            {
+                var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {
+                    Strategy = WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy.Minimal
+                };
+                services.AddProgressiveWebApp(options);
+            }
+        }
     }
 }
