@@ -135,9 +135,9 @@
                                     @if (Model.ShippedDateUtc.HasValue)
                                     {
                                         <div id="divShippedDate" style="display: inline-block;"><admin-input asp-for="ShippedDate" /> &nbsp;@T("Admin.Orders.Shipments.ShippedDate.Enter")</div>
-                                        <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn default" />
-                                        <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn default" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                        <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn default" />
+                                        <button type="submit" id="btnEditShippedDate" onclick=" toggleShippedDate(true);return false; " class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Common.Edit")</button>
+                                        <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><span class="k-icon k-i-save"></span>&nbsp;@T("Admin.Common.Save")</button>
+                                        <button type="submit" id="btnCancelShippedDate" onclick=" toggleShippedDate(false);return false; " class="k-button"><span class="k-icon k-i-cancel"></span>&nbsp;@T("Admin.Common.Cancel")</button>
                                     }
                                 </div>
                             </div>
@@ -161,9 +161,9 @@
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
                                         <div id="divDeliveryDate" style="display: inline-block;"><admin-input asp-for="DeliveryDate" /> &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.Enter")</div>
-                                        <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="btn default" />
-                                        <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn default" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                        <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="btn default" />
+                                        <button type="submit" id="btnEditDeliveryDate"  onclick=" toggleDeliveryDate(true);return false; " class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Common.Edit")</button>
+                                        <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><span class="k-icon k-i-save"></span>&nbsp;@T("Admin.Common.Save")</button>
+                                        <button type="submit" id="btnCancelDeliveryDate" onclick=" toggleDeliveryDate(false);return false; " class="k-button"><span class="k-icon k-i-cancel"></span>&nbsp;@T("Admin.Common.Cancel")</button>
                                     }
                                 </div>
                             </div>

@@ -18,15 +18,15 @@
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
-                            <input type="button" id="sendemail" class="btn yellow" value="@T("Admin.Customers.Customers.SendEmail")" />
-                            <input type="button" id="sendprivatemessage" class="btn blue" value="@T("Admin.Customers.Customers.SendPM")" />
+                            <button class="btn btn-info" type="submit" id="sendemail"><i class="fa fa-paper-plane" aria-hidden="true"></i> &nbsp;@T("Admin.Customers.Customers.SendEmail") </button>
+                            <button class="btn btn-warning" type="submit" id="sendprivatemessage"><i class="fa fa-paper-plane" aria-hidden="true"></i> &nbsp;@T("Admin.Customers.Customers.SendPM") </button>
                             @if (Model.AllowSendingOfWelcomeMessage)
                             {
-                                <input type="submit" name="send-welcome-message" class="btn default" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                <button class="btn btn-primary" type="submit" name="send-welcome-message" onclick="return confirm('@T("Admin.Common.AreYouSure")');"><span class="k-icon k-i-rotate"></span> &nbsp;@T("Admin.Customers.Customers.SendWelcomeMessage") </button>
                             }
                             @if (Model.AllowReSendingOfActivationMessage)
                             {
-                                <input type="submit" name="resend-activation-message" class="btn default" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                <button class="btn btn-primary" type="submit" name="resend-activation-message" onclick="return confirm('@T("Admin.Common.AreYouSure")');"><span class="k-icon k-i-rotate"></span> &nbsp;@T("Admin.Customers.Customers.ReSendActivationMessage") </button>
                             }
                             <span id="customer-delete" class="btn red"><i class="fa fa-trash-o"></i><span class="hidden-xs"> @T("Admin.Common.Delete")</span></span>
                             <vc:admin-widget widget-zone="customer_details_buttons" additional-data="Model" />
@@ -80,7 +80,7 @@
             </div>
             <div class="form-actions">
                 <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                    <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendEmail")" />
+                    <button type="submit" class="k-button"><span class="k-icon k-i-email"></span>&nbsp;@T("Admin.Customers.Customers.SendEmail")</button>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
             </div>
             <div class="form-actions">
                 <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                    <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendPM")" />
+                    <button type="submit" class="k-button"><span class="k-icon k-i-email-box"></span>&nbsp;@T("Admin.Customers.Customers.SendPM")</button>
                 </div>
             </div>
         </div>
