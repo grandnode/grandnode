@@ -436,7 +436,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (config.EnableProgressiveWebApp)
             {
                 var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {
-                    Strategy = WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy.Minimal
+                    Strategy = (WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy)config.ServiceWorkerStrategy
                 };
                 services.AddProgressiveWebApp(options);
             }
