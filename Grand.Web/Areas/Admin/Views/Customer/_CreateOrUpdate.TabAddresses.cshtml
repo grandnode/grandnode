@@ -6,7 +6,7 @@
         <div id="customer-addresses-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="button" class="btn default" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
+        <button type="button" class="k-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Customers.Addresses.AddButton")</button>
     </div>
     <vc:admin-widget widget-zone="customer_details_addresses_bottom" additional-data="Model" />
 </div>

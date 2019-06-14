@@ -6139,6 +6139,9 @@ a.k-link:hover
 {
     text-decoration: underline;
 }
+a.k-link.orderstatuslist:hover {
+    text-decoration: none;
+}
 
 .k-pager-numbers .k-link, .k-pager-numbers .k-state-selected {
     border-width: 0px 0px 2px 0px;
@@ -6150,4 +6153,15 @@ a.k-link:hover
 
 .k-widget.k-tabstrip {
     border-style: solid;
+}
+.k-pager-wrap {
+    justify-content: flex-end;
+}
+
+.k-pager-wrap .k-pager-refresh {
+    margin-right: 0em; 
+}
+
+.k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
+    color: #000;
 }

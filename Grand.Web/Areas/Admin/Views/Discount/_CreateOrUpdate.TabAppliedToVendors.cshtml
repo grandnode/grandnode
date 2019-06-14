@@ -8,7 +8,7 @@
         <div id="vendors-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewVendor" value="@T("Admin.Promotions.Discounts.AppliedToVendors.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshVendors", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+        <button type="submit" id="btnAddNewVendor" onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshVendors", formId = "discount-form" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Promotions.Discounts.AppliedToVendors.AddNew")</button>
         <input type="button" id="btnRefreshVendors" style="display: none" />
     </div>
     <vc:admin-widget widget-zone="discount_details_applied_to_vendors_bottom" additional-data="Model" />

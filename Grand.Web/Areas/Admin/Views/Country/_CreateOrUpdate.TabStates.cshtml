@@ -8,7 +8,7 @@
                 <div id="states-grid"></div>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 500, true); return false;" class="btn default" />
+                <button type="submit" id="btnAddNewState" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 500, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Configuration.Countries.States.AddNew")</button>
                 <input type="submit" id="btnRefresh" style="display: none" />
             </div>
         </div>

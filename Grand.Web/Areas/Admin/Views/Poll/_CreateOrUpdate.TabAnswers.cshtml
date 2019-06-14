@@ -8,7 +8,7 @@
         <div id="answers-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewOption" value="@T("Admin.ContentManagement.Polls.Answer.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("PollAnswerCreatePopup", "Poll", new { pollId = Model.Id, btnId = "btnRefresh", formId = "poll-form" }))', 800, 350, true); return false;" class="k-button" />
+        <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("PollAnswerCreatePopup", "Poll", new { pollId = Model.Id, btnId = "btnRefresh", formId = "poll-form" }))', 800, 350, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.ContentManagement.Polls.Answer.AddNew")</button>
         <input type="submit" id="btnRefresh" style="display: none" />
     </div>
     <vc:admin-widget widget-zone="poll_details_answers_bottom" additional-data="Model" />

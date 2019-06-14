@@ -15,7 +15,7 @@
             <div id="products-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerActionCondition.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id, btnId = "btnRefreshProducts",  formId = "customer-action-condition-form" }))    ', 800, 800, true); return false;" class="btn default" />
+            <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id, btnId = "btnRefreshProducts",  formId = "customer-action-condition-form" }))    ', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.CustomerActionCondition.Products.AddNew")</button>
             <input type="submit" id="btnRefreshProducts" style="display: none" />
         </div>
     </div>

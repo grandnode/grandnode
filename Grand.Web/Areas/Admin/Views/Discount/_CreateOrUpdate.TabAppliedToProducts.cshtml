@@ -11,7 +11,7 @@
         <div id="products-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewProduct" value="@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+        <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")</button>
         <input type="submit" id="btnRefreshProducts" style="display: none" />
     </div>
     <vc:admin-widget widget-zone="discount_details_applied_to_products_bottom" additional-data="Model" />
