@@ -557,4 +557,7 @@
       6. The last step is to enable Google Analytics API in your Google Cloud Platform here - https://console.developers.google.com/apis/api/analyticsreporting.googleapis.com/
     </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Addresses">
+    <Value>Billing and Shipping info</Value>
+  </LocaleResource>
 </Language>

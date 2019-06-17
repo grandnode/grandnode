@@ -20123,6 +20123,6 @@
     <Value>Developer Tools</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Addresses">
-    <Value>Addresses</Value>
+    <Value>Billing and Shipping info</Value>
   </LocaleResource>
 </Language>
