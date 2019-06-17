@@ -434,24 +434,28 @@
 
     @if (await permisionService.Authorize(Grand.Services.Security.PermissionSystemName.Shipments))
     {
-        <p>
-            <strong>
-                @T("Admin.Orders.Shipments")
-            </strong>
-        </p>
-        <div class="panel panel-default">
-            <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
-            <div class="panel-body">
-                <div id="shipments-grid"></div>
+        <div class="card col-md-12">
+            <div class="card-body">
+                <h4 class="card-title">@T("Admin.Orders.Shipments")</h4>
+                <div class="card-text">
+                    <div class="panel panel-default">
+                        <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
+                        <div class="panel-body">
+                            <div id="shipments-grid"></div>
+                        </div>
+                        <div class="panel-footer">
+                            @if (Model.CanAddNewShipments)
+                            {
+                                <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Orders.Shipments.AddNew")</button>
+                            }
+                        </div>
+                        <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
+                    </div>
+                </div>
             </div>
-            <div class="panel-footer">
-                @if (Model.CanAddNewShipments)
-                {
-                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Orders.Shipments.AddNew")</button>
-                }
-            </div>
-            <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
         </div>
+        
+       
         <script>
         $(document).ready(function () {
             $("#shipments-grid").kendoGrid({
@@ -580,7 +584,10 @@
 }
 else
 {
-    <div class="note note-info">@T("Admin.Orders.ShippingInfo.NotRequired")</div>
+        <div class="card col-md-6">
+            <div class="note note-info">@T("Admin.Orders.ShippingInfo.NotRequired")</div>
+        </div>
+    
 }
 
 <vc:admin-widget widget-zone="order_details_address_bottom" additional-data="Model" />
