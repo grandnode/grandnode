@@ -367,7 +367,7 @@ namespace Grand.Services.Customers
 
         #region Shopping cart 
 
-        Task ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType);
+        Task ClearShoppingCartItem(string customerId, IList<ShoppingCartItem> cart);
         Task DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
