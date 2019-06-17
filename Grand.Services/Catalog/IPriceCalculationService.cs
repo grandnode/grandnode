@@ -22,7 +22,7 @@ namespace Grand.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
-        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetFinalPrice(Product product,
+        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
             Customer customer,
             decimal additionalCharge = decimal.Zero, 
             bool includeDiscounts = true, 
@@ -39,7 +39,7 @@ namespace Grand.Services.Catalog
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
         /// <returns>Final price</returns>
-        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetFinalPrice(Product product,
+        Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
             Customer customer,
             decimal additionalCharge,
             bool includeDiscounts,

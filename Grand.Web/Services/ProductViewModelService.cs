@@ -351,8 +351,13 @@ namespace Grand.Web.Services
                                             //prices
 
                                             //calculate for the maximum quantity (in case if we have tier prices)
-                                            decimal minPossiblePrice = (await _priceCalculationService.GetFinalPrice(product,
-                                                currentCustomer, decimal.Zero, true, int.MaxValue)).finalPrice;
+                                            var infoprice = (await _priceCalculationService.GetFinalPrice(product,
+                                                currentCustomer, decimal.Zero, true, int.MaxValue));
+
+                                            priceModel.AppliedDiscounts = infoprice.appliedDiscounts;
+                                            priceModel.PreferredTierPrice = infoprice.preferredTierPrice;
+
+                                            decimal minPossiblePrice = infoprice.finalPrice;
 
                                             decimal oldPriceBase = (await _taxService.GetProductPrice(product, product.OldPrice, priceIncludesTax, currentCustomer)).productprice;
                                             decimal finalPriceBase = (await _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, currentCustomer)).productprice;
@@ -879,7 +884,9 @@ namespace Grand.Web.Services
                         decimal taxRate = productprice.taxRate;
                         decimal oldPriceBase = productprice.productprice;
                         decimal finalPriceWithoutDiscountBase = (await (_taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false)).finalPrice))).productprice;
-                        decimal finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice)).productprice;
+
+                        var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true));
+                        decimal finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
 
                         decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
                         decimal finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
@@ -889,6 +896,10 @@ namespace Grand.Web.Services
                             model.ProductPrice.OldPrice = _priceFormatter.FormatPrice(oldPrice);
 
                         model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+                        if (appliedPrice.appliedDiscounts.Any())
+                            model.ProductPrice.AppliedDiscounts = appliedPrice.appliedDiscounts;
+                        if (appliedPrice.preferredTierPrice != null)
+                            model.ProductPrice.PreferredTierPrice = appliedPrice.preferredTierPrice;
 
                         if (product.CatalogPrice > 0)
                         {
