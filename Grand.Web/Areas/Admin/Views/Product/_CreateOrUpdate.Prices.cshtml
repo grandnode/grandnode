@@ -187,7 +187,7 @@
             <div id="tierprices-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewTierPrice" value="@T("Admin.Catalog.Products.TierPrices.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button" />
+            <button type="submit" id="btnAddNewTierPrice" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.TierPrices.AddNew")</button>
             <input type="submit" id="btnRefreshTierPrices" style="display: none" />
         </div>
     </div>
@@ -277,7 +277,7 @@
                 }, {
                     field: "Id",
                     title: "@T("Admin.Common.Edit")",
-                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
+                    template: "<button type=\"button\" onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class=\"k-button\"><span class=\"k-icon k-i-edit\"></span>&nbsp;@T("Admin.Common.Edit")</button>"
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")"
