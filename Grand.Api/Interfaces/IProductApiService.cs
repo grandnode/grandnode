@@ -30,5 +30,9 @@ namespace Grand.Api.Interfaces
         Task UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
         Task DeleteProductSpecification(ProductDto product, string id);
 
+        Task InsertProductTierPrice(ProductDto product, ProductTierPriceDto model);
+        Task UpdateProductTierPrice(ProductDto product, ProductTierPriceDto model);
+        Task DeleteProductTierPrice(ProductDto product, string id);
+
     }
 }

@@ -16074,6 +16074,18 @@
   <LocaleResource Name="Api.Catalog.ProductPicture.Fields.PictureId.NotExists">
     <Value>Picture Id does not exist</Value>
   </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.CustomerRoleId.NotExists">
+    <Value>Customer role ID doesn't exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.Price.GreaterThan0">
+    <Value>Price field must be greater than 0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.Quantity.GreaterThan0">
+    <Value>Quantity field must be greater than 0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.StoreId.NotExists">
+    <Value>Store ID doesn't exist</Value>
+  </LocaleResource>
   <LocaleResource Name="Api.Catalog.Products.Cannoteditauction">
     <Value>Cannot edit auction</Value>
   </LocaleResource>

@@ -193,6 +193,14 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.PictureBinary, mo => mo.Ignore());
 
             #endregion
+
+            #region Tier prices
+
+            CreateMap<ProductTierPriceDto, TierPrice>();
+
+            CreateMap<TierPrice, ProductTierPriceDto>();
+
+            #endregion
         }
 
         public int Order => 1;
