@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
+using Grand.Services.Discounts;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -146,6 +147,11 @@ namespace Grand.Web.Models.Catalog
 
         public partial class ProductPriceModel : BaseGrandModel
         {
+            public ProductPriceModel()
+            {
+                AppliedDiscounts = new List<AppliedDiscount>();
+            }
+
             /// <summary>
             /// The currency (in 3-letter ISO 4217 format) of the offer price 
             /// </summary>
@@ -178,6 +184,9 @@ namespace Grand.Web.Models.Catalog
             /// PAngV baseprice (used in Germany)
             /// </summary>
             public string BasePricePAngV { get; set; }
+
+            public List<AppliedDiscount> AppliedDiscounts { get; set; }
+            public TierPrice PreferredTierPrice { get; set; }
         }
 
         public partial class GiftCardModel : BaseGrandModel

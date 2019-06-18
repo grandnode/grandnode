@@ -1194,19 +1194,19 @@ namespace Grand.Services.Customers
 
         }
 
-        public virtual async Task ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType)
+        public virtual async Task ClearShoppingCartItem(string customerId, IList<ShoppingCartItem> cart)
         {
             var updatebuilder = Builders<Customer>.Update;
-            var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p => p.StoreId == storeId && p.ShoppingCartTypeId == (int)shoppingCartType);
+            var ids = cart.Select(c => c.Id).ToArray();
+            var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p => ids.Contains(p.Id));
             await _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
-            if (shoppingCartType == ShoppingCartType.ShoppingCart || shoppingCartType == ShoppingCartType.Auctions)
+            if (cart.Any(c => c.ShoppingCartType == ShoppingCartType.ShoppingCart || c.ShoppingCartType == ShoppingCartType.Auctions))
                 await UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
-            else
+            if (cart.Any(c => c.ShoppingCartType == ShoppingCartType.Wishlist))
                 await UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
 
         }
-
 
         public virtual async Task InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
         {

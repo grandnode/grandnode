@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
 using Grand.Framework.Mvc.Models;
+using Grand.Services.Discounts;
 using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,11 @@ namespace Grand.Web.Models.Catalog
 		#region Nested Classes
         public partial class ProductPriceModel : BaseGrandModel
         {
+            public ProductPriceModel()
+            {
+                AppliedDiscounts = new List<AppliedDiscount>();
+            }
+
             public string OldPrice { get; set; }
             public decimal OldPriceValue { get; set; }
             public string CatalogPrice { get; set; }
@@ -68,6 +74,10 @@ namespace Grand.Web.Models.Catalog
             /// A value indicating whether we should display tax/shipping info (used in Germany)
             /// </summary>
             public bool DisplayTaxShippingInfo { get; set; }
+
+            public List<AppliedDiscount> AppliedDiscounts { get; set; }
+            public TierPrice PreferredTierPrice { get; set; }
+
         }
         #endregion
     }
