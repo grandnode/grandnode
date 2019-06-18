@@ -14,8 +14,8 @@ namespace Grand.Web.Areas.Admin.Validators.Customers
             CustomerSettings customerSettings)
         {
             //customer email
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Email.Required"));
-
+            RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Email.Required"));
+            
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {
