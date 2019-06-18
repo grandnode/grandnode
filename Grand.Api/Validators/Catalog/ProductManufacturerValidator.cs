@@ -10,9 +10,9 @@ namespace Grand.Api.Validators.Catalog
     {
         public ProductManufacturerValidator(ILocalizationService localizationService, IManufacturerService manufacturerService)
         {
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
-                var manufacturer = manufacturerService.GetManufacturerById(x.ManufacturerId);
+                var manufacturer = await manufacturerService.GetManufacturerById(x.ManufacturerId);
                 if (manufacturer == null)
                     return false;
                 return true;

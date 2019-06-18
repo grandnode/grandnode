@@ -456,5 +456,92 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
         #endregion
 
+        #region Product tierprice
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
+        {
+            if (productTierPrice == null)
+                return NotFound();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var pt = product.TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
+            if (pt != null)
+                ModelState.AddModelError("", "Product tier price mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                await _productApiService.InsertProductTierPrice(product, productTierPrice);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductTierPrice(string key, [FromBody] ProductTierPriceDto productTierPrice)
+        {
+            if (productTierPrice == null)
+                return NotFound();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var pt = product.TierPrices.Where(x => x.Id == productTierPrice.Id).FirstOrDefault();
+            if (pt == null)
+                ModelState.AddModelError("", "No product tier price mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                await _productApiService.UpdateProductTierPrice(product, productTierPrice);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductTierPrice(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (parameters == null)
+                return NotFound();
+
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = await _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var tierPriceId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
+            if (tierPriceId != null)
+            {
+                var pt = product.TierPrices.Where(x => x.Id == tierPriceId.ToString()).FirstOrDefault();
+                if (pt == null)
+                    ModelState.AddModelError("", "No product tier price mapping found with the specified id");
+
+                if (ModelState.IsValid)
+                {
+                    await _productApiService.DeleteProductTierPrice(product, tierPriceId.ToString());
+                    return Ok(true);
+                }
+                return BadRequest(ModelState);
+            }
+            return NotFound();
+        }
+
+        #endregion
     }
 }

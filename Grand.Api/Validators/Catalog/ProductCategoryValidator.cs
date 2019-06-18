@@ -10,9 +10,9 @@ namespace Grand.Api.Validators.Catalog
     {
         public ProductCategoryValidator(ILocalizationService localizationService, ICategoryService categoryService)
         {
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
-                var category = categoryService.GetCategoryById(x.CategoryId);
+                var category = await categoryService.GetCategoryById(x.CategoryId);
                 if (category == null)
                     return false;
                 return true;
