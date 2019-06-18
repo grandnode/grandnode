@@ -14,33 +14,33 @@ namespace Grand.Api.Validators.Catalog
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.PictureId))
                 {
-                    var picture = pictureService.GetPictureById(x.PictureId);
+                    var picture = await pictureService.GetPictureById(x.PictureId);
                     if (picture == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.PictureId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.ManufacturerTemplateId))
                 {
-                    var template = manufacturerTemplateService.GetManufacturerTemplateById(x.ManufacturerTemplateId);
+                    var template = await manufacturerTemplateService.GetManufacturerTemplateById(x.ManufacturerTemplateId);
                     if (template == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Manufacturer.Fields.ManufacturerTemplateId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Id))
                 {
-                    var manufacturer = manufacturerService.GetManufacturerById(x.Id);
+                    var manufacturer = await manufacturerService.GetManufacturerById(x.Id);
                     if (manufacturer == null)
                         return false;
                 }
