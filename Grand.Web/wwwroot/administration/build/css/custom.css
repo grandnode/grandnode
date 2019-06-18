@@ -6165,3 +6165,25 @@ a.k-link.orderstatuslist:hover {
 .k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
     color: #000;
 }
+
+.tableFixHead {
+    overflow-y: auto;
+    height: 100px;
+}
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 10;
+    }
+
+/* Just common table stuff. Really. */
+table.tableFixHead {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tableFixHead th, .tableFixHead td {
+    padding: 8px 16px;
+}
