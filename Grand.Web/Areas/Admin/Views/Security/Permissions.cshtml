@@ -46,8 +46,8 @@
                                                 }
                                             });
                                         </script>
-                                        <table class="table table-bordered table-striped table-hover">
-                                            <tbody>
+                                        <table class="table table-bordered table-striped table-hover tableFixHead">
+                                            <thead>
                                                 <tr>
                                                     <th scope="col">
                                                         <strong>@T("Admin.Configuration.ACL.Permission")</strong>
@@ -60,6 +60,9 @@
                                                         </th>
                                                     }
                                                 </tr>
+                                            </thead>
+                                            <tbody>
+                                                
                                                 @{
                                                     bool altRow = true;
                                                 }
