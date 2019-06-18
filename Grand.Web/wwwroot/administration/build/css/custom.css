@@ -995,6 +995,9 @@ a:hover, a:focus {
     z-index: 1;
     border-radius: 50%
 }
+.nav-md ul.nav.child_menu li.current-page:before {
+    background: #fff;
+}
 
 .nav-md ul.nav.child_menu li:after {
     border-left: 1px solid #425668;
