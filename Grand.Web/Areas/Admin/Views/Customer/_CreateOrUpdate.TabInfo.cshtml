@@ -354,8 +354,8 @@
                 <div class="form-group">
                     <admin-label asp-for="AffiliateId" />
                     <div class="col-md-9 col-sm-9">
-                        <a class="btn default" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                        <input type="submit" name="remove-affiliate" class="btn red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                        <a class="k-button" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })"><span class="k-icon k-i-eye"></span>&nbsp;@Model.AffiliateName - @T("Admin.Common.View")</a>
+                        <button type="submit" name="remove-affiliate" class="k-button red"><span class="k-icon k-i-delete"></span>&nbsp;@T("Admin.Customers.Customers.Fields.Affiliate.Remove")</button>
                     </div>
                 </div>
             }
