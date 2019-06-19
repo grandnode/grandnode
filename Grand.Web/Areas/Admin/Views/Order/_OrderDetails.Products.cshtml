@@ -136,7 +136,7 @@
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
                                             @for (int i = 0; i < item.ReturnRequestIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@T("Admin.ReturnRequests.View")</a>
+                                                                                      <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })" class="k-button"><span class="k-icon k-i-eye"></span>&nbsp;@T("Admin.ReturnRequests.View")</a>
                                                 if (i != item.ReturnRequestIds.Count - 1)
                                                 {
                                                     <text>,</text>
@@ -150,7 +150,7 @@
                                             @T("Admin.Orders.Products.GiftCards")<text>:</text>
                                             @for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@T("Admin.Orders.Products.GiftCard.View")</a>
+                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })" class="k-button"><span class="k-icon k-i-eye"></span>&nbsp;@T("Admin.Orders.Products.GiftCard.View")</a>
                                                 if (i != item.PurchasedGiftCardIds.Count - 1)
                                                 {
                                                     <text>,</text>
@@ -345,12 +345,12 @@
 
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <td align="center" style="width: 15%;">
-                                    <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="k-button" />
-                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="k-button" style="display:none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " id="btnCancelOrderItem@(item.Id)" class="k-button" style="display:none;" />
-                                </td>
+                            <td align="center" style="width: 15%;">
+                                <button type="submit" name="btnEditOrderItem@(item.Id)" id="btnEditOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Common.Edit")</button>
+                                <button type="submit" name="btnDeleteOrderItem@(item.Id)" id="btnDeleteOrderItem@(item.Id)" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><span class="k-icon k-i-delete"></span>&nbsp;@T("Admin.Common.Delete")</button>
+                                <button type="submit" name="btnSaveOrderItem@(item.Id)" id="btnSaveOrderItem@(item.Id)" style="display:none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><span class="k-icon k-i-save"></span>&nbsp;@T("Admin.Common.Save")</button>
+                                <button type="submit" name="btnCancelOrderItem@(item.Id)" id="btnCancelOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " class="k-button"><span class="k-icon k-i-cancel"></span>&nbsp;@T("Admin.Common.Cancel")</button>
+                            </td>
                             }
                         </tr>
                     }
