@@ -572,4 +572,7 @@
   <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.StoreId.NotExists">
     <Value>Store ID doesn't exist</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.list.skunotfound">
+    <Value>Provided SKU doesn't exist</Value>
+  </LocaleResource>
 </Language>

@@ -147,6 +147,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", "Product", new { id = product.Id });
             }
             //not found
+            WarningNotification(_localizationService.GetResource("Admin.Catalog.Products.List.SkuNotFound"));
             return RedirectToAction("List", "Product");
         }
 

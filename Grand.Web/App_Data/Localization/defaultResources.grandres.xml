@@ -20136,4 +20136,7 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.list.skunotfound">
+    <Value>Provided SKU doesn't exist</Value>
+  </LocaleResource>
 </Language>
