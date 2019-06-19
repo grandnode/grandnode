@@ -210,9 +210,7 @@ function init_sidebar() {
         }
     }
 
-    $cur_menu.first().parent('li').addClass('current-page').parents('ul').slideDown(function () {
-        setContentHeight();
-    }).parent().addClass('active');
+    $cur_menu.first().parent('li').addClass('current-page').parents('ul').slideDown(0).parent().addClass('active');
 
     // recompute content when resizing
     $(window).smartresize(function () {
@@ -229,6 +227,7 @@ function init_sidebar() {
             mouseWheel: { preventDefault: true }
         });
     }
+    $('.side-menu').addClass('side-show');
 }
 // /Sidebar
 
