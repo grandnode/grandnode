@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Grand.Core;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
@@ -27,15 +28,15 @@ namespace Grand.Framework.Themes
             StoreInformationSettings storeInformationSettings, 
             IThemeProvider themeProvider)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._genericAttributeService = genericAttributeService;
-            this._storeInformationSettings = storeInformationSettings;
-            this._themeProvider = themeProvider;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _genericAttributeService = genericAttributeService;
+            _storeInformationSettings = storeInformationSettings;
+            _themeProvider = themeProvider;
         }
 
         /// <summary>
-        /// Get or set current theme system name
+        /// Get current theme system name
         /// </summary>
         public string WorkingThemeName
         {
@@ -66,23 +67,28 @@ namespace Grand.Framework.Themes
                 }
                 
                 //cache theme
-                this._cachedThemeName = theme;
-                this._themeIsCached = true;
+                _cachedThemeName = theme;
+                _themeIsCached = true;
                 return theme;
             }
-            set
-            {
-                if (!_storeInformationSettings.AllowCustomerToSelectTheme)
-                    return;
+        }
+        /// <summary>
+        /// Set current theme system name
+        /// </summary>
+        /// <param name="themeName"></param>
+        /// <returns></returns>
+        public virtual async Task SetWorkingTheme(string themeName)
+        {
+            if (!_storeInformationSettings.AllowCustomerToSelectTheme)
+                return;
 
-                if (_workContext.CurrentCustomer == null)
-                    return;
+            if (_workContext.CurrentCustomer == null)
+                return;
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingThemeName, value, _storeContext.CurrentStore.Id).GetAwaiter().GetResult();
+            await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingThemeName, themeName, _storeContext.CurrentStore.Id);
 
-                //clear cache
-                this._themeIsCached = false;
-            }
+            //clear cache
+            _themeIsCached = false;
         }
     }
 }
