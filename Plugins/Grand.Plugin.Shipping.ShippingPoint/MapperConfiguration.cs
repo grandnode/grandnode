@@ -18,8 +18,8 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
             .ForMember(dest => dest.StoreName, mo => mo.Ignore())
             .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
-            .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-            .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
             CreateMap<ShippingPointModel, ShippingPoints>();                
         }
     }

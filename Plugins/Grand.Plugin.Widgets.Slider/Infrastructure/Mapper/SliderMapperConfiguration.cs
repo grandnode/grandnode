@@ -52,7 +52,7 @@ namespace Grand.Plugin.Widgets.Slider.Infrastructure.Mapper
                 .ForMember(dest => dest.Stores, mo => mo.Ignore());
 
             CreateMap<PictureSlider, SlideListModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.PictureUrl, mo => mo.Ignore())
                 .ForMember(dest => dest.ObjectType, mo => mo.MapFrom(y=>y.SliderType.ToString()));
         }

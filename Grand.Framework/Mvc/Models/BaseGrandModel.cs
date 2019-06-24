@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Grand.Core.Domain.Common;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 
 namespace Grand.Framework.Mvc.Models
@@ -12,7 +13,7 @@ namespace Grand.Framework.Mvc.Models
 
         public BaseGrandModel()
         {
-            this.CustomProperties = new Dictionary<string, object>();
+            GenericAttributes = new List<GenericAttribute>();
             PostInitialize();
         }
 
@@ -39,12 +40,9 @@ namespace Grand.Framework.Mvc.Models
 
         #endregion
 
-        #region Properties
+        #region Properties        
 
-        /// <summary>
-        /// Gets or sets property to store any custom values for models 
-        /// </summary>
-        public Dictionary<string, object> CustomProperties { get; set; }
+        public IList<GenericAttribute> GenericAttributes { get; set; }
 
         #endregion
 

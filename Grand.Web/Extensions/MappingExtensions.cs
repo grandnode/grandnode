@@ -30,7 +30,8 @@ namespace Grand.Web.Extensions
                 SeName = entity.GetSeName(language.Id),
                 Flag = entity.Flag,
                 FlagStyle = entity.FlagStyle,
-                Icon = entity.Icon
+                Icon = entity.Icon,
+                GenericAttributes = entity.GenericAttributes
             };
             return model;
         }
@@ -50,7 +51,8 @@ namespace Grand.Web.Extensions
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
-                Icon = entity.Icon
+                Icon = entity.Icon,
+                GenericAttributes = entity.GenericAttributes
             };
             return model;
         }
@@ -107,7 +109,7 @@ namespace Grand.Web.Extensions
             destination.ZipPostalCode = model.ZipPostalCode;
             destination.PhoneNumber = model.PhoneNumber;
             destination.FaxNumber = model.FaxNumber;
-
+            
             return destination;
         }
 

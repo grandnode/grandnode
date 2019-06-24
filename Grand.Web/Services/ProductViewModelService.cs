@@ -183,6 +183,7 @@ namespace Grand.Web.Services
                     TaxDisplayType = taxDisplay,
                     EndTime = product.AvailableEndDateTimeUtc,
                     ShowQty = showQty,
+                    GenericAttributes = product.GenericAttributes,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
@@ -632,6 +633,7 @@ namespace Grand.Web.Services
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
+                GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage =
                     (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
