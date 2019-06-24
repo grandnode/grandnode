@@ -545,7 +545,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.RecurringPaymentType, mo => mo.MapFrom(src => src.RecurringPaymentType.ToString()))
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
                 .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
+                .ForMember(dest => dest.SupportCapture, mo => mo.MapFrom(src => src.SupportCapture().GetAwaiter().GetResult()))
+                .ForMember(dest => dest.SupportPartiallyRefund, mo => mo.MapFrom(src => src.SupportPartiallyRefund().GetAwaiter().GetResult()))
+                .ForMember(dest => dest.SupportRefund, mo => mo.MapFrom(src => src.SupportRefund().GetAwaiter().GetResult()))
+                .ForMember(dest => dest.SupportVoid, mo => mo.MapFrom(src => src.SupportVoid().GetAwaiter().GetResult()))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<PaymentMethodModel, IPaymentMethod>();
+
             //external authentication methods
             CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
