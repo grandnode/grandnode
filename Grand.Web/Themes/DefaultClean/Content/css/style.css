@@ -5380,11 +5380,6 @@ footer .socicon-pinterest:hover {
     }
     .catalog-selectors #items_statistics {
         order: 3;
-        margin-top: 15px;
-    }
-    .sort-container,
-    .sort-container .selectdiv {
-        width: 100%;
     }
     .return-product-container {
         width: calc(100% - 30px);
