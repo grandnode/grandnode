@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Seo;
 using Grand.Framework.Extensions;
@@ -85,7 +84,6 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-
         protected virtual async Task PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
@@ -116,6 +114,15 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SelectedDiscountIds = category.AppliedDiscounts.ToArray();
             }
         }
+        protected virtual void PrepareSortOptionsModel(CategoryModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList(false).ToList();
+            model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
+
+        }
 
         protected void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
         {
@@ -139,7 +146,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new CategoryListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in (await _storeService.GetAllStores()).Where(x=>x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             return model;
         }
@@ -183,6 +190,8 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<CategoryModel> PrepareCategoryModel(string storeId)
         {
             var model = new CategoryModel();
+            //sort options
+            PrepareSortOptionsModel(model);
             //templates
             await PrepareTemplatesModel(model);
             //categories
@@ -193,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Services
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
             await model.PrepareStoresMappingModel(null, _storeService, false, storeId);
-            
+
             //default values
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
@@ -205,6 +214,9 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category, string storeId)
         {
+            //sort options
+            PrepareSortOptionsModel(model);
+
             //templates
             await PrepareTemplatesModel(model);
             //categories

@@ -148,6 +148,11 @@ namespace Grand.Core.Domain.Catalog
         public string Icon { get; set; }
 
         /// <summary>
+        /// Gets or sets the Default sort
+        /// </summary>
+        public int DefaultSort { get; set; } = -1;
+
+        /// <summary>
         /// Gets or sets the hide on catalog page (subcategories)
         /// </summary>
         public bool HideOnCatalog { get; set; }

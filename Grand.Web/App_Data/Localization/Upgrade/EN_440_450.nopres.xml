@@ -575,4 +575,10 @@
   <LocaleResource Name="admin.catalog.products.list.skunotfound">
     <Value>Provided SKU doesn't exist</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this category</Value>
+  </LocaleResource>
 </Language>

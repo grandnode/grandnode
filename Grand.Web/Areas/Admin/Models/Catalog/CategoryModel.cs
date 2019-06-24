@@ -24,6 +24,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             Locales = new List<CategoryLocalizedModel>();
             AvailableCategoryTemplates = new List<SelectListItem>();
             AvailableCategories = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
@@ -103,6 +104,11 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.HideOnCatalog")]
         public bool HideOnCatalog { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.DefaultSort")]
+        public int DefaultSort { get; set; }
+        public IList<SelectListItem> AvailableSortOptions { get; set; }
+
 
         public IList<CategoryLocalizedModel> Locales { get; set; }
 

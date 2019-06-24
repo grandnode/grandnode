@@ -252,6 +252,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Breadcrumb, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableSortOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())

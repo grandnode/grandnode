@@ -2319,6 +2319,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this category</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
