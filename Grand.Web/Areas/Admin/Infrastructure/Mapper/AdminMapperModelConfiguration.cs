@@ -551,8 +551,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SupportVoid, mo => mo.MapFrom(src => src.SupportVoid().GetAwaiter().GetResult()))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
-            CreateMap<PaymentMethodModel, IPaymentMethod>();
-
             //external authentication methods
             CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
