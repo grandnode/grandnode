@@ -29,6 +29,9 @@ namespace Grand.Web.Areas.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.ServerLocalTime")]
         public DateTime ServerLocalTime { get; set; }
 
+        [GrandResourceDisplayName("Admin.System.SystemInfo.ApplicationTime")]
+        public DateTime ApplicationTime { get; set; }
+
         [GrandResourceDisplayName("Admin.System.SystemInfo.ServerTimeZone")]
         public string ServerTimeZone { get; set; }
 

@@ -15495,6 +15495,12 @@
   <LocaleResource Name="Admin.System.SystemInfo">
     <Value>System information</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime">
+    <Value>Application time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime.hint">
+    <Value>Application time based on default store time zone</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo">
     <Value>ASP.NET info</Value>
   </LocaleResource>

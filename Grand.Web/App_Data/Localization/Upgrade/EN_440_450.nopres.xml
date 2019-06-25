@@ -581,4 +581,10 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort.hint">
     <Value>Allow to set default sorting for this category</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime">
+    <Value>Application time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime.hint">
+    <Value>Application time based on default store time zone</Value>
+  </LocaleResource>
 </Language>
