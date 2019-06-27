@@ -1,5 +1,4 @@
 ﻿using Grand.Framework.Events;
-using Grand.Services.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Wangkanai.Detection;
 
 namespace Grand.Framework.TagHelpers.Admin
 {
@@ -15,10 +15,12 @@ namespace Grand.Framework.TagHelpers.Admin
     public partial class AdminTabStripTagHelper : TagHelper
     {
         private readonly IMediator _mediator;
+        private readonly IDeviceResolver _resolver;
 
-        public AdminTabStripTagHelper(IMediator mediator)
+        public AdminTabStripTagHelper(IMediator mediator, IDeviceResolver deviceResolver)
         {
             _mediator = mediator;
+            _resolver = deviceResolver;
         }
 
         [HtmlAttributeName("SetTabPos")]
@@ -33,9 +35,10 @@ namespace Grand.Framework.TagHelpers.Admin
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName] = new List<string>();
-
             var content = await output.GetChildContentAsync();
             var list = (List<string>)ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName];
+            if (_resolver.Device.Type != DeviceType.Desktop && SetTabPos)
+                SetTabPos = false;
 
             output.TagName = "div";
             output.Attributes.SetAttribute("id", Name);
@@ -44,12 +47,12 @@ namespace Grand.Framework.TagHelpers.Admin
             var sb = new StringBuilder();
             sb.AppendLine("<script>");
             sb.AppendLine("$(document).ready(function () {");
+            sb.AppendLine($"$('#{Name}').show();");
             sb.AppendLine($"var tab_{rnd} = $('#{Name}').kendoTabStrip({{ ");
             sb.AppendLine($"     tabPosition: '{(SetTabPos ? "left" : "top")}',");
             sb.AppendLine($"     animation: {{ open: {{ effects: 'fadeIn'}} }},");
             sb.AppendLine("     select: tabstrip_on_tab_select");
             sb.AppendLine("  }).data('kendoTabStrip');");
-            sb.AppendLine($"$('#{Name}').show();");
 
             var eventMessage = new AdminTabStripCreated(Name);
             await _mediator.Publish(eventMessage);

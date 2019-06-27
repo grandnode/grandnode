@@ -8,7 +8,7 @@
                 <div id="attributeValues-grid"></div>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewValues" value="@T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "InteractiveForm", new { form = Model.FormId, aId = Model.Id, formId = "attribute-form", btnId = "btnRefreshValues" }))', 800, 800, true); return false;" class="btn default" />
+                <button type="submit" id="btnAddNewValues" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "InteractiveForm", new { form = Model.FormId, aId = Model.Id, formId = "attribute-form", btnId = "btnRefreshValues" }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew")</button>
                 <input type="submit" id="btnRefreshValues" style="display: none" />
             </div>
         </div>

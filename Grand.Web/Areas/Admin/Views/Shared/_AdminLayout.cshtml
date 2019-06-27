@@ -14,12 +14,11 @@
 @using Grand.Core.Domain.Localization
 @using Grand.Services.Security;
 @using Grand.Core.Domain.Common;
-@using Microsoft.AspNetCore.Routing;
 @{
     var currentCustomer = this.WorkContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
     var currentVersion = GrandVersion.CurrentVersion;
-    var kendoVersion = "2018.1.503";
+    var kendoVersion = "2019.2.514";
     var supportRtl = workContext.WorkingLanguage.Rtl &&
         !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
@@ -34,10 +33,9 @@
     {
         Html.AppendCssFileParts("~/administration/build/css/custom.css", excludeFromBundle: true);
     }
-
-
-    Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.{adminAreaSettings.KendoLayout}.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.common.min.css", kendoVersion), excludeFromBundle: true);
+    Html.AppendCssFileParts(string.Format("~/content/kendo/{0}/kendo.common-material.min.css", kendoVersion), excludeFromBundle: true);
+    Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.material.min.css", excludeFromBundle: true);
+    Html.AppendCssFileParts($"~/content/kendo/{kendoVersion}/kendo.material.mobile.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
     Html.AddScriptParts(location: ResourceLocation.Footer, src: "~/content/tinymce/tinymce.min.js", excludeFromBundle: true);
 
@@ -56,7 +54,7 @@
     //available list of culture https://github.com/telerik/kendo-ui-core/tree/master/src/cultures
     Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
-    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.ui.core.js", kendoVersion), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/scripts/kendo/{0}/kendo.ui.core.min.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/admin.common.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
@@ -95,7 +93,6 @@
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
     @Html.GrandHeadCustom()
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)

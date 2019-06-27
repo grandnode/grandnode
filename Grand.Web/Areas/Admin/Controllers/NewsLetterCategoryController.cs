@@ -71,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             return View(model);
         }
 
@@ -87,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
 
             return View(model);
         }
@@ -108,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             //Stores
-            await model.PrepareStoresMappingModel(newsletterCategory, false, _storeService);
+            await model.PrepareStoresMappingModel(newsletterCategory, _storeService, false);
             return View(model);
         }
 
@@ -130,7 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = newsletterCategory.Id }) : RedirectToAction("List");
             }
             //Stores
-            await model.PrepareStoresMappingModel(newsletterCategory, true, _storeService);
+            await model.PrepareStoresMappingModel(newsletterCategory, _storeService, true);
 
             return View(model);
         }

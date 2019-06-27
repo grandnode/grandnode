@@ -175,6 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
+            model.ApplicationTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, _dateTimeHelper.DefaultStoreTimeZone);
             model.UtcTime = DateTime.UtcNow;
             foreach (var header in HttpContext.Request.Headers)
             {

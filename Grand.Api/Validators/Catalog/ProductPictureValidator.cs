@@ -10,9 +10,9 @@ namespace Grand.Api.Validators.Catalog
     {
         public ProductPictureValidator(ILocalizationService localizationService, IPictureService pictureService)
         {
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
-                var picture = pictureService.GetPictureById(x.PictureId);
+                var picture = await pictureService.GetPictureById(x.PictureId);
                 if (picture == null)
                     return false;
                 return true;

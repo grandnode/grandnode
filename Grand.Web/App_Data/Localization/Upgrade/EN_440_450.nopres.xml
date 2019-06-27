@@ -522,4 +522,72 @@
   <LocaleResource Name="Admin.Dashboard.Summary">
     <Value>Summary</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore">
+    <Value>Manager of store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.Hint">
+    <Value>Choose a manage store owner associated to this customer account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StaffStore.None">
+    <Value>Not a staff</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Permisions">
+    <Value>You can't edit this category, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Permisions">
+    <Value>You can't edit this manufacturer, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Permisions">
+    <Value>You can't edit this product, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.VendorShouldNotbeStaff">
+    <Value>A customer with a vendor associated should not be a staff</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.LinkedProducts">
+    <Value>Linked products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.system.developertools">
+    <Value>Developer Tools</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help6">
+    <Value>
+      6. The last step is to enable Google Analytics API in your Google Cloud Platform here - https://console.developers.google.com/apis/api/analyticsreporting.googleapis.com/
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Addresses">
+    <Value>Billing and Shipping info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.CustomerRoleId.NotExists">
+    <Value>Customer role ID doesn't exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.Price.GreaterThan0">
+    <Value>Price field must be greater than 0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.Quantity.GreaterThan0">
+    <Value>Quantity field must be greater than 0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductTierPrice.Fields.StoreId.NotExists">
+    <Value>Store ID doesn't exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.list.skunotfound">
+    <Value>Provided SKU doesn't exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime">
+    <Value>Application time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime.hint">
+    <Value>Application time based on default store time zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
 </Language>

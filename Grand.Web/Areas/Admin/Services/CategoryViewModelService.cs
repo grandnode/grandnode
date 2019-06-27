@@ -65,27 +65,24 @@ namespace Grand.Web.Areas.Admin.Services
             _seoSettings = seoSettings;
         }
 
-        protected virtual async Task PrepareAllCategoriesModel(CategoryModel model)
+        protected virtual async Task PrepareAllCategoriesModel(CategoryModel model, string storeId)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableCategories.Add(new SelectListItem
-            {
+            model.AvailableCategories.Add(new SelectListItem {
                 Text = "[None]",
                 Value = ""
             });
-            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
             foreach (var c in categories)
             {
-                model.AvailableCategories.Add(new SelectListItem
-                {
+                model.AvailableCategories.Add(new SelectListItem {
                     Text = c.GetFormattedBreadCrumb(categories),
                     Value = c.Id.ToString()
                 });
             }
         }
-
 
         protected virtual async Task PrepareTemplatesModel(CategoryModel model)
         {
@@ -95,8 +92,7 @@ namespace Grand.Web.Areas.Admin.Services
             var templates = await _categoryTemplateService.GetAllCategoryTemplates();
             foreach (var template in templates)
             {
-                model.AvailableCategoryTemplates.Add(new SelectListItem
-                {
+                model.AvailableCategoryTemplates.Add(new SelectListItem {
                     Text = template.Name,
                     Value = template.Id.ToString()
                 });
@@ -118,14 +114,22 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SelectedDiscountIds = category.AppliedDiscounts.ToArray();
             }
         }
+        protected virtual void PrepareSortOptionsModel(CategoryModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList(false).ToList();
+            model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
+
+        }
 
         protected void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
         {
             var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
             foreach (var child in children)
             {
-                var newNode = new TreeNode
-                {
+                var newNode = new TreeNode {
                     id = child.Id,
                     text = child.Name,
                     nodes = new List<TreeNode>()
@@ -138,17 +142,17 @@ namespace Grand.Web.Areas.Admin.Services
         }
 
 
-        public virtual async Task<CategoryListModel> PrepareCategoryListModel()
+        public virtual async Task<CategoryListModel> PrepareCategoryListModel(string storeId)
         {
             var model = new CategoryListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             return model;
         }
-        public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel()
+        public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel(string storeId)
         {
-            var categories = await _categoryService.GetAllCategories();
+            var categories = await _categoryService.GetAllCategories(storeId: storeId);
             List<TreeNode> nodeList = new List<TreeNode>();
             List<ITreeNode> list = new List<ITreeNode>();
             list.AddRange(categories);
@@ -156,8 +160,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (string.IsNullOrEmpty(node.ParentCategoryId))
                 {
-                    var newNode = new TreeNode
-                    {
+                    var newNode = new TreeNode {
                         id = node.Id,
                         text = node.Name,
                         nodes = new List<TreeNode>()
@@ -184,19 +187,22 @@ namespace Grand.Web.Areas.Admin.Services
             return (categoryListModel, categories.TotalCount);
         }
 
-        public virtual async Task<CategoryModel> PrepareCategoryModel()
+        public virtual async Task<CategoryModel> PrepareCategoryModel(string storeId)
         {
             var model = new CategoryModel();
+            //sort options
+            PrepareSortOptionsModel(model);
             //templates
             await PrepareTemplatesModel(model);
             //categories
-            await PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model, storeId);
             //discounts
             await PrepareDiscountModel(model, null, true);
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false, storeId);
+
             //default values
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
@@ -206,12 +212,15 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category)
+        public virtual async Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category, string storeId)
         {
+            //sort options
+            PrepareSortOptionsModel(model);
+
             //templates
             await PrepareTemplatesModel(model);
             //categories
-            await PrepareAllCategoriesModel(model);
+            await PrepareAllCategoriesModel(model, storeId);
             //discounts
             await PrepareDiscountModel(model, category, false);
             return model;
@@ -306,8 +315,7 @@ namespace Grand.Web.Areas.Admin.Services
             var categoryproducts = new List<CategoryModel.CategoryProductModel>();
             foreach (var item in productCategories)
             {
-                var pc = new CategoryModel.CategoryProductModel
-                {
+                var pc = new CategoryModel.CategoryProductModel {
                     Id = item.Id,
                     CategoryId = item.CategoryId,
                     ProductId = item.ProductId,
@@ -346,12 +354,12 @@ namespace Grand.Web.Areas.Admin.Services
             await _categoryService.DeleteProductCategory(productCategory);
 
         }
-        public virtual async Task<CategoryModel.AddCategoryProductModel> PrepareAddCategoryProductModel()
+        public virtual async Task<CategoryModel.AddCategoryProductModel> PrepareAddCategoryProductModel(string storeId)
         {
             var model = new CategoryModel.AddCategoryProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = await _categoryService.GetAllCategories(showHidden: true);
+            var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
@@ -362,7 +370,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
@@ -372,7 +380,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
 
@@ -386,8 +394,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (product.ProductCategories.Where(x => x.CategoryId == model.CategoryId).Count() == 0)
                     {
                         await _categoryService.InsertProductCategory(
-                            new ProductCategory
-                            {
+                            new ProductCategory {
                                 CategoryId = model.CategoryId,
                                 ProductId = id,
                                 IsFeaturedProduct = false,
@@ -404,8 +411,7 @@ namespace Grand.Web.Areas.Admin.Services
             foreach (var item in activityLog)
             {
                 var customer = await _customerService.GetCustomerById(item.CustomerId);
-                var m = new CategoryModel.ActivityLogModel
-                {
+                var m = new CategoryModel.ActivityLogModel {
                     Id = item.Id,
                     ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(item.ActivityLogTypeId))?.Name,
                     Comment = item.Comment,

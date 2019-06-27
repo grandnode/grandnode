@@ -17,6 +17,7 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Get best customers
         /// </summary>
+        /// <param name="storeId">Store ident</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -26,16 +27,15 @@ namespace Grand.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+        IPagedList<BestCustomerReportLine> GetBestCustomersReport(string storeId, DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy,
             int pageIndex = 0, int pageSize = 214748364);
-        
-        /// <summary>
+
         /// Gets a report of customers registered in the last days
-        /// </summary>
+        /// <param name="storeId">Store ident</param>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        Task<int> GetRegisteredCustomersReport(int days);
+        Task<int> GetRegisteredCustomersReport(string storeId, int days);
 
         /// <summary>
         /// Get "customer by time" report
@@ -43,7 +43,7 @@ namespace Grand.Services.Customers
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+        Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(string storeId, DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null);
     }
 }

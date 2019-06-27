@@ -90,6 +90,11 @@ namespace Grand.Core.Domain.Customers
         public string StoreId { get; set; }
 
         /// <summary>
+        /// Gets or sets the staff store identifier
+        /// </summary>
+        public string StaffStoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

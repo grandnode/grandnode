@@ -394,5 +394,29 @@ namespace Grand.Api.Services
                 await _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
             }
         }
+
+        public virtual async Task InsertProductTierPrice(ProductDto product, ProductTierPriceDto model)
+        {
+            var tierPrice = model.ToEntity();
+            tierPrice.ProductId = product.Id;
+            await _productService.InsertTierPrice(tierPrice);
+
+        }
+
+        public virtual async Task UpdateProductTierPrice(ProductDto product, ProductTierPriceDto model)
+        {
+            var productdb = await _productService.GetProductById(product.Id);
+            var tierPrice = model.ToEntity();
+            tierPrice.ProductId = product.Id;
+            await _productService.UpdateTierPrice(tierPrice);
+        }
+
+        public virtual async Task DeleteProductTierPrice(ProductDto product, string id)
+        {
+            var productdb = await _productService.GetProductById(product.Id);
+            var tierPrice = productdb.TierPrices.Where(x => x.Id == id).FirstOrDefault();
+            tierPrice.ProductId = product.Id;
+            await _productService.DeleteTierPrice(tierPrice);
+        }
     }
 }

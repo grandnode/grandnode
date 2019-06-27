@@ -269,15 +269,10 @@ namespace Grand.Services.Orders
         /// Validates a product for standard properties
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerEnteredPrice">Customer entered price</param>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string attributesXml, decimal customerEnteredPrice,
-            int quantity)
+        public virtual async Task<IList<string>> GetStandardWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -306,25 +301,25 @@ namespace Grand.Services.Orders
             }
 
             //Store mapping
-            if (!_storeMappingService.Authorize(product, _storeContext.CurrentStore.Id))
+            if (!_storeMappingService.Authorize(product, shoppingCartItem.StoreId))
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }
 
             //disabled "add to cart" button
-            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.DisableBuyButton)
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart && product.DisableBuyButton)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.BuyingDisabled"));
             }
 
             //disabled "add to wishlist" button
-            if (shoppingCartType == ShoppingCartType.Wishlist && product.DisableWishlistButton)
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.Wishlist && product.DisableWishlistButton)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.WishlistDisabled"));
             }
 
             //call for price
-            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice)
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice)
             {
                 warnings.Add(_localizationService.GetResource("Products.CallForPrice"));
             }
@@ -332,8 +327,8 @@ namespace Grand.Services.Orders
             //customer entered price
             if (product.CustomerEntersPrice)
             {
-                if (customerEnteredPrice < product.MinimumCustomerEnteredPrice ||
-                    customerEnteredPrice > product.MaximumCustomerEnteredPrice)
+                if (shoppingCartItem.CustomerEnteredPrice < product.MinimumCustomerEnteredPrice ||
+                    shoppingCartItem.CustomerEnteredPrice > product.MaximumCustomerEnteredPrice)
                 {
                     decimal minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
                     decimal maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
@@ -345,23 +340,23 @@ namespace Grand.Services.Orders
 
             //quantity validation
             var hasQtyWarnings = false;
-            if (quantity < product.OrderMinimumQuantity)
+            if (shoppingCartItem.Quantity < product.OrderMinimumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MinimumQuantity"), product.OrderMinimumQuantity));
                 hasQtyWarnings = true;
             }
-            if (quantity > product.OrderMaximumQuantity)
+            if (shoppingCartItem.Quantity > product.OrderMaximumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), product.OrderMaximumQuantity));
                 hasQtyWarnings = true;
             }
             var allowedQuantities = product.ParseAllowedQuantities();
-            if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
+            if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(shoppingCartItem.Quantity))
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
             }
 
-            var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart || !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
+            var validateOutOfStock = shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart || !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
             if (validateOutOfStock && !hasQtyWarnings)
             {
                 switch (product.ManageInventoryMethod)
@@ -376,7 +371,7 @@ namespace Grand.Services.Orders
                             if (product.BackorderMode == BackorderMode.NoBackorders)
                             {
                                 int maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
-                                if (maximumQuantityCanBeAdded < quantity)
+                                if (maximumQuantityCanBeAdded < shoppingCartItem.Quantity)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)
                                         warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
@@ -390,7 +385,7 @@ namespace Grand.Services.Orders
                         {
                             foreach (var item in product.BundleProducts)
                             {
-                                var _qty = quantity * item.Quantity;
+                                var _qty = shoppingCartItem.Quantity * item.Quantity;
                                 var p1 = await _productService.GetProductById(item.ProductId);
                                 if (p1 != null)
                                 {
@@ -408,13 +403,13 @@ namespace Grand.Services.Orders
                         break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
-                            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                            var combination = _productAttributeParser.FindProductAttributeCombination(product, shoppingCartItem.AttributesXml);
                             if (combination != null)
                             {
                                 //combination exists
                                 //let's check stock level
                                 var stockquantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
-                                if (!combination.AllowOutOfStockOrders && stockquantity < quantity)
+                                if (!combination.AllowOutOfStockOrders && stockquantity < shoppingCartItem.Quantity)
                                 {
                                     int maximumQuantityCanBeAdded = stockquantity;
                                     if (maximumQuantityCanBeAdded <= 0)
@@ -454,7 +449,7 @@ namespace Grand.Services.Orders
                     availableStartDateError = true;
                 }
             }
-            if (product.AvailableEndDateTimeUtc.HasValue && !availableStartDateError && !(product.ProductType == ProductType.Auction))
+            if (product.AvailableEndDateTimeUtc.HasValue && !availableStartDateError && shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
             {
                 DateTime now = DateTime.UtcNow;
                 DateTime availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
@@ -463,11 +458,6 @@ namespace Grand.Services.Orders
                     warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
                 }
             }
-            if (!product.AvailableEndDateTimeUtc.HasValue && product.ProductType == ProductType.Auction)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
-            }
-
             return warnings;
         }
 
@@ -879,7 +869,7 @@ namespace Grand.Services.Orders
 
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(await GetStandardWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.AttributesXml, shoppingCartItem.CustomerEnteredPrice, shoppingCartItem.Quantity));
+                warnings.AddRange(await GetStandardWarnings(customer, product, shoppingCartItem));
 
             //selected attributes
             if (getAttributesWarnings)

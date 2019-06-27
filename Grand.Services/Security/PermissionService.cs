@@ -59,16 +59,16 @@ namespace Grand.Services.Security
         public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
             ICustomerService customerService,
             IWorkContext workContext,
-             ILocalizationService localizationService,
+            ILocalizationService localizationService,
             ILanguageService languageService,
-            ICacheManager cacheManager)
+            IEnumerable<ICacheManager> cacheManager)
         {
             this._permissionRecordRepository = permissionRecordRepository;
             this._customerService = customerService;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._languageService = languageService;
-            this._cacheManager = cacheManager;
+            this._cacheManager = cacheManager.FirstOrDefault(); 
         }
 
         #endregion

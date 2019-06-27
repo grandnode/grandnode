@@ -75,6 +75,16 @@ namespace Grand.Core.Domain.Customers
         }
 
         /// <summary>
+        /// Gets a value indicating whether customer is staff
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static bool IsStaff(this Customer customer)
+        {
+            return !string.IsNullOrEmpty(customer.StaffStoreId);
+        }
+
+        /// <summary>
         /// Gets a value indicating whether customer is a forum moderator
         /// </summary>
         /// <param name="customer">Customer</param>

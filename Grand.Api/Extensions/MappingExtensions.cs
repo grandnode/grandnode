@@ -113,6 +113,25 @@ namespace Grand.Api.Extensions
 
         #endregion
 
+        #region Tier prices
+
+        public static ProductTierPriceDto ToModel(this TierPrice entity)
+        {
+            return entity.MapTo<TierPrice, ProductTierPriceDto>();
+        }
+
+        public static TierPrice ToEntity(this ProductTierPriceDto model)
+        {
+            return model.MapTo<ProductTierPriceDto, TierPrice>();
+        }
+
+        public static TierPrice ToEntity(this ProductTierPriceDto model, TierPrice destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Customer Role
         public static CustomerRoleDto ToModel(this CustomerRole entity)
         {

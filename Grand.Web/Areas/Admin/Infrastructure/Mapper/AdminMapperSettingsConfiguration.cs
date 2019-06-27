@@ -50,7 +50,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.EuVatUseWebService_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatAssumeValid_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<TaxSettingsModel, TaxSettings>()
                 .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore());
 
@@ -63,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.MainPageNewsCount_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NewsArchivePageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<NewsSettingsModel, NewsSettings>();
 
             CreateMap<ForumSettings, ForumSettingsModel>()
@@ -92,7 +92,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ForumFeedCount_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.SearchResultsPageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveDiscussionsPageSize_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<ForumSettingsModel, ForumSettings>()
                 .ForMember(dest => dest.TopicSubjectMaxLength, mo => mo.Ignore())
@@ -113,7 +113,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.NotifyAboutNewBlogComments_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NumberOfTags_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<BlogSettingsModel, BlogSettings>();
 
             CreateMap<VendorSettings, VendorSettingsModel>()
@@ -127,7 +127,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.TermsOfServiceEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AddressSettings, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<VendorSettingsModel, VendorSettings>()
                 .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
             CreateMap<ShippingSettings, ShippingSettingsModel>()
@@ -145,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.DisplayShipmentEventsToStoreOwner_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShippingOriginAddress_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<ShippingSettingsModel, ShippingSettings>()
                 .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore())
@@ -219,7 +219,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AskQuestionEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreFilterableSpecAttributeOption_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
@@ -252,7 +252,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.PointsForPurchases_Awarded_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.PointsForPurchases_Canceled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayHowMuchWillBeEarned_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();
 
             CreateMap<OrderSettings, OrderSettingsModel>()
@@ -279,7 +279,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.UserCanCancelUnpaidOrder_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowCustomerToAddOrderNote_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(dest => dest.MinimumOrderPlacementInterval, mo => mo.Ignore())
@@ -305,7 +305,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.MiniShoppingCartProductNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowCartItemEditing_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CartsSharedBetweenStores_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
                 .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore())
@@ -330,14 +330,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.MaximumImageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())
                 .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
 
             CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>()
                 .ForMember(dest => dest.HashedPasswordFormat, mo => mo.Ignore())
                 .ForMember(dest => dest.AvatarMaximumSizeBytes, mo => mo.Ignore())
@@ -346,7 +346,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SuffixDeletedCustomers, mo => mo.Ignore());
 
             CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
 
         }

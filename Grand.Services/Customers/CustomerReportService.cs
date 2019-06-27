@@ -54,6 +54,7 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Get best customers
         /// </summary>
+        /// <param name="storeId">Store ident</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -63,7 +64,7 @@ namespace Grand.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+        public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(string storeId, DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
@@ -91,6 +92,8 @@ namespace Grand.Services.Customers
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+            if (!string.IsNullOrEmpty(storeId))
+                query = query.Where(o => o.StoreId == storeId);
 
             var query2 = from co in query
                          group co by co.CustomerId into g
@@ -129,9 +132,10 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Gets a report of customers registered in the last days
         /// </summary>
+        /// <param name="storeId">Store ident</param>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        public virtual async Task<int> GetRegisteredCustomersReport(int days)
+        public virtual async Task<int> GetRegisteredCustomersReport(string storeId, int days)
         {
             DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
@@ -141,6 +145,7 @@ namespace Grand.Services.Customers
 
             var query = from c in _customerRepository.Table
                         where !c.Deleted &&
+                        (string.IsNullOrEmpty(storeId) || c.StoreId == storeId) &&
                         c.CustomerRoles.Any(cr => cr.Id == registeredCustomerRole.Id) &&
                         c.CreatedOnUtc >= date
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
@@ -156,7 +161,7 @@ namespace Grand.Services.Customers
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual async Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+        public virtual async Task<IList<CustomerByTimeReportLine>> GetCustomerByTimeReport(string storeId, DateTime? startTimeUtc = null,
             DateTime? endTimeUtc = null)
 
         {
@@ -174,6 +179,8 @@ namespace Grand.Services.Customers
             var filter = builder.Where(o => !o.Deleted);
             filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
             filter = filter & builder.Where(o => o.CustomerRoles.Any(y => y.Id == customerRoleRegister));
+            if (!string.IsNullOrEmpty(storeId))
+                filter = filter & builder.Where(o => o.StoreId == storeId);
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
             if (daydiff > 31)

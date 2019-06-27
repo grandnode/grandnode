@@ -32,10 +32,11 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get "order by time" report
         /// </summary>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(DateTime? startTimeUtc = null, 
+        Task<IList<OrderByTimeReportLine>> GetOrderByTimeReport(string storeId = "", DateTime? startTimeUtc = null, 
             DateTime? endTimeUtc = null);
 
         /// <summary>
@@ -104,8 +105,9 @@ namespace Grand.Services.Orders
         /// Gets a report of orders in the last days
         /// </summary>
         /// <param name="days">Orders in the last days</param>
+        /// <param name="storeId">Store ident</param>
         /// <returns>ReportPeriodOrder</returns>
-        Task<ReportPeriodOrder> GetOrderPeriodReport(int days);
+        Task<ReportPeriodOrder> GetOrderPeriodReport(int days, string storeId);
 
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
@@ -121,6 +123,7 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets a list of products that were never sold
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
@@ -128,7 +131,7 @@ namespace Grand.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        Task<IPagedList<Product>> ProductsNeverSold(string vendorId = "",
+        Task<IPagedList<Product>> ProductsNeverSold(string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 

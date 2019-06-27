@@ -86,13 +86,14 @@ namespace Grand.Services.Helpers
         TimeZoneInfo GetCustomerTimeZone(Customer customer);
 
         /// <summary>
-        /// Gets or sets a default store time zone
+        /// Gets a default store time zone
         /// </summary>
-        TimeZoneInfo DefaultStoreTimeZone { get; set; }
+        TimeZoneInfo DefaultStoreTimeZone { get; }
 
         /// <summary>
-        /// Gets or sets the current user time zone
+        /// Gets the current user time zone
         /// </summary>
-        TimeZoneInfo CurrentTimeZone { get; set; }
+        TimeZoneInfo CurrentTimeZone { get; }
+
     }
 }

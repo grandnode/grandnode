@@ -33,9 +33,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public DisplayMenuSettingsModel DisplayMenuSettings { get; set; }
         public KnowledgebaseSettingsModel KnowledgebaseSettings { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.GridLayout")]
-        public KendoLayout GridLayout { get; set; }
-
         #region Nested classes
 
         public partial class StoreInformationSettingsModel : BaseGrandModel

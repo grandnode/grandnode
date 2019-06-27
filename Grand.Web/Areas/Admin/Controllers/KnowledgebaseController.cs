@@ -95,7 +95,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = await _knowledgebaseViewModelService.PrepareKnowledgebaseCategoryModel();
             await model.PrepareACLModel(null, false, _customerService);
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             await AddLocales(_languageService, model.Locales);
             return View(model);
         }
@@ -112,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
             return View(model);
@@ -141,7 +141,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SelectedCustomerRoleIds = knowledgebaseCategory.CustomerRoles.ToArray();
 
             //Stores
-            await model.PrepareStoresMappingModel(knowledgebaseCategory, false, _storeService);
+            await model.PrepareStoresMappingModel(knowledgebaseCategory, _storeService, false);
 
             return View(model);
         }
@@ -163,7 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _knowledgebaseViewModelService.PrepareCategory(model);
             //Stores
-            await model.PrepareStoresMappingModel(knowledgebaseCategory, true, _storeService);
+            await model.PrepareStoresMappingModel(knowledgebaseCategory, _storeService, true);
             //ACL
             await model.PrepareACLModel(knowledgebaseCategory, true, _customerService);
 
@@ -199,7 +199,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
 
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
@@ -221,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _knowledgebaseViewModelService.PrepareCategory(model);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
 
@@ -250,7 +250,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SelectedCustomerRoleIds = knowledgebaseArticle.CustomerRoles.ToArray();
 
             //Stores
-            await model.PrepareStoresMappingModel(knowledgebaseArticle, false, _storeService);
+            await model.PrepareStoresMappingModel(knowledgebaseArticle, _storeService, false);
 
             model.AllowComments = knowledgebaseArticle.AllowComments;
 
@@ -274,7 +274,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             await _knowledgebaseViewModelService.PrepareCategory(model);
             //Store
-            await model.PrepareStoresMappingModel(knowledgebaseArticle, true, _storeService);
+            await model.PrepareStoresMappingModel(knowledgebaseArticle, _storeService, true);
             //ACL
             await model.PrepareACLModel(knowledgebaseArticle, true, _customerService);
 

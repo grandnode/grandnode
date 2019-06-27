@@ -351,13 +351,13 @@ namespace Grand.Web.Controllers
             return Content(siteMap, "text/xml");
         }
 
-        public virtual IActionResult SetStoreTheme(
+        public virtual async Task<IActionResult> SetStoreTheme(
             [FromServices] IThemeContext themeContext, string themeName, string returnUrl = "")
         {
-            themeContext.WorkingThemeName = themeName;
+            await themeContext.SetWorkingTheme(themeName);
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack

@@ -10,19 +10,19 @@ namespace Grand.Api.Validators.Catalog
     {
         public ProductSpecificationAttributeValidator(ILocalizationService localizationService, ISpecificationAttributeService specificationAttributeService)
         {
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
-                var specification = specificationAttributeService.GetSpecificationAttributeById(x.SpecificationAttributeId);
+                var specification = await specificationAttributeService.GetSpecificationAttributeById(x.SpecificationAttributeId);
                 if (specification == null)
                     return false;
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.ProductSpecificationAttribute.Fields.SpecificationAttributeId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.SpecificationAttributeOptionId))
                 {
-                    var sa = specificationAttributeService.GetSpecificationAttributeByOptionId(x.SpecificationAttributeOptionId);
+                    var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(x.SpecificationAttributeOptionId);
                     if (sa == null)
                         return false;
                 }

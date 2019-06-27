@@ -1692,7 +1692,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             if (datetime.HasValue)
             {
                 var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-                datetime = dateTimeHelper.ConvertToUserTime(datetime.Value, DateTimeKind.Utc);
+                datetime = dateTimeHelper.ConvertToUserTime(datetime.Value, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
             }
             return datetime;
         }
@@ -1709,7 +1709,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         public static DateTime ConvertToUserTime(this DateTime datetime)
         {
             var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            datetime = dateTimeHelper.ConvertToUserTime(datetime, DateTimeKind.Utc);
+            datetime = dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
             return datetime;
         }
 

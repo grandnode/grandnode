@@ -24,6 +24,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             Locales = new List<CategoryLocalizedModel>();
             AvailableCategoryTemplates = new List<SelectListItem>();
             AvailableCategories = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
@@ -104,6 +105,11 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.HideOnCatalog")]
         public bool HideOnCatalog { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.DefaultSort")]
+        public int DefaultSort { get; set; }
+        public IList<SelectListItem> AvailableSortOptions { get; set; }
+
+
         public IList<CategoryLocalizedModel> Locales { get; set; }
 
         public string Breadcrumb { get; set; }
@@ -137,7 +143,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
 
         #region Nested classes
-
+        [Validator(typeof(CategoryProductModelValidator))]
         public partial class CategoryProductModel : BaseGrandEntityModel
         {
             public string CategoryId { get; set; }
@@ -153,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-
+        [Validator(typeof(AddCategoryProductModelValidator))]
         public partial class AddCategoryProductModel : BaseGrandModel
         {
             public AddCategoryProductModel()

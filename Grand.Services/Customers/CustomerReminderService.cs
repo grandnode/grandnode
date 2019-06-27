@@ -97,7 +97,15 @@ namespace Grand.Services.Customers
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-            var language = _serviceProvider.GetRequiredService<IWorkContext>().WorkingLanguage;
+            var languages = await _serviceProvider.GetRequiredService<ILanguageService>().GetAllLanguages();
+            var langId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LanguageId, store?.Id);
+            if (string.IsNullOrEmpty(langId))
+                langId = languages.FirstOrDefault().Id;
+
+            var language = languages.FirstOrDefault(x => x.Id == langId);
+            if (language == null)
+                language = languages.FirstOrDefault();
+
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
             await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);

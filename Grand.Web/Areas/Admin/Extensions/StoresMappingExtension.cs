@@ -9,11 +9,11 @@ namespace Grand.Web.Areas.Admin.Extensions
 {
     public static class StoresMappingExtension
     {
-        public static async Task PrepareStoresMappingModel<T>(this T baseGrandEntityModel, IStoreMappingSupported storeMapping, bool excludeProperties, IStoreService _storeService)
+        public static async Task PrepareStoresMappingModel<T>(this T baseGrandEntityModel, IStoreMappingSupported storeMapping, IStoreService _storeService, bool excludeProperties, string storeId = null) 
             where T : BaseGrandEntityModel, IStoreMappingModel
         {
             baseGrandEntityModel.AvailableStores = (await _storeService
-               .GetAllStores())
+               .GetAllStores()).Where(x=>x.Id == storeId || string.IsNullOrEmpty(storeId))
                .Select(s => new StoreModel { Id = s.Id, Name = s.Name })
                .ToList();
             if (!excludeProperties)
@@ -22,6 +22,11 @@ namespace Grand.Web.Areas.Admin.Extensions
                 {
                     baseGrandEntityModel.SelectedStoreIds = storeMapping.Stores.ToArray();
                 }
+            }
+            if (!string.IsNullOrEmpty(storeId))
+            {
+                baseGrandEntityModel.LimitedToStores = true;
+                baseGrandEntityModel.SelectedStoreIds = new string[] { storeId };
             }
         }       
     }

@@ -11,11 +11,11 @@ namespace Grand.Api.Validators.Catalog
         public ProductAttributeValidator(ILocalizationService localizationService, IProductAttributeService productAttributeService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.ProductAttribute.Fields.Name.Required"));
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Id))
                 {
-                    var pa = productAttributeService.GetProductAttributeById(x.Id);
+                    var pa = await productAttributeService.GetProductAttributeById(x.Id);
                     if (pa == null)
                         return false;
                 }

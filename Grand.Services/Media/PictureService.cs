@@ -467,9 +467,8 @@ namespace Grand.Services.Media
                     using (var image = new MagickImage(filePath))
                     {
                         var pictureBinary = File.ReadAllBytes(filePath);
-
                         pictureBinary = await ApplyResize(image, targetSize);
-                        image.Write(thumbFilePath);
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
                     mutex.ReleaseMutex();
                 }
@@ -576,9 +575,9 @@ namespace Grand.Services.Media
                             var size = CalculateDimensions(image, targetSize);
                             size.IgnoreAspectRatio = true;
                             image.Resize(size);
-                            // Save the result
-                            image.Write(thumbFilePath);
+                            pictureBinary = image.ToByteArray();
                         }
+                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         mutex.ReleaseMutex();
                     }
                 }

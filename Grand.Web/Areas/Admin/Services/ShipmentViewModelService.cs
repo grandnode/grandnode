@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
@@ -244,13 +245,10 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            //a vendor should have access only to his products
-            string vendorId = "";
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
-
             //load shipments
-            var shipments = await _shipmentService.GetAllShipments(vendorId: vendorId,
+            var shipments = await _shipmentService.GetAllShipments(
+                storeId: model.StoreId,
+                vendorId: model.VendorId,
                 warehouseId: model.WarehouseId,
                 shippingCountryId: model.CountryId,
                 shippingStateId: model.StateProvinceId,
@@ -297,7 +295,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             var orderItems = order.OrderItems;
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
             {
                 orderItems = orderItems.Where(_workContext.HasAccessToOrderItem).ToList();
             }

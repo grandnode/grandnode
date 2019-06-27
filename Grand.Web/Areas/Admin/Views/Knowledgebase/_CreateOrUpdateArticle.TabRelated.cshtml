@@ -7,7 +7,7 @@
             <div id="relatedarticles-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewRelatedArticle" value="@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ArticlesPopup", "Knowledgebase", new { articleId = Model.Id, btnId = "btnRefreshRelatedArticles", formId = "article-form",  }))', 800, 800, true); return false;" class="k-button" />
+            <button type="submit" id="btnAddNewRelatedArticle" onclick="javascript:OpenWindow('@(Url.Action("ArticlesPopup", "Knowledgebase", new { articleId = Model.Id, btnId = "btnRefreshRelatedArticles", formId = "article-form",  }))', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew")</button>
             <input type="submit" id="btnRefreshRelatedArticles" style="display: none" />
         </div>
     </div>
@@ -69,30 +69,28 @@
                 scrollable: false,
                 columns: [{
                     field: "Article2Name",
-                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")"
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")",
+                    template: '<a href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=Article2Id#">#=Article2Name#</a>',
+                    width: 400
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder")",
                     //integer format
                     format: "{0:0}",
-                    width: 150
+                    width: 10
                 }, {
                     field: "Published",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published")",
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                }, {
-                    field: "Article2Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=Article2Id#">@T("Admin.Common.View")</a>'
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #',
+                    width: 10
                 }, {
                     command: [{
                         name: "destroy",
                         text: "@T("Admin.Common.Delete")"
                     }],
-                    width: 100
+                    width: 10
                 }]
             });
         });

@@ -4,11 +4,14 @@
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Catalog.Products.RelatedProducts")
+        </div>
         <div class="panel-body">
             <div id="relatedproducts-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+            <button type="submit" id="btnAddNewRelatedProduct" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.RelatedProducts.AddNew")</button>
             <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
         </div>
     </div>

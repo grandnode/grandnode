@@ -333,6 +333,25 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
+        protected virtual async Task PrepareStoresModel(CustomerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores.Add(new SelectListItem {
+                Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.StaffStore.None"),
+                Value = ""
+            });
+            var stores = await _storeService.GetAllStores();
+            foreach (var store in stores)
+            {
+                model.AvailableStores.Add(new SelectListItem {
+                    Text = store.Name,
+                    Value = store.Id.ToString()
+                });
+            }
+        }
+
         protected virtual async Task PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
         {
             var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
@@ -475,6 +494,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.Email = customer.Email;
                     model.Username = customer.Username;
                     model.VendorId = customer.VendorId;
+                    model.StaffStoreId = customer.StaffStoreId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.FreeShipping = customer.FreeShipping;
@@ -556,6 +576,10 @@ namespace Grand.Web.Areas.Admin.Services
 
             //vendors
             await PrepareVendorsModel(model);
+
+            //stores
+            await PrepareStoresModel(model);
+
             //customer attributes
             await PrepareCustomerAttributeModel(model, customer);
 
@@ -698,6 +722,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Email = model.Email,
                 Username = model.Username,
                 VendorId = model.VendorId,
+                StaffStoreId = model.StaffStoreId,
                 AdminComment = model.AdminComment,
                 IsTaxExempt = model.IsTaxExempt,
                 FreeShipping = model.FreeShipping,
@@ -879,6 +904,9 @@ namespace Grand.Web.Areas.Admin.Services
 
             //vendor
             customer.VendorId = model.VendorId;
+
+            //staff store
+            customer.StaffStoreId = model.StaffStoreId;
 
             //form fields
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -1256,30 +1284,30 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual async Task<IList<RegisteredCustomerReportLineModel>> GetReportRegisteredCustomersModel()
+        public virtual async Task<IList<RegisteredCustomerReportLineModel>> GetReportRegisteredCustomersModel(string storeId)
         {
             var report = new List<RegisteredCustomerReportLineModel>
             {
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(7)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 7)
                 },
 
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(14)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 14)
                 },
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(30)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 30)
                 },
                 new RegisteredCustomerReportLineModel
                 {
                     Period = _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(365)
+                    Customers = await _customerReportService.GetRegisteredCustomersReport(storeId, 365)
                 }
             };
 
@@ -1298,7 +1326,7 @@ namespace Grand.Web.Areas.Admin.Services
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
+            var items = _customerReportService.GetBestCustomersReport(model.StoreId, startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 2, pageIndex - 1, pageSize);
 
             var report = new List<BestCustomerReportLineModel>();

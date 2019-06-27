@@ -47,9 +47,11 @@
                                             @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
                                         }
                                     </div>
-                                    <input type="submit" name="change-picture-storage" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
-                                    <br />
-                                    <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
+                                    <button type="submit" name="change-picture-storage" onclick="return confirm('@T("Admin.Common.AreYouSure")');" class="k-button"><span class="k-icon k-i-rotate"></span>&nbsp;@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")</button>
+                                    <p>&nbsp;</p>
+                                    <div class="note note-warning">
+                                        <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>    
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

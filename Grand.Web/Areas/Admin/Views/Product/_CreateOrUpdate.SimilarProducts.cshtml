@@ -4,11 +4,14 @@
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Catalog.Products.SimilarProducts")
+        </div>
         <div class="panel-body">
             <div id="similarproducts-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewSimilarProduct" value="@T("Admin.Catalog.Products.SimilarProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("SimilarProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshSimilarProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+            <button type="submit" id="btnAddNewSimilarProduct" onclick="javascript:OpenWindow('@(Url.Action("SimilarProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshSimilarProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Catalog.Products.SimilarProducts.AddNew")</button>
             <input type="submit" id="btnRefreshSimilarProducts" style="display: none" />
         </div>
     </div>
@@ -84,7 +87,7 @@
                     title: "@T("Admin.Catalog.Products.SimilarProducts.Fields.DisplayOrder")",
                     //integer format
                     format: "{0:0}",
-                    width: 80,
+                    width: 100,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                 }, {

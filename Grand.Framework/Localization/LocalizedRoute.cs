@@ -51,7 +51,6 @@ namespace Grand.Framework.Localization
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return data;
 
-            PrepareLanguages().Wait();
             //add language code to page URL in case if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
             if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
@@ -140,8 +139,14 @@ namespace Grand.Framework.Localization
         /// <summary>
         /// Gets all languges
         /// </summary>
-        protected IList<Language> Languages {
-            get {
+        protected IList<Language> Languages 
+        {
+            get 
+            {
+                if (_languages == null)
+                {
+                    PrepareLanguages().GetAwaiter().GetResult();
+                }
                 return _languages;
             }
         }

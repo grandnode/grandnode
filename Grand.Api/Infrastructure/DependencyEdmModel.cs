@@ -172,6 +172,34 @@ namespace Grand.Api.Infrastructure
             deleteSpecification.Parameter<string>(nameof(ProductSpecificationAttributeDto.Id)).Required();
             deleteSpecification.Returns<bool>();
             #endregion
+
+            //insert/update/delete tier price
+            #region Product tierprice
+
+            ActionConfiguration createTierPrice = product.Action("CreateProductTierPrice");
+            createTierPrice.Parameter<int>(nameof(ProductTierPriceDto.Quantity));
+            createTierPrice.Parameter<decimal>(nameof(ProductTierPriceDto.Price));
+            createTierPrice.Parameter<string>(nameof(ProductTierPriceDto.StoreId));
+            createTierPrice.Parameter<string>(nameof(ProductTierPriceDto.CustomerRoleId));
+            createTierPrice.Parameter<DateTime?>(nameof(ProductTierPriceDto.StartDateTimeUtc));
+            createTierPrice.Parameter<DateTime?>(nameof(ProductTierPriceDto.EndDateTimeUtc));
+            createTierPrice.Returns<bool>();
+
+            ActionConfiguration updateTierPrice = product.Action("UpdateProductTierPrice");
+            updateTierPrice.Parameter<string>(nameof(ProductTierPriceDto.Id)).Required();
+            updateTierPrice.Parameter<int>(nameof(ProductTierPriceDto.Quantity));
+            updateTierPrice.Parameter<decimal>(nameof(ProductTierPriceDto.Price));
+            updateTierPrice.Parameter<string>(nameof(ProductTierPriceDto.StoreId));
+            updateTierPrice.Parameter<string>(nameof(ProductTierPriceDto.CustomerRoleId));
+            updateTierPrice.Parameter<DateTime?>(nameof(ProductTierPriceDto.StartDateTimeUtc));
+            updateTierPrice.Parameter<DateTime?>(nameof(ProductTierPriceDto.EndDateTimeUtc));
+            updateTierPrice.Returns<bool>();
+
+            ActionConfiguration deleteTierPrice = product.Action("DeleteProductTierPrice");
+            deleteTierPrice.Parameter<string>(nameof(ProductTierPriceDto.Id)).Required();
+            deleteTierPrice.Returns<bool>();
+
+            #endregion
         }
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)

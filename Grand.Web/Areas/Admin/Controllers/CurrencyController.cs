@@ -165,7 +165,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             
             return View(model);
         }
@@ -182,7 +182,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
 
             return View(model);
         }
@@ -202,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = currency.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            await model.PrepareStoresMappingModel(currency, false, _storeService);
+            await model.PrepareStoresMappingModel(currency, _storeService, false);
 
             return View(model);
         }
@@ -240,7 +240,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             //Stores
-            await model.PrepareStoresMappingModel(currency, true, _storeService);
+            await model.PrepareStoresMappingModel(currency, _storeService, true);
             return View(model);
         }
         

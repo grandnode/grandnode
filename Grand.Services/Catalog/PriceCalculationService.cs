@@ -89,6 +89,8 @@ namespace Grand.Services.Catalog
             public decimal Price { get; set; }
             public decimal AppliedDiscountAmount { get; set; }
             public IList<AppliedDiscount> AppliedDiscounts { get; set; }
+            public TierPrice PreferredTierPrice { get; set; }
+            
         }
         #endregion
 
@@ -412,7 +414,7 @@ namespace Grand.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
-        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetFinalPrice(Product product,
+        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
             Customer customer,
             decimal additionalCharge = decimal.Zero,
             bool includeDiscounts = true,
@@ -434,7 +436,7 @@ namespace Grand.Services.Catalog
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Final price</returns>
-        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts)> GetFinalPrice(Product product,
+        public virtual async Task<(decimal finalPrice, decimal discountAmount, List<AppliedDiscount> appliedDiscounts, TierPrice preferredTierPrice)> GetFinalPrice(Product product,
             Customer customer,
             decimal additionalCharge,
             bool includeDiscounts,
@@ -468,11 +470,13 @@ namespace Grand.Services.Catalog
                 //initial price
                 decimal price = product.Price;
 
-
                 //tier prices
                 var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
                 if (tierPrice != null)
+                {
                     price = tierPrice.Price;
+                    result.PreferredTierPrice = tierPrice;
+                }
 
                 //customer product price
                 var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
@@ -539,7 +543,7 @@ namespace Grand.Services.Catalog
                 }
             }
 
-            return (cachedPrice.Price, discountAmount, appliedDiscounts);
+            return (cachedPrice.Price, discountAmount, appliedDiscounts, cachedPrice.PreferredTierPrice);
         }
 
 

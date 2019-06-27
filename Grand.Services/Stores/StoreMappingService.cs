@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Stores;
-using Grand.Services.Events;
 using MediatR;
 using System;
 using System.Linq;
@@ -49,7 +48,7 @@ namespace Grand.Services.Stores
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public StoreMappingService(ICacheManager cacheManager, 
+        public StoreMappingService(ICacheManager cacheManager,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator)

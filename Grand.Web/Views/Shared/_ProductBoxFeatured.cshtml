@@ -63,9 +63,6 @@
                         <span class="d-block py-1">@Model.Sku</span>
                     }
                 </h5>
-                <p class="card-text d-none">
-                    @Html.Raw(Model.ShortDescription)
-                </p>
                 @if (Model.ReviewOverviewModel.AllowCustomerReviews)
                 {
                     int ratingPercent = 0;
@@ -85,7 +82,7 @@
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="pl-0 mb-0">
+                <ul class="d-inline-flex flex-wrap pl-0 mb-0">
 
                     @if (Model.ProductType != ProductType.Auction)
                     {

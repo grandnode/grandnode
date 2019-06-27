@@ -153,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 ErrorNotification(exc, false);
             }
-
+            model = await _giftCardViewModelService.PrepareGiftCardModel(giftCard);
             return View(model);
         }
 

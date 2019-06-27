@@ -23,6 +23,7 @@ namespace Grand.Services.Customers
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -39,7 +40,7 @@ namespace Grand.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "",
+            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "", string storeId = "",
             string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
@@ -62,9 +63,9 @@ namespace Grand.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
+            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue, string storeId = "");
 
-        Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc);
+        Task<int> GetCountOnlineShoppingCart(DateTime lastActivityFromUtc, string storeId);
 
         /// <summary>
         /// Delete a customer
@@ -366,7 +367,7 @@ namespace Grand.Services.Customers
 
         #region Shopping cart 
 
-        Task ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType);
+        Task ClearShoppingCartItem(string customerId, IList<ShoppingCartItem> cart);
         Task DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         Task UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);

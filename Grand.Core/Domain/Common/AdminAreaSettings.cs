@@ -26,9 +26,5 @@ namespace Grand.Core.Domain.Common
         /// </summary>
         public bool UseIsoDateTimeConverterInJson { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value for admin grid layout
-        /// </summary>
-        public string KendoLayout { get; set; }
     }
 }

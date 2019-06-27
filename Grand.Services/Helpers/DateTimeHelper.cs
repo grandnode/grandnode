@@ -28,7 +28,7 @@ namespace Grand.Services.Helpers
         /// <param name="dateTimeSettings">Datetime settings</param>
         public DateTimeHelper(IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
-            ISettingService settingService, 
+            ISettingService settingService,
             DateTimeSettings dateTimeSettings)
         {
             this._workContext = workContext;
@@ -178,16 +178,14 @@ namespace Grand.Services.Helpers
         }
 
         /// <summary>
-        /// Gets or sets a default store time zone
+        /// Gets a default store time zone
         /// </summary>
-        public virtual TimeZoneInfo DefaultStoreTimeZone
-        {
-            get
-            {
+        public virtual TimeZoneInfo DefaultStoreTimeZone {
+            get {
                 TimeZoneInfo timeZoneInfo = null;
                 try
                 {
-                    if (!String.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
+                    if (!string.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
                         timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
                 catch (Exception exc)
@@ -200,41 +198,14 @@ namespace Grand.Services.Helpers
 
                 return timeZoneInfo;
             }
-            set
-            {
-                string defaultTimeZoneId = string.Empty;
-                if (value != null)
-                {
-                    defaultTimeZoneId = value.Id;
-                }
-
-                _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
-                _settingService.SaveSetting(_dateTimeSettings).GetAwaiter().GetResult();
-            }
         }
 
         /// <summary>
-        /// Gets or sets the current user time zone
+        /// Gets the current user time zone
         /// </summary>
-        public virtual TimeZoneInfo CurrentTimeZone
-        {
-            get
-            {
+        public virtual TimeZoneInfo CurrentTimeZone {
+            get {
                 return GetCustomerTimeZone(_workContext.CurrentCustomer);
-            }
-            set
-            {
-                if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    return;
-
-                string timeZoneId = string.Empty;
-                if (value != null)
-                {
-                    timeZoneId = value.Id;
-                }
-
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId).GetAwaiter().GetResult();
             }
         }
     }

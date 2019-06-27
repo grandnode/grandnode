@@ -32,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
@@ -123,8 +122,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //override cookie name
             services.AddAntiforgery(options =>
             {
-                options.Cookie = new CookieBuilder() 
-                {
+                options.Cookie = new CookieBuilder() {
                     Name = ".Grand.Antiforgery"
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
@@ -143,8 +141,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             services.AddSession(options =>
             {
-                options.Cookie = new CookieBuilder() 
-                {
+                options.Cookie = new CookieBuilder() {
                     Name = ".Grand.Session",
                     HttpOnly = true,
                 };
@@ -360,13 +357,9 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             var hcBuilder = services.AddHealthChecks();
             hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
-
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                hcBuilder.AddMongoDb(DataSettingsHelper.MongoClientSettings(),
-                       name: "mongodb-check",
-                       tags: new string[] { "mongodb" });
-            }
+            hcBuilder.AddMongoDb(DataSettingsHelper.ConnectionString(),
+                   name: "mongodb-check",
+                   tags: new string[] { "mongodb" });
         }
 
         public static void AddHtmlMinification(this IServiceCollection services)
@@ -419,6 +412,34 @@ namespace Grand.Framework.Infrastructure.Extensions
             var typeFinder = new WebAppTypeFinder();
             var assemblies = typeFinder.GetAssemblies();
             services.AddMediatR(assemblies.ToArray());
+        }
+
+        /// <summary>
+        /// Adds services for detection device
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDetectionDevice(this IServiceCollection services)
+        {
+            services.AddDetectionCore().AddDevice();
+        }
+
+        /// <summary>
+        /// Add Progressive Web App
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddPWA(this IServiceCollection services)
+        {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            if (config.EnableProgressiveWebApp)
+            {
+                var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {
+                    Strategy = (WebEssentials.AspNetCore.Pwa.ServiceWorkerStrategy)config.ServiceWorkerStrategy
+                };
+                services.AddProgressiveWebApp(options);
+            }
         }
     }
 }

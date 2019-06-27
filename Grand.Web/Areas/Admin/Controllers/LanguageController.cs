@@ -68,7 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = new LanguageModel();
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
             //currencies
             await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
@@ -90,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
             //currencies
             await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
@@ -108,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = language.ToModel();
             //Stores
-            await model.PrepareStoresMappingModel(language, false, _storeService);
+            await model.PrepareStoresMappingModel(language, _storeService, false);
             //currencies
             await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags
@@ -150,7 +150,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             //If we got this far, something failed, redisplay form
             //Stores
-            await model.PrepareStoresMappingModel(language, true, _storeService);
+            await model.PrepareStoresMappingModel(language, _storeService, true);
             //currencies
             await _languageViewModelService.PrepareCurrenciesModel(model);
             //flags

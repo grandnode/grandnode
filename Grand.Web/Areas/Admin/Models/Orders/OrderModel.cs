@@ -1,4 +1,5 @@
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Tax;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
@@ -98,7 +99,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string RefundedAmount { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.Profit")]
         public string Profit { get; set; }
-
+        public string CurrencyCode { get; set; }
+        public decimal CurrencyRate { get; set; }
         //edit totals
         [GrandResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
         public decimal OrderSubtotalInclTaxValue { get; set; }
@@ -138,6 +140,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         //payment info
         [GrandResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
         public string PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatusEnum { get; set; }
         [GrandResourceDisplayName("Admin.Orders.Fields.PaymentMethod")]
         public string PaymentMethod { get; set; }
 

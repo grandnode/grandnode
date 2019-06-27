@@ -235,7 +235,7 @@ namespace Grand.Services.Catalog
         /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="products">Low stock products</param>
         /// <param name="combinations">Low stock attribute combinations</param>
-        void GetLowStockProducts(string vendorId,
+        void GetLowStockProducts(string vendorId, string storeId,
             out IList<Product> products,
             out IList<ProductAttributeCombination> combinations);
 

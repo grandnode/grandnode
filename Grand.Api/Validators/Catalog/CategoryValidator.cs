@@ -14,44 +14,44 @@ namespace Grand.Api.Validators.Catalog
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.PictureId))
                 {
-                    var picture = pictureService.GetPictureById(x.PictureId);
+                    var picture = await pictureService.GetPictureById(x.PictureId);
                     if (picture == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.PictureId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.ParentCategoryId))
                 {
-                    var category = categoryService.GetCategoryById(x.ParentCategoryId);
+                    var category = await categoryService.GetCategoryById(x.ParentCategoryId);
                     if (category == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.ParentCategoryId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.CategoryTemplateId))
                 {
-                    var template = categoryTemplateService.GetCategoryTemplateById(x.CategoryTemplateId);
+                    var template = await categoryTemplateService.GetCategoryTemplateById(x.CategoryTemplateId);
                     if (template == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.CategoryTemplateId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Id))
                 {
-                    var category = categoryService.GetCategoryById(x.Id);
+                    var category = await categoryService.GetCategoryById(x.Id);
                     if (category == null)
                         return false;
                 }

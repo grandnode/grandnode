@@ -197,7 +197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, false, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, false);
 
             return View(model);
         }
@@ -218,7 +218,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             await AddLocales(_languageService, model.Locales);
             //Stores
-            await model.PrepareStoresMappingModel(null, true, _storeService);
+            await model.PrepareStoresMappingModel(null, _storeService, true);
 
             return View(model);
         }
@@ -238,7 +238,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = blogCategory.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Store
-            await model.PrepareStoresMappingModel(blogCategory, false, _storeService);
+            await model.PrepareStoresMappingModel(blogCategory, _storeService, false);
             return View(model);
         }
 
@@ -274,7 +274,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = blogCategory.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Store
-            await model.PrepareStoresMappingModel(blogCategory, true, _storeService);
+            await model.PrepareStoresMappingModel(blogCategory, _storeService, true);
 
             return View(model);
         }

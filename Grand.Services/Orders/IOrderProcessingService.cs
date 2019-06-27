@@ -13,6 +13,12 @@ namespace Grand.Services.Orders
     public partial interface IOrderProcessingService
     {
         /// <summary>
+        /// Send notification order 
+        /// </summary>
+        /// <param name="order">Order</param>
+        Task SendNotification(Order order);
+
+        /// <summary>
         /// Checks order status
         /// </summary>
         /// <param name="order">Order</param>

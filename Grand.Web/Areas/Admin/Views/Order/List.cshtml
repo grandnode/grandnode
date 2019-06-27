@@ -231,7 +231,22 @@
                     schema: {
                         data: "Data",
                         total: "Total",
-                        errors: "Errors"
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { editable: false, type: "string" },
+                                CreatedOn: { type: "Date" },
+                                StoreName: { editable: false, type: "string" },
+                                OrderTotal: { editable: false, type: "string" },
+                                OrderStatus: { editable: false, type: "string" }, 
+                                PaymentStatus: { editable: false, type: "string" }, 
+                                ShippingStatus: { editable: false, type: "string" },
+                                CustomerEmail: { editable: false, type: "string" },
+                                CustomerFullName: { editable: false, type: "string" },
+                                OrderStatusId: { editable: false, type: "number" }
+                            }
+                        }
                     },
                     requestEnd: function (e) {
                         if (e.type == "read") {
@@ -284,7 +299,12 @@
                             field: "OrderStatus",
                             title: "@T("Admin.Orders.Fields.OrderStatus")",
                             width: 120,
-                            template: '<a class="k-link" href="Edit/#=Id#">#=OrderStatus#</a>'
+                            template: '<h4><a class="k-link orderstatuslist" href="Edit/#=Id#"><span class="label label-' +
+                                    '# if(OrderStatusId == 10) {#warning #} #' +
+                                    '# if(OrderStatusId == 20) {#info #} #' +
+                                    '# if(OrderStatusId == 30) {#success #} #' +
+                                    '# if(OrderStatusId == 40) {#danger #} #' +
+                                    '">#=OrderStatus#</span></a></h4>'
                         },</text>
                                 }
                         {
@@ -329,6 +349,7 @@
                         field: "OrderTotal",
                         title: "@T("Admin.Orders.Fields.OrderTotal")",
                         width: 150,
+                        template: '#=OrderTotal#',
                         headerAttributes: { style: "text-align:right" },
                         attributes: { style: "text-align:right" },
                         footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary"):</strong></div>' +

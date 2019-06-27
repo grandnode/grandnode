@@ -28,33 +28,33 @@ namespace Grand.Api.Validators.Catalog
 
             RuleFor(x => x.ProductType == ProductType.Auction && !x.AvailableEndDateTimeUtc.HasValue).Equal(false).WithMessage(localizationService.GetResource("Api.Catalog.Products.Fields.AvailableEndDateTime.Required"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.ParentGroupedProductId))
                 {
-                    var product = productService.GetProductById(x.ParentGroupedProductId);
+                    var product = await productService.GetProductById(x.ParentGroupedProductId);
                     if (product == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.ParentGroupedProductId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.ProductTemplateId))
                 {
-                    var template = productTemplateService.GetProductTemplateById(x.ProductTemplateId);
+                    var template = await productTemplateService.GetProductTemplateById(x.ProductTemplateId);
                     if (template == null)
                         return false;
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.ProductTemplateId.NotExists"));
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.VendorId))
                 {
-                    var vendor = vendorService.GetVendorById(x.VendorId);
+                    var vendor = await vendorService.GetVendorById(x.VendorId);
                     if (vendor == null)
                         return false;
                 }
@@ -62,11 +62,11 @@ namespace Grand.Api.Validators.Catalog
             }).WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.VendorId.NotExists"));
 
 
-            RuleFor(x => x).Must((x, context) =>
+            RuleFor(x => x).MustAsync(async (x, y, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Id))
                 {
-                    var product = productService.GetProductById(x.Id);
+                    var product = await productService.GetProductById(x.Id);
                     if (product == null)
                         return false;
                 }

@@ -39,15 +39,10 @@ namespace Grand.Services.Orders
         /// Validates a product for standard properties
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerEnteredPrice">Customer entered price</param>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string attributesXml,
-            decimal customerEnteredPrice, int quantity);
+        Task<IList<string>> GetStandardWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem);
 
         /// <summary>
         /// Gets shopping cart

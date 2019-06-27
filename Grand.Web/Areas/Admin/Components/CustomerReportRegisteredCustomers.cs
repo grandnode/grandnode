@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageReports))
                 return Content("");
 
             return View();

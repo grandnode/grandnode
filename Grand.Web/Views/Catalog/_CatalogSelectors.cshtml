@@ -14,7 +14,7 @@
                 </div>
             </div>
         }
-        <div class="d-flex align-items-center mx-auto" id="items_statistics">
+        <div class="d-sm-flex d-none align-items-center mx-auto order-2" id="items_statistics">
             <div class="items-page-size d-none">@Model.PageSize</div>
             <div class="items-per-page d-lg-inline-flex"><span>@T("catalog.selectors.items")</span><span class="number"></span></div>
             <div class="items-separator">@T("catalog.selectors.of")</div>
@@ -34,7 +34,7 @@
         @if (Model.AllowProductViewModeChanging)
         {
 
-            <div class="sort-container ml-5 d-lg-inline-flex d-none">
+            <div class="sort-container order-3 d-inline-flex ml-sm-0 ml-auto">
                 @if (Model.AvailableViewModes.Count > 1)
                 {
                     var gridMode = Model.AvailableViewModes[0];

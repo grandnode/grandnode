@@ -2376,8 +2376,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
 
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
-            model.GridLayout = string.IsNullOrEmpty(adminareasettings.KendoLayout) ? (KendoLayout)Enum.Parse(typeof(KendoLayout), "custom") : (KendoLayout)Enum.Parse(typeof(KendoLayout), adminareasettings.KendoLayout);
-
+            
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
@@ -2850,7 +2849,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //admin settings
             var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
-            adminareasettings.KendoLayout = model.GridLayout.ToString();
 
             await _settingService.SaveSetting(adminareasettings);
 
