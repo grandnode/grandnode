@@ -357,7 +357,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             var hcBuilder = services.AddHealthChecks();
             hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
-            hcBuilder.AddMongoDb(DataSettingsHelper.ConnectionString(),
+            hcBuilder.AddMongoDb(DataSettingsHelper.MongoClientSettings(),
                    name: "mongodb-check",
                    tags: new string[] { "mongodb" });
         }

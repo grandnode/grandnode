@@ -42,11 +42,11 @@ namespace Grand.Core.Data
             set => RawDataSettings["MongoDBServerPort"] = value.ToString();
         }
         public string MongoDBDatabaseName {
-            get => GetRawDataSetting("MongoDBDatabaseName");
+            get => GetRawDataSetting("MongoDBDatabaseName") ?? "grandnode";
             set => RawDataSettings["MongoDBDatabaseName"] = value;
         }
         public string MongoDBUsername {
-            get => GetRawDataSetting("MongoDBUsername");
+            get => GetRawDataSetting("MongoDBUsername") ?? "grandnode";
             set => RawDataSettings["MongoDBUsername"] = value;
         }
 
@@ -56,11 +56,11 @@ namespace Grand.Core.Data
         }
 
         public string MongoCredentialMechanism {
-            get => GetRawDataSetting("MongoCredentialMechanism");
+            get => GetRawDataSetting("MongoCredentialMechanism") ?? "SCRAM-SHA-1";
             set => RawDataSettings["MongoCredentialMechanism"] = value;
         }
         public string ReplicaSet {
-            get => GetRawDataSetting("ReplicaSet");
+            get => GetRawDataSetting("ReplicaSet") ?? "globaldb";
             set => RawDataSettings["ReplicaSet"] = value;
         }
         public string Collation {
@@ -96,13 +96,17 @@ namespace Grand.Core.Data
             get => GetBoolenValue("InstallSampleData");
             set => RawDataSettings["InstallSampleData"] = value.ToString();
         }
+
+        /// <summary>
+        /// This is used to log inner exception message, so admin could easily find issue.
+        /// </summary>
         public string InstallMessage {
             get => GetRawDataSetting("InstallMessage");
             set => RawDataSettings["InstallMessage"] = value;
         }
 
         public string AdminEmail {
-            get => GetRawDataSetting("AdminEmail") ?? "uubuyer@outlook.com";
+            get => GetRawDataSetting("AdminEmail") ?? "admin@yourstore.com";
             set => RawDataSettings["AdminEmail"] = value;
         }
 

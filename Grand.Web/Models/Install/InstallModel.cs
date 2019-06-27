@@ -15,14 +15,21 @@ namespace Grand.Web.Models.Install
             this.AvailableLanguages = new List<SelectListItem>();
             this.AvailableCollation = new List<SelectListItem>();
         }
+
         public string AdminEmail { get; set; }
+
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
+
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
         public string DatabaseConnectionString { get; set; }
+
         public string DataProvider { get; set; }
+
         public bool UseConnectionString { get; set; }
+
         public string MongoDBServerName { get; set; }
 
         public System.Security.Authentication.SslProtocols SslProtocol { get; set; } = System.Security.Authentication.SslProtocols.Tls12;
@@ -33,16 +40,25 @@ namespace Grand.Web.Models.Install
 
         public string ReplicaSet { get; set; } = "globaldb";
 
-        public string MongoDBDatabaseName { get; set; }
-        public string MongoDBUsername { get; set; }
+        public string MongoDBDatabaseName { get; set; } = "grandnode";
+
+        public string MongoDBUsername { get; set; } = "grandnode";
+
         [DataType(DataType.Password)]
         public string MongoDBPassword { get; set; }
+
         public bool DisableSampleDataOption { get; set; }
+
         public bool InstallSampleData { get; set; } = true;
+
         public bool Installed { get; set; }
+
         public string Collation { get; set; }
+
         public List<SelectListItem> AvailableLanguages { get; set; }
+
         public List<SelectListItem> AvailableCollation { get; set; }
+
         public List<SelectListItem> SslProtocols { get; set; }
 
     }

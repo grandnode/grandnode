@@ -128,7 +128,7 @@ namespace Grand.Web.Controllers
 
             if (model.UseConnectionString)
             {
-                if (String.IsNullOrEmpty(model.DatabaseConnectionString))
+                if (string.IsNullOrEmpty(model.DatabaseConnectionString))
                 {
                     ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
                 }
@@ -139,24 +139,42 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                if (String.IsNullOrEmpty(model.MongoDBDatabaseName))
+                if (string.IsNullOrEmpty(model.MongoDBDatabaseName))
                 {
                     ModelState.AddModelError("", _locService.GetResource("DatabaseNameRequired"));
                 }
-                if (String.IsNullOrEmpty(model.MongoDBServerName))
+                if (string.IsNullOrEmpty(model.MongoDBServerName))
                 {
                     ModelState.AddModelError("", _locService.GetResource("MongoDBServerNameRequired"));
                 }
+                if (string.IsNullOrEmpty(model.MongoDBPassword))
+                {
+                    ModelState.AddModelError("", _locService.GetResource("MongoDBPasswordRequired"));
+                }
+                if (model.MongoDBServerPort < 1)
+                {
+                    ModelState.AddModelError("", _locService.GetResource("MongoDBServerPortRequired"));
+                }
+                if (string.IsNullOrEmpty(model.MongoDBPassword))
+                {
+                    ModelState.AddModelError("", _locService.GetResource("MongoDBPasswordRequired"));
+                }
 
                 connectionString = $"mongodb://{model.MongoDBUsername}:{model.MongoDBPassword}@{model.MongoDBServerName}:{model.MongoDBServerPort}/{model.MongoDBDatabaseName}";
-
                 var connParams = new List<string>();
 
                 if (model.SslProtocol != SslProtocols.None)
                 {
                     connParams.Add("ssl=true");
+                }
+                if (!string.IsNullOrEmpty(model.ReplicaSet))
+                {
+                    connParams.Add($"replicaSet={model.ReplicaSet}");
+                }
 
-                    connectionString = $"{connectionString}?ssl=true&replicaSet={model.ReplicaSet}";
+                if (connParams.Count > 0)
+                {
+                    connectionString = $"{connectionString}?{string.Join("&", connParams)}";
                 }
 
             }
@@ -165,22 +183,30 @@ namespace Grand.Web.Controllers
             {
                 try
                 {
-                    MongoClientSettings settings = new MongoClientSettings();
-                    settings.Server = new MongoServerAddress(model.MongoDBServerName, model.MongoDBServerPort);
-
-                    if (model.SslProtocol != SslProtocols.None)
+                    MongoClient client;
+                    if (model.UseConnectionString)
                     {
-                        settings.UseSsl = true;
-                        settings.SslSettings = new SslSettings();
-                        settings.SslSettings.EnabledSslProtocols = model.SslProtocol;
+                        client = new MongoClient(model.DatabaseConnectionString);
                     }
+                    else
+                    {
+                        MongoClientSettings settings = new MongoClientSettings();
+                        settings.Server = new MongoServerAddress(model.MongoDBServerName, model.MongoDBServerPort);
 
-                    MongoIdentity identity = new MongoInternalIdentity(model.MongoDBDatabaseName, model.MongoDBUsername);
-                    MongoIdentityEvidence evidence = new PasswordEvidence(model.MongoDBPassword);
+                        if (model.SslProtocol != SslProtocols.None)
+                        {
+                            settings.UseSsl = true;
+                            settings.SslSettings = new SslSettings();
+                            settings.SslSettings.EnabledSslProtocols = model.SslProtocol;
+                        }
 
-                    settings.Credential = new MongoCredential(model.MongoCredentialMechanism, identity, evidence);
+                        MongoIdentity identity = new MongoInternalIdentity(model.MongoDBDatabaseName, model.MongoDBUsername);
+                        MongoIdentityEvidence evidence = new PasswordEvidence(model.MongoDBPassword);
 
-                    var client = new MongoClient(settings);
+                        settings.Credential = new MongoCredential(model.MongoCredentialMechanism, identity, evidence);
+
+                        client = new MongoClient(settings);
+                    }
 
                     var database = client.GetDatabase();
                     database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
@@ -261,7 +287,7 @@ namespace Grand.Web.Controllers
                             .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                             .ToList();
 
-                        var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
+                        var pluginsIgnoredDuringInstallation = string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
                             new List<string>() :
                             _config.PluginsIgnoredDuringInstallation
                             .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)

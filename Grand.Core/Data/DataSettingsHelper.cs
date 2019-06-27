@@ -47,7 +47,7 @@ namespace Grand.Core.Data
 
             if (!dataProviderSettings.IsValid())
             {
-                throw new Exception("MongoDb is not correctly setup.");
+                return;
             }
             _mongoClientSettings = new MongoClientSettings();
             _mongoClientSettings.Server = new MongoServerAddress(dataProviderSettings.MongoDBServerName, dataProviderSettings.MongoDBServerPort);
