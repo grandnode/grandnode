@@ -20151,4 +20151,7 @@
   <LocaleResource Name="admin.catalog.products.list.skunotfound">
     <Value>Provided SKU doesn't exist</Value>
   </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
 </Language>

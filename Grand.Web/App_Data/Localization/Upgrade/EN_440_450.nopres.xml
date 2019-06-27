@@ -587,4 +587,7 @@
   <LocaleResource Name="Admin.System.SystemInfo.ApplicationTime.hint">
     <Value>Application time based on default store time zone</Value>
   </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
 </Language>
