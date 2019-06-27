@@ -18,9 +18,9 @@ var CustomerAction = {
             cache: false,
             url: this.UrlPopup
         }).then(function (success) {
-            CustomerAction.nextStep(success)
+            CustomerAction.nextStep(success);
         }).fail(function (failureResponse) {
-            CustomerAction.ajaxFailure(failureResponse)
+            CustomerAction.ajaxFailure(failureResponse);
         });
     },
 
@@ -29,11 +29,11 @@ var CustomerAction = {
             type: "GET",
             cache: false,
             url: this.UrlActive,
-            data: { "curl": _curl, "purl": _purl },
+            data: { "curl": _curl, "purl": _purl }
         }).complete(function () {
             CustomerAction.checkActivePopup();
         }).fail(function (failureResponse) {
-            CustomerAction.ajaxFailure(failureResponse)
+            CustomerAction.ajaxFailure(failureResponse);
         });
     },
 
@@ -63,8 +63,8 @@ var CustomerAction = {
             url: this.RemoveUrl,
             data: { "Id": id }
         }).fail(function (failureResponse) {
-            CustomerAction.ajaxFailure(failureResponse)
-        })
+            CustomerAction.ajaxFailure(failureResponse);
+        });
     },
     ajaxFailure: function (failureResponse) {
         console.log('Error: ' + failureResponse.responseText);

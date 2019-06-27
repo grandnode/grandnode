@@ -184,7 +184,7 @@ namespace Grand.Services.Messages
 
             if (rule == CustomerReminderRuleEnum.AbandonedCart)
             {
-                allowedTokens.AddRange(LiquidExtensions.GetTokens(typeof(LiquidStore)));
+                allowedTokens.AddRange(LiquidExtensions.GetTokens(typeof(LiquidShoppingCart)));
             }
 
             if (rule == CustomerReminderRuleEnum.CompletedOrder || rule == CustomerReminderRuleEnum.UnpaidOrder)

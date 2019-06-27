@@ -14,6 +14,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
@@ -69,6 +70,7 @@ namespace Grand.Web.Services
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IAuctionService _auctionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
@@ -110,6 +112,7 @@ namespace Grand.Web.Services
             IGenericAttributeService genericAttributeService,
             IAuctionService auctionService,
             IHttpContextAccessor httpContextAccessor,
+            IDateTimeHelper dateTimeHelper,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings,
@@ -149,6 +152,7 @@ namespace Grand.Web.Services
             this._genericAttributeService = genericAttributeService;
             this._auctionService = auctionService;
             this._httpContextAccessor = httpContextAccessor;
+            this._dateTimeHelper = dateTimeHelper;
 
             this._mediaSettings = mediaSettings;
             this._orderSettings = orderSettings;
@@ -452,7 +456,7 @@ namespace Grand.Web.Services
                 if (sci.ShoppingCartType == ShoppingCartType.Auctions)
                 {
                     cartItemModel.DisableRemoval = true;
-                    cartItemModel.AuctionInfo = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
+                    cartItemModel.AuctionInfo = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc).ToString();
                 }
 
                 //unit prices
