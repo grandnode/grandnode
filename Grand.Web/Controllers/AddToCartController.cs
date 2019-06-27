@@ -632,7 +632,17 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var warnings = (await _shoppingCartService.GetStandardWarnings(customer, ShoppingCartType.Auctions, product, "", bid, 1)).ToList();
+            var shoppingCartItem = new ShoppingCartItem {
+                AttributesXml = "",
+                CreatedOnUtc = DateTime.UtcNow,
+                ProductId = product.Id,
+                ShoppingCartType = ShoppingCartType.Auctions,
+                StoreId = _storeContext.CurrentStore.Id,
+                CustomerEnteredPrice = bid,
+                Quantity = 1
+            };
+
+            var warnings = (await _shoppingCartService.GetStandardWarnings(customer, product, shoppingCartItem)).ToList();
             warnings.AddRange(_shoppingCartService.GetAuctionProductWarning(bid, product, customer));
 
             if (warnings.Any())
