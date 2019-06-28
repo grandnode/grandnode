@@ -101,22 +101,6 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         //odata/Customer(email)/UpdateAddress
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
-        //{
-        //    if (!await _permissionService.Authorize(PermissionSystemName.Customers))
-        //        return Forbid();
-
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-
-        //    var customer = await _customerApiService.GetByEmail(key);
-        //    if (customer == null)
-        //        return NotFound();
-
-        //    address = await _customerApiService.UpdateAddress(customer, address);
-        //    return Ok(address);
-        //}
         [HttpPut]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
         {
