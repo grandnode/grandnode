@@ -55,6 +55,42 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] CategoryDto model)
+        {
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
+            if (ModelState.IsValid)
+            {
+                model = await _categoryApiService.UpdateCategory(model);
+                return Updated(model);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<CategoryDto> model)
+        {
+            if (!await _permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
+            var entity = await _categoryApiService.GetById(key);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            model.Patch(entity);
+
+            if (ModelState.IsValid)
+            {
+                entity = await _categoryApiService.UpdateCategory(entity);
+                return Updated(entity);
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {

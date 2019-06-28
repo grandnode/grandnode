@@ -56,6 +56,41 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return BadRequest(ModelState);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] ProductDto model)
+        {
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            if (ModelState.IsValid)
+            {
+                model = await _productApiService.UpdateProduct(model);
+                return Updated(model);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> Patch([FromODataUri] string key, Delta<ProductDto> model)
+        {
+            if (!await _permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var entity = await _productApiService.GetById(key);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            model.Patch(entity);
+
+            if (ModelState.IsValid)
+            {
+                entity = await _productApiService.UpdateProduct(entity);
+                return Updated(model);
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
