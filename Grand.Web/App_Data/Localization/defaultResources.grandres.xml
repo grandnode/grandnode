@@ -20154,4 +20154,10 @@
   <LocaleResource Name="messages.wishlist.product(s).quantity">
     <Value>Quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).picture">
+    <Value>Picture</Value>
+  </LocaleResource>
 </Language>
