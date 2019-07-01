@@ -2541,12 +2541,7 @@ namespace Grand.Services.Messages
             }
             else
             {
-                string storeId = bid.StoreId;
-                if (string.IsNullOrEmpty(storeId))
-                {
-                    storeId = _storeContext.CurrentStore.Id;
-                }
-                var store = await _storeService.GetStoreById(storeId);
+                var store = (await _storeService.GetAllStores()).FirstOrDefault();
                 var language = await EnsureLanguageIsActive(languageId, store.Id);
                 messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
                 if (messageTemplate == null)

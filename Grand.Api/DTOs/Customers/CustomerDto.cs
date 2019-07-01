@@ -3,11 +3,12 @@ using Grand.Api.Validators.Customers;
 using Grand.Framework.Mvc.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Api.DTOs.Customers
 {
     [Validator(typeof(CustomerValidator))]
-    public partial class CustomerDto : BaseApiEntityModel
+    public partial class CustomerDto
     {
         public CustomerDto()
         {
@@ -15,8 +16,10 @@ namespace Grand.Api.DTOs.Customers
             this.CustomerRoles = new List<string>();
             this.Addresses = new List<AddressDto>();
         }
+        public string Id { get; set; }
         public Guid CustomerGuid { get; set; }
         public string Username { get; set; }
+        [Key]
         public string Email { get; set; }
         public string AdminComment { get; set; }
         public bool IsTaxExempt { get; set; }
