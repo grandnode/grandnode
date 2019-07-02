@@ -50,9 +50,9 @@ namespace Grand.Web.Models.Common
             public string Name { get; set; }
             public string SeName { get; set; }
 
-            public bool IncludeInFooterColumn1 { get; set; }
-            public bool IncludeInFooterColumn2 { get; set; }
-            public bool IncludeInFooterColumn3 { get; set; }
+            public bool IncludeInFooterRow1 { get; set; }
+            public bool IncludeInFooterRow2 { get; set; }
+            public bool IncludeInFooterRow3 { get; set; }
         }
 
         #endregion

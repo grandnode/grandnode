@@ -41,15 +41,15 @@ namespace Grand.Core.Domain.Topics
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
-        public bool IncludeInFooterColumn1 { get; set; }
+        public bool IncludeInFooterRow1 { get; set; }
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
-        public bool IncludeInFooterColumn2 { get; set; }
+        public bool IncludeInFooterRow2 { get; set; }
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
         /// </summary>
-        public bool IncludeInFooterColumn3 { get; set; }
+        public bool IncludeInFooterRow3 { get; set; }
 
         /// <summary>
         /// Gets or sets the display order

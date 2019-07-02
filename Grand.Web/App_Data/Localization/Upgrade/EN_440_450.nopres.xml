@@ -596,4 +596,22 @@
   <LocaleResource Name="messages.wishlist.product(s).picture">
     <Value>Picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow1">
+    <Value>Include in footer (column 1)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow1.Hint">
+    <Value>Check to include this topic in the footer (row 1). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow2">
+    <Value>Include in footer (column 2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow2.Hint">
+    <Value>Check to include this topic in the footer (row 2). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3">
+    <Value>Include in footer (column 3)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3.Hint">
+    <Value>Check to include this topic in the footer (row 3). Ensure that your theme supports it.</Value>
+  </LocaleResource>
 </Language>

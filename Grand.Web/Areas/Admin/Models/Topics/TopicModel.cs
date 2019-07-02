@@ -38,12 +38,12 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }
 
-        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1")]
-        public bool IncludeInFooterColumn1 { get; set; }
-        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2")]
-        public bool IncludeInFooterColumn2 { get; set; }
-        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")]
-        public bool IncludeInFooterColumn3 { get; set; }
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterRow1")]
+        public bool IncludeInFooterRow1 { get; set; }
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterRow2")]
+        public bool IncludeInFooterRow2 { get; set; }
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3")]
+        public bool IncludeInFooterRow3 { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
