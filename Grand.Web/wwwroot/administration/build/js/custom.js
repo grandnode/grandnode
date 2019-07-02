@@ -49,9 +49,6 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-
-
-
 // Sidebar
 function init_sidebar() {
     // TODO: This is some kind of easy fix, maybe we can improve this
@@ -100,12 +97,13 @@ function init_sidebar() {
 
     // toggle small or large menu 
     $MENU_TOGGLE.on('click', function () {
-
         if ($BODY.hasClass('nav-md')) {
+            document.cookie = "sideBarCookie=true";
             $(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
+            document.cookie = "sideBarCookie=false";
             $SIDEBAR_MENU.find('li.active-sm ul').show();
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
         }
@@ -1900,3 +1898,32 @@ $(document).ready(function () {
     
 });
 
+function getCookie(name) {
+    var pattern = RegExp(name + "=.[^;]*");
+    matched = document.cookie.match(pattern);
+    if (matched) {
+        var cookie = matched[0].split('=');
+        return cookie[1];
+    }
+    return false;
+}
+
+const value = getCookie("sideBarCookie");
+$(document).ready(() => {
+    if (value == "true") {
+        $BODY.removeClass('nav-md');
+        $BODY.addClass('nav-sm');
+        if ($BODY.hasClass('nav-sm')) {
+            $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
+            $SIDEBAR_MENU.find('li.active-sm ul').hide();
+        }
+        $(".site_title").css("padding-left", "26px");
+    }
+    else {
+        $BODY.removeClass('nav-sm');
+        $BODY.addClass('nav-md');
+        $(".site_title").css("padding-left", "0px");
+        $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
+        $SIDEBAR_MENU.find('li.active ul').show();
+    }
+});
