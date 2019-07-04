@@ -22,7 +22,7 @@
                 </div>
             </a>
             <div class="panel-collapse collapse in" id="@(usertype)" aria-expanded="true">
-                <ul>
+                <ul class="googleStatistics">
                     @foreach (var pos in item.Where(x => x.Key != "ga:userType"))
                     {
                         if (pos.Value != "0")
