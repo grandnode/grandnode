@@ -98,12 +98,15 @@ function init_sidebar() {
     // toggle small or large menu 
     $MENU_TOGGLE.on('click', function () {
         if ($BODY.hasClass('nav-md')) {
-            document.cookie = "sideBarCookie=true";
+
+           localStorage.setItem('sideBarCookie', 'true');
             $(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
-            document.cookie = "sideBarCookie=false";
+
+           localStorage.setItem('sideBarCookie', 'false');
+            
             $SIDEBAR_MENU.find('li.active-sm ul').show();
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
         }
@@ -1898,18 +1901,12 @@ $(document).ready(function () {
     
 });
 
-function getCookie(name) {
-    var pattern = RegExp(name + "=.[^;]*");
-    matched = document.cookie.match(pattern);
-    if (matched) {
-        var cookie = matched[0].split('=');
-        return cookie[1];
-    }
-    return false;
+function getValue(name) {
+    return localStorage.getItem(name);
 }
 
-const value = getCookie("sideBarCookie");
 $(document).ready(() => {
+    let value = getValue("sideBarCookie");
     if (value == "true") {
         $BODY.removeClass('nav-md');
         $BODY.addClass('nav-sm');
@@ -1924,6 +1921,6 @@ $(document).ready(() => {
         $BODY.addClass('nav-md');
         $(".site_title").css("padding-left", "0px");
         $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
-        $SIDEBAR_MENU.find('li.active ul').show();
+        $SIDEBAR_MENU.find('li.active > ul').show();
     }
 });
