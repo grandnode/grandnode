@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -8,8 +9,17 @@ namespace Grand.Web.Controllers
     [AllowAnonymous]
     public partial class LetsEncryptController : Controller
     {
+        private readonly CommonSettings _commonSettings;
+
+        public LetsEncryptController(CommonSettings commonSettings)
+        {
+            _commonSettings = commonSettings;
+        }
         public virtual IActionResult Index(string fileName)
         {
+            if(!_commonSettings.AllowToReadLetsEncryptFile)
+                return Content("");
+
             if (fileName == null)
                 return Content("");
 
