@@ -5133,11 +5133,11 @@ namespace Grand.Services.Installation
                 HideNotesTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
-                GenderEnabled = true,
-                DateOfBirthEnabled = true,
+                GenderEnabled = false,
+                DateOfBirthEnabled = false,
                 DateOfBirthRequired = false,
                 DateOfBirthMinimumAge = 0,
-                CompanyEnabled = true,
+                CompanyEnabled = false,
                 StreetAddressEnabled = false,
                 StreetAddress2Enabled = false,
                 ZipPostalCodeEnabled = false,
@@ -5177,7 +5177,7 @@ namespace Grand.Services.Installation
                 StateProvinceEnabled = true,
                 PhoneEnabled = true,
                 PhoneRequired = true,
-                FaxEnabled = true,
+                FaxEnabled = false,
             });
 
             await _settingService.SaveSetting(new StoreInformationSettings
