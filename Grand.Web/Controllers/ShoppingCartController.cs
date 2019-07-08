@@ -44,6 +44,7 @@ namespace Grand.Web.Controllers
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -62,7 +63,8 @@ namespace Grand.Web.Controllers
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
             IGenericAttributeService genericAttributeService,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            OrderSettings orderSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -77,6 +79,7 @@ namespace Grand.Web.Controllers
             this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._genericAttributeService = genericAttributeService;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -322,7 +325,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
             }
@@ -332,13 +335,13 @@ namespace Grand.Web.Controllers
             }
         }
 
-        [HttpPost]
-        public virtual async Task<IActionResult> StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
+        public virtual async Task<IActionResult> StartCheckout(IFormCollection form = null)
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             //parse and save checkout attributes
-            await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            if (form != null && form.Count > 0)
+                await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
             var checkoutAttributes = await _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
@@ -351,7 +354,7 @@ namespace Grand.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                if (!orderSettings.AnonymousCheckoutAllowed)
+                if (!_orderSettings.AnonymousCheckoutAllowed)
                     return Challenge();
 
                 return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
