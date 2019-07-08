@@ -722,7 +722,7 @@ namespace Grand.Web.Services
                     var subtotal = await _priceCalculationService.GetSubTotal(sci, true);
                     decimal shoppingCartItemDiscountBase = subtotal.discountAmount;
                     List<AppliedDiscount> scDiscounts = subtotal.appliedDiscounts;
-                    var productprices = await _taxService.GetProductPrice(product, subtotal.discountAmount);
+                    var productprices = await _taxService.GetProductPrice(product, subtotal.subTotal);
                     decimal taxRate = productprices.taxRate;
                     decimal shoppingCartItemSubTotalWithDiscountBase = productprices.productprice;
 
