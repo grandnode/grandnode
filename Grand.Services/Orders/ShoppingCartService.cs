@@ -1447,6 +1447,10 @@ namespace Grand.Services.Orders
             //copy url referer
             var lastUrlReferrer = await fromCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastUrlReferrer);
             await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.LastUrlReferrer, lastUrlReferrer);
+
+            //move selected checkout attributes
+            var checkoutAttributesXml = await fromCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
         }
 
         #endregion

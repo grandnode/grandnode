@@ -318,6 +318,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentVendor != null && originalProduct.VendorId != _workContext.CurrentVendor.Id)
                     return RedirectToAction("List");
 
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    originalProduct.LimitedToStores = true;
+                    originalProduct.Stores.Add(_workContext.CurrentCustomer.StaffStoreId);
+                }
+
                 var newProduct = await copyProductService.CopyProduct(originalProduct,
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
                 SuccessNotification("The product has been copied successfully");
