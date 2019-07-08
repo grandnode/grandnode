@@ -65,46 +65,6 @@ namespace Grand.Framework.Mvc.Rss
         public XElement Title { get; private set; }
 
         /// <summary>
-        /// Load rss feed from xml reader
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
-        public static RssFeed Load(XmlReader reader)
-        {
-            try
-            {
-                var document = XDocument.Load(reader);
-                
-                if (document.Root == null)
-                    return null;
-
-                var channel = document.Root.Element("channel");
-
-                if (channel == null)
-                    return null;
-
-                var title = channel.Element("title").Return(e => e.Value, string.Empty);
-                var description = channel.Element("description").Return(e => e.Value, string.Empty);
-                var link = new Uri(channel.Element("link").Return(e => e.Value, string.Empty));
-                var lastBuildDate = channel.Element("lastBuildDate").Return(e => DateTimeOffset.ParseExact(e.Value, "r", null), DateTimeOffset.Now);
-
-                var feed = new RssFeed(title, description, link, lastBuildDate);
-
-                foreach (var item in channel.Elements("item"))
-                {
-                    feed.Items.Add(new RssItem(item));
-                }
-
-                return feed;
-
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Description
         /// </summary>
         public XElement Description { get; private set; }
