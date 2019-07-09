@@ -107,8 +107,9 @@ function init_sidebar() {
 
            localStorage.setItem('sideBarCookie', 'false');
             
-            $SIDEBAR_MENU.find('li.active-sm ul').show();
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
+            $SIDEBAR_MENU.find('li.active > ul').show();
+            $(".site_title").css("padding-left", "10px");
         }
 
         $BODY.toggleClass('nav-md nav-sm');
@@ -1919,7 +1920,7 @@ $(document).ready(() => {
     else {
         $BODY.removeClass('nav-sm');
         $BODY.addClass('nav-md');
-        $(".site_title").css("padding-left", "0px");
+        $(".site_title").css("padding-left", "10px");
         $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
         $SIDEBAR_MENU.find('li.active > ul').show();
     }
