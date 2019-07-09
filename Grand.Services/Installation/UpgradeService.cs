@@ -574,6 +574,7 @@ namespace Grand.Services.Installation
             IPermissionProvider provider = new StandardPermissionProvider();
             await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
             #endregion
+            
             #region Update tags on the products
 
             var productTagService = _serviceProvider.GetRequiredService<IProductTagService>();
@@ -693,6 +694,18 @@ namespace Grand.Services.Installation
                     await shipments.UpdateAsync(shipment);
                 }
             }
+            #endregion
+
+            #region Update topics - rename fields
+
+            var renameFields = Builders<object>.Update
+                .Rename("IncludeInFooterColumn1", "IncludeInFooterRow1")
+                .Rename("IncludeInFooterColumn2", "IncludeInFooterRow2")
+                .Rename("IncludeInFooterColumn3", "IncludeInFooterRow3");
+
+            var dbContext = _serviceProvider.GetRequiredService<IMongoDatabase>();
+            await dbContext.GetCollection<object>(typeof(Topic).Name).UpdateManyAsync(new BsonDocument(), renameFields);
+
             #endregion
 
             #region Permisions

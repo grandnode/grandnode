@@ -394,7 +394,7 @@ namespace Grand.Services.Localization
 
             if (String.IsNullOrEmpty(xml))
                 return;
-            //stored procedures aren't supported
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
 
@@ -407,7 +407,7 @@ namespace Grand.Services.Localization
                 if (valueNode != null)
                     value = valueNode.InnerText;
 
-                if (String.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(name))
                     continue;
 
                 var lsr = (
