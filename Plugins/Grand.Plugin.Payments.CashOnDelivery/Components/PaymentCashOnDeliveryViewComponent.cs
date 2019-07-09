@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Plugin.Payments.CashOnDelivery.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;

@@ -1,4 +1,4 @@
-﻿using FluentValidation.Attributes;
+using FluentValidation.Attributes;
 using Grand.Core.Domain.Forums;
 using Grand.Web.Validators.Boards;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -1,4 +1,4 @@
-﻿Group: Exchange rate providers
+Group: Exchange rate providers
 FriendlyName: Money converter exchange rate provider (from EUR: ECB, from PLN: NBP)
 SystemName: CurrencyExchange.MoneyConverter
 Version: 1.09

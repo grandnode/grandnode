@@ -1,4 +1,4 @@
-﻿using Grand.Core.Extensions;
+using Grand.Core.Extensions;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Microsoft.AspNetCore.Routing;

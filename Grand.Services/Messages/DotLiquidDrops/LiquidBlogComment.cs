@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;

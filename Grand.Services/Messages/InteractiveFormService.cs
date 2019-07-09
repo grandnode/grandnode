@@ -1,4 +1,4 @@
-﻿using Grand.Core.Data;
+using Grand.Core.Data;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
 using System;

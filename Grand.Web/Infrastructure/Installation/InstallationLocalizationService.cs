@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;

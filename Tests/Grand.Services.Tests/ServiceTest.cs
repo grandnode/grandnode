@@ -1,4 +1,4 @@
-﻿using Grand.Core.Plugins;
+using Grand.Core.Plugins;
 using Grand.Services.Tests.Directory;
 using Grand.Services.Tests.Payments;
 using Grand.Services.Tests.Shipping;

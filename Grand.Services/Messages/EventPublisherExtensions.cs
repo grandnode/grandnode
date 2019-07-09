@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using Grand.Core;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;

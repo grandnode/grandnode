@@ -1,4 +1,4 @@
-﻿var PushNotifications = {
+var PushNotifications = {
     url: "",
     SenderId: "",
     ApiKey: "",

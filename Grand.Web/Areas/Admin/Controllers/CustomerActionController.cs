@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;

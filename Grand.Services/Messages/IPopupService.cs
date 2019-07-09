@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+using Grand.Core.Domain.Messages;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Messages

@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Common;
 using System.Collections.Generic;
 using System.Xml.Serialization;

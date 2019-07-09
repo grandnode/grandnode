@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 
 //code from Telerik MVC Extensions

@@ -1,4 +1,4 @@
-﻿using Grand.Services.Orders;
+using Grand.Services.Orders;
 using MediatR;
 
 namespace Grand.Services.Events.Web

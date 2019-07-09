@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Kendoui
+namespace Grand.Framework.Kendoui
 {
     public class DataSourceRequest
     {

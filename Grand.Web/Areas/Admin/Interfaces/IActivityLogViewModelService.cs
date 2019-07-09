@@ -1,4 +1,4 @@
-﻿using Grand.Web.Areas.Admin.Models.Logging;
+using Grand.Web.Areas.Admin.Models.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

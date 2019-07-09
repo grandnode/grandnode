@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;

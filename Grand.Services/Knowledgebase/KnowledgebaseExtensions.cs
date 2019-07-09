@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;

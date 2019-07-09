@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using System.ComponentModel;

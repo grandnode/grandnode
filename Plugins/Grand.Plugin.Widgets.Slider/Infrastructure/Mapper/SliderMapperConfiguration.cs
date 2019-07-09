@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Models;

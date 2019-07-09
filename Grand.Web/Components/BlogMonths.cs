@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Blogs;
+using Grand.Core.Domain.Blogs;
 using Grand.Framework.Components;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;

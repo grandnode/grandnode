@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;

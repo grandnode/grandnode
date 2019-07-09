@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Topics;
 using System.Collections.Generic;

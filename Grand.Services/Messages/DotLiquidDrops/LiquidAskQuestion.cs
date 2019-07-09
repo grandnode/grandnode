@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops

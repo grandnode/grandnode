@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Grand.Services.Security.Tests

@@ -1,4 +1,4 @@
-﻿var Admin = Admin || {};
+var Admin = Admin || {};
 
 Admin.Search = (function () {
     var itemTemplate = function (data) {

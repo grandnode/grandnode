@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor
 @using Grand.Services.Authentication.External;
 @{
     var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true, httpContextAccessor);

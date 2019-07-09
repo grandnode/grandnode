@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Knowledgebase;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Orders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Framework.Components;

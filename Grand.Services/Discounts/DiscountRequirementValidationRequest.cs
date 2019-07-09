@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Stores;
 
 namespace Grand.Services.Discounts

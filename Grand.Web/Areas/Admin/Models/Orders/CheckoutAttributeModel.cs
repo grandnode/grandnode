@@ -1,4 +1,4 @@
-﻿using FluentValidation.Attributes;
+using FluentValidation.Attributes;
 using Grand.Core.Domain.Catalog;
 using Grand.Framework.Localization;
 using Grand.Framework.Mapping;

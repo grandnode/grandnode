@@ -1,4 +1,4 @@
-﻿//This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+//This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
 
 using Grand.Core;
 using Grand.Services.Logging;

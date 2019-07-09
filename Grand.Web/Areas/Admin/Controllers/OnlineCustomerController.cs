@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;

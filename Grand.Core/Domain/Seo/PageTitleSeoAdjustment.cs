@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Seo
+namespace Grand.Core.Domain.Seo
 {
     /// <summary>
     /// Represents a page title SEO adjustment

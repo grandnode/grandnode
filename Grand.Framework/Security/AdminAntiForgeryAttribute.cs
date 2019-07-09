@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Security;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

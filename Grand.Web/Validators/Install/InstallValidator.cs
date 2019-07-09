@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Framework.Validators;
 using Grand.Web.Infrastructure.Installation;
 using Grand.Web.Models.Install;

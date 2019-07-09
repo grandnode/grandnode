@@ -1,4 +1,4 @@
-﻿namespace Grand.Core
+namespace Grand.Core
 {
     /// <summary>
     /// Interface for History of changes object

@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Security.Captcha
+namespace Grand.Framework.Security.Captcha
 {
     /// <summary>
     /// Represents a reCAPTCHA version

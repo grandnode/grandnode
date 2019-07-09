@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;

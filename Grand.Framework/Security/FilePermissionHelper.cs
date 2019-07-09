@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;

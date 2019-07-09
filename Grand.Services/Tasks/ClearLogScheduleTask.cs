@@ -1,4 +1,4 @@
-﻿using Grand.Services.Logging;
+using Grand.Services.Logging;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Kendoui;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Forums;

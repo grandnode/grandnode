@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Orders;

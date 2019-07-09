@@ -1,4 +1,4 @@
-﻿using Grand.Services.Configuration;
+using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Tax;
 using Grand.Core.Plugins;

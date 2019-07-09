@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using System;
 using System.Collections.Generic;

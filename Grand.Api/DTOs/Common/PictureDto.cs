@@ -1,4 +1,4 @@
-﻿using FluentValidation.Attributes;
+using FluentValidation.Attributes;
 using Grand.Api.Validators.Common;
 using Grand.Framework.Mvc.Models;
 

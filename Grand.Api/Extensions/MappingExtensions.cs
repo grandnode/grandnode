@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;

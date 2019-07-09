@@ -1,4 +1,4 @@
-﻿using Grand.Core.Data;
+using Grand.Core.Data;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

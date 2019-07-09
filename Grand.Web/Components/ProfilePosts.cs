@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Forums;
 using Grand.Framework.Components;
 using Grand.Services.Customers;
 using Grand.Services.Forums;

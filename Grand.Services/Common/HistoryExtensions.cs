@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Infrastructure;
 using System;
 using System.Collections.Generic;

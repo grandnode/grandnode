@@ -1,4 +1,4 @@
-﻿using Grand.Framework.UI.Paging;
+using Grand.Framework.UI.Paging;
 
 namespace Grand.Web.Models.News
 {

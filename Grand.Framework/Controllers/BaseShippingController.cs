@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Controllers
+namespace Grand.Framework.Controllers
 {
     public abstract class BaseShippingController : BasePluginController
     {

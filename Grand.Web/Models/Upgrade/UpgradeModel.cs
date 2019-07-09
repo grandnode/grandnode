@@ -1,4 +1,4 @@
-﻿namespace Grand.Web.Models.Upgrade
+namespace Grand.Web.Models.Upgrade
 {
     public partial class UpgradeModel
     {

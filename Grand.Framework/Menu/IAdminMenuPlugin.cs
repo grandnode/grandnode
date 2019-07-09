@@ -1,4 +1,4 @@
-﻿using Grand.Core.Plugins;
+using Grand.Core.Plugins;
 
 namespace Grand.Framework.Menu
 {

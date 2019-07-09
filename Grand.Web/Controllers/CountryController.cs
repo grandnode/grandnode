@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;

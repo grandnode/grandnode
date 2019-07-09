@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** ajax cart implementation
 */
 var AjaxCart = {

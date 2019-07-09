@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure;
+using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 
 namespace Grand.Web.Models.Common

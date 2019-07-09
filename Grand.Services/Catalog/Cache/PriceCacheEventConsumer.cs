@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Discounts;

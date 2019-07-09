@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 {

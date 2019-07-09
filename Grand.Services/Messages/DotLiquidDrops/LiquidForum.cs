@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Stores;

@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Common;
 using Grand.Services.Common;
 using Grand.Services.Localization;

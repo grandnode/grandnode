@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;

@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Framework.Mvc;
 using Grand.Services.Localization;

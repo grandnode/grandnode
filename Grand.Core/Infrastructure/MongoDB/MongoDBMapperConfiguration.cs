@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;

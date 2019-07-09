@@ -1,4 +1,4 @@
-﻿using FluentValidation.AspNetCore;
+using FluentValidation.AspNetCore;
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;

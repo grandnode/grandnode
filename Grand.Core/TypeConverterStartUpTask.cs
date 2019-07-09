@@ -1,4 +1,4 @@
-﻿using Grand.Core.ComponentModel;
+using Grand.Core.ComponentModel;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Infrastructure;
 using System.Collections.Generic;

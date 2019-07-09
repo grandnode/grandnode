@@ -1,4 +1,4 @@
-﻿Group: Tax providers
+Group: Tax providers
 FriendlyName: Tax By Country & State & Zip
 SystemName: Tax.CountryStateZip
 Version: 1.45

@@ -1,4 +1,4 @@
-﻿using Grand.Services.Logging;
+using Grand.Services.Logging;
 using Grand.Services.Messages;
 using System;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Controllers;
+using Grand.Framework.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Api.Controllers

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Http;

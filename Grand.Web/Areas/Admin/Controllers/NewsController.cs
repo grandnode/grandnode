@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.News;
+using Grand.Core.Domain.News;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;

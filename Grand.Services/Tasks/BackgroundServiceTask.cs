@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Tasks;
+using Grand.Core.Domain.Tasks;
 using Grand.Services.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

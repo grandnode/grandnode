@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+Group: Payment methods
 FriendlyName: BrainTree
 SystemName: Payments.BrainTree
 Version: 1.01

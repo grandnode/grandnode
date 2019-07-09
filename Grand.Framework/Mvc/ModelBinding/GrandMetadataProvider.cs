@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Linq;
 

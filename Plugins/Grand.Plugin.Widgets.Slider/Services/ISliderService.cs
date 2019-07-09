@@ -1,4 +1,4 @@
-﻿using Grand.Plugin.Widgets.Slider.Domain;
+using Grand.Plugin.Widgets.Slider.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

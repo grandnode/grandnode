@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Tasks;
+using Grand.Core.Domain.Tasks;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Helpers;

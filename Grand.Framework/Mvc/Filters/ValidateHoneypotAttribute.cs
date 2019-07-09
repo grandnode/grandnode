@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Security;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;

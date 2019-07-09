@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Discounts;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;

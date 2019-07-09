@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Forums
+namespace Grand.Core.Domain.Forums
 {
     /// <summary>
     /// Represents a forum search type

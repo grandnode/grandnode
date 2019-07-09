@@ -1,4 +1,4 @@
-﻿using Grand.Services.Customers;
+using Grand.Services.Customers;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

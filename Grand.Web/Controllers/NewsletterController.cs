@@ -1,4 +1,4 @@
-﻿using Grand.Services.Messages;
+using Grand.Services.Messages;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

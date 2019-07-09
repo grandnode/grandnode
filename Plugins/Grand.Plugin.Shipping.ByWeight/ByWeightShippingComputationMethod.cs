@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Plugins;
 using Grand.Services.Shipping;
 using System;

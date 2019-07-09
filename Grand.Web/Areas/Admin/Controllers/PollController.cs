@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Polls;
+using Grand.Core.Domain.Polls;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;

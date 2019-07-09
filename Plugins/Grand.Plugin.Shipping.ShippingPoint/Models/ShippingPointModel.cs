@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Grand.Plugin.Shipping.ShippingPoint.Validators;
 using Grand.Framework.Mvc.Models;

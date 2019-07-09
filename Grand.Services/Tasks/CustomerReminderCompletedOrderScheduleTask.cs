@@ -1,4 +1,4 @@
-﻿using Grand.Services.Customers;
+using Grand.Services.Customers;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks

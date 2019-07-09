@@ -1,4 +1,4 @@
-﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Catalog;
 using Grand.Api.Interfaces;
 using Grand.Api.Services;
 using Grand.Api.Tests.Helpers;

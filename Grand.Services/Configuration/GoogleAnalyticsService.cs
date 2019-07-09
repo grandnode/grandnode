@@ -1,4 +1,4 @@
-﻿using Google.Apis.AnalyticsReporting.v4;
+using Google.Apis.AnalyticsReporting.v4;
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.ComponentModel;
+using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;

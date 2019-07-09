@@ -1,4 +1,4 @@
-﻿using Grand.Plugin.Payments.PayInStore.Models;
+using Grand.Plugin.Payments.PayInStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Plugin.Payments.PayInStore.Components

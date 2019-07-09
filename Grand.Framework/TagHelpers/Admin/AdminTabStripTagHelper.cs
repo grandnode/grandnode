@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Events;
+using Grand.Framework.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

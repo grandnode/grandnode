@@ -1,4 +1,4 @@
-﻿
+
 using Grand.Core.Configuration;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics

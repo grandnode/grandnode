@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Framework.Components;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;

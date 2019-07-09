@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+using Grand.Core.Domain.Messages;
 using Grand.Web.Models.Newsletter;
 using System.Threading.Tasks;
 

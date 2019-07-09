@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Localization;
+using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Seo;
 using Microsoft.AspNetCore.Builder;

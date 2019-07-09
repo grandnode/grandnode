@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 namespace Grand.Core.Infrastructure.Mapper
 {

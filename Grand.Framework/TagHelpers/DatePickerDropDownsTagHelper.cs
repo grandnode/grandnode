@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

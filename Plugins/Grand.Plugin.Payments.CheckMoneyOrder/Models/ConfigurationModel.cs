@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Localization;
+using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;

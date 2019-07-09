@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Data;
 using Grand.Services.Installation;
 using Grand.Web.Models.Upgrade;

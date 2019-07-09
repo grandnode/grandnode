@@ -1,4 +1,4 @@
-﻿
+
 namespace Grand.Plugin.Widgets.Slider
 {
     public static class SliderDefaults

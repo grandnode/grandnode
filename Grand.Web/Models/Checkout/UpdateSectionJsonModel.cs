@@ -1,4 +1,4 @@
-﻿namespace Grand.Web.Models.Checkout
+namespace Grand.Web.Models.Checkout
 {
     public class UpdateSectionJsonModel
     {

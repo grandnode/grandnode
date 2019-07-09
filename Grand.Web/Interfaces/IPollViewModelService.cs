@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Polls;
+using Grand.Core.Domain.Polls;
 using Grand.Web.Models.Polls;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+Group: Payment methods
 FriendlyName: Pay In Store
 SystemName: Payments.PayInStore
 Version: 1.08

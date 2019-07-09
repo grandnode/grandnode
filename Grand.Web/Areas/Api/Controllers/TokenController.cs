@@ -1,4 +1,4 @@
-﻿using Grand.Api.Interfaces;
+using Grand.Api.Interfaces;
 using Grand.Web.Areas.Api.Models.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;

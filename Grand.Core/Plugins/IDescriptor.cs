@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Plugins
+namespace Grand.Core.Plugins
 {
     /// <summary>
     /// Represents descriptor of the application extension (plugin or theme)

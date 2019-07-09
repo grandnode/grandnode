@@ -1,4 +1,4 @@
-﻿//Contribution: Orchard project (https://github.com/OrchardCMS/OrchardCore)
+//Contribution: Orchard project (https://github.com/OrchardCMS/OrchardCore)
 using System;
 using System.Collections.Generic;
 using System.Linq;

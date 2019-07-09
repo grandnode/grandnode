@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Extensions;
 using System;
 using System.Collections.Generic;

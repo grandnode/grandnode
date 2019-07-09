@@ -1,4 +1,4 @@
-﻿Group: Tax providers
+Group: Tax providers
 FriendlyName: Fixed tax rate provider
 SystemName: Tax.FixedRate
 Version: 1.14

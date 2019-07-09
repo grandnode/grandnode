@@ -1,4 +1,4 @@
-﻿namespace Grand.Core
+namespace Grand.Core
 {
     public static class GrandVersion
     {

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Security.Captcha;
+using Grand.Framework.Security.Captcha;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System.Collections.Generic;
 using System.Threading.Tasks;

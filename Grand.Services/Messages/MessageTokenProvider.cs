@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;

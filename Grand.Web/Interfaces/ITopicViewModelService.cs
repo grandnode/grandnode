@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Topics;
+using Grand.Core.Domain.Topics;
 using Grand.Web.Models.Topics;
 using System.Threading.Tasks;
 

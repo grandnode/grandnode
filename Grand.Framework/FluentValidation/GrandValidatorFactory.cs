@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using FluentValidation.Attributes;
 using Grand.Core.Infrastructure;
 using System;

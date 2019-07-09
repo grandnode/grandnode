@@ -1,4 +1,4 @@
-﻿@model IList<ProductDetailsModel.TierPriceModel>
+@model IList<ProductDetailsModel.TierPriceModel>
 @{
     //When there is just one tier (with  qty 1), there are no actual savings in the list.
     var displayTierPrices = Model.Any() && !(Model.Count == 1 && Model[0].Quantity <= 1);

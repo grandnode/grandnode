@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Validators;
 using Grand.Services.Directory;

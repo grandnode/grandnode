@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Topics;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
