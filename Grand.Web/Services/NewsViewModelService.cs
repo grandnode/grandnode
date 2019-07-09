@@ -126,6 +126,7 @@ namespace Grand.Web.Services
                     var picture = await _pictureService.GetPictureById(newsItem.PictureId);
                     var pictureModel = new PictureModel
                     {
+                        Id = newsItem.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.News.ImageLinkTitleFormat"), newsItem.Title),

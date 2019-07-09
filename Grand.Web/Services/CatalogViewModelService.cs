@@ -497,6 +497,7 @@ namespace Grand.Web.Services
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var picture = await _pictureService.GetPictureById(x.PictureId);
                     subCatModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
@@ -597,6 +598,7 @@ namespace Grand.Web.Services
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var picture = await _pictureService.GetPictureById(x.PictureId);
                     catModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
@@ -626,6 +628,7 @@ namespace Grand.Web.Services
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var picture = await _pictureService.GetPictureById(x.PictureId);
                     catModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
@@ -774,6 +777,7 @@ namespace Grand.Web.Services
                 int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var picture = await _pictureService.GetPictureById(manufacturer.PictureId);
                 modelMan.PictureModel = new PictureModel {
+                    Id = manufacturer.PictureId,
                     FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                     ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                     Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
@@ -801,6 +805,7 @@ namespace Grand.Web.Services
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var picture = await _pictureService.GetPictureById(x.PictureId);
                     manModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), manModel.Name),
@@ -859,6 +864,7 @@ namespace Grand.Web.Services
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var picture = await _pictureService.GetPictureById(x.PictureId);
                     manModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), manModel.Name),
@@ -1030,6 +1036,7 @@ namespace Grand.Web.Services
             {
                 var picture = await _pictureService.GetPictureById(vendor.PictureId);
                 var pictureModel = new PictureModel {
+                    Id = vendor.PictureId,
                     FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                     ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                     Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), model.Name),
@@ -1093,6 +1100,7 @@ namespace Grand.Web.Services
                 {
                     var picture = await _pictureService.GetPictureById(vendor.PictureId);
                     var pictureModel = new PictureModel {
+                        Id = vendor.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),

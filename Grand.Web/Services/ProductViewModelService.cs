@@ -451,6 +451,7 @@ namespace Grand.Web.Services
                             picture = new ProductPicture();
 
                         var pictureModel = new PictureModel {
+                            Id = picture.PictureId,
                             ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
                             FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                         };
@@ -477,6 +478,7 @@ namespace Grand.Web.Services
                                 return new PictureModel();
 
                             var pictureModel = new PictureModel {
+                                Id = picture.PictureId,
                                 ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                             };
@@ -821,6 +823,7 @@ namespace Grand.Web.Services
                     defaultPicture = new ProductPicture();
 
                 var defaultPictureModel = new PictureModel {
+                    Id = defaultPicture.PictureId,
                     ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
                     FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
                 };
@@ -838,6 +841,7 @@ namespace Grand.Web.Services
                 foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
                 {
                     var pictureModel = new PictureModel {
+                        Id = picture.PictureId,
                         ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
@@ -1119,6 +1123,7 @@ namespace Grand.Web.Services
                                 if (imageSquaresPicture != null)
                                 {
                                     return new PictureModel {
+                                        Id = imageSquaresPicture.Id,
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
@@ -1140,6 +1145,7 @@ namespace Grand.Web.Services
                                 if (valuePicture != null)
                                 {
                                     return new PictureModel {
+                                        Id = attributeValue.PictureId,
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
                                     };
@@ -1396,6 +1402,7 @@ namespace Grand.Web.Services
                                 picture = new ProductPicture();
 
                             var pictureModel = new PictureModel {
+                                Id = picture.PictureId,
                                 ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                             };
@@ -1630,6 +1637,7 @@ namespace Grand.Web.Services
                     {
                         var picture = await _pictureService.GetPictureById(pictureId);
                         return picture == null ? new PictureModel() : new PictureModel {
+                            Id = pictureId,
                             FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                             ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
                         };

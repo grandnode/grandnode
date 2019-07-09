@@ -119,6 +119,7 @@ namespace Grand.Web.Services
                             var picture = await _pictureService.GetPictureById(post.PictureId);
                             var pictureModel = new PictureModel
                             {
+                                Id = post.PictureId,
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                                 ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                                 Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), post.Title),
@@ -251,6 +252,7 @@ namespace Grand.Web.Services
                     var picture = await _pictureService.GetPictureById(blogPost.PictureId);
                     var pictureModel = new PictureModel
                     {
+                        Id = blogPost.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), blogPost.Title),
