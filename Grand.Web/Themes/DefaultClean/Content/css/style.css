@@ -388,6 +388,10 @@ span.rotate {
 
 /* canavs */
 
+.c-offcanvas-content-wrap {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
 .c-offcanvas-bg.is-animating, .c-offcanvas-bg.is-open {
     background-color: rgba(0, 0, 0, 0.3);
 }
