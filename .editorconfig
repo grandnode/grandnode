@@ -1,8 +1,23 @@
 root = true
 
-[*.cs]
+[*]
+charset = utf-8
+end_of_line = crlf
+
+[*]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+[*.{cs,csx,yml,html,cshtml,css,js}]
 
 #Core editorconfig formatting - indentation
+
+indent_style = space
+
+[*.cs]
 
 #Formatting - indentation options
 
