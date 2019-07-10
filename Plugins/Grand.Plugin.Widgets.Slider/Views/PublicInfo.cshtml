@@ -49,7 +49,6 @@
                             <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
                         </a>
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>@item.Name</h5>
                             @Html.Raw(item.Description)
                         </div>
                     </div>
@@ -59,8 +58,7 @@
                     <div class="carousel-item no-wide-img with-bg">
                         <div class="container">
                             <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>@item.Name</h5>
+                            <div class="carousel-caption container d-none d-md-block">
                                 @Html.Raw(item.Description)
                             </div>
                         </div>
