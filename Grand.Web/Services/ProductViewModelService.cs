@@ -1123,7 +1123,7 @@ namespace Grand.Web.Services
                                 if (imageSquaresPicture != null)
                                 {
                                     return new PictureModel {
-                                        Id = imageSquaresPicture.Id,
+                                        Id = imageSquaresPicture?.Id,
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
