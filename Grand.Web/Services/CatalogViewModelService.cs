@@ -1185,14 +1185,14 @@ namespace Grand.Web.Services
                 //get all tags
                 var allTags = (await _productTagService
                     .GetAllProductTags())
-                    .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id))
+                    .OrderByDescending(x => x.Count)
                     .ToList();
 
                 var tags = allTags
                     .Take(_catalogSettings.NumberOfProductTags)
                     .ToList();
                 //sorting
-                tags = tags.OrderBy(x => x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id)).ToList();
+                tags = tags.OrderBy(x => x.Name).ToList();
 
                 model.TotalTags = allTags.Count;
 
@@ -1201,7 +1201,7 @@ namespace Grand.Web.Services
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name, languageId),
                         SeName = tag.SeName,
-                        ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                        ProductCount = tag.Count
                     });
                 return model;
             });
@@ -1213,7 +1213,7 @@ namespace Grand.Web.Services
             var model = new PopularProductTagsModel();
             model.Tags = (await _productTagService
                 .GetAllProductTags())
-                .OrderBy(x => x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id))
+                .OrderBy(x => x.Name)
                 .Select(x =>
                 {
                     var ptModel = new ProductTagModel {
