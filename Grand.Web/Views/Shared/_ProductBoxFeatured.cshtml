@@ -35,9 +35,15 @@
 }
 <div class="card rowHelper col-12 px-0 mb-0 pb-0 featured-product" data-productid="@Model.Id">
     <div class="prod-list">
-            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-                <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
-            </a>
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <picture>
+                <source media="(max-width: 480px)" picture-id="@Model.DefaultPictureModel.Id" picture-size="200" />
+                <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title"
+                     @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl)) { <text>
+                     onmouseover="this.src='@Model.SecondPictureModel.ImageUrl';" onmouseout="this.src='@Model.DefaultPictureModel.ImageUrl';"
+                     </text> } />
+            </picture>
+        </a>
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
                  @if (!string.IsNullOrEmpty(Model.Flag))

@@ -37,7 +37,13 @@
         <div class="row flex-row flex-nowrap prod-list">
             <div class="d-inline-flex img-holder">
                 <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-                    <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                    <picture>
+                        <source media="(max-width: 480px)" picture-id="@Model.DefaultPictureModel.Id" picture-size="200" />
+                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title"
+                             @if (!string.IsNullOrEmpty(Model.SecondPictureModel.ImageUrl)) { <text>
+                             onmouseover="this.src='@Model.SecondPictureModel.ImageUrl';" onmouseout="this.src='@Model.DefaultPictureModel.ImageUrl';"
+                             </text> } />
+                    </picture>
                 </a>
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
