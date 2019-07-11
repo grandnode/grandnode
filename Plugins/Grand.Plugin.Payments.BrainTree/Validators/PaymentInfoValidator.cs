@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Services.Localization;
 using Grand.Plugin.Payments.BrainTree.Models;
 

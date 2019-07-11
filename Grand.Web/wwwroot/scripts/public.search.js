@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** grandnode search
 */
 var SearchAction = {

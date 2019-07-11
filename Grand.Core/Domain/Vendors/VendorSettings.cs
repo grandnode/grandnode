@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Common;
 
 namespace Grand.Core.Domain.Vendors

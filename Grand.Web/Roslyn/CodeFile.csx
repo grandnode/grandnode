@@ -1,4 +1,4 @@
-﻿#! "netcoreapp2.2"
+#! "netcoreapp2.2"
 #r "Grand.Core"
 #r "Grand.Services"
 

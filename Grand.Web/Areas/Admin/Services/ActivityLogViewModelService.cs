@@ -1,4 +1,4 @@
-﻿using Grand.Services.Catalog;
+using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;

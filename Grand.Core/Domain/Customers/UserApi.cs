@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Customers
+namespace Grand.Core.Domain.Customers
 {
     public partial class UserApi : BaseEntity
     {

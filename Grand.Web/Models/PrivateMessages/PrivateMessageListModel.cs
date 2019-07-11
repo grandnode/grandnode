@@ -1,4 +1,4 @@
-﻿using Grand.Web.Models.Common;
+using Grand.Web.Models.Common;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.PrivateMessages

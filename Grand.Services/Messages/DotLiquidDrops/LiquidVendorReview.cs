@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using Grand.Core.Domain.Vendors;
 using System.Collections.Generic;
 

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Components;
+using Grand.Framework.Components;
 
 namespace Grand.Framework.Events
 {

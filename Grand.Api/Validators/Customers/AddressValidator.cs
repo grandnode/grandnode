@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Common;
 using Grand.Framework.Validators;

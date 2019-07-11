@@ -1,4 +1,4 @@
-﻿using Grand.Services.Localization;
+using Grand.Services.Localization;
 
 namespace Grand.Framework.Security.Captcha
 {

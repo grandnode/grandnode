@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;

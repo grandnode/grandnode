@@ -1,4 +1,4 @@
-﻿//code from Telerik MVC Extensions
+//code from Telerik MVC Extensions
 
 using Grand.Core;
 using Grand.Core.Infrastructure;

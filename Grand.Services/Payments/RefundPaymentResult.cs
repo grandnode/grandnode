@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Payments;
+using Grand.Core.Domain.Payments;
 using System.Collections.Generic;
 
 namespace Grand.Services.Payments

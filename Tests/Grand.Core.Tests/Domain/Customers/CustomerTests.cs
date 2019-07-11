@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Plugins;
+using Grand.Core.Plugins;
 using Grand.Services.Tax;
 using Microsoft.AspNetCore.Routing;
 using System.Threading.Tasks;

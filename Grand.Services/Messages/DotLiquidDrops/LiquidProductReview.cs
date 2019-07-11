@@ -1,4 +1,4 @@
-﻿using DotLiquid;
+using DotLiquid;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;

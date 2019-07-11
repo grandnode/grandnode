@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Security;

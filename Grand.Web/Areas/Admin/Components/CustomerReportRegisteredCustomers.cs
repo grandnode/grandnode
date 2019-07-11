@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Components;
+using Grand.Framework.Components;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Extensions;
+using Grand.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;

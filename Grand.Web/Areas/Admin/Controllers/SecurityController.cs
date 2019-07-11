@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;

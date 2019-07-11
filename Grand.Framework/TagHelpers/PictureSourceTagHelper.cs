@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Services.Media;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Threading.Tasks;

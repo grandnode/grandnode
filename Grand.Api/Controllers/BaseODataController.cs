@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

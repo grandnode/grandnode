@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;

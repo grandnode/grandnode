@@ -1,4 +1,4 @@
-﻿using Grand.Plugin.Payments.PayInStore.Models;
+using Grand.Plugin.Payments.PayInStore.Models;
 using Grand.Services.Configuration;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;

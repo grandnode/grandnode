@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Events;
 using Grand.Services.Events;
 using Microsoft.AspNetCore.Mvc;

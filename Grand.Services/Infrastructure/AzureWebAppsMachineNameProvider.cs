@@ -1,4 +1,4 @@
-﻿//Contribution: Orchard project (http://www.orchardproject.net/)
+//Contribution: Orchard project (http://www.orchardproject.net/)
 
 using System;
 

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 

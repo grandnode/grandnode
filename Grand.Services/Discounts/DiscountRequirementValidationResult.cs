@@ -1,4 +1,4 @@
-﻿namespace Grand.Services.Discounts
+namespace Grand.Services.Discounts
 {
     /// <summary>
     /// Represents a result of discount requirement validation

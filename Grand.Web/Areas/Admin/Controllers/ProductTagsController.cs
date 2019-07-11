@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Seo;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;

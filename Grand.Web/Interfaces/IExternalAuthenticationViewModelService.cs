@@ -1,4 +1,4 @@
-﻿using Grand.Web.Models.Customer;
+using Grand.Web.Models.Customer;
 using System.Collections.Generic;
 
 namespace Grand.Web.Interfaces

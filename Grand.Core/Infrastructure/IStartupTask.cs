@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Infrastructure
+namespace Grand.Core.Infrastructure
 {
     /// <summary>
     /// Interface which should be implemented by tasks run on startup

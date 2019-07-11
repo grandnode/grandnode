@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;

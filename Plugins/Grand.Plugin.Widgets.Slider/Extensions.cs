@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Framework.Localization;

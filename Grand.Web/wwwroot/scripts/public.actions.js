@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** grandnode actions
 */
 var CustomerAction = {

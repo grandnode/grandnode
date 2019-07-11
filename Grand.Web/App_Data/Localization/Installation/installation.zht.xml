@@ -1,4 +1,4 @@
-﻿<Language Name="簡體中文" IsDefault="false" IsRightToLeft="false">
+<Language Name="簡體中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>管理員郵箱</Value>
   </LocaleResource>

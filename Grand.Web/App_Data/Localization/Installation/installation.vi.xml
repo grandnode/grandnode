@@ -1,4 +1,4 @@
-﻿<Language Name="Tiếng Việt" IsDefault="false" IsRightToLeft="false">
+<Language Name="Tiếng Việt" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email quản trị viên</Value>
   </LocaleResource>

@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Infrastructure.Mapper
+namespace Grand.Core.Infrastructure.Mapper
 {
     public interface IMapperProfile
     {

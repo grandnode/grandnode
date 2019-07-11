@@ -1,4 +1,4 @@
-﻿namespace Grand.Services.Tax
+namespace Grand.Services.Tax
 {
     public class TaxProductPrice
     {

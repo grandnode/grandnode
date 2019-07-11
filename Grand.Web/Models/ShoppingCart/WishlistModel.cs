@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

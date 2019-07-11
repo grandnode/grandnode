@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;

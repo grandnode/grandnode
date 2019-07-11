@@ -1,4 +1,4 @@
-﻿namespace Grand.Web.Models.Boards
+namespace Grand.Web.Models.Boards
 {
     public partial class ForumRowModel
     {

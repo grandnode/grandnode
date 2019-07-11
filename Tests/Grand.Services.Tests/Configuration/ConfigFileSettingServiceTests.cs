@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Configuration;
 using Microsoft.Extensions.Caching.Memory;

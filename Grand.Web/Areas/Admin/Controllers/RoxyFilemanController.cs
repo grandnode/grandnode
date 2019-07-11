@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;

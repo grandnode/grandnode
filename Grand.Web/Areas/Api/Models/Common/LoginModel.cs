@@ -1,4 +1,4 @@
-﻿using FluentValidation.Attributes;
+using FluentValidation.Attributes;
 using Grand.Web.Areas.Api.Validators.Common;
 
 namespace Grand.Web.Areas.Api.Models.Common

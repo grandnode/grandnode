@@ -1,4 +1,4 @@
-﻿using Grand.Api.Infrastructure.Extensions;
+using Grand.Api.Infrastructure.Extensions;
 using Grand.Api.Interfaces;
 using Grand.Api.Jwt;
 using Grand.Core.Configuration;

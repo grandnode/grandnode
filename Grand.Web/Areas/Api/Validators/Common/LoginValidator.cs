@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Core.Configuration;
 using Grand.Framework.Validators;
 using Grand.Services.Customers;

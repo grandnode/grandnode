@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Services.Localization;
 using Grand.Framework.Validators;
 using Grand.Plugin.Shipping.ShippingPoint.Models;

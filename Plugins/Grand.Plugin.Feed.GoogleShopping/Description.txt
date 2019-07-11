@@ -1,4 +1,4 @@
-﻿Group: Promotion feeds
+Group: Promotion feeds
 FriendlyName: Google Shopping - Google Product Search
 SystemName: PromotionFeed.GoogleShopping
 Version: 1.77

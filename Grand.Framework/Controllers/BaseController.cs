@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Kendoui;

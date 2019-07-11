@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.Mvc.ModelBinding;

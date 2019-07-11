@@ -1,4 +1,4 @@
-﻿using Grand.Core.Data;
+using Grand.Core.Data;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Bindings;

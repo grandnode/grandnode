@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Orders
+namespace Grand.Core.Domain.Orders
 {
     public class ReturnRequestItem : BaseEntity
     {

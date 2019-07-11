@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Core.Domain.Cms;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;

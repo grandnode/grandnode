@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Caching;
 using Grand.Plugin.Widgets.Slider.Models;
 using Grand.Services.Localization;

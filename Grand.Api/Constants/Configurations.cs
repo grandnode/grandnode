@@ -1,4 +1,4 @@
-﻿namespace Grand.Api.Constants
+namespace Grand.Api.Constants
 {
     public static class Configurations
     {

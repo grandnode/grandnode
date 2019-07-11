@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Security.Authorization;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;

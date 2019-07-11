@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Mvc.Models;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Localization;
 using System.Collections.Generic;
 

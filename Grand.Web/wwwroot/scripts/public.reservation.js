@@ -1,4 +1,4 @@
-﻿var Reservation = {
+var Reservation = {
     availableDates: [],
     availableDatesFrom: [],
     availableDatesTo: [],

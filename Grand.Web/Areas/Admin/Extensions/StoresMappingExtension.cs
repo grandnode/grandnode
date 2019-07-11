@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Stores;
+using Grand.Core.Domain.Stores;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Stores;

@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     SliderPosition();
     $("#GrandCarousel .carousel-indicators:first, #GrandCarousel .carousel-inner .carousel-item:first").addClass("active");
     $("#GrandCarousel .carousel-indicators li").each(function () {

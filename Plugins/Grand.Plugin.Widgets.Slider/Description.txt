@@ -1,4 +1,4 @@
-﻿Group: Widgets
+Group: Widgets
 FriendlyName: Bootstrap Slider
 SystemName: Widgets.Slider
 Version: 1.04

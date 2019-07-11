@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;

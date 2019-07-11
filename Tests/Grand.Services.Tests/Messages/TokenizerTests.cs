@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+using Grand.Core.Domain.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 

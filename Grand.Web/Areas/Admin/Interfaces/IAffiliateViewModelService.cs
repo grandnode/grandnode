@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Affiliates;
+using Grand.Core.Domain.Affiliates;
 using Grand.Web.Areas.Admin.Models.Affiliates;
 using System.Collections.Generic;
 using System.Threading.Tasks;

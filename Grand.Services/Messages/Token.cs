@@ -1,4 +1,4 @@
-﻿namespace Grand.Services.Messages
+namespace Grand.Services.Messages
 {
     public sealed class Token
     {

@@ -1,4 +1,4 @@
-﻿using Grand.Api.Infrastructure.Extensions;
+using Grand.Api.Infrastructure.Extensions;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication;

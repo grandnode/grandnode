@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 

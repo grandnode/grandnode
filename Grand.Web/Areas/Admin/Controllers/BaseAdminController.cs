@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;

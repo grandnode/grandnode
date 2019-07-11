@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Common
+namespace Grand.Core.Domain.Common
 {
     /// <summary>
     /// Represents a Full-Text search mode 

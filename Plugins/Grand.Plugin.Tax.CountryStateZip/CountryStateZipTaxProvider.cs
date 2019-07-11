@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Plugins;
 using Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache;

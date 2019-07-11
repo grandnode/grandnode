@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Forums;
 using Grand.Web.Models.Boards;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;

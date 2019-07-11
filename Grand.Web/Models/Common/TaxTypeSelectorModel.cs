@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Tax;
+using Grand.Core.Domain.Tax;
 using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Models.Common

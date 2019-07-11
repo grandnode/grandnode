@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Services.Configuration;

@@ -1,4 +1,4 @@
-﻿<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
+<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Netfang kerfisstjóra</Value>
   </LocaleResource>

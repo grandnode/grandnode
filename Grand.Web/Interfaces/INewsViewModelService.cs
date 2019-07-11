@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.News;
+using Grand.Core.Domain.News;
 using Grand.Web.Models.News;
 using System.Threading.Tasks;
 

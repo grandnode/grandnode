@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+using Grand.Core.Domain.Messages;
 using Grand.Services.Logging;
 using Grand.Services.Media;
 using MailKit.Net.Smtp;

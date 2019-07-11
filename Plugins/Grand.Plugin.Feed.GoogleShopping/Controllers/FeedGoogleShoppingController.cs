@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Framework.Controllers;

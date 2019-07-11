@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 using Microsoft.AspNet.OData.Builder;
 
 namespace Grand.Api.Infrastructure.DependencyManagement

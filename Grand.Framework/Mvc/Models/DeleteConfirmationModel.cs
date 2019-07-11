@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Mvc.Models
+namespace Grand.Framework.Mvc.Models
 {
     public class DeleteConfirmationModel : BaseGrandEntityModel
     {

@@ -1,4 +1,4 @@
-﻿using Grand.Web.Areas.Admin.Models.Settings;
+using Grand.Web.Areas.Admin.Models.Settings;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators

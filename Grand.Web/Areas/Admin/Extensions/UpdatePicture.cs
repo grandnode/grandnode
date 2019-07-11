@@ -1,4 +1,4 @@
-﻿using Grand.Services.Media;
+using Grand.Services.Media;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Extensions

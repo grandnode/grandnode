@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Security;
 using System;
 using System.IO;
 using System.Security.Cryptography;

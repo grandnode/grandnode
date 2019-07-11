@@ -1,4 +1,4 @@
-﻿namespace Grand.Framework.Localization
+namespace Grand.Framework.Localization
 {
     public interface ILocalizedModelLocal
     {

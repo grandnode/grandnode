@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;

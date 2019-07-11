@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Vendors
+namespace Grand.Core.Domain.Vendors
 {
     /// <summary>
     /// Represents a vendor review helpfulness

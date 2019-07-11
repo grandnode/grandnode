@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Framework.Components;
 using Grand.Services.Knowledgebase;

@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Controllers;
+using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;

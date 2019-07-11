@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Framework.Validators;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Models;

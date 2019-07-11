@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;

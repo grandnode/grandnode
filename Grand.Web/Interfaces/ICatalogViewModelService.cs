@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Catalog;
 using System.Collections.Generic;

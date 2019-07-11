@@ -1,4 +1,4 @@
-﻿using Grand.Framework.Controllers;
+using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 

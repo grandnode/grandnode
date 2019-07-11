@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Localization;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Catalog

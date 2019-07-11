@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;

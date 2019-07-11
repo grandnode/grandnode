@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Common;
 using Grand.Services.Configuration;

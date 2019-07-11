@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Framework.Extensions;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;

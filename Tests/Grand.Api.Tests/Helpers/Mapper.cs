@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Grand.Api.Infrastructure.Mapper;
 using Grand.Core.Infrastructure.Mapper;
 

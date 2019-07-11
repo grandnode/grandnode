@@ -1,4 +1,4 @@
-﻿<Language Name="عربي" IsDefault="false" IsRightToLeft="true">
+<Language Name="عربي" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>البريد الالكتروني لمدير الموقع</Value>
   </LocaleResource>

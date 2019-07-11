@@ -1,4 +1,4 @@
-﻿namespace Grand.Services.PushNotifications
+namespace Grand.Services.PushNotifications
 {
     public class JsonResponse
     {

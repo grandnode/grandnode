@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Models.Checkout

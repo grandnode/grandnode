@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.Mvc.ModelBinding;

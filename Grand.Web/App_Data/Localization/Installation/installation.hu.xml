@@ -1,4 +1,4 @@
-﻿<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
+<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin felhasználó e-mail</Value>
   </LocaleResource>

@@ -1,4 +1,4 @@
-﻿Group: Payment methods
+Group: Payment methods
 FriendlyName: Cash On Delivery (COD)
 SystemName: Payments.CashOnDelivery
 Version: 1.15

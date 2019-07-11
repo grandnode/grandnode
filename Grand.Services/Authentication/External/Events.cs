@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Customers;
 using MediatR;
 
 namespace Grand.Services.Authentication.External

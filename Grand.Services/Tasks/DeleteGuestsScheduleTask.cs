@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Grand.Services.Customers;
 using System;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿Group: ExternalAuth methods
+Group: ExternalAuth methods
 FriendlyName: Google authentication
 SystemName: ExternalAuth.Google
 Version: 1.01

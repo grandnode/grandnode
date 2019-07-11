@@ -1,4 +1,4 @@
-﻿using Grand.Core.Configuration;
+using Grand.Core.Configuration;
 
 namespace Grand.Core.Domain.Knowledgebase
 {

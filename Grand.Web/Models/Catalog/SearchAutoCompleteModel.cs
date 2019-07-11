@@ -1,4 +1,4 @@
-﻿namespace Grand.Web.Models.Catalog
+namespace Grand.Web.Models.Catalog
 {
     public class SearchAutoCompleteModel
     {

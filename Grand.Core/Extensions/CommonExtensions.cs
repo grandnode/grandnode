@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using System;
 using System.Collections.Generic;
 using System.Linq;

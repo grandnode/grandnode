@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Catalog
+namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents the product sorting

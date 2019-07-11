@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Api.DTOs.Catalog;
 using Grand.Framework.Extensions;
 using Grand.Framework.Validators;

@@ -1,4 +1,4 @@
-﻿namespace Grand.Services.Security
+namespace Grand.Services.Security
 {
     public static class PermissionSystemName
     {

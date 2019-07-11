@@ -1,4 +1,4 @@
-﻿@model List<string>
+@model List<string>
 @Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
 <script>
     $(document).ready(function() {

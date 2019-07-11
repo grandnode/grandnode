@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.News;
+using Grand.Core.Domain.News;
 using Grand.Framework.Components;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;

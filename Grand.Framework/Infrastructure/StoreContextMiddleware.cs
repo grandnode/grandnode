@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 

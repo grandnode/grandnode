@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.AdminSearch;
 using Grand.Core.Domain.Catalog;

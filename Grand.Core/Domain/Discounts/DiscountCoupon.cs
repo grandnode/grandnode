@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Discounts
+namespace Grand.Core.Domain.Discounts
 {
     public class DiscountCoupon : BaseEntity
     {

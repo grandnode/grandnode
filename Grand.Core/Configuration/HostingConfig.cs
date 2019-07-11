@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Configuration
+namespace Grand.Core.Configuration
 {
     public partial class HostingConfig
     {

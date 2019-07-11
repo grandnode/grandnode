@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Events;
 using MediatR;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Caching;
+using Grand.Core.Caching;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Events;
 using MediatR;

@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

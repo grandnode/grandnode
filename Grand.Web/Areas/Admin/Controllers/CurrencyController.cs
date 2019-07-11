@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Core.Domain.Directory;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;

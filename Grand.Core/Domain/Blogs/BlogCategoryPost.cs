@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Domain.Blogs
+namespace Grand.Core.Domain.Blogs
 {
     public partial class BlogCategoryPost : SubBaseEntity
     {

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;

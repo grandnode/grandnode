@@ -1,4 +1,4 @@
-﻿using Grand.Api.Constants;
+using Grand.Api.Constants;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Api.Infrastructure.Extensions

@@ -1,4 +1,4 @@
-﻿using Grand.Core;
+using Grand.Core;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;

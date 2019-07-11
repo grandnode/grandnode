@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Common;
 using Grand.Web.Areas.Admin.Models.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;

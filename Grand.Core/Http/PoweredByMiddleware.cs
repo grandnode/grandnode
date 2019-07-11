@@ -1,4 +1,4 @@
-﻿//Contribution: Orchard project (https://github.com/OrchardCMS/OrchardCore)
+//Contribution: Orchard project (https://github.com/OrchardCMS/OrchardCore)
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 

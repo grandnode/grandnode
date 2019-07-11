@@ -1,4 +1,4 @@
-﻿namespace Grand.Web.Areas.Admin.Models.Settings
+namespace Grand.Web.Areas.Admin.Models.Settings
 {
     public class FoundMenuItem
     {

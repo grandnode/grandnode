@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Models;
 using Grand.Services.Localization;

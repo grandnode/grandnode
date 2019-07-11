@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Messages;
+using Grand.Core.Domain.Messages;
 using Grand.Web.Areas.Admin.Models.Messages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
