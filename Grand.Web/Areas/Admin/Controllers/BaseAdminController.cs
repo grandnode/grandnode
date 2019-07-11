@@ -27,10 +27,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!index.HasValue)
             {
                 int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"][0], out tmp))
+                var tabindex = this.Request.Form["selected-tab-index"];
+                if (tabindex.Count > 0)
                 {
-                    index = tmp;
+                    if (int.TryParse(tabindex[0], out tmp))
+                    {
+                        index = tmp;
+                    }
                 }
+                else
+                    index = 1;
             }
             if (index.HasValue)
             {
@@ -61,8 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
             //TODO rename setting
             var useIsoDateTime = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson;
-            var serializerSettings = new JsonSerializerSettings
-            {
+            var serializerSettings = new JsonSerializerSettings {
                 DateFormatHandling = useIsoDateTime ? DateFormatHandling.IsoDateFormat : DateFormatHandling.MicrosoftDateFormat
             };
 
