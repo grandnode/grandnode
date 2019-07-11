@@ -61,10 +61,10 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !model.IsSystemRole)
             {
                 model = await _customerRoleApiService.UpdateCustomerRole(model);
-                return Updated(model);
+                return Ok(model);
             }
             return BadRequest(ModelState);
         }
@@ -80,13 +80,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             {
                 return NotFound();
             }
-
             model.Patch(entity);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !entity.IsSystemRole)
             {
                 entity = await _customerRoleApiService.UpdateCustomerRole(entity);
-                return Updated(model);
+                return Ok(entity);
             }
             return BadRequest(ModelState);
         }
