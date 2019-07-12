@@ -4,7 +4,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;

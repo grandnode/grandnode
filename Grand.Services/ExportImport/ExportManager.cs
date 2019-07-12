@@ -7,7 +7,6 @@ using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Extensions;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;

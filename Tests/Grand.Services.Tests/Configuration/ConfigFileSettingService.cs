@@ -5,7 +5,6 @@ using Grand.Core.Domain.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

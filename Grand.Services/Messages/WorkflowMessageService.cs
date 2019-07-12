@@ -15,7 +15,6 @@ using Grand.Core.Domain.Vendors;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;

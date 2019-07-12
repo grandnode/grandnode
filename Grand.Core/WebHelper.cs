@@ -1,6 +1,5 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Grand.Core
 {

@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Plugin.Payments.PayPalStandard.Controllers;
 using Grand.Services.Catalog;

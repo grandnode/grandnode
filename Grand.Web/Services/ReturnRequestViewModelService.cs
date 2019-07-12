@@ -3,7 +3,6 @@ using Grand.Core.Caching;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;

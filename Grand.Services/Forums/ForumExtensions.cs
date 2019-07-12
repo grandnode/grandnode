@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Domain.Forums;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
 using System;
 using System.Threading.Tasks;
 

@@ -1,9 +1,5 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
-using Grand.Services.Directory;
-using Grand.Services.Localization;
-using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
