@@ -239,8 +239,8 @@
                                 CreatedOn: { type: "Date" },
                                 StoreName: { editable: false, type: "string" },
                                 OrderTotal: { editable: false, type: "string" },
-                                OrderStatus: { editable: false, type: "string" }, 
-                                PaymentStatus: { editable: false, type: "string" }, 
+                                OrderStatus: { editable: false, type: "string" },
+                                PaymentStatus: { editable: false, type: "string" },
                                 ShippingStatus: { editable: false, type: "string" },
                                 CustomerEmail: { editable: false, type: "string" },
                                 CustomerFullName: { editable: false, type: "string" },
@@ -257,7 +257,7 @@
                             }
                         }
                     },
-                    error: function(e) {
+                    error: function (e) {
                         display_kendoui_grid_error(e);
                         // Cancel the changes
                         this.cancelChanges();
@@ -296,38 +296,41 @@
                     {
                         //a vendor does not have access to this functionality
                         <text>{
-                            field: "OrderStatus",
-                            title: "@T("Admin.Orders.Fields.OrderStatus")",
-                            width: 120,
-                            template: '<h4><a class="k-link orderstatuslist" href="Edit/#=Id#"><span class="label label-' +
-                                    '# if(OrderStatusId == 10) {#warning #} #' +
-                                    '# if(OrderStatusId == 20) {#info #} #' +
-                                    '# if(OrderStatusId == 30) {#success #} #' +
-                                    '# if(OrderStatusId == 40) {#danger #} #' +
-                                    '">#=OrderStatus#</span></a></h4>'
-                        },</text>
+                        field: "OrderStatus",
+                        title: "@T("Admin.Orders.Fields.OrderStatus")",
+                        width: 120,
+                        template: '<h4><a class="k-link orderstatuslist" href="Edit/#=Id#"><span class="label label-' +
+                            '# if(OrderStatusId == 10) {#warning #} #' +
+                            '# if(OrderStatusId == 20) {#info #} #' +
+                            '# if(OrderStatusId == 30) {#success #} #' +
+                            '# if(OrderStatusId == 40) {#danger #} #' +
+                            '">#=OrderStatus#</span></a></h4>'
+                    },</text>
                                 }
-                        {
-                            field: "PaymentStatus",
-                            title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                            width: 120,
-                            template: '<a class="k-link" href="Edit/#=Id#">#=PaymentStatus#</a>'
+                    {
+                        field: "PaymentStatus",
+                        title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                        width: 120,
+                        template: '<a class="k-link" href="Edit/#=Id#">#=PaymentStatus#</a>'
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
                         //a vendor does not have access to this functionality
                         <text>{
-                            field: "ShippingStatus",
-                            title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                            width: 120,
-                            template: '<a class="k-link" href="Edit/#=Id#">#=ShippingStatus#</a>'
-                        },</text>
+                        field: "ShippingStatus",
+                        title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                        width: 120,
+                        template: '<a class="k-link" href="Edit/#=Id#">#=ShippingStatus#</a>'
+                    },</text>
                                 }
                     {
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 220,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
+                        template: function (dataItem) {
+                            return "<a class=\"k-link\" href='@Url.Content("~/Admin/Customer/Edit/")" + dataItem.CustomerId + "'>" + kendo.htmlEncode(dataItem.CustomerFullName)+ " ("+dataItem.CustomerEmail+")</a>";
+                        }
+
                     },
                     {
                         field: "StoreName",
