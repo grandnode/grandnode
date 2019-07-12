@@ -119,7 +119,7 @@ $(document).ready(function () {
             field: "Subject",
             title: "@T("Admin.System.ContactForm.Fields.Subject")",
             width: 300,
-            template: '<a class="k-link" href="Details/#=Id#">#=Subject#</a>',
+                template: '<a class="k-link" href="Details/#=Id#">#=kendo.htmlEncode(Subject)#</a>',
         }]
     });
 });

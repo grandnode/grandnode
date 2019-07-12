@@ -103,7 +103,7 @@
             columns: [{
                 field: "Breadcrumb",
                 title: "@T("Admin.Catalog.Categories.Fields.Name")",
-                template: '<a class="k-link" href="Edit/#=Id#">#=Breadcrumb#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Breadcrumb)#</a>',
             },
             {
                 field: "ShowOnHomePage",

@@ -72,7 +72,7 @@
                     field: "Name",
                     title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")",
                     width: 300,
-                    template: '<a class="k-link" href="EditForumGroup/#=Id#">#=Name#</a>',
+                    template: '<a class="k-link" href="EditForumGroup/#=Id#">#=kendo.htmlEncode(Name)#</a>',
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")",
@@ -127,7 +127,7 @@
                     field: "Name",
                     title: "@T("Admin.ContentManagement.Forums.Forum.Fields.Name")",
                     width: 300,
-                    template: '<a class="k-link" href="EditForum/#=Id#">#=Name#</a>',
+                    template: '<a class="k-link" href="EditForum/#=Id#">#=kendo.htmlEncode(Name)#</a>',
                 },{
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")",

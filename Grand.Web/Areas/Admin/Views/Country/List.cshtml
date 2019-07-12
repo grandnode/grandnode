@@ -79,7 +79,7 @@
                 field: "Name",
                 title: "@T("Admin.Configuration.Countries.Fields.Name")",
                 width: 300,
-                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "AllowsBilling",
                 title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",

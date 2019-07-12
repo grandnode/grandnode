@@ -71,7 +71,7 @@
                     field: "ProductName",
                     title: "@T("Admin.ContentManagement.Blog.Product.Fields.ProductName")",
                     width: 300,
-                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=ProductName#</a>'
+                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=kendo.htmlEncode(ProductName)#</a>'
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Blog.Product.Fields.DisplayOrder")",

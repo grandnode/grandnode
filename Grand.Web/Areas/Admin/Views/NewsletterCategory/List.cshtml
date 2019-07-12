@@ -67,7 +67,7 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Promotions.NewsletterCategory.Fields.Name")",
-                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "Selected",
                 title: "@T("Admin.Promotions.NewsletterCategory.Fields.Selected")",

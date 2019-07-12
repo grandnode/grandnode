@@ -113,7 +113,7 @@
             }, {
                 field: "ShortMessage",
                 title: "@T("Admin.System.Log.Fields.ShortMessage")",
-                template: '<a class="k-link" href="View/#=Id#">#=ShortMessage#</a>'
+                template: '<a class="k-link" href="View/#=Id#">#=kendo.htmlEncode(ShortMessage)#</a>'
             }, {
                 field: "CreatedOn",
                 title: "@T("Admin.System.Log.Fields.CreatedOn")",

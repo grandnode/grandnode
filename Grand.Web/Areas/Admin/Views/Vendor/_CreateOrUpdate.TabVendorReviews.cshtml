@@ -48,10 +48,11 @@ $(document).ready(function () {
             field: "CustomerId",
             title: "@T("Admin.VendorReviews.Fields.Customer")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
         },
         {
             field: "Title",
+            encoded: false,
             title: "@T("Admin.VendorReviews.Fields.Title")",
             width: 300
         },
