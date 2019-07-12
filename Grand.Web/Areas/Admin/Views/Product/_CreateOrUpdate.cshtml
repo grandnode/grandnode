@@ -107,7 +107,7 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Products.AssociatedProducts")" tab-index="16" id="tab-associated-products">
+        <tabstrip-item text="@T("Admin.Catalog.Products.AssociatedProducts")" tab-index="14" id="tab-associated-products">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.AssociatedProducts" model="Model" />
@@ -116,21 +116,21 @@
         </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <tabstrip-item text="@T("Admin.Catalog.Products.ActivityLog")" tab-index="17">
+            <tabstrip-item text="@T("Admin.Catalog.Products.ActivityLog")" tab-index="15">
                 <content>
                     <div>
                         <partial name="_CreateOrUpdate.Activitylog" model="Model" />
                     </div>
                 </content>
             </tabstrip-item>
-            <tabstrip-item text="@T("Admin.Catalog.Products.PurchasedWithOrders")" tab-index="18" id="tab-purchased-product">
+            <tabstrip-item text="@T("Admin.Catalog.Products.PurchasedWithOrders")" tab-index="16" id="tab-purchased-product">
                 <content>
                     <div>
                         <partial name="_CreateOrUpdate.PurchasedWithOrders" model="Model" />
                     </div>
                 </content>
             </tabstrip-item>
-            <tabstrip-item text="@T("Admin.Catalog.Products.Reviews")" tab-index="19">
+            <tabstrip-item text="@T("Admin.Catalog.Products.Reviews")" tab-index="17">
                 <content>
                     <div>
                         <partial name="_CreateOrUpdate.Reviews" model="Model" />

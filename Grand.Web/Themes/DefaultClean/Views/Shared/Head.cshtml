@@ -1,10 +1,8 @@
 ﻿@using Grand.Core;
 @using Grand.Framework.Themes
 @using Grand.Framework.UI
-@using Grand.Services.Helpers;
 @inject IWorkContext workContext
 @inject IThemeContext themeContext
-@inject IUserAgentHelper userAgentHelper
 @{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     var themeName = themeContext.WorkingThemeName;

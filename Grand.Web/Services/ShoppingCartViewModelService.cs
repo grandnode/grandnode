@@ -173,7 +173,7 @@ namespace Grand.Web.Services
                     var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
                     return new PictureModel
                     {
-                        Id = sciPicture.Id,
+                        Id = sciPicture?.Id,
                         ImageUrl = await _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),

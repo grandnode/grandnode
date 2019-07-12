@@ -125,8 +125,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (!excludeProperties)
             {
                 var addr = new AddressModel();
-                await PrepareAddressModel(addr, returnRequest.PickupAddress, excludeProperties);
-                model.PickupAddress = addr;
+                model.PickupAddress = await PrepareAddressModel(addr, returnRequest.PickupAddress, excludeProperties);
                 model.CustomerComments = returnRequest.CustomerComments;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
@@ -154,7 +153,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return (returnRequestModels, returnRequests.TotalCount);
         }
-        public virtual async Task PrepareAddressModel(AddressModel model, Address address, bool excludeProperties)
+        public virtual async Task<AddressModel> PrepareAddressModel(AddressModel model, Address address, bool excludeProperties)
         {
             if (address != null)
             {
@@ -206,6 +205,8 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             //customer attribute services
             await model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
+
+            return model;
         }
 
         public virtual async Task NotifyCustomer(ReturnRequest returnRequest)
