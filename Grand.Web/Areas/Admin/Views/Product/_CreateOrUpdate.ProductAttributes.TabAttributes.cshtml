@@ -94,7 +94,7 @@
                         field: "ProductAttributeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
                         width: 190,
-                        template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeMappingPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 600, true);'>#=ProductAttribute#<br /></a>"
+                        template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeMappingPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 600, true);'>#=kendo.htmlEncode(ProductAttribute)#<br /></a>"
                     }, {
                         field: "TextPrompt",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",

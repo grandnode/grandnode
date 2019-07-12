@@ -121,7 +121,7 @@ $(document).ready(function () {
             field: "Title",
             title: "@T("Admin.VendorReviews.Fields.Title")",
             width: 200,
-            template: '<a class="k-link" href="Edit/#=Id#?VendorId=#=VendorId#">#=Title#</a>',
+            template: '<a class="k-link" href="Edit/#=Id#?VendorId=#=VendorId#">#=kendo.htmlEncode(Title)#</a>',
         }, {
             field: "Rating",
             title: "@T("Admin.VendorReviews.Fields.Rating")",
