@@ -1,5 +1,4 @@
 using Autofac;
-using Autofac.Core;
 using FluentValidation;
 using Grand.Core;
 using Grand.Core.Caching;
@@ -26,7 +25,6 @@ using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Events;
 using Grand.Services.ExportImport;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;

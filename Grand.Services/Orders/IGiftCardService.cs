@@ -1,5 +1,4 @@
 using Grand.Core;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using System;
 using System.Collections.Generic;

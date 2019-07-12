@@ -5,7 +5,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;

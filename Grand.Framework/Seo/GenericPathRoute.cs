@@ -3,7 +3,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
-using Grand.Services.Events;
 using Grand.Services.Seo;
 using MediatR;
 using Microsoft.AspNetCore.Routing;

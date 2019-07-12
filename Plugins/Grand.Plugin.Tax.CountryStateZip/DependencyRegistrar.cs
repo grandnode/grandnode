@@ -3,7 +3,6 @@ using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Plugin.Tax.CountryStateZip.Services;
-using Grand.Services.Tax;
 
 namespace Grand.Plugin.Tax.CountryStateZip
 {

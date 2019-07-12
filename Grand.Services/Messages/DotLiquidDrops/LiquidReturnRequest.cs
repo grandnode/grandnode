@@ -1,20 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core;
-using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Tax;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
-using Grand.Services.Common;
-using Grand.Services.Directory;
-using Grand.Services.Localization;
-using Grand.Services.Orders;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {

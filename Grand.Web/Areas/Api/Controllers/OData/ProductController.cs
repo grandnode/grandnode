@@ -65,7 +65,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (ModelState.IsValid)
             {
                 model = await _productApiService.UpdateProduct(model);
-                return Updated(model);
+                return Ok();
             }
             return BadRequest(ModelState);
         }
@@ -86,7 +86,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (ModelState.IsValid)
             {
                 entity = await _productApiService.UpdateProduct(entity);
-                return Updated(model);
+                return Ok();
             }
             return BadRequest(ModelState);
         }

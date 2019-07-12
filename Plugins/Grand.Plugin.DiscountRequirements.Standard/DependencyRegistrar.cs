@@ -2,9 +2,6 @@
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Grand.Plugin.DiscountRequirements.Standard
 {

@@ -86,6 +86,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public string ProductSeName 
+        {
+            get {
+                string name = "";
+
+                if (_product != null)
+                    name = _product.GetLocalized(x => x.SeName, _language.Id);
+                return name;
+            }
+        }
         public string ProductShortDescription
         {
             get

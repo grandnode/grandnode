@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Shipping;
 using System;

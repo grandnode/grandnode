@@ -1,13 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net;
-using Grand.Core;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure

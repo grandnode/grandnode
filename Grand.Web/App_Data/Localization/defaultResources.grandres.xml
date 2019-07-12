@@ -20160,4 +20160,7 @@
   <LocaleResource Name="messages.wishlist.product(s).picture">
     <Value>Picture</Value>
   </LocaleResource>
+  <LocaleResource Name="pushnotifications.message.fields.text">
+    <Value>Message content</Value>
+  </LocaleResource>
 </Language>

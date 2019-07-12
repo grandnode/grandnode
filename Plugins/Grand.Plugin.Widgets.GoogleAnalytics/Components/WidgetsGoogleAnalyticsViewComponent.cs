@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;

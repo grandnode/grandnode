@@ -2,7 +2,6 @@
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Framework.Security;
 using Grand.Services.Installation;

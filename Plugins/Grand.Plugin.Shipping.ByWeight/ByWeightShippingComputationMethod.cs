@@ -1,19 +1,18 @@
 ﻿using Grand.Core;
-using Grand.Core.Plugins;
-using Grand.Services.Shipping;
-using System;
 using Grand.Core.Domain.Orders;
-using Grand.Services.Shipping.Tracking;
-using System.Collections.Generic;
-using Grand.Services.Configuration;
 using Grand.Core.Domain.Shipping;
-using Grand.Services.Localization;
+using Grand.Core.Plugins;
 using Grand.Plugin.Shipping.ByWeight.Services;
 using Grand.Services.Catalog;
-using Grand.Core.Infrastructure;
+using Grand.Services.Configuration;
+using Grand.Services.Localization;
+using Grand.Services.Shipping;
+using Grand.Services.Shipping.Tracking;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ByWeight
 {

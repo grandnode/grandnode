@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Seo;
-using Grand.Core.Infrastructure;
 using Grand.Services.Seo;
 using System;
 using System.Threading.Tasks;

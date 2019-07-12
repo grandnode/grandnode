@@ -64,7 +64,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (ModelState.IsValid)
             {
                 model = await _specificationAttributeApiService.UpdateSpecificationAttribute(model);
-                return Updated(model);
+                return Ok(model);
             }
             return BadRequest(ModelState);
         }
@@ -86,7 +86,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (ModelState.IsValid)
             {
                 entity = await _specificationAttributeApiService.UpdateSpecificationAttribute(entity);
-                return Updated(model);
+                return Ok(model);
             }
             return BadRequest(ModelState);
         }
