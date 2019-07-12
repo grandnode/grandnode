@@ -106,8 +106,8 @@ $(document).ready(function () {
 
 @if (!(Model.Allowed == 0 && Model.Denied == 0))
 {
-    <script src="~/scripts/" type="text/javascript"></script>
-    <script>
+    
+    <script asp-location="Footer">
     $(document).ready(function () {
         var config = {
             type: 'pie',

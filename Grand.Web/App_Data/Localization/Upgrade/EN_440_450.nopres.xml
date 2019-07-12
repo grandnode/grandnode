@@ -614,4 +614,7 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3.Hint">
     <Value>Check to include this topic in the footer (row 3). Ensure that your theme supports it.</Value>
   </LocaleResource>
+  <LocaleResource Name="pushnotifications.message.fields.text">
+    <Value>Message content</Value>
+  </LocaleResource>
 </Language>
