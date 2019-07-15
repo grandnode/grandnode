@@ -398,7 +398,10 @@ namespace Grand.Services.Orders
 
             var filter = builder.Where(o => !o.Deleted);
             var filterItem = builderItem.Where(x => true);
-
+            if (!String.IsNullOrEmpty(vendorId))
+            {
+                filterItem = filterItem & builderItem.Where(x => x.OrderItems.VendorId == vendorId);
+            }
 
             if (!String.IsNullOrEmpty(storeId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
