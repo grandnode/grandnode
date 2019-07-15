@@ -207,7 +207,7 @@ namespace Grand.Services.Orders
             details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
             details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
             details.CustomerLanguage = await _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
-
+            
             if (details.InitialOrder.BillingAddress == null)
                 throw new GrandException("Billing address is not available");
 
@@ -394,6 +394,7 @@ namespace Grand.Services.Orders
                 CheckoutAttributeDescription = details.CheckoutAttributeDescription,
                 CheckoutAttributesXml = details.CheckoutAttributesXml,
                 CustomerCurrencyCode = details.CustomerCurrencyCode,
+                PrimaryCurrencyCode = details.PrimaryCurrencyCode,
                 CurrencyRate = details.CustomerCurrencyRate,
                 AffiliateId = details.AffiliateId,
                 OrderStatus = OrderStatus.Pending,
@@ -457,6 +458,7 @@ namespace Grand.Services.Orders
             details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
             var primaryStoreCurrency = await _currencyService.GetPrimaryStoreCurrency();
             details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
+            details.PrimaryCurrencyCode = primaryStoreCurrency.CurrencyCode;
 
             //customer language
             details.CustomerLanguage = await _languageService.GetLanguageById(await details.Customer.GetAttribute<string>(

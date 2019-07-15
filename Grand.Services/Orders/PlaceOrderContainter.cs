@@ -24,6 +24,7 @@ namespace Grand.Services.Orders
         public TaxDisplayType CustomerTaxDisplayType { get; set; }
         public string CustomerCurrencyCode { get; set; }
         public decimal CustomerCurrencyRate { get; set; }
+        public string PrimaryCurrencyCode { get; set; }
 
         public Address BillingAddress { get; set; }
         public Address ShippingAddress { get; set; }

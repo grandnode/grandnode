@@ -72,6 +72,11 @@ namespace Grand.Core.Domain.Orders
         public string CustomerCurrencyCode { get; set; }
 
         /// <summary>
+        /// Gets or sets the primary currency code (at the moment of order placing)
+        /// </summary>
+        public string PrimaryCurrencyCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the currency rate
         /// </summary>
         [BsonRepresentation(BsonType.Decimal128, AllowTruncation = true)]

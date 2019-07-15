@@ -380,7 +380,11 @@ namespace Grand.Web.Areas.Admin.Services
 
             #region Order totals
 
-            var primaryStoreCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await _currencyService.GetCurrencyByCode(order.PrimaryCurrencyCode);
+
+            if (primaryStoreCurrency == null)
+                primaryStoreCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
 
@@ -414,9 +418,8 @@ namespace Grand.Web.Areas.Admin.Services
             model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
             model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
 
-
             //tax
-            model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
+            model.Tax = await _priceFormatter.FormatPrice(order.OrderTax, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
             SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
             bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
             bool displayTax = !displayTaxRates;
@@ -424,7 +427,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 model.TaxRates.Add(new OrderModel.TaxRate {
                     Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                    Value = _priceFormatter.FormatPrice(tr.Value, true, false),
+                    Value = await _priceFormatter.FormatPrice(tr.Value, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage),
                 });
             }
             model.DisplayTaxRates = displayTaxRates;
@@ -434,7 +437,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //discount
             if (order.OrderDiscount > 0)
-                model.OrderTotalDiscount = _priceFormatter.FormatPrice(-order.OrderDiscount, true, false);
+                model.OrderTotalDiscount = await _priceFormatter.FormatPrice(-order.OrderDiscount, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
             model.OrderTotalDiscountValue = order.OrderDiscount;
 
             //gift cards
@@ -445,7 +448,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     model.GiftCards.Add(new OrderModel.GiftCard {
                         CouponCode = giftCard.GiftCardCouponCode,
-                        Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
+                        Amount = await _priceFormatter.FormatPrice(-gcuh.UsedValue, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage),
                     });
                 }
             }
@@ -454,18 +457,18 @@ namespace Grand.Web.Areas.Admin.Services
             if (order.RedeemedRewardPointsEntry != null)
             {
                 model.RedeemedRewardPoints = -order.RedeemedRewardPointsEntry.Points;
-                model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-order.RedeemedRewardPointsEntry.UsedAmount, true, false);
+                model.RedeemedRewardPointsAmount = await _priceFormatter.FormatPrice(-order.RedeemedRewardPointsEntry.UsedAmount, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
             }
 
             //total
-            model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+            model.OrderTotal = await _priceFormatter.FormatPrice(order.OrderTotal, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
             model.OrderTotalValue = order.OrderTotal;
             model.CurrencyRate = order.CurrencyRate;
             model.CurrencyCode = order.CustomerCurrencyCode;
 
             //refunded amount
             if (order.RefundedAmount > decimal.Zero)
-                model.RefundedAmount = _priceFormatter.FormatPrice(order.RefundedAmount, true, false);
+                model.RefundedAmount = await _priceFormatter.FormatPrice(order.RefundedAmount, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
 
             //used discounts
             var duh = await _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
@@ -485,7 +488,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (_workContext.CurrentVendor == null)
             {
                 var profit = await _orderReportService.ProfitReport(orderId: order.Id);
-                model.Profit = _priceFormatter.FormatPrice(profit, true, false);
+                model.Profit = await _priceFormatter.FormatPrice(profit, true, primaryStoreCurrency.CurrencyCode, false, _workContext.WorkingLanguage);
             }
 
             #endregion

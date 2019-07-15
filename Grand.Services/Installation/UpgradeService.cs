@@ -17,6 +17,7 @@ using Grand.Core.Domain.Topics;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -705,6 +706,18 @@ namespace Grand.Services.Installation
 
             var dbContext = _serviceProvider.GetRequiredService<IMongoDatabase>();
             await dbContext.GetCollection<object>(typeof(Topic).Name).UpdateManyAsync(new BsonDocument(), renameFields);
+
+            #endregion
+
+            #region Update order - primary currency code
+
+            var pc = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryStoreCurrency();
+            var updateOrder = Builders<Order>.Update
+               .Set(x => x.PrimaryCurrencyCode, pc.CurrencyCode);
+
+            var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
+
+            await orderRepository.Collection.UpdateOneAsync(new BsonDocument(), updateOrder);
 
             #endregion
 
