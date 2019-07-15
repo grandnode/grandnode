@@ -673,7 +673,7 @@ namespace Grand.Web.Services
                 }
                 if (featuredProducts != null)
                 {
-                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
+                    item.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
                 }
             }
 

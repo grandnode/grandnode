@@ -1697,7 +1697,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
         {
@@ -1711,7 +1711,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
         {
@@ -1733,7 +1733,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRecommended(int? productThumbPictureSize)
         {
@@ -1749,7 +1749,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             //prepare model
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsPersonalized(int? productThumbPictureSize)
         {
@@ -1782,7 +1782,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             //prepare model
-            return (await PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsCrossSell(int? productThumbPictureSize, int count)
         {
@@ -1801,7 +1801,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             return (await PrepareProductOverviewModels(products,
-                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)
                 ).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRelated(string productId, int? productThumbPictureSize)
@@ -1821,7 +1821,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize)
         {
@@ -1840,7 +1840,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel)
         {
@@ -1877,7 +1877,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
     }
 }
