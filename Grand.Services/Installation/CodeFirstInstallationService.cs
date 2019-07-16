@@ -4111,6 +4111,14 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crVendors);
 
+            var crStaff = new CustomerRole {
+                Name = "Staff",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Staff,
+            };
+            await _customerRoleRepository.InsertAsync(crStaff);
+
             //admin user
             var adminUser = new Customer
             {

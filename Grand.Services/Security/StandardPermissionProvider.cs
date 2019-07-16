@@ -257,9 +257,26 @@ namespace Grand.Services.Security
                     {
                         AccessAdminPanel,
                         ManageProducts,
+                        ManageFiles,
                         ManageOrders,
                         ManageVendorReviews,
                         ManageShipments
+                    }
+                },
+                new DefaultPermissionRecord
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.Staff,
+                    PermissionRecords = new[]
+                    {
+                        AccessAdminPanel,
+                        ManageProducts,
+                        ManageFiles,
+                        ManageCategories,
+                        ManageManufacturers,
+                        ManageOrders,
+                        ManageShipments,
+                        ManageReturnRequests,
+                        ManageReports
                     }
                 }
             };

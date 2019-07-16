@@ -830,7 +830,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //ensure that a customer in the Vendors role has a vendor account associated.
             //otherwise, he will have access to ALL products
-            if (customer.IsVendor() && !String.IsNullOrEmpty(customer.VendorId))
+            if (customer.IsVendor() && string.IsNullOrEmpty(customer.VendorId))
             {
                 var vendorRole = customer
                     .CustomerRoles
@@ -839,7 +839,17 @@ namespace Grand.Web.Areas.Admin.Services
                 vendorRole.CustomerId = customer.Id;
                 await _customerService.DeleteCustomerRoleInCustomer(vendorRole);
             }
-
+            //ensure that a customer in the Staff role has a staff account associated.
+            //otherwise, he will have access to ALL products
+            if (customer.IsStaff() && string.IsNullOrEmpty(customer.StaffStoreId))
+            {
+                var staffRole = customer
+                    .CustomerRoles
+                    .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Staff);
+                customer.CustomerRoles.Remove(staffRole);
+                staffRole.CustomerId = customer.Id;
+                await _customerService.DeleteCustomerRoleInCustomer(staffRole);
+            }
             //tags
             await SaveCustomerTags(customer, ParseCustomerTags(model.CustomerTags));
 
@@ -1012,6 +1022,14 @@ namespace Grand.Web.Areas.Admin.Services
             if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.VendorId))
             {
                 customer.VendorId = "";
+                await _customerService.UpdateCustomerinAdminPanel(customer);
+            }
+
+            //ensure that a customer with a staff associated is not in "Administrators" role
+            //otherwise, he won't have access to the other functionality in admin area
+            if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.StaffStoreId))
+            {
+                customer.StaffStoreId = "";
                 await _customerService.UpdateCustomerinAdminPanel(customer);
             }
 

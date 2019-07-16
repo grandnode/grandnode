@@ -721,6 +721,18 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Insert new system customer role - staff
+
+            var crStaff = new CustomerRole {
+                Name = "Staff",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Staff,
+            };
+            await _serviceProvider.GetRequiredService<IRepository<CustomerRole>>().InsertAsync(crStaff);
+
+            #endregion
+
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();

@@ -617,4 +617,7 @@
   <LocaleResource Name="pushnotifications.message.fields.text">
     <Value>Message content</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated">
+    <Value>A customer in the Staff role should have a staff account associated.</Value>
+  </LocaleResource>
 </Language>

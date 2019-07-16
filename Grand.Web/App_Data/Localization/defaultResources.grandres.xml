@@ -11454,6 +11454,9 @@
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated">
     <Value>A customer in the Vendors role should have a vendor account associated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated">
+    <Value>A customer in the Staff role should have a staff account associated.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CurrentShoppingCart">
     <Value>Current shopping cart</Value>
   </LocaleResource>
