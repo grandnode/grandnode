@@ -19,11 +19,13 @@
 
   <ItemGroup>
     <PackageReference Include="Braintree" Version="4.12.0" />
+    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   
   <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
     <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Braintree'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" 
+                               Condition="'%(Filename)' != 'Braintree' AND '%(Filename)' != 'System.Xml.XPath.XmlDocument'" />
     </ItemGroup>
   </Target>
   
