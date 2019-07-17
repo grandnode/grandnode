@@ -32,12 +32,12 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Development status ## 
 
-The latest stable version is 4.40
-Active development version: 4.50 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+The latest stable version is 4.50
+Active development version: 4.60 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
-[Roadmap for 4.50](https://github.com/grandnode/grandnode/projects/3)
+[Roadmap for 4.60](https://github.com/grandnode/grandnode/projects/4)
 
-[Tickets linked to 4.50](https://github.com/grandnode/grandnode/issues)
+[Tickets linked to 4.60](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
 
@@ -71,12 +71,12 @@ And that's all, you are GrandNode official contributor!
 ##### Frontend:
 [http://demo.grandnode.com/](http://demo.grandnode.com/)
 
-[![ScreenShot](http://grandnode.com/content/images/uploaded/demograndnodefront.gif)](http://demo.grandnode.com/)
+[![ScreenShot](http://grandnode.com/content/images/uploaded/grandnode_homepage.JPG)](http://demo.grandnode.com/)
 
 ##### Backend:
 [http://demo.grandnode.com/login?ReturnUrl=%2fadmin](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
-[![ScreenShot](https://grandnode.com/content/images/uploaded/adminpanel.gif)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[![ScreenShot](https://grandnode.com/content/images/uploaded/grandnode_backend.JPG)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
 Demo is restoring every hour to the original state.
 
@@ -86,7 +86,7 @@ Admin password: 123456
 
 ## License ##
 
-GrandNode open source edition is licensed under GrandNode Public License Version 3.0. It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE.md).
+GrandNode open source edition is licensed under GrandNode Public License Version 3.0 (GPL v3). It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE.md).
 
 ## Additional tools ##
 Cross-browser support is tested by ![Browserstack Logo](https://grandnode.com/content/images/uploaded/browserstack-logo-small.png)  
