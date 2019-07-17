@@ -20,15 +20,15 @@ Please note that if you use grandnode/develop, Docker will pull the newest image
 
 GrandNode Site: [https://grandnode.com](https://grandnode.com)
 
-GrandNode demo store: [http://www.demo.grandnode.com/](http://www.demo.grandnode.com/)
+GrandNode demo store: [https://www.demo.grandnode.com/](https://www.demo.grandnode.com/)
 
-Complete feature list: [http://www.grandnode.com/features](http://www.grandnode.com/features)
+Complete feature list: [https://www.grandnode.com/features](https://www.grandnode.com/features)
 
-System Requirements: [http://grandnode.com/system-requirements](http://grandnode.com/system-requirements)
+System Requirements: [https://grandnode.com/system-requirements](https://grandnode.com/system-requirements)
 
 Documentation: [http://www.docs.grandnode.com](http://www.docs.grandnode.com)
 
-Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
+Forums: [https://www.grandnode.com/boards/](https://www.grandnode.com/boards/)
 
 ## Development status ## 
 
@@ -69,14 +69,14 @@ And that's all, you are GrandNode official contributor!
 ## Store demo: ##
 
 ##### Frontend:
-[http://demo.grandnode.com/](http://demo.grandnode.com/)
+[https://demo.grandnode.com/](https://demo.grandnode.com/)
 
-[![ScreenShot](http://grandnode.com/content/images/uploaded/grandnode_homepage.JPG)](http://demo.grandnode.com/)
+[![ScreenShot](http://grandnode.com/content/images/uploaded/grandnode_homepage.JPG)](https://demo.grandnode.com/)
 
 ##### Backend:
-[http://demo.grandnode.com/login?ReturnUrl=%2fadmin](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[https://demo.grandnode.com/admin](https://demo.grandnode.com/admin)
 
-[![ScreenShot](https://grandnode.com/content/images/uploaded/grandnode_backend.JPG)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[![ScreenShot](https://grandnode.com/content/images/uploaded/grandnode_backend.JPG)](https://demo.grandnode.com/admin)
 
 Demo is restoring every hour to the original state.
 
