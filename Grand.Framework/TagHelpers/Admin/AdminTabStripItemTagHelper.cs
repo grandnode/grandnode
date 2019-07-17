@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Framework.TagHelpers.Admin
 {
-    [HtmlTargetElement("tabstrip-item", ParentTag = "items")]
+    [HtmlTargetElement("tabstrip-item")]
     public partial class AdminTabStripItemTagHelper : TagHelper
     {
         [ViewContext]
