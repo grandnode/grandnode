@@ -46,7 +46,10 @@
                 {
                     <div class="carousel-item wide-img with-bg">
                         <a href="@item.Link">
-                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
+                            <picture>
+                                <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
+                                <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Name" title="" />
+                            </picture>
                         </a>
                         <div class="carousel-caption d-none d-md-block">
                             @Html.Raw(item.Description)
@@ -57,13 +60,15 @@
                 {
                     <div class="carousel-item no-wide-img with-bg">
                         <div class="container">
-                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
+                            <picture>
+                                <source media="(max-width: 767px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
+                                <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Name">
+                            </picture>
                             <div class="carousel-caption container d-none d-md-block">
                                 @Html.Raw(item.Description)
                             </div>
                         </div>
                     </div>
-
                 }
             }
         }
