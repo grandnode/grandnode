@@ -68,8 +68,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 vendorId = model.SearchVendorId;
             }
-            else
-                return AccessDeniedView();
 
             model.SearchVendorId = vendorId;
             var (vendorReviewModels, totalCount) = await _vendorViewModelService.PrepareVendorReviewModel(model, command.Page, command.PageSize);
