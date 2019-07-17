@@ -236,7 +236,7 @@ namespace Grand.Services.Tax
             if (result == decimal.Zero)
                 return 0;
 
-            return result;
+            return Math.Round(result, 2);
         }
 
         /// <summary>
