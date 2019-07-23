@@ -60,7 +60,7 @@
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-            <div class="manufactureGrid">
+            <div class="product-grid manufactureGrid">
                 <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
@@ -73,7 +73,7 @@
         }
         else
         {
-            <div class="row">
+            <div class="product-grid row">
                 <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
@@ -88,9 +88,9 @@
     }
     @if (!pager.IsEmpty())
     {
-        <div class="pager">
-            @pager
-        </div>
+            <nav aria-label="Page navigation">
+                @pager
+            </nav>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
 </div>
