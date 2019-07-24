@@ -2,7 +2,7 @@
 FriendlyName: Fixed tax rate provider
 SystemName: Tax.FixedRate
 Version: 1.14
-SupportedVersions: 4.50
+SupportedVersions: 4.60
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Tax.FixedRate.dll

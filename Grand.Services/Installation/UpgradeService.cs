@@ -47,7 +47,7 @@ namespace Grand.Services.Installation
         private const string version_430 = "4.30";
         private const string version_440 = "4.40";
         private const string version_450 = "4.50";
-
+        private const string version_460 = "4.60";
         #endregion
 
         #region Ctor
@@ -740,7 +740,12 @@ namespace Grand.Services.Installation
 
             #endregion
         }
-
+        private async Task From450To460()
+        {
+            #region Install String resources
+            await InstallStringResources("EN_450_460.nopres.xml");
+            #endregion
+        }
         private async Task InstallStringResources(string filenames)
         {
             //'English' language            
