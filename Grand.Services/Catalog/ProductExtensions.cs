@@ -140,6 +140,8 @@ namespace Grand.Services.Catalog
                                     default:
                                         break;
                                 }
+                                if(!combination.AllowOutOfStockOrders)
+                                    stockMessage = localizationService.GetResource("Products.Availability.Attributes.OutOfStock");
                             }
                         }
                         else
