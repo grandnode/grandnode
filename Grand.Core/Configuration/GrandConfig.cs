@@ -22,11 +22,6 @@ namespace Grand.Core.Configuration
         public bool ClearPluginShadowDirectoryOnStartup { get; set; }
 
         /// <summary>
-        /// Path to database with user agent strings
-        /// </summary>
-        public string UserAgentStringsPath { get; set; }
-
-        /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
         public bool RedisCachingEnabled { get; set; }
@@ -34,13 +29,6 @@ namespace Grand.Core.Configuration
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; set; }
-
-
-        /// <summary>
-        /// A value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
-        /// Do not enable it if you run on Azure but use one instance only
-        /// </summary>
-        public bool MultipleInstancesEnabled { get; set; }
 
         /// <summary>
         /// A value indicating whether the site is run on Windows Azure Web Apps
