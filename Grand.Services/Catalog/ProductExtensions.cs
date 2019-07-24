@@ -123,13 +123,23 @@ namespace Grand.Services.Catalog
                                     //display "in stock" without stock quantity
                                     localizationService.GetResource("Products.Availability.InStock");
                             }
-                            else if (combination.AllowOutOfStockOrders)
-                            {
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                            }
                             else
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                //out of stock
+                                switch (product.BackorderMode)
+                                {
+                                    case BackorderMode.NoBackorders:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.OutOfStock");
+                                        break;
+                                    case BackorderMode.AllowQtyBelow0:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.InStock");
+                                        break;
+                                    case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.Backordering");
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                         else

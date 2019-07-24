@@ -1,2 +1,11 @@
 <Language>
+  <LocaleResource Name="Products.Availability.Attributes.OutOfStock">
+    <Value>Out of stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.Attributes.InStock">
+    <Value>In stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.Attributes.Backordering">
+    <Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
+  </LocaleResource>
 </Language>
