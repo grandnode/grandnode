@@ -2,6 +2,7 @@
 using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
+using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -414,7 +415,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var fileType = "file";
 
             fileExtension = fileExtension.ToLower();
-            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif")
+            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".bmp" || fileExtension == ".webp")
                 fileType = "image";
 
             if (fileExtension == ".swf" || fileExtension == ".flv")
@@ -553,7 +554,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         using (var stream = new FileStream(file.FullName, FileMode.Open))
                         {
-                            using (var image = Image.FromStream(stream))
+                            using (var image = new MagickImage(stream))
                             {
                                 width = image.Width;
                                 height = image.Height;
