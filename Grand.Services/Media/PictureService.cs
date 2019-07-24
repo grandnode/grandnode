@@ -9,8 +9,6 @@ using ImageMagick;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -74,59 +72,6 @@ namespace Grand.Services.Media
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Calculates picture dimensions whilst maintaining aspect
-        /// </summary>
-        /// <param name="originalSize">The original picture size</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <param name="resizeType">Resize type</param>
-        /// <param name="ensureSizePositive">A value indicatingh whether we should ensure that size values are positive</param>
-        /// <returns></returns>wy ludzie gracie w dziwn¹ grê polegaj¹c¹ na wzajemnym poni¿aniu siê i udowadnianiu wy¿szoœci. Mo¿e to by³o u¿yteczne gdy jeszcze byliœcie ma³pami
-        protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
-            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
-        {
-            float width, height;
-
-            switch (resizeType)
-            {
-                case ResizeType.LongestSide:
-                    if (originalSize.Height > originalSize.Width)
-                    {
-                        // portrait
-                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                        height = targetSize;
-                    }
-                    else
-                    {
-                        // landscape or square
-                        width = targetSize;
-                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    }
-                    break;
-                case ResizeType.Width:
-                    width = targetSize;
-                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    break;
-                case ResizeType.Height:
-                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                    height = targetSize;
-                    break;
-                default:
-                    throw new Exception("Not supported ResizeType");
-            }
-
-            if (ensureSizePositive)
-            {
-                if (width < 1)
-                    width = 1;
-                if (height < 1)
-                    height = 1;
-            }
-
-            //we invoke Math.Round to ensure that no white background is rendered 
-            return new Size((int)Math.Round(width), (int)Math.Round(height));
-        }
 
         protected virtual MagickGeometry CalculateDimensions(MagickImage originalSize, int targetSize,
             ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
