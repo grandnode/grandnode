@@ -1344,8 +1344,8 @@ namespace Grand.Web.Services
                     }
                 }
             }
-
-            if (_catalogSettings.ShowBlogPostsInSearchAutoComplete)
+            
+            if (_blogSettings.ShowBlogPostsInSearchAutoComplete)
             {
                 var posts = await _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
                 foreach (var item in posts)

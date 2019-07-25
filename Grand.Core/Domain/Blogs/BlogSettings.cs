@@ -48,5 +48,11 @@ namespace Grand.Core.Domain.Blogs
         /// Gets or sets a value the maximum size of the text on home page
         /// </summary>
         public int MaxTextSizeHomePage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show blog posts in the auto complete search
+        /// </summary>
+        public bool ShowBlogPostsInSearchAutoComplete { get; set; }
+
     }
 }

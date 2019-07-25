@@ -248,11 +248,7 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to show blog posts in the auto complete search
-        /// </summary>
-        public bool ShowBlogPostsInSearchAutoComplete { get; set; }
-
+       
         /// <summary>
         /// Gets or sets a minimum search term length
         /// </summary>
