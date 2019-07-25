@@ -19281,6 +19281,9 @@
   <LocaleResource Name="Products.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Warehouse">
+    <Value>Please select warehouse</Value>
+  </LocaleResource>
   <LocaleResource Name="Profile.Country">
     <Value>Country</Value>
   </LocaleResource>
@@ -19811,6 +19814,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.RequiredProductWarning">
     <Value>This product requires the following product is added to the cart: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.RequiredWarehouse">
+    <Value>Warehouse is required</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation">
     <Value>Reservation</Value>

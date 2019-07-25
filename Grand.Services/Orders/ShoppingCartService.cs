@@ -356,6 +356,13 @@ namespace Grand.Services.Orders
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
             }
 
+            if(_shoppingCartSettings.AllowToSelectWarehouse && string.IsNullOrEmpty(shoppingCartItem.WarehouseId))
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.RequiredWarehouse"));
+            }
+
+            var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+
             var validateOutOfStock = shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart || !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
             if (validateOutOfStock && !hasQtyWarnings)
             {
@@ -370,7 +377,7 @@ namespace Grand.Services.Orders
                         {
                             if (product.BackorderMode == BackorderMode.NoBackorders)
                             {
-                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
+                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: warehouseId);
                                 if (maximumQuantityCanBeAdded < shoppingCartItem.Quantity)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)
@@ -391,7 +398,7 @@ namespace Grand.Services.Orders
                                 {
                                     if (p1.BackorderMode == BackorderMode.NoBackorders)
                                     {
-                                        int maximumQuantityCanBeAdded = p1.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
+                                        int maximumQuantityCanBeAdded = p1.GetTotalStockQuantity(warehouseId: warehouseId);
                                         if (maximumQuantityCanBeAdded < _qty)
                                         {
                                             warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
@@ -408,7 +415,7 @@ namespace Grand.Services.Orders
                             {
                                 //combination exists
                                 //let's check stock level
-                                var stockquantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
+                                var stockquantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: warehouseId);
                                 if (!combination.AllowOutOfStockOrders && stockquantity < shoppingCartItem.Quantity)
                                 {
                                     int maximumQuantityCanBeAdded = stockquantity;
@@ -1042,6 +1049,7 @@ namespace Grand.Services.Orders
         public virtual async Task<ShoppingCartItem> FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             string productId,
+            string warehouseId = null,
             string attributesXml = "",
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null,
@@ -1052,7 +1060,7 @@ namespace Grand.Services.Orders
 
             foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
-                if (sci.ProductId == productId)
+                if (sci.ProductId == productId && sci.WarehouseId == warehouseId)
                 {
                     //attributes
                     var _product = await _productService.GetProductById(sci.ProductId);
@@ -1115,7 +1123,7 @@ namespace Grand.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> AddToCart(Customer customer, string productId,
-            ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
+            ShoppingCartType shoppingCartType, string storeId, string warehouseId = null, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
@@ -1128,7 +1136,7 @@ namespace Grand.Services.Orders
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            if (String.IsNullOrEmpty(productId))
+            if (string.IsNullOrEmpty(productId))
                 throw new ArgumentNullException("product");
 
             var warnings = new List<string>();
@@ -1217,7 +1225,7 @@ namespace Grand.Services.Orders
                 .ToList();
 
             var shoppingCartItem = await FindShoppingCartItemInTheCart(cart,
-                shoppingCartType, productId, attributesXml, customerEnteredPrice,
+                shoppingCartType, productId, warehouseId, attributesXml, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
             if (shoppingCartItem != null && product.ProductType != ProductType.Reservation)
@@ -1245,6 +1253,7 @@ namespace Grand.Services.Orders
                 {
                     ShoppingCartType = shoppingCartType,
                     StoreId = storeId,
+                    WarehouseId = warehouseId,
                     ProductId = productId,
                     AttributesXml = attributesXml,
                     CustomerEnteredPrice = customerEnteredPrice,
@@ -1346,7 +1355,7 @@ namespace Grand.Services.Orders
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         public virtual async Task<IList<string>> UpdateShoppingCartItem(Customer customer,
-            string shoppingCartItemId, string attributesXml,
+            string shoppingCartItemId, string warehouseId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "")
@@ -1368,6 +1377,7 @@ namespace Grand.Services.Orders
                 {
                     var product = await _productService.GetProductById(shoppingCartItem.ProductId);
                     shoppingCartItem.Quantity = quantity;
+                    shoppingCartItem.WarehouseId = warehouseId;
                     shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
                     shoppingCartItem.RentalStartDateUtc = rentalStartDate;
@@ -1421,7 +1431,7 @@ namespace Grand.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                await AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId,
+                await AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId, sci.WarehouseId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.ReservationId, sci.Parameter, sci.Duration);
             }

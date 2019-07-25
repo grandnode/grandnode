@@ -1235,6 +1235,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
             var update = Builders<Customer>.Update
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).WarehouseId, shoppingCartItem.WarehouseId)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Quantity, shoppingCartItem.Quantity)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).AdditionalShippingChargeProduct, shoppingCartItem.AdditionalShippingChargeProduct)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).IsFreeShipping, shoppingCartItem.IsFreeShipping)

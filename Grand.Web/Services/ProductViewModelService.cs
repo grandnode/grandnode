@@ -81,6 +81,7 @@ namespace Grand.Web.Services
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public ProductViewModelService(IPermissionService permissionService, IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService, IProductService productService, IPriceCalculationService priceCalculationService,
@@ -92,44 +93,45 @@ namespace Grand.Web.Services
             IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService, IProductReservationService productReservationService,
             IServiceProvider serviceProvider,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings)
+            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, ShoppingCartSettings shoppingCartSettings)
         {
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._priceCalculationService = priceCalculationService;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._measureService = measureService;
-            this._cacheManager = cacheManager;
-            this._pictureService = pictureService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._webHelper = webHelper;
-            this._productTemplateService = productTemplateService;
-            this._productAttributeParser = productAttributeParser;
-            this._shippingService = shippingService;
-            this._vendorService = vendorService;
-            this._categoryService = categoryService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._productTagService = productTagService;
-            this._productAttributeService = productAttributeService;
-            this._manufacturerService = manufacturerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._workflowMessageService = workflowMessageService;
-            this._productReservationService = productReservationService;
-            this._serviceProvider = serviceProvider;
-            this._mediaSettings = mediaSettings;
-            this._catalogSettings = catalogSettings;
-            this._seoSettings = seoSettings;
-            this._vendorSettings = vendorSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
-            this._localizationSettings = localizationSettings;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _productService = productService;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _currencyService = currencyService;
+            _priceFormatter = priceFormatter;
+            _measureService = measureService;
+            _cacheManager = cacheManager;
+            _pictureService = pictureService;
+            _specificationAttributeService = specificationAttributeService;
+            _webHelper = webHelper;
+            _productTemplateService = productTemplateService;
+            _productAttributeParser = productAttributeParser;
+            _shippingService = shippingService;
+            _vendorService = vendorService;
+            _categoryService = categoryService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _productTagService = productTagService;
+            _productAttributeService = productAttributeService;
+            _manufacturerService = manufacturerService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _workflowMessageService = workflowMessageService;
+            _productReservationService = productReservationService;
+            _serviceProvider = serviceProvider;
+            _mediaSettings = mediaSettings;
+            _catalogSettings = catalogSettings;
+            _seoSettings = seoSettings;
+            _vendorSettings = vendorSettings;
+            _customerSettings = customerSettings;
+            _captchaSettings = captchaSettings;
+            _localizationSettings = localizationSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         public virtual async Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModels(
@@ -634,7 +636,7 @@ namespace Grand.Web.Services
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
+                StockAvailability = product.FormatStockMessage("", updatecartitem != null ? updatecartitem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId, _localizationService, _productAttributeParser),
                 GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage =
@@ -651,6 +653,23 @@ namespace Grand.Web.Services
                 model.MetaDescription = model.ShortDescription;
             }
 
+            //warehouse
+            model.AllowToSelectWarehouse = _shoppingCartSettings.AllowToSelectWarehouse;
+            if (model.AllowToSelectWarehouse)
+            {
+                foreach (var warehouse in await _shippingService.GetAllWarehouses())
+                {
+                    var productwarehouse = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                    model.ProductWarehouses.Add(new ProductDetailsModel.ProductWarehouseModel {
+                        Use = productwarehouse != null,
+                        StockQuantity = productwarehouse?.StockQuantity ?? 0,
+                        ReservedQuantity = productwarehouse?.ReservedQuantity ?? 0,
+                        WarehouseId = warehouse.Id,
+                        Name = warehouse.Name,
+                        Selected = updatecartitem != null && updatecartitem?.WarehouseId == warehouse.Id
+                    });
+                }
+            }
             //shipping info
             model.IsShipEnabled = product.IsShipEnabled;
             if (product.IsShipEnabled)
@@ -1543,6 +1562,8 @@ namespace Grand.Web.Services
 
             string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
 
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
@@ -1575,7 +1596,7 @@ namespace Grand.Web.Services
                 model.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock
-            model.StockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _storeContext);
+            model.StockAvailability = product.FormatStockMessage(warehouseId, attributeXml, _localizationService, _productAttributeParser);
 
             //back in stock subscription
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&

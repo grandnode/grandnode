@@ -60,6 +60,8 @@ namespace Grand.Web.Models.ShoppingCart
             public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
+            public string WarehouseId { get; set; }
+            public string WarehouseName { get; set; }
             public string UnitPriceWithoutDiscount { get; set; }
             public decimal UnitPriceWithoutDiscountValue { get; set; }
             public string UnitPrice { get; set; }

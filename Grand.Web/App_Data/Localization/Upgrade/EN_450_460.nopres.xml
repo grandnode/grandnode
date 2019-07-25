@@ -8,4 +8,10 @@
   <LocaleResource Name="Products.Availability.Attributes.Backordering">
     <Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Warehouse">
+    <Value>Please select warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.RequiredWarehouse">
+    <Value>Warehouse is required</Value>
+  </LocaleResource>
 </Language>

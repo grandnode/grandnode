@@ -395,6 +395,7 @@ namespace Grand.Web.Services
                     Id = sci.Id,
                     Sku = product.FormatSku(sci.AttributesXml, _productAttributeParser),
                     ProductId = product.Id,
+                    WarehouseId = sci.WarehouseId,
                     ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id),
                     Quantity = sci.Quantity,
@@ -415,6 +416,10 @@ namespace Grand.Web.Services
                 //1. do other items require this one?
                 if (product.RequireOtherProducts)
                     cartItemModel.DisableRemoval = product.RequireOtherProducts && product.ParseRequiredProductIds().Intersect(cart.Select(x => x.ProductId)).Any();
+
+                //warehouse
+                if (!string.IsNullOrEmpty(cartItemModel.WarehouseId))
+                    cartItemModel.WarehouseName = (await _shippingService.GetWarehouseById(cartItemModel.WarehouseId))?.Name;
 
                 //allowed quantities
                 var allowedQuantities = product.ParseAllowedQuantities();

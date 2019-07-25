@@ -3056,7 +3056,7 @@ namespace Grand.Services.Orders
                     if (product != null && product.ProductType == ProductType.SimpleProduct)
                     {
                         await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
-                            ShoppingCartType.ShoppingCart, order.StoreId,
+                            ShoppingCartType.ShoppingCart, order.StoreId, orderItem.WarehouseId,
                             orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                             orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                             orderItem.Quantity, false);
