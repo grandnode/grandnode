@@ -7,7 +7,6 @@ using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
-using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -783,10 +782,10 @@ namespace Grand.Services.Customers
             }
         }
 
-        public virtual async Task AddOrder(Order order, Customer customer)
+        public virtual async Task AddOrder(Order order, CustomerActionTypeEnum customerActionType)
         {
             var actiontypes = await GetAllCustomerActionType();
-            var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
+            var actionType = actiontypes.Where(x => x.SystemKeyword == customerActionType.ToString()).FirstOrDefault();
             if (actionType.Enabled)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
@@ -799,6 +798,7 @@ namespace Grand.Services.Customers
                 {
                     if (!UsedAction(item.Id, order.CustomerId))
                     {
+                        var customer = await _customerService.GetCustomerById(order.CustomerId);
                         foreach (var orderItem in order.OrderItems)
                         {
                             var product = await _productService.GetProductById(orderItem.ProductId);

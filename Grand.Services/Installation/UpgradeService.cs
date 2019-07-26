@@ -743,7 +743,22 @@ namespace Grand.Services.Installation
         private async Task From450To460()
         {
             #region Install String resources
+
             await InstallStringResources("EN_450_460.nopres.xml");
+
+            #endregion
+
+            #region Add new customer action - paid order
+
+            var customerActionType = _serviceProvider.GetRequiredService<IRepository<CustomerActionType>>();
+            await customerActionType.InsertAsync(
+            new CustomerActionType() {
+                Name = "Paid order",
+                SystemKeyword = "PaidOrder",
+                Enabled = false,
+                ConditionType = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
+            });
+
             #endregion
         }
         private async Task InstallStringResources(string filenames)

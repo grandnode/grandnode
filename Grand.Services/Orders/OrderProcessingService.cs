@@ -1395,6 +1395,9 @@ namespace Grand.Services.Orders
             //raise event
             await _mediator.Publish(new OrderPaidEvent(order));
 
+            //customer action event service - paid order
+            await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.PaidOrder);
+
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
             {
@@ -1741,7 +1744,8 @@ namespace Grand.Services.Orders
                     //raise event       
                     await _mediator.Publish(new OrderPlacedEvent(order));
 
-                    await _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
+                    //cutomer action - add order
+                    await _customerActionEventService.AddOrder(order, CustomerActionTypeEnum.AddOrder);
 
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
