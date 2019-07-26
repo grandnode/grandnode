@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Grand.Core.Domain.Directory;
+﻿using Grand.Core.Domain.Directory;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using Grand.Plugin.Shipping.ByWeight.Models;
 using Grand.Plugin.Shipping.ByWeight.Services;
@@ -12,13 +13,11 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
-using Grand.Framework.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Grand.Plugin.Shipping.ByWeight.Controllers
@@ -101,11 +100,10 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             var records = await _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
 
             var sbwModel = new List<ShippingByWeightModel>();
-            foreach (var x in sbwModel)
+            foreach (var x in records)
             {
 
-                var m = new ShippingByWeightModel
-                {
+                var m = new ShippingByWeightModel {
                     Id = x.Id,
                     StoreId = x.StoreId,
                     WarehouseId = x.WarehouseId,
@@ -155,8 +153,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
                 sbwModel.Add(m);
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = sbwModel,
                 Total = records.TotalCount
             };
@@ -220,8 +217,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            var sbw = new ShippingByWeightRecord
-            {
+            var sbw = new ShippingByWeightRecord {
                 StoreId = model.StoreId,
                 WarehouseId = model.WarehouseId,
                 CountryId = model.CountryId,
@@ -253,8 +249,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 //No record found with the specified id
                 return RedirectToAction("Configure");
 
-            var model = new ShippingByWeightModel
-            {
+            var model = new ShippingByWeightModel {
                 Id = sbw.Id,
                 StoreId = sbw.StoreId,
                 WarehouseId = sbw.WarehouseId,
