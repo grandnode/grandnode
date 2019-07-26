@@ -750,9 +750,9 @@ namespace Grand.Services.Orders
                     attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
 
                 var itemWeight = await _shippingService.GetShoppingCartItemWeight(sc);
-
-                var warehouseId = _storeContext.CurrentStore.DefaultWarehouseId;
-                if (!product.UseMultipleWarehouses)
+                
+                var warehouseId = !string.IsNullOrEmpty(sc.WarehouseId) ? sc.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+                if (!product.UseMultipleWarehouses && string.IsNullOrEmpty(warehouseId))
                 {
                     if (!string.IsNullOrEmpty(product.WarehouseId))
                     {

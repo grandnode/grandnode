@@ -14,4 +14,7 @@
   <LocaleResource Name="ShoppingCart.RequiredWarehouse">
     <Value>Warehouse is required</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.WarehouseNotExists">
+    <Value>Warehouse not exists</Value>
+  </LocaleResource>
 </Language>
