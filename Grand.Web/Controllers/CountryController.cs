@@ -1,16 +1,16 @@
 ﻿using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
     public partial class CountryController : BasePublicController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly ICountryViewModelService _countryViewModelService;
         private readonly ILocalizationService _localizationService;
@@ -20,9 +20,9 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public CountryController(ICountryViewModelService countryViewModelService, ILocalizationService localizationService)
-		{
-            this._countryViewModelService = countryViewModelService;
-            this._localizationService = localizationService;
+        {
+            _countryViewModelService = countryViewModelService;
+            _localizationService = localizationService;
 
         }
 
@@ -35,9 +35,9 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             //this action method gets called via an ajax request
-            if (String.IsNullOrEmpty(countryId))
+            if (string.IsNullOrEmpty(countryId))
             {
-                return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
+                return Json(new List<StateProvinceModel>() { new StateProvinceModel { id = "", name = _localizationService.GetResource("Address.SelectState") } });
             }
             var model = await _countryViewModelService.PrepareModel(countryId, addSelectStateItem);
             return Json(model);
