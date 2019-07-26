@@ -8,7 +8,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface ICustomerRoleViewModelService
     {
-        Task<CustomerRoleModel> PrepareCustomerRoleModel(CustomerRole customerRole);
+        CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole);
         CustomerRoleModel PrepareCustomerRoleModel();
         Task<CustomerRole> InsertCustomerRoleModel(CustomerRoleModel model);
         Task<CustomerRole> UpdateCustomerRoleModel(CustomerRole customerRole, CustomerRoleModel model);

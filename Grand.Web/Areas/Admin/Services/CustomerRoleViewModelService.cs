@@ -58,14 +58,9 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        public virtual async Task<CustomerRoleModel> PrepareCustomerRoleModel(CustomerRole customerRole)
+        public virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
-            var product = await _productService.GetProductById(customerRole.PurchasedWithProductId);
-            if (product != null)
-            {
-                model.PurchasedWithProductName = product.Name;
-            }
             return model;
         }
 
@@ -144,8 +139,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new List<CustomerRoleProductModel>();
             foreach (var item in products)
             {
-                var cr = new CustomerRoleProductModel
-                {
+                var cr = new CustomerRoleProductModel {
                     Id = item.Id,
                     Name = (await _productService.GetProductById(item.ProductId))?.Name,
                     ProductId = item.ProductId,

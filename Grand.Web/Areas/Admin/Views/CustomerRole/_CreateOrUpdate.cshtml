@@ -2,19 +2,6 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script type="text/javascript">
-    $(document).ready(function () {
-        toggleRemoveButton();
-    });
-    function toggleRemoveButton() {
-        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() != '' ) {
-            $('#purchased-with-product-name-remove').show();
-        }
-        else {
-            $('#purchased-with-product-name-remove').hide();
-        }
-    }
-</script>
 <vc:admin-widget widget-zone="customer_role_details_top" additional-data="Model" />
 <admin-tabstrip name="customerrole-edit">
     <items>

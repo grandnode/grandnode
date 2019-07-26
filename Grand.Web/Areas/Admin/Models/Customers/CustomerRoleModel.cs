@@ -33,13 +33,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
         public bool EnablePasswordLifetime { get; set; }
 
-        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
-        public string PurchasedWithProductId { get; set; }
-
-        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
-        public string PurchasedWithProductName { get; set; }
-
-
         #region Nested classes
 
         public partial class AssociateProductToCustomerRoleModel : BaseGrandModel

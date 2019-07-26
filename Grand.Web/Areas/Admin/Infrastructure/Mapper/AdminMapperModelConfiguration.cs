@@ -729,7 +729,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //customer roles
             CreateMap<CustomerRole, CustomerRoleModel>()
-                .ForMember(dest => dest.PurchasedWithProductName, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
             CreateMap<CustomerRoleModel, CustomerRole>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());

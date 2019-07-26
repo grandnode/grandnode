@@ -11316,21 +11316,6 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct">
-    <Value>Purchased with product</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose">
-    <Value>Choose product</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Hint">
-    <Value>A customer is added to this customer role once a specified product is purchased (paid). Please note that in case of refund or order cancellation you have to manually remove a customer from this role.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered">
-    <Value>You cannot specify "Purchased with product" value for "Registered" customer role</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove">
-    <Value>Remove</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
@@ -16217,9 +16202,6 @@
   </LocaleResource>
   <LocaleResource Name="Api.Customers.CustomerRole.Fields.Name.Required">
     <Value>Customer role name is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Api.Customers.CustomerRole.Fields.PurchasedWithProductId.NotExists">
-    <Value>Purchased with Product Id does not exist</Value>
   </LocaleResource>
   <LocaleResource Name="Api.Customers.CustomerRoles.Fields.Active.CantEditSystem">
     <Value>You can not edit system roles</Value>
