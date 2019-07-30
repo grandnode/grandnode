@@ -293,11 +293,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <returns>Path</returns>
         protected virtual string GetVirtualPath(string path)
         {
-            path = path ?? string.Empty;
-
             var rootDirectory = GetRootDirectory();
-            if (!path.StartsWith(rootDirectory))
-                path = rootDirectory + path;
+            path = path ?? rootDirectory;
+            if (!string.IsNullOrEmpty(path))
+            {
+                var fullPath = System.IO.Path.GetFullPath(path);
+                var fullPathRootDirectory = System.IO.Path.GetFullPath(rootDirectory);
+                if (!fullPath.StartsWith(fullPathRootDirectory))
+                    path = rootDirectory;
+            }
 
             return path;
         }
