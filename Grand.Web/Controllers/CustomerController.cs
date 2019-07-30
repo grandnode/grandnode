@@ -16,7 +16,6 @@ using Grand.Services.Authentication.External;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.ExportImport;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -92,27 +91,27 @@ namespace Grand.Web.Controllers
             TaxSettings taxSettings
             )
         {
-            this._customerViewModelService = customerViewModelService;
-            this._authenticationService = authenticationService;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._genericAttributeService = genericAttributeService;
-            this._customerRegistrationService = customerRegistrationService;
-            this._taxService = taxService;
-            this._customerSettings = customerSettings;
-            this._countryService = countryService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._customerActivityService = customerActivityService;
-            this._addressViewModelService = addressViewModelService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
-            this._mediator = mediator;
+            _customerViewModelService = customerViewModelService;
+            _authenticationService = authenticationService;
+            _dateTimeSettings = dateTimeSettings;
+            _taxSettings = taxSettings;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _customerService = customerService;
+            _customerAttributeParser = customerAttributeParser;
+            _genericAttributeService = genericAttributeService;
+            _customerRegistrationService = customerRegistrationService;
+            _taxService = taxService;
+            _customerSettings = customerSettings;
+            _countryService = countryService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _customerActivityService = customerActivityService;
+            _addressViewModelService = addressViewModelService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _captchaSettings = captchaSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -511,8 +510,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                var newsLetterSubscription = new NewsLetterSubscription
-                                {
+                                var newsLetterSubscription = new NewsLetterSubscription {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
                                     CustomerId = customer.Id,
@@ -534,8 +532,7 @@ namespace Grand.Web.Controllers
                         await _authenticationService.SignIn(customer, true);
 
                     //insert default address (if possible)
-                    var defaultAddress = new Address
-                    {
+                    var defaultAddress = new Address {
                         FirstName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.FirstName),
                         LastName = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.LastName),
                         Email = customer.Email,
@@ -644,8 +641,7 @@ namespace Grand.Web.Controllers
                 default:
                     break;
             }
-            var model = new RegisterResultModel
-            {
+            var model = new RegisterResultModel {
                 Result = resultText
             };
             return View(model);
@@ -869,8 +865,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                var newsLetterSubscription = new NewsLetterSubscription
-                                {
+                                var newsLetterSubscription = new NewsLetterSubscription {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
                                     CustomerId = customer.Id,
