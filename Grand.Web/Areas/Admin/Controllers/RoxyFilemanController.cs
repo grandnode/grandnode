@@ -54,18 +54,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IHttpContextAccessor httpContextAccessor)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._permissionService = permissionService;
             this._workContext = workContext;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -180,10 +182,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Process request
         /// </summary>
-        public virtual void ProcessRequest()
+        public virtual async Task ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
-            ProcessRequestAsync().Wait();
+            await ProcessRequestAsync();
         }
 
         #endregion
@@ -247,9 +249,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         await RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
-                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
-                        CreateThumbnail(HttpContext.Request.Query["f"], w, h);
+                        await CreateThumbnail(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
                         await UploadFilesAsync(HttpContext.Request.Form["d"]);
@@ -957,80 +957,39 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// Create the thumbnail of the image and write it to the response
         /// </summary>
         /// <param name="path">Path to the image</param>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
-        protected virtual void CreateThumbnail(string path, int width, int height)
+        protected virtual async Task CreateThumbnail(string path)
         {
             try
             {
                 path = GetFullPath(GetVirtualPath(path));
-                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                HttpContext.Response.Headers.Add("Content-Type", "image/png");
+                byte[] file = System.IO.File.ReadAllBytes(path);
+                using (var image = new MagickImage(file))
                 {
-                    using (var image = new Bitmap(Image.FromStream(stream)))
+                    float width, height;
+                    int targetSize = 120;
+                    if (image.Height > image.Width)
                     {
-                        var cropX = 0;
-                        var cropY = 0;
-
-                        var imgRatio = (double)image.Width / (double)image.Height;
-
-                        if (height == 0)
-                            height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
-
-                        if (width > image.Width)
-                            width = image.Width;
-                        if (height > image.Height)
-                            height = image.Height;
-
-                        var cropRatio = (double)width / (double)height;
-                        var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                        var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-
-                        if (cropWidth > image.Width)
-                        {
-                            cropWidth = image.Width;
-                            cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-                        }
-
-                        if (cropHeight > image.Height)
-                        {
-                            cropHeight = image.Height;
-                            cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
-                        }
-
-                        if (cropWidth < image.Width)
-                            cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-                        if (cropHeight < image.Height)
-                            cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
-
-                        using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
-                        {
-                            HttpContext.Response.Headers.Add("Content-Type", "image/png");
-                            cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
-                            HttpContext.Response.Body.Close();
-                        }
+                        // portrait
+                        width = image.Width * (targetSize / (float)image.Height);
+                        height = targetSize;
                     }
+                    else
+                    {
+                        // landscape or square
+                        width = targetSize;
+                        height = image.Height * (targetSize / (float)image.Width);
+                    }
+                    var size = new MagickGeometry((int)Math.Round(width), (int)Math.Round(height)); 
+                    size.IgnoreAspectRatio = true;
+                    image.Resize(size);
+                    file = image.ToByteArray();
                 }
+                await HttpContext.Response.Body.WriteAsync(file, 0, file.Length);
+                HttpContext.Response.Body.Close();
+                
             }
             catch { }
-        }
-
-        /// <summary>
-        /// Get the file format of the image
-        /// </summary>
-        /// <param name="path">Path to the image</param>
-        /// <returns>Image format</returns>
-        protected virtual ImageFormat GetImageFormat(string path)
-        {
-            var fileExtension = new FileInfo(path).Extension.ToLower();
-            switch (fileExtension)
-            {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
-            }
         }
 
         /// <summary>
