@@ -17,4 +17,10 @@
   <LocaleResource Name="ShoppingCart.WarehouseNotExists">
     <Value>Warehouse not exists</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Required">
+    <Value>Coupon code can't be empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Required">
+    <Value>Gift card code can't be empty</Value>
+  </LocaleResource>
 </Language>
