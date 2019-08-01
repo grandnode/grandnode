@@ -1875,7 +1875,7 @@ namespace Grand.Web.Areas.Admin.Services
             var storeId = string.Empty;
             if (_workContext.CurrentCustomer.IsStaff())
                 storeId = _workContext.CurrentCustomer.StaffStoreId;
-
+                
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
@@ -1890,6 +1890,13 @@ namespace Grand.Web.Areas.Admin.Services
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            // avaible stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = ""});
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
+            {
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            }
 
             return model;
         }
@@ -1911,7 +1918,7 @@ namespace Grand.Web.Areas.Admin.Services
             var products = (await _productService.SearchProducts(categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 vendorId: vendorId,
-                storeId: storeId,
+                storeId: model.SearchStoreId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: pageIndex - 1,
