@@ -572,15 +572,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
-        /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
-        {
-            return "PaymentPayPalStandard";
-        }
-
-        /// <summary>
         /// Install the plugin
         /// </summary>
         public override async Task Install()
