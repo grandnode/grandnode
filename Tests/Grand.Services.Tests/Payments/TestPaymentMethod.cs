@@ -159,11 +159,6 @@ namespace Grand.Services.Tests.Payments
             routeValues = null;
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(TestPaymentMethod);
-        }
-
         public async Task<IList<string>> ValidatePaymentForm(IFormCollection form)
         {
             return await Task.FromResult(new List<string>());

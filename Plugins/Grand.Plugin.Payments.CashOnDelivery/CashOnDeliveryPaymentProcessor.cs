@@ -181,11 +181,6 @@ namespace Grand.Plugin.Payments.CashOnDelivery
             return await Task.FromResult(false);
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentCashOnDeliveryController);
-        }
-
         public override async Task Install()
         {
             var settings = new CashOnDeliveryPaymentSettings

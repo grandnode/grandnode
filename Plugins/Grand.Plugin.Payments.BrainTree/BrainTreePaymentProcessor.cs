@@ -304,11 +304,6 @@ namespace Grand.Plugin.Payments.BrainTree
             viewComponentName = "PaymentBrainTree";
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentBrainTreeController);
-        }
-
         public override async Task Install()
         {
             //settings

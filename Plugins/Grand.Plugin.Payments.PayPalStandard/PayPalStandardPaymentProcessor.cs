@@ -638,11 +638,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
             viewComponentName = "PaymentPayPalStandard";
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentPayPalStandardController);
-        }
-
         #endregion
 
         #region Properties

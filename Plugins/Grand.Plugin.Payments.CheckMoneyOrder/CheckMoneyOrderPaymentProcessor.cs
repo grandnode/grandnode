@@ -206,11 +206,6 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.CheckMoneyOrder.Controllers" }, { "area", null } };
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentCheckMoneyOrderController);
-        }
-
         public override async Task Install()
         {
             //settings
