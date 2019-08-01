@@ -45,7 +45,7 @@ $(document).ready(function () {
             type: "json",
             transport: {
                 read: {
-                    url: "@Html.Raw(Url.RouteUrl("PushNotifications.PushMessagesList"))",
+                    url: "@Html.Raw(Url.Action("PushMessagesList", "PushNotifications"))",
                     type: "POST",
                     dataType: "json",
                     data: addAntiForgeryToken
