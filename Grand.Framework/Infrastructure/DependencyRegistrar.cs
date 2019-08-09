@@ -25,6 +25,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
+using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;
@@ -294,6 +295,8 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<GoogleAnalyticsService>().As<IGoogleAnalyticsService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentTypeService>().As<IDocumentTypeService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentService>().As<IDocumentService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
