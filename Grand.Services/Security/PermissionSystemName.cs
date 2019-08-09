@@ -11,6 +11,7 @@
         public const string ProductTags = "ManageProductTags";
         public const string Attributes = "ManageAttributes";
         public const string Customers = "ManageCustomers";
+        public const string Documents = "ManageDocuments";
         public const string Reports = "ManageReports";
         public const string CustomerRoles = "ManageCustomerRoles";
         public const string Actions = "ManageActions";
