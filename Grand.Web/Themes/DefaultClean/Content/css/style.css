@@ -167,11 +167,14 @@ input {
     border-color: #0093B5;
     box-shadow: 0 2px 6px 0 rgba(0,0,0,0.12);
 }
+.btn-group-vertical > .btn, .btn-group > .btn {
+    flex: 0 1 auto;
+}
 .input-group-btn .btn,
 .btn-group .btn {
-	display: flex;
-	height: 38px;
-	align-items: center;
+    display: flex;
+    height: 38px;
+    align-items: center;
 }
 .currency-selector .btn-group .btn,
 .tax-type-button .btn,
@@ -280,8 +283,13 @@ input {
     background-color: #637DB1;
     border-color: #637DB1;
 }
-.btn-info {
+.btn-info,
+.btn-outline-info:hover {
     background-color: #0091b5;
+    border-color: #0091b5;
+}
+.btn-outline-info {
+    color: #0091b5;
     border-color: #0091b5;
 }
 .btn-secondary {
@@ -503,7 +511,7 @@ body:not(.is-ready) .search-box-button {
 }
 #small-searchterms {
     margin: 0 5px 0 0;
-    font-size: 14px;
+    font-size: 16px;
 	border-bottom-left-radius: 4px;
 	border-top-left-radius: 4px;
 }
@@ -2418,10 +2426,6 @@ ul.opc .order-summary-content h5 {
     width: 100%;
     padding-top: 100%;
 }
-.product-details-page .overview-buttons .add-to-cart-button {
-	border-top-left-radius: .25rem;
-	border-bottom-left-radius: .25rem;
-}
 .product-details-page .sp-wrap {
 	max-width: 100%;
 	border: 0;
@@ -3505,7 +3509,6 @@ input[type='checkbox'].checkbox-u:checked + label:after {
     position: absolute;
     width: 100%;
     height: 100%;
-    min-width: 300px;
     font-size: 14px;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -3557,6 +3560,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
     font-weight: 300;
     width: 18px;
     height: 18px;
+    line-height: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3592,6 +3596,8 @@ span.product-quantity {
 	display: inline;
 	position: relative;
 	margin-right: 5px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 .generalAdToCart select {
     width: auto;
@@ -4448,6 +4454,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+    .header-links .dropdowns-container {
+        display: none;
+    }
     .mobile-desc {
         justify-content: center;
         font-size: 9px;
