@@ -1,14 +1,23 @@
-﻿using MongoDB.Bson;
+﻿using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Stores;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Documents
 {
     /// <summary>
     /// Represents a document
     /// </summary>
-    public partial class Document : BaseEntity
+    public partial class Document : BaseEntity, IAclSupported, IStoreMappingSupported
     {
+        public Document()
+        {
+            CustomerRoles = new List<string>();
+            Stores = new List<string>();
+        }
+
         /// <summary>
         /// Gets or sets the document number
         /// </summary>
@@ -55,9 +64,21 @@ namespace Grand.Core.Domain.Documents
         public string Flag { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier
+        /// Gets or sets the lik
         /// </summary>
-        public string StoreId { get; set; }
+        public string Link { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<string> CustomerRoles { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
