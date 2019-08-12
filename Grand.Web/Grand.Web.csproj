@@ -48,5 +48,8 @@
     <EmbeddedResource Remove="Plugins\**" />
     <None Remove="Plugins\**" />
   </ItemGroup>  
+  <ItemGroup>
+    <None Remove="App_Data\Localization\Installation\installation.ko-kr.xml" />
+  </ItemGroup>  
  
 </Project>
