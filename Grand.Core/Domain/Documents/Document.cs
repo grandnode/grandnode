@@ -88,7 +88,7 @@ namespace Grand.Core.Domain.Documents
         /// <summary>
         /// Gets or sets an document status identifier
         /// </summary>
-        public int DocumentStatusId { get; set; }
+        public int StatusId { get; set; }
 
         /// <summary>
         /// Gets or sets an document reference identifier
@@ -150,11 +150,11 @@ namespace Grand.Core.Domain.Documents
         /// <summary>
         /// Gets or sets the date and time of document date
         /// </summary>
-        public DateTime DocDate { get; set; }
+        public DateTime? DocDate { get; set; }
 
         /// Gets or sets the date and time of document due date
         /// </summary>
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
         #region Custom properties
 
@@ -163,10 +163,10 @@ namespace Grand.Core.Domain.Documents
         /// </summary>
         public DocumentStatus DocumentStatus {
             get {
-                return (DocumentStatus)DocumentStatusId;
+                return (DocumentStatus)StatusId;
             }
             set {
-                DocumentStatusId = (int)value;
+                StatusId = (int)value;
             }
         }
 

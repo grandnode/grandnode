@@ -29,6 +29,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<CustomerRoleViewModelService>().As<ICustomerRoleViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerTagViewModelService>().As<ICustomerTagViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountViewModelService>().As<IDiscountViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentViewModelService>().As<IDocumentViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<GiftCardViewModelService>().As<IGiftCardViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<KnowledgebaseViewModelService>().As<IKnowledgebaseViewModelService>().InstancePerLifetimeScope();

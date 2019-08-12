@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Documents;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Documents
@@ -15,16 +14,10 @@ namespace Grand.Services.Documents
         Task<Document> GetById(string id);
 
         /// <summary>
-        /// Gets all documents 
+        /// Gets all documents
         /// </summary>
         /// <returns>Documents</returns>
-        Task<IList<Document>> GetAll();
-
-        /// <summary>
-        /// Gets all documents for customer id
-        /// </summary>
-        /// <returns>Documents</returns>
-        Task<IPagedList<Document>> GetByCustomerId(string customerId = "", int pageIndex = 0, int pageSize = 2147483647);
+        Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Insert a document

@@ -19,6 +19,7 @@ namespace Grand.Services.Documents
         /// <returns>Document types</returns>
         Task<IList<DocumentType>> GetAll();
 
+
         /// <summary>
         /// Insert a document type
         /// </summary>

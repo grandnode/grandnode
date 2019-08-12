@@ -3,10 +3,8 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Documents;
 using Grand.Services.Events;
 using MediatR;
-using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,19 +32,29 @@ namespace Grand.Services.Documents
             await _mediator.EntityDeleted(document);
         }
 
-        public async Task<IList<Document>> GetAll()
+        public virtual async Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _documentRepository.Table;
-            return await query.ToListAsync();
-        }
+            var query = from d in _documentRepository.Table
+                        select d;
 
-        public async Task<IPagedList<Document>> GetByCustomerId(string customerId = "", int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = from c in _documentRepository.Table
-                        where c.CustomerId == customerId
-                        select c;
+            if (!string.IsNullOrEmpty(customerId))
+                query = query.Where(d => d.CustomerId == customerId);
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(name.ToLower()));
+
+            if (!string.IsNullOrWhiteSpace(number))
+                query = query.Where(m => m.Number != null && m.Number.ToLower().Contains(number.ToLower()));
+
+            if (!string.IsNullOrWhiteSpace(email))
+                query = query.Where(m => m.CustomerEmail != null && m.CustomerEmail.ToLower().Contains(email.ToLower()));
+
+            if (status >= 0)
+                query = query.Where(d => d.StatusId == status);
+
             return await PagedList<Document>.Create(query, pageIndex, pageSize);
         }
+
 
         public Task<Document> GetById(string id)
         {

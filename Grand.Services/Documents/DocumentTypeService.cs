@@ -3,7 +3,9 @@ using Grand.Core.Domain.Documents;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,7 +35,9 @@ namespace Grand.Services.Documents
 
         public virtual async Task<IList<DocumentType>> GetAll()
         {
-            var query = _documentTypeRepository.Table;
+            var query = from t in _documentTypeRepository.Table
+                        orderby t.DisplayOrder
+                        select t;
             return await query.ToListAsync();
         }
 

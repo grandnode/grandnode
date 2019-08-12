@@ -12072,6 +12072,15 @@
   <LocaleResource Name="Admin.Customers.CustomerTags.Updated">
     <Value>The tag has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Document.List">
+    <Value>Document list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Document.Type">
+    <Value>Type of document</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Guest">
     <Value>Guest</Value>
   </LocaleResource>
@@ -12182,6 +12191,153 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ViewMore">
     <Value>View more</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.account">
+    <Value>Accounting Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.acl">
+    <Value>ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.added">
+    <Value>Document added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.addnew">
+    <Value>Add new document</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.backtolist">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.deleted">
+    <Value>Document deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.edit">
+    <Value>Edit document</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.currencycode">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.customeremail">
+    <Value>Customer email</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.displayorder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.docdate">
+    <Value>Document date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.documenttype">
+    <Value>Document type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.download">
+    <Value>Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.duedate">
+    <Value>Due date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.flag">
+    <Value>Flag</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.link">
+    <Value>Link</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.name.required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.number">
+    <Value>Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.number.required">
+    <Value>Field number is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.object">
+    <Value>Object reference Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.outstandamount">
+    <Value>Outstanding amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.reference">
+    <Value>Reference</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.totalamount">
+    <Value>Total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.fields.username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.info">
+    <Value>Document info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.list.documentstatus">
+    <Value>Document status</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.list.searchemail">
+    <Value>Search by email</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.list.searchname">
+    <Value>Search by name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.list.searchnumber">
+    <Value>Search by number</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.manage">
+    <Value>Manage document list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.updated">
+    <Value>Document updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type">
+    <Value>Type of documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.added">
+    <Value>Document type added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.addnew">
+    <Value>Add new document type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.backtolist">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.deleted">
+    <Value>Document type deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.edit">
+    <Value>Edit type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.fields.description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.fields.displayorder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.fields.name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.fields.name.required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.type.updated">
+    <Value>Document type updated</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>

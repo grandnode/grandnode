@@ -4,6 +4,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Documents;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
@@ -34,6 +35,7 @@ using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Discounts;
+using Grand.Web.Areas.Admin.Models.Documents;
 using Grand.Web.Areas.Admin.Models.ExternalAuthentication;
 using Grand.Web.Areas.Admin.Models.Forums;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
@@ -577,6 +579,39 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Documents
+
+        public static DocumentModel ToModel(this Document entity)
+        {
+            return entity.MapTo<Document, DocumentModel>();
+        }
+
+        public static Document ToEntity(this DocumentModel model)
+        {
+            return model.MapTo<DocumentModel, Document>();
+        }
+
+        public static Document ToEntity(this DocumentModel model, Document destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        public static DocumentTypeModel ToModel(this DocumentType entity)
+        {
+            return entity.MapTo<DocumentType, DocumentTypeModel>();
+        }
+
+        public static DocumentType ToEntity(this DocumentTypeModel model)
+        {
+            return model.MapTo<DocumentTypeModel, DocumentType>();
+        }
+
+        public static DocumentType ToEntity(this DocumentTypeModel model, DocumentType destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
 
         #region Campaigns
 
