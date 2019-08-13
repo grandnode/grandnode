@@ -179,4 +179,22 @@
   <LocaleResource Name="Admin.Customers.Document.Type">
     <Value>Type of document</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewDocument">
+    <Value>Added a new document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewDocumentType">
+    <Value>Added a new document type ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditDocument">
+    <Value>Edited a document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditDocumentType">
+    <Value>Edited a document type ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteDocument">
+    <Value>Deleted a document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteDocumentType">
+    <Value>Deleted a document type ('{0}')</Value>
+  </LocaleResource>
 </Language>

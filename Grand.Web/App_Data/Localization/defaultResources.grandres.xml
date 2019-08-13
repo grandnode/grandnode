@@ -816,6 +816,12 @@
   <LocaleResource Name="ActivityLog.AddNewDiscount">
     <Value>Added a new discount ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewDocument">
+    <Value>Added a new document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewDocumentType">
+    <Value>Added a new document type ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewGiftCard">
     <Value>Added a new gift card ('{0}')</Value>
   </LocaleResource>
@@ -878,6 +884,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteDiscount">
     <Value>Deleted a discount ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteDocument">
+    <Value>Deleted a document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteDocumentType">
+    <Value>Deleted a document type ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteGiftCard">
     <Value>Deleted a gift card ('{0}')</Value>
@@ -950,6 +962,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditDiscount">
     <Value>Edited a discount ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditDocument">
+    <Value>Edited a document ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditDocumentType">
+    <Value>Edited a document type ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditGiftCard">
     <Value>Edited a gift card ('{0}')</Value>

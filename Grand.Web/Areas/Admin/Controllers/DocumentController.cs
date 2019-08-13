@@ -5,6 +5,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Documents;
 using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
@@ -25,9 +26,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
         private readonly IStoreService _storeService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         public DocumentController(IDocumentViewModelService documentViewModelService, IDocumentService documentService, IDocumentTypeService documentTypeService,
-            ILocalizationService localizationService, ICustomerService customerService, IStoreService storeService)
+            ILocalizationService localizationService, ICustomerService customerService, IStoreService storeService, ICustomerActivityService customerActivityService)
         {
             _documentViewModelService = documentViewModelService;
             _documentService = documentService;
@@ -35,6 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _localizationService = localizationService;
             _customerService = customerService;
             _storeService = storeService;
+            _customerActivityService = customerActivityService;
         }
 
         public IActionResult Index() => RedirectToAction("List");
@@ -74,6 +77,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var document = model.ToEntity();
                 document.CreatedOnUtc = DateTime.UtcNow;
                 await _documentService.Insert(document);
+
+                //activity log
+                await _customerActivityService.InsertActivity("AddNewDocument", document.Id, _localizationService.GetResource("ActivityLog.AddNewDocument"), document.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Document.Added"));
                 return continueEditing ? RedirectToAction("EditDocument", new { id = document.Id }) : RedirectToAction("List");
             }
@@ -117,6 +124,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 document = model.ToEntity(document);
                 document.UpdatedOnUtc = DateTime.UtcNow;
                 await _documentService.Update(document);
+
+                //activity log
+                await _customerActivityService.InsertActivity("EditDocument", document.Id, _localizationService.GetResource("ActivityLog.EditDocument"), document.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Document.Updated"));
                 return continueEditing ? RedirectToAction("EditDocument", new { id = document.Id }) : RedirectToAction("List");
             }
@@ -140,6 +151,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _documentService.Delete(document);
+
+                //activity log
+                await _customerActivityService.InsertActivity("DeleteDocument", document.Id, _localizationService.GetResource("ActivityLog.DeleteDocument"), document.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Document.Deleted"));
                 return RedirectToAction("List");
             }
@@ -172,6 +187,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var documenttype = model.ToEntity();
                 await _documentTypeService.Insert(documenttype);
+
+                //activity log
+                await _customerActivityService.InsertActivity("AddNewDocumentType", documenttype.Id, _localizationService.GetResource("ActivityLog.AddNewDocumentType"), documenttype.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Type.Added"));
                 return continueEditing ? RedirectToAction("EditType", new { id = documenttype.Id }) : RedirectToAction("Types");
             }
@@ -201,6 +220,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 documentType = model.ToEntity(documentType);
                 await _documentTypeService.Update(documentType);
+
+                //activity log
+                await _customerActivityService.InsertActivity("EditDocumentType", documentType.Id, _localizationService.GetResource("ActivityLog.EditDocumentType"), documentType.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Type.Updated"));
                 return continueEditing ? RedirectToAction("EditType", new { id = documentType.Id }) : RedirectToAction("Types");
             }
@@ -218,6 +241,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _documentTypeService.Delete(documentType);
+
+                //activity log
+                await _customerActivityService.InsertActivity("DeleteDocumentType", documentType.Id, _localizationService.GetResource("ActivityLog.DeleteDocumentType"), documentType.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Documents.Type.Deleted"));
                 return RedirectToAction("Types");
             }

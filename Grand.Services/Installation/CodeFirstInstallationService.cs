@@ -273,8 +273,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallVersion()
         {
-            var version = new GrandNodeVersion
-            {
+            var version = new GrandNodeVersion {
                 DataBaseVersion = GrandVersion.CurrentVersion
             };
             await _versionRepository.InsertAsync(version);
@@ -435,8 +434,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallLanguages()
         {
-            var language = new Language
-            {
+            var language = new Language {
                 Name = "English",
                 LanguageCulture = "en-US",
                 UniqueSeoCode = "en",
@@ -556,8 +554,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallCountriesAndStates()
         {
-            var cUsa = new Country
-            {
+            var cUsa = new Country {
                 Name = "United States",
                 AllowsBilling = true,
                 AllowsShipping = true,
@@ -572,504 +569,441 @@ namespace Grand.Services.Installation
             var states = new List<StateProvince>();
             await _countryRepository.InsertAsync(cUsa);
 
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "AA (Armed Forces Americas)",
                 Abbreviation = "AA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "AE (Armed Forces Europe)",
                 Abbreviation = "AE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Alabama",
                 Abbreviation = "AL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Alaska",
                 Abbreviation = "AK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "American Samoa",
                 Abbreviation = "AS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "AP (Armed Forces Pacific)",
                 Abbreviation = "AP",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Arizona",
                 Abbreviation = "AZ",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Arkansas",
                 Abbreviation = "AR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "California",
                 Abbreviation = "CA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Colorado",
                 Abbreviation = "CO",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Connecticut",
                 Abbreviation = "CT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Delaware",
                 Abbreviation = "DE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "District of Columbia",
                 Abbreviation = "DC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Federated States of Micronesia",
                 Abbreviation = "FM",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Florida",
                 Abbreviation = "FL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Georgia",
                 Abbreviation = "GA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Guam",
                 Abbreviation = "GU",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Hawaii",
                 Abbreviation = "HI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Idaho",
                 Abbreviation = "ID",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Illinois",
                 Abbreviation = "IL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Indiana",
                 Abbreviation = "IN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Iowa",
                 Abbreviation = "IA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Kansas",
                 Abbreviation = "KS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Kentucky",
                 Abbreviation = "KY",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Louisiana",
                 Abbreviation = "LA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Maine",
                 Abbreviation = "ME",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Marshall Islands",
                 Abbreviation = "MH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Maryland",
                 Abbreviation = "MD",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Massachusetts",
                 Abbreviation = "MA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Michigan",
                 Abbreviation = "MI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Minnesota",
                 Abbreviation = "MN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Mississippi",
                 Abbreviation = "MS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Missouri",
                 Abbreviation = "MO",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Montana",
                 Abbreviation = "MT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Nebraska",
                 Abbreviation = "NE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Nevada",
                 Abbreviation = "NV",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "New Hampshire",
                 Abbreviation = "NH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "New Jersey",
                 Abbreviation = "NJ",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "New Mexico",
                 Abbreviation = "NM",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "New York",
                 Abbreviation = "NY",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "North Carolina",
                 Abbreviation = "NC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "North Dakota",
                 Abbreviation = "ND",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Northern Mariana Islands",
                 Abbreviation = "MP",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Ohio",
                 Abbreviation = "OH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Oklahoma",
                 Abbreviation = "OK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Oregon",
                 Abbreviation = "OR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Palau",
                 Abbreviation = "PW",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Pennsylvania",
                 Abbreviation = "PA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Puerto Rico",
                 Abbreviation = "PR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Rhode Island",
                 Abbreviation = "RI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "South Carolina",
                 Abbreviation = "SC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "South Dakota",
                 Abbreviation = "SD",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Tennessee",
                 Abbreviation = "TN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Texas",
                 Abbreviation = "TX",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Utah",
                 Abbreviation = "UT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Vermont",
                 Abbreviation = "VT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Virgin Islands",
                 Abbreviation = "VI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Virginia",
                 Abbreviation = "VA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Washington",
                 Abbreviation = "WA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "West Virginia",
                 Abbreviation = "WV",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Wisconsin",
                 Abbreviation = "WI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cUsa.Id,
                 Name = "Wyoming",
                 Abbreviation = "WY",
                 Published = true,
                 DisplayOrder = 1,
             });
-            var cCanada = new Country
-            {
+            var cCanada = new Country {
                 Name = "Canada",
                 AllowsBilling = true,
                 AllowsShipping = true,
@@ -1082,104 +1016,91 @@ namespace Grand.Services.Installation
             };
             await _countryRepository.InsertAsync(cCanada);
 
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Alberta",
                 Abbreviation = "AB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "British Columbia",
                 Abbreviation = "BC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Manitoba",
                 Abbreviation = "MB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "New Brunswick",
                 Abbreviation = "NB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Newfoundland and Labrador",
                 Abbreviation = "NL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Northwest Territories",
                 Abbreviation = "NT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Nova Scotia",
                 Abbreviation = "NS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Nunavut",
                 Abbreviation = "NU",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Ontario",
                 Abbreviation = "ON",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Prince Edward Island",
                 Abbreviation = "PE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Quebec",
                 Abbreviation = "QC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Saskatchewan",
                 Abbreviation = "SK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            states.Add(new StateProvince
-            {
+            states.Add(new StateProvince {
                 CountryId = cCanada.Id,
                 Name = "Yukon Territory",
                 Abbreviation = "YT",
@@ -4066,8 +3987,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
-            var crAdministrators = new CustomerRole
-            {
+            var crAdministrators = new CustomerRole {
                 Name = "Administrators",
                 Active = true,
                 IsSystemRole = true,
@@ -4075,8 +3995,7 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crAdministrators);
 
-            var crForumModerators = new CustomerRole
-            {
+            var crForumModerators = new CustomerRole {
                 Name = "Forum Moderators",
                 Active = true,
                 IsSystemRole = true,
@@ -4084,8 +4003,7 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crForumModerators);
 
-            var crRegistered = new CustomerRole
-            {
+            var crRegistered = new CustomerRole {
                 Name = "Registered",
                 Active = true,
                 IsSystemRole = true,
@@ -4093,8 +4011,7 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crRegistered);
 
-            var crGuests = new CustomerRole
-            {
+            var crGuests = new CustomerRole {
                 Name = "Guests",
                 Active = true,
                 IsSystemRole = true,
@@ -4102,8 +4019,7 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crGuests);
 
-            var crVendors = new CustomerRole
-            {
+            var crVendors = new CustomerRole {
                 Name = "Vendors",
                 Active = true,
                 IsSystemRole = true,
@@ -4120,8 +4036,7 @@ namespace Grand.Services.Installation
             await _customerRoleRepository.InsertAsync(crStaff);
 
             //admin user
-            var adminUser = new Customer
-            {
+            var adminUser = new Customer {
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
@@ -4133,8 +4048,7 @@ namespace Grand.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 PasswordChangeDateUtc = DateTime.UtcNow,
             };
-            var defaultAdminUserAddress = new Address
-            {
+            var defaultAdminUserAddress = new Address {
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
@@ -4163,8 +4077,7 @@ namespace Grand.Services.Installation
 
 
             //search engine (crawler) built-in user
-            var searchEngineUser = new Customer
-            {
+            var searchEngineUser = new Customer {
                 Email = "builtin@search_engine_record.com",
                 CustomerGuid = Guid.NewGuid(),
                 PasswordFormat = PasswordFormat.Clear,
@@ -4180,8 +4093,7 @@ namespace Grand.Services.Installation
 
 
             //built-in user for background tasks
-            var backgroundTaskUser = new Customer
-            {
+            var backgroundTaskUser = new Customer {
                 Email = "builtin@background-task-record.com",
                 CustomerGuid = Guid.NewGuid(),
                 PasswordFormat = PasswordFormat.Clear,
@@ -4855,8 +4767,7 @@ namespace Grand.Services.Installation
             foreach (var topic in ltopics)
             {
                 var seName = topic.SystemName;
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = topic.Id,
                     EntityName = "Topic",
                     LanguageId = "",
@@ -4873,8 +4784,7 @@ namespace Grand.Services.Installation
         {
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
 
-            await _settingService.SaveSetting(new MenuItemSettings
-            {
+            await _settingService.SaveSetting(new MenuItemSettings {
                 DisplayHomePageMenu = !installSampleData,
                 DisplayNewProductsMenu = !installSampleData,
                 DisplaySearchMenu = !installSampleData,
@@ -4884,8 +4794,7 @@ namespace Grand.Services.Installation
                 DisplayContactUsMenu = !installSampleData
             });
 
-            await _settingService.SaveSetting(new PdfSettings
-            {
+            await _settingService.SaveSetting(new PdfSettings {
                 LogoPictureId = "",
                 LetterPageSizeEnabled = false,
                 RenderOrderNotes = true,
@@ -4894,8 +4803,7 @@ namespace Grand.Services.Installation
                 InvoiceFooterTextColumn2 = null,
             });
 
-            await _settingService.SaveSetting(new CommonSettings
-            {
+            await _settingService.SaveSetting(new CommonSettings {
                 StoreInDatabaseContactUsForm = true,
                 UseSystemEmailForContactUsForm = true,
                 UseStoredProceduresIfSupported = true,
@@ -4914,8 +4822,7 @@ namespace Grand.Services.Installation
                 PopupForTermsOfServiceLinks = true,
                 AllowToSelectStore = false,
             });
-            await _settingService.SaveSetting(new SecuritySettings
-            {
+            await _settingService.SaveSetting(new SecuritySettings {
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(24),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
@@ -4924,8 +4831,7 @@ namespace Grand.Services.Installation
                 HoneypotInputName = "hpinput",
                 AllowNonAsciiCharInHeaders = true,
             });
-            await _settingService.SaveSetting(new MediaSettings
-            {
+            await _settingService.SaveSetting(new MediaSettings {
                 AvatarPictureSize = 120,
                 BlogThumbPictureSize = 450,
                 ProductThumbPictureSize = 415,
@@ -4946,8 +4852,7 @@ namespace Grand.Services.Installation
                 MultipleThumbDirectories = false
             });
 
-            await _settingService.SaveSetting(new SeoSettings
-            {
+            await _settingService.SaveSetting(new SeoSettings {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
                 DefaultTitle = "Your store",
@@ -5020,8 +4925,7 @@ namespace Grand.Services.Installation
                     },
             });
 
-            await _settingService.SaveSetting(new AdminAreaSettings
-            {
+            await _settingService.SaveSetting(new AdminAreaSettings {
                 DefaultGridPageSize = 15,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
@@ -5029,8 +4933,7 @@ namespace Grand.Services.Installation
                 UseIsoDateTimeConverterInJson = true,
             });
 
-            await _settingService.SaveSetting(new CatalogSettings
-            {
+            await _settingService.SaveSetting(new CatalogSettings {
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
                 PublishBackProductWhenCancellingOrders = false,
@@ -5110,8 +5013,7 @@ namespace Grand.Services.Installation
                 LimitOfFeaturedProducts = 30,
             });
 
-            await _settingService.SaveSetting(new LocalizationSettings
-            {
+            await _settingService.SaveSetting(new LocalizationSettings {
                 DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                 UseImagesForLanguageSelection = false,
                 SeoFriendlyUrlsForLanguagesEnabled = false,
@@ -5122,8 +5024,7 @@ namespace Grand.Services.Installation
                 IgnoreRtlPropertyForAdminArea = false,
             });
 
-            await _settingService.SaveSetting(new CustomerSettings
-            {
+            await _settingService.SaveSetting(new CustomerSettings {
                 UsernamesEnabled = false,
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
@@ -5178,8 +5079,7 @@ namespace Grand.Services.Installation
                 AllowUsersToExportData = false
             });
 
-            await _settingService.SaveSetting(new AddressSettings
-            {
+            await _settingService.SaveSetting(new AddressSettings {
                 CompanyEnabled = true,
                 StreetAddressEnabled = true,
                 StreetAddressRequired = true,
@@ -5195,8 +5095,7 @@ namespace Grand.Services.Installation
                 FaxEnabled = false,
             });
 
-            await _settingService.SaveSetting(new StoreInformationSettings
-            {
+            await _settingService.SaveSetting(new StoreInformationSettings {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
@@ -5211,14 +5110,12 @@ namespace Grand.Services.Installation
                 HidePoweredByGrandNode = false
             });
 
-            await _settingService.SaveSetting(new ExternalAuthenticationSettings
-            {
+            await _settingService.SaveSetting(new ExternalAuthenticationSettings {
                 AutoRegisterEnabled = true,
                 RequireEmailValidation = false
             });
 
-            await _settingService.SaveSetting(new RewardPointsSettings
-            {
+            await _settingService.SaveSetting(new RewardPointsSettings {
                 Enabled = true,
                 ExchangeRate = 1,
                 PointsForRegistration = 0,
@@ -5230,8 +5127,7 @@ namespace Grand.Services.Installation
                 PointsAccumulatedForAllStores = true,
             });
 
-            await _settingService.SaveSetting(new CurrencySettings
-            {
+            await _settingService.SaveSetting(new CurrencySettings {
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                 PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
@@ -5239,14 +5135,12 @@ namespace Grand.Services.Installation
                 AutoUpdateEnabled = false
             });
 
-            await _settingService.SaveSetting(new MeasureSettings
-            {
+            await _settingService.SaveSetting(new MeasureSettings {
                 BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
                 BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
             });
 
-            await _settingService.SaveSetting(new MessageTemplatesSettings
-            {
+            await _settingService.SaveSetting(new MessageTemplatesSettings {
                 CaseInvariantReplacement = false,
                 Color1 = "#b9babe",
                 Color2 = "#ebecee",
@@ -5254,8 +5148,7 @@ namespace Grand.Services.Installation
                 PictureSize = 50,
             });
 
-            await _settingService.SaveSetting(new ShoppingCartSettings
-            {
+            await _settingService.SaveSetting(new ShoppingCartSettings {
                 DisplayCartAfterAddingProduct = false,
                 DisplayWishlistAfterAddingProduct = false,
                 MaximumShoppingCartItems = 1000,
@@ -5278,8 +5171,7 @@ namespace Grand.Services.Installation
                 RenderAssociatedAttributeValueQuantity = false
             });
 
-            await _settingService.SaveSetting(new OrderSettings
-            {
+            await _settingService.SaveSetting(new OrderSettings {
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
                 MinOrderSubtotalAmountIncludingTax = false,
@@ -5305,8 +5197,7 @@ namespace Grand.Services.Installation
                 UserCanCancelUnpaidOrder = false,
             });
 
-            await _settingService.SaveSetting(new ShippingSettings
-            {
+            await _settingService.SaveSetting(new ShippingSettings {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.ByWeight" },
                 ShipToSameAddress = false,
                 AllowPickUpInStore = true,
@@ -5323,8 +5214,7 @@ namespace Grand.Services.Installation
                 UseCubeRootMethod = true
             });
 
-            await _settingService.SaveSetting(new PaymentSettings
-            {
+            await _settingService.SaveSetting(new PaymentSettings {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
                         "Payments.CheckMoneyOrder",
@@ -5337,8 +5227,7 @@ namespace Grand.Services.Installation
                 SkipPaymentInfoStepForRedirectionPaymentMethods = false,
             });
 
-            await _settingService.SaveSetting(new TaxSettings
-            {
+            await _settingService.SaveSetting(new TaxSettings {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
                 ActiveTaxProviderSystemName = "Tax.FixedRate",
@@ -5365,14 +5254,12 @@ namespace Grand.Services.Installation
                 EuVatEmailAdminWhenNewVatSubmitted = false
             });
 
-            await _settingService.SaveSetting(new DateTimeSettings
-            {
+            await _settingService.SaveSetting(new DateTimeSettings {
                 DefaultStoreTimeZoneId = "",
                 AllowCustomersToSetTimeZone = false
             });
 
-            await _settingService.SaveSetting(new BlogSettings
-            {
+            await _settingService.SaveSetting(new BlogSettings {
                 Enabled = true,
                 PostsPageSize = 10,
                 AllowNotRegisteredUsersToLeaveComments = false,
@@ -5384,21 +5271,18 @@ namespace Grand.Services.Installation
                 MaxTextSizeHomePage = 200
             });
 
-            await _settingService.SaveSetting(new KnowledgebaseSettings
-            {
+            await _settingService.SaveSetting(new KnowledgebaseSettings {
                 Enabled = false,
                 AllowNotRegisteredUsersToLeaveComments = false,
                 NotifyAboutNewArticleComments = false
             });
 
-            await _settingService.SaveSetting(new PushNotificationsSettings
-            {
+            await _settingService.SaveSetting(new PushNotificationsSettings {
                 Enabled = false,
                 AllowGuestNotifications = true
             });
 
-            await _settingService.SaveSetting(new AdminSearchSettings
-            {
+            await _settingService.SaveSetting(new AdminSearchSettings {
                 BlogsDisplayOrder = 0,
                 CategoriesDisplayOrder = 0,
                 CustomersDisplayOrder = 0,
@@ -5421,8 +5305,7 @@ namespace Grand.Services.Installation
                 MenuDisplayOrder = -1
             });
 
-            await _settingService.SaveSetting(new NewsSettings
-            {
+            await _settingService.SaveSetting(new NewsSettings {
                 Enabled = true,
                 AllowNotRegisteredUsersToLeaveComments = false,
                 NotifyAboutNewNewsComments = false,
@@ -5432,8 +5315,7 @@ namespace Grand.Services.Installation
                 ShowHeaderRssUrl = false,
             });
 
-            await _settingService.SaveSetting(new ForumSettings
-            {
+            await _settingService.SaveSetting(new ForumSettings {
                 ForumsEnabled = false,
                 RelativeDateTimeFormattingEnabled = true,
                 AllowCustomersToDeletePosts = false,
@@ -5469,8 +5351,7 @@ namespace Grand.Services.Installation
                 ForumSearchTermMinimumLength = 3,
             });
 
-            await _settingService.SaveSetting(new VendorSettings
-            {
+            await _settingService.SaveSetting(new VendorSettings {
                 DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
@@ -5486,18 +5367,15 @@ namespace Grand.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
-            await _settingService.SaveSetting(new EmailAccountSettings
-            {
+            await _settingService.SaveSetting(new EmailAccountSettings {
                 DefaultEmailAccountId = eaGeneral.Id
             });
 
-            await _settingService.SaveSetting(new WidgetSettings
-            {
+            await _settingService.SaveSetting(new WidgetSettings {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.Slider" },
             });
 
-            await _settingService.SaveSetting(new GoogleAnalyticsSettings()
-            {
+            await _settingService.SaveSetting(new GoogleAnalyticsSettings() {
                 gaprivateKey = "",
                 gaserviceAccountEmail = "",
                 gaviewID = ""
@@ -5506,8 +5384,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallCheckoutAttributes()
         {
-            var ca1 = new CheckoutAttribute
-            {
+            var ca1 = new CheckoutAttribute {
                 Name = "Gift wrapping",
                 IsRequired = true,
                 ShippableProductRequired = true,
@@ -5515,8 +5392,7 @@ namespace Grand.Services.Installation
                 DisplayOrder = 1,
             };
             await _checkoutAttributeRepository.InsertAsync(ca1);
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
-            {
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue {
                 Name = "No",
                 PriceAdjustment = 0,
                 DisplayOrder = 1,
@@ -5524,8 +5400,7 @@ namespace Grand.Services.Installation
                 CheckoutAttributeId = ca1.Id,
             });
 
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
-            {
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue {
                 Name = "Yes",
                 PriceAdjustment = 10,
                 DisplayOrder = 2,
@@ -5536,104 +5411,87 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallSpecificationAttributes()
         {
-            var sa1 = new SpecificationAttribute
-            {
+            var sa1 = new SpecificationAttribute {
                 Name = "Screensize",
                 DisplayOrder = 1,
             };
             await _specificationAttributeRepository.InsertAsync(sa1);
 
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
 
                 Name = "13.0''",
                 DisplayOrder = 2,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "13.3''",
                 DisplayOrder = 3,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "14.0''",
                 DisplayOrder = 4,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.0''",
                 DisplayOrder = 4,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "15.6''",
                 DisplayOrder = 5,
             });
             await _specificationAttributeRepository.UpdateAsync(sa1);
 
-            var sa2 = new SpecificationAttribute
-            {
+            var sa2 = new SpecificationAttribute {
                 Name = "CPU Type",
                 DisplayOrder = 2,
             };
             await _specificationAttributeRepository.InsertAsync(sa2);
 
-            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i5",
                 DisplayOrder = 1,
             });
 
-            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
             });
             await _specificationAttributeRepository.UpdateAsync(sa2);
 
-            var sa3 = new SpecificationAttribute
-            {
+            var sa3 = new SpecificationAttribute {
                 Name = "Memory",
                 DisplayOrder = 3,
             };
             await _specificationAttributeRepository.InsertAsync(sa3);
 
-            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "4 GB",
                 DisplayOrder = 1,
             });
-            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "8 GB",
                 DisplayOrder = 2,
             });
-            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "16 GB",
                 DisplayOrder = 3,
             });
             await _specificationAttributeRepository.UpdateAsync(sa3);
 
-            var sa4 = new SpecificationAttribute
-            {
+            var sa4 = new SpecificationAttribute {
                 Name = "Hardrive",
                 DisplayOrder = 5,
             };
             await _specificationAttributeRepository.InsertAsync(sa4);
 
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "128 GB",
                 DisplayOrder = 7,
             });
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "500 GB",
                 DisplayOrder = 4,
             });
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
-            {
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption {
                 Name = "1 TB",
                 DisplayOrder = 3,
             });
@@ -5696,8 +5554,7 @@ namespace Grand.Services.Installation
 
             //categories
             var allCategories = new List<Category>();
-            var categoryComputers = new Category
-            {
+            var categoryComputers = new Category {
                 Name = "Computers",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5715,8 +5572,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryComputers);
 
-            var categoryDesktops = new Category
-            {
+            var categoryDesktops = new Category {
                 Name = "Desktops",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5733,8 +5589,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryDesktops);
 
-            var categoryNotebooks = new Category
-            {
+            var categoryNotebooks = new Category {
                 Name = "Notebooks",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5750,8 +5605,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryNotebooks);
 
-            var categorySoftware = new Category
-            {
+            var categorySoftware = new Category {
                 Name = "Software",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5767,8 +5621,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categorySoftware);
 
-            var categoryElectronics = new Category
-            {
+            var categoryElectronics = new Category {
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5785,8 +5638,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryElectronics);
 
-            var categoryCameraPhoto = new Category
-            {
+            var categoryCameraPhoto = new Category {
                 Name = "Camera & photo",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5803,8 +5655,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryCameraPhoto);
 
-            var categoryCellPhones = new Category
-            {
+            var categoryCellPhones = new Category {
                 Name = "Cell phones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5820,8 +5671,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryCellPhones);
 
-            var categoryOthers = new Category
-            {
+            var categoryOthers = new Category {
                 Name = "Others",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5838,8 +5688,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryOthers);
 
-            var categoryApparel = new Category
-            {
+            var categoryApparel = new Category {
                 Name = "Apparel",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5856,8 +5705,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryApparel);
 
-            var categoryShoes = new Category
-            {
+            var categoryShoes = new Category {
                 Name = "Shoes",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5874,8 +5722,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryShoes);
 
-            var categoryClothing = new Category
-            {
+            var categoryClothing = new Category {
                 Name = "Clothing",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5891,8 +5738,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryClothing);
 
-            var categoryAccessories = new Category
-            {
+            var categoryAccessories = new Category {
                 Name = "Accessories",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5909,8 +5755,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryAccessories);
 
-            var categoryDigitalDownloads = new Category
-            {
+            var categoryDigitalDownloads = new Category {
                 Name = "Digital downloads",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5927,8 +5772,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryDigitalDownloads);
 
-            var categoryBooks = new Category
-            {
+            var categoryBooks = new Category {
                 Name = "Books",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 MetaKeywords = "Books, Dictionary, Textbooks",
@@ -5950,8 +5794,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryBooks);
 
-            var categoryJewelry = new Category
-            {
+            var categoryJewelry = new Category {
                 Name = "Jewelry",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5968,8 +5811,7 @@ namespace Grand.Services.Installation
             };
             allCategories.Add(categoryJewelry);
 
-            var categoryGiftCards = new Category
-            {
+            var categoryGiftCards = new Category {
                 Name = "Gift Cards",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5990,8 +5832,7 @@ namespace Grand.Services.Installation
             foreach (var category in allCategories)
             {
                 category.SeName = SeoExtensions.GetSeName(category.Name, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = category.Id,
                     EntityName = "Category",
                     LanguageId = "",
@@ -6015,8 +5856,7 @@ namespace Grand.Services.Installation
                 throw new Exception("Manufacturer template cannot be loaded");
 
             var allManufacturers = new List<Manufacturer>();
-            var manufacturerAsus = new Manufacturer
-            {
+            var manufacturerAsus = new Manufacturer {
                 Name = "Apple",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -6032,8 +5872,7 @@ namespace Grand.Services.Installation
             allManufacturers.Add(manufacturerAsus);
 
 
-            var manufacturerHp = new Manufacturer
-            {
+            var manufacturerHp = new Manufacturer {
                 Name = "HP",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -6049,8 +5888,7 @@ namespace Grand.Services.Installation
             allManufacturers.Add(manufacturerHp);
 
 
-            var manufacturerNike = new Manufacturer
-            {
+            var manufacturerNike = new Manufacturer {
                 Name = "Nike",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -6069,8 +5907,7 @@ namespace Grand.Services.Installation
             foreach (var manufacturer in allManufacturers)
             {
                 manufacturer.SeName = SeoExtensions.GetSeName(manufacturer.Name, false, true);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = manufacturer.Id,
                     EntityName = "Manufacturer",
                     LanguageId = "",
@@ -6120,8 +5957,7 @@ namespace Grand.Services.Installation
             #region Desktops
 
 
-            var productBuildComputer = new Product
-            {
+            var productBuildComputer = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Build your own computer",
@@ -6297,14 +6133,12 @@ namespace Grand.Services.Installation
 
             await _productRepository.InsertAsync(productBuildComputer);
 
-            var productpicture1 = new ProductPicture
-            {
+            var productpicture1 = new ProductPicture {
                 ProductId = productBuildComputer.Id,
                 PictureId = Picture1.Id,
                 DisplayOrder = 1
             };
-            var productpicture2 = new ProductPicture
-            {
+            var productpicture2 = new ProductPicture {
                 ProductId = productBuildComputer.Id,
                 PictureId = Picture2.Id,
                 DisplayOrder = 1
@@ -6313,8 +6147,7 @@ namespace Grand.Services.Installation
             productBuildComputer.ProductPictures.Add(productpicture2);
             await _productRepository.UpdateAsync(productBuildComputer);
 
-            var productDigitalStorm = new Product
-            {
+            var productDigitalStorm = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Digital Storm VANQUISH 3 Custom Performance PC",
@@ -6351,15 +6184,13 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productDigitalStorm);
-            productDigitalStorm.ProductPictures.Add(new ProductPicture
-            {
+            productDigitalStorm.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productDigitalStorm);
 
-            var productLenovoIdeaCentre = new Product
-            {
+            var productLenovoIdeaCentre = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo IdeaCentre 600 All-in-One PC",
@@ -6396,8 +6227,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productLenovoIdeaCentre);
-            productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
-            {
+            productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -6407,8 +6237,7 @@ namespace Grand.Services.Installation
 
             #region Notebooks
 
-            var productAppleMacBookPro = new Product
-            {
+            var productAppleMacBookPro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple MacBook Pro 13-inch",
@@ -6483,21 +6312,18 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productAppleMacBookPro);
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture
-            {
+            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAppleMacBookPro.ProductPictures.Add(new ProductPicture
-            {
+            productAppleMacBookPro.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productAppleMacBookPro);
 
 
-            var productAsusN551JK = new Product
-            {
+            var productAsusN551JK = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Asus N551JK-XO076H Laptop",
@@ -6569,16 +6395,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productAsusN551JK);
-            productAsusN551JK.ProductPictures.Add(new ProductPicture
-            {
+            productAsusN551JK.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAsusN551JK);
 
 
-            var productSamsungSeries = new Product
-            {
+            var productSamsungSeries = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
@@ -6650,15 +6474,13 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productSamsungSeries);
-            productSamsungSeries.ProductPictures.Add(new ProductPicture
-            {
+            productSamsungSeries.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productSamsungSeries);
 
-            var productHpSpectre = new Product
-            {
+            var productHpSpectre = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Spectre XT Pro UltraBook",
@@ -6738,21 +6560,18 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productHpSpectre);
-            productHpSpectre.ProductPictures.Add(new ProductPicture
-            {
+            productHpSpectre.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHpSpectre.ProductPictures.Add(new ProductPicture
-            {
+            productHpSpectre.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productHpSpectre);
 
 
-            var productHpEnvy = new Product
-            {
+            var productHpEnvy = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
@@ -6832,16 +6651,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productHpEnvy);
-            productHpEnvy.ProductPictures.Add(new ProductPicture
-            {
+            productHpEnvy.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productHpEnvy);
 
 
-            var productLenovoThinkpad = new Product
-            {
+            var productLenovoThinkpad = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Thinkpad X1 Carbon Laptop",
@@ -6897,8 +6714,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productLenovoThinkpad);
-            productLenovoThinkpad.ProductPictures.Add(new ProductPicture
-            {
+            productLenovoThinkpad.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -6909,8 +6725,7 @@ namespace Grand.Services.Installation
             #region Software
 
 
-            var productAdobePhotoshop = new Product
-            {
+            var productAdobePhotoshop = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Adobe Photoshop CS4",
@@ -6947,16 +6762,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductPictures.Add(new ProductPicture
-            {
+            productAdobePhotoshop.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productAdobePhotoshop);
 
 
-            var productWindows8Pro = new Product
-            {
+            var productWindows8Pro = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Windows 8 Pro",
@@ -6993,16 +6806,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productWindows8Pro);
-            productWindows8Pro.ProductPictures.Add(new ProductPicture
-            {
+            productWindows8Pro.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productWindows8Pro);
 
 
-            var productSoundForge = new Product
-            {
+            var productSoundForge = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Sound Forge Pro 11",
@@ -7039,8 +6850,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productSoundForge);
-            productSoundForge.ProductPictures.Add(new ProductPicture
-            {
+            productSoundForge.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -7053,8 +6863,7 @@ namespace Grand.Services.Installation
 
 
             //this one is a grouped product with two associated ones
-            var productNikonD5500DSLR = new Product
-            {
+            var productNikonD5500DSLR = new Product {
                 ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
                 Name = "Nikon D5500 DSLR",
@@ -7091,19 +6900,16 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNikonD5500DSLR);
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
-            {
+            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
                 DisplayOrder = 1,
             });
-            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
-            {
+            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productNikonD5500DSLR);
-            var productNikonD5500DSLR_associated_1 = new Product
-            {
+            var productNikonD5500DSLR_associated_1 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false, //hide this products
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
@@ -7131,14 +6937,12 @@ namespace Grand.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productNikonD5500DSLR_associated_1);
-            productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
-            {
+            productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productNikonD5500DSLR_associated_1);
-            var productNikonD5500DSLR_associated_2 = new Product
-            {
+            var productNikonD5500DSLR_associated_2 = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false,
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
@@ -7166,15 +6970,13 @@ namespace Grand.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productNikonD5500DSLR_associated_2);
-            productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
-            {
+            productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productNikonD5500DSLR_associated_2);
 
-            var productLeica = new Product
-            {
+            var productLeica = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Leica T Mirrorless Digital Camera",
@@ -7211,16 +7013,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productLeica);
-            productLeica.ProductPictures.Add(new ProductPicture
-            {
+            productLeica.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productLeica);
 
 
-            var productAppleICam = new Product
-            {
+            var productAppleICam = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple iCam",
@@ -7265,8 +7065,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productAppleICam);
-            productAppleICam.ProductPictures.Add(new ProductPicture
-            {
+            productAppleICam.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -7276,8 +7075,7 @@ namespace Grand.Services.Installation
 
             #region Cell Phone
 
-            var productHtcOne = new Product
-            {
+            var productHtcOne = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One M8 Android L 5.0 Lollipop",
@@ -7317,16 +7115,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productHtcOne);
-            productHtcOne.ProductPictures.Add(new ProductPicture
-            {
+            productHtcOne.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productHtcOne);
 
 
-            var productHtcOneMini = new Product
-            {
+            var productHtcOneMini = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One Mini Blue",
@@ -7363,21 +7159,18 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productHtcOneMini);
-            productHtcOneMini.ProductPictures.Add(new ProductPicture
-            {
+            productHtcOneMini.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
                 DisplayOrder = 1,
             });
-            productHtcOneMini.ProductPictures.Add(new ProductPicture
-            {
+            productHtcOneMini.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productHtcOneMini);
 
 
-            var productNokiaLumia = new Product
-            {
+            var productNokiaLumia = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nokia Lumia 1020",
@@ -7414,8 +7207,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNokiaLumia);
-            productNokiaLumia.ProductPictures.Add(new ProductPicture
-            {
+            productNokiaLumia.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -7428,8 +7220,7 @@ namespace Grand.Services.Installation
 
 
 
-            var productBeatsPill = new Product
-            {
+            var productBeatsPill = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Beats Pill 2.0 Wireless Speaker",
@@ -7488,21 +7279,18 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productBeatsPill);
-            productBeatsPill.ProductPictures.Add(new ProductPicture
-            {
+            productBeatsPill.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
                 DisplayOrder = 1,
             });
-            productBeatsPill.ProductPictures.Add(new ProductPicture
-            {
+            productBeatsPill.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productBeatsPill);
 
 
-            var productUniversalTabletCover = new Product
-            {
+            var productUniversalTabletCover = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Universal 7-8 Inch Tablet Cover",
@@ -7539,16 +7327,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productUniversalTabletCover);
-            productUniversalTabletCover.ProductPictures.Add(new ProductPicture
-            {
+            productUniversalTabletCover.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productUniversalTabletCover);
 
 
-            var productPortableSoundSpeakers = new Product
-            {
+            var productPortableSoundSpeakers = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Portable Sound Speakers",
@@ -7585,8 +7371,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productPortableSoundSpeakers);
-            productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
-            {
+            productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -7598,8 +7383,7 @@ namespace Grand.Services.Installation
             #region Shoes
 
 
-            var productNikeFloral = new Product
-            {
+            var productNikeFloral = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Floral Roshe Customized Running Shoes",
@@ -7701,21 +7485,18 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNikeFloral);
-            productNikeFloral.ProductPictures.Add(new ProductPicture
-            {
+            productNikeFloral.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
                 DisplayOrder = 1,
             });
-            productNikeFloral.ProductPictures.Add(new ProductPicture
-            {
+            productNikeFloral.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name))).Id,
                 DisplayOrder = 2,
             });
             await _productRepository.InsertAsync(productNikeFloral);
 
 
-            var productAdidas = new Product
-            {
+            var productAdidas = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "adidas Consortium Campus 80s Running Shoes",
@@ -7819,18 +7600,15 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productAdidas);
-            productAdidas.ProductPictures.Add(new ProductPicture
-            {
+            productAdidas.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
                 DisplayOrder = 1,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture
-            {
+            productAdidas.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
                 DisplayOrder = 2,
             });
-            productAdidas.ProductPictures.Add(new ProductPicture
-            {
+            productAdidas.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name))).Id,
                 DisplayOrder = 3,
             });
@@ -7846,8 +7624,7 @@ namespace Grand.Services.Installation
             await _productRepository.UpdateAsync(productAdidas);
 
 
-            var productNikeZoom = new Product
-            {
+            var productNikeZoom = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
@@ -7892,8 +7669,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNikeZoom);
-            productNikeZoom.ProductPictures.Add(new ProductPicture
-            {
+            productNikeZoom.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -7904,8 +7680,7 @@ namespace Grand.Services.Installation
 
             #region Clothing
 
-            var productNikeTailwind = new Product
-            {
+            var productNikeTailwind = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
@@ -7999,15 +7774,13 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNikeTailwind);
-            productNikeTailwind.ProductPictures.Add(new ProductPicture
-            {
+            productNikeTailwind.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productNikeTailwind);
 
-            var productOversizedWomenTShirt = new Product
-            {
+            var productOversizedWomenTShirt = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Oversized Women T-Shirt",
@@ -8062,16 +7835,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productOversizedWomenTShirt);
-            productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
-            {
+            productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productOversizedWomenTShirt);
 
 
-            var productCustomTShirt = new Product
-            {
+            var productCustomTShirt = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Custom T-Shirt",
@@ -8118,16 +7889,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductPictures.Add(new ProductPicture
-            {
+            productCustomTShirt.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productCustomTShirt);
 
 
-            var productLeviJeans = new Product
-            {
+            var productLeviJeans = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Levi's 511 Jeans",
@@ -8184,13 +7953,11 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productLeviJeans);
 
-            productLeviJeans.ProductPictures.Add(new ProductPicture
-            {
+            productLeviJeans.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
                 DisplayOrder = 1,
             });
-            productLeviJeans.ProductPictures.Add(new ProductPicture
-            {
+            productLeviJeans.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name))).Id,
                 DisplayOrder = 2,
             });
@@ -8202,8 +7969,7 @@ namespace Grand.Services.Installation
             #region Accessories
 
 
-            var productObeyHat = new Product
-            {
+            var productObeyHat = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Obey Propaganda Hat",
@@ -8276,8 +8042,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productObeyHat);
-            productObeyHat.ProductPictures.Add(new ProductPicture
-            {
+            productObeyHat.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8285,8 +8050,7 @@ namespace Grand.Services.Installation
 
 
 
-            var productBelt = new Product
-            {
+            var productBelt = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Reversible Horseferry Check Belt",
@@ -8323,8 +8087,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productBelt);
-            productBelt.ProductPictures.Add(new ProductPicture
-            {
+            productBelt.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8332,8 +8095,7 @@ namespace Grand.Services.Installation
 
 
 
-            var productSunglasses = new Product
-            {
+            var productSunglasses = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Ray Ban Aviator Sunglasses",
@@ -8370,8 +8132,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productSunglasses);
-            productSunglasses.ProductPictures.Add(new ProductPicture
-            {
+            productSunglasses.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8382,8 +8143,7 @@ namespace Grand.Services.Installation
             #region Digital Downloads
 
 
-            var downloadNightVision1 = new Download
-            {
+            var downloadNightVision1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
@@ -8392,8 +8152,7 @@ namespace Grand.Services.Installation
                 IsNew = true,
             };
             await downloadService.InsertDownload(downloadNightVision1);
-            var downloadNightVision2 = new Download
-            {
+            var downloadNightVision2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
@@ -8402,8 +8161,7 @@ namespace Grand.Services.Installation
                 IsNew = true,
             };
             await downloadService.InsertDownload(downloadNightVision2);
-            var productNightVision = new Product
-            {
+            var productNightVision = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Night Visions",
@@ -8442,8 +8200,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productNightVision);
-            productNightVision.ProductPictures.Add(new ProductPicture
-            {
+            productNightVision.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8451,8 +8208,7 @@ namespace Grand.Services.Installation
 
 
 
-            var downloadIfYouWait1 = new Download
-            {
+            var downloadIfYouWait1 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
@@ -8461,8 +8217,7 @@ namespace Grand.Services.Installation
                 IsNew = true,
             };
             await downloadService.InsertDownload(downloadIfYouWait1);
-            var downloadIfYouWait2 = new Download
-            {
+            var downloadIfYouWait2 = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
@@ -8471,8 +8226,7 @@ namespace Grand.Services.Installation
                 IsNew = true,
             };
             await downloadService.InsertDownload(downloadIfYouWait2);
-            var productIfYouWait = new Product
-            {
+            var productIfYouWait = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "If You Wait",
@@ -8512,16 +8266,14 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productIfYouWait);
 
-            productIfYouWait.ProductPictures.Add(new ProductPicture
-            {
+            productIfYouWait.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productIfYouWait);
 
 
-            var downloadScienceAndFaith = new Download
-            {
+            var downloadScienceAndFaith = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
@@ -8530,8 +8282,7 @@ namespace Grand.Services.Installation
                 IsNew = true,
             };
             await downloadService.InsertDownload(downloadScienceAndFaith);
-            var productScienceAndFaith = new Product
-            {
+            var productScienceAndFaith = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Science & Faith",
@@ -8568,8 +8319,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productScienceAndFaith);
-            productScienceAndFaith.ProductPictures.Add(new ProductPicture
-            {
+            productScienceAndFaith.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8581,8 +8331,7 @@ namespace Grand.Services.Installation
 
             #region Books
 
-            var productFahrenheit = new Product
-            {
+            var productFahrenheit = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Fahrenheit 451 by Ray Bradbury",
@@ -8621,8 +8370,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productFahrenheit);
-            productFahrenheit.ProductPictures.Add(new ProductPicture
-            {
+            productFahrenheit.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8630,8 +8378,7 @@ namespace Grand.Services.Installation
 
 
 
-            var productFirstPrizePies = new Product
-            {
+            var productFirstPrizePies = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "First Prize Pies",
@@ -8669,15 +8416,13 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productFirstPrizePies);
-            productFirstPrizePies.ProductPictures.Add(new ProductPicture
-            {
+            productFirstPrizePies.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productFirstPrizePies);
 
-            var productPrideAndPrejudice = new Product
-            {
+            var productPrideAndPrejudice = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Pride and Prejudice",
@@ -8715,8 +8460,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productPrideAndPrejudice);
-            productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
-            {
+            productPrideAndPrejudice.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8728,8 +8472,7 @@ namespace Grand.Services.Installation
 
             #region Jewelry
 
-            var productElegantGemstoneNecklace = new Product
-            {
+            var productElegantGemstoneNecklace = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Elegant Gemstone Necklace",
@@ -8767,16 +8510,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productElegantGemstoneNecklace);
-            productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
-            {
+            productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productElegantGemstoneNecklace);
 
 
-            var productFlowerGirlBracelet = new Product
-            {
+            var productFlowerGirlBracelet = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Flower Girl Bracelet",
@@ -8814,16 +8555,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productFlowerGirlBracelet);
-            productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
-            {
+            productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(productFlowerGirlBracelet);
 
 
-            var productEngagementRing = new Product
-            {
+            var productEngagementRing = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Vintage Style Engagement Ring",
@@ -8860,8 +8599,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductPictures.Add(new ProductPicture
-            {
+            productEngagementRing.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -8874,8 +8612,7 @@ namespace Grand.Services.Installation
             #region Gift Cards
 
 
-            var product25GiftCard = new Product
-            {
+            var product25GiftCard = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$25 Virtual Gift Card",
@@ -8906,16 +8643,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(product25GiftCard);
-            product25GiftCard.ProductPictures.Add(new ProductPicture
-            {
+            product25GiftCard.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product25GiftCard);
 
 
-            var product50GiftCard = new Product
-            {
+            var product50GiftCard = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$50 Physical Gift Card",
@@ -8953,16 +8688,14 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(product50GiftCard);
-            product50GiftCard.ProductPictures.Add(new ProductPicture
-            {
+            product50GiftCard.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
             await _productRepository.InsertAsync(product50GiftCard);
 
 
-            var product100GiftCard = new Product
-            {
+            var product100GiftCard = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$100 Physical Gift Card",
@@ -8998,8 +8731,7 @@ namespace Grand.Services.Installation
                 }
             };
             allProducts.Add(product100GiftCard);
-            product100GiftCard.ProductPictures.Add(new ProductPicture
-            {
+            product100GiftCard.ProductPictures.Add(new ProductPicture {
                 PictureId = (await pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name))).Id,
                 DisplayOrder = 1,
             });
@@ -9011,8 +8743,7 @@ namespace Grand.Services.Installation
             foreach (var product in allProducts)
             {
                 product.SeName = SeoExtensions.GetSeName(product.Name, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = product.Id,
                     EntityName = "Product",
                     LanguageId = "",
@@ -9029,512 +8760,436 @@ namespace Grand.Services.Installation
             //related products
 
             productFlowerGirlBracelet.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFlowerGirlBracelet.Id,
                     ProductId2 = productEngagementRing.Id,
                 });
 
             productFlowerGirlBracelet.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFlowerGirlBracelet.Id,
                     ProductId2 = productElegantGemstoneNecklace.Id,
                 });
 
             productEngagementRing.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productEngagementRing.Id,
                     ProductId2 = productFlowerGirlBracelet.Id,
                 });
 
             productEngagementRing.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productEngagementRing.Id,
                     ProductId2 = productElegantGemstoneNecklace.Id,
                 });
 
             productElegantGemstoneNecklace.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productElegantGemstoneNecklace.Id,
                     ProductId2 = productFlowerGirlBracelet.Id,
                 });
 
             productElegantGemstoneNecklace.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productElegantGemstoneNecklace.Id,
                     ProductId2 = productEngagementRing.Id,
                 });
 
             productIfYouWait.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productIfYouWait.Id,
                     ProductId2 = productNightVision.Id,
                 });
 
             productIfYouWait.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productIfYouWait.Id,
                     ProductId2 = productScienceAndFaith.Id,
                 });
 
             productNightVision.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNightVision.Id,
                     ProductId2 = productIfYouWait.Id,
                 });
 
             productNightVision.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNightVision.Id,
                     ProductId2 = productScienceAndFaith.Id,
                 });
 
             productPrideAndPrejudice.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productPrideAndPrejudice.Id,
                     ProductId2 = productFirstPrizePies.Id,
                 });
 
             productPrideAndPrejudice.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productPrideAndPrejudice.Id,
                     ProductId2 = productFahrenheit.Id,
                 });
 
             productFirstPrizePies.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFirstPrizePies.Id,
                     ProductId2 = productPrideAndPrejudice.Id,
                 });
 
             productFirstPrizePies.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFirstPrizePies.Id,
                     ProductId2 = productFahrenheit.Id,
                 });
 
             productFahrenheit.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFahrenheit.Id,
                     ProductId2 = productFirstPrizePies.Id,
                 });
 
             productFahrenheit.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productFahrenheit.Id,
                     ProductId2 = productPrideAndPrejudice.Id,
                 });
 
             productAsusN551JK.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
             productAsusN551JK.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
 
             productAsusN551JK.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
             productAsusN551JK.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productHpSpectre.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
-                 new RelatedProduct
-                 {
+                 new RelatedProduct {
                      ProductId1 = productLenovoThinkpad.Id,
                      ProductId2 = productHpEnvy.Id,
                  });
 
             productAppleMacBookPro.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
-                 new RelatedProduct
-                 {
+                 new RelatedProduct {
                      ProductId1 = productAppleMacBookPro.Id,
                      ProductId2 = productHpSpectre.Id,
                  });
 
             productHpSpectre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
             productHpSpectre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
 
             productHpSpectre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
 
             productHpSpectre.RelatedProducts.Add(
-                 new RelatedProduct
-                 {
+                 new RelatedProduct {
                      ProductId1 = productHpSpectre.Id,
                      ProductId2 = productHpEnvy.Id,
                  });
 
             productHpEnvy.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productHpSpectre.Id,
                 });
 
             productHpEnvy.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productSamsungSeries.Id,
                 });
             productSamsungSeries.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productAsusN551JK.Id,
                 });
             productSamsungSeries.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
 
             productSamsungSeries.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productHpEnvy.Id,
                 });
             productSamsungSeries.RelatedProducts.Add(
-                 new RelatedProduct
-                 {
+                 new RelatedProduct {
                      ProductId1 = productSamsungSeries.Id,
                      ProductId2 = productHpSpectre.Id,
                  });
             productLeica.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productHtcOneMini.Id,
                 });
 
             productLeica.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productNikonD5500DSLR.Id,
                 });
 
             productLeica.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productAppleICam.Id,
                 });
 
             productLeica.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productNokiaLumia.Id,
                 });
             productHtcOne.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productHtcOneMini.Id,
                 });
 
             productHtcOne.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productNokiaLumia.Id,
                 });
             productHtcOne.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productBeatsPill.Id,
                 });
 
             productHtcOne.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
 
             productHtcOneMini.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productHtcOne.Id,
                 });
             productHtcOneMini.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productNokiaLumia.Id,
                 });
 
             productHtcOneMini.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productBeatsPill.Id,
                 });
             productHtcOneMini.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
             productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productHtcOne.Id,
                 });
             productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productHtcOneMini.Id,
                 });
 
             productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productBeatsPill.Id,
                 });
             productNokiaLumia.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
                 });
 
             productAdidas.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productLeviJeans.Id,
                 });
 
             productAdidas.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeFloral.Id,
                 });
 
             productAdidas.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeZoom.Id,
                 });
             productAdidas.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeTailwind.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productAdidas.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeFloral.Id,
                 });
 
             productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeZoom.Id,
                 });
             productLeviJeans.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeTailwind.Id,
                 });
 
             productCustomTShirt.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productLeviJeans.Id,
                 });
 
             productCustomTShirt.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productNikeTailwind.Id,
                 });
             productCustomTShirt.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productOversizedWomenTShirt.Id,
                 });
             productCustomTShirt.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productObeyHat.Id,
                 });
             productDigitalStorm.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
             productDigitalStorm.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productLenovoIdeaCentre.Id,
                 });
             productDigitalStorm.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
             productDigitalStorm.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productBuildComputer.Id,
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productDigitalStorm.Id,
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productLenovoThinkpad.Id,
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
-                new RelatedProduct
-                {
+                new RelatedProduct {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productAppleMacBookPro.Id,
                 });
@@ -9653,8 +9308,7 @@ namespace Grand.Services.Installation
 
                 //rating from 4 to 5
                 var rating = random.Next(4, 6);
-                var productReview = new ProductReview
-                {
+                var productReview = new ProductReview {
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
                     IsApproved = true,
@@ -9678,8 +9332,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallForums()
         {
-            var forumGroup = new ForumGroup
-            {
+            var forumGroup = new ForumGroup {
                 Name = "General",
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -9688,8 +9341,7 @@ namespace Grand.Services.Installation
 
             await _forumGroupRepository.InsertAsync(forumGroup);
 
-            var newProductsForum = new Forum
-            {
+            var newProductsForum = new Forum {
                 ForumGroupId = forumGroup.Id,
                 Name = "New Products",
                 Description = "Discuss new products and industry trends",
@@ -9703,8 +9355,7 @@ namespace Grand.Services.Installation
             };
             await _forumRepository.InsertAsync(newProductsForum);
 
-            var mobileDevicesForum = new Forum
-            {
+            var mobileDevicesForum = new Forum {
                 ForumGroupId = forumGroup.Id,
                 Name = "Mobile Devices Forum",
                 Description = "Discuss the mobile phone market",
@@ -9718,8 +9369,7 @@ namespace Grand.Services.Installation
             };
             await _forumRepository.InsertAsync(mobileDevicesForum);
 
-            var packagingShippingForum = new Forum
-            {
+            var packagingShippingForum = new Forum {
                 ForumGroupId = forumGroup.Id,
                 Name = "Packaging & Shipping",
                 Description = "Discuss packaging & shipping",
@@ -9805,8 +9455,7 @@ namespace Grand.Services.Installation
             foreach (var blogPost in blogPosts)
             {
                 var seName = SeoExtensions.GetSeName(blogPost.Title, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
                     LanguageId = "",
@@ -9850,8 +9499,7 @@ namespace Grand.Services.Installation
             foreach (var blogPost in blogPosts)
             {
                 blogPost.SeName = SeoExtensions.GetSeName(blogPost.Title, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
                     LanguageId = "",
@@ -9902,8 +9550,7 @@ namespace Grand.Services.Installation
             foreach (var newsItem in news)
             {
                 newsItem.SeName = SeoExtensions.GetSeName(newsItem.Title, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = newsItem.Id,
                     EntityName = "NewsItem",
                     LanguageId = "",
@@ -9918,37 +9565,31 @@ namespace Grand.Services.Installation
         protected virtual async Task InstallPolls()
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
-            var poll1 = new Poll
-            {
+            var poll1 = new Poll {
                 Name = "Do you like Grandnode for MongoDB?",
                 SystemKeyword = "",
                 Published = true,
                 ShowOnHomePage = true,
                 DisplayOrder = 1,
             };
-            poll1.PollAnswers.Add(new PollAnswer
-            {
+            poll1.PollAnswers.Add(new PollAnswer {
                 Name = "Like very much",
                 DisplayOrder = 1,
             });
-            poll1.PollAnswers.Add(new PollAnswer
-            {
+            poll1.PollAnswers.Add(new PollAnswer {
                 Name = "Like",
                 DisplayOrder = 2,
             });
-            poll1.PollAnswers.Add(new PollAnswer
-            {
+            poll1.PollAnswers.Add(new PollAnswer {
                 Name = "Neither Like nor Dislike",
                 DisplayOrder = 3,
             });
-            poll1.PollAnswers.Add(new PollAnswer
-            {
+            poll1.PollAnswers.Add(new PollAnswer {
                 Name = "Dislike",
                 DisplayOrder = 4,
 
             });
-            poll1.PollAnswers.Add(new PollAnswer
-            {
+            poll1.PollAnswers.Add(new PollAnswer {
                 Name = "Dislike very much",
                 DisplayOrder = 5,
 
@@ -9996,6 +9637,18 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "AddNewDiscount",
                                                   Enabled = true,
                                                   Name = "Add a new discount"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "AddNewDocument",
+                                                  Enabled = false,
+                                                  Name = "Add a new document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "AddNewDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Add a new document type"
                                               },
                                           new ActivityLogType
                                               {
@@ -10086,6 +9739,19 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "DeleteDiscount",
                                                   Enabled = true,
                                                   Name = "Delete a discount"
+                                              },
+
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteDocument",
+                                                  Enabled = false,
+                                                  Name = "Delete document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Delete document type"
                                               },
                                           new ActivityLogType
                                               {
@@ -10182,6 +9848,18 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "EditDiscount",
                                                   Enabled = true,
                                                   Name = "Edit a discount"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditDocument",
+                                                  Enabled = false,
+                                                  Name = "Edit document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Edit document type"
                                               },
                                           new ActivityLogType
                                               {
@@ -10736,8 +10414,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallWarehouses()
         {
-            var warehouse1address = new Address
-            {
+            var warehouse1address = new Address {
                 Address1 = "21 West 52nd Street",
                 City = "New York",
                 StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York").Id,
@@ -10746,8 +10423,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
             };
             await _addressRepository.InsertAsync(warehouse1address);
-            var warehouse2address = new Address
-            {
+            var warehouse2address = new Address {
                 Address1 = "300 South Spring Stree",
                 City = "Los Angeles",
                 StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California").Id,
@@ -10775,8 +10451,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallPickupPoints()
         {
-            var addresspoint = new Address
-            {
+            var addresspoint = new Address {
                 Address1 = "21 West 52nd Street",
                 City = "New York",
                 StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York").Id,
@@ -10786,8 +10461,7 @@ namespace Grand.Services.Installation
             };
             await _addressRepository.InsertAsync(addresspoint);
 
-            var point = new PickupPoint()
-            {
+            var point = new PickupPoint() {
                 Address = addresspoint,
                 Name = "My Store - New York",
             };
@@ -10832,8 +10506,7 @@ namespace Grand.Services.Installation
             foreach (var vendor in vendors)
             {
                 var seName = SeoExtensions.GetSeName(vendor.Name, false, false);
-                await _urlRecordRepository.InsertAsync(new UrlRecord
-                {
+                await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = vendor.Id,
                     EntityName = "Vendor",
                     LanguageId = "",
@@ -10847,8 +10520,7 @@ namespace Grand.Services.Installation
 
         protected virtual async Task InstallAffiliates()
         {
-            var affiliateAddress = new Address
-            {
+            var affiliateAddress = new Address {
                 FirstName = "John",
                 LastName = "Smith",
                 Email = "affiliate_email@gmail.com",
@@ -10862,8 +10534,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
             };
             await _addressRepository.InsertAsync(affiliateAddress);
-            var affilate = new Affiliate
-            {
+            var affilate = new Affiliate {
                 Active = true,
                 Address = affiliateAddress
             };
@@ -10875,8 +10546,7 @@ namespace Grand.Services.Installation
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
             if (productTag == null)
             {
-                productTag = new ProductTag
-                {
+                productTag = new ProductTag {
                     Name = tag,
                     SeName = SeoExtensions.GetSeName(tag, false, false),
                 };

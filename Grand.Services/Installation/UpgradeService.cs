@@ -575,7 +575,7 @@ namespace Grand.Services.Installation
             IPermissionProvider provider = new StandardPermissionProvider();
             await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
             #endregion
-            
+
             #region Update tags on the products
 
             var productTagService = _serviceProvider.GetRequiredService<IProductTagService>();
@@ -765,6 +765,48 @@ namespace Grand.Services.Installation
 
             IPermissionProvider provider = new StandardPermissionProvider();
             await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
+
+            #endregion
+
+            #region Activity Log Type
+
+            var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "AddNewDocument",
+                    Enabled = false,
+                    Name = "Add a new document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "AddNewDocumentType",
+                    Enabled = false,
+                    Name = "Add a new document type"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "EditDocument",
+                    Enabled = false,
+                    Name = "Edit document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "EditDocumentType",
+                    Enabled = false,
+                    Name = "Edit document type"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "DeleteDocument",
+                    Enabled = false,
+                    Name = "Delete document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "DeleteDocumentType",
+                    Enabled = false,
+                    Name = "Delete document type"
+                });
 
             #endregion
 
