@@ -20346,4 +20346,100 @@
   <LocaleResource Name="pushnotifications.message.fields.text">
     <Value>Message content</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Type.Fields.Name.Hint">
+    <Value>Enter the name of the document type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Type.Fields.Description.Hint">
+    <Value>Enter the description of the document type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Type.Fields.DisplayOrder.Hint">
+    <Value>Provide the display order of the document type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.List.SearchName.Hint">
+    <Value>Specify the name of the document to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.List.SearchNumber.Hint">
+    <Value>Specify the number of the document to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.List.SearchEmail.Hint">
+    <Value>Specify the name of the document to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.List.DocumentStatus.Hint">
+    <Value>Specify the status of the document to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Number.Hint">
+    <Value>Enter the number of the document. You can filter documents by documents number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Name.Hint">
+    <Value>Enter the name of the document. You can filter documents by documents name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Description.Hint">
+    <Value>Enter the description of the document. You can filter documents by documents description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Link.Hint">
+    <Value>Enter the link assigned to this document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.DocumentType.Hint">
+    <Value>Select the document type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Status.Hint">
+    <Value>Select the status of the document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Reference.Hint">
+    <Value>Select the reference of the document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Published.Hint">
+    <Value>Specify if document should be published or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Download.Hint">
+    <Value>Upload files to download or provide the download URL with additional content.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.DisplayOrder.Hint">
+    <Value>Specify the display order of the element</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Flag.Hint">
+    <Value>Enter the flag name to highlight the document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Picture.Hint">
+    <Value>Upload the picture of the document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.CustomerEmail.Hint">
+    <Value>Enter the email address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Username.Hint">
+    <Value>Enter the username of customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.CurrencyCode.Hint">
+    <Value>Enter the currency code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.TotalAmount.Hint">
+    <Value>Provide the total ammount of document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.OutstandAmount.Hint">
+    <Value>Provide the amount of outstanding payment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Quantity.Hint">
+    <Value>Provide the quantity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.DocDate.Hint">
+    <Value>Provide the document creation date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.DueDate.Hint">
+    <Value>Provide the due date of the document.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.SubjectToAcl.Hint">
+    <Value>Check this box if you want to limit document to specified role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.AclCustomerRoles.Hint">
+    <Value>Check roles to which document should be limited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.LimitedToStores.Hint">
+    <Value>Check this box if you want to limit document to specified store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.AvailableStores.Hint">
+    <Value>Check stores to which document should be limited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.Fields.Object.Hint">
+    <Value>Provide the referenced object ID.</Value>
+  </LocaleResource>
 </Language>
