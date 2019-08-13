@@ -15,6 +15,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Documents;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -173,8 +174,7 @@ namespace Grand.Web.Services
             var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var attributeModel = new CustomerAttributeModel
-                {
+                var attributeModel = new CustomerAttributeModel {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     IsRequired = attribute.IsRequired,
@@ -187,8 +187,7 @@ namespace Grand.Web.Services
                     var attributeValues = attribute.CustomerAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
-                        var valueModel = new CustomerAttributeValueModel
-                        {
+                        var valueModel = new CustomerAttributeValueModel {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                             IsPreSelected = attributeValue.IsPreSelected
@@ -302,8 +301,7 @@ namespace Grand.Web.Services
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 var categories = (await _newsletterCategoryService.GetAllNewsletterCategory()).ToList();
-                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
+                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
                     Id = x.Id,
                     Description = x.GetLocalized(y => y.Description, _workContext.WorkingLanguage.Id),
                     Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
@@ -327,8 +325,7 @@ namespace Grand.Web.Services
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
+                    model.AvailableCountries.Add(new SelectListItem {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
@@ -352,8 +349,7 @@ namespace Grand.Web.Services
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem
-                        {
+                        model.AvailableStates.Add(new SelectListItem {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = ""
                         });
@@ -400,8 +396,7 @@ namespace Grand.Web.Services
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
-                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
-                {
+                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel {
                     Id = ear.Id,
                     Email = ear.Email,
                     ExternalIdentifier = ear.ExternalDisplayIdentifier,
@@ -465,8 +460,7 @@ namespace Grand.Web.Services
 
                 foreach (var c in await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
+                    model.AvailableCountries.Add(new SelectListItem {
                         Text = c.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
@@ -490,8 +484,7 @@ namespace Grand.Web.Services
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem
-                        {
+                        model.AvailableStates.Add(new SelectListItem {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = ""
                         });
@@ -511,8 +504,7 @@ namespace Grand.Web.Services
             var newsletterCategories = await _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
             foreach (var item in newsletterCategories)
             {
-                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
                     Id = item.Id,
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
@@ -658,6 +650,8 @@ namespace Grand.Web.Services
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             model.HideAuctions = _customerSettings.HideAuctionsTab;
             model.HideNotes = _customerSettings.HideNotesTab;
+            model.HideDocuments = _customerSettings.HideDocumentsTab;
+
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -709,8 +703,7 @@ namespace Grand.Web.Services
             {
                 var order = await _orderService.GetOrderByOrderItemId(item.Id);
                 var product = await productService.GetProductByIdIncludeArch(item.ProductId);
-                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
-                {
+                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = order.Id,
                     OrderNumber = order.OrderNumber,
@@ -805,6 +798,34 @@ namespace Grand.Web.Services
                 mm.Title = item.Title;
                 mm.DownloadId = item.DownloadId;
                 model.CustomerNoteList.Add(mm);
+            }
+            return model;
+        }
+
+        public virtual async Task<DocumentsModel> PrepareDocuments(Customer customer)
+        {
+            var model = new DocumentsModel();
+            model.CustomerId = customer.Id;
+            var documentService = _serviceProvider.GetRequiredService<IDocumentService>();
+            var documentTypeService = _serviceProvider.GetRequiredService<IDocumentTypeService>();
+            var documents = await documentService.GetAll(customer.Id);
+            foreach (var item in documents.Where(x => x.Published).OrderBy(x => x.DisplayOrder))
+            {
+                var doc = new Document();
+                doc.Id = item.Id;
+                doc.Amount = item.TotalAmount;
+                doc.OutstandAmount = item.OutstandAmount;
+                doc.Link = item.Link;
+                doc.Name = item.Name;
+                doc.Number = item.Number;
+                doc.Quantity = item.Quantity;
+                doc.Status = item.DocumentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                doc.Description = item.Description;
+                doc.DocDate = item.DocDate;
+                doc.DueDate = item.DueDate;
+                doc.DocumentType = (await documentTypeService.GetById(item.DocumentTypeId))?.Name;
+                doc.DownloadId = item.DownloadId;
+                model.DocumentList.Add(doc);
             }
             return model;
         }

@@ -48,6 +48,15 @@
                                                                              {<text>inactive</text>}"><span class="mdi mdi-chat"></span><span>@T("Account.CustomerNotes")</span></a>
                                                                         </li>
                                                                     }
+            @if (!Model.HideDocuments)
+            {
+                <li class="customer-notes">
+                    <a href="@Url.RouteUrl("CustomerDocuments")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Documents)
+                                                                    {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-file-document-edit-outline"></span><span>@T("Account.CustomerDocuments")</span></a>
+                                                                        </li>
+                                                                    }
             @if (!Model.HideReturnRequests)
             {
                 <li class="customer-returns">
@@ -129,6 +138,6 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-account-supervisor"></span><span>@T("Account.VendorInfo")</span></a>
                                                                 </li>
                                                             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData=Model })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
         </ul>
 </div>

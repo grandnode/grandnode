@@ -302,5 +302,28 @@
   <LocaleResource Name="Admin.Customers.Customers.Documents">
     <Value>Documents</Value>
   </LocaleResource>
-
+  <LocaleResource Name="PageTitle.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerDocuments">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.Attachment">
+    <Value>Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.DocDate">
+    <Value>Doc date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.DueDate">
+    <Value>Due date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.NoExists">
+    <Value>Documents not exists</Value>
+  </LocaleResource>
 </Language>

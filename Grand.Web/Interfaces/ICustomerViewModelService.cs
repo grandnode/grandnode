@@ -29,5 +29,6 @@ namespace Grand.Web.Interfaces
         Task<CustomerAvatarModel> PrepareAvatar(Customer customer);
         Task<CustomerAuctionsModel> PrepareAuctions(Customer customer);
         Task<CustomerNotesModel> PrepareNotes(Customer customer);
+        Task<DocumentsModel> PrepareDocuments(Customer customer);
     }
 }

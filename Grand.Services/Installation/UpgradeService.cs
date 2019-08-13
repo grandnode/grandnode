@@ -810,6 +810,15 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update customer settings
+
+            var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+            var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
+            customerSettings.HideDocumentsTab = true;
+            await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
         }
         private async Task InstallStringResources(string filenames)
         {

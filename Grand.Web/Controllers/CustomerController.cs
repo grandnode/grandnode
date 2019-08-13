@@ -1371,5 +1371,22 @@ namespace Grand.Web.Controllers
         }
 
         #endregion
+
+        #region My account / Documents
+
+        public virtual async Task<IActionResult> Documents()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideDocumentsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = await _customerViewModelService.PrepareDocuments(_workContext.CurrentCustomer);
+
+            return View(model);
+        }
+
+        #endregion
     }
 }

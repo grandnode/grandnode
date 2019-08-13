@@ -3,6 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
@@ -282,6 +283,34 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
+        public virtual async Task<IActionResult> GetDocumentFile(string documentId,
+            [FromServices] IDocumentService documentService)
+        {
+            if (string.IsNullOrEmpty(documentId))
+                return Content("Download is not available.");
 
+            var document = await documentService.GetById(documentId);
+            if (document == null || !document.Published)
+                return InvokeHttp404();
+
+            if (_workContext.CurrentCustomer == null || document.CustomerId != _workContext.CurrentCustomer.Id)
+                return Challenge();
+
+            var download = await _downloadService.GetDownloadById(document.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+                return new RedirectResult(download.DownloadUrl);
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : document.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+        }
     }
 }

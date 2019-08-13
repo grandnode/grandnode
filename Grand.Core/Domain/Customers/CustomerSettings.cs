@@ -105,6 +105,11 @@ namespace Grand.Core.Domain.Customers
         public bool HideNotesTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Documents' tab on 'My account' page
+        /// </summary>
+        public bool HideDocumentsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to validate user when downloading products
         /// </summary>
         public bool DownloadableProductsValidateUser { get; set; }

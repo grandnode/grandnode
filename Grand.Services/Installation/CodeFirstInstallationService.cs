@@ -5047,6 +5047,7 @@ namespace Grand.Services.Installation
                 HideBackInStockSubscriptionsTab = false,
                 HideAuctionsTab = true,
                 HideNotesTab = true,
+                HideDocumentsTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = false,

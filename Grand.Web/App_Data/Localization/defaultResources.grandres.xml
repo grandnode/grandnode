@@ -198,6 +198,9 @@
   <LocaleResource Name="Account.CustomerInfo">
     <Value>Customer info</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerDocuments">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerNotes">
     <Value>Customer notes</Value>
   </LocaleResource>
@@ -317,6 +320,24 @@
   </LocaleResource>
   <LocaleResource Name="Account.DeleteAccount.Fields.Password.Required">
     <Value>Password field is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.Attachment">
+    <Value>Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.DocDate">
+    <Value>Doc date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.DueDate">
+    <Value>Due date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Documents.NoExists">
+    <Value>Documents not exists</Value>
   </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
@@ -17763,6 +17784,9 @@
   </LocaleResource>
   <LocaleResource Name="Forum.PageTitle.Default">
     <Value>Forums</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.PageTitle.MoveTopic">
     <Value>Move Topic</Value>
