@@ -74,11 +74,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(model.CustomerId))
+                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Id;
+
                 var document = model.ToEntity();
                 document.CreatedOnUtc = DateTime.UtcNow;
-
-                if (string.IsNullOrEmpty(model.CustomerId))
-                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Email;
 
                 await _documentService.Insert(document);
 
@@ -125,11 +125,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(model.CustomerId))
+                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Id;
+
                 document = model.ToEntity(document);
                 document.UpdatedOnUtc = DateTime.UtcNow;
-
-                if (string.IsNullOrEmpty(model.CustomerId))
-                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Email;
 
                 await _documentService.Update(document);
 
