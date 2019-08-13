@@ -203,7 +203,7 @@ body {
 }
 
 .left_col {
-    background: #2A3F54
+    background: #2F3C48
 }
 
 .nav-sm .container.body .col-md-3.left_col {
@@ -278,7 +278,8 @@ body {
 
 .nav-sm .nav.child_menu li.active, .nav-sm .nav.side-menu li.active-sm {
     border-right: 5px solid #1ABB9C;
-    background: rgba(255, 255, 255, 0.05);
+    background: #416B8E;
+    /*background: rgba(255, 255, 255, 0.05);*/
 }
 
 .nav-sm ul.nav.child_menu ul, .nav-sm .nav.side-menu li.active-sm ul ul {
@@ -464,9 +465,11 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #2A3F54;
+    /*background: #2A3F54;*/
+    background: #2F3C48;
     border-radius: 0;
-    height: 57px
+    height: 57px;
+    border-bottom: 1px solid #4D6376;
 }
 
 @media (max-width: 991px) {
@@ -616,7 +619,7 @@ body .container.body .right_col {
 
 body {
     color: #333333;
-    background: #2A3F54;
+    background: #2F3C48;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     font-weight: 400;
@@ -956,11 +959,12 @@ a:hover, a:focus {
 .nav.side-menu>li {
     position: relative;
     display: block;
-    cursor: pointer
+    cursor: pointer;
+    border-bottom: 1px solid #4D6376;
 }
 
 .nav.side-menu>li>a {
-    margin-bottom: 6px
+    margin-bottom: 5px
 }
 
 .nav.side-menu>li>a:hover {
@@ -1060,9 +1064,10 @@ a:hover, a:focus {
     color: #fff
 }
 
-.nav.side-menu>li.active>a {
+.nav.side-menu > li.active > a {
     text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-    background: linear-gradient(#334556, #2C4257), #2A3F54;
+    /*background: linear-gradient(#334556, #2C4257), #2A3F54;*/
+    background: #416B8E;
     box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0
 }
 
@@ -2119,7 +2124,7 @@ span.right {
     padding: 5px 0 0 0;
     position: fixed;
     width: 230px;
-    background: #2A3F54;
+    background: #2F3C48;
     z-index: 999;
 }
 
