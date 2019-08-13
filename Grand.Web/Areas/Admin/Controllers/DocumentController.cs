@@ -76,6 +76,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var document = model.ToEntity();
                 document.CreatedOnUtc = DateTime.UtcNow;
+
+                if (string.IsNullOrEmpty(model.CustomerId))
+                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Email;
+
                 await _documentService.Insert(document);
 
                 //activity log
@@ -123,6 +127,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 document = model.ToEntity(document);
                 document.UpdatedOnUtc = DateTime.UtcNow;
+
+                if (string.IsNullOrEmpty(model.CustomerId))
+                    model.CustomerId = (await _customerService.GetCustomerByEmail(model.CustomerEmail))?.Email;
+
                 await _documentService.Update(document);
 
                 //activity log
