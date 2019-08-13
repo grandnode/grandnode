@@ -425,7 +425,7 @@ body {
 
 .nav_menu {
     float: left;
-    background: white;
+    background: #EFF4F9;
     border-bottom: 1px solid #D9DEE4;
     /*margin-bottom: 10px;*/
     width: 100%;
@@ -2347,7 +2347,7 @@ h4.graph_title {
     position: relative;
     display: block;
     margin-bottom: 12px;
-    border: 1px solid #E4E4E4;
+    border: 1px solid #D7DADC;
     -webkit-border-radius: 5px;
     overflow: hidden;
     padding-bottom: 5px;
@@ -5127,7 +5127,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 /** /bootstrap-datetimepicker **/
 
 .tile-stats {
-    border: 1px solid #1ABB9C;
+    /*border: 1px solid #1ABB9C;*/
 }
 
 .btn.green:not(.btn-outline) {
