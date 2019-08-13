@@ -608,7 +608,7 @@ namespace Grand.Services.Orders
 
                     var shippingOptionRequests = await _shippingService.CreateShippingOptionRequests(customer, cart,
                         shippingAddress,
-                        _storeContext.CurrentStore.Id);
+                        _storeContext.CurrentStore);
                     bool shippingFromMultipleLocations = shippingOptionRequests.shippingFromMultipleLocations;
                     decimal? fixedRate = null;
                     foreach (var shippingOptionRequest in shippingOptionRequests.shippingOptionRequest)

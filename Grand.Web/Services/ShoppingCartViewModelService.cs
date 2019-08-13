@@ -1504,7 +1504,7 @@ namespace Grand.Web.Services
                     ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = await _shippingService
-                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore.Id);
+                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)

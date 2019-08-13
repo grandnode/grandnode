@@ -238,7 +238,7 @@ namespace Grand.Web.Services
 
             var getShippingOptionResponse = await _shippingService
                 .GetShippingOptions(_workContext.CurrentCustomer, cart, shippingAddress,
-                "", _storeContext.CurrentStore.Id);
+                "", _storeContext.CurrentStore);
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.

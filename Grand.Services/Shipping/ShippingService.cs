@@ -6,6 +6,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -15,7 +16,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -820,7 +820,7 @@ namespace Grand.Services.Shipping
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
         public virtual async Task<(IList<GetShippingOptionRequest> shippingOptionRequest, bool shippingFromMultipleLocations)> CreateShippingOptionRequests(Customer customer,
-            IList<ShoppingCartItem> cart, Address shippingAddress, string storeId)
+            IList<ShoppingCartItem> cart, Address shippingAddress, Store store)
         {
             //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
@@ -865,6 +865,18 @@ namespace Grand.Services.Shipping
                         warehouse = await GetWarehouseById(product.WarehouseId);
                     }
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(sci.WarehouseId))
+                        warehouse = await GetWarehouseById(sci.WarehouseId);
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(store?.DefaultWarehouseId))
+                            warehouse = await GetWarehouseById(store.DefaultWarehouseId);
+                    }
+
+                }
+
                 string warehouseId = warehouse != null ? warehouse.Id : "";
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
@@ -877,7 +889,7 @@ namespace Grand.Services.Shipping
                     //create a new request
                     var request = new GetShippingOptionRequest();
                     //store
-                    request.StoreId = storeId;
+                    request.StoreId = store?.Id;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //ship to
@@ -940,7 +952,7 @@ namespace Grand.Services.Shipping
         /// <returns>Shipping options</returns>
         public virtual async Task<GetShippingOptionResponse> GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart,
             Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "",
-            string storeId = "")
+            Store store = null)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -948,10 +960,10 @@ namespace Grand.Services.Shipping
             var result = new GetShippingOptionResponse();
 
             //create a package
-            var shippingOptionRequests = await CreateShippingOptionRequests(customer, cart, shippingAddress, storeId);
+            var shippingOptionRequests = await CreateShippingOptionRequests(customer, cart, shippingAddress, store);
             result.ShippingFromMultipleLocations = shippingOptionRequests.shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = await LoadActiveShippingRateComputationMethods(storeId, cart);
+            var shippingRateComputationMethods = await LoadActiveShippingRateComputationMethods(store?.Id, cart);
             //filter by system name
             if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
             {

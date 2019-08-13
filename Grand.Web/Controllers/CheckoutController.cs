@@ -580,7 +580,7 @@ namespace Grand.Web.Controllers
             {
                 //not found? let's load them using shipping service
                 shippingOptions = (await _shippingService
-                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                     .ShippingOptions
                     .ToList();
             }
@@ -1384,7 +1384,7 @@ namespace Grand.Web.Controllers
                 {
                     //not found? let's load them using shipping service
                     shippingOptions = (await _shippingService
-                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                         .ShippingOptions
                         .ToList();
                 }
