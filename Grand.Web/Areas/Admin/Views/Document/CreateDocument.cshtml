@@ -13,6 +13,10 @@
                         <i class="fa fa-sitemap"></i>
                         @T("Admin.Documents.Document.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Documents.Document.BackToList").Text, "List")</small>
+                        @if (!string.IsNullOrEmpty(Model.CustomerId))
+                        {
+                            <small><i class="fa fa-user"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToCustomer").Text, "Edit", "Customer", new { id = Model.CustomerId })</small>
+                        }
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">

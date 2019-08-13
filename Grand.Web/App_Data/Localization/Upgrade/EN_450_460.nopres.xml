@@ -293,4 +293,14 @@
   <LocaleResource Name="Admin.Documents.Document.Fields.Object.Hint">
     <Value>Provide the referenced object ID.</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.documents.document.gotocustomer">
+    <Value>Go to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Document.Add">
+    <Value>Add new document</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+
 </Language>
