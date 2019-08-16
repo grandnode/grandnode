@@ -11,7 +11,9 @@ COPY Grand.Web/Grand.Web.csproj Grand.Web/Grand.Web.csproj
 COPY Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj
 COPY Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj
 COPY Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj
+COPY Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj
 COPY Plugins/Grand.Plugin.Feed.GoogleShopping/Grand.Plugin.Feed.GoogleShopping.csproj Plugins/Grand.Plugin.Feed.GoogleShopping/Grand.Plugin.Feed.GoogleShopping.csproj
+COPY Plugins/Grand.Plugin.Payments.BrainTree/Grand.Plugin.Payments.BrainTree.csproj Plugins/Grand.Plugin.Payments.BrainTree/Grand.Plugin.Payments.BrainTree.csproj
 COPY Plugins/Grand.Plugin.Payments.CashOnDelivery/Grand.Plugin.Payments.CashOnDelivery.csproj Plugins/Grand.Plugin.Payments.CashOnDelivery/Grand.Plugin.Payments.CashOnDelivery.csproj
 COPY Plugins/Grand.Plugin.Payments.CheckMoneyOrder/Grand.Plugin.Payments.CheckMoneyOrder.csproj Plugins/Grand.Plugin.Payments.CheckMoneyOrder/Grand.Plugin.Payments.CheckMoneyOrder.csproj
 COPY Plugins/Grand.Plugin.Payments.PayInStore/Grand.Plugin.Payments.PayInStore.csproj Plugins/Grand.Plugin.Payments.PayInStore/Grand.Plugin.Payments.PayInStore.csproj
@@ -30,7 +32,9 @@ RUN dotnet publish Grand.Web -c Release -o out
 RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard
 RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
 RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
+RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Google
 RUN dotnet build Plugins/Grand.Plugin.Feed.GoogleShopping
+RUN dotnet build Plugins/Grand.Plugin.Payments.BrainTree
 RUN dotnet build Plugins/Grand.Plugin.Payments.CashOnDelivery
 RUN dotnet build Plugins/Grand.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Plugins/Grand.Plugin.Payments.PayInStore
