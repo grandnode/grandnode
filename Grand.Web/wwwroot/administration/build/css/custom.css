@@ -956,15 +956,15 @@ a:hover, a:focus {
     margin-top: 0
 }
 
-.nav.side-menu>li {
+.nav.side-menu > li {
     position: relative;
     display: block;
     cursor: pointer;
-    border-bottom: 1px solid #4D6376;
+    border-bottom: 1px solid #3d4957;
 }
 
 .nav.side-menu>li>a {
-    margin-bottom: 5px
+    /*margin-bottom: 5px*/
 }
 
 .nav.side-menu>li>a:hover {
