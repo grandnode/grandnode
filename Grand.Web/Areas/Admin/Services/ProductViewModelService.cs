@@ -1909,15 +1909,15 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount)> PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize)
         {
+            var storeId = model.SearchStoreId;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
             var vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
-            
             var searchCategoryIds = new List<string>();
             if (!string.IsNullOrEmpty(model.SearchCategoryId))
                 searchCategoryIds.Add(model.SearchCategoryId);
@@ -1925,7 +1925,7 @@ namespace Grand.Web.Areas.Admin.Services
             var products = (await _productService.SearchProducts(categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 vendorId: vendorId,
-                storeId: model.SearchStoreId,
+                storeId: storeId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: pageIndex - 1,
