@@ -4,7 +4,7 @@ using Grand.Core.Infrastructure;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Grand.Core
+namespace Grand.Framework.StartUpTask
 {
     /// <summary>
     /// Startup task for the registration custom type converters
