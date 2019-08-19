@@ -44,184 +44,187 @@
                      <span asp-validation-for="@Model.Locales[item].Description"></span>
                  </div>
              </div>
+             <div class="form-group">
+                 <admin-label asp-for="@Model.Locales[item].Flag" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="@Model.Locales[item].Flag" />
+                     <span asp-validation-for="@Model.Locales[item].Flag"></span>
+                 </div>
+             </div>
              <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
          </div>
     </div>
-    ,
+                ,
     @<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Name" />
-                    <span asp-validation-for="Name"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <admin-label asp-for="Description" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Description" asp-template="RichEditor" />
-                    <span asp-validation-for="Description"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    ))
-<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            <admin-label asp-for="CategoryTemplateId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="CategoryTemplateId" asp-items="Model.AvailableCategoryTemplates" />
-                <span asp-validation-for="CategoryTemplateId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="PictureId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PictureId" />
-                <span asp-validation-for="PictureId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="ParentCategoryId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ParentCategoryId" asp-items="Model.AvailableCategories" />
-                <span asp-validation-for="ParentCategoryId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="PriceRanges" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PriceRanges" />
-                <span asp-validation-for="PriceRanges"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="ShowOnHomePage" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="ShowOnHomePage" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="ShowOnHomePage"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="FeaturedProductsOnHomaPage" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="FeaturedProductsOnHomaPage" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="FeaturedProductsOnHomaPage"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="IncludeInTopMenu" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="IncludeInTopMenu" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="IncludeInTopMenu"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="ShowOnSearchBox" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="ShowOnSearchBox" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="ShowOnSearchBox"></span>
-            </div>
-        </div>
-        <div class="form-group" id="pnlSearchBoxOrder">
-            <admin-label asp-for="SearchBoxDisplayOrder" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="SearchBoxDisplayOrder" />
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="AllowCustomersToSelectPageSize" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="AllowCustomersToSelectPageSize" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
-            </div>
-        </div>
-        <div class="form-group" id="pnlPageSize">
-            <admin-label asp-for="PageSize" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PageSize" />
-                <span asp-validation-for="PageSize"></span>
-            </div>
-        </div>
-        <div class="form-group" id="pnlPageSizeOptions">
-            <admin-label asp-for="PageSizeOptions" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PageSizeOptions" />
-                <span asp-validation-for="PageSizeOptions"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="DefaultSort" />
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="DefaultSort" asp-items="Model.AvailableSortOptions" />
-                <span asp-validation-for="DefaultSort"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Published" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="Published" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="Published"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="DisplayOrder" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="DisplayOrder" />
-                <span asp-validation-for="DisplayOrder"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Flag" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Flag" />
-                <span asp-validation-for="Flag"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="FlagStyle" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="FlagStyle" />
-                <span asp-validation-for="FlagStyle"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Icon" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Icon" />
-                <span asp-validation-for="Icon"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="HideOnCatalog" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="HideOnCatalog" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="HideOnCatalog"></span>
-            </div>
-        </div>
-    </div>
-</div>
+         <div class="form-body">
+             <div class="form-group">
+                 <admin-label asp-for="Name" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="Name" />
+                     <span asp-validation-for="Name"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="Description" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="Description" asp-template="RichEditor" />
+                     <span asp-validation-for="Description"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="CategoryTemplateId" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-select asp-for="CategoryTemplateId" asp-items="Model.AvailableCategoryTemplates" />
+                     <span asp-validation-for="CategoryTemplateId"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="PictureId" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="PictureId" />
+                     <span asp-validation-for="PictureId"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="ParentCategoryId" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-select asp-for="ParentCategoryId" asp-items="Model.AvailableCategories" />
+                     <span asp-validation-for="ParentCategoryId"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="PriceRanges" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="PriceRanges" />
+                     <span asp-validation-for="PriceRanges"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="ShowOnHomePage" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="ShowOnHomePage" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="ShowOnHomePage"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="FeaturedProductsOnHomaPage" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="FeaturedProductsOnHomaPage" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="FeaturedProductsOnHomaPage"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="IncludeInTopMenu" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="IncludeInTopMenu" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="IncludeInTopMenu"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="ShowOnSearchBox" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="ShowOnSearchBox" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="ShowOnSearchBox"></span>
+                 </div>
+             </div>
+             <div class="form-group" id="pnlSearchBoxOrder">
+                 <admin-label asp-for="SearchBoxDisplayOrder" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="SearchBoxDisplayOrder" />
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="AllowCustomersToSelectPageSize" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="AllowCustomersToSelectPageSize" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
+                 </div>
+             </div>
+             <div class="form-group" id="pnlPageSize">
+                 <admin-label asp-for="PageSize" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="PageSize" />
+                     <span asp-validation-for="PageSize"></span>
+                 </div>
+             </div>
+             <div class="form-group" id="pnlPageSizeOptions">
+                 <admin-label asp-for="PageSizeOptions" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="PageSizeOptions" />
+                     <span asp-validation-for="PageSizeOptions"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="DefaultSort" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-select asp-for="DefaultSort" asp-items="Model.AvailableSortOptions" />
+                     <span asp-validation-for="DefaultSort"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="Published" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="Published" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="Published"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="DisplayOrder" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="DisplayOrder" />
+                     <span asp-validation-for="DisplayOrder"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="Flag" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="Flag" />
+                     <span asp-validation-for="Flag"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="FlagStyle" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="FlagStyle" />
+                     <span asp-validation-for="FlagStyle"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="Icon" />
+                 <div class="col-md-9 col-sm-9">
+                     <admin-input asp-for="Icon" />
+                     <span asp-validation-for="Icon"></span>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <admin-label asp-for="HideOnCatalog" />
+                 <div class="col-md-9 col-sm-9">
+                     <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                         <admin-input asp-for="HideOnCatalog" />
+                         <div class="control__indicator"></div>
+                     </label>
+                     <span asp-validation-for="HideOnCatalog"></span>
+                 </div>
+             </div>
+         </div>
+      </div>))
+
 <vc:admin-widget widget-zone="category_details_info_bottom" additional-data="Model" />
