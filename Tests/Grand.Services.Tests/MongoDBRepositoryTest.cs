@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Data;
 
 namespace Grand.Services.Tests
 {
