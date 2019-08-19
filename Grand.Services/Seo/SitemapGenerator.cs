@@ -7,6 +7,7 @@ using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Security;
 using Grand.Services.Catalog;
+using Grand.Services.Helpers;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -243,7 +244,7 @@ namespace Grand.Services.Seo
 
             return search.products.Select(product =>
                 {
-                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language)}, GetHttpProtocol());
+                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language) }, GetHttpProtocol());
                     return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
                 });
         }
@@ -283,8 +284,7 @@ namespace Grand.Services.Seo
         /// <param name="sitemapNumber">The number of sitemaps</param>
         protected virtual async Task WriteSitemapIndex(IUrlHelper urlHelper, Stream stream, int sitemapNumber)
         {
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Indent = true,
                 IndentChars = "\t",
@@ -326,8 +326,7 @@ namespace Grand.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual async Task WriteSitemap(IUrlHelper urlHelper, Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Indent = true,
                 IndentChars = "\t",
