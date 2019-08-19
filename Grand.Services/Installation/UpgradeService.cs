@@ -14,7 +14,6 @@ using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
-using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;

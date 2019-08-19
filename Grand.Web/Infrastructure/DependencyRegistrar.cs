@@ -71,11 +71,10 @@ namespace Grand.Web.Infrastructure
 
             //vendor service
             builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
-           
+
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 2; }
         }
     }

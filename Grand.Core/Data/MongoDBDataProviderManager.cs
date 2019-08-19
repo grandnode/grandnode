@@ -1,8 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using System;
+﻿using System;
 
-namespace Grand.Data
+namespace Grand.Core.Data
 {
     public partial class MongoDBDataProviderManager : BaseDataProviderManager
     {

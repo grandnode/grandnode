@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
-    <ProjectReference Include="..\Grand.Data\Grand.Data.csproj" />
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
 

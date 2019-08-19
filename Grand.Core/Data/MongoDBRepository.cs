@@ -1,5 +1,3 @@
-using Grand.Core;
-using Grand.Core.Data;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -9,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Grand.Data
+namespace Grand.Core.Data
 {
     /// <summary>
     /// MongoDB repository

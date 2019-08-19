@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY GrandNode.sln .
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
-COPY Grand.Data/Grand.Data.csproj Grand.Data/Grand.Data.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj
 COPY Grand.Services/Grand.Services.csproj Grand.Services/Grand.Services.csproj
 COPY Grand.Web/Grand.Web.csproj Grand.Web/Grand.Web.csproj

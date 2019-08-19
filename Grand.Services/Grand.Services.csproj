@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
-    <ProjectReference Include="..\Grand.Data\Grand.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

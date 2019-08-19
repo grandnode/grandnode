@@ -1,8 +1,6 @@
-﻿using Grand.Core;
-using Grand.Core.Data;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core.Infrastructure;
 
-namespace Grand.Data
+namespace Grand.Core.Data
 {
     public class MongoDBStartUpTask : IStartupTask
     {

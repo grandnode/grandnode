@@ -36,9 +36,6 @@
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Data\Grand.Data.csproj">
-      <Private>false</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj">
       <Private>false</Private>
     </ProjectReference>

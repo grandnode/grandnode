@@ -8,7 +8,6 @@ using Grand.Core.Http;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
-using Grand.Data;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
@@ -341,8 +340,7 @@ namespace Grand.Framework.Infrastructure
         /// <summary>
         /// Gets order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             get { return 0; }
         }
     }

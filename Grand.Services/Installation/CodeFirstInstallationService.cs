@@ -31,7 +31,6 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
-using Grand.Data;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;

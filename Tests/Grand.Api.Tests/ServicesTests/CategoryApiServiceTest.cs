@@ -4,7 +4,7 @@ using Grand.Api.Tests.Helpers;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Seo;
-using Grand.Data;
+using Grand.Core.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;

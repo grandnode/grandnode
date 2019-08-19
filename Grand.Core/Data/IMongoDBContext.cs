@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Data
+namespace Grand.Core.Data
 {
     public interface IMongoDBContext
     {

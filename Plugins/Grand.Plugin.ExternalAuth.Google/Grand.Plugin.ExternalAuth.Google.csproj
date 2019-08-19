@@ -34,9 +34,6 @@
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Data\Grand.Data.csproj">
-      <Private>false</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj">
       <Private>false</Private>
     </ProjectReference>
@@ -46,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.2.0" />
   </ItemGroup>
 
   <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">

@@ -9,7 +9,7 @@ using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
-using Grand.Data;
+using Grand.Core.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;

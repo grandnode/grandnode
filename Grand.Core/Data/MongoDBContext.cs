@@ -1,12 +1,11 @@
-﻿using Grand.Core.Data;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Bindings;
 using MongoDB.Driver.Core.Operations;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Data
+namespace Grand.Core.Data
 {
     public class MongoDBContext : IMongoDBContext
     {
