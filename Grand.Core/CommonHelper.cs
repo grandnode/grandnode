@@ -35,17 +35,6 @@ namespace Grand.Core
             return output;
         }
 
-        // Verifies that string is an valid IP-Address
-        /// </summary>
-        /// <param name="ipAddress">IPAddress to verify</param>
-        /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
-        public static bool IsValidIpAddress(string ipAddress)
-        {
-            IPAddress ip;
-            return IPAddress.TryParse(ipAddress, out ip);
-        }
-
-
         /// <summary>
         /// Verifies that a string is in valid e-mail format
         /// </summary>

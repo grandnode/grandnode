@@ -102,11 +102,4 @@ namespace Grand.Framework.Mvc.Razor
         }
 
     }
-
-    /// <summary>
-    /// Web view page
-    /// </summary>
-    public abstract class GrandRazorPage : GrandRazorPage<dynamic>
-    {
-    }
 }

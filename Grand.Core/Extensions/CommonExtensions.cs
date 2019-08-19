@@ -9,11 +9,6 @@ namespace Grand.Core.Extensions
 {
     public static class CommonExtensions
     {
-        public static bool IsNullOrDefault<T>(this T? value) where T : struct
-        {
-            return default(T).Equals(value.GetValueOrDefault());
-        }       
-
         public static TResult Return<TInput, TResult>(this TInput o, Func<TInput, TResult> evaluator, TResult failureValue)
             where TInput : class
         {
