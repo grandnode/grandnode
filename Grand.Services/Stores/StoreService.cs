@@ -118,7 +118,7 @@ namespace Grand.Services.Stores
             string key = string.Format(STORES_BY_ID_KEY, storeId);
             return _cacheManager.GetAsync(key, () => _storeRepository.GetByIdAsync(storeId));
         }
-
+        
         /// <summary>
         /// Inserts a store
         /// </summary>
