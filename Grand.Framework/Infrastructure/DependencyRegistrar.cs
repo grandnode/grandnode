@@ -111,10 +111,7 @@ namespace Grand.Framework.Infrastructure
                 builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
 
             }
-            else
-            {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
-            }
+            
 
             if (config.RunOnAzureWebApps)
             {
