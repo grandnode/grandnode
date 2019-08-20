@@ -338,7 +338,7 @@ namespace Grand.Web.Services
                     Name = category.GetLocalized(x => x.Name, langid),
                     SeName = category.GetSeName(langid),
                     IncludeInTopMenu = category.IncludeInTopMenu,
-                    Flag = category.Flag,
+                    Flag = category.GetLocalized(x => x.Flag, langid),
                     FlagStyle = category.FlagStyle,
                     Icon = category.Icon,
                     ImageUrl = await _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize)

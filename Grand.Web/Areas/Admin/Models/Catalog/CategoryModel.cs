@@ -218,28 +218,31 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string LanguageId { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
-        
+
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
-        
-        public string Description {get;set;}
+
+        public string Description { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
-        
+
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
-        
+
         public string MetaDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
-        
+
         public string MetaTitle { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
-        
+
         public string SeName { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Flag")]
+        public string Flag { get; set; }
     }
 
 }

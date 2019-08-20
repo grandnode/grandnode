@@ -187,6 +187,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaDescription = category.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = category.GetSeName(languageId, false, false);
+                locale.Flag = category.GetLocalized(x => x.Flag, languageId, false, false);
             });
             model = await _categoryViewModelService.PrepareCategoryModel(model, category, _workContext.CurrentCustomer.StaffStoreId);
             //ACL
