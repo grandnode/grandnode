@@ -11,12 +11,10 @@
 {
     <div class="vendor-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
         <div class="vendor-review-box">
-            <div class="rating">
-                <div class="rating-ghost">
-                    &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
-                </div>
-                <div class="rating-real" style="width: @(ratingPercent)%">
-                    &#9733;&#9733;&#9733;&#9733;&#9733;
+            <div class="ratings">
+                <div class="rating-box">
+                    <div class="rating" style="width: @(ratingPercent)%">
+                    </div>
                 </div>
             </div>
         </div>

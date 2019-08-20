@@ -13,12 +13,10 @@
             int ratingPercent = review.Rating * 20;
             <div class="card comment product-review-item pb-3">
                 <div class="card-header review-item-head">
-                    <div class="rating">
-                        <div class="rating-ghost">
-                            &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
-                        </div>
-                        <div class="rating-real" style="width: @(ratingPercent)%">
-                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                    <div class="ratings">
+                        <div class="rating-box">
+                            <div class="rating" style="width: @(ratingPercent)%">
+                            </div>
                         </div>
                     </div>
                     <div class="review-info">
