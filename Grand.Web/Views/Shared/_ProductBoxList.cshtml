@@ -79,13 +79,9 @@
                     {
                         ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
                     }
-                    <div class="product-rating-box list-group" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
-                        <div class="rating">
-                            <div class="rating-ghost">
-                                &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
-                            </div>
-                            <div class="rating-real" style="width: @(ratingPercent)%">
-                                &#9733;&#9733;&#9733;&#9733;&#9733;
+                    <div class="ratings">
+                        <div class="rating-box">
+                            <div class="rating" style="width: @(ratingPercent)%">
                             </div>
                         </div>
                     </div>
