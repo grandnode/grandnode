@@ -42,7 +42,7 @@
                 @if (!string.IsNullOrEmpty(item.Description))
                 {
                     <div class="card-body px-sm-3 px-2">
-                        @item.Description
+                        @Html.Raw(item.Description)
                     </div>
                 }
                 @if (!string.IsNullOrEmpty(item.DownloadId))
