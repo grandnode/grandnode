@@ -126,9 +126,10 @@ function init_sidebar() {
 
     var arr = [];
     var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () { // find nav element with exact match
-
+       
         var segment = this.href.split("/");
         var z = window.location.pathname;
+
         var segment2 = z.split("/");
         var linkY = "";
         var linkZ = "";
@@ -191,6 +192,10 @@ function init_sidebar() {
             }
         }
     });
+
+    if ($("#active-menu-item").length > 0) {
+        arr.push($("#active-menu-item").val());
+    }
 
     if ($cur_menu.length == 0) { // if no exact match, try to find best match
         var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () {
