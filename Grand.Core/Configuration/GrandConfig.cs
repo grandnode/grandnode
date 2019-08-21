@@ -22,6 +22,11 @@ namespace Grand.Core.Configuration
         public bool ClearPluginShadowDirectoryOnStartup { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether copy dll plugin files to /Plugins/bin on application startup
+        /// </summary>
+        public bool PluginShadowCopy { get; set; }
+
+        /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
         public bool RedisCachingEnabled { get; set; }

@@ -149,7 +149,7 @@ namespace Grand.Core.Infrastructure
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, grandConfig);
+            PluginManager.Initialize(mvcCoreBuilder, grandConfig);
 
             //initialize CTX sctipts
             RoslynCompiler.Initialize(mvcCoreBuilder.PartManager, grandConfig);

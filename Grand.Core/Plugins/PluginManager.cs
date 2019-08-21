@@ -1,6 +1,7 @@
 ﻿using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,18 +49,16 @@ namespace Grand.Core.Plugins
         /// <summary>
         /// Initialize
         /// </summary>
-        public static void Initialize(ApplicationPartManager applicationPartManager, GrandConfig config)
+        public static void Initialize(IMvcCoreBuilder mvcCoreBuilder, GrandConfig config)
         {
-            if (applicationPartManager == null)
-                throw new ArgumentNullException("applicationPartManager");
+            if (mvcCoreBuilder == null)
+                throw new ArgumentNullException("mvcCoreBuilder");
             
             if (config == null)
                 throw new ArgumentNullException("config");
 
             using (new WriteLockDisposable(Locker))
             {
-                // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
-                // prevent app from starting altogether
                 var pluginFolder = new DirectoryInfo(CommonHelper.MapPath(PluginsPath));
                 _shadowCopyFolder = new DirectoryInfo(CommonHelper.MapPath(ShadowCopyPath));
 
@@ -126,26 +125,43 @@ namespace Grand.Core.Plugins
                         {
                             if (descriptionFile.Directory == null)
                                 throw new Exception(string.Format("Directory cannot be resolved for '{0}' description file", descriptionFile.Name));
+
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
                                 .Where(x => !binFiles.Select(q => q.FullName).Contains(x.FullName))
                                 .Where(x => IsPackagePluginFolder(x.Directory))
                                 .ToList();
-                            //TO DO - copy files only from plugins - description.txt ?
-                            //other plugin description info
+
+                            if (!config.PluginShadowCopy)
+                            {
+                                //remove deps.json files 
+                                var depsFiles = descriptionFile.Directory.GetFiles("*.deps.json", SearchOption.TopDirectoryOnly);
+                                foreach (var f in depsFiles)
+                                {
+                                    try
+                                    {
+                                        File.Delete(f.FullName);
+                                    }
+                                    catch (Exception exc)
+                                    {
+                                        Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                                    }
+                                }
+                            }
+
                             var mainPluginFile = pluginFiles
                                 .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.OrdinalIgnoreCase));
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
-                            //shadow copy main plugin file
-                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile, applicationPartManager);
+                            //main plugin file
+                            pluginDescriptor.ReferencedAssembly = AddApplicationPart(mainPluginFile, mvcCoreBuilder, config);
 
                             //load all other referenced assemblies now
                             foreach (var plugin in pluginFiles
                                 .Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.OrdinalIgnoreCase))
                                 .Where(x => !IsAlreadyLoaded(x)))
-                                PerformFileDeploy(plugin, applicationPartManager);
+                                AddApplicationPart(plugin, mvcCoreBuilder, config);
 
                             //init plugin type (only one plugin per assembly is allowed)
                             foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
@@ -339,26 +355,24 @@ namespace Grand.Core.Plugins
         /// <param name="plug">Plugin file info</param>
         /// <param name="applicationPartManager">Application part manager</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager)
+        private static Assembly AddApplicationPart(FileInfo plug, IMvcCoreBuilder mvcCoreBuilder, GrandConfig config)
         {
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed grandnode folder hierarchy");
 
-            var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-            var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
+            var _plug = config.PluginShadowCopy ? ShadowCopyFile(plug, Directory.CreateDirectory(_shadowCopyFolder.FullName)) : plug;
 
             try
             {                
-                Assembly shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(shadowCopiedPlug.FullName);
-
+                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(_plug.FullName);
                 //we can now register the plugin definition
-                Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
-                applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
-                return shadowCopiedAssembly;
+                Debug.WriteLine("Adding to ApplicationParts: '{0}'", assembly.FullName);
+                mvcCoreBuilder.AddApplicationPart(assembly);
+                return assembly;
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"The plugin directory for the {plug.Name} file exists in a folder outside of the allowed grandnode folder hierarchy - exception because of {shadowCopiedPlug.FullName} - exception: {ex.Message}");
+                throw new InvalidOperationException($"The plugin directory for the {plug.Name} file exists in a folder outside of the allowed grandnode folder hierarchy - exception because of {plug.FullName} - exception: {ex.Message}");
             }
         }
        
