@@ -10,6 +10,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
+using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -47,6 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
+        private readonly IDocumentService _documentService;
         #endregion
 
         #region Constructors
@@ -62,19 +64,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             IImportManager importManager,
             IStoreService storeService,
             IProductReservationService productReservationService,
-            IAuctionService auctionService)
+            IAuctionService auctionService, 
+            IDocumentService documentService)
         {
-            this._productViewModelService = productViewModelService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._storeService = storeService;
-            this._productReservationService = productReservationService;
-            this._auctionService = auctionService;
+            _productViewModelService = productViewModelService;
+            _productService = productService;
+            _customerService = customerService;
+            _workContext = workContext;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _storeService = storeService;
+            _productReservationService = productReservationService;
+            _auctionService = auctionService;
+            _documentService = documentService;
         }
 
         #endregion
@@ -2554,6 +2558,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Bids.CantDeleteWithOrder") });
             }
             return Json(new DataSourceResult { Errors = "Bid not exists" });
+        }
+
+        #endregion
+
+        #region Documents
+
+        [HttpPost]
+        public async Task<IActionResult> DocumentList(DataSourceRequest command, string productId)
+        {
+            var documents = await _documentService.GetAll(objectId: productId, reference: (int)Core.Domain.Documents.Reference.Product,
+                pageSize: command.PageSize, pageIndex: command.Page - 1);
+            var gridModel = new DataSourceResult {
+                Data = documents.ToList(),
+                Total = documents.TotalCount
+            };
+            return Json(gridModel);
         }
 
         #endregion

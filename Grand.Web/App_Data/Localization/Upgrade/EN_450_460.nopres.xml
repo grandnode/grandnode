@@ -335,5 +335,11 @@
   <LocaleResource Name="Order.Document">
     <Value>Order number {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.gotoproduct">
+    <Value>Go to product</Value>
+  </LocaleResource>
 
 </Language>

@@ -3144,6 +3144,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.EditProductDetails">
     <Value>Edit product details</Value>
   </LocaleResource>
@@ -12410,6 +12413,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Documents.Document.GoToOrder">
     <Value>Go to order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.gotoproduct">
+    <Value>Go to product</Value>
   </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>

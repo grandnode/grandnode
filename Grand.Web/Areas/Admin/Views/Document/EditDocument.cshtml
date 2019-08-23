@@ -19,9 +19,12 @@
                         }
                         @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 10)
                         {
-                            <small><i class="fa fa-user"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToOrder").Text, "Edit", "Order", new { id = Model.ObjectId })</small>
+                            <small><i class="fa fa-shopping-cart"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToOrder").Text, "Edit", "Order", new { id = Model.ObjectId })</small>
                         }
-
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 40)
+                        {
+                            <small><i class="fa fa-cube"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToProduct").Text, "Edit", "Product", new { id = Model.ObjectId })</small>
+                        }
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">

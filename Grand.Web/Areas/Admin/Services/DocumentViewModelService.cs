@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Documents;
+using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Documents;
 using Grand.Services.Localization;
@@ -19,15 +20,17 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductService _productService;
 
-        public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService, 
-            IOrderService orderService, ILocalizationService localizationService)
+        public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService,
+            IOrderService orderService, ILocalizationService localizationService, IProductService productService)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
             _customerService = customerService;
             _orderService = orderService;
             _localizationService = localizationService;
+            _productService = productService;
         }
 
         public virtual async Task<(IEnumerable<DocumentModel> documetListModel, int totalCount)> PrepareDocumentListModel(DocumentListModel model, int pageIndex, int pageSize)
@@ -74,6 +77,19 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                     if (!string.IsNullOrEmpty(model.CustomerId))
                         model.CustomerEmail = (await _customerService.GetCustomerById(simpleModel.CustomerId))?.Email;
+
+                    if (!string.IsNullOrEmpty(simpleModel.ProductId))
+                    {
+                        model.ObjectId = simpleModel.ProductId;
+                        model.ReferenceId = (int)Reference.Product;
+                        var product = await _productService.GetProductById(simpleModel.ProductId);
+                        if (product != null)
+                        {
+                            model.Name = product.Name;
+                            model.Number = product.Sku;
+                            model.Quantity = 1;
+                        }
+                    }
 
                 }
             }
