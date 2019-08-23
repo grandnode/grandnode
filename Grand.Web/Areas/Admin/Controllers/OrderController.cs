@@ -10,6 +10,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
+using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -34,6 +35,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class OrderController : BaseAdminController
     {
         #region Fields
+
         private readonly IOrderViewModelService _orderViewModelService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -41,6 +43,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
+        private readonly IDocumentService _documentService;
+
         #endregion
 
         #region Ctor
@@ -53,15 +57,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             ICurrencyService currencyService,
             IPdfService pdfService,
-            IExportManager exportManager)
+            IExportManager exportManager,
+            IDocumentService documentService)
         {
-            this._orderViewModelService = orderViewModelService;
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._pdfService = pdfService;
-            this._exportManager = exportManager;
+            _orderViewModelService = orderViewModelService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _pdfService = pdfService;
+            _exportManager = exportManager;
+            _documentService = documentService;
         }
 
         #endregion
@@ -1489,6 +1495,22 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+        #endregion
+
+        #region Documents
+
+        [HttpPost]
+        public async Task<IActionResult> DocumentList(DataSourceRequest command, string orderId)
+        {
+            var documents = await _documentService.GetAll(objectId: orderId, reference: (int)Core.Domain.Documents.Reference.Order, 
+                pageSize: command.PageSize, pageIndex: command.Page - 1);
+            var gridModel = new DataSourceResult {
+                Data = documents.ToList(),
+                Total = documents.TotalCount
+            };
+            return Json(gridModel);
+        }
+
         #endregion
     }
 }

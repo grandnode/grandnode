@@ -1,8 +1,10 @@
 ﻿@model OrderModel
-
+@inject Grand.Services.Security.IPermissionService permissionService
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
+    //has "Manage Documents" permission?
+    var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
 }
 <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
     <antiforgery-token />
@@ -72,6 +74,16 @@
                                     </content>
                                 </tabstrip-item>
                             }
+                            @if (canManageDocuments)
+                            {
+                                <tabstrip-item text="@T("Admin.Orders.Documents")" tab-index="4">
+                                    <content>
+                                        <div>
+                                            <partial name="_OrderDetails.Documents" model="Model" />
+                                        </div>
+                                    </content>
+                                </tabstrip-item>
+                            }
                             <vc:admin-widget widget-zone="order_details_tabs" additional-data="Model" />
                         </items>
                     </admin-tabstrip>
@@ -82,4 +94,4 @@
     <div asp-validation-summary="All"></div>
 
 </form>
-<admin-delete-confirmation button-id="order-delete"/>
+<admin-delete-confirmation button-id="order-delete" />

@@ -12408,6 +12408,9 @@
   <LocaleResource Name="admin.documents.document.gotocustomer">
     <Value>Go to customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToOrder">
+    <Value>Go to order</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>
   </LocaleResource>
@@ -12764,6 +12767,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.BillingInfo">
     <Value>Billing info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.EditOrderDetails">
     <Value>Edit order details</Value>
@@ -18327,6 +18333,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.CancelOrder">
     <Value>Cancel Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Document">
+    <Value>Order number {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Email">
     <Value>Email</Value>

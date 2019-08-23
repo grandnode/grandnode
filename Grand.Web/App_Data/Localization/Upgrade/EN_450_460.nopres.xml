@@ -326,4 +326,14 @@
   <LocaleResource Name="Account.Documents.NoExists">
     <Value>Documents not exists</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToOrder">
+    <Value>Go to order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Document">
+    <Value>Order number {0}</Value>
+  </LocaleResource>
+
 </Language>

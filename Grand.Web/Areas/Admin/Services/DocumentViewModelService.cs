@@ -1,5 +1,8 @@
 ﻿using Grand.Core.Domain.Documents;
+using Grand.Services.Customers;
 using Grand.Services.Documents;
+using Grand.Services.Localization;
+using Grand.Services.Orders;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Documents;
@@ -13,16 +16,24 @@ namespace Grand.Web.Areas.Admin.Services
     {
         private readonly IDocumentService _documentService;
         private readonly IDocumentTypeService _documentTypeService;
+        private readonly ICustomerService _customerService;
+        private readonly IOrderService _orderService;
+        private readonly ILocalizationService _localizationService;
 
-        public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService)
+        public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService, 
+            IOrderService orderService, ILocalizationService localizationService)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
+            _customerService = customerService;
+            _orderService = orderService;
+            _localizationService = localizationService;
         }
 
         public virtual async Task<(IEnumerable<DocumentModel> documetListModel, int totalCount)> PrepareDocumentListModel(DocumentListModel model, int pageIndex, int pageSize)
         {
-            var documents = await _documentService.GetAll("", model.SearchName, model.SearchNumber, model.SearchEmail, model.StatusId, pageIndex - 1, pageSize);
+            var documents = await _documentService.GetAll(customerId: "", name: model.SearchName, number: model.SearchNumber,
+                email: model.SearchEmail, status: model.StatusId, pageIndex: pageIndex - 1, pageSize: pageSize);
 
             var documentListModel = new List<DocumentModel>();
             foreach (var x in documents)
@@ -40,7 +51,31 @@ namespace Grand.Web.Areas.Admin.Services
                 model = document.ToModel();
             else
             {
-                model.CustomerId = simpleModel?.CustomerId;
+                if (simpleModel != null)
+                {
+                    model.CustomerId = simpleModel.CustomerId;
+                    if (!string.IsNullOrEmpty(simpleModel.OrderId))
+                    {
+                        model.ObjectId = simpleModel.OrderId;
+                        model.ReferenceId = (int)Reference.Order;
+                        var order = await _orderService.GetOrderById(simpleModel.OrderId);
+                        if (order != null)
+                        {
+                            model.Number = order.OrderNumber.ToString();
+                            model.TotalAmount = order.OrderTotal;
+                            model.OutstandAmount = order.PaymentStatus == Core.Domain.Payments.PaymentStatus.Paid ? 0 : order.OrderTotal;
+                            model.CurrencyCode = order.CustomerCurrencyCode;
+                            model.Name = string.Format(_localizationService.GetResource("Order.Document"), model.Number);
+                            model.DocDate = order.CreatedOnUtc;
+                            model.DueDate = order.CreatedOnUtc;
+                            model.Quantity = 1;
+                            model.Username = $"{order.BillingAddress?.FirstName} {order.BillingAddress?.LastName}";
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(model.CustomerId))
+                        model.CustomerEmail = (await _customerService.GetCustomerById(simpleModel.CustomerId))?.Email;
+
+                }
             }
             var types = await _documentTypeService.GetAll();
             foreach (var item in types)

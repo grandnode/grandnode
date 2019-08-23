@@ -17,6 +17,11 @@
                         {
                             <small><i class="fa fa-user"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToCustomer").Text, "Edit", "Customer", new { id = Model.CustomerId })</small>
                         }
+                        @if (!string.IsNullOrEmpty(Model.ObjectId) && Model.ReferenceId == 10)
+                        {
+                            <small><i class="fa fa-user"></i>@Html.ActionLink(T("Admin.Documents.Document.GoToOrder").Text, "Edit", "Order", new { id = Model.ObjectId })</small>
+                        }
+
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
