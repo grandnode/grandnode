@@ -97,6 +97,7 @@
         color: #1D1F20;
         font-size: 30px;
         opacity: 0;
+        z-index: 10;
         transition: all .3s ease;
     }
 
