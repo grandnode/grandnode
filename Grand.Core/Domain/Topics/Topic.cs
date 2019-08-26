@@ -118,5 +118,9 @@ namespace Grand.Core.Domain.Topics
         public bool SubjectToAcl { get; set; }
         public IList<string> CustomerRoles { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is published
+        /// </summary>
+        public bool Published { get; set; }
     }
 }
