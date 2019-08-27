@@ -10372,7 +10372,7 @@
     <Value>Check if this topic is password protected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
-    <Value>Publish</Value>
+    <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
     <Value>Specify if topic should be published or not.</Value>
