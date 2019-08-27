@@ -53,6 +53,9 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")]
         public bool IsPasswordProtected { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.Published")]
+        public bool Published { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.Password")]
         public string Password { get; set; }
 
@@ -95,7 +98,6 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
-
 
     }
 

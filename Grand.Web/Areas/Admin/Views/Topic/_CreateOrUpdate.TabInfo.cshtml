@@ -77,7 +77,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IsPasswordProtected" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IsPasswordProtected"></span>
             </div>
@@ -94,7 +94,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInSitemap" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInSitemap"></span>
             </div>
@@ -104,7 +104,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInTopMenu" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInTopMenu"></span>
             </div>
@@ -114,7 +114,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInFooterRow1" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInFooterRow1"></span>
             </div>
@@ -124,7 +124,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInFooterRow2" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInFooterRow2"></span>
             </div>
@@ -134,7 +134,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="IncludeInFooterRow3" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="IncludeInFooterRow3"></span>
             </div>
@@ -151,7 +151,7 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AccessibleWhenStoreClosed" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AccessibleWhenStoreClosed"></span>
             </div>
@@ -161,6 +161,16 @@ function togglePassword() {
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="TopicTemplateId" asp-items="Model.AvailableTopicTemplates" />
                 <span asp-validation-for="TopicTemplateId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Published" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="Published" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="Published"></span>
             </div>
         </div>
     </div>

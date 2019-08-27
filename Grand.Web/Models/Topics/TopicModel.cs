@@ -23,5 +23,7 @@ namespace Grand.Web.Models.Topics
         public string SeName { get; set; }
 
         public string TopicTemplateId { get; set; }
+
+        public bool Published { get; set; }
     }
 }

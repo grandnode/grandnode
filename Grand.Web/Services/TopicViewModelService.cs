@@ -59,7 +59,8 @@ namespace Grand.Web.Services
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id),
                 SeName = topic.GetSeName(_workContext.WorkingLanguage.Id),
-                TopicTemplateId = topic.TopicTemplateId
+                TopicTemplateId = topic.TopicTemplateId,
+                Published = topic.Published
             };
             return model;
 
