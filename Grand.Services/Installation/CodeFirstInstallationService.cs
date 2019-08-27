@@ -4765,7 +4765,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var topic in ltopics)
             {
-                var seName = topic.SystemName;
+                var seName = topic.SystemName.ToLowerInvariant();
                 await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = topic.Id,
                     EntityName = "Topic",
