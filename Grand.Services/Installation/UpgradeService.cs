@@ -818,6 +818,17 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update topics
+
+            IRepository<Topic> _topicRepository = _serviceProvider.GetRequiredService<IRepository<Topic>>();
+            foreach (var topic in _topicRepository.Table)
+            {
+                topic.Published  = true;
+                _topicRepository.Update(topic);
+            }
+
+            #endregion
+
         }
         private async Task InstallStringResources(string filenames)
         {
