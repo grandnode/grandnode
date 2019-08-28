@@ -198,6 +198,8 @@ namespace Grand.Services.Seo
             if (String.IsNullOrEmpty(slug))
                 return null;
 
+            slug = slug.ToLowerInvariant();
+
             var query = from ur in _urlRecordRepository.Table
                         where ur.Slug == slug
                         orderby ur.IsActive
@@ -216,6 +218,8 @@ namespace Grand.Services.Seo
         {
             if (String.IsNullOrEmpty(slug))
                 return null;
+
+            slug = slug.ToLowerInvariant();
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
@@ -255,7 +259,7 @@ namespace Grand.Services.Seo
             var query = _urlRecordRepository.Table;
 
             if (!String.IsNullOrWhiteSpace(slug))
-                query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLower()));
+                query = query.Where(ur => ur.Slug.ToLower().Contains(slug.ToLowerInvariant()));
             query = query.OrderBy(ur => ur.Slug);
             return await PagedList<UrlRecord>.Create(query, pageIndex, pageSize);
         }
@@ -335,6 +339,9 @@ namespace Grand.Services.Seo
 
             var allUrlRecords = await query.ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
+
+            if (!string.IsNullOrWhiteSpace(slug))
+                slug = slug.ToLowerInvariant();
 
             if (activeUrlRecord == null && !string.IsNullOrWhiteSpace(slug))
             {

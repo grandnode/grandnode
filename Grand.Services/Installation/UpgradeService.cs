@@ -11,6 +11,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
@@ -825,6 +826,17 @@ namespace Grand.Services.Installation
             {
                 topic.Published  = true;
                 _topicRepository.Update(topic);
+            }
+
+            #endregion
+
+            #region Update url seo to lowercase
+
+            IRepository<UrlRecord> _urlRecordRepository = _serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
+            foreach (var urlrecord in _urlRecordRepository.Table)
+            {
+                urlrecord.Slug = urlrecord.Slug.ToLowerInvariant();
+                _urlRecordRepository.Update(urlrecord);
             }
 
             #endregion
