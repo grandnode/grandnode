@@ -123,7 +123,7 @@ namespace Grand.Web.Services
             {
                 //load by store
                 var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
-                if (topic == null)
+                if (topic == null || !topic.Published)
                     return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))
