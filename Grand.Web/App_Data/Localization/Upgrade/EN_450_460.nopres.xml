@@ -341,5 +341,16 @@
   <LocaleResource Name="admin.documents.document.gotoproduct">
     <Value>Go to product</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate.Hint">
+    <Value>The end date for the search</Value>
+  </LocaleResource>
 </Language>
