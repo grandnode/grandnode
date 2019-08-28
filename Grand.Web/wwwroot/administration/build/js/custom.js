@@ -100,7 +100,7 @@ function init_sidebar() {
         if ($BODY.hasClass('nav-md')) {
 
            localStorage.setItem('sideBarCookie', 'true');
-            $(".site_title").css("padding-left", "26px");
+            //$(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
@@ -109,7 +109,7 @@ function init_sidebar() {
             
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
             $SIDEBAR_MENU.find('li.active > ul').show();
-            $(".site_title").css("padding-left", "10px");
+            //$(".site_title").css("padding-left", "10px");
         }
 
         $BODY.toggleClass('nav-md nav-sm');
@@ -1924,12 +1924,12 @@ $(document).ready(() => {
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
             $SIDEBAR_MENU.find('li.active-sm ul').hide();
         }
-        $(".site_title").css("padding-left", "26px");
+        //$(".site_title").css("padding-left", "26px");
     }
     else {
         $BODY.removeClass('nav-sm');
         $BODY.addClass('nav-md');
-        $(".site_title").css("padding-left", "10px");
+        //$(".site_title").css("padding-left", "10px");
         $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
         $SIDEBAR_MENU.find('li.active > ul').show();
     }
