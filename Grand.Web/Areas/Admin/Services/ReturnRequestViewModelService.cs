@@ -144,7 +144,20 @@ namespace Grand.Web.Areas.Admin.Services
                 else
                     customerId = "00000000-0000-0000-0000-000000000000";
             }
-            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, customerId, "", (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), pageIndex - 1, pageSize);
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, 
+                customerId, 
+                "", 
+                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), 
+                pageIndex - 1, 
+                pageSize,
+                startDateValue,
+                endDateValue);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
