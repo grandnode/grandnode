@@ -353,4 +353,7 @@
   <LocaleResource Name="Admin.ReturnRequests.List.EndDate.Hint">
     <Value>The end date for the search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
+    <Value>The message text for the search.</Value>
+  </LocaleResource>
 </Language>
