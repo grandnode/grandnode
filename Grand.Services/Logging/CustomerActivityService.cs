@@ -270,6 +270,7 @@ namespace Grand.Services.Logging
         /// <summary>
         /// Gets all activity log items
         /// </summary>
+        /// <param name="comment">Log item message text or text part; null or empty string to load all</param>
         /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
         /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
         /// <param name="customerId">Customer identifier; null to load all customers</param>
@@ -277,12 +278,15 @@ namespace Grand.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(string comment = "",
+            DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
+            if (!String.IsNullOrEmpty(comment))
+                query = query.Where(al => al.Comment != null && al.Comment.ToLower().Contains(comment.ToLower()));
             if (createdOnFrom.HasValue)
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)
