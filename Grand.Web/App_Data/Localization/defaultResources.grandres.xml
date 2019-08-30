@@ -804,6 +804,9 @@
   <LocaleResource Name="Account.YourPersonalDetails">
     <Value>Your Personal Details</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AbandonedCart">
     <Value>Send email AbandonedCart - ('{0}')</Value>
   </LocaleResource>

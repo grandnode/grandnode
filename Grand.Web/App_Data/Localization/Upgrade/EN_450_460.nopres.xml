@@ -356,4 +356,7 @@
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
     <Value>The message text for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
 </Language>

@@ -19,6 +19,7 @@ namespace Grand.Web.Models.Customer
         public bool HideNotes { get; set; }
         public bool HideDocuments { get; set; }
         public bool ShowVendorInfo { get; set; }
+        public bool HideReviews { get; set; }
 
         public CustomerNavigationEnum SelectedTab { get; set; }
     }
@@ -39,6 +40,7 @@ namespace Grand.Web.Models.Customer
         VendorInfo = 100,
         Auctions = 110,
         Notes = 120,
-        Documents = 130
+        Documents = 130,
+        Reviews = 140,
     }
 }
