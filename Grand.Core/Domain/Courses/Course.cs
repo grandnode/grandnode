@@ -1,0 +1,70 @@
+﻿using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Stores;
+using System.Collections.Generic;
+
+namespace Grand.Core.Domain.Courses
+{
+    public class Course : BaseEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
+    {
+        public Course()
+        {
+            CustomerRoles = new List<string>();
+            Stores = new List<string>();
+        }
+
+        /// <summary>
+        /// Gets or sets the name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is published
+        /// </summary>
+        public bool Published { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the picture
+        /// </summary>
+        public string PictureId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product ident
+        /// </summary>
+        public string ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the level ident
+        /// </summary>
+        public string LevelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<string> CustomerRoles { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
+        public IList<string> Stores { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name
+        /// </summary>
+        public string SeName { get; set; }
+
+       
+    }
+}
