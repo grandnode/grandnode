@@ -213,6 +213,18 @@ namespace Grand.Core.Domain.Catalog
         public string UserAgreementText { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the product has a size chart picture
+        /// </summary>
+        public bool HasSizeChartPicture { get; set; }
+        /// <summary>
+        /// Gets or sets the sample download identifier
+        /// </summary>
+        public string SizeChartPictureId { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the product has user agreement
+        /// </summary>
+        
+        /// <summary>
         /// Gets or sets a value indicating whether the product is recurring
         /// </summary>
         public bool IsRecurring { get; set; }

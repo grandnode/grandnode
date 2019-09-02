@@ -109,6 +109,23 @@ namespace Grand.Services.Catalog
                 }
             }
 
+            // SizeChartPicture
+            string sizeChartPictureCopyId = null;
+            if (product.HasSizeChartPicture)
+            {
+                var picture = await _pictureService.GetPictureById(product.SizeChartPictureId);
+                if (picture != null)
+                { 
+                    var sizeChartPictureCopy = await _pictureService.InsertPicture(
+                        await _pictureService.LoadPictureBinary(picture),
+                        picture.MimeType,
+                        _pictureService.GetPictureSeName(newName),
+                        picture.AltAttribute,
+                        picture.TitleAttribute);
+                    sizeChartPictureCopyId = sizeChartPictureCopy.Id;
+                }
+            }
+
             // product
             var productCopy = new Product
             {
@@ -145,6 +162,8 @@ namespace Grand.Services.Catalog
                 DownloadActivationType = product.DownloadActivationType,
                 HasSampleDownload = product.HasSampleDownload,
                 SampleDownloadId = sampleDownloadId,
+                HasSizeChartPicture = product.HasSizeChartPicture,
+                SizeChartPictureId = sizeChartPictureCopyId, 
                 HasUserAgreement = product.HasUserAgreement,
                 UserAgreementText = product.UserAgreementText,
                 IsRecurring = product.IsRecurring,

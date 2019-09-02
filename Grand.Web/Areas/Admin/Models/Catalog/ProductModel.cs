@@ -146,6 +146,13 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [UIHint("Download")]
         public string DownloadId { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.HasSizeChartPicture")]
+        public bool HasSizeChartPicture { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SizeChartPictureId")]
+        [UIHint("Picture")]
+        public string SizeChartPictureId { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UnlimitedDownloads")]
         public bool UnlimitedDownloads { get; set; }
 

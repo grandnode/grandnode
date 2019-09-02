@@ -26,6 +26,7 @@
         $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
+        $("#@Html.FieldIdFor(model => model.HasSizeChartPicture)").click(toggleSizeChartPicture);
         $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
         $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
         $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
@@ -46,6 +47,7 @@
         toggleCustomerEntersPrice();
         toggleBasepriceEnabled();
         toggleDownloadableProduct();
+        toggleSizeChartPicture;
         toggleRecurring();
         toggleShipping();
         toggleTax();
@@ -237,6 +239,14 @@
             $('#pnlUserAgreementText').hide();
             $('#pnlHasSampleDownload').hide();
             $('#pnlSampleDownloadFile').hide();
+        }
+    }
+
+    function toggleSizeChartPicture() {
+        if ($('#@Html.FieldIdFor(model => model.HasSizeChartPicture)').is(':checked')) {
+            $('#pnlSizeChartPictureFile').show();
+        } else {
+            $('#pnlSizeChartPictureFile').hide();
         }
     }
 
