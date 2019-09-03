@@ -1,6 +1,6 @@
 ﻿namespace Grand.Core.Domain.Courses
 {
-    public class Level : BaseEntity
+    public class CourseLevel : BaseEntity
     {
         /// <summary>
         /// Gets or sets the name
