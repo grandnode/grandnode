@@ -114,5 +114,8 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         
         public string SeName { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
+
+        public string Tags { get; set; }
     }
 }

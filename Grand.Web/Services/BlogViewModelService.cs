@@ -218,6 +218,9 @@ namespace Grand.Web.Services
             if (model == null)
                 throw new ArgumentNullException("model");
 
+            blogPost.Tags = blogPost.GetLocalized(x => x.Tags, _workContext.WorkingLanguage.Id);
+
+
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id);
             model.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id);

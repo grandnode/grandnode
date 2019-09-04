@@ -3,133 +3,152 @@
 
 <script type="text/javascript">
         @{
-        var blogTags = await blogService.GetAllBlogPostTags("", true);
-        var blogTagsSb = new StringBuilder();
-        blogTagsSb.Append("var initialBlogTags = [");
-        for (int i = 0; i < blogTags.Count; i++)
-        {
-            var tag = blogTags[i];
-            blogTagsSb.Append("'");
-            blogTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(tag.Name));
-            blogTagsSb.Append("'");
-            if (i != blogTags.Count - 1)
+
+            var blogTags = Model.Tags.Split(',').ToList();
+            //var blogTags = await blogService.GetAllBlogPostTags("", true);
+            var blogTagsSb = new StringBuilder();
+            blogTagsSb.Append("var initialBlogTags = [");
+            for (int i = 0; i < blogTags.Count; i++)
             {
-                blogTagsSb.Append(",");
+                var tag = blogTags[i];
+                blogTagsSb.Append("'");
+                blogTagsSb.Append(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(tag));
+                blogTagsSb.Append("'");
+                if (i != blogTags.Count - 1)
+                {
+                    blogTagsSb.Append(",");
+                }
             }
-        }
-        blogTagsSb.Append("]");
+            blogTagsSb.Append("]");
     }
 
     //tags
     $(document).ready(function () {
-        @Html.Raw(blogTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.Tags)").tagEditor({
-            autocomplete: {
-                delay: 0,
-                position: { collision: 'flip' },
-                source: initialBlogTags
-            },
-            delimiter: ',',
-            placeholder: '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder")'
-        });
+        var id_input_field = "";
+        tabsContent = $("div[id^='block-input-tags']");
+        
+        for (var i = 0; i < tabsContent.length; i++) {
+            id_input_field = $(tabsContent[i]).find(" :input").attr('id');
+            if (id_input_field === "") {
+                id_input_field = "Tags";
+            }
+
+            @Html.Raw(blogTagsSb.ToString())
+            
+            $("#" + id_input_field).tagEditor({
+                autocomplete: {
+                    delay: 0,
+                    position: { collision: 'flip' },
+                    source: initialBlogTags
+                },
+                delimiter: ',',
+                placeholder: '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Placeholder")'
+            });
+        }
     });
 </script>
 
-<div class="form-horizontal">
-    <vc:admin-widget widget-zone="blog_details_info_top" additional-data="Model" />
-    <div class="form-body">
-        @(Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-info-localized",
-                            @<div class="form-horizontal">
-                                <div class="form-body">
-                                    <div class="form-group">
-                                        <admin-label asp-for="@Model.Locales[item].Title" />
-                                        <div class="col-md-9 col-sm-9">
-                                            <admin-input asp-for="@Model.Locales[item].Title" />
-                                            <span asp-validation-for="@Model.Locales[item].Title"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <admin-label asp-for="@Model.Locales[item].BodyOverview" />
-                                        <div class="col-md-9 col-sm-9">
-                                            <admin-textarea asp-for="@Model.Locales[item].BodyOverview"></admin-textarea>
-                                            <span asp-validation-for="@Model.Locales[item].BodyOverview"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <admin-label asp-for="Locales[item].Body" />
-                                        <div class="col-md-9 col-sm-9">
-                                            <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
-                                            <span asp-validation-for="Locales[item].Body"></span>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-                                </div>
-                            </div>
-                                                            ,
-                                                            @<div class="form-horizontal">
-                                                                <div class="form-body">
-                                                                    <div class="form-group">
-                                                                        <admin-label asp-for="Title" />
-                                                                        <div class="col-md-9 col-sm-9">
-                                                                            <admin-input asp-for="Title" />
-                                                                            <span asp-validation-for="Title"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <admin-label asp-for="BodyOverview" />
-                                                                        <div class="col-md-9 col-sm-9">
-                                                                            <admin-textarea asp-for="BodyOverview"></admin-textarea>
-                                                                            <span asp-validation-for="BodyOverview"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <admin-label asp-for="Body" />
-                                                                        <div class="col-md-9 col-sm-9">
-                                                                            <admin-input asp-for="Body" asp-template="RichEditor" />
-                                                                            <span asp-validation-for="Body"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                                                                        ))
-        <div class="form-group">
-            <admin-label asp-for="PictureId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PictureId" />
-                <span asp-validation-for="PictureId"></span>
+
+<vc:admin-widget widget-zone="blog_details_info_top" additional-data="Model" />
+    
+@(Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-info-localized",
+                                        
+        @<div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Title" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Title"/>
+                        <span asp-validation-for="@Model.Locales[item].Title"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].BodyOverview" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-textarea asp-for="@Model.Locales[item].BodyOverview"></admin-textarea>
+                        <span asp-validation-for="@Model.Locales[item].BodyOverview"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Body" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                        <span asp-validation-for="Locales[item].Body"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Tags" />
+                    <div class="col-md-9 col-sm-9" id="block-input-tags">
+                        <admin-input asp-for="@Model.Locales[item].Tags" />
+                        <span asp-validation-for="@Model.Locales[item].Tags"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
             </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="AllowComments" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="AllowComments" />
-                     <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="AllowComments"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Tags" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Tags" />
-                <span asp-validation-for="Tags"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="StartDate" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="StartDate" />
-                <span asp-validation-for="StartDate"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="EndDate" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="EndDate" />
-                <span asp-validation-for="EndDate"></span>
-            </div>
-        </div>
-    </div>
-    <vc:admin-widget widget-zone="blog_details_info_bottom" additional-data="Model" />
-</div>
+        </div>,
+
+        @<div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="Title" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Title" />
+                        <span asp-validation-for="Title"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="BodyOverview" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-textarea asp-for="BodyOverview"></admin-textarea>
+                        <span asp-validation-for="BodyOverview"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="Body" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Body" asp-template="RichEditor" />
+                        <span asp-validation-for="Body"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="PictureId" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="PictureId" />
+                        <span asp-validation-for="PictureId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="AllowComments" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                            <admin-input asp-for="AllowComments" />
+                            <div class="control__indicator"></div>
+                        </label>
+                        <span asp-validation-for="AllowComments"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="Tags" />
+                    <div class="col-md-9 col-sm-9" id="block-input-tags">
+                        <admin-input asp-for="Tags" />
+                        <span asp-validation-for="Tags"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="StartDate" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="StartDate" />
+                        <span asp-validation-for="StartDate"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="EndDate" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="EndDate" />
+                        <span asp-validation-for="EndDate"></span>
+                    </div>
+                </div>
+             </div>
+        </div>))
+
+<vc:admin-widget widget-zone="blog_details_info_bottom" additional-data="Model" />    

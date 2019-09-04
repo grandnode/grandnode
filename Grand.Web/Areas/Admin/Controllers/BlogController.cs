@@ -108,6 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.Tags = blogPost.GetLocalized(x => x.Tags, languageId, false, false);
                 locale.SeName = blogPost.GetSeName(languageId, false, false);
             });
             return View(model);
