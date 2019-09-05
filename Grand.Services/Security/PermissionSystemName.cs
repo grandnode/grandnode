@@ -38,6 +38,7 @@
         public const string Topics = "ManageTopics";
         public const string Forums = "ManageForums";
         public const string Knowledgebase = "ManageKnowledgebase";
+        public const string Courses = "ManageCourses";
         public const string MessageTemplates = "ManageMessageTemplates";
         public const string Countries = "ManageCountries";
         public const string Languages = "ManageLanguages";

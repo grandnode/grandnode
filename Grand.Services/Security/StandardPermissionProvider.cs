@@ -46,6 +46,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = PermissionSystemName.Topics, Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = PermissionSystemName.Forums, Category = "Content Management" };
         public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = PermissionSystemName.Knowledgebase, Category = "Content Management" };
+        public static readonly PermissionRecord ManageCourses = new PermissionRecord { Name = "Admin area. Manage Courses", SystemName = PermissionSystemName.Courses, Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = PermissionSystemName.MessageTemplates, Category = "Content Management" };
         public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = PermissionSystemName.Countries, Category = "Configuration" };
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = PermissionSystemName.Languages, Category = "Configuration" };
@@ -116,6 +117,7 @@ namespace Grand.Services.Security
                 ManageTopics,
                 ManageForums,
                 ManageKnowledgebase,
+                ManageCourses,
                 ManageMessageTemplates,
                 ManageCountries,
                 ManageLanguages,
@@ -187,6 +189,7 @@ namespace Grand.Services.Security
                         ManageTopics,
                         ManageForums,
                         ManageKnowledgebase,
+                        ManageCourses,
                         ManageMessageTemplates,
                         ManageCountries,
                         ManageLanguages,
