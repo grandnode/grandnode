@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
@@ -32,6 +33,7 @@ using Grand.Web.Areas.Admin.Models.Blogs;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Cms;
 using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Web.Areas.Admin.Models.Courses;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Discounts;
@@ -322,6 +324,7 @@ namespace Grand.Web.Areas.Admin.Extensions
 
 
         #endregion
+
         #region Contact attributes
 
         //attributes
@@ -355,6 +358,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
         #endregion
+
         #region Customer attributes
 
         //customer attributes
@@ -1264,7 +1268,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
-
         #region Customer Tag
 
         //customer tags
@@ -1720,7 +1723,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
-
         #region Datetime
         public static DateTime? ConvertToUserTime(this DateTime? datetime)
         {
@@ -1753,6 +1755,25 @@ namespace Grand.Web.Areas.Admin.Extensions
             var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
             datetime = dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
             return datetime;
+        }
+
+        #endregion
+
+        #region Course level
+
+        public static CourseLevelModel ToModel(this CourseLevel entity)
+        {
+            return entity.MapTo<CourseLevel, CourseLevelModel>();
+        }
+
+        public static CourseLevel ToEntity(this CourseLevelModel model)
+        {
+            return model.MapTo<CourseLevelModel, CourseLevel>();
+        }
+
+        public static CourseLevel ToEntity(this CourseLevelModel model, CourseLevel destination)
+        {
+            return model.MapTo(destination);
         }
 
         #endregion
