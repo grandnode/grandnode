@@ -3,6 +3,7 @@ using Grand.Core.Domain.Courses;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,9 +32,12 @@ namespace Grand.Services.Courses
             await _mediator.EntityDeleted(courseLevel);
         }
 
-        public virtual async Task<IList<CourseLevel>> GetAllAsync()
+        public virtual async Task<IList<CourseLevel>> GetAll()
         {
-            var query = _courseLevelRepository.Table;
+            var query = from l in _courseLevelRepository.Table
+                        orderby l.DisplayOrder
+                        select l;
+
             return await query.ToListAsync();
         }
 

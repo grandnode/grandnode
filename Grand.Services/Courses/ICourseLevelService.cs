@@ -7,7 +7,7 @@ namespace Grand.Services.Courses
     public interface ICourseLevelService
     {
         Task<CourseLevel> GetById(string id);
-        Task<IList<CourseLevel>> GetAllAsync();
+        Task<IList<CourseLevel>> GetAll();
         Task<CourseLevel> Update(CourseLevel courseLevel);
         Task<CourseLevel> Insert(CourseLevel courseLevel);
         Task Delete(CourseLevel courseLevel);
