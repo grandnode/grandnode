@@ -357,6 +357,9 @@
     <Value>The message text for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Reviews">
-    <Value>Reviews</Value>
+    <Value>My Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Reviews.NoExists">
+    <Value>You don't have any reviews</Value>
   </LocaleResource>
 </Language>

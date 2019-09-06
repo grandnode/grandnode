@@ -805,7 +805,10 @@
     <Value>Your Personal Details</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Reviews">
-    <Value>Reviews</Value>
+    <Value>My Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Reviews.NoExists">
+    <Value>You don't have any reviews</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AbandonedCart">
     <Value>Send email AbandonedCart - ('{0}')</Value>
