@@ -1399,9 +1399,9 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideReviews)
                 return RedirectToRoute("CustomerInfo");
 
-            //var model = await _customerViewModelService.PrepareAuctions(_workContext.CurrentCustomer);
+            var model = await _customerViewModelService.PrepareReviews(_workContext.CurrentCustomer);
 
-            return View(/*model*/);
+            return View(model);
         }
 
         #endregion
