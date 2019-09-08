@@ -1,3 +1,15 @@
-﻿@page
-@{
+﻿@model PictureModel
+@if (Model!=null)
+{
+    <div class="zoom size-chart-@Model.Id mb-1">
+        <div class="col-sm-12 product-size-chart-box px-0">
+            <img class="img-fluid"
+                alt="@Model.AlternateText" 
+                src="@Model.ImageUrl"
+                data-fullsize="@Model.FullSizeImageUrl"
+                title="@Model.Title" 
+                itemprop="image"
+                id="size-chart-img-@Model.Id" /> 
+        </div>
+    </div>
 }

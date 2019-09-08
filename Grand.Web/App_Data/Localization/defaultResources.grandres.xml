@@ -3613,6 +3613,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.HasSampleDownload.Hint">
     <Value>Check if this product has a sample download file that can be downloaded before checkout.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.HasSizeChartPicture">
+    <Value>Has size chart picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.HasSizeChartPicture.Hint">
+    <Value>Check if this product has a picture depicting a size chart.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.HasUserAgreement">
     <Value>Has user agreement</Value>
   </LocaleResource>
@@ -3918,6 +3924,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShowOnHomePage.Hint">
     <Value>Check to display this product on your store's home page. Recommended for your most popular products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SizeChartPictureId">
+    <Value>Size Chart Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.SizeChartPictureId.Hint">
+    <Value>An image depicting a size chart. This image will be disapayed in a tab in the product detail.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Sku">
     <Value>SKU</Value>
@@ -20320,6 +20332,9 @@
   </LocaleResource>
   <LocaleResource Name="products.similarproducts">
     <Value>Similar products</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.SizeChart">
+    <Value>Size Chart</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Sku">
     <Value>SKU</Value>

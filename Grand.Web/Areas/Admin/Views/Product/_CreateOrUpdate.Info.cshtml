@@ -35,6 +35,7 @@
         $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
+        $("#@Html.FieldIdFor(model => model.HasSizeChartPicture)").click(toggleSizeChartPicture);
 
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -53,6 +54,7 @@
         toggleTax();
         toggleManageStock();
         toggleMarkAsNew();
+        toggleSizeChartPicture();
     });
 
     function toggleShowOnHomePage() {

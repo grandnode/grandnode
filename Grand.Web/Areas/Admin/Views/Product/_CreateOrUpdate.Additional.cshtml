@@ -143,28 +143,6 @@
     </div>
 </div>
 
-<div class="form-horizontal" id="group-size-chart">
-    <div class="form-body">
-        <div class="form-group">
-            <admin-label asp-for="HasSizeChartPicture" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="HasSizeChartPicture" />
-                     <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="HasSizeChartPicture"></span>
-            </div>
-        </div>
-        <div class="form-group" id="pnlSizeChartPictureFile">
-            <admin-label asp-for="SizeChartPictureId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="SizeChartPictureId" />
-                <span asp-validation-for="SizeChartPictureId"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="form-horizontal" id="group-recurring">
     <div class="form-body">
         <div class="form-group">
@@ -242,6 +220,28 @@
                      <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal" id="group-size-chart">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="HasSizeChartPicture" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="HasSizeChartPicture" />
+                     <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="HasSizeChartPicture"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlSizeChartPictureFile">
+            <admin-label asp-for="SizeChartPictureId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="SizeChartPictureId" />
+                <span asp-validation-for="SizeChartPictureId"></span>
             </div>
         </div>
     </div>

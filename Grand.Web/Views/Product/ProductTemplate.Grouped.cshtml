@@ -115,6 +115,12 @@
                                 <a class="nav-link" id="tags-tab" data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false"><span class="d-none d-md-block">@T("Products.Tags")</span><span class="mdi mdi-tag-multiple d-md-none"></span></a>
                             </li>
                         }
+                        @if (Model.HasSizeChartPicture)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="size-tab" data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false"><span class="d-none d-md-block">@T("Products.SizeChart")</span><span class="mdi mdi-tag-multiple d-md-none"></span></a>
+                            </li>
+                        }
                         @if (Model.ProductSpecifications.Any())
                         {
                             <li class="nav-item">
@@ -136,6 +142,10 @@
                     </ul>
                     <div class="tab-content" id="product_tab_content">
                         <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Html.Raw(Model.FullDescription)</div>
+                        @if (Model.HasSizeChartPicture)
+                        {
+                            <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="size-tab"><partial name="_ProductSizeChart" model="Model.SizeChartPicture" /></div>
+                        }
                         @if (Model.ProductTags.Any())
                         {
                             <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="tags-tab">

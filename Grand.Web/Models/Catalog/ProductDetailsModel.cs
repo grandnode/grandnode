@@ -55,6 +55,8 @@ namespace Grand.Web.Models.Catalog
         public VendorBriefInfoModel VendorModel { get; set; }
         public bool HasSampleDownload { get; set; }
         public GiftCardModel GiftCard { get; set; }
+        public bool HasSizeChartPicture { get; set; }
+        public PictureModel SizeChartPicture { get; set; }
         public bool IsShipEnabled { get; set; }
         public bool NotReturnable { get; set; }
         public bool IsFreeShipping { get; set; }
