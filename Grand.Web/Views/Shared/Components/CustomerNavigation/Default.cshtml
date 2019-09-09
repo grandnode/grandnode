@@ -145,7 +145,7 @@
                     <a href="@Url.RouteUrl("CustomerReviews")" class="@if(Model.SelectedTab == CustomerNavigationEnum.Reviews)
                                                                      {<text>active</text>}
                                                                      else
-                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-supervisor"></span><span>@T("Account.Reviews")</span></a>
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-star"></span><span>@T("Account.Reviews")</span></a>
                                                                 </li>
                                                             }
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
