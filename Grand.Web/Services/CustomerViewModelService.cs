@@ -651,6 +651,7 @@ namespace Grand.Web.Services
             model.HideAuctions = _customerSettings.HideAuctionsTab;
             model.HideNotes = _customerSettings.HideNotesTab;
             model.HideDocuments = _customerSettings.HideDocumentsTab;
+            model.HideReviews = _customerSettings.HideReviewsTab;
 
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {

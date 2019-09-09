@@ -1396,7 +1396,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            if (_customerSettings.HideReviews)
+            if (_customerSettings.HideReviewsTab)
                 return RedirectToRoute("CustomerInfo");
 
             var model = await _customerViewModelService.PrepareReviews(_workContext.CurrentCustomer);

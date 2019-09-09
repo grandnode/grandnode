@@ -197,7 +197,7 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Gets or sets a value indicating whether to hide 'Reviews' tab on 'My account' page
         /// </summary>
-        public bool HideReviews { get; set; }
+        public bool HideReviewsTab { get; set; }
 
         #region Form fields
 
