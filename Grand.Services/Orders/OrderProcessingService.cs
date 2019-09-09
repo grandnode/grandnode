@@ -375,6 +375,7 @@ namespace Grand.Services.Orders
                 StoreId = processPaymentRequest.StoreId,
                 OrderGuid = processPaymentRequest.OrderGuid,
                 CustomerId = details.Customer.Id,
+                OwnerId = string.IsNullOrEmpty(details.Customer.OwnerId) ? details.Customer.Id : details.Customer.OwnerId,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
                 CustomerIp = _webHelper.GetCurrentIpAddress(),

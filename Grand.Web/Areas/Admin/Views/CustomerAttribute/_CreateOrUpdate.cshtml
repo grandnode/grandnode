@@ -2,6 +2,8 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
+
+<input id="active-menu-item" type="hidden" value="/Admin/Setting/CustomerUser" />
 <admin-tabstrip name="customerattribute-edit">
     <items>
         <tabstrip-item text="@T("Admin.Customers.CustomerAttributes.Info")" tab-index="0">

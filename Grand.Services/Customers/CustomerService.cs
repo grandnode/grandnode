@@ -815,6 +815,8 @@ namespace Grand.Services.Customers
 
             filter = filter & builder.Eq(x => x.HasContributions, false);
 
+            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
+
             var customers = await _customerRepository.Collection.DeleteManyAsync(filter);
 
             return (int)customers.DeletedCount;

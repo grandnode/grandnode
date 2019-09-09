@@ -1,5 +1,9 @@
 ﻿@model ProductModel
-
+@inject Grand.Services.Security.IPermissionService permissionService
+@{
+    //has "Manage Documents" permission?
+    var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
+}
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="Ticks" type="hidden" />
@@ -137,6 +141,16 @@
                     </div>
                 </content>
             </tabstrip-item>
+            if (canManageDocuments)
+            {
+                <tabstrip-item text="@T("Admin.Catalog.Products.Documents")" tab-index="18">
+                    <content>
+                        <div>
+                            <partial name="_CreateOrUpdate.Documents" model="Model" />
+                        </div>
+                    </content>
+                </tabstrip-item>
+            }
         }
         <vc:admin-widget widget-zone="product_details_tabs" additional-data="Model" />
     </items>

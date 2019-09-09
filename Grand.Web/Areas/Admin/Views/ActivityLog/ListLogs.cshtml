@@ -25,6 +25,12 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
+                            <admin-label asp-for="Comment" />
+                            <div class="col-md-4 col-sm-6">
+                                <admin-input asp-for="Comment" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <admin-label asp-for="CreatedOnFrom" />
                             <div class="col-md-4 col-sm-6">
                                 <admin-input asp-for="CreatedOnFrom" />
@@ -160,10 +166,11 @@
 
     function additionalData() {
         var data = {
+            Comment: $('#@Html.FieldIdFor(model => model.Comment)').val(),
             CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
             CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
             IpAddress: $('#@Html.FieldIdFor(model => model.IpAddress)').val(),
-            ActivityLogTypeId: $('#ActivityLogTypeId').val()
+            ActivityLogTypeId: $('#ActivityLogTypeId').val()          
         };
         addAntiForgeryToken(data);
         return data;

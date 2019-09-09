@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? endDateValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var activityLog = await _customerActivityService.GetAllActivities(startDateValue, endDateValue, null, model.ActivityLogTypeId, model.IpAddress, pageIndex - 1, pageSize);
+            var activityLog = await _customerActivityService.GetAllActivities(model.Comment, startDateValue, endDateValue, null, model.ActivityLogTypeId, model.IpAddress, pageIndex - 1, pageSize);
             var activityLogModel = new List<ActivityLogModel>();
             foreach (var item in activityLog)
             {

@@ -3144,6 +3144,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.EditProductDetails">
     <Value>Edit product details</Value>
   </LocaleResource>
@@ -4772,6 +4775,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment">
     <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
+    <Value>The message text for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn">
     <Value>Created On</Value>
@@ -10371,6 +10377,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IsPasswordProtected.Hint">
     <Value>Check if this topic is password protected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
+    <Value>Specify if topic should be published or not.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
   </LocaleResource>
@@ -12408,6 +12420,12 @@
   <LocaleResource Name="admin.documents.document.gotocustomer">
     <Value>Go to customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToOrder">
+    <Value>Go to order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.gotoproduct">
+    <Value>Go to product</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>
   </LocaleResource>
@@ -12764,6 +12782,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.BillingInfo">
     <Value>Billing info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.EditOrderDetails">
     <Value>Edit order details</Value>
@@ -15132,6 +15153,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.List.SearchReturnRequestStatus.Hint">
     <Value>Search by a specific return status.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate.Hint">
+    <Value>The end date for the search</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Notified">
     <Value>The customer has been notified successfully.</Value>
@@ -18327,6 +18360,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.CancelOrder">
     <Value>Cancel Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Document">
+    <Value>Order number {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Email">
     <Value>Email</Value>

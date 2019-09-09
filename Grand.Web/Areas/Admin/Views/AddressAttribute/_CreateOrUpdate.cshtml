@@ -2,6 +2,7 @@
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
+<input id="active-menu-item" type="hidden" value="/Admin/Setting/CustomerUser" />
 <admin-tabstrip name="addressattribute-edit">
     <items>
         <tabstrip-item text="@T("Admin.Address.AddressAttributes.Info")" tab-index="0">

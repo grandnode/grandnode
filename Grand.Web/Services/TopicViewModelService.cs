@@ -59,7 +59,8 @@ namespace Grand.Web.Services
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription, _workContext.WorkingLanguage.Id),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle, _workContext.WorkingLanguage.Id),
                 SeName = topic.GetSeName(_workContext.WorkingLanguage.Id),
-                TopicTemplateId = topic.TopicTemplateId
+                TopicTemplateId = topic.TopicTemplateId,
+                Published = topic.Published
             };
             return model;
 
@@ -122,7 +123,7 @@ namespace Grand.Web.Services
             {
                 //load by store
                 var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
-                if (topic == null)
+                if (topic == null || !topic.Published)
                     return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))

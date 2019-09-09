@@ -58,9 +58,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CreateDocument(SimpleDocumentModel simpleModel)
         {
             var model = await _documentViewModelService.PrepareDocumentModel(null, null, simpleModel);
-            if (!string.IsNullOrEmpty(simpleModel.CustomerId))
-                model.CustomerEmail = (await _customerService.GetCustomerById(simpleModel.CustomerId))?.Email;
-
+           
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores

@@ -51,6 +51,12 @@ namespace Grand.Web.Controllers
             if (model == null)
                 return RedirectToRoute("HomePage");
 
+            //hide topic if it`s set as no published
+            if(!model.Published
+                && !(await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel)) 
+                && !(await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))) 
+                return RedirectToRoute("HomePage");
+
             //template
             var templateViewPath = await _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 

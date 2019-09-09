@@ -169,12 +169,12 @@
                 }, {
                     field: "ProductId",
                     title: "@T("Admin.Common.View")",
-                    width: 75,
-                    template: '<a class="k-button" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;&nbsp;@T("Admin.Common.View")</a>'
+                    width: 80,
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
                 },{
                     field: "Sku",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Sku")",
-                    width: 150
+                    width: 100
                 }, {
                     field: "Price",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Price")",
@@ -199,11 +199,11 @@
                                 decimals: 4
                             });
                     }
-                }, {
+                }, @*{
                     field: "ManageInventoryMethod",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod")",
-                    width: 150
-                }, {
+                    width: 120
+                },*@ {
                     field: "StockQuantity",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.StockQuantity")",
                     //integer format
@@ -212,7 +212,7 @@
                 },{
                     field: "Published",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Published")",
-                    width: 100
+                    width: 90
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",

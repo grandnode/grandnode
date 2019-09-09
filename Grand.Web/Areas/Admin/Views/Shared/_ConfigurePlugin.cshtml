@@ -12,6 +12,7 @@
 @inject IServiceProvider serviceProvider    
 @{
     var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo.AsType()).Instance(serviceProvider);
+    var menuitem = "";
 
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;
@@ -30,6 +31,7 @@
         backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
         listActionMethodName = "Methods";
         listControllerName = "Payment";
+        menuitem = "/Admin/Payment/Methods";
     }
     else if (plugin is IShippingRateComputationMethod)
     {
@@ -39,6 +41,7 @@
         backToLocale = "Admin.Configuration.Shipping.Providers.BackToList";
         listActionMethodName = "Providers";
         listControllerName = "Shipping";
+        menuitem = "/Admin/Shipping/Providers";
     }
     else if (plugin is ITaxProvider)
     {
@@ -48,6 +51,7 @@
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
         listActionMethodName = "Providers";
         listControllerName = "Tax";
+        menuitem = "/Admin/Tax/Providers";
     }
     else if (plugin is IExternalAuthenticationMethod)
     {
@@ -57,6 +61,7 @@
         backToLocale = "Admin.Configuration.ExternalAuthenticationMethods.BackToList";
         listActionMethodName = "Methods";
         listControllerName = "ExternalAuthentication";
+        menuitem = "/Admin/ExternalAuthentication/Methods";
     }
     else if (plugin is IWidgetPlugin)
     {
@@ -66,6 +71,7 @@
         backToLocale = "Admin.ContentManagement.Widgets.BackToList";
         listActionMethodName = "List";
         listControllerName = "Widget";
+        menuitem = "/Admin/Widget/List";
     }
     else if (plugin is IMiscPlugin)
     {
@@ -75,6 +81,7 @@
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";
         listControllerName = "Plugin";
+        menuitem = "/Admin/Plugin/List";
     }
 
     Layout = "_AdminLayout";
@@ -84,6 +91,7 @@
     Html.SetActiveMenuItemSystemName(activeMenuSystemName);
 
 }
+<input id="active-menu-item" type="hidden" value="@menuitem" />
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">

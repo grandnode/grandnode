@@ -17,7 +17,8 @@ namespace Grand.Services.Documents
         /// Gets all documents
         /// </summary>
         /// <returns>Documents</returns>
-        Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<Document>> GetAll(string customerId = "", string name = "", string number = "", string email = "", 
+            int reference = 0, string objectId = "", int status = -1, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Insert a document

@@ -100,7 +100,7 @@ function init_sidebar() {
         if ($BODY.hasClass('nav-md')) {
 
            localStorage.setItem('sideBarCookie', 'true');
-            $(".site_title").css("padding-left", "26px");
+            //$(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
@@ -109,7 +109,7 @@ function init_sidebar() {
             
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
             $SIDEBAR_MENU.find('li.active > ul').show();
-            $(".site_title").css("padding-left", "10px");
+            //$(".site_title").css("padding-left", "10px");
         }
 
         $BODY.toggleClass('nav-md nav-sm');
@@ -129,7 +129,9 @@ function init_sidebar() {
        
         var segment = this.href.split("/");
         var z = window.location.pathname;
-
+        if ($("#active-menu-item").length > 0) {
+            z = $("#active-menu-item").val();
+        }
         var segment2 = z.split("/");
         var linkY = "";
         var linkZ = "";
@@ -194,6 +196,7 @@ function init_sidebar() {
     });
 
     if ($("#active-menu-item").length > 0) {
+        
         arr.push($("#active-menu-item").val());
     }
 
@@ -212,6 +215,7 @@ function init_sidebar() {
     }
 
     for (var i = 0; i < $cur_menu.length; i++) { //extact match
+        
         if ($cur_menu.eq(i).attr('href') == arr[0]) {
             $cur_menu = $cur_menu.eq(i);
         }
@@ -1920,12 +1924,12 @@ $(document).ready(() => {
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
             $SIDEBAR_MENU.find('li.active-sm ul').hide();
         }
-        $(".site_title").css("padding-left", "26px");
+        //$(".site_title").css("padding-left", "26px");
     }
     else {
         $BODY.removeClass('nav-sm');
         $BODY.addClass('nav-md');
-        $(".site_title").css("padding-left", "10px");
+        //$(".site_title").css("padding-left", "10px");
         $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
         $SIDEBAR_MENU.find('li.active > ul').show();
     }

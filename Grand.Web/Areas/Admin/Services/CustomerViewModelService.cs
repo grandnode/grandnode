@@ -1533,7 +1533,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<(IEnumerable<CustomerModel.ActivityLogModel> activityLogModels, int totalCount)> PrepareActivityLogModel(string customerId, int pageIndex, int pageSize)
         {
-            var activityLog = await _customerActivityService.GetAllActivities(null, null, customerId, "", null, pageIndex - 1, pageSize);
+            var activityLog = await _customerActivityService.GetAllActivities(null, null, null, customerId, "", null, pageIndex - 1, pageSize);
             var items = new List<CustomerModel.ActivityLogModel>();
             foreach (var x in activityLog)
             {

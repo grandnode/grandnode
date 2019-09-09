@@ -326,4 +326,34 @@
   <LocaleResource Name="Account.Documents.NoExists">
     <Value>Documents not exists</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToOrder">
+    <Value>Go to order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Document">
+    <Value>Order number {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.documents.document.gotoproduct">
+    <Value>Go to product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.EndDate.Hint">
+    <Value>The end date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
+    <Value>The message text for the search.</Value>
+  </LocaleResource>
 </Language>

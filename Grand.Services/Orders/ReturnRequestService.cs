@@ -91,13 +91,15 @@ namespace Grand.Services.Orders
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
         /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="rs">Return request status; null to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
         public virtual async Task<IPagedList<ReturnRequest>> SearchReturnRequests(string storeId = "", string customerId = "",
             string orderItemId = "", ReturnRequestStatus? rs = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int pageIndex = 0, int pageSize = int.MaxValue, DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
         {
             var query = _returnRequestRepository.Table;
             if (!String.IsNullOrEmpty(storeId))
@@ -111,6 +113,10 @@ namespace Grand.Services.Orders
             }
             if (!String.IsNullOrEmpty(orderItemId))
                 query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.OrderItemId == orderItemId));
+            if (createdFromUtc.HasValue)
+                query = query.Where(rr => createdFromUtc.Value <= rr.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(rr => createdToUtc.Value >= rr.CreatedOnUtc);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
             return await PagedList<ReturnRequest>.Create(query, pageIndex, pageSize);
