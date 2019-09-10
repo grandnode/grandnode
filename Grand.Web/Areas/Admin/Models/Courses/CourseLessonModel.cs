@@ -19,6 +19,9 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.Name")]
         public string Name { get; set; }
 
+        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.ShortDescription")]
+        public string ShortDescription { get; set; }
+
         [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.Description")]
         public string Description { get; set; }
 
@@ -42,6 +45,10 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         [UIHint("Picture")]
         [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.PictureId")]
         public string PictureId { get; set; }
+
+        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.Published")]
+        public bool Published { get; set; }
+        
 
     }
 }

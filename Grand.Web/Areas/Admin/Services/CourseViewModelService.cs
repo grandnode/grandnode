@@ -17,6 +17,8 @@ namespace Grand.Web.Areas.Admin.Services
     {
         private readonly ICourseService _courseService;
         private readonly ICourseLevelService _courseLevelService;
+        private readonly ICourseLessonService _courseLessonService;
+        private readonly ICourseSubjectService _courseSubjectService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
@@ -25,13 +27,16 @@ namespace Grand.Web.Areas.Admin.Services
 
         private readonly SeoSettings _seoSettings;
 
-        public CourseViewModelService(ICourseService courseService, ICourseLevelService courseLevelService,
+        public CourseViewModelService(ICourseService courseService, ICourseLevelService courseLevelService, ICourseLessonService courseLessonService,
+            ICourseSubjectService courseSubjectService,
             IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ICustomerActivityService customerActivityService,
             SeoSettings seoSettings)
         {
             _courseService = courseService;
             _courseLevelService = courseLevelService;
+            _courseLessonService = courseLessonService;
+            _courseSubjectService = courseSubjectService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
             _languageService = languageService;
@@ -40,7 +45,7 @@ namespace Grand.Web.Areas.Admin.Services
             _seoSettings = seoSettings;
         }
 
-        public virtual async Task<CourseModel> PrepareModel(CourseModel model = null)
+        public virtual async Task<CourseModel> PrepareCourseModel(CourseModel model = null)
         {
             if (model == null)
             {
@@ -56,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
 
-            return await Task.FromResult(model);
+            return model;
         }
 
         public virtual async Task<Course> InsertCourseModel(CourseModel model)
@@ -117,5 +122,61 @@ namespace Grand.Web.Areas.Admin.Services
             //activity log
             await _customerActivityService.InsertActivity("DeleteCourse", course.Id, _localizationService.GetResource("ActivityLog.DeleteCourse"), course.Name);
         }
+
+        public virtual async Task<CourseLessonModel> PrepareCourseLessonModel(string courseId, CourseLessonModel model = null)
+        {
+            if (model == null)
+            {
+                model = new CourseLessonModel();
+                model.Published = true;
+            }
+            model.CourseId = courseId;
+
+            foreach (var item in await _courseSubjectService.GetByCourseId(courseId))
+            {
+                model.AvailableSubjects.Add(new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem() {
+                    Text = item.Name,
+                    Value = item.Id
+                });
+            }
+
+            return model;
+        }
+
+        public virtual async Task<CourseLesson> InsertCourseLessonModel(CourseLessonModel model)
+        {
+            var lesson = model.ToEntity();
+            await _courseLessonService.Insert(lesson);
+            //activity log
+            await _customerActivityService.InsertActivity("AddNewCourseLesson", lesson.Id, _localizationService.GetResource("ActivityLog.AddNewCourseLesson"), lesson.Name);
+            return lesson;
+        }
+
+        public virtual async Task<CourseLesson> UpdateCourseLessonModel(CourseLesson lesson, CourseLessonModel model)
+        {
+            string prevPictureId = lesson.PictureId;
+            lesson = model.ToEntity(lesson);
+            await _courseLessonService.Update(lesson);
+
+            //delete an old picture (if deleted or updated)
+            if (!string.IsNullOrEmpty(prevPictureId) && prevPictureId != lesson.PictureId)
+            {
+                var prevPicture = await _pictureService.GetPictureById(prevPictureId);
+                if (prevPicture != null)
+                    await _pictureService.DeletePicture(prevPicture);
+            }
+
+            //activity log
+            await _customerActivityService.InsertActivity("EditCourseLesson", lesson.Id, _localizationService.GetResource("ActivityLog.EditLessonCourse"), lesson.Name);
+
+            return lesson;
+        }
+        public virtual async Task DeleteCourseLesson(CourseLesson lesson)
+        {
+            await _courseLessonService.Delete(lesson);
+            //activity log
+            await _customerActivityService.InsertActivity("DeleteCourseLesson", lesson.Id, _localizationService.GetResource("ActivityLog.DeleteCourseLesson"), lesson.Name);
+        }
+
     }
 }

@@ -133,7 +133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var model = await _courseViewModelService.PrepareModel();
+            var model = await _courseViewModelService.PrepareCourseModel();
             //locales
             await AddLocales(_languageService, model.Locales);
             //ACL
@@ -201,7 +201,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = course.GetSeName(languageId, false, false);
             });
 
-            model = await _courseViewModelService.PrepareModel(model);
+            model = await _courseViewModelService.PrepareCourseModel(model);
             //ACL
             await model.PrepareACLModel(course, false, _customerService);
             //Stores
@@ -215,7 +215,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var course = await _courseService.GetById(model.Id);
             if (course == null)
-                //No category found with the specified id
+                //No course found with the specified id
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff())
@@ -246,13 +246,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _courseViewModelService.PrepareModel(model);
+            model = await _courseViewModelService.PrepareCourseModel(model);
             //ACL
             await model.PrepareACLModel(course, true, _customerService);
             //Stores
             await model.PrepareStoresMappingModel(course, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
 
-            return View(/*model*/);
+            return View(model);
         }
 
         [HttpPost]
@@ -260,7 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var course = await _courseService.GetById(id);
             if (course == null)
-                //No category found with the specified id
+                //No course found with the specified id
                 return RedirectToAction("List");
 
             if (_workContext.CurrentCustomer.IsStaff())
@@ -353,6 +353,150 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+        public async Task<IActionResult> CreateLesson(string courseId)
+        {
+            var course = await _courseService.GetById(courseId);
+            if (course == null)
+                //No course found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!course.LimitedToStores || (course.LimitedToStores && course.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && course.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.Courses.Course.Permisions"));
+                else
+                {
+                    if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
+
+            var model = await _courseViewModelService.PrepareCourseLessonModel(courseId);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> CreateLesson(CourseLessonModel model, bool continueEditing)
+        {
+            var course = await _courseService.GetById(model.CourseId);
+            if (course == null)
+                //No course found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!course.LimitedToStores || (course.LimitedToStores && course.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && course.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.Courses.Course.Permisions"));
+                else
+                {
+                    if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                var lesson = await _courseViewModelService.InsertCourseLessonModel(model);
+                SuccessNotification(_localizationService.GetResource("Admin.Courses.Course.Lesson.Added"));
+                return continueEditing ? RedirectToAction("EditLesson", new { id = lesson.Id }) : RedirectToAction("Edit", new { Id = lesson.CourseId });
+            }
+
+            //If we got this far, something failed, redisplay form
+            model = await _courseViewModelService.PrepareCourseLessonModel(model.CourseId, model);
+
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> EditLesson(string id)
+        {
+            var lesson = await _courseLessonService.GetById(id);
+            if (lesson == null)
+                //No course found with the specified id
+                return RedirectToAction("List");
+
+            var course = await _courseService.GetById(lesson.CourseId);
+            if (course == null)
+                //No course found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!course.LimitedToStores || (course.LimitedToStores && course.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && course.Stores.Count > 1))
+                    WarningNotification(_localizationService.GetResource("Admin.Courses.Course.Permisions"));
+                else
+                {
+                    if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                        return RedirectToAction("List");
+                }
+            }
+            var model = lesson.ToModel();
+            model = await _courseViewModelService.PrepareCourseLessonModel(lesson.CourseId, model);
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> EditLesson(CourseLessonModel model, bool continueEditing)
+        {
+            var lesson = await _courseLessonService.GetById(model.Id);
+            if (lesson == null)
+                //No lesson found with the specified id
+                return RedirectToAction("List");
+
+            var course = await _courseService.GetById(model.CourseId);
+            if (course == null)
+                //No category found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = course.Id });
+            }
+            if (ModelState.IsValid)
+            {
+                lesson = await _courseViewModelService.UpdateCourseLessonModel(lesson, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Courses.Course.Lesson.Updated"));
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("EditLesson", new { id = lesson.Id });
+                }
+                return RedirectToAction("Edit", new { id = course.Id });
+            }
+            //If we got this far, something failed, redisplay form
+            model = await _courseViewModelService.PrepareCourseLessonModel(lesson.CourseId, model);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteLesson(string id)
+        {
+            var lesson = await _courseLessonService.GetById(id);
+            if (lesson == null)
+                //No lesson found with the specified id
+                return RedirectToAction("List");
+
+            var course = await _courseService.GetById(lesson.CourseId);
+            if (course == null)
+                //No category found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                    return RedirectToAction("Edit", new { id = course.Id });
+            }
+            await _courseViewModelService.DeleteCourseLesson(lesson);
+            SuccessNotification(_localizationService.GetResource("Admin.Courses.Course.Lesson.Deleted"));
+
+            return RedirectToAction("Edit", new { id = course.Id });
+        }
+
         #endregion
     }
 }
