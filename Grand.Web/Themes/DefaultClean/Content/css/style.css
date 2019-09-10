@@ -2613,8 +2613,8 @@ ul.opc .order-summary-content h5 {
     display: flex;
     justify-content: flex-start;
     width: 100%;
-    height: 20px;
-    font-size: 20px;
+    height: 22px;
+    font-size: 22px;
     backface-visibility: hidden;
     text-align: center;
 }
@@ -2622,7 +2622,7 @@ ul.opc .order-summary-content h5 {
     display: flex;
     justify-content: flex-start;
     position: relative;
-    height: 20px;
+    height: 22px;
     font-size: 0;
     line-height: 0;
     text-indent: -999em;
@@ -2630,30 +2630,30 @@ ul.opc .order-summary-content h5 {
 }
 .rating-box::before {
     content: "\2605\2605\2605\2605\2605";
-    height: 20px;
+    height: 22px;
     color: #c3c5c9;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
-    font-size: 18px;
+    font-size: 22px;
 }
 .rating-box .rating {
     position: absolute;
     left: 0;
     top: 0;
-    height: 20px;
+    height: 22px;
     overflow: hidden;
 }
 .rating-box .rating:before {
     content: "\2605\2605\2605\2605\2605";
-    height: 20px;
+    height: 22px;
     color: #ffc107;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
-    font-size: 18px;
+    font-size: 22px;
     position: absolute;
     left: 0;
 }
@@ -5385,11 +5385,6 @@ footer .socicon-pinterest:hover {
     }
     .product-details-page .product-tabs .nav-link {
         padding: 11px;
-    }
-    .card.gen .card-body-content .card-title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
     .card.gen .card-body-content .card-title a {
         font-size: 14px;
