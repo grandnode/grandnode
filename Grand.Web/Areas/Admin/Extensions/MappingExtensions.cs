@@ -1778,5 +1778,61 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Course
+
+        public static CourseModel ToModel(this Course entity)
+        {
+            return entity.MapTo<Course, CourseModel>();
+        }
+
+        public static Course ToEntity(this CourseModel model)
+        {
+            return model.MapTo<CourseModel, Course>();
+        }
+
+        public static Course ToEntity(this CourseModel model, Course destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Course subject
+
+        public static CourseSubjectModel ToModel(this CourseSubject entity)
+        {
+            return entity.MapTo<CourseSubject, CourseSubjectModel>();
+        }
+
+        public static CourseSubject ToEntity(this CourseSubjectModel model)
+        {
+            return model.MapTo<CourseSubjectModel, CourseSubject>();
+        }
+
+        public static CourseSubject ToEntity(this CourseSubjectModel model, CourseSubject destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Course lesson
+
+        public static CourseLessonModel ToModel(this CourseLesson entity)
+        {
+            return entity.MapTo<CourseLesson, CourseLessonModel>();
+        }
+
+        public static CourseLesson ToEntity(this CourseLessonModel model)
+        {
+            return model.MapTo<CourseLessonModel, CourseLesson>();
+        }
+
+        public static CourseLesson ToEntity(this CourseLessonModel model, CourseLesson destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
     }
 }

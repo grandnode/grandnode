@@ -1,16 +1,19 @@
-﻿using Grand.Core.Domain.Security;
+﻿using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Stores;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Courses
 {
-    public class Course : BaseEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
+    public class Course : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
         public Course()
         {
             CustomerRoles = new List<string>();
             Stores = new List<string>();
+            Locales = new List<LocalizedProperty>();
         }
 
         /// <summary>
@@ -61,10 +64,39 @@ namespace Grand.Core.Domain.Courses
         public IList<string> Stores { get; set; }
 
         /// <summary>
+        /// Gets or sets the meta keywords
+        /// </summary>
+        public string MetaKeywords { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta description
+        /// </summary>
+        public string MetaDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta title
+        /// </summary>
+        public string MetaTitle { get; set; }
+
+        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string SeName { get; set; }
 
-       
+        /// <summary>
+        /// Gets or sets the date and time of instance creation
+        /// </summary>
+        public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of instance update
+        /// </summary>
+        public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of locales
+        /// </summary>
+        public IList<LocalizedProperty> Locales { get; set; }
+
     }
 }

@@ -678,7 +678,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.BlogPosts, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
-                
+
             //news
             CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -1056,11 +1056,39 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CourseLevelModel, CourseLevel>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
+            //course subject
+            CreateMap<CourseSubject, CourseSubjectModel>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseSubjectModel, CourseSubject>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //course
+            CreateMap<Course, CourseModel>()
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableLevels, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<CourseModel, Course>()
+                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+            
+            //course lesson
+            CreateMap<CourseLesson, CourseLessonModel>()
+                .ForMember(dest => dest.AvailableSubjects, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseLessonModel, CourseLesson>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 0; }
         }
     }

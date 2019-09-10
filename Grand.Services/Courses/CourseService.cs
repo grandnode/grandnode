@@ -1,10 +1,10 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Data;
 using Grand.Core.Domain.Courses;
 using Grand.Services.Events;
 using MediatR;
-using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Courses
@@ -31,9 +31,13 @@ namespace Grand.Services.Courses
             await _mediator.EntityDeleted(course);
         }
 
-        public virtual async Task<IList<Course>> GetAll()
+        public virtual async Task<IPagedList<Course>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _courseRepository.Table.ToListAsync();
+            var query = from q in _courseRepository.Table
+                        orderby q.DisplayOrder
+                        select q;
+
+            return await PagedList<Course>.Create(query, pageIndex, pageSize);
         }
 
         public virtual Task<Course> GetById(string id)
