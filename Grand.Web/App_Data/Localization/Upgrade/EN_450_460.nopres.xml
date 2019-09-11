@@ -356,4 +356,232 @@
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
     <Value>The message text for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCourse">
+    <Value>Added a new course ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCourseLesson">
+    <Value>Added a new lesson ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCourse">
+    <Value>Deleted a course ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCourseLesson">
+    <Value>Deleted a lesson ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCourse">
+    <Value>Edited a course ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditLessonCourse">
+    <Value>Edited a lesson ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Course">
+    <Value>Manage courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Course.Level">
+    <Value>Levels</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Course.Manage">
+    <Value>Courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Added">
+    <Value>The new course has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.AddNew">
+    <Value>Add new course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.BackToCourse">
+    <Value>Back to the course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.BackToList">
+    <Value>Back to the list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Deleted">
+    <Value>The course has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Edit">
+    <Value>Edit course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the course will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the course will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.LevelId">
+    <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the course is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaDescription.hint">
+    <Value>Meta description to be added to course page header</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaKeywords.hint">
+    <Value>Meta keywords to be added to course page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.MetaTitle.hint">
+    <Value>Override the page title. The default is the name of the course.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Name.Required">
+    <Value>Field name is Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.PictureId">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.PictureId.hint">
+    <Value>The course picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Published.Hint">
+    <Value>Check to publish this course (visible in store). Uncheck to unpublish (course not available in store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.SeName.hint">
+    <Value>Set a search engine friendly page name e.g. 'the-best-course' to make your page URL 'http://www.yourStore.com/the-best-course'. Leave empty to generate it automatically based on the name of the course.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Info">
+    <Value>General info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Added">
+    <Value>The new lesson has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.AddNew">
+    <Value>Add new lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Deleted">
+    <Value>The lesson has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Edit">
+    <Value>Edit lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.AttachmentId">
+    <Value>Download file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.CourseId.Required">
+    <Value>Field course id is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name.Required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.PictureId">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.ShortDescription">
+    <Value>Short description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId.Required">
+    <Value>Subject is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.VideoFile">
+    <Value>Video file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Info">
+    <Value>General info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Updated">
+    <Value>The lesson has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lessons">
+    <Value>Lessons</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Manage">
+    <Value>Manage course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Permisions">
+    <Value>You can't edit this course, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Subject.Fields.CourseId.Required">
+    <Value>Field course id required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Subject.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Subject.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Subject.Fields.Name.Required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Subjects">
+    <Value>Subjects</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Updated">
+    <Value>The course has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Level">
+    <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Level.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Level.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Level.Fields.Name.Required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.courses.course.lesson.savebeforeedit">
+    <Value>Save before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.courses.course.subject.savebeforeedit">
+    <Value>Save before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.courses.course.subjects">
+    <Value>Subjects</Value>
+  </LocaleResource>
 </Language>

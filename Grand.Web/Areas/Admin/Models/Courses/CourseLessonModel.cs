@@ -30,7 +30,7 @@ namespace Grand.Web.Areas.Admin.Models.Courses
 
         public string CourseId { get; set; }
 
-        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.Subject")]
+        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.SubjectId")]
         public string SubjectId { get; set; }
         public IList<SelectListItem> AvailableSubjects { get; set; }
 
@@ -38,7 +38,7 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         [UIHint("Download")]
         public string VideoFile { get; set; }
 
-        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.Attachment")]
+        [GrandResourceDisplayName("Admin.Courses.Course.Lesson.Fields.AttachmentId")]
         [UIHint("Download")]
         public string AttachmentId { get; set; }
 

@@ -53,6 +53,7 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
+        [GrandResourceDisplayName("Admin.Courses.Course.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
 
         [GrandResourceDisplayName("Admin.Courses.Course.Fields.MetaDescription")]
