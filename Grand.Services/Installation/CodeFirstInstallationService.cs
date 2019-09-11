@@ -5089,7 +5089,8 @@ namespace Grand.Services.Installation
                 SaveVisitedPage = false,
                 SuffixDeletedCustomers = true,
                 AllowUsersToDeleteAccount = false,
-                AllowUsersToExportData = false
+                AllowUsersToExportData = false,
+                HideReviewsTab = false,
             });
 
             await _settingService.SaveSetting(new AddressSettings {

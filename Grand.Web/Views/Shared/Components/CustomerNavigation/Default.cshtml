@@ -138,6 +138,16 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-account-supervisor"></span><span>@T("Account.VendorInfo")</span></a>
                                                                 </li>
                                                             }
+            @if (!Model.HideReviews)
+            {
+                <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
+                <li class="customer-notes">
+                    <a href="@Url.RouteUrl("CustomerReviews")" class="@if(Model.SelectedTab == CustomerNavigationEnum.Reviews)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-star"></span><span>@T("Account.Reviews")</span></a>
+                                                                </li>
+                                                            }
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
         </ul>
 </div>
