@@ -1,0 +1,52 @@
+﻿@model CourseModel
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input id="active-menu-item" type="hidden" value="/Admin/Course/List" />
+<admin-tabstrip name="category-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Courses.Course.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.SEO")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabSeo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Courses.Course.Acl")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Courses.Course.Stores")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Courses.Course.Subjects")" tab-index="4">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Subject" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Courses.Course.Lessons")" tab-index="5">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.Lesson" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="course_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>
+<input id="active-menu-item" type="hidden" value="/Admin/Course/List" />

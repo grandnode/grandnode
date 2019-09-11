@@ -21,6 +21,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Cms;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
+using Grand.Services.Courses;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
@@ -293,6 +294,12 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<GoogleAnalyticsService>().As<IGoogleAnalyticsService>().InstancePerLifetimeScope();
             builder.RegisterType<DocumentTypeService>().As<IDocumentTypeService>().InstancePerLifetimeScope();
             builder.RegisterType<DocumentService>().As<IDocumentService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<CourseActionService>().As<ICourseActionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseLessonService>().As<ICourseLessonService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseLevelService>().As<ICourseLevelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseService>().As<ICourseService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseSubjectService>().As<ICourseSubjectService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 

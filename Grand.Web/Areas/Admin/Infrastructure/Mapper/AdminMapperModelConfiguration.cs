@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
@@ -32,6 +33,7 @@ using Grand.Web.Areas.Admin.Models.Blogs;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Cms;
 using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Web.Areas.Admin.Models.Courses;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Discounts;
@@ -676,7 +678,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.BlogPosts, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
-                
+
             //news
             CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -1047,10 +1049,46 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
+
+            //course level
+            CreateMap<CourseLevel, CourseLevelModel>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseLevelModel, CourseLevel>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //course subject
+            CreateMap<CourseSubject, CourseSubjectModel>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseSubjectModel, CourseSubject>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //course
+            CreateMap<Course, CourseModel>()
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableLevels, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<CourseModel, Course>()
+                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+            
+            //course lesson
+            CreateMap<CourseLesson, CourseLessonModel>()
+                .ForMember(dest => dest.AvailableSubjects, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseLessonModel, CourseLesson>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 0; }
         }
     }

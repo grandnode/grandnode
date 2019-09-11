@@ -1,0 +1,33 @@
+﻿@model CourseModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Courses.Course.Edit").Text;
+}
+<form asp-controller="Course" asp-action="Edit" method="post" id="course-form">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Admin.Courses.Course.Edit") - @Model.Name
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Courses.Course.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="course-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <vc:admin-widget widget-zone="course_details_buttons" additional-data="Model" />
+                <div class="x_content form">
+                    <partial name="_CreateOrUpdate" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<admin-delete-confirmation button-id="course-delete"/>

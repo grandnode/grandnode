@@ -1,0 +1,32 @@
+﻿@model CourseLessonModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Courses.Course.Lesson.AddNew").Text;
+}
+<form asp-controller="Course" asp-action="CreateLesson" method="post" id="course-lesson-form">
+    <input asp-for="CourseId" type="hidden" />
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Admin.Courses.Course.Lesson.AddNew")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Courses.Course.BackToCourse").Text, "Edit", "Course", new { Id = Model.CourseId })</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                        </div>
+                    </div>
+                </div>
+                <vc:admin-widget widget-zone="course_lesson_details_buttons" additional-data="null" />
+                <div class="x_content form k-content">
+                    <partial name="_Lesson" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

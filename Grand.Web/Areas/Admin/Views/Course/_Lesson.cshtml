@@ -1,0 +1,16 @@
+﻿@model CourseLessonModel
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input id="active-menu-item" type="hidden" value="/Admin/Course/List" />
+<admin-tabstrip name="lesson-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Courses.Course.Lesson.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_Lesson.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="course_lesson_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>

@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
@@ -32,6 +33,7 @@ using Grand.Web.Areas.Admin.Models.Blogs;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Cms;
 using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Web.Areas.Admin.Models.Courses;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Discounts;
@@ -322,6 +324,7 @@ namespace Grand.Web.Areas.Admin.Extensions
 
 
         #endregion
+
         #region Contact attributes
 
         //attributes
@@ -355,6 +358,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
         #endregion
+
         #region Customer attributes
 
         //customer attributes
@@ -1264,7 +1268,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
-
         #region Customer Tag
 
         //customer tags
@@ -1720,7 +1723,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
-
         #region Datetime
         public static DateTime? ConvertToUserTime(this DateTime? datetime)
         {
@@ -1757,5 +1759,80 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Course level
+
+        public static CourseLevelModel ToModel(this CourseLevel entity)
+        {
+            return entity.MapTo<CourseLevel, CourseLevelModel>();
+        }
+
+        public static CourseLevel ToEntity(this CourseLevelModel model)
+        {
+            return model.MapTo<CourseLevelModel, CourseLevel>();
+        }
+
+        public static CourseLevel ToEntity(this CourseLevelModel model, CourseLevel destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Course
+
+        public static CourseModel ToModel(this Course entity)
+        {
+            return entity.MapTo<Course, CourseModel>();
+        }
+
+        public static Course ToEntity(this CourseModel model)
+        {
+            return model.MapTo<CourseModel, Course>();
+        }
+
+        public static Course ToEntity(this CourseModel model, Course destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Course subject
+
+        public static CourseSubjectModel ToModel(this CourseSubject entity)
+        {
+            return entity.MapTo<CourseSubject, CourseSubjectModel>();
+        }
+
+        public static CourseSubject ToEntity(this CourseSubjectModel model)
+        {
+            return model.MapTo<CourseSubjectModel, CourseSubject>();
+        }
+
+        public static CourseSubject ToEntity(this CourseSubjectModel model, CourseSubject destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Course lesson
+
+        public static CourseLessonModel ToModel(this CourseLesson entity)
+        {
+            return entity.MapTo<CourseLesson, CourseLessonModel>();
+        }
+
+        public static CourseLesson ToEntity(this CourseLessonModel model)
+        {
+            return model.MapTo<CourseLessonModel, CourseLesson>();
+        }
+
+        public static CourseLesson ToEntity(this CourseLessonModel model, CourseLesson destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
     }
 }
