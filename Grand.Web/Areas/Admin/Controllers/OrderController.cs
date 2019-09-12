@@ -83,6 +83,34 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ProductSearchAutoComplete(string term, [FromServices] IProductService productService)
+        {
+            const int searchTermMinimumLength = 3;
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content("");
+
+            var storeId = string.Empty;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
+            //products
+            const int productNumber = 15;
+            var products = (await productService.SearchProducts(
+                storeId: storeId,
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true)).products;
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          })
+                .ToList();
+            return Json(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> OrderList(DataSourceRequest command, OrderListModel model)
         {
