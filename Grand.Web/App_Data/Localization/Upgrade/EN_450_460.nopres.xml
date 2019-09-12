@@ -356,6 +356,18 @@
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment.Hint">
     <Value>The message text for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Reviews">
+    <Value>My Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Reviews.NoExists">
+    <Value>You don't have any reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideReviewsTab">
+    <Value>Hide 'My Reviews' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideReviewsTab.Hint">
+    <Value>Check to hide 'My Reviews' tab on 'My account' page.</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCourse">
     <Value>Added a new course ('{0}')</Value>
   </LocaleResource>
@@ -583,5 +595,44 @@
   </LocaleResource>
   <LocaleResource Name="admin.courses.course.subjects">
     <Value>Subjects</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.courses.course.fields.name.hint">
+    <Value>Enter the name of the course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Description.hint">
+    <Value>Enter the description of the course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.LevelId.hint">
+    <Value>Choose the level of the course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.DisplayOrder.hint">
+    <Value>Specify the display order of the course</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name.hint">
+    <Value>Enter the name of the lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.ShortDescription.hint">
+    <Value>Enter the short description of the lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Description.hint">
+    <Value>Enter the full description of the lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.PictureId.hint">
+    <Value>Choose the picture of the lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.VideoFile.hint">
+    <Value>Enter the URL or upload the video for this lesson.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.AttachmentId.hint">
+    <Value>Enter the URL or upload the attachment for this lesson.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId.hint">
+    <Value>Choose the subject in which this lesson should appear.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Published.hint">
+    <Value>Specify if this lesson is published or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.DisplayOrder.hint">
+    <Value>Specify the display order of the lesson</Value>
   </LocaleResource>
 </Language>

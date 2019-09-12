@@ -1015,7 +1015,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("Company", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Company));
 
                 xmlWriter.WriteElementString("CountryId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId));
-                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId).ToString());
+                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId));
                 xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress));
                 xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2));
                 xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode));
@@ -1311,8 +1311,8 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Customer>("StreetAddress2", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StreetAddress2)),
                 new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ZipPostalCode)),
                 new PropertyByName<Customer>("City", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.City)),
-                new PropertyByName<Customer>("CountryId", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.CountryId)),
-                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttributeFromEntity<int>(SystemCustomerAttributeNames.StateProvinceId)),
+                new PropertyByName<Customer>("CountryId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.CountryId)),
+                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.StateProvinceId)),
                 new PropertyByName<Customer>("Phone", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Phone)),
                 new PropertyByName<Customer>("Fax", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.Fax)),
                 new PropertyByName<Customer>("VatNumber", p => p.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.VatNumber)),

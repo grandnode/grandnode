@@ -804,6 +804,12 @@
   <LocaleResource Name="Account.YourPersonalDetails">
     <Value>Your Personal Details</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Reviews">
+    <Value>My Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Reviews.NoExists">
+    <Value>You don't have any reviews</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AbandonedCart">
     <Value>Send email AbandonedCart - ('{0}')</Value>
   </LocaleResource>
@@ -6897,6 +6903,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
     <Value>Check if 'Zip / postal code' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideReviewsTab">
+    <Value>Hide 'My Reviews' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideReviewsTab.Hint">
+    <Value>Check to hide 'My Reviews' tab on 'My account' page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Filter.Name">
     <Value>Setting Name</Value>
   </LocaleResource>
@@ -10575,11 +10587,20 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.Description.hint">
+    <Value>Enter the description of the course</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.DisplayOrder.hint">
+    <Value>Specify the display order of the course</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.LevelId">
     <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.LevelId.hint">
+    <Value>Choose the level of the course</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
@@ -10607,6 +10628,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.Name">
     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.courses.course.fields.name.hint">
+    <Value>Enter the name of the course</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.Name.Required">
     <Value>Field name is Required</Value>
@@ -10650,17 +10674,29 @@
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.AttachmentId">
     <Value>Download file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.AttachmentId.hint">
+    <Value>Enter the URL or upload the attachment for this lesson.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.CourseId.Required">
     <Value>Field course id is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Description.hint">
+    <Value>Enter the full description of the lesson</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.DisplayOrder.hint">
+    <Value>Specify the display order of the lesson</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name">
     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name.hint">
+    <Value>Enter the name of the lesson</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Name.Required">
     <Value>Field name is required</Value>
@@ -10668,20 +10704,35 @@
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.PictureId">
     <Value>Picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.PictureId.hint">
+    <Value>Choose the picture of the lesson</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Published">
     <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.Published.hint">
+    <Value>Specify if this lesson is published or not.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.ShortDescription">
     <Value>Short description</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.ShortDescription.hint">
+    <Value>Enter the short description of the lesson</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId">
     <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId.hint">
+    <Value>Choose the subject in which this lesson should appear.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.SubjectId.Required">
     <Value>Subject is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.VideoFile">
     <Value>Video file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Lesson.Fields.VideoFile.hint">
+    <Value>Enter the URL or upload the video for this lesson.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Lesson.Info">
     <Value>General info</Value>
