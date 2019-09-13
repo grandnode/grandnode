@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Braintree;
+﻿using Braintree;
 using Grand.Core;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.BrainTree.Controllers;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Plugin.Payments.BrainTree.Validators;
+using Grand.Services.Cms;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Environment = Braintree.Environment;
 
 namespace Grand.Plugin.Payments.BrainTree
 {
-    public class BrainTreePaymentProcessor : BasePlugin, IPaymentMethod
+    public class BrainTreePaymentProcessor : BasePlugin, IPaymentMethod, IWidgetPlugin
     {
         #region Fields
 
@@ -78,8 +79,7 @@ namespace Grand.Plugin.Payments.BrainTree
             var privateKey = _brainTreePaymentSettings.PrivateKey;
 
             //new gateway
-            var gateway = new BraintreeGateway
-            {
+            var gateway = new BraintreeGateway {
                 Environment = useSandBox ? Environment.SANDBOX : Environment.PRODUCTION,
                 MerchantId = merchantId,
                 PublicKey = publicKey,
@@ -87,23 +87,27 @@ namespace Grand.Plugin.Payments.BrainTree
             };
 
             //new transaction request
-            var transactionRequest = new TransactionRequest
-            {
+            var transactionRequest = new TransactionRequest {
                 Amount = processPaymentRequest.OrderTotal,
             };
 
-            //transaction credit card request
-            var transactionCreditCardRequest = new TransactionCreditCardRequest
+            if (_brainTreePaymentSettings.Use3DS)
             {
-                Number = processPaymentRequest.CreditCardNumber,
-                CVV = processPaymentRequest.CreditCardCvv2,
-                ExpirationDate = processPaymentRequest.CreditCardExpireMonth + "/" + processPaymentRequest.CreditCardExpireYear
-            };
-            transactionRequest.CreditCard = transactionCreditCardRequest;
+                transactionRequest.PaymentMethodNonce = processPaymentRequest.CustomValues["CardNonce"].ToString();
+            }
+            else
+            {
+                //transaction credit card request
+                var transactionCreditCardRequest = new TransactionCreditCardRequest {
+                    Number = processPaymentRequest.CreditCardNumber,
+                    CVV = processPaymentRequest.CreditCardCvv2,
+                    ExpirationDate = processPaymentRequest.CreditCardExpireMonth + "/" + processPaymentRequest.CreditCardExpireYear
+                };
+                transactionRequest.CreditCard = transactionCreditCardRequest;
+            }
 
             //address request
-            var addressRequest = new AddressRequest
-            {
+            var addressRequest = new AddressRequest {
                 FirstName = customer.BillingAddress.FirstName,
                 LastName = customer.BillingAddress.LastName,
                 StreetAddress = customer.BillingAddress.Address1,
@@ -112,8 +116,7 @@ namespace Grand.Plugin.Payments.BrainTree
             transactionRequest.BillingAddress = addressRequest;
 
             //transaction options request
-            var transactionOptionsRequest = new TransactionOptionsRequest
-            {
+            var transactionOptionsRequest = new TransactionOptionsRequest {
                 SubmitForSettlement = true
             };
             transactionRequest.Options = transactionOptionsRequest;
@@ -268,14 +271,14 @@ namespace Grand.Plugin.Payments.BrainTree
             var warnings = new List<string>();
 
             //validate
-            var validator = new PaymentInfoValidator(_localizationService);
-            var model = new PaymentInfoModel
-            {
+            var validator = new PaymentInfoValidator(_brainTreePaymentSettings, _localizationService);
+            var model = new PaymentInfoModel {
                 CardholderName = form["CardholderName"],
                 CardNumber = form["CardNumber"],
                 CardCode = form["CardCode"],
                 ExpireMonth = form["ExpireMonth"],
-                ExpireYear = form["ExpireYear"]
+                ExpireYear = form["ExpireYear"],
+                CardNonce = form["CardNonce"]
             };
             var validationResult = validator.Validate(model);
             if (!validationResult.IsValid)
@@ -288,14 +291,18 @@ namespace Grand.Plugin.Payments.BrainTree
 
         public async Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form)
         {
-            var paymentInfo = new ProcessPaymentRequest
-            {
+            var paymentInfo = _brainTreePaymentSettings.Use3DS ? new ProcessPaymentRequest() : new ProcessPaymentRequest {
                 CreditCardName = form["CardholderName"],
                 CreditCardNumber = form["CardNumber"],
                 CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
                 CreditCardExpireYear = int.Parse(form["ExpireYear"]),
                 CreditCardCvv2 = form["CardCode"]
             };
+
+            if (form.TryGetValue("CardNonce", out var cardNonce) && !StringValues.IsNullOrEmpty(cardNonce))
+                paymentInfo.CustomValues.Add("CardNonce", cardNonce.ToString());
+
+
             return await Task.FromResult(paymentInfo);
         }
 
@@ -307,8 +314,7 @@ namespace Grand.Plugin.Payments.BrainTree
         public override async Task Install()
         {
             //settings
-            var settings = new BrainTreePaymentSettings
-            {
+            var settings = new BrainTreePaymentSettings {
                 UseSandBox = true,
                 MerchantId = "",
                 PrivateKey = "",
@@ -317,6 +323,8 @@ namespace Grand.Plugin.Payments.BrainTree
             await _settingService.SaveSetting(settings);
 
             //locales
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.Use3DS", "Use the 3D secure");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.Use3DS.Hint", "Check to enable the 3D secure integration");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox", "Use Sandbox");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Payments.BrainTree.Fields.MerchantId", "Merchant ID");
@@ -396,10 +404,8 @@ namespace Grand.Plugin.Payments.BrainTree
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get
-            {
+        public RecurringPaymentType RecurringPaymentType {
+            get {
                 return RecurringPaymentType.NotSupported;
             }
         }
@@ -407,10 +413,8 @@ namespace Grand.Plugin.Payments.BrainTree
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get
-            {
+        public PaymentMethodType PaymentMethodType {
+            get {
                 return PaymentMethodType.Standard;
             }
         }
@@ -429,6 +433,16 @@ namespace Grand.Plugin.Payments.BrainTree
         public async Task<string> PaymentMethodDescription()
         {
             return await Task.FromResult(_localizationService.GetResource("Plugins.Payments.BrainTree.PaymentMethodDescription"));
+        }
+
+        public IList<string> GetWidgetZones()
+        {
+            return new string[] { "opc_content_before", "checkout_payment_info_top" };
+        }
+
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
+        {
+            viewComponentName = "PaymentBrainTreeScripts";
         }
 
         #endregion

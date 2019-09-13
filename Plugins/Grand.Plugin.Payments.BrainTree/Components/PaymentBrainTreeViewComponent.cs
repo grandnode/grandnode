@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using Braintree;
+using Grand.Core;
+using Grand.Core.Domain.Orders;
+using Grand.Plugin.Payments.BrainTree;
 using Grand.Plugin.Payments.BrainTree.Models;
+using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -10,9 +16,54 @@ namespace Nop.Plugin.Payments.BrainTree.Components
     [ViewComponent(Name = "PaymentBrainTree")]
     public class PaymentBrainTreeViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly BrainTreePaymentSettings _brainTreePaymentSettings;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+
+        public PaymentBrainTreeViewComponent(BrainTreePaymentSettings brainTreePaymentSettings, 
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
+        {
+            _brainTreePaymentSettings = brainTreePaymentSettings;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = new PaymentInfoModel();
+
+            if (_brainTreePaymentSettings.Use3DS)
+            {
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart);
+
+                if (!cart.Any())
+                    throw new Exception("Your cart is empty");
+
+                //get settings
+                var useSandBox = _brainTreePaymentSettings.UseSandBox;
+                var merchantId = _brainTreePaymentSettings.MerchantId;
+                var publicKey = _brainTreePaymentSettings.PublicKey;
+                var privateKey = _brainTreePaymentSettings.PrivateKey;
+
+                var gateway = new BraintreeGateway {
+                    Environment = useSandBox ? Braintree.Environment.SANDBOX : Braintree.Environment.PRODUCTION,
+                    MerchantId = merchantId,
+                    PublicKey = publicKey,
+                    PrivateKey = privateKey
+                };
+
+                ViewBag.ClientToken = gateway.ClientToken.Generate();
+                ViewBag.OrderTotal = (await _orderTotalCalculationService.GetShoppingCartTotal(cart)).shoppingCartTotal;
+
+                return View("~/Plugins/Payments.BrainTree/Views/PaymentInfo_3DS.cshtml", model);
+            }
 
             //years
             for (var i = 0; i < 15; i++)

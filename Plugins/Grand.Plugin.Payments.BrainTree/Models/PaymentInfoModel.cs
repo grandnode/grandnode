@@ -35,5 +35,9 @@ namespace Grand.Plugin.Payments.BrainTree.Models
 
         [GrandResourceDisplayName("Payment.CardCode")]
         public string CardCode { get; set; }
+
+        public string CardNonce { get; set; }
+        public string Errors { get; set; }
+
     }
 }

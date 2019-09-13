@@ -6,8 +6,11 @@ namespace Grand.Plugin.Payments.BrainTree.Validators
 {
     public class PaymentInfoValidator : AbstractValidator<PaymentInfoModel>
     {
-        public PaymentInfoValidator(ILocalizationService localizationService)
+        public PaymentInfoValidator(BrainTreePaymentSettings brainTreePaymentSettings, ILocalizationService localizationService)
         {
+            if (brainTreePaymentSettings.Use3DS)
+                return;
+
             //useful links:
             //http://fluentvalidation.codeplex.com/wikipage?title=Custom&referringTitle=Documentation&ANCHOR#CustomValidator
             //http://benjii.me/2010/11/credit-card-validator-attribute-for-asp-net-mvc-3/

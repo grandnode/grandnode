@@ -5,6 +5,9 @@ namespace Grand.Plugin.Payments.BrainTree.Models
 {
     public class ConfigurationModel : BaseGrandModel
     {
+        [GrandResourceDisplayName("Plugins.Payments.BrainTree.Fields.Use3DS")]
+        public bool Use3DS { get; set; }
+
         [GrandResourceDisplayName("Plugins.Payments.BrainTree.Fields.UseSandbox")]
         public bool UseSandBox { get; set; }
 
