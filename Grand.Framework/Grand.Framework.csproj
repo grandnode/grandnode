@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="2.2.3" />
-    <PackageReference Include="BundlerMinifier.Core" Version="2.9.406" />
+    <PackageReference Include="BundlerMinifier.Core" Version="3.0.415" />
     <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.4.0" />
@@ -24,9 +24,9 @@
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
     <PackageReference Include="Wangkanai.Detection.Crawler" Version="2.0.0-beta11" />
     <PackageReference Include="Wangkanai.Detection.Device" Version="2.0.0-beta11" />
-    <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.49" />
-    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.5.0" />
-    <PackageReference Include="WebMarkupMin.Core" Version="2.5.8" />
+    <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.59" />
+    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.6.1" />
+    <PackageReference Include="WebMarkupMin.Core" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup>
