@@ -440,6 +440,11 @@ namespace Grand.Core.Domain.Catalog
         public string UnitId { get; set; }
 
         /// <summary>
+        /// Gets or sets a course ident
+        /// </summary>
+        public string CourseId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this product is marked as new
         /// </summary>
         public bool MarkAsNew { get; set; }

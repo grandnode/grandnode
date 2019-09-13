@@ -68,7 +68,52 @@ namespace Grand.Web.Areas.Admin.Models.Courses
 
         public string SeName { get; set; }
 
-        public IList<CourseLocalizedModel> Locales { get; set; }        
+        public IList<CourseLocalizedModel> Locales { get; set; }
+
+        [GrandResourceDisplayName("Admin.Courses.Course.Fields.ProductId")]
+        public string ProductId { get; set; }
+        public string ProductName { get; set; }
+
+        #region Nested classes
+
+        public partial class AssociateProductToCourseModel : BaseGrandModel
+        {
+            public AssociateProductToCourseModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
+                AvailableProductTypes = new List<SelectListItem>();
+            }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+
+            public string SearchProductName { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public string SearchCategoryId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public string SearchManufacturerId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public string SearchStoreId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public string SearchVendorId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            public int SearchProductTypeId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
+            public IList<SelectListItem> AvailableProductTypes { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
+
+
+            public string AssociatedToProductId { get; set; }
+        }
+        #endregion
     }
 
     public partial class CourseLocalizedModel : ILocalizedModelLocal, ISlugModelLocal

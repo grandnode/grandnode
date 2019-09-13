@@ -145,6 +145,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductReservationService>().As<IProductReservationService>().InstancePerLifetimeScope();
             builder.RegisterType<AuctionService>().As<IAuctionService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductCourseService>().As<IProductCourseService>().InstancePerLifetimeScope();
 
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerLifetimeScope();
 

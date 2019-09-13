@@ -1,10 +1,12 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
+using Grand.Services.Catalog;
 using Grand.Services.Courses;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -161,6 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model = await _courseViewModelService.PrepareCourseModel(model);
 
             //ACL
             await model.PrepareACLModel(null, true, _customerService);
@@ -277,6 +280,52 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        public async Task<IActionResult> AssociateProductToCoursePopup()
+        {
+            var model = await _courseViewModelService.PrepareAssociateProductToCourseModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssociateProductToCoursePopupList(DataSourceRequest command,
+            CourseModel.AssociateProductToCourseModel model, [FromServices] IWorkContext workContext)
+        {
+            //a vendor should have access only to his products
+            if (workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = workContext.CurrentVendor.Id;
+            }
+            var products = await _courseViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult {
+                Data = products.products.ToList(),
+                Total = products.totalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssociateProductToCoursePopup(string btnId, string productIdInput,
+            string productNameInput, CourseModel.AssociateProductToCourseModel model, [FromServices] IProductService productService, [FromServices] IWorkContext workContext)
+        {
+            var associatedProduct = await productService.GetProductById(model.AssociatedToProductId);
+            if (associatedProduct == null)
+                return Content("Cannot load a product");
+
+            //a vendor should have access only to his products
+            if (workContext.CurrentVendor != null && associatedProduct.VendorId != workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = workContext.CurrentVendor != null;
+            ViewBag.RefreshPage = true;
+            ViewBag.productIdInput = productIdInput;
+            ViewBag.productNameInput = productNameInput;
+            ViewBag.btnId = btnId;
+            ViewBag.productId = associatedProduct.Id;
+            ViewBag.productName = associatedProduct.Name;
+            return View(model);
+        }
 
         #endregion
 
