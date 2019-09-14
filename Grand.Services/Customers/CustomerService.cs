@@ -884,17 +884,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        public virtual async Task<IList<CustomerRole>> GetAllCustomerRoles(bool showHidden = false)
+        public virtual async Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0, 
+            int pageSize = int.MaxValue, bool showHidden = false)
         {
-            string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
-            return await _cacheManager.GetAsync(key, () =>
-            {
-                var query = from cr in _customerRoleRepository.Table
-                            where (showHidden || cr.Active)
-                            orderby cr.Name
-                            select cr;
-                return query.ToListAsync();
-            });
+            var query = from cr in _customerRoleRepository.Table
+                        where (showHidden || cr.Active)
+                        orderby cr.Name
+                        select cr;
+            return await PagedList<CustomerRole>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>

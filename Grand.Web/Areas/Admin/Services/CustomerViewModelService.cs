@@ -450,9 +450,9 @@ namespace Grand.Web.Areas.Admin.Services
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(true)).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == registered.Id) }).ToList(),
+                AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(showHidden: true)).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == registered.Id) }).ToList(),
                 AvailableCustomerTags = (await _customerTagService.GetAllCustomerTags()).Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
-                SearchCustomerRoleIds = new List<string> { (await _customerService.GetAllCustomerRoles(true)).FirstOrDefault(x => x.Id == registered.Id).Id },
+                SearchCustomerRoleIds = new List<string> { (await _customerService.GetAllCustomerRoles(showHidden: true)).FirstOrDefault(x => x.Id == registered.Id).Id },
             };
             return model;
         }
@@ -642,7 +642,7 @@ namespace Grand.Web.Areas.Admin.Services
 
 
             //customer roles
-            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(true))
+            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(showHidden: true))
                 .Select(cr => cr.ToModel())
                 .ToList();
 
@@ -800,7 +800,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
             }
 
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -984,7 +984,7 @@ namespace Grand.Web.Areas.Admin.Services
                     }
                 }
             }
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
