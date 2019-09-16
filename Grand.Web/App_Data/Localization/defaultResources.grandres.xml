@@ -10642,7 +10642,10 @@
     <Value>The course picture</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId">
-    <Value>Product</Value>
+    <Value>Purchased with product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Hint">
+    <Value>A customer is added to this course once a specified product is purchased (paid).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Assigned">
     <Value>This product has been assigned to another course</Value>
