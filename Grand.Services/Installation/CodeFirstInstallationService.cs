@@ -4853,6 +4853,8 @@ namespace Grand.Services.Installation
                 CategoryThumbPictureSize = 450,
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
+                CourseThumbPictureSize = 200,
+                LessonThumbPictureSize = 64,
                 CartThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 100,
                 AddToCartThumbPictureSize = 200,

@@ -1,10 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
+using Grand.Web.Models.Course;
 using Grand.Web.Models.Vendors;
 using System;
 
@@ -51,6 +53,25 @@ namespace Grand.Web.Extensions
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
                 Icon = entity.Icon,
+                GenericAttributes = entity.GenericAttributes
+            };
+            return model;
+        }
+
+        //course
+        public static CourseModel ToModel(this Course entity, Language language)
+        {
+            if (entity == null)
+                return null;
+
+            var model = new CourseModel {
+                Id = entity.Id,
+                Name = entity.GetLocalized(x => x.Name, language.Id),
+                Description = entity.GetLocalized(x => x.Description, language.Id),
+                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
+                MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
+                MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
+                SeName = entity.GetSeName(language.Id),
                 GenericAttributes = entity.GenericAttributes
             };
             return model;

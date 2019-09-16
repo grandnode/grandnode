@@ -4,6 +4,8 @@ using Grand.Services.Events;
 using MediatR;
 using System;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Courses
 {
@@ -21,6 +23,15 @@ namespace Grand.Services.Courses
         public virtual Task<CourseAction> GetById(string id)
         {
             return _courseActionRepository.GetByIdAsync(id);
+        }
+
+        public virtual async Task<bool> CustomerLessonCompleted(string customerId, string lessonId)
+        {
+            var query = await (from a in _courseActionRepository.Table
+                        where a.CustomerId == customerId && a.LessonId == lessonId
+                        select a).FirstOrDefaultAsync();
+
+            return query != null ? query.Finished : false;
         }
 
         public virtual async Task<CourseAction> InsertAsync(CourseAction courseAction)

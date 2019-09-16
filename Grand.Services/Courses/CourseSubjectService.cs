@@ -40,6 +40,7 @@ namespace Grand.Services.Courses
 
             var query = from c in _courseSubjectRepository.Table
                         where c.CourseId == courseId
+                        orderby c.DisplayOrder
                         select c;
 
             return await query.ToListAsync();

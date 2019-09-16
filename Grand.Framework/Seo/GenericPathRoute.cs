@@ -196,6 +196,12 @@ namespace Grand.Framework.Seo
                     currentRouteData.Values["categoryId"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "course":
+                    currentRouteData.Values["controller"] = "Course";
+                    currentRouteData.Values["action"] = "Details";
+                    currentRouteData.Values["courseId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
                     await EngineContext.Current.Resolve<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
