@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject AdminAreaSettings adminAreaSettings
+
+@{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
@@ -45,15 +47,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false
+                pageSizes: [@(adminAreaSettings.GridPageSizes)] 
             },
             editable: {
                 confirmation: false,
@@ -97,4 +98,3 @@
         });
     });
 </script>
-        

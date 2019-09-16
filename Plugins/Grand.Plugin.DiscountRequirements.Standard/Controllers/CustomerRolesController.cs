@@ -60,7 +60,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             //customer roles
             //TODO localize "Select customer role"
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "" });
-            foreach (var cr in await _customerService.GetAllCustomerRoles(true))
+            foreach (var cr in await _customerService.GetAllCustomerRoles(showHidden: true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
 
             //add a prefix
