@@ -413,7 +413,7 @@
                 Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
             }
             @{
-                var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+                var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             }
             @foreach (var customerRole in allCustomerRoles)
             {

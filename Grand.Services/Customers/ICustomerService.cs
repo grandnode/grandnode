@@ -302,7 +302,8 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        Task<IList<CustomerRole>> GetAllCustomerRoles(bool showHidden = false);
+        Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0,
+            int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets customer roles products for customer role

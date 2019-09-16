@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Grand.Api.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -51,16 +52,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customerRoles = await _customerService.GetAllCustomerRoles(true);
-            var items = new List<CustomerRoleModel>();
-            foreach (var item in customerRoles)
-            {
-                items.Add(_customerRoleViewModelService.PrepareCustomerRoleModel(item));
-            }
-            var gridModel = new DataSourceResult
-            {
-                Data = items,
-                Total = customerRoles.Count()
+            var customerRoles = await _customerService.GetAllCustomerRoles(command.Page - 1, command.PageSize, true);
+            var gridModel = new DataSourceResult {
+                Data = customerRoles.Select(x =>
+                {
+                    var rolesModel = x.ToModel();
+                    return rolesModel;
+                }),
+                Total = customerRoles.TotalCount,
             };
             return Json(gridModel);
         }
