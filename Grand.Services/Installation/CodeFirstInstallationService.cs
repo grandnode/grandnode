@@ -9988,6 +9988,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "PublicStore.ViewCourse",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a course"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "PublicStore.AskQuestion",
                                                   Enabled = false,
                                                   Name = "Public store. Ask a question about product"

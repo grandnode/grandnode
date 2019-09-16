@@ -807,6 +807,12 @@ namespace Grand.Services.Installation
                     Enabled = false,
                     Name = "Delete document type"
                 });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewCourse",
+                    Enabled = false,
+                    Name = "Public store. View a course"
+                });
 
             #endregion
 
