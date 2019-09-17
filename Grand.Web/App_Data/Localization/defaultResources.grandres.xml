@@ -1131,6 +1131,9 @@
   <LocaleResource Name="ActivityLog.PublicStore.ViewCourse">
     <Value>Public store. Viewed a course details page ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewLesson">
+    <Value>Public store. Viewed a lesson details page ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ViewManufacturer">
     <Value>Public store. Viewed a manufacturer details page ('{0}')</Value>
   </LocaleResource>
@@ -17422,6 +17425,12 @@
   </LocaleResource>
   <LocaleResource Name="Content.CopyrightNotice">
     <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Course.ApproveLesson">
+    <Value>Approve lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Course.GoBack">
+    <Value>Go back to the course</Value>
   </LocaleResource>
   <LocaleResource Name="Currencies">
     <Value>Currencies</Value>

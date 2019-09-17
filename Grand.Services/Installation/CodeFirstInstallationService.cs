@@ -9994,6 +9994,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "PublicStore.ViewLesson",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a lesson"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "PublicStore.AskQuestion",
                                                   Enabled = false,
                                                   Name = "Public store. Ask a question about product"

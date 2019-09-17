@@ -50,6 +50,11 @@ namespace Grand.Web.Services
             return _courseService.GetById(courseId);
         }
 
+        public virtual Task<CourseLesson> GetLessonById(string lessonId)
+        {
+            return _courseLessonService.GetById(lessonId);
+        }
+
         public virtual async Task<bool> CheckOrder(Course course, Customer customer)
         {
             if (string.IsNullOrEmpty(course.ProductId))
@@ -101,6 +106,58 @@ namespace Grand.Web.Services
             }
             model.Approved = !model.Lessons.Any(x => !x.Approved);
             return model;
+        }
+        public virtual async Task<LessonModel> PrepareLessonModel(Course course, CourseLesson lesson)
+        {
+            var model = new LessonModel();
+
+            var modelCourse = course.ToModel(_workContext.WorkingLanguage);
+            model.Id = lesson.Id;
+            model.CourseId = modelCourse.Id;
+            model.CourseDescription = modelCourse.Description;
+            model.CourseName = modelCourse.Name;
+            model.CourseSeName = modelCourse.SeName;
+            model.MetaDescription = modelCourse.MetaDescription;
+            model.MetaKeywords = model.MetaKeywords;
+            model.MetaTitle = model.MetaTitle;
+            model.Name = lesson.Name;
+            model.ShortDescription = lesson.ShortDescription;
+            model.Description = lesson.Description;
+
+            model.CourseLevel = (await _courseLevelService.GetById(course.LevelId))?.Name;
+
+            //prepare picture
+            var picture = await _pictureService.GetPictureById(lesson.PictureId);
+            model.PictureUrl = await _pictureService.GetPictureUrl(picture);
+
+            model.Approved = await _courseActionService.CustomerLessonCompleted(_workContext.CurrentCustomer.Id, lesson.Id);
+            if (!string.IsNullOrEmpty(lesson.AttachmentId))
+                model.DownloadFile = true;
+
+            if (!string.IsNullOrEmpty(lesson.VideoFile))
+                model.VideoFile = true;
+
+            return model;
+        }
+
+        public virtual async Task Approved(Course course, CourseLesson lesson, Customer customer)
+        {
+            var action = await _courseActionService.GetCourseAction(customer.Id, lesson.Id);
+            if (action == null)
+            {
+                await _courseActionService.InsertAsync(new CourseAction() {
+                    CustomerId = customer.Id,
+                    CourseId = course.Id,
+                    LessonId = lesson.Id,
+                    Finished = true
+                });
+            }
+            else
+            {
+                action.Finished = true;
+                await _courseActionService.Update(action);
+
+            }
         }
     }
 }

@@ -65,7 +65,8 @@
                             <img src="@lesson.PictureUrl" class="mr-3" />
                             <div class="media-body d-inline-flex">
                                 <div class="w-100">
-                                    <h5 class="mt-0 mb-1">@lesson.Name</h5>
+                                    
+                                    <h5 class="mt-0 mb-1">@Html.ActionLink(lesson.Name, "Lesson", "Course", new { id = lesson.Id })</h5>
                                     @lesson.ShortDescription
                                 </div>
                                 <div class="d-inline-flex">

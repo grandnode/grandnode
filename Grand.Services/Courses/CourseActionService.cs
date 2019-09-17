@@ -24,6 +24,14 @@ namespace Grand.Services.Courses
         {
             return _courseActionRepository.GetByIdAsync(id);
         }
+        public virtual async Task<CourseAction> GetCourseAction(string customerId, string lessonId)
+        {
+            var query = from a in _courseActionRepository.Table
+                              where a.CustomerId == customerId && a.LessonId == lessonId
+                              select a;
+
+            return await query.FirstOrDefaultAsync();
+        }
 
         public virtual async Task<bool> CustomerLessonCompleted(string customerId, string lessonId)
         {

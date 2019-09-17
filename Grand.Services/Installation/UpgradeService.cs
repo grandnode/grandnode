@@ -813,7 +813,12 @@ namespace Grand.Services.Installation
                     Enabled = false,
                     Name = "Public store. View a course"
                 });
-
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewLesson",
+                    Enabled = false,
+                    Name = "Public store. View a lesson"
+                });
             #endregion
 
             #region Update customer settings
