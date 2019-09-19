@@ -322,14 +322,12 @@
     Dashboard.init();
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
-        if ($.fn.initReportCustomerTimeChart) {
+        if ($.isFunction(window.initReportCustomerTimeChart)) {
             initReportCustomerTimeChart(false);
         };
-
-        if ($.fn.initReportOrderTimeChart) {
+        if ($.isFunction(window.initReportOrderTimeChart)) {
             initReportOrderTimeChart(false);
         };
-
         var gridOrders = $('#latest-orders-grid').data('kendoGrid');
         if (gridOrders != undefined) {
             gridOrders.dataSource.read();
