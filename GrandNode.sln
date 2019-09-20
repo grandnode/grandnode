@@ -63,6 +63,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.ExternalAuth.G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.BrainTree", "Plugins\Grand.Plugin.Payments.BrainTree\Grand.Plugin.Payments.BrainTree.csproj", "{EC08558B-8993-49DC-8DB7-F96369740732}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E9E98CA6-9A8F-40AE-A0BC-F161C4237226}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
