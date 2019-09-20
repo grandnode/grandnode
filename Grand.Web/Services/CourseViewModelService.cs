@@ -8,6 +8,7 @@ using Grand.Services.Orders;
 using Grand.Web.Extensions;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Course;
+using Grand.Web.Models.Customer;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,6 +51,26 @@ namespace Grand.Web.Services
             return _courseService.GetById(courseId);
         }
 
+        public virtual async Task<CoursesModel> GetCoursesByCustomer(Customer customer, string storeId)
+        {
+            var model = new CoursesModel();
+            model.CustomerId = customer.Id;
+            var courses = await _courseService.GetByCustomer(customer, storeId);
+            foreach (var item in courses)
+            {
+                var level = await _courseLevelService.GetById(item.LevelId);
+                model.CourseList.Add(new CoursesModel.Course() {
+                    Id = item.Id,
+                    Name = item.Name,
+                    SeName = item.SeName,
+                    ShortDescription = item.Description,
+                    Level = level?.Name,
+                    Approved = await IsApprovedCourse(item, customer),
+                });
+            }
+            return model;
+        }
+
         public virtual Task<CourseLesson> GetLessonById(string lessonId)
         {
             return _courseLessonService.GetById(lessonId);
@@ -65,6 +86,16 @@ namespace Grand.Web.Services
                 return true;
 
             return false;
+        }
+        public virtual async Task<bool> IsApprovedCourse(Course course, Customer customer)
+        {
+            var lessons = await _courseLessonService.GetByCourseId(course.Id);
+            foreach (var item in lessons.Where(x=>x.Published))
+            {
+                if (!await _courseActionService.CustomerLessonCompleted(customer.Id, item.Id))
+                    return false;
+            }
+            return true;
         }
 
         public virtual async Task<CourseModel> PrepareCourseModel(Course course)
@@ -139,7 +170,6 @@ namespace Grand.Web.Services
 
             return model;
         }
-
         public virtual async Task Approved(Course course, CourseLesson lesson, Customer customer)
         {
             var action = await _courseActionService.GetCourseAction(customer.Id, lesson.Id);
@@ -159,5 +189,6 @@ namespace Grand.Web.Services
 
             }
         }
+
     }
 }

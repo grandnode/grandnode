@@ -174,6 +174,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideReviewsTab")]
             public bool HideReviewsTab { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideCoursesTab")]
+            public bool HideCoursesTab { get; set; }
         }
 
         public partial class AddressSettingsModel : BaseGrandModel

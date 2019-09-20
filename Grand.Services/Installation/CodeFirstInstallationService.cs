@@ -5093,6 +5093,7 @@ namespace Grand.Services.Installation
                 AllowUsersToDeleteAccount = false,
                 AllowUsersToExportData = false,
                 HideReviewsTab = false,
+                HideCoursesTab = true,
             });
 
             await _settingService.SaveSetting(new AddressSettings {

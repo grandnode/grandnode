@@ -78,6 +78,12 @@
   <LocaleResource Name="Account.BackInStockSubscriptions.ProductColumn">
     <Value>Product</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Courses">
+    <Value>My courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Courses.NoExists">
+    <Value>You don't have any courses</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword">
     <Value>Change password</Value>
   </LocaleResource>
@@ -191,6 +197,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
     <Value>Outbid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerCourses">
+    <Value>My courses</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerDocuments">
     <Value>Documents</Value>
@@ -6746,6 +6755,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab.Hint">
     <Value>Check to hide 'Back in stock subscriptions' tab on 'My account' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab">
+    <Value>Hide 'My courses' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab.hint">
+    <Value>Check to hide 'My courses' tab on 'My account' page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideDownloadableProductsTab">
     <Value>Hide 'Downloadable products' tab</Value>
@@ -18928,6 +18943,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.Blog">
     <Value>Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Courses">
+    <Value>My courses</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Checkout">
     <Value>Checkout</Value>

@@ -7,6 +7,7 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
@@ -652,7 +653,7 @@ namespace Grand.Web.Services
             model.HideNotes = _customerSettings.HideNotesTab;
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
-
+            model.HideCourses = _customerSettings.HideCoursesTab;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -861,5 +862,13 @@ namespace Grand.Web.Services
 
             return reviewsModel;
         }
+
+        public virtual async Task<CoursesModel> PrepareCourses(Customer customer, Store store)
+        {
+            var courseService = _serviceProvider.GetRequiredService<ICourseViewModelService>();
+            var model = await courseService.GetCoursesByCustomer(customer, store.Id);
+            return model;
+        }
+
     }
 }

@@ -826,8 +826,9 @@ namespace Grand.Services.Installation
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
             var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
             customerSettings.HideDocumentsTab = true;
-            await _settingService.SaveSetting(customerSettings);
             customerSettings.HideReviewsTab = false;
+            customerSettings.HideCoursesTab = true;
+            await _settingService.SaveSetting(customerSettings);
 
             #endregion
 

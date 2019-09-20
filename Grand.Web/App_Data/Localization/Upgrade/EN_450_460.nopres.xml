@@ -662,4 +662,22 @@
   <LocaleResource Name="Course.ApproveLesson">
     <Value>Approve lesson</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerCourses">
+    <Value>My courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab">
+    <Value>Hide 'My courses' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab.hint">
+    <Value>Check to hide 'My courses' tab on 'My account' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Courses">
+    <Value>My courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Courses">
+    <Value>My courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Courses.NoExists">
+    <Value>You don't have any courses</Value>
+  </LocaleResource>
 </Language>
