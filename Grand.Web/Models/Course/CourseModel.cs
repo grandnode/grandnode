@@ -13,6 +13,7 @@ namespace Grand.Web.Models.Course
 
         public string Name { get; set; }
         public string Level { get; set; }
+        public string ShortDescription { get; set; }
         public string Description { get; set; }
         public string MetaKeywords { get; set; }
         public string MetaDescription { get; set; }

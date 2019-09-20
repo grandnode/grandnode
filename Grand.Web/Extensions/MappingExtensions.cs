@@ -68,6 +68,7 @@ namespace Grand.Web.Extensions
                 Id = entity.Id,
                 Name = entity.GetLocalized(x => x.Name, language.Id),
                 Description = entity.GetLocalized(x => x.Description, language.Id),
+                ShortDescription = entity.GetLocalized(x => x.ShortDescription, language.Id),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),

@@ -10688,6 +10688,12 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.SeName.hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-course' to make your page URL 'http://www.yourStore.com/the-best-course'. Leave empty to generate it automatically based on the name of the course.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription">
+    <Value>Short description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
+    <Value>The short description of the course. </Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
   </LocaleResource>

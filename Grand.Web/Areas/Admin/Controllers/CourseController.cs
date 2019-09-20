@@ -197,6 +197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = course.GetLocalized(x => x.Name, languageId, false, false);
+                locale.ShortDescription = course.GetLocalized(x => x.ShortDescription, languageId, false, false);
                 locale.Description = course.GetLocalized(x => x.Description, languageId, false, false);
                 locale.MetaKeywords = course.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = course.GetLocalized(x => x.MetaDescription, languageId, false, false);

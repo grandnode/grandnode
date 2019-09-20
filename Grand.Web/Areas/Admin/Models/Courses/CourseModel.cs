@@ -22,6 +22,9 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         [GrandResourceDisplayName("Admin.Courses.Course.Fields.Name")]
         public string Name { get; set; }
 
+        [GrandResourceDisplayName("Admin.Courses.Course.Fields.ShortDescription")]
+        public string ShortDescription { get; set; }
+
         [GrandResourceDisplayName("Admin.Courses.Course.Fields.Description")]
         public string Description { get; set; }
 
@@ -123,6 +126,10 @@ namespace Grand.Web.Areas.Admin.Models.Courses
         [GrandResourceDisplayName("Admin.Courses.Course.Fields.Name")]
 
         public string Name { get; set; }
+
+        [GrandResourceDisplayName("Admin.Courses.Course.Fields.ShortDescription")]
+
+        public string ShortDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Courses.Course.Fields.Description")]
 

@@ -63,7 +63,7 @@ namespace Grand.Web.Services
                     Id = item.Id,
                     Name = item.Name,
                     SeName = item.SeName,
-                    ShortDescription = item.Description,
+                    ShortDescription = item.ShortDescription,
                     Level = level?.Name,
                     Approved = await IsApprovedCourse(item, customer),
                 });
