@@ -42,6 +42,13 @@
                 </content>
             </tabstrip-item>
         }
+        <tabstrip-item text="@T("Admin.Vendors.Commission")" tab-index="5">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabCommission" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
         <vc:admin-widget widget-zone="vendor_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>

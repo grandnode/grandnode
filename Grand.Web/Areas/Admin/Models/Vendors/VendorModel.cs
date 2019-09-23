@@ -100,6 +100,10 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         public List<DiscountModel> AvailableDiscounts { get; set; }
         public string[] SelectedDiscountIds { get; set; }
 
+        [GrandResourceDisplayName("Admin.Vendors.Fields.Commission")]
+
+        public decimal Commission { get; set; } = 0;
+
 
         #region Nested classes
 
