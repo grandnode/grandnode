@@ -24,9 +24,6 @@ namespace Grand.Web.Areas.Admin.Validators.Vendors
         
         private bool IsCommissionValid(decimal commission)
         {
-            //if (commission.Equals(null) || commission == 0)
-            //    return true;
-
             if (commission < 0 || commission > 100)
                 return false;
 
