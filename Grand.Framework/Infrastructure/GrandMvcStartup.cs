@@ -25,7 +25,7 @@ namespace Grand.Framework.Infrastructure
             services.AddGrandHealthChecks();
 
             //add miniprofiler
-            services.AddGrandMiniProfiler();
+            //services.AddGrandMiniProfiler();
 
             //add WebMarkupMin
             services.AddHtmlMinification();

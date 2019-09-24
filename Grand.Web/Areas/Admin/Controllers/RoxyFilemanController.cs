@@ -51,7 +51,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -59,7 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
+        public RoxyFilemanController(IWebHostEnvironment hostingEnvironment,
             IPermissionService permissionService,
             IWorkContext workContext,
             IHttpContextAccessor httpContextAccessor)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,7 +18,7 @@ namespace Grand.Framework.Kendoui
             for (var i = 0; i < modelState.Errors.Count; i++)
             {
                 var modelError = modelState.Errors[i];
-                var errorText = ValidationHelpers.GetModelErrorMessageOrDefault(modelError);
+                var errorText = modelError.ErrorMessage;
 
                 if (!string.IsNullOrEmpty(errorText))
                 {

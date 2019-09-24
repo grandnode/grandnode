@@ -67,7 +67,7 @@ namespace Grand.Web.Services
         private readonly IProductService _productService;
         private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -102,7 +102,7 @@ namespace Grand.Web.Services
             IProductService productService,
             IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IServiceProvider serviceProvider,
             StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings,

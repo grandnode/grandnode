@@ -27,5 +27,11 @@ namespace Grand.Framework.Security.Authorization
             }
             return FallbackPolicyProvider.GetPolicyAsync(policyName);
         }
+
+        public Task<AuthorizationPolicy> GetFallbackPolicyAsync()
+        {
+            //TO DO
+            throw new NotImplementedException();
+        }
     }
 }

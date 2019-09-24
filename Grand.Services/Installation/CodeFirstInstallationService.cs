@@ -150,7 +150,7 @@ namespace Grand.Services.Installation
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -256,7 +256,7 @@ namespace Grand.Services.Installation
             _genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
             _customerActionService = serviceProvider.GetRequiredService<ICustomerActionService>();
             _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
-            _hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+            _hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
             _serviceProvider = serviceProvider;
         }
 

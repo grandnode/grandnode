@@ -7,7 +7,7 @@
         <select class="custom-select form-control" name="WarehouseId" id="WarehouseId">
             @foreach (var warehouse in Model.ProductWarehouses)
             {
-                <option selected="@warehouse.Selected" value="@warehouse.WarehouseId" @selected>@warehouse.Name</option>
+                <option selected="@(warehouse.Selected)" value="@warehouse.WarehouseId">@(warehouse.Name)</option>
             }
         </select>
     </div>

@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -31,14 +29,19 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.0.0" />
   </ItemGroup>
-  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
+  
+  <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Microsoft.AspNetCore.Authentication.Facebook'" />
+      <CopyFiles Include="$(NuGetPackageRoot)\microsoft.aspnetcore.authentication.facebook\3.0.0\lib\netcoreapp3.0\*.dll" />
     </ItemGroup>
+    <Copy SourceFiles="@(CopyFiles)"
+       DestinationFolder="..\..\Grand.Web\Plugins\ExternalAuth.Facebook\" />
   </Target>
+  
   <ItemGroup>
     <None Update="Content\facebookstyles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

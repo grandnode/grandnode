@@ -36,7 +36,7 @@ namespace Grand.Services.Media
             ILogger logger,
             IMediator mediator,
             MediaSettings mediaSettings,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             GrandConfig config)
             : base(pictureRepository,
                 settingService,

@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,10 +20,13 @@
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   
-  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
+  <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Braintree' AND '%(Filename)' != 'System.Xml.XPath.XmlDocument'" />
+      <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.15.0\lib\netstandard2.0\*.*" />
+      <CopyFiles Include="$(NuGetPackageRoot)\system.xml.xpath.xmldocument\4.3.0\lib\netstandard1.3\*.*" />
     </ItemGroup>
+    <Copy SourceFiles="@(CopyFiles)"
+       DestinationFolder="..\..\Grand.Web\Plugins\Payments.BrainTree\" />
   </Target>
   
   <ItemGroup>
@@ -38,7 +40,7 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
@@ -28,7 +29,7 @@ namespace Grand.Core
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -38,7 +39,7 @@ namespace Grand.Core
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
+        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
         {
             this._hostingConfig = hostingConfig;
             this._httpContextAccessor = httpContextAccessor;

@@ -35,7 +35,7 @@ namespace Grand.Services.Media
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace Grand.Services.Media
             ILogger logger,
             IMediator mediator,
             MediaSettings mediaSettings,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
             this._pictureRepository = pictureRepository;
             this._settingService = settingService;

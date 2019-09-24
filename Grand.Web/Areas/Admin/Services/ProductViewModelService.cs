@@ -436,6 +436,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
                 //reservation
+                model.CalendarModel.ProductId = product.Id;
                 model.CalendarModel.Interval = product.Interval;
                 model.CalendarModel.IntervalUnit = product.IntervalUnitId;
                 model.CalendarModel.IncBothDate = product.IncBothDate;

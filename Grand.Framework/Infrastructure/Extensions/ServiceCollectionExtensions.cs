@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Caching.Memory;
@@ -58,6 +59,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
             //add api configuration parameters
             services.ConfigureStartupConfig<ApiConfig>(configuration.GetSection("Api"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
@@ -245,15 +247,13 @@ namespace Grand.Framework.Infrastructure.Extensions
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 options.EnableEndpointRouting = false;
             });
+            
+            mvcBuilder.AddRazorRuntimeCompilation();
 
             var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
-
-            //Allow recompiling views on file change
-            if (config.AllowRecompilingViewsOnFileChange)
-                mvcBuilder.AddRazorOptions(options => options.AllowRecompilingViewsOnFileChange = true);
-
+            
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
 
             if (config.UseHsts)
             {
@@ -279,13 +279,24 @@ namespace Grand.Framework.Infrastructure.Extensions
             }
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
+            mvcBuilder.AddFluentValidation(configuration =>
+            {
+                var assemblies = mvcBuilder.PartManager.ApplicationParts
+                    .OfType<AssemblyPart>()
+                    .Where(part => part.Name.StartsWith("Grand", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(part => part.Assembly);
+                configuration.RegisterValidatorsFromAssemblies(assemblies);
+                configuration.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                //implicit/automatic validation of child properties
+                configuration.ImplicitlyValidateChildProperties = true;
+            });
+            //mvcBuilder.AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining(typeof(GrandValidatorFactory)));
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();

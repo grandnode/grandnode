@@ -295,6 +295,6 @@ namespace Grand.Core
             }
         }
 
-        public static IHostingEnvironment HostingEnvironment { get; set; }
+        public static IWebHostEnvironment HostingEnvironment { get; set; }
     }
 }
