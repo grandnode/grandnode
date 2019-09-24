@@ -5093,6 +5093,7 @@ namespace Grand.Services.Installation
                 AllowUsersToDeleteAccount = false,
                 AllowUsersToExportData = false,
                 HideReviewsTab = false,
+                HideCoursesTab = true,
             });
 
             await _settingService.SaveSetting(new AddressSettings {
@@ -9985,6 +9986,18 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "PublicStore.ViewProduct",
                                                   Enabled = false,
                                                   Name = "Public store. View a product"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewCourse",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a course"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewLesson",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a lesson"
                                               },
                                           new ActivityLogType
                                               {

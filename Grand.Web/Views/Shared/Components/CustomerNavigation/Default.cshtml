@@ -30,6 +30,15 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-cart"></span><span>@T("Account.CustomerOrders")</span></a>
                                                                 </li>
                                                             }
+            @if (!Model.HideCourses)
+            {
+                <li class="customer-auctions">
+                    <a href="@Url.RouteUrl("CustomerCourses")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Courses)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-message-draw"></span><span>@T("Account.CustomerCourses")</span></a>
+                                                                </li>
+                                                            }
             @if (!Model.HideAuctions)
             {
                 <li class="customer-auctions">

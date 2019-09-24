@@ -807,7 +807,18 @@ namespace Grand.Services.Installation
                     Enabled = false,
                     Name = "Delete document type"
                 });
-
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewCourse",
+                    Enabled = false,
+                    Name = "Public store. View a course"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewLesson",
+                    Enabled = false,
+                    Name = "Public store. View a lesson"
+                });
             #endregion
 
             #region Update customer settings
@@ -815,8 +826,9 @@ namespace Grand.Services.Installation
             var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
             var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
             customerSettings.HideDocumentsTab = true;
-            await _settingService.SaveSetting(customerSettings);
             customerSettings.HideReviewsTab = false;
+            customerSettings.HideCoursesTab = true;
+            await _settingService.SaveSetting(customerSettings);
 
             #endregion
 

@@ -27,6 +27,11 @@ namespace Grand.Core.Domain.Courses
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public string ShortDescription { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public bool Published { get; set; }

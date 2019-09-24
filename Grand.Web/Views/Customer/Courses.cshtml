@@ -1,0 +1,57 @@
+﻿@model CoursesModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.Courses").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+}
+
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
+    <h1 class="h2 generalTitle">@T("Account.Courses")</h1>
+    @if (Model.CourseList.Any())
+    {
+        foreach (var item in Model.CourseList)
+        {
+            <div class="card mb-3">
+                <div class="card-header d-sm-inline-flex flex-sm-row d-flex flex-column px-sm-3 px-2">
+                    <div class="pr-3">
+                        <strong><a href="@Url.RouteUrl("Course", new { SeName = item.SeName })">@item.Name</a></strong> <small>(@item.Level)</small>
+                    </div>
+                </div>
+                <div class="d-inline-flex flex-column align-items-end">
+                        @if (item.Approved)
+                        {
+                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
+                                <label class="custom-control-label" for="customControlInline"></label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
+                                <label class="custom-control-label" for="customControlInline"></label>
+                            </div>
+                        }
+                </div>
+                @if (!string.IsNullOrEmpty(item.ShortDescription))
+                {
+                    <div class="card-body px-sm-3 px-2">
+                        @Html.Raw(item.ShortDescription)
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-data pt-3">
+            @T("Account.Courses.NoExists")
+        </div>
+    }
+</div>

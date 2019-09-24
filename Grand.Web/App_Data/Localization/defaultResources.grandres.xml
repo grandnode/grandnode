@@ -78,6 +78,12 @@
   <LocaleResource Name="Account.BackInStockSubscriptions.ProductColumn">
     <Value>Product</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Courses">
+    <Value>My courses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Courses.NoExists">
+    <Value>You don't have any courses</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.ChangePassword">
     <Value>Change password</Value>
   </LocaleResource>
@@ -191,6 +197,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
     <Value>Outbid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerCourses">
+    <Value>My courses</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerDocuments">
     <Value>Documents</Value>
@@ -1127,6 +1136,12 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ViewCategory">
     <Value>Public store. Viewed a category details page ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewCourse">
+    <Value>Public store. Viewed a course details page ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewLesson">
+    <Value>Public store. Viewed a lesson details page ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ViewManufacturer">
     <Value>Public store. Viewed a manufacturer details page ('{0}')</Value>
@@ -6741,6 +6756,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab.Hint">
     <Value>Check to hide 'Back in stock subscriptions' tab on 'My account' page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab">
+    <Value>Hide 'My courses' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab.hint">
+    <Value>Check to hide 'My courses' tab on 'My account' page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideDownloadableProductsTab">
     <Value>Hide 'Downloadable products' tab</Value>
   </LocaleResource>
@@ -10666,6 +10687,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.SeName.hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-course' to make your page URL 'http://www.yourStore.com/the-best-course'. Leave empty to generate it automatically based on the name of the course.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription">
+    <Value>Short description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
+    <Value>The short description of the course. </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
@@ -17435,6 +17462,12 @@
   <LocaleResource Name="Content.CopyrightNotice">
     <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
   </LocaleResource>
+  <LocaleResource Name="Course.ApproveLesson">
+    <Value>Approve lesson</Value>
+  </LocaleResource>
+  <LocaleResource Name="Course.GoBack">
+    <Value>Go back to the course</Value>
+  </LocaleResource>
   <LocaleResource Name="Currencies">
     <Value>Currencies</Value>
   </LocaleResource>
@@ -18931,6 +18964,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.Blog">
     <Value>Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Courses">
+    <Value>My courses</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Checkout">
     <Value>Checkout</Value>
