@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   ci-build:
-    image: microsoft/dotnet:3.0-sdk
+    image: microsoft/dotnet:3.0.100-sdk
     volumes:
       - .:/src
     working_dir: /src
