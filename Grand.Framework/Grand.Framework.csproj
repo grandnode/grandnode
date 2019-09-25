@@ -17,19 +17,19 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="2.2.3" />
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.0.0" />
     <PackageReference Include="BundlerMinifier.Core" Version="3.0.415" />
-    <PackageReference Include="FluentValidation" Version="8.5.0-preview5" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0-preview5" />
-    <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.4.0" />
+    <PackageReference Include="FluentValidation" Version="8.5.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0" />
+    <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.5.0" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.1.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.9.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.6.0" />
     <PackageReference Include="Wangkanai.Detection.Crawler" Version="2.0.0-beta11" />
     <PackageReference Include="Wangkanai.Detection.Device" Version="2.0.0-beta11" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.59" />
-    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.6.1" />
-    <PackageReference Include="WebMarkupMin.Core" Version="2.6.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.7.0" />
+    <PackageReference Include="WebMarkupMin.Core" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
