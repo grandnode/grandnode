@@ -692,7 +692,8 @@ namespace Grand.Web.Areas.Admin.Services
                         IsDownload = product.IsDownload,
                         DownloadCount = orderItem.DownloadCount,
                         DownloadActivationType = product.DownloadActivationType,
-                        IsDownloadActivated = orderItem.IsDownloadActivated
+                        IsDownloadActivated = orderItem.IsDownloadActivated,
+                        //Commission = orderItem.Commission
                     };
                     //picture
                     var orderItemPicture = await product.GetProductPicture(orderItem.AttributesXml, _productService, _pictureService, _productAttributeParser);
@@ -724,8 +725,12 @@ namespace Grand.Web.Areas.Admin.Services
                     //subtotal
                     orderItemModel.SubTotalInclTaxValue = orderItem.PriceInclTax;
                     orderItemModel.SubTotalExclTaxValue = orderItem.PriceExclTax;
-                    orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, false);
                     orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+
+                    // commission
+                    orderItemModel.CommissionValue = orderItem.Commission;
+                    orderItemModel.Commission = _priceFormatter.FormatPrice(orderItem.Commission, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
 
                     orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                     if (product.IsRecurring)

@@ -13718,6 +13718,9 @@
   <LocaleResource Name="Admin.Orders.Products.Discount">
     <Value>Discount</Value>
   </LocaleResource>
+  <LocalResource Name="Admin.Orders.Products.Commission">
+    <Value>Commission</Value>
+  </LocalResource>
   <LocaleResource Name="Admin.Orders.Products.Download">
     <Value>Downloadable product</Value>
   </LocaleResource>
@@ -16490,6 +16493,9 @@
   <LocaleResource Name="Admin.Vendors.EditVendorDetails">
     <Value>Edit vendor details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Commission">
+    <Value>Commission</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Active">
     <Value>Active</Value>
   </LocaleResource>
@@ -16606,6 +16612,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Store.hint">
     <Value>A store name for which products of vendor will be available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Commission">
+    <Value>Commisssion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Commission.Hint">
+    <Value>Commission percentage rate for each vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Commission.IsCommissionValid">
+    <Value>Commission`s rate is no valid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Info">
     <Value>Vendor Info</Value>

@@ -66,7 +66,7 @@
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
                 <admin-label asp-for="AssociatedCustomers" />
                 <div class="col-md-9 col-sm-9">
@@ -116,7 +116,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomersToSelectPageSize" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
             </div>
@@ -140,7 +140,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="Active" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="Active"></span>
             </div>
@@ -157,9 +157,16 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
                     <admin-input asp-for="AllowCustomerReviews" />
-                     <div class="control__indicator"></div>
+                    <div class="control__indicator"></div>
                 </label>
                 <span asp-validation-for="AllowCustomerReviews"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Commission" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Commission" /> [%]
+                <span asp-validation-for="Commission"></span>
             </div>
         </div>
     </div>
