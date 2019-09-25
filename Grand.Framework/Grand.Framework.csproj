@@ -28,7 +28,7 @@
     <PackageReference Include="Wangkanai.Detection.Crawler" Version="2.0.0-beta11" />
     <PackageReference Include="Wangkanai.Detection.Device" Version="2.0.0-beta11" />
     <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.59" />
-    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.7.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.7.0" />
     <PackageReference Include="WebMarkupMin.Core" Version="2.7.0" />
   </ItemGroup>
 

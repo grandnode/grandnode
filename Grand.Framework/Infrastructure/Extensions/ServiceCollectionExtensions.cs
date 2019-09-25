@@ -36,7 +36,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
-using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.AspNetCore3;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {

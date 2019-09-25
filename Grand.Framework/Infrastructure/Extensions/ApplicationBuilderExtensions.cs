@@ -20,7 +20,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.AspNetCore3;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
