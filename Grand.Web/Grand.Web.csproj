@@ -8,6 +8,7 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
