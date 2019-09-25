@@ -283,6 +283,9 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public Guid LicenseDownloadGuid { get; set; }
+
+            public string Commission { get; set; }
+            public decimal CommissionValue { get; set; } 
         }
 
         public partial class TaxRate : BaseGrandModel
