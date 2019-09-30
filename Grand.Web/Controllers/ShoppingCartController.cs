@@ -570,10 +570,14 @@ namespace Grand.Web.Controllers
                 : _workContext.CurrentCustomer;
             if (customer == null)
                 return RedirectToRoute("HomePage");
-            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+
+            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var model = new WishlistModel();
-            await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+            await _shoppingCartViewModelService.PrepareWishlist(model, cart.ToList(), !customerGuid.HasValue);
             return View(model);
         }
 
@@ -657,7 +661,9 @@ namespace Grand.Web.Controllers
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
-            var pageCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+            var pageCart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                pageCart = pageCart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
