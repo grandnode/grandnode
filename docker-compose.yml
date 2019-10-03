@@ -4,5 +4,5 @@ services:
   grand.web:
     image: grand.web
     build:
-      context: ./Grand.Web
+      context: .
       dockerfile: Dockerfile
