@@ -297,7 +297,7 @@ namespace Grand.Services.Installation
                     CompanyPhoneNumber = "(123) 456-78901",
                     CompanyVat = null,
                     CompanyEmail = "company@email.com",
-                    CompanyHours = "Monday - Sunday / 8:00AM - 18:00PM"
+                    CompanyHours = "Monday - Sunday / 8:00AM - 6:00PM"
                 },
             };
 
