@@ -17,7 +17,7 @@ namespace Grand.Services.Messages
     public partial interface IMessageTokenProvider
     {
         Task AddStoreTokens(LiquidObject liquidObject, Store store, Language language, EmailAccount emailAccount);
-        Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0);
+        Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, Vendor vendor = null, decimal refundedAmount = 0);
         Task AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, Order order, Store store, Language language);
         Task AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment);
         Task AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order orderItem, Language language);

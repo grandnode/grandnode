@@ -26,6 +26,7 @@ using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Stores;
+using Grand.Services.Vendors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -210,18 +211,20 @@ namespace Grand.Services.Messages
             await _mediator.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
-        public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
+        public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, Vendor vendor = null, decimal refundedAmount = 0)
         {
             var language = await _languageService.GetLanguageById(order.CustomerLanguageId);
             var currency = await _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
             var productService = _serviceProvider.GetRequiredService<IProductService>();
             var downloadService = _serviceProvider.GetRequiredService<IDownloadService>();
+            var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
 
-            var liquidOrder = new LiquidOrder(order, customer, language, currency, store, orderNote, vendorId);
-            foreach (var item in order.OrderItems)
+            var liquidOrder = new LiquidOrder(order, customer, language, currency, store, orderNote, vendor);
+            foreach (var item in order.OrderItems.Where(x => x.VendorId == vendor?.Id || vendor == null))
             {
                 var product = await productService.GetProductById(item.ProductId);
-                var liqitem = new LiquidOrderItem(item, product, order, language, currency, store);
+                var vendorItem = await vendorService.GetVendorById(item.VendorId);
+                var liqitem = new LiquidOrderItem(item, product, order, language, currency, store, vendorItem);
 
                 #region Download
 
@@ -613,7 +616,7 @@ namespace Grand.Services.Messages
                             var picture = await pictureService.GetPictureById(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                             if (picture != null)
                             {
-                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl: store.Url);
+                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl : store.Url);
                             }
                         }
                         sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
