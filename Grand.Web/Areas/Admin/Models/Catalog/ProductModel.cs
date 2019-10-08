@@ -885,7 +885,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string OrderId { get; set; }
         }
 
-        [Validator(typeof(GenerateCalendarValidator))]
         public partial class GenerateCalendarModel : BaseGrandModel
         {
 
