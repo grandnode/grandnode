@@ -193,7 +193,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandMvc(this IApplicationBuilder application)
         {
-            application.UseMvc(routeBuilder =>
+            application.UseEndpoints(routeBuilder =>
             {
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
