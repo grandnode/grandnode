@@ -20,4 +20,4 @@ RUN dotnet publish "Grand.Web.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Grand.Web.dll"]
+CMD ["dotnet", "Grand.Web.dll"]
