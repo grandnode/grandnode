@@ -75,7 +75,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
             {
                 GoogleId = "UA-0000000-0",
                 TrackingScript = @"<!-- Google code for Analytics tracking -->
-                    <script type=""text/javascript"">
+                    <script>
                     var _gaq = _gaq || [];
                     _gaq.push(['_setAccount', '{GOOGLEID}']);
                     _gaq.push(['_trackPageview']);
