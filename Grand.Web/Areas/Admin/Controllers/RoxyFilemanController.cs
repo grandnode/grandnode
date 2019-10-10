@@ -966,21 +966,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 byte[] file = System.IO.File.ReadAllBytes(path);
                 using (var image = SKBitmap.Decode(file))
                 {
-                    int width, height;
+                    float width, height;
                     int targetSize = 120;
                     if (image.Height > image.Width)
                     {
                         // portrait
-                        width = image.Width * (targetSize / image.Height);
+                        width = image.Width * (targetSize / (float)image.Height);
                         height = targetSize;
                     }
                     else
                     {
                         // landscape or square
                         width = targetSize;
-                        height = image.Height * (targetSize / image.Width);
+                        height = image.Height * (targetSize / (float)image.Width);
                     }
-                    using (var resized = image.Resize(new SKImageInfo(width, height), SKFilterQuality.None))
+                    using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
                     {
                         using (var image2 = SKImage.FromBitmap(resized))
                         {

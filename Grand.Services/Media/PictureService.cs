@@ -739,19 +739,21 @@ namespace Grand.Services.Media
             {
                 targetSize = 800;
             }
-            int width, height;
-            if (image.Width > image.Height)
+            float width, height;
+            if (image.Height > image.Width)
             {
-                width = targetSize;
-                height = image.Height * targetSize / image.Width;
+                // portrait
+                width = image.Width * (targetSize / (float)image.Height);
+                height = targetSize;
             }
             else
             {
-                width = image.Width * targetSize / image.Height;
-                height = targetSize;
+                // landscape or square
+                width = targetSize;
+                height = image.Height * (targetSize / (float)image.Width);
             }
 
-            using (var resized = image.Resize(new SKImageInfo(width, height), SKFilterQuality.None))
+            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
             {
                 using (var resimage = SKImage.FromBitmap(resized))
                 {
