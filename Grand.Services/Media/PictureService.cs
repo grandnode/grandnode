@@ -753,7 +753,7 @@ namespace Grand.Services.Media
                 height = image.Height * (targetSize / (float)image.Width);
             }
 
-            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
+            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.High))
             {
                 using (var resimage = SKImage.FromBitmap(resized))
                 {
