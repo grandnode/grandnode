@@ -2,7 +2,7 @@
 using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
-using ImageMagick;
+using SkiaSharp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -558,7 +558,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         using (var stream = new FileStream(file.FullName, FileMode.Open))
                         {
-                            using (var image = new MagickImage(stream))
+                            using (var image = SKBitmap.Decode(stream))
                             {
                                 width = image.Width;
                                 height = image.Height;
@@ -964,26 +964,29 @@ namespace Grand.Web.Areas.Admin.Controllers
                 path = GetFullPath(GetVirtualPath(path));
                 HttpContext.Response.Headers.Add("Content-Type", "image/png");
                 byte[] file = System.IO.File.ReadAllBytes(path);
-                using (var image = new MagickImage(file))
+                using (var image = SKBitmap.Decode(file))
                 {
-                    float width, height;
+                    int width, height;
                     int targetSize = 120;
                     if (image.Height > image.Width)
                     {
                         // portrait
-                        width = image.Width * (targetSize / (float)image.Height);
+                        width = image.Width * (targetSize / image.Height);
                         height = targetSize;
                     }
                     else
                     {
                         // landscape or square
                         width = targetSize;
-                        height = image.Height * (targetSize / (float)image.Width);
+                        height = image.Height * (targetSize / image.Width);
                     }
-                    var size = new MagickGeometry((int)Math.Round(width), (int)Math.Round(height)); 
-                    size.IgnoreAspectRatio = true;
-                    image.Resize(size);
-                    file = image.ToByteArray();
+                    using (var resized = image.Resize(new SKImageInfo(width, height), SKFilterQuality.None))
+                    {
+                        using (var image2 = SKImage.FromBitmap(resized))
+                        {
+                            file = image2.Encode().ToArray();
+                        }
+                    }
                 }
                 await HttpContext.Response.Body.WriteAsync(file, 0, file.Length);
                 HttpContext.Response.Body.Close();

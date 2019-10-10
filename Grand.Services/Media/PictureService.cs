@@ -5,7 +5,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
-using ImageMagick;
+using SkiaSharp;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
@@ -72,51 +72,6 @@ namespace Grand.Services.Media
         #endregion
 
         #region Utilities
-
-        protected virtual MagickGeometry CalculateDimensions(MagickImage originalSize, int targetSize,
-            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
-        {
-            float width, height;
-
-            switch (resizeType)
-            {
-                case ResizeType.LongestSide:
-                    if (originalSize.Height > originalSize.Width)
-                    {
-                        // portrait
-                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                        height = targetSize;
-                    }
-                    else
-                    {
-                        // landscape or square
-                        width = targetSize;
-                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    }
-                    break;
-                case ResizeType.Width:
-                    width = targetSize;
-                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    break;
-                case ResizeType.Height:
-                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                    height = targetSize;
-                    break;
-                default:
-                    throw new Exception("Not supported ResizeType");
-            }
-
-            if (ensureSizePositive)
-            {
-                if (width < 1)
-                    width = 1;
-                if (height < 1)
-                    height = 1;
-            }
-
-            //we invoke Math.Round to ensure that no white background is rendered 
-            return new MagickGeometry((int)Math.Round(width), (int)Math.Round(height));
-        }
 
         /// <summary>
         /// Returns the file extension from mime type.
@@ -409,10 +364,9 @@ namespace Grand.Services.Media
                         return GetThumbUrl(thumbFileName, storeLocation);
 
                     mutex.WaitOne();
-                    using (var image = new MagickImage(filePath))
+                    using (var image = SKBitmap.Decode(filePath))
                     {
-                        var pictureBinary = File.ReadAllBytes(filePath);
-                        pictureBinary = await ApplyResize(image, targetSize);
+                        var pictureBinary = await ApplyResize(image, targetSize);
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
                     mutex.ReleaseMutex();
@@ -515,12 +469,9 @@ namespace Grand.Services.Media
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         mutex.WaitOne();
-                        using (var image = new MagickImage(pictureBinary))
+                        using (var image = SKBitmap.Decode(pictureBinary))
                         {
-                            var size = CalculateDimensions(image, targetSize);
-                            size.IgnoreAspectRatio = true;
-                            image.Resize(size);
-                            pictureBinary = image.ToByteArray();
+                            pictureBinary = await ApplyResize(image, targetSize);
                         }
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         mutex.ReleaseMutex();
@@ -758,7 +709,7 @@ namespace Grand.Services.Media
             {
                 using (var ms = new MemoryStream(byteArray))
                 {
-                    using (var image = new MagickImage(byteArray))
+                    using (var image = SKBitmap.Decode(byteArray))
                     {
                         if (image.Width >= image.Height)
                         {
@@ -782,16 +733,31 @@ namespace Grand.Services.Media
             }
         }
 
-        protected async Task<byte[]> ApplyResize(MagickImage image, int targetSize)
+        protected async Task<byte[]> ApplyResize(SKBitmap image, int targetSize)
         {
             if (targetSize <= 0)
             {
                 targetSize = 800;
             }
-            var size = CalculateDimensions(image, targetSize);
-            size.IgnoreAspectRatio = true;
-            image.Resize(size);
-            return await Task.FromResult(image.ToByteArray());
+            int width, height;
+            if (image.Width > image.Height)
+            {
+                width = targetSize;
+                height = image.Height * targetSize / image.Width;
+            }
+            else
+            {
+                width = image.Width * targetSize / image.Height;
+                height = targetSize;
+            }
+
+            using (var resized = image.Resize(new SKImageInfo(width, height), SKFilterQuality.None))
+            {
+                using (var resimage = SKImage.FromBitmap(resized))
+                {
+                    return await Task.FromResult(resimage.Encode().ToArray());
+                }
+            }
         }
 
         #endregion
