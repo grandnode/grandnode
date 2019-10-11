@@ -58,7 +58,7 @@ namespace Grand.Services.Configuration
         public SettingService(IEnumerable<ICacheManager> cacheManager, IMediator mediator,
             IRepository<Setting> settingRepository, IServiceProvider serviceProvider)
         {
-            this._cacheManager = cacheManager.FirstOrDefault();
+            this._cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
             this._mediator = mediator;
             this._settingRepository = settingRepository;
             this._serviceProvider = serviceProvider;

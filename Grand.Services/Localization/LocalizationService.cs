@@ -78,7 +78,7 @@ namespace Grand.Services.Localization
             ILanguageService languageService,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            this._cacheManager = cacheManager.FirstOrDefault();
+            this._cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
             this._logger = logger;
             this._workContext = workContext;
             this._lsrRepository = lsrRepository;
