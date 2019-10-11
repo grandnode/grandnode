@@ -31,5 +31,6 @@ namespace Grand.Api.DTOs.Catalog
         public bool HideOnCatalog { get; set; }
         public bool ShowOnSearchBox { get; set; }
         public int SearchBoxDisplayOrder { get; set; }
+        public string Class { get; set; }
     }
 }

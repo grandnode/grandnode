@@ -449,6 +449,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog.hint">
     <Value>Allow store owner to hide some categories on category page (subcategories before the list of products).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Class">
+    <Value>Css class</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Class.hint">
+    <Value>Allow to specify css class for category</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled">
     <Value>Knowledge base enabled</Value>
   </LocaleResource>

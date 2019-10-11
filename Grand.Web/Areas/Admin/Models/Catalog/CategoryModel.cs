@@ -141,6 +141,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public List<DiscountModel> AvailableDiscounts { get; set; }
         public string[] SelectedDiscountIds { get; set; }
 
+        //css class
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Class")]
+        public string Class { get; set; }
 
         #region Nested classes
         [Validator(typeof(CategoryProductModelValidator))]

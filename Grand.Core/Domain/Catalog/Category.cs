@@ -180,5 +180,10 @@ namespace Grand.Core.Domain.Catalog
             get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
             protected set { _appliedDiscounts = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the css class
+        /// </summary>
+        public string Class { get; set; }
     }
 }
