@@ -735,6 +735,9 @@ namespace Grand.Services.Media
 
         protected async Task<byte[]> ApplyResize(SKBitmap image, int targetSize)
         {
+            if (image == null)
+                throw new ArgumentNullException("image");
+
             if (targetSize <= 0)
             {
                 targetSize = 800;
@@ -751,6 +754,12 @@ namespace Grand.Services.Media
                 // landscape or square
                 width = targetSize;
                 height = image.Height * (targetSize / (float)image.Width);
+            }
+
+            if ((int)width == 0 || (int)height == 0)
+            {
+                width = image.Width;
+                height = image.Height;
             }
 
             using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.High))
