@@ -2997,10 +2997,10 @@ namespace Grand.Services.Orders
 
             foreach (var orderItem in order.OrderItems)
             {
-                if (_productService.GetProductById(orderItem.ProductId) != null)
+                var product = await _productService.GetProductById(orderItem.ProductId);
+                if (product != null)
                 {
-                    var product = await _productService.GetProductById(orderItem.ProductId);
-                    if (product != null && product.ProductType == ProductType.SimpleProduct)
+                    if (product.ProductType == ProductType.SimpleProduct)
                     {
                         await _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                             ShoppingCartType.ShoppingCart, order.StoreId, orderItem.WarehouseId,
