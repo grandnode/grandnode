@@ -41,12 +41,5 @@
     <EmbeddedResource Remove="Plugins\**" />
     <None Remove="Plugins\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Remove="App_Data\Settings.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="App_Data\InstalledPlugins.txt" />
-    <None Remove="App_Data\Settings.txt" />
-  </ItemGroup>
-  
+   
 </Project>
