@@ -129,6 +129,7 @@ namespace Grand.Web.Models.Order
             public int ShipmentNumber { get; set; }
             public DateTime? ShippedDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
+            public string ShipmentNotes { get; set; }
         }
         #endregion
     }

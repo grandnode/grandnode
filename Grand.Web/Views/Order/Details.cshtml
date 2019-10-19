@@ -347,6 +347,20 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                     </span>
                                 </li>
                             }
+                            @if (Model.Shipments.Any(x => x.ShipmentNotes != null))
+                            {
+                                @foreach (var item in Model.Shipments)
+                                {
+                                    <li class="shipping-status">
+                                        <span class="label">
+                                            @T("Order.Shipping.Notes#")@item.TrackingNumber:
+                                        </span>
+                                        <p class="text-justify">
+                                            @item.ShipmentNotes
+                                        </p>
+                                    </li>
+                                }
+                            }
                         </ul>
                     </div>
                 }

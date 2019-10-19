@@ -832,6 +832,38 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setnotes")]
+        public async Task<IActionResult> SetShipmentNotes(ShipmentModel model)
+        {
+            var shipment = await _shipmentService.GetShipmentById(model.Id);
+            if (shipment == null)
+                //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("List");
+            }
+
+            var order = await _orderService.GetOrderById(shipment.OrderId);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !_workContext.HasAccessToShipment(order, shipment) && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("List");
+
+            shipment.Notes = model.Notes;
+            shipment.NotesDisplayToCustomer = model.NotesDisplayToCustomer;
+            await _shipmentService.UpdateShipment(shipment);
+
+            return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+        }
+
+
+
         #endregion
     }
 }

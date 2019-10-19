@@ -13925,6 +13925,21 @@
   <LocaleResource Name="Admin.Orders.Shipments.NoShipmentsSelected">
     <Value>No shipments selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Notes">
+    <Value>Notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Notes.Hint">
+    <Value>Notes for shipment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Notes.Button">
+    <Value>Save notes options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.NotesDisplayToCustomer">
+    <Value>Display notes to customer?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.NotesDisplayToCustomer.Hint">
+    <Value>Choose if shipment notes should be visible for customer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.OrderID">
     <Value>Order #</Value>
   </LocaleResource>
@@ -18814,6 +18829,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Information">
     <Value>Shipment #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.Notes#">
+    <Value>Notes for </Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Order#">
     <Value>Order #</Value>

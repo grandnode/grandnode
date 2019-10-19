@@ -61,6 +61,16 @@ namespace Grand.Core.Domain.Shipping
         public virtual int ShipmentNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets notes display to customer
+        /// </summary>
+        public bool NotesDisplayToCustomer { get; set; }
+
+        /// <summary>
+        /// Gets or sets notes
+        /// </summary>
+        public string Notes { get; set; }
+
+        /// <summary>
         /// Gets or sets the shipment items
         /// </summary>
         public virtual ICollection<ShipmentItem> ShipmentItems

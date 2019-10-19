@@ -94,6 +94,8 @@ namespace Grand.Web.Areas.Admin.Services
                 DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 AdminComment = shipment.AdminComment,
+                NotesDisplayToCustomer = shipment.NotesDisplayToCustomer,
+                Notes = shipment.Notes,
             };
 
             if (prepareProducts)
@@ -526,6 +528,8 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var trackingNumber = form["TrackingNumber"];
                     var adminComment = form["AdminComment"];
+                    var notesDisplayToCustomer = Convert.ToBoolean(form["NotesDisplayToCustomer"].FirstOrDefault());
+                    var notes = form["Notes"];
                     shipment = new Shipment
                     {
                         OrderId = order.Id,
@@ -534,6 +538,8 @@ namespace Grand.Web.Areas.Admin.Services
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,
                         AdminComment = adminComment,
+                        NotesDisplayToCustomer = notesDisplayToCustomer,
+                        Notes = notes,
                         CreatedOnUtc = DateTime.UtcNow,
                         StoreId = order.StoreId,
                     };

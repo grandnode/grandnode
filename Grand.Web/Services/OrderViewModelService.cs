@@ -203,6 +203,7 @@ namespace Grand.Web.Services
                 }
                 model.ShippingMethod = order.ShippingMethod;
                 model.ShippingAdditionDescription = order.ShippingOptionAttributeDescription;
+
                 //shipments (only already shipped)
                 var shipments = (await _shipmentService.GetShipmentsByOrder(order.Id)).Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
@@ -217,6 +218,8 @@ namespace Grand.Web.Services
                         shipmentModel.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
                         shipmentModel.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+                    if (shipment.NotesDisplayToCustomer)
+                        shipmentModel.ShipmentNotes = shipment.Notes;
                     model.Shipments.Add(shipmentModel);
                 }
             }

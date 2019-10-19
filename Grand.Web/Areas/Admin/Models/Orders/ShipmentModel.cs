@@ -38,6 +38,12 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         [GrandResourceDisplayName("Admin.Orders.Shipments.AdminComment")]
         public string AdminComment { get; set; }
 
+        [GrandResourceDisplayName("Admin.Orders.Shipments.NotesDisplayToCustomer")]
+        public bool NotesDisplayToCustomer { get; set; }
+
+        [GrandResourceDisplayName("Admin.Orders.Shipments.Notes")]
+        public string Notes { get; set; }
+
         public List<ShipmentItemModel> Items { get; set; }
 
         public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
