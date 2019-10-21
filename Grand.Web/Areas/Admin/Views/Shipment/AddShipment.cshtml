@@ -47,17 +47,26 @@
                                 <admin-input asp-for="AdminComment" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <admin-label asp-for="Notes" />
-                            <div class="col-md-9 col-sm-9">
-                                <admin-input asp-for="Notes" />
+                        <div class="form-row">
+                            <div class="form-group">
+                                <admin-label asp-for="Notes" />
+                                <div class="col-md-9 col-sm-9">
+                                    <div class="input-group">
+                                        <div class="input-group-control">
+                                            <admin-textarea asp-for="Notes" />
+                                        </div>
+                                            
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <admin-label asp-for="NotesDisplayToCustomer" />
-                            <div class="col-md-9 col-sm-9">
-                                    <admin-input asp-for="NotesDisplayToCustomer" />
-                                    <div class="control__indicator"></div>
+                            <div class="form-group">
+                                <admin-label asp-for="NotesDisplayToCustomer" />
+                                <div class="col-md-9 col-sm-9" style="display: inline-block">
+                                    <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                                        <admin-input asp-for="NotesDisplayToCustomer" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
