@@ -516,7 +516,7 @@ namespace Grand.Web.Services
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
                     string.Join(",", customer.GetCustomerRoleIds()), storeId);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
                     //no value in the cache yet
@@ -646,7 +646,7 @@ namespace Grand.Web.Services
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, item.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
                     //no value in the cache yet
@@ -884,7 +884,7 @@ namespace Grand.Web.Services
                     item.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
                     //no value in the cache yet
@@ -958,7 +958,7 @@ namespace Grand.Web.Services
                     manufacturer.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
-                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
                     //no value in the cache yet
