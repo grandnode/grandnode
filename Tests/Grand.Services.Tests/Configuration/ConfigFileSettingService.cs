@@ -18,13 +18,14 @@ namespace Grand.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
+        private readonly ICacheManager _cacheManager;
         public ConfigFileSettingService(IEnumerable<ICacheManager> cacheManager,
             IMediator eventPublisher,
             IRepository<Setting> settingRepository,
             IServiceProvider serviceProvider) :
             base(cacheManager, eventPublisher, settingRepository, serviceProvider)
         {
-
+            _cacheManager = cacheManager.FirstOrDefault();
         }
         public override Setting GetSettingById(string settingId)
         {
