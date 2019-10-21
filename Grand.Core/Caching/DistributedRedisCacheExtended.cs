@@ -9,21 +9,11 @@ namespace Grand.Core.Caching
 {
     public partial class DistributedRedisCacheExtended : IDistributedRedisCacheExtended, IDisposable
     {
-        private readonly RedisCacheOptions _options;
-        private readonly ConnectionMultiplexer _connection;
         private readonly IDatabase _db;
 
-        private bool isDisposed;
+        private static RedisCacheOptions _options;
 
-
-        public DistributedRedisCacheExtended(IOptions<RedisCacheOptions> redisCacheOptions)
-        {
-            this._options = redisCacheOptions.Value;
-            this._connection = ConnectionMultiplexer.Connect(GetConnectionOptions());
-            this._db = _connection.GetDatabase();
-        }
-
-        private ConfigurationOptions GetConnectionOptions()
+        private static ConfigurationOptions GetConnectionOptions()
         {
             ConfigurationOptions redisConnectionOptions = (_options.ConfigurationOptions != null)
                 ? ConfigurationOptions.Parse(_options.ConfigurationOptions.ToString())
@@ -34,11 +24,29 @@ namespace Grand.Core.Caching
             return redisConnectionOptions;
         }
 
+        public static ConnectionMultiplexer Connection {
+            get {
+                return lazyConnection.Value;
+            }
+        }
+
+        private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+        {
+            return ConnectionMultiplexer.Connect(GetConnectionOptions());
+        });
+
+
+        public DistributedRedisCacheExtended(IOptions<RedisCacheOptions> redisCacheOptions)
+        {
+            _options = redisCacheOptions.Value;
+            _db = lazyConnection.Value.GetDatabase();
+        }
+
         public async Task ClearAsync()
         {
-            foreach (var endPoint in _connection.GetEndPoints())
+            foreach (var endPoint in Connection.GetEndPoints())
             {
-                var server = _connection.GetServer(endPoint);
+                var server = Connection.GetServer(endPoint);
                 var keys = server.Keys(_db.Database).ToArray();
                 await _db.KeyDeleteAsync(keys);
             }
@@ -46,9 +54,9 @@ namespace Grand.Core.Caching
 
         public async Task RemoveByPatternAsync(string pattern)
         {
-            foreach (var endPoint in _connection.GetEndPoints())
+            foreach (var endPoint in Connection.GetEndPoints())
             {
-                var server = _connection.GetServer(endPoint);
+                var server = Connection.GetServer(endPoint);
                 var keys = server.Keys(_db.Database, $"*{pattern}*");
                 await _db.KeyDeleteAsync(keys.ToArray());
             }
@@ -56,23 +64,7 @@ namespace Grand.Core.Caching
 
         public void Dispose()
         {
-            this.Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-
-
-        private void Dispose(bool disposing)
-        {
-            if (!this.isDisposed)
-            {
-                if (disposing && this._connection != null)
-                {
-                    this._connection.Close();
-                }
-
-                this.isDisposed = true;
-            }
         }
 
     }
