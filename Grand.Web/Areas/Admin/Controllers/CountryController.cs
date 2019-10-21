@@ -69,7 +69,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public async Task<IActionResult> List()
+        public IActionResult List()
         {
             var model = new CountriesListModel();
             return View(model);
