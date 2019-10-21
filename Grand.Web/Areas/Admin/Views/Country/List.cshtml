@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CountriesListModel
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
@@ -23,9 +24,24 @@
             <div class="x_content form">
                 <div class="form-horizontal">
                     <div class="form-body">
-                        <div class="x_content">
-                            <div id="countries-grid"></div>
+                        <div class="form-group">
+                            <admin-label asp-for="CountryName" />
+                            <div class="col-md-9 col-sm-6">
+                                <admin-input asp-for="CountryName" />
+                            </div>
                         </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <button class="btn btn-success filter-submit" id="search-countries">
+                                    <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_content">
+                        <div id="countries-grid"></div>
                     </div>
                 </div>
             </div>
@@ -43,7 +59,7 @@
                         url: "@Html.Raw(Url.Action("CountryList", "Country"))",
                         type: "POST",
                         dataType: "json",
-                        data: addAntiForgeryToken
+                        data: additionalData
                     }
                 },
                 schema: {
@@ -271,4 +287,32 @@
             window.data('kendoWindow').center().open();
         });
     });
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //search button
+        $('#search-countries').click(function () {
+            //search
+            var grid = $('#countries-grid').data('kendoGrid');
+            grid.dataSource.read();
+        });
+
+        $("#@Html.FieldIdFor(model => model.CountryName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-countries").click();
+                return false;
+            }
+        });
+
+    });
+
+    function additionalData() {
+        var data = {
+            CountryName: $('#@Html.FieldIdFor(model => model.CountryName)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
 </script>
