@@ -142,9 +142,9 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(string key)
+        public virtual Task<T> Get<T>(string key)
         {
-            return _cache.Get<T>(key);
+            return Task.FromResult(_cache.Get<T>(key));
         }
 
         /// <summary>
