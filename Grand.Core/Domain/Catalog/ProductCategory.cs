@@ -24,6 +24,10 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+        /// <summary>
+        /// Css Class
+        /// </summary>
+        public string Class { get; set; }
 
     }
 

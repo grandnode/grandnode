@@ -32,6 +32,7 @@ namespace Grand.Web.Models.Catalog
         public IList<SubCategoryModel> SubCategories { get; set; }
         public IList<ProductOverviewModel> FeaturedProducts { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }        
+        public string Class { get; set; }
 		#region Nested Classes
         public partial class SubCategoryModel : BaseGrandEntityModel
         {
@@ -45,6 +46,7 @@ namespace Grand.Web.Models.Catalog
             public string Flag { get; set; }
             public string FlagStyle { get; set; }
             public PictureModel PictureModel { get; set; }
+            public string Class { get;set;}
         }
 
 		#endregion

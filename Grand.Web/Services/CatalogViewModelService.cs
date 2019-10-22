@@ -467,7 +467,8 @@ namespace Grand.Web.Services
                     .Select(catBr => new CategoryModel {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name, languageId),
-                        SeName = catBr.GetSeName(languageId)
+                        SeName = catBr.GetSeName(languageId),
+                        Class = catBr.Class
                     })
                     .ToList()
                 );
@@ -491,7 +492,8 @@ namespace Grand.Web.Services
                         SeName = x.GetSeName(languageId),
                         Description = x.GetLocalized(y => y.Description, languageId),
                         Flag = x.Flag,
-                        FlagStyle = x.FlagStyle
+                        FlagStyle = x.FlagStyle,
+                        Class = x.Class
                     };
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;

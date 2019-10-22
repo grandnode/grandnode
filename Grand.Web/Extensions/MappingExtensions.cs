@@ -32,7 +32,8 @@ namespace Grand.Web.Extensions
                 Flag = entity.GetLocalized(x => x.Flag, language.Id),
                 FlagStyle = entity.FlagStyle,
                 Icon = entity.Icon,
-                GenericAttributes = entity.GenericAttributes
+                GenericAttributes = entity.GenericAttributes,
+                Class = entity.Class
             };
             return model;
         }

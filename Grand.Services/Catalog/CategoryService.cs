@@ -480,6 +480,7 @@ namespace Grand.Services.Catalog
                                                   Id = pc.Id,
                                                   ProductId = prod.Id,
                                                   IsFeaturedProduct = pc.IsFeaturedProduct,
+                                                  Class = pc.Class,
                                               };
 
                 query_productCategories = from pm in query_productCategories

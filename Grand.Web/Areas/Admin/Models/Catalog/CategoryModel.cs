@@ -197,6 +197,11 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string CategoryId { get; set; }
 
             public string[] SelectedProductIds { get; set; }
+            /// <summary>
+            /// Css Class
+            /// </summary>
+            public string CssClass { get; set; }
+
         }
 
         public partial class ActivityLogModel : BaseGrandEntityModel
