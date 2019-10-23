@@ -1,2 +1,0 @@
-DataProvider: mongodb
-DataConnectionString: mongodb://localhost:27017/mystore
