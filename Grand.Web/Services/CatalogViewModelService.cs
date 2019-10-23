@@ -341,7 +341,8 @@ namespace Grand.Web.Services
                     Flag = category.GetLocalized(x => x.Flag, langid),
                     FlagStyle = category.FlagStyle,
                     Icon = category.Icon,
-                    ImageUrl = await _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize)
+                    ImageUrl = await _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize),
+                    Class = category.Class
                 };
 
                 //product number for each category

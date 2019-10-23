@@ -1,7 +1,7 @@
 ﻿@model TopMenuModel.CategoryLineModel
 <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
 
-    <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" ) href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+    <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none") @(!String.IsNullOrEmpty(Model.Category.Class)?Model.Category.Class:"")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" )  href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
         @if (!string.IsNullOrEmpty(Model.Category.Icon))
         {
             <span class="category-icon @Model.Category.Icon"></span>
