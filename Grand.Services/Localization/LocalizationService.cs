@@ -53,7 +53,6 @@ namespace Grand.Services.Localization
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
-        private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IMediator _mediator;
@@ -75,16 +74,14 @@ namespace Grand.Services.Localization
         public LocalizationService(IEnumerable<ICacheManager> cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
-            ILanguageService languageService,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            this._cacheManager = cacheManager.FirstOrDefault();
-            this._logger = logger;
-            this._workContext = workContext;
-            this._lsrRepository = lsrRepository;
-            this._languageService = languageService;
-            this._localizationSettings = localizationSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _logger = logger;
+            _workContext = workContext;
+            _lsrRepository = lsrRepository;
+            _localizationSettings = localizationSettings;
+            _mediator = mediator;
         }
 
         #endregion

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Web.Areas.Admin.Models.Country;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -68,12 +69,25 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List() => View();
+        public IActionResult List()
+        {
+            var model = new CountriesListModel();
+            return View(model);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> CountryList(DataSourceRequest command)
+        public async Task<IActionResult> CountryList(DataSourceRequest command, CountriesListModel countriesListModel)
         {
             var countries = await _countryService.GetAllCountries(showHidden: true);
+            
+            //Filters Countries based off of name
+            if(!string.IsNullOrEmpty(countriesListModel.CountryName))
+            {
+                countries = countries.Where(
+                    x => x.Name.ToLowerInvariant().Contains(countriesListModel.CountryName.ToLowerInvariant())
+                    ).ToList();
+            }
+
             var gridModel = new DataSourceResult
             {
                 Data = countries.Select(x => x.ToModel()),

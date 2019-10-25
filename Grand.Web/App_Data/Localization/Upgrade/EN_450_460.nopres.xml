@@ -664,6 +664,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Commission.IsCommissionValid">
     <Value>Commission`s rate is no valid</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ViewCourse">
     <Value>Public store. Viewed a course details page ('{0}')</Value>
   </LocaleResource>

@@ -187,8 +187,10 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds authentication service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddGrandAuthentication(this IServiceCollection services)
+        public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var config = services.BuildServiceProvider().GetService<GrandConfig>();
+
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -204,7 +206,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
 
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //add external authentication
@@ -214,7 +216,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //register external authentication plugins now

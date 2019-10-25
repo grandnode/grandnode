@@ -28,11 +28,10 @@ namespace Grand.Core.Caching
         }
 
       
-        public virtual T Get<T>(string key)
+        public virtual async Task<T> Get<T>(string key)
         {
-
             //get serialized item from cache
-            var serializedItem = _distributedCache.GetString(key);
+            var serializedItem = await _distributedCache.GetStringAsync(key);
             if (string.IsNullOrEmpty(serializedItem))
                 return default(T);
 

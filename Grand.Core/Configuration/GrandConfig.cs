@@ -102,6 +102,11 @@ namespace Grand.Core.Configuration
         public string StaticFilesCacheControl { get; set; }
 
         /// <summary>
+        /// Gets or sets a value of "Cookie SecurePolicy Always"
+        /// </summary>
+        public bool CookieSecurePolicyAlways { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to display the full error in production environment.
         /// It's ignored (always enabled) in development environment
         /// </summary>

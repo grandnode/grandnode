@@ -22,7 +22,7 @@ namespace Grand.Framework.Infrastructure
             //add data protection
             services.AddGrandDataProtection();
             //add authentication
-            services.AddGrandAuthentication();
+            services.AddGrandAuthentication(configuration);
         }
 
         /// <summary>

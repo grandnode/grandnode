@@ -349,7 +349,7 @@ namespace Grand.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendor: vendor);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
@@ -526,7 +526,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendor: vendor);
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 

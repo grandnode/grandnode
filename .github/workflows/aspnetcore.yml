@@ -1,0 +1,27 @@
+name: ASP.NET Core CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+    - name: Build with dotnet
+      run: dotnet build ./GrandNode.sln --configuration Release
+    - name: Start Docker for Mongodb
+      run: docker run -d -p 27017:27017 mongo
+    - name: Grand.Core Unit Tests
+      run: dotnet test ./Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
+    - name: Grand.Services Unit Tests
+      run: dotnet test ./Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
+    - name: Grand.Plugins Unit Tests
+      run: dotnet test ./Tests/Grand.Plugin.Tests/Grand.Plugin.Tests.csproj
+    - name: Grand.Api Unit Tests
+      run: dotnet test ./Tests/Grand.Api.Tests/Grand.Api.Tests.csproj

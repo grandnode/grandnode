@@ -68,7 +68,7 @@ namespace Grand.Services.Security
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._languageService = languageService;
-            this._cacheManager = cacheManager.FirstOrDefault(); 
+            this._cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
         }
 
         #endregion

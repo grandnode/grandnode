@@ -291,6 +291,20 @@ namespace Grand.Framework.Infrastructure.Extensions
                 .AddContentTypeOptionsNoSniff()
                 .AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365) // maxage = one year in seconds
                 .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+                .AddContentSecurityPolicy(builder =>
+                {
+                    builder.AddUpgradeInsecureRequests();
+                    builder.AddDefaultSrc().Self(); 
+                    builder.AddConnectSrc().From("*");
+                    builder.AddFontSrc().From("*");
+                    builder.AddFrameAncestors().From("*");
+                    builder.AddFrameSource().From("*");
+                    builder.AddMediaSrc().From("*");
+                    builder.AddImgSrc().From("*").Data();
+                    builder.AddObjectSrc().From("*");
+                    builder.AddScriptSrc().From("*").UnsafeInline().UnsafeEval();
+                    builder.AddStyleSrc().From("*").UnsafeEval().UnsafeInline();
+                })
                 .RemoveServerHeader();
 
             application.UseSecurityHeaders(policyCollection);
