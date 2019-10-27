@@ -6,6 +6,7 @@ using Grand.Services.Messages;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Newsletter;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Services
@@ -50,7 +51,8 @@ namespace Grand.Web.Services
                     Id = item.Id,
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
-                    Selected = item.Selected
+                    Selected = item.Selected,
+                    Published = item.Published
                 });
             }
             return model;
@@ -116,7 +118,7 @@ namespace Grand.Web.Services
 
                     model.Result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
                     var modelCategory = await PrepareNewsletterCategory(subscription.Id);
-                    if (modelCategory.NewsletterCategories.Count > 0)
+                    if (modelCategory.NewsletterCategories.Count > 0 && modelCategory.NewsletterCategories.Any(c => c.Published))
                     {
                         model.NewsletterCategory = modelCategory;
                     }

@@ -14807,6 +14807,12 @@
   <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Selected.hint">
     <Value>This option should be selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Published.hint">
+    <Value>If checked, Newsletter is published</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsletterCategory.Info">
     <Value>General info</Value>
   </LocaleResource>

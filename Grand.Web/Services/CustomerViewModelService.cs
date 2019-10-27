@@ -307,6 +307,7 @@ namespace Grand.Web.Services
                     Description = x.GetLocalized(y => y.Description, _workContext.WorkingLanguage.Id),
                     Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                     Selected = newsletter == null ? false : newsletter.Categories.Contains(x.Id),
+                    Published = x.Published
                 }));
 
                 model.Signature = await customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.Signature);
@@ -509,7 +510,8 @@ namespace Grand.Web.Services
                     Id = item.Id,
                     Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
-                    Selected = item.Selected
+                    Selected = item.Selected,
+                    Published = item.Published
                 });
             }
             return model;

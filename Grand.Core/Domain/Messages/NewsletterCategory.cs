@@ -27,6 +27,8 @@ namespace Grand.Core.Domain.Messages
         /// </summary>
         public bool Selected { get; set; }
 
+        public bool Published { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>

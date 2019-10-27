@@ -28,6 +28,9 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Selected")]
         public bool Selected { get; set; }
 
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Published")]
+        public bool Published { get; set; }
+
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
 
