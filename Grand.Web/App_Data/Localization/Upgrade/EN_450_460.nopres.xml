@@ -701,4 +701,10 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Class">
+    <Value>Css class</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Class.hint">
+    <Value>Allow to specify css class for category</Value>
+  </LocaleResource>
 </Language>
