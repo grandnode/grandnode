@@ -613,7 +613,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //discounts
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true))
+                .GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true))
                 .Select(d => d.ToModel())
                 .ToList();
             if (!excludeProperties && product != null)
@@ -972,7 +972,7 @@ namespace Grand.Web.Areas.Admin.Services
             //warehouses
             await SaveProductWarehouseInventory(product, model.ProductWarehouseInventoryModels);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1036,7 +1036,7 @@ namespace Grand.Web.Areas.Admin.Services
             //picture seo names
             await UpdatePictureSeoNames(product);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))

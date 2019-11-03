@@ -270,15 +270,17 @@ namespace Grand.Services.Catalog.Tests
             product.AppliedDiscounts.Add(discount001.Id);
 
             tempDiscountServiceMock.Setup(x => x.ValidateDiscount(discount001, customer)).ReturnsAsync(new DiscountValidationResult() { IsValid = true });
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToSkus, "1", "", "", false)).ReturnsAsync(new List<Discount>() { discount001 });
 
             var discountAmount = discount001.DiscountAmount;
             tempDiscountServiceMock.Setup(x => x.GetPreferredDiscount(It.IsAny<List<AppliedDiscount>>(), customer, product, 49.99M)).ReturnsAsync((new List<AppliedDiscount>(), 10));
 
             //it should return 39.99 - price cheaper about 10 
-            var pp = (await _priceCalcService.GetFinalPrice(product, customer, 0, true, 1)).finalPrice;
+            var finalprice = await _priceCalcService.GetFinalPrice(product, customer, 0, true, 1);
+            var pp = finalprice.finalPrice;
 
             Assert.AreEqual(39.99M, pp);
         }
@@ -307,9 +309,9 @@ namespace Grand.Services.Catalog.Tests
 
             customer001.ShoppingCartItems.Add(shoppingCartItem);
 
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
 
             Assert.AreEqual(49.99M, (await _priceCalcService.GetUnitPrice(shoppingCartItem)).unitprice);
         }
@@ -338,9 +340,9 @@ namespace Grand.Services.Catalog.Tests
 
             customer001.ShoppingCartItems.Add(shoppingCartItem);
 
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).ReturnsAsync(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
 
             Assert.AreEqual(110.22M,(await _priceCalcService.GetSubTotal(shoppingCartItem)).subTotal);
         }
