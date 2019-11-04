@@ -2188,6 +2188,7 @@ namespace Grand.Services.Orders
             //cancel discount
             await _discountService.CancelDiscount(order.Id);
 
+            //event notification
             await _mediator.Publish(new OrderCancelledEvent(order));
 
         }
@@ -2230,6 +2231,9 @@ namespace Grand.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
+
+            //event notification
+            await _mediator.Publish(new OrderMarkAsAuthorizedEvent(order));
 
             //check order status
             await CheckOrderStatus(order);
@@ -2278,6 +2282,9 @@ namespace Grand.Services.Orders
                 //old info from placing order
                 request.Order = order;
                 result = await _paymentService.Capture(request);
+
+                //event notification
+                await _mediator.CaptureOrderDetailsEvent(result, request);
 
                 if (result.Success)
                 {
@@ -2889,6 +2896,9 @@ namespace Grand.Services.Orders
                 request.Order = order;
                 result = await _paymentService.Void(request);
 
+                //event notification
+                await _mediator.VoidOrderDetailsEvent(result, request);
+
                 if (result.Success)
                 {
                     //update order info
@@ -2980,6 +2990,10 @@ namespace Grand.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
+
+            //event notification
+            await _mediator.Publish(new OrderVoidOfflineEvent(order));
+
             //check orer status
             await CheckOrderStatus(order);
         }
