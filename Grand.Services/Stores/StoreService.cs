@@ -154,19 +154,6 @@ namespace Grand.Services.Stores
             //event notification
             await _mediator.EntityUpdated(store);
         }
-
-        /// <summary>
-        /// Gets a store mapping 
-        /// </summary>
-        /// <param name="discountId">Discount id mapping identifier</param>
-        /// <returns>store mapping</returns>
-        public virtual async Task<IList<Store>> GetAllStoresByDiscount(string discountId)
-        {
-            var query = from c in _storeRepository.Table
-                        where c.AppliedDiscounts.Any(x => x == discountId)
-                        select c;
-            return await query.ToListAsync();
-        }
         #endregion
     }
 }

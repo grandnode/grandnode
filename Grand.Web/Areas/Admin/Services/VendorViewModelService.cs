@@ -69,7 +69,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-
+            
             model.AvailableDiscounts = (await _discountService
                 .GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true))
                 .Select(d => d.ToModel())

@@ -701,4 +701,7 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
+    <Value>You can't edit this discount, because it can be used in many stores.</Value>
+  </LocaleResource>
 </Language>

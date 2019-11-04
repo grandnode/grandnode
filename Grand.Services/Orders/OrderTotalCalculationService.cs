@@ -128,7 +128,7 @@ namespace Grand.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (discountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal, storeId: _storeContext.CurrentStore.Id);
             var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
@@ -171,7 +171,7 @@ namespace Grand.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (shippingDiscountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToShipping);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToShipping, storeId: _storeContext.CurrentStore.Id);
             var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
@@ -219,7 +219,7 @@ namespace Grand.Services.Orders
             if (_catalogSettings.IgnoreDiscounts)
                 return (discountAmount, appliedDiscounts);
 
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToOrderTotal);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToOrderTotal, storeId: _storeContext.CurrentStore.Id);
             var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)

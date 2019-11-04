@@ -954,6 +954,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableDiscountAmountProviders, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()));
 
@@ -962,6 +964,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()));
 
