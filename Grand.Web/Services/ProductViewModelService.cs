@@ -173,11 +173,7 @@ namespace Grand.Web.Services
 
             var models = new List<ProductOverviewModel>();
 
-            //LVL 1 background tasks may spawn tasks on their own, which would
-            //not be awaited if their's no lvl 2
-            //This is a pitfall of this approach and a learned lesson
             var lvl1BackgroundTasks = new List<Task>();
-            var lvl2BackgroundTasks = new List<Task>();
 
             foreach (var product in products)
             {
@@ -470,8 +466,8 @@ namespace Grand.Web.Services
                             Id = picture.PictureId
                         };
 
-                        lvl2BackgroundTasks.Add(_pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result));
-                        lvl2BackgroundTasks.Add(_pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result));
+                        await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                        await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
 
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
@@ -500,8 +496,8 @@ namespace Grand.Web.Services
                                 Id = picture.PictureId
                             };
 
-                            lvl2BackgroundTasks.Add(_pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result));
-                            lvl2BackgroundTasks.Add(_pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result));
+                            await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                            await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
 
                             //"title" attribute
                             pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
@@ -515,7 +511,6 @@ namespace Grand.Web.Services
                             return pictureModel;
                         }).ContinueWith(t => model.SecondPictureModel = t.Result));
                     }
-
                     #endregion
                 }
 
@@ -532,7 +527,6 @@ namespace Grand.Web.Services
             }
 
             await Task.WhenAll(lvl1BackgroundTasks);
-            await Task.WhenAll(lvl2BackgroundTasks);
 
             return models;
         }
