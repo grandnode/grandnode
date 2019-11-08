@@ -117,9 +117,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (!category.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                             return false;
                     }
-                    return true;
                 }
-
+                return true;
             }
             return false;
         }
@@ -169,8 +168,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (!manufacturer.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                             return false;
                     }
-                    return true;
                 }
+                return true;
             }
             return false;
         }
@@ -192,9 +191,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (!course.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
                             return false;
                     }
-                    return true;
                 }
-
+                return true;
             }
             return false;
         }
@@ -222,7 +220,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
 
 
         #region Methods
