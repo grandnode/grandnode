@@ -705,7 +705,7 @@
     <Value>You can't edit this discount, because it can be used in many stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew">
-    <Value>Add values generic attribute</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
     <Value>Save</Value>
@@ -713,11 +713,17 @@
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key">
+    <Value>Key</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key.Required">
     <Value>Key is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.ObjectType.Required">
     <Value>Object type is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value">
+    <Value>Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value.Required">
     <Value>Value is required.</Value>
