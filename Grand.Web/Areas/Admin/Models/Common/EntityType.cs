@@ -12,6 +12,7 @@
         CustomerRole = 7,
         Vendor = 8,
         Shipment = 9,
-        ReturnRequest = 10
+        ReturnRequest = 10,
+        Topic = 11
     }
 }

@@ -97,6 +97,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!await _permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                     return false;
             }
+            if (objType == EntityType.Topic)
+            {
+                if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                    return false;
+            }
             return true;
         }
         protected async Task<bool> PermissionForCategory(string id)
