@@ -4873,7 +4873,7 @@ namespace Grand.Services.Installation
                 DefaultMetaKeywords = "",
                 DefaultMetaDescription = "",
                 GenerateProductMetaDescription = true,
-                ConvertNonWesternChars = false,
+                ConvertNonWesternChars = true,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
                 WwwRequirement = WwwRequirement.NoMatter,
