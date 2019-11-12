@@ -474,79 +474,10 @@ namespace Grand.Web.Services
             }
 
             //subcategories
-            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
-                category.Id,
-                string.Join(",", customer.GetCustomerRoleIds()),
-                storeId,
-                languageId,
-                connectionSecured);
-            model.SubCategories = await _cacheManager.GetAsync(subCategoriesCacheKey, async () =>
-            {
-                var subCategories = new List<CategoryModel.SubCategoryModel>();
-                foreach (var x in (await _categoryService.GetAllCategoriesByParentCategoryId(category.Id)).Where(x => !x.HideOnCatalog))
-                {
-                    var subCatModel = new CategoryModel.SubCategoryModel {
-                        Id = x.Id,
-                        Name = x.GetLocalized(y => y.Name, languageId),
-                        SeName = x.GetSeName(languageId),
-                        Description = x.GetLocalized(y => y.Description, languageId),
-                        Flag = x.Flag,
-                        FlagStyle = x.FlagStyle
-                    };
-                    //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = await _pictureService.GetPictureById(x.PictureId);
-                    subCatModel.PictureModel = new PictureModel {
-                        Id = x.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
-                    };
-                    subCategories.Add(subCatModel);
-                };
-                return subCategories;
-            });
-
+            await SetupSubcategories(category, model, customer, storeId, languageId, connectionSecured);
 
             //featured products
-            if (!_catalogSettings.IgnoreFeaturedProducts)
-            {
-                //We cache a value indicating whether we have featured products
-                IPagedList<Product> featuredProducts = null;
-                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
-                    string.Join(",", customer.GetCustomerRoleIds()), storeId);
-                var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
-                if (!hasFeaturedProductsCache.HasValue)
-                {
-                    //no value in the cache yet
-                    //let's load products and cache the result (true/false)
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       categoryIds: new List<string> { category.Id },
-                       storeId: storeId,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
-                    hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
-                }
-                if (hasFeaturedProductsCache.Value && featuredProducts == null)
-                {
-                    //cache indicates that the category has featured products
-                    //let's load them
-                    featuredProducts = (await _productService.SearchProducts(
-                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
-                       categoryIds: new List<string> { category.Id },
-                       storeId: storeId,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true)).products;
-                }
-                if (featuredProducts != null)
-                {
-                    model.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
-                }
-            }
-
+            await SetupFeaturedProducts(category, model, customer, storeId);
 
             var categoryIds = new List<string>();
             categoryIds.Add(category.Id);
@@ -578,6 +509,94 @@ namespace Grand.Web.Services
                 _specificationAttributeService, _webHelper, _workContext, _cacheManager);
 
             return model;
+        }
+
+        private async Task SetupFeaturedProducts(Category category, CategoryModel model, Core.Domain.Customers.Customer customer, string storeId)
+        {
+            if (_catalogSettings.IgnoreFeaturedProducts)
+            {
+                return;
+            }
+
+            //We cache a value indicating whether we have featured products
+            IPagedList<Product> featuredProducts = null;
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
+                string.Join(",", customer.GetCustomerRoleIds()), storeId);
+            var hasFeaturedProductsCache = await _cacheManager.Get<bool?>(cacheKey);
+            if (!hasFeaturedProductsCache.HasValue)
+            {
+                //no value in the cache yet
+                //let's load products and cache the result (true/false)
+                featuredProducts = (await _productService.SearchProducts(
+                   pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                   categoryIds: new List<string> { category.Id },
+                   storeId: storeId,
+                   visibleIndividuallyOnly: true,
+                   featuredProducts: true)).products;
+                hasFeaturedProductsCache = featuredProducts.Any();
+                await _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+            }
+            if (hasFeaturedProductsCache.Value && featuredProducts == null)
+            {
+                //cache indicates that the category has featured products
+                //let's load them
+                featuredProducts = (await _productService.SearchProducts(
+                   pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                   categoryIds: new List<string> { category.Id },
+                   storeId: storeId,
+                   visibleIndividuallyOnly: true,
+                   featuredProducts: true)).products;
+            }
+            if (featuredProducts != null)
+            {
+                model.FeaturedProducts = (await _productViewModelService.PrepareProductOverviewModels(featuredProducts)).ToList();
+            }
+        }
+
+        private async Task SetupSubcategories(Category category, CategoryModel model, Core.Domain.Customers.Customer customer, string storeId, string languageId, bool connectionSecured)
+        {
+            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+                            category.Id,
+                            string.Join(",", customer.GetCustomerRoleIds()),
+                            storeId,
+                            languageId,
+                            connectionSecured);
+            model.SubCategories = await _cacheManager.GetAsync(subCategoriesCacheKey, async () =>
+            {
+                var subCategories = new List<CategoryModel.SubCategoryModel>();
+                var subCategoriesSearch = await _categoryService.GetAllCategoriesByParentCategoryId(category.Id);
+                var tasks = new List<Task<string>>();
+
+                foreach (var x in subCategoriesSearch.Where(x => !x.HideOnCatalog))
+                {
+                    var subCatModel = new CategoryModel.SubCategoryModel {
+                        Id = x.Id,
+                        Name = x.GetLocalized(y => y.Name, languageId),
+                        SeName = x.GetSeName(languageId),
+                        Description = x.GetLocalized(y => y.Description, languageId),
+                        Flag = x.Flag,
+                        FlagStyle = x.FlagStyle
+                    };
+                    //prepare picture model
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var picture = await _pictureService.GetPictureById(x.PictureId);
+
+                    //async parallel load urls
+                    tasks.Add(_pictureService.GetPictureUrl(picture).ContinueWith(t => subCatModel.PictureModel.FullSizeImageUrl = t.Result));
+                    tasks.Add(_pictureService.GetPictureUrl(picture, pictureSize).ContinueWith(t => subCatModel.PictureModel.ImageUrl = t.Result));
+
+                    subCatModel.PictureModel = new PictureModel {
+                        Id = x.PictureId,
+                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
+                    };
+                    subCategories.Add(subCatModel);
+                }
+
+                await Task.WhenAll(tasks);
+
+                return subCategories;
+            });
         }
 
         public virtual async Task<List<CategoryModel>> PrepareHomepageCategory()
@@ -1344,7 +1363,7 @@ namespace Grand.Web.Services
                     }
                 }
             }
-            
+
             if (_blogSettings.ShowBlogPostsInSearchAutoComplete)
             {
                 var posts = await _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
