@@ -5,6 +5,9 @@ namespace Grand.Plugin.Tax.CountryStateZip.Models
 {
     public class TaxRateModel : BaseGrandEntityModel
     {
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Name")]
+        public string Name { get; set; }
+
         [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
         public string StoreId { get; set; }
         [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
@@ -30,5 +33,8 @@ namespace Grand.Plugin.Tax.CountryStateZip.Models
 
         [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
         public decimal Percentage { get; set; }
+
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxIdNumber")]
+        public string TaxIdNumber { get; set; }
     }
 }

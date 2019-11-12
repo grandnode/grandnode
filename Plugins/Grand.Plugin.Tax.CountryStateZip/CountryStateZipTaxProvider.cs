@@ -65,12 +65,14 @@ namespace Grand.Plugin.Tax.CountryStateZip
                     return taxes.Select(x => new TaxRateForCaching
                     {
                         Id = x.Id,
+                        Name = x.Name,
                         StoreId = x.StoreId,
                         TaxCategoryId = x.TaxCategoryId,
                         CountryId = x.CountryId,
                         StateProvinceId = x.StateProvinceId,
                         Zip = x.Zip,
-                        Percentage = x.Percentage
+                        Percentage = x.Percentage,
+                        TaxIdNumber = x.TaxIdNumber,
                     });
                 });
 
@@ -125,6 +127,8 @@ namespace Grand.Plugin.Tax.CountryStateZip
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint", "If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip", "Zip");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Name", "Tax name");
+            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxIdNumber", "Tax ID number");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory", "Tax category");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint", "The tax category.");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage", "Percentage");
@@ -149,6 +153,8 @@ namespace Grand.Plugin.Tax.CountryStateZip
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Zip.Hint");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Name");
+            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxIdNumber");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Tax.CountryStateZip.Fields.Percentage");

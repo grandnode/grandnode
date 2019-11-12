@@ -8,6 +8,11 @@ namespace Grand.Plugin.Tax.CountryStateZip.Domain
     public partial class TaxRate : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the tax name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
         public string StoreId { get; set; }
@@ -36,5 +41,10 @@ namespace Grand.Plugin.Tax.CountryStateZip.Domain
         /// Gets or sets the percentage
         /// </summary>
         public decimal Percentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tax number issued from the government
+        /// </summary>
+        public string TaxIdNumber { get; set; }
     }
 }

@@ -91,12 +91,14 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
                 var m = new TaxRateModel
                 {
                     Id = x.Id,
+                    Name = x.Name,
                     StoreId = x.StoreId,
                     TaxCategoryId = x.TaxCategoryId,
                     CountryId = x.CountryId,
                     StateProvinceId = x.StateProvinceId,
                     Zip = x.Zip,
                     Percentage = x.Percentage,
+                    TaxIdNumber = x.TaxIdNumber,
                 };
                 //store
                 var store = await _storeService.GetStoreById(x.StoreId);
