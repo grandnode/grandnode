@@ -1,0 +1,21 @@
+image: mcr.microsoft.com/dotnet/core/sdk:3.0
+
+stages:
+  - build
+  - test
+
+default:
+  before_script:
+    - dotnet restore GrandNode.sln
+
+build:
+  stage: build
+  script:
+    - dotnet build Grand.Web
+
+test:
+  stage: test
+  script:
+    - dotnet test Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
+    - dotnet test Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
+    - dotnet test Tests/Grand.Plugin.Tests/Grand.Plugin.Tests.csproj
