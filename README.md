@@ -1,4 +1,4 @@
-# GrandNode : Free and Open Source Ecommerce #
+# GrandNode : Free and Open Source Ecommerce Platform #
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HFRGJMMY9KF7C)   [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/grandnode/Lobby)   [![Build status](https://ci.appveyor.com/api/projects/status/ox0qebg3wv3dp30e/branch/develop?svg=true)](https://ci.appveyor.com/project/KrzysztofPajak/grandnode/branch/develop)   [![Build Status](https://travis-ci.org/grandnode/grandnode.svg?branch=develop)](https://travis-ci.org/grandnode/grandnode)   [![Codacy Badge](https://api.codacy.com/project/badge/Grade/acbd143050984c1983d7cb0bd10b3472)](https://www.codacy.com/app/grandnode/grandnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=grandnode/grandnode&amp;utm_campaign=Badge_Grade)   ![Github All Releases](https://img.shields.io/github/downloads/grandnode/grandnode/total.svg) [![Demo](https://img.shields.io/badge/DEMO-HERE-green.svg)](https://demo.grandnode.com/)
 
@@ -25,13 +25,17 @@ GrandNode Site: [https://grandnode.com](https://grandnode.com)
 
 GrandNode demo store: [https://www.demo.grandnode.com/](https://www.demo.grandnode.com/)
 
-Complete feature list: [https://www.grandnode.com/features](https://www.grandnode.com/features)
+Complete feature list: [https://www.grandnode.com/benefits](https://www.grandnode.com/features)
 
 System Requirements: [https://grandnode.com/system-requirements](https://grandnode.com/system-requirements)
 
 Documentation: [http://www.docs.grandnode.com](http://www.docs.grandnode.com)
 
 Forums: [https://www.grandnode.com/boards/](https://www.grandnode.com/boards/)
+
+Premium themes: [https://grandnode.com/grandnode-themes](https://grandnode.com/grandnode-themes)
+
+Premium extensions: [https://grandnode.com/extensions](https://grandnode.com/extensions)
 
 ## Development status ##
 
