@@ -832,6 +832,14 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update catalog settings
+
+            var catalogSettings = _serviceProvider.GetRequiredService<CatalogSettings>();
+            catalogSettings.PeriodBestsellers = 6;
+            await _settingService.SaveSetting(catalogSettings);
+
+            #endregion
+
             #region Update topics
 
             IRepository<Topic> _topicRepository = _serviceProvider.GetRequiredService<IRepository<Topic>>();

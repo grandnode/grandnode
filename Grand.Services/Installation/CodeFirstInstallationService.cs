@@ -4993,6 +4993,7 @@ namespace Grand.Services.Installation
                 ShowProductImagesInSearchAutoComplete = true,
                 ShowBestsellersOnHomepage = false,
                 NumberOfBestsellersOnHomepage = 4,
+                PeriodBestsellers = 6,
                 SearchPageProductsPerPage = 6,
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",

@@ -1755,9 +1755,12 @@ namespace Grand.Web.Services
         {
             //load and cache report
             var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
+            var fromdate = DateTime.UtcNow.AddMonths(_catalogSettings.PeriodBestsellers > 0 ? -_catalogSettings.PeriodBestsellers : -12);
             var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
                 async () => await orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
+                        createdFromUtc: fromdate,
+                        ps: Core.Domain.Payments.PaymentStatus.Paid,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
                         );
 
