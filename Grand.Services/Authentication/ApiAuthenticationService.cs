@@ -12,7 +12,6 @@ namespace Grand.Services.Authentication
 {
     public partial class ApiAuthenticationService : IApiAuthenticationService
     {
-        private readonly ApiConfig _apiConfig;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICustomerService _customerService;
         private readonly IUserApiService _userApiService;
@@ -22,13 +21,12 @@ namespace Grand.Services.Authentication
         private string _errorMessage;
         private string _email;
 
-        public ApiAuthenticationService(ApiConfig apiConfig, IHttpContextAccessor httpContextAccessor,
+        public ApiAuthenticationService(IHttpContextAccessor httpContextAccessor,
             ICustomerService customerService, IUserApiService userApiService)
         {
-            this._apiConfig = apiConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._customerService = customerService;
-            this._userApiService = userApiService;
+            _httpContextAccessor = httpContextAccessor;
+            _customerService = customerService;
+            _userApiService = userApiService;
         }
 
         /// <summary>
