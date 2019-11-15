@@ -32,20 +32,6 @@ namespace Grand.Services.Common
         /// </remarks>
         private const string ADDRESSATTRIBUTES_BY_ID_KEY = "Grand.addressattribute.id-{0}";
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute ID
-        /// </remarks>
-        private const string ADDRESSATTRIBUTEVALUES_ALL_KEY = "Grand.addressattributevalue.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute value ID
-        /// </remarks>
-        private const string ADDRESSATTRIBUTEVALUES_BY_ID_KEY = "Grand.addressattributevalue.id-{0}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string ADDRESSATTRIBUTES_PATTERN_KEY = "Grand.addressattribute.";
@@ -70,14 +56,14 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="addressAttributeRepository">Address attribute repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public AddressAttributeService(ICacheManager cacheManager,
             IRepository<AddressAttribute> addressAttributeRepository,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._addressAttributeRepository = addressAttributeRepository;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _addressAttributeRepository = addressAttributeRepository;
+            _mediator = mediator;
         }
 
         #endregion

@@ -36,7 +36,7 @@ namespace Grand.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="productAlsoPurchased">Product also purchased repository</param>
+        /// <param name="productAlsoPurchasedRepository">Product also purchased repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
         public OrderReportService(IRepository<Order> orderRepository,
@@ -44,10 +44,10 @@ namespace Grand.Services.Orders
             IRepository<Product> productRepository,
             IDateTimeHelper dateTimeHelper)
         {
-            this._orderRepository = orderRepository;
-            this._productAlsoPurchasedRepository = productAlsoPurchasedRepository;
-            this._productRepository = productRepository;
-            this._dateTimeHelper = dateTimeHelper;
+            _orderRepository = orderRepository;
+            _productAlsoPurchasedRepository = productAlsoPurchasedRepository;
+            _productRepository = productRepository;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion

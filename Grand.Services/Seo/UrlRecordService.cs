@@ -66,9 +66,9 @@ namespace Grand.Services.Seo
             IRepository<UrlRecord> urlRecordRepository,
             LocalizationSettings localizationSettings)
         {
-            this._cacheManager = cacheManager;
-            this._urlRecordRepository = urlRecordRepository;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _urlRecordRepository = urlRecordRepository;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion

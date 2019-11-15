@@ -81,7 +81,6 @@ namespace Grand.Services.Discounts
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Store> _storeRepository;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -112,7 +111,6 @@ namespace Grand.Services.Discounts
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Vendor> vendorRepository,
-            IRepository<Store> storeRepository,
             PerRequestCacheManager perRequestCache,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings
@@ -131,7 +129,6 @@ namespace Grand.Services.Discounts
             _categoryRepository = categoryRepository;
             _manufacturerRepository = manufacturerRepository;
             _vendorRepository = vendorRepository;
-            _storeRepository = storeRepository;
             _perRequestCache = perRequestCache;
             _shoppingCartSettings = shoppingCartSettings;
             _catalogSettings = catalogSettings;

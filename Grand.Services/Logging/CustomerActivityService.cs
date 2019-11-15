@@ -60,12 +60,12 @@ namespace Grand.Services.Logging
             IWebHelper webHelper,
             IActivityKeywordsProvider activityKeywordsProvider)
         {
-            this._cacheManager = cacheManager;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._workContext = workContext;
-            this._webHelper = webHelper;
-            this._activityKeywordsProvider = activityKeywordsProvider;
+            _cacheManager = cacheManager;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _workContext = workContext;
+            _webHelper = webHelper;
+            _activityKeywordsProvider = activityKeywordsProvider;
         }
 
         #endregion

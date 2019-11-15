@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Topics;
 using Grand.Services.Customers;
 using Grand.Services.Events;
@@ -50,7 +49,6 @@ namespace Grand.Services.Topics
 
         private readonly IRepository<Topic> _topicRepository;
         private readonly IWorkContext _workContext;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMediator _mediator;
@@ -61,20 +59,18 @@ namespace Grand.Services.Topics
         #region Ctor
 
         public TopicService(IRepository<Topic> topicRepository,
-            IRepository<AclRecord> aclRepository,
             IWorkContext workContext,
             IStoreMappingService storeMappingService,
             CatalogSettings catalogSettings,
             IMediator mediator,
             ICacheManager cacheManager)
         {
-            this._topicRepository = topicRepository;
-            this._aclRepository = aclRepository;
-            this._workContext = workContext;
-            this._storeMappingService = storeMappingService;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
+            _topicRepository = topicRepository;
+            _workContext = workContext;
+            _storeMappingService = storeMappingService;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
         }
 
         #endregion

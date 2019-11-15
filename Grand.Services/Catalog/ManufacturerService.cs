@@ -93,7 +93,7 @@ namespace Grand.Services.Catalog
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="aclService">Acl service </param>
         public ManufacturerService(ICacheManager cacheManager,
@@ -106,15 +106,15 @@ namespace Grand.Services.Catalog
             IStoreMappingService storeMappingService,
             IAclService aclService)
         {
-            this._cacheManager = cacheManager;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productRepository = productRepository;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
+            _cacheManager = cacheManager;
+            _manufacturerRepository = manufacturerRepository;
+            _productRepository = productRepository;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
         }
         #endregion
 

@@ -63,12 +63,12 @@ namespace Grand.Services.Security
             ILanguageService languageService,
             IEnumerable<ICacheManager> cacheManager)
         {
-            this._permissionRecordRepository = permissionRecordRepository;
-            this._customerService = customerService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _permissionRecordRepository = permissionRecordRepository;
+            _customerService = customerService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
         }
 
         #endregion

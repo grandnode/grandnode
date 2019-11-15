@@ -87,29 +87,29 @@ namespace Grand.Services.Common
             TaxSettings taxSettings,
             AddressSettings addressSettings)
         {
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._workContext = workContext;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._downloadService = downloadService;
-            this._serviceProvider = serviceProvider;
-            this._settingContext = settingContext;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._catalogSettings = catalogSettings;
-            this._measureSettings = measureSettings;
-            this._pdfSettings = pdfSettings;
-            this._taxSettings = taxSettings;
-            this._addressSettings = addressSettings;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _workContext = workContext;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _measureService = measureService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _productAttributeParser = productAttributeParser;
+            _storeService = storeService;
+            _storeContext = storeContext;
+            _downloadService = downloadService;
+            _serviceProvider = serviceProvider;
+            _settingContext = settingContext;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _catalogSettings = catalogSettings;
+            _measureSettings = measureSettings;
+            _pdfSettings = pdfSettings;
+            _taxSettings = taxSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion

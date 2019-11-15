@@ -68,9 +68,8 @@ namespace Grand.Services.Localization
         /// <param name="logger">Logger</param>
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
-        /// <param name="languageService">Language service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public LocalizationService(IEnumerable<ICacheManager> cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,

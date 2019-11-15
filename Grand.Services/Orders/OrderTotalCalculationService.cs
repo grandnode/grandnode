@@ -90,24 +90,24 @@ namespace Grand.Services.Orders
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._priceCalculationService = priceCalculationService;
-            this._taxService = taxService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._discountService = discountService;
-            this._giftCardService = giftCardService;
-            this._genericAttributeService = genericAttributeService;
-            this._rewardPointsService = rewardPointsService;
-            this._productService = productService;
-            this._currencyService = currencyService;
-            this._taxSettings = taxSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _shippingService = shippingService;
+            _paymentService = paymentService;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _discountService = discountService;
+            _giftCardService = giftCardService;
+            _genericAttributeService = genericAttributeService;
+            _rewardPointsService = rewardPointsService;
+            _productService = productService;
+            _currencyService = currencyService;
+            _taxSettings = taxSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

@@ -26,7 +26,6 @@ namespace Grand.Services.Messages
         private readonly IRepository<Customer> _customerRepository;
         private readonly IEmailSender _emailSender;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly ITokenizer _tokenizer;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ICustomerService _customerService;
         private readonly IStoreContext _storeContext;
@@ -40,27 +39,26 @@ namespace Grand.Services.Messages
             IRepository<NewsLetterSubscription> newsLetterSubscriptionRepository,
             IRepository<Customer> customerRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
+            IQueuedEmailService queuedEmailService,
             ICustomerService customerService, IStoreContext storeContext,
             IMediator mediator,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             IServiceProvider serviceProvider)
         {
-            this._campaignRepository = campaignRepository;
-            this._campaignHistoryRepository = campaignHistoryRepository;
-            this._newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
-            this._customerRepository = customerRepository;
-            this._emailSender = emailSender;
-            this._messageTokenProvider = messageTokenProvider;
-            this._tokenizer = tokenizer;
-            this._queuedEmailService = queuedEmailService;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._mediator = mediator;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _campaignRepository = campaignRepository;
+            _campaignHistoryRepository = campaignHistoryRepository;
+            _newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
+            _customerRepository = customerRepository;
+            _emailSender = emailSender;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _storeContext = storeContext;
+            _customerService = customerService;
+            _mediator = mediator;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>

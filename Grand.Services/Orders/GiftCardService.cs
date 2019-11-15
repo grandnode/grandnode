@@ -30,7 +30,7 @@ namespace Grand.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public GiftCardService(IRepository<GiftCard> giftCardRepository, IMediator mediator)
         {
             _giftCardRepository = giftCardRepository;
