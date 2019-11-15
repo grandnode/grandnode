@@ -107,11 +107,13 @@ namespace Grand.Web.Controllers
             if (!await _orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
+            ModelState.Clear();
+
             string pD = form["pickupDate"];
             DateTime pickupDate = default(DateTime);
             if (!string.IsNullOrEmpty(pD))
             {
-                pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);                
             }
             else if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate && _orderSettings.ReturnRequests_PickupDateRequired)
             {
@@ -134,6 +136,7 @@ namespace Grand.Web.Controllers
                     {
                         ModelState.AddModelError("", error);
                     }
+                    await TryUpdateModelAsync(model.NewAddress, "ReturnRequestNewAddress");
                     address = model.NewAddress.ToEntity();
                     model.NewAddressPreselected = true;
                     address.CustomAttributes = customAttributes;
@@ -161,7 +164,6 @@ namespace Grand.Web.Controllers
                 PickupDate = pickupDate
             };
 
-            int count = 0;
             foreach (var orderItem in order.OrderItems)
             {
                 var product = await _productService.GetProductById(orderItem.ProductId);
@@ -200,13 +202,11 @@ namespace Grand.Web.Controllers
                             Quantity = quantity,
                             OrderItemId = orderItem.Id
                         });
-
-                        count++;
                     }
                 }
             }
             model = await _returnRequestViewModelService.PrepareReturnRequest(model, order);
-            if (count > 0)
+            if (rr.ReturnRequestItems.Any())
             {
                 await _returnRequestService.InsertReturnRequest(rr);
 
