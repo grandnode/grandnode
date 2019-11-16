@@ -13,9 +13,9 @@ namespace Grand.Services.Orders
     {
         public PlaceOrderContainter()
         {
-            this.Cart = new List<ShoppingCartItem>();
-            this.AppliedDiscounts = new List<AppliedDiscount>();
-            this.AppliedGiftCards = new List<AppliedGiftCard>();
+            Cart = new List<ShoppingCartItem>();
+            AppliedDiscounts = new List<AppliedDiscount>();
+            AppliedGiftCards = new List<AppliedGiftCard>();
         }
 
         public Customer Customer { get; set; }

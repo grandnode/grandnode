@@ -35,7 +35,6 @@ namespace Grand.Services.Catalog
         private readonly ICustomerService _customerService;
         private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
-        private readonly IStoreService _storeService;
         private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -54,25 +53,23 @@ namespace Grand.Services.Catalog
             ICustomerService customerService,
             ICacheManager cacheManager,
             IVendorService vendorService,
-            IStoreService storeService,
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._discountService = discountService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._cacheManager = cacheManager;
-            this._vendorService = vendorService;
-            this._storeService = storeService;
-            this._currencyService = currencyService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _discountService = discountService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _customerService = customerService;
+            _cacheManager = cacheManager;
+            _vendorService = vendorService;
+            _currencyService = currencyService;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -90,7 +87,7 @@ namespace Grand.Services.Catalog
             public decimal AppliedDiscountAmount { get; set; }
             public IList<AppliedDiscount> AppliedDiscounts { get; set; }
             public TierPrice PreferredTierPrice { get; set; }
-            
+
         }
         #endregion
 
@@ -118,8 +115,7 @@ namespace Grand.Services.Catalog
                         var validDiscount = await _discountService.ValidateDiscount(discount, customer);
                         if (validDiscount.IsValid &&
                             discount.DiscountType == DiscountType.AssignedToSkus)
-                            allowedDiscounts.Add(new AppliedDiscount()
-                            {
+                            allowedDiscounts.Add(new AppliedDiscount() {
                                 CouponCode = validDiscount.CouponCode,
                                 DiscountId = discount.Id,
                                 IsCumulative = discount.IsCumulative
@@ -136,13 +132,12 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            var discounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToAllProducts);
+            var discounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToAllProducts, storeId: _storeContext.CurrentStore.Id);
             foreach (var discount in discounts)
             {
                 var validDiscount = await _discountService.ValidateDiscount(discount, customer);
                 if (validDiscount.IsValid)
-                    allowedDiscounts.Add(new AppliedDiscount()
-                    {
+                    allowedDiscounts.Add(new AppliedDiscount() {
                         CouponCode = validDiscount.CouponCode,
                         DiscountId = discount.Id,
                         IsCumulative = discount.IsCumulative
@@ -176,8 +171,7 @@ namespace Grand.Services.Catalog
                         {
                             var validDiscount = await _discountService.ValidateDiscount(discount, customer);
                             if (validDiscount.IsValid && discount.DiscountType == DiscountType.AssignedToCategories)
-                                allowedDiscounts.Add(new AppliedDiscount()
-                                {
+                                allowedDiscounts.Add(new AppliedDiscount() {
                                     CouponCode = validDiscount.CouponCode,
                                     DiscountId = discount.Id,
                                     IsCumulative = discount.IsCumulative
@@ -214,8 +208,7 @@ namespace Grand.Services.Catalog
                             var validDiscount = await _discountService.ValidateDiscount(discount, customer);
                             if (validDiscount.IsValid &&
                                      discount.DiscountType == DiscountType.AssignedToManufacturers)
-                                allowedDiscounts.Add(new AppliedDiscount()
-                                {
+                                allowedDiscounts.Add(new AppliedDiscount() {
                                     CouponCode = validDiscount.CouponCode,
                                     DiscountId = discount.Id,
                                     IsCumulative = discount.IsCumulative
@@ -254,61 +247,11 @@ namespace Grand.Services.Catalog
                                 var validDiscount = await _discountService.ValidateDiscount(discount, customer);
                                 if (validDiscount.IsValid &&
                                          discount.DiscountType == DiscountType.AssignedToVendors)
-                                    allowedDiscounts.Add(new AppliedDiscount()
-                                    {
+                                    allowedDiscounts.Add(new AppliedDiscount() {
                                         CouponCode = validDiscount.CouponCode,
                                         DiscountId = discount.Id,
                                         IsCumulative = discount.IsCumulative,
                                     });
-                            }
-                        }
-                    }
-                }
-            }
-            return allowedDiscounts;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="product"></param>
-        /// <param name="customer"></param>
-        /// <returns></returns>
-        protected virtual async Task<IList<AppliedDiscount>> GetAllowedDiscountsAppliedToStores(Product product, Customer customer)
-        {
-            var allowedDiscounts = new List<AppliedDiscount>();
-            if (_catalogSettings.IgnoreDiscounts)
-                return allowedDiscounts;
-
-            if (product.LimitedToStores == false)
-            {
-                //Products that don't have any Store (inside Stores collection) shouldn't have any Discount by Store
-            }
-            else
-            {
-                //if it is limited to store, it means it should have at least one Store assigned
-                foreach (var storeID in product.Stores)
-                {
-                    if (!(string.IsNullOrEmpty(storeID)))
-                    {
-                        var store = await _storeService.GetStoreById(storeID);
-                        if (store != null && store.AppliedDiscounts.Any())
-                        {
-                            foreach (var appliedDiscount in store.AppliedDiscounts)
-                            {
-                                var discount = await _discountService.GetDiscountById(appliedDiscount);
-                                if (discount != null)
-                                {
-                                    var validDiscount = await _discountService.ValidateDiscount(discount, customer);
-                                    if (validDiscount.IsValid &&
-                                             discount.DiscountType == DiscountType.AssignedToStores)
-                                        allowedDiscounts.Add(new AppliedDiscount()
-                                        {
-                                            CouponCode = validDiscount.CouponCode,
-                                            DiscountId = discount.Id,
-                                            IsCumulative = discount.IsCumulative
-                                        });
-                                }
                             }
                         }
                     }
@@ -351,11 +294,6 @@ namespace Grand.Services.Catalog
 
             //discounts applied to vendors
             foreach (var discount in await GetAllowedDiscountsAppliedToVendors(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
-
-            //discounts applied to stores
-            foreach (var discount in await GetAllowedDiscountsAppliedToStores(product, customer))
                 if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
@@ -422,7 +360,7 @@ namespace Grand.Services.Catalog
         {
             return await GetFinalPrice(product, customer, additionalCharge, includeDiscounts, quantity, null, null);
         }
-       
+
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -532,7 +470,7 @@ namespace Grand.Services.Catalog
                 return result;
             }
 
-            var cachedPrice = cacheTime > 0 ?  await _cacheManager.Get(cacheKey, cacheTime, () => { return PrepareModel(); }) : await PrepareModel();
+            var cachedPrice = cacheTime > 0 ? await _cacheManager.Get(cacheKey, cacheTime, () => { return PrepareModel(); }) : await PrepareModel();
 
             if (includeDiscounts)
             {
@@ -690,7 +628,7 @@ namespace Grand.Services.Catalog
             }
             return (finalPrice.Value, discountAmount, appliedDiscounts);
         }
-        
+
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>

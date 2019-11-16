@@ -270,6 +270,11 @@ namespace Grand.Core.Domain.Catalog
         public int NumberOfBestsellersOnHomepage { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of time period for bestsellers on home page
+        /// </summary>
+        public int PeriodBestsellers { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of review on product page
         /// </summary>
         public int NumberOfReview { get; set; }

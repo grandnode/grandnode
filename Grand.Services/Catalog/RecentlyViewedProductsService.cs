@@ -1,6 +1,5 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ namespace Grand.Services.Catalog
     {
         #region Fields
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProducts;
@@ -26,16 +24,14 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="httpContext">HTTP context</param>
         /// <param name="productService">Product service</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        public RecentlyViewedProductsService(IHttpContextAccessor httpContextAccessor, IProductService productService,
+        public RecentlyViewedProductsService(IProductService productService,
             CatalogSettings catalogSettings, IRepository<RecentlyViewedProduct> recentlyViewedProducts)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
-            this._recentlyViewedProducts = recentlyViewedProducts;
+            _productService = productService;
+            _catalogSettings = catalogSettings;
+            _recentlyViewedProducts = recentlyViewedProducts;
         }
 
         #endregion

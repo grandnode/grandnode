@@ -9,6 +9,7 @@ namespace Grand.Services.Common
     public partial interface IGenericAttributeService
     {
         Task SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, string storeId = "");
+        Task SaveAttribute<TPropType>(string entity, string entityId, string key, TPropType value, string storeId = "");
         Task<TPropType> GetAttributesForEntity<TPropType>(BaseEntity entity, string key, string storeId = "");
     }
 }

@@ -32,9 +32,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly CustomerSettings _customerSettings;
         private readonly IMediator _mediator;
-        private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IMessageTokenProvider _messageTokenProvider;
@@ -54,9 +52,7 @@ namespace Grand.Services.Customers
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
-            CustomerSettings customerSettings,
             IMediator mediator,
-            ITokenizer tokenizer,
             IEmailAccountService emailAccountService,
             IQueuedEmailService queuedEmailService,
             IMessageTokenProvider messageTokenProvider,
@@ -67,22 +63,20 @@ namespace Grand.Services.Customers
             ILocalizationService localizationService,
             IServiceProvider serviceProvider)
         {
-            this._customerReminderRepository = customerReminderRepository;
-            this._customerReminderHistoryRepository = customerReminderHistoryRepository;
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
-            this._customerSettings = customerSettings;
-            this._mediator = mediator;
-            this._tokenizer = tokenizer;
-            this._emailAccountService = emailAccountService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._queuedEmailService = queuedEmailService;
-            this._storeService = storeService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._productService = productService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _customerReminderRepository = customerReminderRepository;
+            _customerReminderHistoryRepository = customerReminderHistoryRepository;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _mediator = mediator;
+            _emailAccountService = emailAccountService;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _storeService = storeService;
+            _customerAttributeParser = customerAttributeParser;
+            _productService = productService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

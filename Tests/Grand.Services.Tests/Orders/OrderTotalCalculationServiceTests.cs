@@ -1,10 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
@@ -16,12 +14,10 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
-using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using MediatR;
@@ -60,7 +56,6 @@ namespace Grand.Services.Orders.Tests
         private IRepository<ShippingMethod> _shippingMethodRepository;
         private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
-        private IRepository<PickupPoint> _pickupPointRepository;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private IMediator _eventPublisher;
@@ -70,9 +65,7 @@ namespace Grand.Services.Orders.Tests
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
-        private CurrencySettings _currencySettings;
         private IVendorService _vendorService;
-        private IStoreService _storeService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
         private IServiceProvider _serviceProvider;
@@ -104,19 +97,17 @@ namespace Grand.Services.Orders.Tests
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _vendorService = new Mock<IVendorService>().Object;
-            _storeService = new Mock<IStoreService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
             _serviceProvider = new Mock<IServiceProvider>().Object;
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _currencySettings = new CurrencySettings();
             _customerService = new Mock<ICustomerService>().Object;
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _storeService, _currencyService,
+                cacheManager, _vendorService, _currencyService,
                 _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IMediator>();
@@ -134,14 +125,11 @@ namespace Grand.Services.Orders.Tests
             _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>().Object;
             _deliveryDateRepository = new Mock<IRepository<DeliveryDate>>().Object;
             _warehouseRepository = new Mock<IRepository<Warehouse>>().Object;
-            _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
-
             _logger = new NullLogger();
             _paymentService = new Mock<IPaymentService>().Object;
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _giftCardService = new Mock<IGiftCardService>().Object;
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
-
             _geoLookupService = new Mock<IGeoLookupService>().Object;
             _countryService = new Mock<ICountryService>().Object;
             _customerSettings = new CustomerSettings();

@@ -39,7 +39,6 @@ namespace Grand.Services.Installation
         #region Fields
         private readonly IServiceProvider _serviceProvider;
         private readonly IRepository<GrandNodeVersion> _versionRepository;
-        private readonly IWebHelper _webHelper;
 
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
@@ -51,11 +50,10 @@ namespace Grand.Services.Installation
         #endregion
 
         #region Ctor
-        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository, IWebHelper webHelper)
+        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository)
         {
             _serviceProvider = serviceProvider;
             _versionRepository = versionRepository;
-            _webHelper = webHelper;
         }
         #endregion
 
@@ -93,6 +91,11 @@ namespace Grand.Services.Installation
             {
                 await From440To450();
                 fromversion = version_450;
+            }
+            if (fromversion == version_450)
+            {
+                await From450To460();
+                fromversion = version_460;
             }
             if (fromversion == toversion)
             {
@@ -829,6 +832,14 @@ namespace Grand.Services.Installation
             customerSettings.HideReviewsTab = false;
             customerSettings.HideCoursesTab = true;
             await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
+            #region Update catalog settings
+
+            var catalogSettings = _serviceProvider.GetRequiredService<CatalogSettings>();
+            catalogSettings.PeriodBestsellers = 6;
+            await _settingService.SaveSetting(catalogSettings);
 
             #endregion
 

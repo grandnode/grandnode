@@ -22,8 +22,8 @@ namespace Grand.Services.Messages
             IRepository<ContactUs> contactusRepository,
             IMediator mediator)
         {
-            this._contactusRepository = contactusRepository;
-            this._mediator = mediator;
+            _contactusRepository = contactusRepository;
+            _mediator = mediator;
         }
         /// <summary>
         /// Deletes a contactus item

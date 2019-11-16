@@ -65,9 +65,9 @@ namespace Grand.Services.Catalog
         public CompareProductsService(IHttpContextAccessor httpContextAccessor, IProductService productService,
             CatalogSettings catalogSettings)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
+            _httpContextAccessor = httpContextAccessor;
+            _productService = productService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

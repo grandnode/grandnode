@@ -54,21 +54,20 @@ namespace Grand.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._countryRepository = countryRepository;
-            this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _countryRepository = countryRepository;
+            _storeContext = storeContext;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
         }
 
         #endregion

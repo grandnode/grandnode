@@ -9,7 +9,7 @@ namespace Grand.Services.Tasks
 
         public CustomerReminderAbandonedCartScheduleTask(ICustomerReminderService customerReminderService)
         {
-            this._customerReminderService = customerReminderService;
+            _customerReminderService = customerReminderService;
         }
 
         public async Task Execute()

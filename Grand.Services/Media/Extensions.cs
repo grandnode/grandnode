@@ -17,7 +17,7 @@ namespace Grand.Services.Media
         /// <summary>
         /// Gets the download binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">Posted file</param>
         /// <returns>Download binary array</returns>
         public static byte[] GetDownloadBits(this IFormFile file)
         {

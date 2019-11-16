@@ -34,10 +34,10 @@ namespace Grand.Services.Polls
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
-            this._pollRepository = pollRepository;
-            this._mediator = mediator;
-            this._workContext = workContext;
-            this._catalogSettings = catalogSettings;
+            _pollRepository = pollRepository;
+            _mediator = mediator;
+            _workContext = workContext;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

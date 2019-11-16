@@ -34,16 +34,16 @@ namespace Grand.Services.Orders
         /// <param name="returnRequestRepository">Return request repository</param>
         /// <param name="returnRequestActionRepository">Return request action repository</param>
         /// <param name="returnRequestReasonRepository">Return request reason repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
             IMediator mediator)
         {
-            this._returnRequestRepository = returnRequestRepository;
-            this._returnRequestActionRepository = returnRequestActionRepository;
-            this._returnRequestReasonRepository = returnRequestReasonRepository;
-            this._mediator = mediator;
+            _returnRequestRepository = returnRequestRepository;
+            _returnRequestActionRepository = returnRequestActionRepository;
+            _returnRequestReasonRepository = returnRequestReasonRepository;
+            _mediator = mediator;
         }
 
         #endregion
@@ -78,7 +78,7 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets a return request
         /// </summary>
-        /// <param name="returnRequestId">Return request identifier</param>
+        /// <param name="id">Return request identifier</param>
         /// <returns>Return request</returns>
         public virtual Task<ReturnRequest> GetReturnRequestById(int id)
         {

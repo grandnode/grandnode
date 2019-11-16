@@ -97,7 +97,7 @@ namespace Grand.Services.Directory
         /// <param name="measureWeightRepository">Weight repository</param>
         /// <param name="measureUnitRepository">Unit repository</param>
         /// <param name="measureSettings">Measure settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public MeasureService(ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,

@@ -701,4 +701,43 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
+    <Value>You can't edit this discount, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew">
+    <Value>Add new generic attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
+    <Value>Id is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key">
+    <Value>Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key.Required">
+    <Value>Key is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.ObjectType.Required">
+    <Value>Object type is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value.Required">
+    <Value>Value is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Permission">
+    <Value>You don't have permission to add new value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.SaveBeforeEdit">
+    <Value>You need to save object before you can add values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Tab">
+    <Value>Generic attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.genericattributes.fields.store">
+    <Value>Select store</Value>
+  </LocaleResource>
 </Language>

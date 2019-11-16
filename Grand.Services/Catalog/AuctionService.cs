@@ -37,12 +37,12 @@ namespace Grand.Services.Catalog
             ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
-            this._bidRepository = bidRepository;
-            this._mediator = mediator;
-            this._productService = productService;
-            this._productRepository = productRepository;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
+            _bidRepository = bidRepository;
+            _mediator = mediator;
+            _productService = productService;
+            _productRepository = productRepository;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task DeleteBid(Bid bid)

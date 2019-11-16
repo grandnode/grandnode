@@ -1,7 +1,6 @@
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
 using MediatR;
@@ -25,7 +24,6 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerTag> _customerTagRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly CommonSettings _commonSettings;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
 
@@ -49,17 +47,15 @@ namespace Grand.Services.Customers
         public CustomerTagService(IRepository<CustomerTag> customerTagRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<Customer> customerRepository,
-            CommonSettings commonSettings,
             IMediator mediator,
             ICacheManager cacheManager
             )
         {
-            this._customerTagRepository = customerTagRepository;
-            this._customerTagProductRepository = customerTagProductRepository;
-            this._commonSettings = commonSettings;
-            this._mediator = mediator;
-            this._customerRepository = customerRepository;
-            this._cacheManager = cacheManager;
+            _customerTagRepository = customerTagRepository;
+            _customerTagProductRepository = customerTagProductRepository;
+            _mediator = mediator;
+            _customerRepository = customerRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion

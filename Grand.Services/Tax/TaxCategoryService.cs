@@ -60,7 +60,7 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxCategoryRepository">Tax category repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
             IMediator mediator, IRepository<Product> productRepository)

@@ -34,16 +34,16 @@ namespace Grand.Services.Orders
         /// <param name="rphRepository">RewardPointsHistory repository</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public RewardPointsService(IRepository<RewardPointsHistory> rphRepository,
             RewardPointsSettings rewardPointsSettings,
             IStoreContext storeContext,
             IMediator mediator)
         {
-            this._rphRepository = rphRepository;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._storeContext = storeContext;
-            this._mediator = mediator;
+            _rphRepository = rphRepository;
+            _rewardPointsSettings = rewardPointsSettings;
+            _storeContext = storeContext;
+            _mediator = mediator;
         }
         #endregion
 

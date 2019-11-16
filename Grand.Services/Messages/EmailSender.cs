@@ -23,9 +23,9 @@ namespace Grand.Services.Messages
 
         public EmailSender(ILogger logger, IDownloadService downloadService, IMimeMappingService mimeMappingService)
         {
-            this._downloadService = downloadService;
-            this._mimeMappingService = mimeMappingService;
-            this._logger = logger;
+            _downloadService = downloadService;
+            _mimeMappingService = mimeMappingService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -38,13 +38,13 @@ namespace Grand.Services.Messages
         /// <param name="fromName">From display name</param>
         /// <param name="toAddress">To address</param>
         /// <param name="toName">To display name</param>
-        /// <param name="replyTo">ReplyTo address</param>
+        /// <param name="replyToAddress">ReplyTo address</param>
         /// <param name="replyToName">ReplyTo display name</param>
-        /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses list</param>
+        /// <param name="bccAddresses">BCC addresses list</param>
+        /// <param name="ccAddresses">CC addresses list</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="attachedDownloads">Attachment download ID (another attachedment)</param>
         public virtual async Task SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,

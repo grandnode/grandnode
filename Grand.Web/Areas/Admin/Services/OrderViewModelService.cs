@@ -356,6 +356,7 @@ namespace Grand.Web.Areas.Admin.Services
             var store = await _storeService.GetStoreById(order.StoreId);
             model.StoreName = store != null ? store.Name : "Unknown";
             model.CustomerId = order.CustomerId;
+            model.GenericAttributes = order.GenericAttributes;
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");

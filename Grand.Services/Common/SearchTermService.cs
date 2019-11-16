@@ -28,8 +28,8 @@ namespace Grand.Services.Common
         public SearchTermService(IRepository<SearchTerm> searchTermRepository,
             IMediator mediator)
         {
-            this._searchTermRepository = searchTermRepository;
-            this._mediator = mediator;
+            _searchTermRepository = searchTermRepository;
+            _mediator = mediator;
         }
 
         #endregion
