@@ -91,6 +91,11 @@
                             dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
                             <partial name="_ProductAttributes" model="Model.ProductAttributes" view-data="dataDictAttributes" />
                         }
+                        <!--warehouses-->
+                        @if (Model.AllowToSelectWarehouse)
+                        {
+                            <partial name="_ProductWarehouses" model="Model" />
+                        }
                         <!--gift card-->
                         @{
                             var dataDictGiftCard = new ViewDataDictionary(ViewData);

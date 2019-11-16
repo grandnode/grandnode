@@ -3,7 +3,6 @@ using Grand.Core.Caching;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;

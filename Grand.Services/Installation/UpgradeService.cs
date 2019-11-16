@@ -11,12 +11,13 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
-using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -38,7 +39,6 @@ namespace Grand.Services.Installation
         #region Fields
         private readonly IServiceProvider _serviceProvider;
         private readonly IRepository<GrandNodeVersion> _versionRepository;
-        private readonly IWebHelper _webHelper;
 
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
@@ -46,15 +46,14 @@ namespace Grand.Services.Installation
         private const string version_430 = "4.30";
         private const string version_440 = "4.40";
         private const string version_450 = "4.50";
-
+        private const string version_460 = "4.60";
         #endregion
 
         #region Ctor
-        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository, IWebHelper webHelper)
+        public UpgradeService(IServiceProvider serviceProvider, IRepository<GrandNodeVersion> versionRepository)
         {
             _serviceProvider = serviceProvider;
             _versionRepository = versionRepository;
-            _webHelper = webHelper;
         }
         #endregion
 
@@ -92,6 +91,11 @@ namespace Grand.Services.Installation
             {
                 await From440To450();
                 fromversion = version_450;
+            }
+            if (fromversion == version_450)
+            {
+                await From450To460();
+                fromversion = version_460;
             }
             if (fromversion == toversion)
             {
@@ -574,6 +578,7 @@ namespace Grand.Services.Installation
             IPermissionProvider provider = new StandardPermissionProvider();
             await _serviceProvider.GetRequiredService<IPermissionService>().InstallPermissions(provider);
             #endregion
+
             #region Update tags on the products
 
             var productTagService = _serviceProvider.GetRequiredService<IProductTagService>();
@@ -695,6 +700,42 @@ namespace Grand.Services.Installation
             }
             #endregion
 
+            #region Update topics - rename fields
+
+            var renameFields = Builders<object>.Update
+                .Rename("IncludeInFooterColumn1", "IncludeInFooterRow1")
+                .Rename("IncludeInFooterColumn2", "IncludeInFooterRow2")
+                .Rename("IncludeInFooterColumn3", "IncludeInFooterRow3");
+
+            var dbContext = _serviceProvider.GetRequiredService<IMongoDatabase>();
+            await dbContext.GetCollection<object>(typeof(Topic).Name).UpdateManyAsync(new BsonDocument(), renameFields);
+
+            #endregion
+
+            #region Update order - primary currency code
+
+            var pc = await _serviceProvider.GetRequiredService<ICurrencyService>().GetPrimaryStoreCurrency();
+            var updateOrder = Builders<Order>.Update
+               .Set(x => x.PrimaryCurrencyCode, pc.CurrencyCode);
+
+            var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
+
+            await orderRepository.Collection.UpdateOneAsync(new BsonDocument(), updateOrder);
+
+            #endregion
+
+            #region Insert new system customer role - staff
+
+            var crStaff = new CustomerRole {
+                Name = "Staff",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Staff,
+            };
+            await _serviceProvider.GetRequiredService<IRepository<CustomerRole>>().InsertAsync(crStaff);
+
+            #endregion
+
             #region Permisions
 
             IPermissionProvider provider = new StandardPermissionProvider();
@@ -702,7 +743,129 @@ namespace Grand.Services.Installation
 
             #endregion
         }
+        private async Task From450To460()
+        {
+            #region Install String resources
 
+            await InstallStringResources("EN_450_460.nopres.xml");
+
+            #endregion
+
+            #region Add new customer action - paid order
+
+            var customerActionType = _serviceProvider.GetRequiredService<IRepository<CustomerActionType>>();
+            await customerActionType.InsertAsync(
+            new CustomerActionType() {
+                Name = "Paid order",
+                SystemKeyword = "PaidOrder",
+                Enabled = false,
+                ConditionType = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
+            });
+
+            #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            await _serviceProvider.GetRequiredService<IPermissionService>().InstallNewPermissions(provider);
+
+            #endregion
+
+            #region Activity Log Type
+
+            var _activityLogTypeRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "AddNewDocument",
+                    Enabled = false,
+                    Name = "Add a new document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "AddNewDocumentType",
+                    Enabled = false,
+                    Name = "Add a new document type"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "EditDocument",
+                    Enabled = false,
+                    Name = "Edit document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "EditDocumentType",
+                    Enabled = false,
+                    Name = "Edit document type"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "DeleteDocument",
+                    Enabled = false,
+                    Name = "Delete document"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "DeleteDocumentType",
+                    Enabled = false,
+                    Name = "Delete document type"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewCourse",
+                    Enabled = false,
+                    Name = "Public store. View a course"
+                });
+            await _activityLogTypeRepository.InsertAsync(
+                new ActivityLogType {
+                    SystemKeyword = "PublicStore.ViewLesson",
+                    Enabled = false,
+                    Name = "Public store. View a lesson"
+                });
+            #endregion
+
+            #region Update customer settings
+
+            var _settingService = _serviceProvider.GetRequiredService<ISettingService>();
+            var customerSettings = _serviceProvider.GetRequiredService<CustomerSettings>();
+            customerSettings.HideDocumentsTab = true;
+            customerSettings.HideReviewsTab = false;
+            customerSettings.HideCoursesTab = true;
+            await _settingService.SaveSetting(customerSettings);
+
+            #endregion
+
+            #region Update catalog settings
+
+            var catalogSettings = _serviceProvider.GetRequiredService<CatalogSettings>();
+            catalogSettings.PeriodBestsellers = 6;
+            await _settingService.SaveSetting(catalogSettings);
+
+            #endregion
+
+            #region Update topics
+
+            IRepository<Topic> _topicRepository = _serviceProvider.GetRequiredService<IRepository<Topic>>();
+            foreach (var topic in _topicRepository.Table)
+            {
+                topic.Published  = true;
+                _topicRepository.Update(topic);
+            }
+
+            #endregion
+
+            #region Update url seo to lowercase
+
+            IRepository<UrlRecord> _urlRecordRepository = _serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
+            foreach (var urlrecord in _urlRecordRepository.Table)
+            {
+                urlrecord.Slug = urlrecord.Slug.ToLowerInvariant();
+                _urlRecordRepository.Update(urlrecord);
+            }
+
+            #endregion
+
+        }
         private async Task InstallStringResources(string filenames)
         {
             //'English' language            

@@ -104,13 +104,6 @@ namespace Grand.Core.Tests
             }
         }
 
-        [TestMethod()]
-        public void EnsureNumericOnlyTest() {
-            Assert.AreEqual("7927", CommonHelper.EnsureNumericOnly("dh79dhd27h"));
-            Assert.AreEqual("78", CommonHelper.EnsureNumericOnly("78DGDGdd"));
-            Assert.AreEqual("8212", CommonHelper.EnsureNumericOnly("821dDH*U2"));
-            Assert.AreEqual("1111", CommonHelper.EnsureNumericOnly("1111dS"));
-        }
 
         [TestMethod()]
         public void EnsureNotNullTest() {
@@ -121,14 +114,6 @@ namespace Grand.Core.Tests
             Assert.IsNotNull(CommonHelper.EnsureNotNull(sentString));
         }
 
-        [TestMethod()]
-        public void AreNullOrEmptyTest() {
-            string[] arrayWithNull = { "asd", null, "asd" };
-            string[] arrayWithoutNull = { "asd", "ddd", "asd" };
-
-            Assert.IsTrue(CommonHelper.AreNullOrEmpty(arrayWithNull));
-            Assert.IsFalse(CommonHelper.AreNullOrEmpty(arrayWithoutNull));
-        }
 
         [TestMethod()]
         public void ArraysEqualTest() {

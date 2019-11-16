@@ -31,7 +31,6 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
-using Grand.Data;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -58,12 +57,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Bid> _bidRepository;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<BlogComment> _blogcommentRepository;
-        private readonly IRepository<BlogPost> _blogpostRepository;
-        private readonly IRepository<Campaign> _campaignRepository;
         private readonly IRepository<CampaignHistory> _campaignHistoryRepository;
-        private readonly IRepository<Download> _downloadRepository;
-        private readonly IRepository<GiftCard> _giftcardRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<ReturnRequest> _returnrequestRepository;
@@ -94,16 +88,12 @@ namespace Grand.Services.Installation
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReservation> _productReservationRepository;
         private readonly IRepository<ProductAlsoPurchased> _productalsopurchasedRepository;
-        private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
         private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumPost> _forumpostRepository;
-        private readonly IRepository<ForumTopic> _forumtopicRepository;
         private readonly IRepository<ForumPostVote> _forumPostVote;
-        private readonly IRepository<ForumSubscription> _forumsubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
@@ -114,11 +104,9 @@ namespace Grand.Services.Installation
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<NewsLetterSubscription> _newslettersubscriptionRepository;
         private readonly IRepository<Poll> _pollRepository;
-        private readonly IRepository<PrivateMessage> _privatemessageRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
@@ -126,7 +114,6 @@ namespace Grand.Services.Installation
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly IRepository<QueuedEmail> _queuedemailRepository;
         private readonly IRepository<RewardPointsHistory> _rewardpointshistoryRepository;
         private readonly IRepository<SearchTerm> _searchtermRepository;
         private readonly IRepository<Setting> _settingRepository;
@@ -141,17 +128,14 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerAction> _customerAction;
         private readonly IRepository<CustomerActionType> _customerActionType;
         private readonly IRepository<CustomerActionHistory> _customerActionHistory;
-        private readonly IRepository<Banner> _banner;
         private readonly IRepository<PopupArchive> _popupArchive;
-        private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
-        private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly DataSettingsManager _settingsManager = new DataSettingsManager();
@@ -166,14 +150,9 @@ namespace Grand.Services.Installation
             _bidRepository = serviceProvider.GetRequiredService<IRepository<Bid>>();
             _addressRepository = serviceProvider.GetRequiredService<IRepository<Address>>();
             _affiliateRepository = serviceProvider.GetRequiredService<IRepository<Affiliate>>();
-            _blogcommentRepository = serviceProvider.GetRequiredService<IRepository<BlogComment>>();
-            _blogpostRepository = serviceProvider.GetRequiredService<IRepository<BlogPost>>();
-            _campaignRepository = serviceProvider.GetRequiredService<IRepository<Campaign>>();
             _campaignHistoryRepository = serviceProvider.GetRequiredService<IRepository<CampaignHistory>>();
-            _downloadRepository = serviceProvider.GetRequiredService<IRepository<Download>>();
             _orderRepository = serviceProvider.GetRequiredService<IRepository<Order>>();
             _orderNoteRepository = serviceProvider.GetRequiredService<IRepository<OrderNote>>();
-            _giftcardRepository = serviceProvider.GetRequiredService<IRepository<GiftCard>>();
             _storeRepository = serviceProvider.GetRequiredService<IRepository<Store>>();
             _measureDimensionRepository = serviceProvider.GetRequiredService<IRepository<MeasureDimension>>();
             _measureWeightRepository = serviceProvider.GetRequiredService<IRepository<MeasureWeight>>();
@@ -199,16 +178,12 @@ namespace Grand.Services.Installation
             _manufacturerRepository = serviceProvider.GetRequiredService<IRepository<Manufacturer>>();
             _productRepository = serviceProvider.GetRequiredService<IRepository<Product>>();
             _productReservationRepository = serviceProvider.GetRequiredService<IRepository<ProductReservation>>();
-            _pictureRepository = serviceProvider.GetRequiredService<IRepository<Picture>>();
             _productalsopurchasedRepository = serviceProvider.GetRequiredService<IRepository<ProductAlsoPurchased>>();
             _urlRecordRepository = serviceProvider.GetRequiredService<IRepository<UrlRecord>>();
             _emailAccountRepository = serviceProvider.GetRequiredService<IRepository<EmailAccount>>();
             _messageTemplateRepository = serviceProvider.GetRequiredService<IRepository<MessageTemplate>>();
             _forumGroupRepository = serviceProvider.GetRequiredService<IRepository<ForumGroup>>();
             _forumRepository = serviceProvider.GetRequiredService<IRepository<Forum>>();
-            _forumpostRepository = serviceProvider.GetRequiredService<IRepository<ForumPost>>();
-            _forumtopicRepository = serviceProvider.GetRequiredService<IRepository<ForumTopic>>();
-            _forumsubscriptionRepository = serviceProvider.GetRequiredService<IRepository<ForumSubscription>>();
             _forumPostVote = serviceProvider.GetRequiredService<IRepository<ForumPostVote>>();
             _countryRepository = serviceProvider.GetRequiredService<IRepository<Country>>();
             _stateProvinceRepository = serviceProvider.GetRequiredService<IRepository<StateProvince>>();
@@ -220,11 +195,9 @@ namespace Grand.Services.Installation
             _newsItemRepository = serviceProvider.GetRequiredService<IRepository<NewsItem>>();
             _newslettersubscriptionRepository = serviceProvider.GetRequiredService<IRepository<NewsLetterSubscription>>();
             _pollRepository = serviceProvider.GetRequiredService<IRepository<Poll>>();
-            _privatemessageRepository = serviceProvider.GetRequiredService<IRepository<PrivateMessage>>();
             _shippingMethodRepository = serviceProvider.GetRequiredService<IRepository<ShippingMethod>>();
             _deliveryDateRepository = serviceProvider.GetRequiredService<IRepository<DeliveryDate>>();
             _activityLogTypeRepository = serviceProvider.GetRequiredService<IRepository<ActivityLogType>>();
-            _activityLogRepository = serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
             _productTagRepository = serviceProvider.GetRequiredService<IRepository<ProductTag>>();
             _productTemplateRepository = serviceProvider.GetRequiredService<IRepository<ProductTemplate>>();
             _recentlyViewedProductRepository = serviceProvider.GetRequiredService<IRepository<RecentlyViewedProduct>>();
@@ -232,7 +205,6 @@ namespace Grand.Services.Installation
             _manufacturerTemplateRepository = serviceProvider.GetRequiredService<IRepository<ManufacturerTemplate>>();
             _topicTemplateRepository = serviceProvider.GetRequiredService<IRepository<TopicTemplate>>();
             _scheduleTaskRepository = serviceProvider.GetRequiredService<IRepository<ScheduleTask>>();
-            _queuedemailRepository = serviceProvider.GetRequiredService<IRepository<QueuedEmail>>();
             _returnrequestRepository = serviceProvider.GetRequiredService<IRepository<ReturnRequest>>();
             _rewardpointshistoryRepository = serviceProvider.GetRequiredService<IRepository<RewardPointsHistory>>();
             _searchtermRepository = serviceProvider.GetRequiredService<IRepository<SearchTerm>>();
@@ -250,16 +222,13 @@ namespace Grand.Services.Installation
             _customerAction = serviceProvider.GetRequiredService<IRepository<CustomerAction>>();
             _customerActionType = serviceProvider.GetRequiredService<IRepository<CustomerActionType>>();
             _customerActionHistory = serviceProvider.GetRequiredService<IRepository<CustomerActionHistory>>();
-            _customerReminder = serviceProvider.GetRequiredService<IRepository<CustomerReminder>>();
             _customerReminderHistoryRepository = serviceProvider.GetRequiredService<IRepository<CustomerReminderHistory>>();
             _knowledgebaseArticleRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseArticle>>();
             _knowledgebaseCategoryRepository = serviceProvider.GetRequiredService<IRepository<KnowledgebaseCategory>>();
-            _banner = serviceProvider.GetRequiredService<IRepository<Banner>>();
             _popupArchive = serviceProvider.GetRequiredService<IRepository<PopupArchive>>();
             _genericAttributeService = serviceProvider.GetRequiredService<IGenericAttributeService>();
-            _customerActionService = serviceProvider.GetRequiredService<ICustomerActionService>();
             _webHelper = serviceProvider.GetRequiredService<IWebHelper>();
-            _hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+            _hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
             _serviceProvider = serviceProvider;
 
             _dataSettings = _settingsManager.LoadSettings();
@@ -302,7 +271,7 @@ namespace Grand.Services.Installation
                     CompanyPhoneNumber = "(123) 456-78901",
                     CompanyVat = null,
                     CompanyEmail = "company@email.com",
-                    CompanyHours = "Monday - Sunday / 8:00AM - 18:00PM"
+                    CompanyHours = "Monday - Sunday / 8:00AM - 6:00PM"
                 },
             };
 
@@ -4051,6 +4020,14 @@ namespace Grand.Services.Installation
             };
             await _customerRoleRepository.InsertAsync(crVendors);
 
+            var crStaff = new CustomerRole {
+                Name = "Staff",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Staff,
+            };
+            await _customerRoleRepository.InsertAsync(crStaff);
+
             //admin user
             var adminUser = new Customer {
                 CustomerGuid = Guid.NewGuid(),
@@ -4148,6 +4125,13 @@ namespace Grand.Services.Installation
                 {
                     Name = "Add order",
                     SystemKeyword = "AddOrder",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
+                },
+                new CustomerActionType()
+                {
+                    Name = "Paid order",
+                    SystemKeyword = "PaidOrder",
                     Enabled = false,
                     ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
                 },
@@ -4646,11 +4630,12 @@ namespace Grand.Services.Installation
                                            SystemName = "AboutUs",
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
+                                           IncludeInFooterRow1 = true,
                                            DisplayOrder = 20,
                                            Title = "About us",
                                            Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4660,18 +4645,20 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
                                            SystemName = "ConditionsOfUse",
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
+                                           IncludeInFooterRow1 = true,
                                            DisplayOrder = 15,
                                            Title = "Conditions of Use",
                                            Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4681,7 +4668,8 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4691,7 +4679,8 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "Forums",
                                            Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4701,7 +4690,8 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "Welcome to our store",
                                            Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.grandnode.com/\">Documentation</a>, or post in the <a href=\"http://www.grandnode.com/boards/\">Forums</a> at <a href=\"http://www.grandnode.com\">grandnode.com</a></p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4711,18 +4701,20 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "About login / registration",
                                            Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
                                            SystemName = "PrivacyInfo",
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
+                                           IncludeInFooterRow1 = true,
                                            DisplayOrder = 10,
                                            Title = "Privacy notice",
                                            Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4732,18 +4724,20 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
                                            SystemName = "ShippingInfo",
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
-                                           IncludeInFooterColumn1 = true,
+                                           IncludeInFooterRow1 = true,
                                            DisplayOrder = 5,
                                            Title = "Shipping & returns",
                                            Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4753,7 +4747,8 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                    new Topic
                                        {
@@ -4763,9 +4758,10 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
-                                                                      new Topic
+                                   new Topic
                                        {
                                            SystemName = "KnowledgebaseHomePage",
                                            IncludeInSitemap = false,
@@ -4773,7 +4769,8 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
-                                           TopicTemplateId = defaultTopicTemplate.Id
+                                           TopicTemplateId = defaultTopicTemplate.Id,
+                                           Published = true,
                                        },
                                };
             await _topicRepository.InsertAsync(topics);
@@ -4783,7 +4780,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var topic in ltopics)
             {
-                var seName = topic.SystemName;
+                var seName = topic.SystemName.ToLowerInvariant();
                 await _urlRecordRepository.InsertAsync(new UrlRecord {
                     EntityId = topic.Id,
                     EntityName = "Topic",
@@ -4860,6 +4857,8 @@ namespace Grand.Services.Installation
                 CategoryThumbPictureSize = 450,
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
+                CourseThumbPictureSize = 200,
+                LessonThumbPictureSize = 64,
                 CartThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 100,
                 AddToCartThumbPictureSize = 200,
@@ -4998,6 +4997,7 @@ namespace Grand.Services.Installation
                 ShowProductImagesInSearchAutoComplete = true,
                 ShowBestsellersOnHomepage = false,
                 NumberOfBestsellersOnHomepage = 4,
+                PeriodBestsellers = 6,
                 SearchPageProductsPerPage = 6,
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
@@ -5066,13 +5066,14 @@ namespace Grand.Services.Installation
                 HideBackInStockSubscriptionsTab = false,
                 HideAuctionsTab = true,
                 HideNotesTab = true,
+                HideDocumentsTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
-                GenderEnabled = true,
-                DateOfBirthEnabled = true,
+                GenderEnabled = false,
+                DateOfBirthEnabled = false,
                 DateOfBirthRequired = false,
                 DateOfBirthMinimumAge = 0,
-                CompanyEnabled = true,
+                CompanyEnabled = false,
                 StreetAddressEnabled = false,
                 StreetAddress2Enabled = false,
                 ZipPostalCodeEnabled = false,
@@ -5095,7 +5096,9 @@ namespace Grand.Services.Installation
                 SaveVisitedPage = false,
                 SuffixDeletedCustomers = true,
                 AllowUsersToDeleteAccount = false,
-                AllowUsersToExportData = false
+                AllowUsersToExportData = false,
+                HideReviewsTab = false,
+                HideCoursesTab = true,
             });
 
             await _settingService.SaveSetting(new AddressSettings {
@@ -5111,7 +5114,7 @@ namespace Grand.Services.Installation
                 StateProvinceEnabled = true,
                 PhoneEnabled = true,
                 PhoneRequired = true,
-                FaxEnabled = true,
+                FaxEnabled = false,
             });
 
             await _settingService.SaveSetting(new StoreInformationSettings {
@@ -9690,6 +9693,18 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewDocument",
+                                                  Enabled = false,
+                                                  Name = "Add a new document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "AddNewDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Add a new document type"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "AddNewGiftCard",
                                                   Enabled = true,
                                                   Name = "Add a new gift card"
@@ -9777,6 +9792,19 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "DeleteDiscount",
                                                   Enabled = true,
                                                   Name = "Delete a discount"
+                                              },
+
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteDocument",
+                                                  Enabled = false,
+                                                  Name = "Delete document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Delete document type"
                                               },
                                           new ActivityLogType
                                               {
@@ -9873,6 +9901,18 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "EditDiscount",
                                                   Enabled = true,
                                                   Name = "Edit a discount"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditDocument",
+                                                  Enabled = false,
+                                                  Name = "Edit document"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditDocumentType",
+                                                  Enabled = false,
+                                                  Name = "Edit document type"
                                               },
                                           new ActivityLogType
                                               {
@@ -9982,6 +10022,18 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "PublicStore.ViewProduct",
                                                   Enabled = false,
                                                   Name = "Public store. View a product"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewCourse",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a course"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewLesson",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a lesson"
                                               },
                                           new ActivityLogType
                                               {

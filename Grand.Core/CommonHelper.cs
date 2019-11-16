@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -34,17 +32,6 @@ namespace Grand.Core
 
             return output;
         }
-
-        // Verifies that string is an valid IP-Address
-        /// </summary>
-        /// <param name="ipAddress">IPAddress to verify</param>
-        /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
-        public static bool IsValidIpAddress(string ipAddress)
-        {
-            IPAddress ip;
-            return IPAddress.TryParse(ipAddress, out ip);
-        }
-
 
         /// <summary>
         /// Verifies that a string is in valid e-mail format
@@ -100,7 +87,7 @@ namespace Grand.Core
         /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
         public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
                 return str;
 
             if (str.Length > maxLength)
@@ -118,16 +105,6 @@ namespace Grand.Core
         }
 
         /// <summary>
-        /// Ensures that a string only contains numeric values
-        /// </summary>
-        /// <param name="str">Input string</param>
-        /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
-        public static string EnsureNumericOnly(string str)
-        {
-            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(p => char.IsDigit(p)).ToArray());
-        }
-
-        /// <summary>
         /// Ensure that a string is not null
         /// </summary>
         /// <param name="str">Input string</param>
@@ -135,16 +112,6 @@ namespace Grand.Core
         public static string EnsureNotNull(string str)
         {
             return str ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Indicates whether the specified strings are null or empty strings
-        /// </summary>
-        /// <param name="stringsToValidate">Array of strings to validate</param>
-        /// <returns>Boolean</returns>
-        public static bool AreNullOrEmpty(params string[] stringsToValidate)
-        {
-            return stringsToValidate.Any(p => string.IsNullOrEmpty(p));
         }
 
         /// <summary>
@@ -242,7 +209,7 @@ namespace Grand.Core
             return result.TrimStart();
         }
 
-        
+
         /// <summary>
         /// Get difference in years
         /// </summary>
@@ -306,6 +273,6 @@ namespace Grand.Core
             }
         }
 
-        public static IHostingEnvironment HostingEnvironment { get; set; }
+        public static IWebHostEnvironment HostingEnvironment { get; set; }
     }
 }

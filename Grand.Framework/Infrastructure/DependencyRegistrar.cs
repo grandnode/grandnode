@@ -1,5 +1,4 @@
 using Autofac;
-using Autofac.Core;
 using FluentValidation;
 using Grand.Core;
 using Grand.Core.Caching;
@@ -9,7 +8,6 @@ using Grand.Core.Http;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
-using Grand.Data;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
@@ -23,10 +21,11 @@ using Grand.Services.Catalog;
 using Grand.Services.Cms;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
+using Grand.Services.Courses;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Events;
+using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;
@@ -75,8 +74,7 @@ namespace Grand.Framework.Infrastructure
 
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
-            //user agent helper
-            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
+
             //powered by
             builder.RegisterType<PoweredByMiddlewareOptions>().As<IPoweredByMiddlewareOptions>().SingleInstance();
 
@@ -113,11 +111,6 @@ namespace Grand.Framework.Infrastructure
             {
                 builder.RegisterType<DistributedRedisCache>().As<ICacheManager>().SingleInstance();
                 builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
-
-            }
-            else
-            {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)
@@ -151,6 +144,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductReservationService>().As<IProductReservationService>().InstancePerLifetimeScope();
             builder.RegisterType<AuctionService>().As<IAuctionService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductCourseService>().As<IProductCourseService>().InstancePerLifetimeScope();
 
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerLifetimeScope();
 
@@ -298,6 +292,14 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<GoogleAnalyticsService>().As<IGoogleAnalyticsService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentTypeService>().As<IDocumentTypeService>().InstancePerLifetimeScope();
+            builder.RegisterType<DocumentService>().As<IDocumentService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<CourseActionService>().As<ICourseActionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseLessonService>().As<ICourseLessonService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseLevelService>().As<ICourseLevelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseService>().As<ICourseService>().InstancePerLifetimeScope();
+            builder.RegisterType<CourseSubjectService>().As<ICourseSubjectService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
@@ -342,8 +344,7 @@ namespace Grand.Framework.Infrastructure
         /// <summary>
         /// Gets order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             get { return 0; }
         }
     }

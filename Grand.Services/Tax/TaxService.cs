@@ -5,7 +5,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
@@ -65,16 +64,16 @@ namespace Grand.Services.Tax
             CustomerSettings customerSettings,
             AddressSettings addressSettings)
         {
-            this._addressService = addressService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
-            this._pluginFinder = pluginFinder;
-            this._geoLookupService = geoLookupService;
-            this._serviceProvider = serviceProvider;
-            this._logger = logger;
-            this._countryService = countryService;
-            this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
+            _addressService = addressService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
+            _pluginFinder = pluginFinder;
+            _geoLookupService = geoLookupService;
+            _serviceProvider = serviceProvider;
+            _logger = logger;
+            _countryService = countryService;
+            _customerSettings = customerSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -237,7 +236,7 @@ namespace Grand.Services.Tax
             if (result == decimal.Zero)
                 return 0;
 
-            return result;
+            return Math.Round(result, 2);
         }
 
         /// <summary>

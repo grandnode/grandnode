@@ -128,7 +128,7 @@
 
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-            <div class="subCategoryList">
+            <div class="product-grid subCategoryList">
                 <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
@@ -152,7 +152,7 @@
         }
         else
         {
-            <div class="row">
+            <div class="product-grid row">
                 <div class="col-12">
                     @foreach (var product in Model.Products)
                     {

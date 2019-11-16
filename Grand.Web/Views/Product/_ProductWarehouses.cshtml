@@ -1,0 +1,25 @@
+﻿@model ProductDetailsModel
+
+@if (Model.ProductWarehouses.Any())
+{
+    <div>
+        <label for="warehouseId" class="col-form-label">@T("Products.Warehouse"):</label>
+        <select class="custom-select form-control" name="WarehouseId" id="WarehouseId">
+            @foreach (var warehouse in Model.ProductWarehouses)
+            {
+                <option selected="@(warehouse.Selected)" value="@warehouse.WarehouseId">@(warehouse.Name)</option>
+            }
+        </select>
+    </div>
+    @if (Model.ProductAttributes.Any())
+    {
+        <script asp-location="Footer">
+        @{
+            var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}();", Model.Id);
+        }
+        $(document).ready(function () {
+            $('#WarehouseId').change(function () { @attributeChangeHandlerFuncName });
+        });
+        </script>
+    }
+}

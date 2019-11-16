@@ -1,9 +1,7 @@
 ﻿using DotLiquid;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Stores;
-using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using System.Collections.Generic;
 

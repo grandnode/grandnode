@@ -42,6 +42,11 @@ namespace Grand.Core.Domain.Orders
         public string CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the owner identifier
+        /// </summary>
+        public string OwnerId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
         /// </summary>
         public bool PickUpInStore { get; set; }
@@ -70,6 +75,11 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the customer currency code (at the moment of order placing)
         /// </summary>
         public string CustomerCurrencyCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the primary currency code (at the moment of order placing)
+        /// </summary>
+        public string PrimaryCurrencyCode { get; set; }
 
         /// <summary>
         /// Gets or sets the currency rate

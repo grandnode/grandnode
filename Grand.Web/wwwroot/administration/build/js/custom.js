@@ -49,9 +49,6 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-
-
-
 // Sidebar
 function init_sidebar() {
     // TODO: This is some kind of easy fix, maybe we can improve this
@@ -100,14 +97,19 @@ function init_sidebar() {
 
     // toggle small or large menu 
     $MENU_TOGGLE.on('click', function () {
-
         if ($BODY.hasClass('nav-md')) {
-            $(".site_title").css("padding-left", "26px");
+
+           localStorage.setItem('sideBarCookie', 'true');
+            //$(".site_title").css("padding-left", "26px");
             $SIDEBAR_MENU.find('li.active ul').hide();
             $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
         } else {
-            $SIDEBAR_MENU.find('li.active-sm ul').show();
+
+           localStorage.setItem('sideBarCookie', 'false');
+            
             $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
+            $SIDEBAR_MENU.find('li.active > ul').show();
+            //$(".site_title").css("padding-left", "10px");
         }
 
         $BODY.toggleClass('nav-md nav-sm');
@@ -124,9 +126,12 @@ function init_sidebar() {
 
     var arr = [];
     var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () { // find nav element with exact match
-
+       
         var segment = this.href.split("/");
         var z = window.location.pathname;
+        if ($("#active-menu-item").length > 0) {
+            z = $("#active-menu-item").val();
+        }
         var segment2 = z.split("/");
         var linkY = "";
         var linkZ = "";
@@ -190,6 +195,11 @@ function init_sidebar() {
         }
     });
 
+    if ($("#active-menu-item").length > 0) {
+        
+        arr.push($("#active-menu-item").val());
+    }
+
     if ($cur_menu.length == 0) { // if no exact match, try to find best match
         var $cur_menu = $SIDEBAR_MENU.find('a').filter(function () {
             return CURRENT_URL.startsWith(this.href) && this.href != '';
@@ -205,6 +215,7 @@ function init_sidebar() {
     }
 
     for (var i = 0; i < $cur_menu.length; i++) { //extact match
+        
         if ($cur_menu.eq(i).attr('href') == arr[0]) {
             $cur_menu = $cur_menu.eq(i);
         }
@@ -1900,3 +1911,26 @@ $(document).ready(function () {
     
 });
 
+function getValue(name) {
+    return localStorage.getItem(name);
+}
+
+$(document).ready(() => {
+    let value = getValue("sideBarCookie");
+    if (value == "true") {
+        $BODY.removeClass('nav-md');
+        $BODY.addClass('nav-sm');
+        if ($BODY.hasClass('nav-sm')) {
+            $SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
+            $SIDEBAR_MENU.find('li.active-sm ul').hide();
+        }
+        //$(".site_title").css("padding-left", "26px");
+    }
+    else {
+        $BODY.removeClass('nav-sm');
+        $BODY.addClass('nav-md');
+        //$(".site_title").css("padding-left", "10px");
+        $SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
+        $SIDEBAR_MENU.find('li.active > ul').show();
+    }
+});

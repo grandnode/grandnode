@@ -70,7 +70,7 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Configuration.Shipping.Warehouses.Fields.Name")",
-                template: '<a class="k-link" href="EditWarehouse/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="EditWarehouse/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }]
         });
     });

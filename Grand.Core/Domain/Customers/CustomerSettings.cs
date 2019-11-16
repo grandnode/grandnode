@@ -105,6 +105,11 @@ namespace Grand.Core.Domain.Customers
         public bool HideNotesTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Documents' tab on 'My account' page
+        /// </summary>
+        public bool HideDocumentsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to validate user when downloading products
         /// </summary>
         public bool DownloadableProductsValidateUser { get; set; }
@@ -188,6 +193,16 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets a number of days for password expiration
         /// </summary>
         public int PasswordLifetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Reviews' tab on 'My account' page
+        /// </summary>
+        public bool HideReviewsTab { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Courses' tab on 'My account' page
+        /// </summary>
+        public bool HideCoursesTab { get; set; }
 
         #region Form fields
 

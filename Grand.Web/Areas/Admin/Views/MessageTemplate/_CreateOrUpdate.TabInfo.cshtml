@@ -60,7 +60,7 @@
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId)}" />
+                    <admin-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@(new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))" />
                     <span asp-validation-for="Locales[item].EmailAccountId"></span>
                 </div>
             </div>
@@ -104,7 +104,7 @@
             <div class="form-group">
                 <admin-label asp-for="EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-select asp-for="EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName")}" />
+                    <admin-select asp-for="EmailAccountId" asp-items="@(new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))" />
                     <span asp-validation-for="EmailAccountId"></span>
                 </div>
             </div>

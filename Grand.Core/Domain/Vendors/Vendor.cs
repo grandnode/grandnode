@@ -124,6 +124,11 @@ namespace Grand.Core.Domain.Vendors
         public int NotApprovedTotalReviews { get; set; }
 
         /// <summary>
+        /// Gets or sets the commission rate
+        /// </summary>
+        public decimal Commission { get; set; }
+
+        /// <summary>
         /// Gets or sets the vendor address
         /// </summary>
         public virtual Address Address { get; set; }

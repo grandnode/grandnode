@@ -67,7 +67,7 @@ namespace Grand.Web.Services
         private readonly IProductService _productService;
         private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -102,7 +102,7 @@ namespace Grand.Web.Services
             IProductService productService,
             IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IServiceProvider serviceProvider,
             StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings,
@@ -396,14 +396,14 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
                 (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
-                .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
+                .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published)
                 .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
                     SeName = t.GetSeName(_workContext.WorkingLanguage.Id),
-                    IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
-                    IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
-                    IncludeInFooterColumn3 = t.IncludeInFooterColumn3
+                    IncludeInFooterRow1 = t.IncludeInFooterRow1,
+                    IncludeInFooterRow2 = t.IncludeInFooterRow2,
+                    IncludeInFooterRow3 = t.IncludeInFooterRow3
                 })
                 .ToList()
             );

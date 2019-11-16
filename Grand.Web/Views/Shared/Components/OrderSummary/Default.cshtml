@@ -90,6 +90,12 @@
                                             @Html.Raw(item.AttributeInfo)
                                         </div>
                                     }
+                                    @if (!String.IsNullOrEmpty(item.WarehouseName))
+                                    {
+                                        <div class="attributes small">
+                                            @Html.Raw(item.WarehouseName)
+                                        </div>
+                                    }
                                     @if (!String.IsNullOrEmpty(item.AuctionInfo))
                                     {
                                         <div class="attributes small">

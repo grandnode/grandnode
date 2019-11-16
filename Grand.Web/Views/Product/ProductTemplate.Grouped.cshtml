@@ -77,6 +77,11 @@
                             <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
                             <!--product manufacturers-->
                             <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
+                            <!--warehouses-->
+                            @if (Model.AllowToSelectWarehouse)
+                            {
+                                <partial name="_ProductWarehouses" model="Model" />
+                            }
                             <!--compare, email a friend-->
                             <div class="overview-buttons mt-3 mb-3">
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })

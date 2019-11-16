@@ -1,4 +1,5 @@
 ﻿@model ProductModel
+@inject AdminAreaSettings adminAreaSettings
 <div class="note note-info">
     <p>
         <strong>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")</strong>
@@ -75,16 +76,12 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
             },
             pageable: {
-                refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false
-            },
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
             editable: {
                 confirmation: true,
                 mode: "inline"

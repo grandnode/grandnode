@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -18,7 +17,7 @@ namespace Grand.Services.Media
         /// <summary>
         /// Gets the download binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">Posted file</param>
         /// <returns>Download binary array</returns>
         public static byte[] GetDownloadBits(this IFormFile file)
         {

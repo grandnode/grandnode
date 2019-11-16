@@ -36,7 +36,7 @@ namespace Grand.Api.Infrastructure
                     OnAuthenticationFailed = context =>
                     {
                         context.NoResult();
-                        context.Response.StatusCode = 500;
+                        context.Response.StatusCode = 401;
                         context.Response.ContentType = "text/plain";
                         context.Response.WriteAsync(context.Exception.Message).Wait();
                         return Task.CompletedTask;

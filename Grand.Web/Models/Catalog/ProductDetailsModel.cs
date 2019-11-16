@@ -30,6 +30,7 @@ namespace Grand.Web.Models.Catalog
             TierPrices = new List<TierPriceModel>();
             Parameters = new List<SelectListItem>();
             ProductBundleModels = new List<ProductBundleModel>();
+            ProductWarehouses = new List<ProductWarehouseModel>();
         }
         //picture(s)
         public bool DefaultPictureZoomEnabled { get; set; }
@@ -57,6 +58,8 @@ namespace Grand.Web.Models.Catalog
         public bool IsShipEnabled { get; set; }
         public bool NotReturnable { get; set; }
         public bool IsFreeShipping { get; set; }
+        public bool AllowToSelectWarehouse { get; set; }
+        public IList<ProductWarehouseModel> ProductWarehouses { get; set; }
         public decimal AdditionalShippingCharge { get; set; }
         public string AdditionalShippingChargeStr { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
@@ -291,6 +294,15 @@ namespace Grand.Web.Models.Catalog
             public PictureModel DefaultPictureModel { get; set; }
         }
 
+        public partial class ProductWarehouseModel : BaseGrandModel
+        {
+            public bool Use { get; set; }
+            public string WarehouseId { get; set; }
+            public string Name { get; set; }
+            public int StockQuantity { get; set; }
+            public int ReservedQuantity { get; set; }
+            public bool Selected { get; set; }
+        }
         #endregion
     }
 }

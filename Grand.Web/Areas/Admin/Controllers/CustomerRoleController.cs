@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Grand.Api.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -51,16 +52,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var customerRoles = await _customerService.GetAllCustomerRoles(true);
-            var items = new List<CustomerRoleModel>();
-            foreach (var item in customerRoles)
-            {
-                items.Add(await _customerRoleViewModelService.PrepareCustomerRoleModel(item));
-            }
-            var gridModel = new DataSourceResult
-            {
-                Data = items,
-                Total = customerRoles.Count()
+            var customerRoles = await _customerService.GetAllCustomerRoles(command.Page - 1, command.PageSize, true);
+            var gridModel = new DataSourceResult {
+                Data = customerRoles.Select(x =>
+                {
+                    var rolesModel = x.ToModel();
+                    return rolesModel;
+                }),
+                Total = customerRoles.TotalCount,
             };
             return Json(gridModel);
         }
@@ -91,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No customer role found with the specified id
                 return RedirectToAction("List");
 
-            var model = await _customerRoleViewModelService.PrepareCustomerRoleModel(customerRole);
+            var model = _customerRoleViewModelService.PrepareCustomerRoleModel(customerRole);
             return View(model);
         }
 
@@ -112,10 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                     if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.OrdinalIgnoreCase))
                         throw new GrandException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
-
-                    if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.OrdinalIgnoreCase) &&
-                        !String.IsNullOrEmpty(model.PurchasedWithProductId))
-                        throw new GrandException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
 
                     customerRole = await _customerRoleViewModelService.UpdateCustomerRoleModel(customerRole, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
@@ -157,57 +152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
-        }
-
-        public async Task<IActionResult> AssociateProductToCustomerRolePopup()
-        {
-            var model = await _customerRoleViewModelService.PrepareAssociateProductToCustomerRoleModel();
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AssociateProductToCustomerRolePopupList(DataSourceRequest command,
-            CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IWorkContext workContext)
-        {
-            //a vendor should have access only to his products
-            if (workContext.CurrentVendor != null)
-            {
-                model.SearchVendorId = workContext.CurrentVendor.Id;
-            }
-            var products = await _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = products.products.ToList(),
-                Total = products.totalCount
-            };
-
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        [FormValueRequired("save")]
-        public async Task<IActionResult> AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
-            string productNameInput, CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IProductService productService, [FromServices] IWorkContext workContext)
-        {
-            var associatedProduct = await productService.GetProductById(model.AssociatedToProductId);
-            if (associatedProduct == null)
-                return Content("Cannot load a product");
-
-            //a vendor should have access only to his products
-            if (workContext.CurrentVendor != null && associatedProduct.VendorId != workContext.CurrentVendor.Id)
-                return Content("This is not your product");
-
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
-            ViewBag.productIdInput = productIdInput;
-            ViewBag.productNameInput = productNameInput;
-            ViewBag.btnId = btnId;
-            ViewBag.productId = associatedProduct.Id;
-            ViewBag.productName = associatedProduct.Name;
-            return View(model);
-        }
-
+        }        
         #endregion
 
         #region Products

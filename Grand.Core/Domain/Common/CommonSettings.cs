@@ -89,5 +89,12 @@ namespace Grand.Core.Domain.Common
         /// Gets or sets to edit product where auction ended
         /// </summary>
         public bool AllowEditProductEndedAuction { get; set; }
+
+        /// <summary>
+        /// Gets or sets - allow user to read "let's encrypted file"
+        /// </summary>
+        public bool AllowToReadLetsEncryptFile { get; set; }
+
+
     }
 }

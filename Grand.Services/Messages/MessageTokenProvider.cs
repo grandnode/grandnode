@@ -3,11 +3,9 @@ using Grand.Core.Domain;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
@@ -15,19 +13,16 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
-using Grand.Services.Stores;
+using Grand.Services.Vendors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -49,23 +44,14 @@ namespace Grand.Services.Messages
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly IWorkContext _workContext;
-        private readonly IDownloadService _downloadService;
-        private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
-        private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ICountryService _countryService;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ShippingSettings _shippingSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly MediaSettings _mediaSettings;
         private readonly IMediator _mediator;
         private readonly IServiceProvider _serviceProvider;
         #endregion
@@ -78,51 +64,33 @@ namespace Grand.Services.Messages
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
             IWorkContext workContext,
-            IDownloadService downloadService,
-            IOrderService orderService,
-            IPaymentService paymentService,
-            IStoreService storeService,
-            IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
-            ICustomerAttributeFormatter customerAttributeFormatter,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
-            CurrencySettings currencySettings,
-            ShippingSettings shippingSettings,
             StoreInformationSettings storeInformationSettings,
-            MediaSettings mediaSettings,
             IMediator mediator,
             IServiceProvider serviceProvider)
         {
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._workContext = workContext;
-            this._downloadService = downloadService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._productAttributeParser = productAttributeParser;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingSettings = shippingSettings;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._mediaSettings = mediaSettings;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _workContext = workContext;
+            _productAttributeParser = productAttributeParser;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _templatesSettings = templatesSettings;
+            _catalogSettings = catalogSettings;
+            _taxSettings = taxSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _mediator = mediator;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -212,18 +180,20 @@ namespace Grand.Services.Messages
             await _mediator.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
-        public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
+        public async Task AddOrderTokens(LiquidObject liquidObject, Order order, Customer customer, Store store, OrderNote orderNote = null, Vendor vendor = null, decimal refundedAmount = 0)
         {
             var language = await _languageService.GetLanguageById(order.CustomerLanguageId);
             var currency = await _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
             var productService = _serviceProvider.GetRequiredService<IProductService>();
             var downloadService = _serviceProvider.GetRequiredService<IDownloadService>();
+            var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
 
-            var liquidOrder = new LiquidOrder(order, customer, language, currency, store, orderNote, vendorId);
-            foreach (var item in order.OrderItems)
+            var liquidOrder = new LiquidOrder(order, customer, language, currency, store, orderNote, vendor);
+            foreach (var item in order.OrderItems.Where(x => x.VendorId == vendor?.Id || vendor == null))
             {
                 var product = await productService.GetProductById(item.ProductId);
-                var liqitem = new LiquidOrderItem(item, product, order, language, currency, store);
+                var vendorItem = await vendorService.GetVendorById(item.VendorId);
+                var liqitem = new LiquidOrderItem(item, product, order, language, currency, store, vendorItem);
 
                 #region Download
 
@@ -615,7 +585,7 @@ namespace Grand.Services.Messages
                             var picture = await pictureService.GetPictureById(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                             if (picture != null)
                             {
-                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl: store.Url);
+                                pictureUrl = await pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize, storeLocation: store.SslEnabled ? store.SecureUrl : store.Url);
                             }
                         }
                         sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));

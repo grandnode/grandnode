@@ -1,7 +1,4 @@
-﻿using Grand.Core.Infrastructure;
-using Grand.Framework.Events;
-using Grand.Services.Events;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace Grand.Framework.Components

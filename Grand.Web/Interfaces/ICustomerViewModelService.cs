@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Stores;
 using Grand.Web.Models.Customer;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -29,5 +30,8 @@ namespace Grand.Web.Interfaces
         Task<CustomerAvatarModel> PrepareAvatar(Customer customer);
         Task<CustomerAuctionsModel> PrepareAuctions(Customer customer);
         Task<CustomerNotesModel> PrepareNotes(Customer customer);
+        Task<DocumentsModel> PrepareDocuments(Customer customer);
+        Task<CustomerProductReviewsModel> PrepareReviews(Customer customer);
+        Task<CoursesModel> PrepareCourses(Customer customer, Store store);
     }
 }

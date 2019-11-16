@@ -11,6 +11,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
+using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -52,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDownloadService _downloadService;
-
+        private readonly IDocumentService _documentService;
         #endregion
 
         #region Constructors
@@ -73,7 +74,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IWorkflowMessageService workflowMessageService,
-            IDownloadService downloadService)
+            IDownloadService downloadService,
+            IDocumentService documentService)
         {
             _customerService = customerService;
             _productService = productService;
@@ -92,6 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _addressAttributeService = addressAttributeService;
             _workflowMessageService = workflowMessageService;
             _downloadService = downloadService;
+            _documentService = documentService;
         }
 
         #endregion
@@ -225,7 +228,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -258,14 +261,20 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
-                if (customer.IsVendor() && !string.IsNullOrEmpty(model.VendorId))
+
+                if (newCustomerRoles.Any(x=>x.SystemName == SystemCustomerRoleNames.Vendors) && string.IsNullOrEmpty(model.VendorId))
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
-                if (customer.IsStaff() && !string.IsNullOrEmpty(model.VendorId))
+                if (newCustomerRoles.Any(x => x.SystemName == SystemCustomerRoleNames.Staff) && string.IsNullOrEmpty(model.StaffStoreId))
                 {
-                    WarningNotification(_localizationService.GetResource("Admin.Customers.Customers.VendorShouldNotbeStaff"));
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated"));
                 }
+                if (customer.IsStaff() && customer.IsVendor())
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.VendorShouldNotbeStaff"));
+                }
+
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
             }
@@ -297,7 +306,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //validate customer roles
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
@@ -323,7 +332,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
-                    if (customer.IsStaff() && !string.IsNullOrEmpty(model.VendorId))
+                    if (customer.IsStaff() && string.IsNullOrEmpty(model.StaffStoreId))
+                    {
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated"));
+                    }
+                    if (customer.IsStaff() && customer.IsVendor())
                     {
                         WarningNotification(_localizationService.GetResource("Admin.Customers.Customers.VendorShouldNotbeStaff"));
                     }
@@ -993,6 +1006,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+
+        #endregion
+
+        #region Documents
+
+        [HttpPost]
+        public async Task<IActionResult> DocumentList(DataSourceRequest command, string customerId)
+        {
+            var documents = await _documentService.GetAll(customerId, pageSize: command.PageSize, pageIndex: command.Page - 1);
+            var gridModel = new DataSourceResult {
+                Data = documents.ToList(),
+                Total = documents.TotalCount                
+            };
+            return Json(gridModel);
+        }
 
         #endregion
 

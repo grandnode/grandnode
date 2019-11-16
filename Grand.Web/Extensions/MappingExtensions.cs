@@ -1,10 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Courses;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
+using Grand.Web.Models.Course;
 using Grand.Web.Models.Vendors;
 using System;
 
@@ -18,8 +20,7 @@ namespace Grand.Web.Extensions
             if (entity == null)
                 return null;
 
-            var model = new CategoryModel
-            {
+            var model = new CategoryModel {
                 Id = entity.Id,
                 ParentCategoryId = entity.ParentCategoryId,
                 Name = entity.GetLocalized(x => x.Name, language.Id),
@@ -28,7 +29,7 @@ namespace Grand.Web.Extensions
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
-                Flag = entity.Flag,
+                Flag = entity.GetLocalized(x => x.Flag, language.Id),
                 FlagStyle = entity.FlagStyle,
                 Icon = entity.Icon,
                 GenericAttributes = entity.GenericAttributes
@@ -52,6 +53,26 @@ namespace Grand.Web.Extensions
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
                 SeName = entity.GetSeName(language.Id),
                 Icon = entity.Icon,
+                GenericAttributes = entity.GenericAttributes
+            };
+            return model;
+        }
+
+        //course
+        public static CourseModel ToModel(this Course entity, Language language)
+        {
+            if (entity == null)
+                return null;
+
+            var model = new CourseModel {
+                Id = entity.Id,
+                Name = entity.GetLocalized(x => x.Name, language.Id),
+                Description = entity.GetLocalized(x => x.Description, language.Id),
+                ShortDescription = entity.GetLocalized(x => x.ShortDescription, language.Id),
+                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords, language.Id),
+                MetaDescription = entity.GetLocalized(x => x.MetaDescription, language.Id),
+                MetaTitle = entity.GetLocalized(x => x.MetaTitle, language.Id),
+                SeName = entity.GetSeName(language.Id),
                 GenericAttributes = entity.GenericAttributes
             };
             return model;

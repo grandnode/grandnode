@@ -81,7 +81,7 @@ namespace Grand.Core.Domain.Customers
         /// <returns>Result</returns>
         public static bool IsStaff(this Customer customer)
         {
-            return !string.IsNullOrEmpty(customer.StaffStoreId);
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Staff);
         }
 
         /// <summary>

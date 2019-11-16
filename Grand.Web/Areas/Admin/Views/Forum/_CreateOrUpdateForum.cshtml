@@ -8,7 +8,7 @@
         <div class="form-group">
             <admin-label asp-for="ForumGroupId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ForumGroupId" asp-items="@{new SelectList(Model.ForumGroups, "Id", "Name")}" />
+                <admin-select asp-for="ForumGroupId" asp-items="@(new SelectList(Model.ForumGroups, "Id", "Name"))" />
                 <span asp-validation-for="ForumGroupId"></span>
             </div>
         </div>

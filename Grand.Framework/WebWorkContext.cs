@@ -8,7 +8,6 @@ using Grand.Services.Authentication;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
@@ -44,8 +43,8 @@ namespace Grand.Framework
         private readonly ILanguageService _languageService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IUserAgentHelper _userAgentHelper;
         private readonly IVendorService _vendorService;
+
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -69,24 +68,22 @@ namespace Grand.Framework
             ILanguageService languageService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
-            IUserAgentHelper userAgentHelper,
             IVendorService vendorService,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._authenticationService = authenticationService;
-            this._apiauthenticationService = apiauthenticationService;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._languageService = languageService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._userAgentHelper = userAgentHelper;
-            this._vendorService = vendorService;
-            this._localizationSettings = localizationSettings;
-            this._taxSettings = taxSettings;
+            _httpContextAccessor = httpContextAccessor;
+            _authenticationService = authenticationService;
+            _apiauthenticationService = apiauthenticationService;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _languageService = languageService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _vendorService = vendorService;
+            _localizationSettings = localizationSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -126,8 +123,7 @@ namespace Grand.Framework
                 cookieExpiresDate = DateTime.Now.AddMonths(-1);
 
             //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions
-            {
+            var options = new Microsoft.AspNetCore.Http.CookieOptions {
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
@@ -195,14 +191,11 @@ namespace Grand.Framework
         /// <summary>
         /// Gets or sets the current customer
         /// </summary>
-        public virtual Customer CurrentCustomer
-        {
-            get
-            {
+        public virtual Customer CurrentCustomer {
+            get {
                 return _cachedCustomer;
             }
-            set
-            {
+            set {
                 SetCustomerCookie(value.CustomerGuid);
                 _cachedCustomer = value;
             }
@@ -275,8 +268,9 @@ namespace Grand.Framework
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
+                var crawler = _httpContextAccessor?.HttpContext?.Request.Crawler();
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
-                if (_userAgentHelper.IsSearchEngine())
+                if (crawler != null)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
             }
 

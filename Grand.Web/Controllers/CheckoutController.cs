@@ -580,7 +580,7 @@ namespace Grand.Web.Controllers
             {
                 //not found? let's load them using shipping service
                 shippingOptions = (await _shippingService
-                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                     .ShippingOptions
                     .ToList();
             }
@@ -634,16 +634,7 @@ namespace Grand.Web.Controllers
             }
 
             //filter by country
-            string filterByCountryId = "";
-            if (_addressViewModelService.AddressSettings().CountryEnabled &&
-                _workContext.CurrentCustomer.BillingAddress != null &&
-                !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
-            {
-                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
-            }
-
-            //model
-            var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
+            var paymentMethodModel = await GetCheckoutPaymentMethodModel(cart);
 
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -660,6 +651,7 @@ namespace Grand.Web.Controllers
 
             return View(paymentMethodModel);
         }
+
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
         public virtual async Task<IActionResult> SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
@@ -1074,11 +1066,14 @@ namespace Grand.Web.Controllers
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return Challenge();
 
+            var paymentMethodModel = await GetCheckoutPaymentMethodModel(cart);
+
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
-                BillingAddress = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true)
+                BillingAddress = await _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true),
+                HasSinglePaymentMethod = paymentMethodModel.PaymentMethods?.Count == 1 
             };
             return View(model);
         }
@@ -1389,7 +1384,7 @@ namespace Grand.Web.Controllers
                 {
                     //not found? let's load them using shipping service
                     shippingOptions = (await _shippingService
-                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id))
+                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store))
                         .ShippingOptions
                         .ToList();
                 }
@@ -1682,6 +1677,20 @@ namespace Grand.Web.Controllers
                 _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
                 return Content(exc.Message);
             }
+        }
+
+        private async Task<CheckoutPaymentMethodModel> GetCheckoutPaymentMethodModel(IList<ShoppingCartItem> cart)
+        {
+            var filterByCountryId = "";
+            if (_addressViewModelService.AddressSettings().CountryEnabled &&
+                _workContext.CurrentCustomer.BillingAddress != null &&
+                !string.IsNullOrWhiteSpace(_workContext.CurrentCustomer.BillingAddress.CountryId))
+            {
+                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
+            }
+
+            var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
+            return paymentMethodModel;
         }
 
         #endregion

@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Customers;
 using Grand.Services.Orders;
+using Grand.Services.Payments;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,13 @@ namespace Grand.Services.Events.Web
         {
             await eventPublisher.Publish(new PlaceOrderDetailsEvent<R, O>(result, order));
         }
-
+        public static async Task CaptureOrderDetailsEvent<R, C>(this IMediator eventPublisher, R result, C request) where R : CapturePaymentResult where C : CapturePaymentRequest
+        {
+            await eventPublisher.Publish(new CaptureOrderDetailsEvent<R, C>(result, request));
+        }
+        public static async Task VoidOrderDetailsEvent<R, C>(this IMediator eventPublisher, R result, C request) where R : VoidPaymentResult where C : VoidPaymentRequest
+        {
+            await eventPublisher.Publish(new VoidOrderDetailsEvent<R, C>(result, request));
+        }
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Caching.Memory;
@@ -35,7 +36,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
-using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.AspNetCore3;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -58,6 +59,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
             //add api configuration parameters
             services.ConfigureStartupConfig<ApiConfig>(configuration.GetSection("Api"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
@@ -185,8 +187,10 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds authentication service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddGrandAuthentication(this IServiceCollection services)
+        public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var config = services.BuildServiceProvider().GetService<GrandConfig>();
+
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -202,7 +206,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
 
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //add external authentication
@@ -212,7 +216,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
             });
 
             //register external authentication plugins now
@@ -245,15 +249,13 @@ namespace Grand.Framework.Infrastructure.Extensions
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 options.EnableEndpointRouting = false;
             });
+            
+            mvcBuilder.AddRazorRuntimeCompilation();
 
             var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
-
-            //Allow recompiling views on file change
-            if (config.AllowRecompilingViewsOnFileChange)
-                mvcBuilder.AddRazorOptions(options => options.AllowRecompilingViewsOnFileChange = true);
-
+            
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
 
             if (config.UseHsts)
             {
@@ -279,13 +281,24 @@ namespace Grand.Framework.Infrastructure.Extensions
             }
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
 
             //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
+            mvcBuilder.AddFluentValidation(configuration =>
+            {
+                var assemblies = mvcBuilder.PartManager.ApplicationParts
+                    .OfType<AssemblyPart>()
+                    .Where(part => part.Name.StartsWith("Grand", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(part => part.Assembly);
+                configuration.RegisterValidatorsFromAssemblies(assemblies);
+                configuration.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                //implicit/automatic validation of child properties
+                configuration.ImplicitlyValidateChildProperties = true;
+            });
+            //mvcBuilder.AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining(typeof(GrandValidatorFactory)));
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();
@@ -420,8 +433,9 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDetectionDevice(this IServiceCollection services)
         {
-            services.AddDetectionCore().AddDevice();
+            services.AddDetectionCore().AddDevice().AddCrawler();
         }
+
 
         /// <summary>
         /// Add Progressive Web App

@@ -1,5 +1,5 @@
 ﻿@model CustomerModel
-
+@inject AdminAreaSettings adminAreaSettings
 <div class="panel panel-default">
     <vc:admin-widget widget-zone="customer_details_addresses_top" additional-data="Model" />
     <div class="panel-body">
@@ -42,15 +42,11 @@ $(document).ready(function () {
                 // Cancel the changes
                 this.cancelChanges();
             },
-            serverPaging: true,
-            serverFiltering: true,
-            serverSorting: true
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
         },
         pageable: {
             refresh: true,
-            numeric: false,
-            previousNext: false,
-            info: false
+            pageSizes: [@(adminAreaSettings.GridPageSizes)]
         },
         editable: {
             confirmation: true,

@@ -1,7 +1,6 @@
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
@@ -31,8 +30,6 @@ namespace Grand.Services.Orders
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IRepository<ProductAlsoPurchased> _productAlsoPurchasedRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IMediator _mediator;
 
         #endregion
@@ -46,29 +43,23 @@ namespace Grand.Services.Orders
         /// <param name="orderNoteRepository">Order note repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="returnRequestRepository">Return request repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="productAlsoPurchasedRepository">Product also purchased repository</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
-            IRepository<Customer> customerRepository,
-            IRepository<ReturnRequest> returnRequestRepository,
             IMediator mediator,
             IRepository<ProductAlsoPurchased> productAlsoPurchasedRepository,
             IRepository<ProductDeleted> productDeletedRepository)
         {
-            this._orderRepository = orderRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._productRepository = productRepository;
-            this._recurringPaymentRepository = recurringPaymentRepository;
-            this._customerRepository = customerRepository;
-            this._returnRequestRepository = returnRequestRepository;
-            this._mediator = mediator;
-            this._productAlsoPurchasedRepository = productAlsoPurchasedRepository;
-            this._productDeletedRepository = productDeletedRepository;
+            _orderRepository = orderRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _productRepository = productRepository;
+            _recurringPaymentRepository = recurringPaymentRepository;
+            _mediator = mediator;
+            _productAlsoPurchasedRepository = productAlsoPurchasedRepository;
+            _productDeletedRepository = productDeletedRepository;
         }
 
         #endregion

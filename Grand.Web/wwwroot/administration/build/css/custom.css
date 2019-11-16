@@ -203,7 +203,7 @@ body {
 }
 
 .left_col {
-    background: #2A3F54
+    background: #2F3C48
 }
 
 .nav-sm .container.body .col-md-3.left_col {
@@ -278,7 +278,8 @@ body {
 
 .nav-sm .nav.child_menu li.active, .nav-sm .nav.side-menu li.active-sm {
     border-right: 5px solid #1ABB9C;
-    background: rgba(255, 255, 255, 0.05);
+    background: #416B8E;
+    /*background: rgba(255, 255, 255, 0.05);*/
 }
 
 .nav-sm ul.nav.child_menu ul, .nav-sm .nav.side-menu li.active-sm ul ul {
@@ -424,7 +425,7 @@ body {
 
 .nav_menu {
     float: left;
-    background: white;
+    background: #EFF4F9;
     border-bottom: 1px solid #D9DEE4;
     /*margin-bottom: 10px;*/
     width: 100%;
@@ -464,9 +465,11 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #2A3F54;
+    /*background: #2A3F54;*/
+    background: #2F3C48;
     border-radius: 0;
-    height: 57px
+    height: 57px;
+    border-bottom: 1px solid #4D6376;
 }
 
 @media (max-width: 991px) {
@@ -616,7 +619,7 @@ body .container.body .right_col {
 
 body {
     color: #333333;
-    background: #2A3F54;
+    background: #2F3C48;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     font-weight: 400;
@@ -953,14 +956,15 @@ a:hover, a:focus {
     margin-top: 0
 }
 
-.nav.side-menu>li {
+.nav.side-menu > li {
     position: relative;
     display: block;
-    cursor: pointer
+    cursor: pointer;
+    border-bottom: 1px solid #3d4957;
 }
 
 .nav.side-menu>li>a {
-    margin-bottom: 6px
+    /*margin-bottom: 5px*/
 }
 
 .nav.side-menu>li>a:hover {
@@ -1060,9 +1064,10 @@ a:hover, a:focus {
     color: #fff
 }
 
-.nav.side-menu>li.active>a {
+.nav.side-menu > li.active > a {
     text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-    background: linear-gradient(#334556, #2C4257), #2A3F54;
+    /*background: linear-gradient(#334556, #2C4257), #2A3F54;*/
+    background: #416B8E;
     box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0
 }
 
@@ -1085,7 +1090,7 @@ a:hover, a:focus {
     display: block;
     height: 55px;
     margin: 0;
-    padding-left: 10px
+    padding-left: 26px;
 }
 
 .site_title:hover, .site_title:focus {
@@ -2119,7 +2124,7 @@ span.right {
     padding: 5px 0 0 0;
     position: fixed;
     width: 230px;
-    background: #2A3F54;
+    background: #2F3C48;
     z-index: 999;
 }
 
@@ -2342,7 +2347,7 @@ h4.graph_title {
     position: relative;
     display: block;
     margin-bottom: 12px;
-    border: 1px solid #E4E4E4;
+    border: 1px solid #D7DADC;
     -webkit-border-radius: 5px;
     overflow: hidden;
     padding-bottom: 5px;
@@ -5122,7 +5127,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 /** /bootstrap-datetimepicker **/
 
 .tile-stats {
-    border: 1px solid #1ABB9C;
+    /*border: 1px solid #1ABB9C;*/
 }
 
 .btn.green:not(.btn-outline) {
@@ -6202,4 +6207,32 @@ table.tableFixHead {
 
 .tableFixHead th, .tableFixHead td {
     padding: 8px 16px;
+}
+
+/*Google statistics*/
+.googleStatistics {
+    list-style-type: none;
+}
+
+.list-icon-container {
+    display: inline;
+}
+
+    .list-icon-container a .icon-check {
+        font-size: 16px;
+        margin-right: 5px;
+    }
+
+.list-datetime {
+    display: inline;
+    font-size: 24px;
+}
+
+.list-item-content {
+    padding: 0px 15px 0 3px;
+    display: inline-block;
+}
+
+.list-toggle .uppercase {
+    font-size: 18px;
 }

@@ -5,12 +5,10 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
-using ImageMagick;
+using SkiaSharp;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -37,7 +35,7 @@ namespace Grand.Services.Media
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -47,12 +45,10 @@ namespace Grand.Services.Media
         /// Ctor
         /// </summary>
         /// <param name="pictureRepository">Picture repository</param>
-        /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="logger">Logger</param>
-        /// <param name="dbContext">Database context</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
@@ -60,118 +56,20 @@ namespace Grand.Services.Media
             ILogger logger,
             IMediator mediator,
             MediaSettings mediaSettings,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
-            this._pictureRepository = pictureRepository;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._logger = logger;
-            this._mediator = mediator;
-            this._mediaSettings = mediaSettings;
-            this._hostingEnvironment = hostingEnvironment;
+            _pictureRepository = pictureRepository;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _logger = logger;
+            _mediator = mediator;
+            _mediaSettings = mediaSettings;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Calculates picture dimensions whilst maintaining aspect
-        /// </summary>
-        /// <param name="originalSize">The original picture size</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <param name="resizeType">Resize type</param>
-        /// <param name="ensureSizePositive">A value indicatingh whether we should ensure that size values are positive</param>
-        /// <returns></returns>wy ludzie gracie w dziwn¹ grê polegaj¹c¹ na wzajemnym poni¿aniu siê i udowadnianiu wy¿szoœci. Mo¿e to by³o u¿yteczne gdy jeszcze byliœcie ma³pami
-        protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
-            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
-        {
-            float width, height;
-
-            switch (resizeType)
-            {
-                case ResizeType.LongestSide:
-                    if (originalSize.Height > originalSize.Width)
-                    {
-                        // portrait
-                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                        height = targetSize;
-                    }
-                    else
-                    {
-                        // landscape or square
-                        width = targetSize;
-                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    }
-                    break;
-                case ResizeType.Width:
-                    width = targetSize;
-                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    break;
-                case ResizeType.Height:
-                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                    height = targetSize;
-                    break;
-                default:
-                    throw new Exception("Not supported ResizeType");
-            }
-
-            if (ensureSizePositive)
-            {
-                if (width < 1)
-                    width = 1;
-                if (height < 1)
-                    height = 1;
-            }
-
-            //we invoke Math.Round to ensure that no white background is rendered 
-            return new Size((int)Math.Round(width), (int)Math.Round(height));
-        }
-
-        protected virtual MagickGeometry CalculateDimensions(MagickImage originalSize, int targetSize,
-            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
-        {
-            float width, height;
-
-            switch (resizeType)
-            {
-                case ResizeType.LongestSide:
-                    if (originalSize.Height > originalSize.Width)
-                    {
-                        // portrait
-                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                        height = targetSize;
-                    }
-                    else
-                    {
-                        // landscape or square
-                        width = targetSize;
-                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    }
-                    break;
-                case ResizeType.Width:
-                    width = targetSize;
-                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    break;
-                case ResizeType.Height:
-                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                    height = targetSize;
-                    break;
-                default:
-                    throw new Exception("Not supported ResizeType");
-            }
-
-            if (ensureSizePositive)
-            {
-                if (width < 1)
-                    width = 1;
-                if (height < 1)
-                    height = 1;
-            }
-
-            //we invoke Math.Round to ensure that no white background is rendered 
-            return new MagickGeometry((int)Math.Round(width), (int)Math.Round(height));
-        }
 
         /// <summary>
         /// Returns the file extension from mime type.
@@ -321,7 +219,6 @@ namespace Grand.Services.Media
         /// Get picture local path. Used when images stored on file system (not in the database)
         /// </summary>
         /// <param name="fileName">Filename</param>
-        /// <param name="imagesDirectoryPath">Directory path with images; if null, then default one is used</param>
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
@@ -464,10 +361,9 @@ namespace Grand.Services.Media
                         return GetThumbUrl(thumbFileName, storeLocation);
 
                     mutex.WaitOne();
-                    using (var image = new MagickImage(filePath))
+                    using (var image = SKBitmap.Decode(filePath))
                     {
-                        var pictureBinary = File.ReadAllBytes(filePath);
-                        pictureBinary = await ApplyResize(image, targetSize);
+                        var pictureBinary = await ApplyResize(image, targetSize);
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
                     mutex.ReleaseMutex();
@@ -570,12 +466,9 @@ namespace Grand.Services.Media
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         mutex.WaitOne();
-                        using (var image = new MagickImage(pictureBinary))
+                        using (var image = SKBitmap.Decode(pictureBinary))
                         {
-                            var size = CalculateDimensions(image, targetSize);
-                            size.IgnoreAspectRatio = true;
-                            image.Resize(size);
-                            pictureBinary = image.ToByteArray();
+                            pictureBinary = await ApplyResize(image, targetSize);
                         }
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         mutex.ReleaseMutex();
@@ -813,7 +706,7 @@ namespace Grand.Services.Media
             {
                 using (var ms = new MemoryStream(byteArray))
                 {
-                    using (var image = new MagickImage(byteArray))
+                    using (var image = SKBitmap.Decode(byteArray))
                     {
                         if (image.Width >= image.Height)
                         {
@@ -837,16 +730,42 @@ namespace Grand.Services.Media
             }
         }
 
-        protected async Task<byte[]> ApplyResize(MagickImage image, int targetSize)
+        protected async Task<byte[]> ApplyResize(SKBitmap image, int targetSize)
         {
+            if (image == null)
+                throw new ArgumentNullException("image");
+
             if (targetSize <= 0)
             {
                 targetSize = 800;
             }
-            var size = CalculateDimensions(image, targetSize);
-            size.IgnoreAspectRatio = true;
-            image.Resize(size);
-            return await Task.FromResult(image.ToByteArray());
+            float width, height;
+            if (image.Height > image.Width)
+            {
+                // portrait
+                width = image.Width * (targetSize / (float)image.Height);
+                height = targetSize;
+            }
+            else
+            {
+                // landscape or square
+                width = targetSize;
+                height = image.Height * (targetSize / (float)image.Width);
+            }
+
+            if ((int)width == 0 || (int)height == 0)
+            {
+                width = image.Width;
+                height = image.Height;
+            }
+
+            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.High))
+            {
+                using (var resimage = SKImage.FromBitmap(resized))
+                {
+                    return await Task.FromResult(resimage.Encode().ToArray());
+                }
+            }
         }
 
         #endregion

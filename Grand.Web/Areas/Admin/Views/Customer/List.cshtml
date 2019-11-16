@@ -195,7 +195,7 @@
                         @if (Model.UsernamesEnabled)
                         {
                             <text>{
-                                field: "Username",
+                                field: "UserName",
                                 title: "@T("Admin.Customers.Customers.Fields.Username")",
                                 width: 200
                             },</text>
@@ -204,7 +204,7 @@
                             field: "FullName",
                             title: "@T("Admin.Customers.Customers.Fields.FullName")",
                             width: 200,
-                            template: '<a class="k-link" href="Edit/#=Id#">#=FullName#</a>',
+                            encoded: true,
                         }, {
                             field: "CustomerRoleNames",
                             title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")",

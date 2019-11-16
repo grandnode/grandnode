@@ -8,6 +8,7 @@ using Grand.Services.Media;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,6 +54,11 @@ namespace Grand.Plugin.Widgets.Slider
         {
             //pictures
             var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/Content/slider/sample-images/");
+            var byte1 = File.ReadAllBytes(sampleImagesPath + "banner1.jpg");
+            var byte2 = File.ReadAllBytes(sampleImagesPath + "banner2.png");
+
+            var pic1 = await _pictureService.InsertPicture(byte1, "image/jpeg", "banner_1", validateBinary: false);
+            var pic2 = await _pictureService.InsertPicture(byte2, "image/png", "banner_2", validateBinary: false);
 
             await _pictureSliderRepository.InsertAsync(new PictureSlider()
             {
@@ -61,8 +67,8 @@ namespace Grand.Plugin.Widgets.Slider
                 Name = "Sample slider 1",
                 FullWidth = true,
                 Published = true,
-                PictureId = "",
-                Description = "<div class=\"row slideRow\"><div class=\"col-lg-6 offset-lg-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-center px-0\"><div class=\"slide-title animated fadeInRight delay-1s\"><h2 class=\"mb-0 text-white\">GrandNode 4.50 Release</h2></div><div class=\"slide-content mt-3 animated fadeInRight delay-1-5s\"><p>Open Source Cross Platform E-Commerce Solution based on .NET Core 2.2</p></div><div class=\"slide-button mt-3 animated fadeInRight delay-2s\"><a class=\"btn btn-outline-white\" href=\"https://grandnode.com\">Read More</a></div></div></div><p><img src=\"/Plugins/Widgets.Slider/Content/slider/sample-images/banner1.jpg\" alt=\"\" /></p>"
+                PictureId = pic1.Id,
+                Description = "<div class=\"row slideRow\"><div class=\"col-lg-6 offset-lg-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-center px-0\"> <div class=\"slide-title grandslide animated fadeInRight delay-1s\"> <h2 class=\"mb-0 text-white\">GrandNode 4.50 Release</h2> </div> <div class=\"slide-content grandslide mt-lg-3 mt-1 animated fadeInRight delay-1-5s\"> <p style=\"text-align: center; margin-bottom: 0;\">Open Source Cross Platform E-Commerce Solution based on .NET Core 2.2</p></div><div class=\"slide-button mt-lg-3 mt-1 animated fadeInRight delay-2s\"><a class=\"btn btn-outline-white\" href=\"https://grandnode.com\">Read More</a></div></div></div>"
             });
 
             await _pictureSliderRepository.InsertAsync(new PictureSlider()
@@ -70,9 +76,10 @@ namespace Grand.Plugin.Widgets.Slider
                 DisplayOrder = 1,
                 Link = _webHelper.GetStoreLocation(false),
                 Name = "Sample slider 2",
+                FullWidth = true,
                 Published = true,
-                PictureId = "",
-                Description = "<div class=\"row slideRow\"><div class=\"container\"><div class=\"row\"><div class=\"col-6 d-flex flex-column justify-content-center align-item-center px-0\"><div class=\"animated zoomIn delay-0-5s\"><img style=\"max-width: 500px;\" src=\"/Plugins/Widgets.Slider/Content/slider/sample-images/banner2.png\" alt=\"\" /></div></div><div class=\"col-6 d-flex flex-column justify-content-center align-items-start px-0\"><div class=\"slide-title text-dark animated bounceInRight delay-0-5s\"><h2 class=\"mt-0\">Apple MacBook Pro 13-inch</h2></div><div class=\"slide-content animated bounceInRight delay-1s\"><p class=\"mb-0\">A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.</p></div><div class=\"slide-price animated fadeInRight delay-1-5s d-inline-flex align-items-center justify-content-start w-100  mt-2\"><p class=\"actual\">$1,800.00</p><p class=\"old-price\">$2,200.00</p></div><div class=\"slide-button animated bounceInUp delay-2s mt-3\"><a class=\"btn btn-outline-info\" href=\"/apple-macbook-pro-13-inch\">See More</a></div></div></div></div></div>",
+                PictureId = pic2.Id,
+                Description = "<div class=\"row slideRow\"> <div class=\"col-md-6 offset-md-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-start px-0 pr-md-3\"><div class=\"slide-title text-dark animated bounceInRight delay-0-5s\"><h2 class=\"mt-0\">Apple MacBook Pro 13-inch</h2></div><div class=\"slide-content animated bounceInRight delay-1s\"><p class=\"mb-0\"><span style=\"color: #999999;\">A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors.</span></p></div><div class=\"slide-price animated fadeInRight delay-1-5s d-inline-flex align-items-center justify-content-start w-100 mt-2\"><p class=\"actual\">$1,800.00</p><p class=\"old-price\">$2,200.00</p></div><div class=\"slide-button animated bounceInUp delay-2s mt-3\"><a class=\"btn btn-outline-info\" href=\"/apple-macbook-pro-13-inch\">See More</a></div></div></div>",
             });
 
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.Slider.Added", "Slider added");

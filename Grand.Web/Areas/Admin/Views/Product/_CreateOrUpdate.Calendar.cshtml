@@ -3,6 +3,8 @@
 @using Grand.Core.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
+    <input type="hidden" asp-for="CalendarModel.ProductId" />
+
     <vc:admin-widget widget-zone="product_details_calendar_top" additional-data="Model" />
     <div class="form-horizontal">
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>

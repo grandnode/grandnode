@@ -33,7 +33,8 @@ namespace Grand.Web.Areas.Admin.Components
             //add widget zone to view component arguments
             additionalData = new RouteValueDictionary(additionalData)
             {
-                { "widgetZone", widgetZone }
+                { "widgetZone", widgetZone },
+                { "additionalData", additionalData}
             };
 
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);

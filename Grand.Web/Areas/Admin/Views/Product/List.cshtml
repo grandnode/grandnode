@@ -229,7 +229,8 @@
                     {
                         field: "Name",
                         title: "@T("Admin.Catalog.Products.Fields.Name")",
-						template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                        encoded: false,
+                        template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
                         width: 270
                     }, {
                         field: "Sku",

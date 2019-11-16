@@ -4,6 +4,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
+using Grand.Core.Domain.Vendors;
 using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Language _language;
         private Currency _currency;
         private Store _store;
+        private Vendor _vendor;
 
-        public LiquidOrderItem(OrderItem orderItem, Product product, Order order, Language language, Currency currency, Store store)
+        public LiquidOrderItem(OrderItem orderItem, Product product, Order order, Language language, Currency currency, Store store, Vendor vendor)
         {
             this._orderItem = orderItem;
             this._store = store;
@@ -28,6 +30,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._currency = currency;
             this._order = order;
             this._product = product;
+            this._vendor = vendor;
             AdditionalTokens = new Dictionary<string, string>();
         }
 
@@ -86,6 +89,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public string ProductSeName 
+        {
+            get {
+                string name = "";
+
+                if (_product != null)
+                    name = _product.GetLocalized(x => x.SeName, _language.Id);
+                return name;
+            }
+        }
         public string ProductShortDescription
         {
             get
@@ -129,6 +142,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 return _orderItem.VendorId;
+            }
+        }
+
+        public string VendorName {
+            get {
+                return _vendor?.Name;
             }
         }
 

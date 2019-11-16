@@ -2,9 +2,7 @@ using Grand.Core;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.PayPalStandard.Controllers;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
@@ -221,8 +219,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
 
 
             //create query parameters
-            return new Dictionary<string, string>
-            {
+            return new Dictionary<string, string> {
                 //PayPal ID or an email address associated with your PayPal account
                 ["business"] = _paypalStandardPaymentSettings.BusinessEmail,
 
@@ -573,22 +570,12 @@ namespace Grand.Plugin.Payments.PayPalStandard
         }
 
         /// <summary>
-        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
-        /// </summary>
-        /// <returns>View component name</returns>
-        public string GetPublicViewComponentName()
-        {
-            return "PaymentPayPalStandard";
-        }
-
-        /// <summary>
         /// Install the plugin
         /// </summary>
         public override async Task Install()
         {
             //settings
-            await _settingService.SaveSetting(new PayPalStandardPaymentSettings
-            {
+            await _settingService.SaveSetting(new PayPalStandardPaymentSettings {
                 UseSandbox = true
             });
 
@@ -648,11 +635,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
             viewComponentName = "PaymentPayPalStandard";
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentPayPalStandardController);
-        }
-
         #endregion
 
         #region Properties
@@ -692,16 +674,14 @@ namespace Grand.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
+        public RecurringPaymentType RecurringPaymentType {
             get { return RecurringPaymentType.NotSupported; }
         }
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
+        public PaymentMethodType PaymentMethodType {
             get { return PaymentMethodType.Redirection; }
         }
 

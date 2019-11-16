@@ -53,7 +53,6 @@ namespace Grand.Services.Localization
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
-        private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IMediator _mediator;
@@ -69,22 +68,19 @@ namespace Grand.Services.Localization
         /// <param name="logger">Logger</param>
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
-        /// <param name="languageService">Language service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public LocalizationService(IEnumerable<ICacheManager> cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
-            ILanguageService languageService,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            this._cacheManager = cacheManager.FirstOrDefault();
-            this._logger = logger;
-            this._workContext = workContext;
-            this._lsrRepository = lsrRepository;
-            this._languageService = languageService;
-            this._localizationSettings = localizationSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _logger = logger;
+            _workContext = workContext;
+            _lsrRepository = lsrRepository;
+            _localizationSettings = localizationSettings;
+            _mediator = mediator;
         }
 
         #endregion
@@ -394,7 +390,7 @@ namespace Grand.Services.Localization
 
             if (String.IsNullOrEmpty(xml))
                 return;
-            //stored procedures aren't supported
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
 
@@ -407,7 +403,7 @@ namespace Grand.Services.Localization
                 if (valueNode != null)
                     value = valueNode.InnerText;
 
-                if (String.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(name))
                     continue;
 
                 var lsr = (

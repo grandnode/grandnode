@@ -1,17 +1,18 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100 AS build-env
 
 WORKDIR /app
 
 COPY GrandNode.sln .
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
-COPY Grand.Data/Grand.Data.csproj Grand.Data/Grand.Data.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj
 COPY Grand.Services/Grand.Services.csproj Grand.Services/Grand.Services.csproj
 COPY Grand.Web/Grand.Web.csproj Grand.Web/Grand.Web.csproj
 COPY Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj Plugins/Grand.Plugin.DiscountRequirements.Standard/Grand.Plugin.DiscountRequirements.Standard.csproj
 COPY Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj Plugins/Grand.Plugin.ExchangeRate.McExchange/Grand.Plugin.ExchangeRate.McExchange.csproj
 COPY Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj Plugins/Grand.Plugin.ExternalAuth.Facebook/Grand.Plugin.ExternalAuth.Facebook.csproj
+COPY Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj Plugins/Grand.Plugin.ExternalAuth.Google/Grand.Plugin.ExternalAuth.Google.csproj
 COPY Plugins/Grand.Plugin.Feed.GoogleShopping/Grand.Plugin.Feed.GoogleShopping.csproj Plugins/Grand.Plugin.Feed.GoogleShopping/Grand.Plugin.Feed.GoogleShopping.csproj
+COPY Plugins/Grand.Plugin.Payments.BrainTree/Grand.Plugin.Payments.BrainTree.csproj Plugins/Grand.Plugin.Payments.BrainTree/Grand.Plugin.Payments.BrainTree.csproj
 COPY Plugins/Grand.Plugin.Payments.CashOnDelivery/Grand.Plugin.Payments.CashOnDelivery.csproj Plugins/Grand.Plugin.Payments.CashOnDelivery/Grand.Plugin.Payments.CashOnDelivery.csproj
 COPY Plugins/Grand.Plugin.Payments.CheckMoneyOrder/Grand.Plugin.Payments.CheckMoneyOrder.csproj Plugins/Grand.Plugin.Payments.CheckMoneyOrder/Grand.Plugin.Payments.CheckMoneyOrder.csproj
 COPY Plugins/Grand.Plugin.Payments.PayInStore/Grand.Plugin.Payments.PayInStore.csproj Plugins/Grand.Plugin.Payments.PayInStore/Grand.Plugin.Payments.PayInStore.csproj
@@ -30,7 +31,9 @@ RUN dotnet publish Grand.Web -c Release -o out
 RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard
 RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
 RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
+RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Google
 RUN dotnet build Plugins/Grand.Plugin.Feed.GoogleShopping
+RUN dotnet build Plugins/Grand.Plugin.Payments.BrainTree
 RUN dotnet build Plugins/Grand.Plugin.Payments.CashOnDelivery
 RUN dotnet build Plugins/Grand.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Plugins/Grand.Plugin.Payments.PayInStore
@@ -44,15 +47,15 @@ RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 # Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime 
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
 
 WORKDIR /app
-COPY --from=build-env /app/Grand.Web/out/ .
+COPY --from=build-env /app/out/ .
 COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
 
-ENTRYPOINT ["dotnet", "Grand.Web.dll"]
+CMD ["dotnet", "Grand.Web.dll"]

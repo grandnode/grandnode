@@ -115,8 +115,8 @@ namespace Grand.Web.Controllers
                     message = "No product found with the specified ID"
                 });
 
-            //we can add only simple products
-            if (product.ProductType != ProductType.SimpleProduct)
+            //we can add only simple products and 
+            if (product.ProductType != ProductType.SimpleProduct || _shoppingCartSettings.AllowToSelectWarehouse)
             {
                 return Json(new
                 {
@@ -173,8 +173,7 @@ namespace Grand.Web.Controllers
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = await _shoppingCartService
-                .GetShoppingCartItemWarnings(customer, new ShoppingCartItem()
-                {
+                .GetShoppingCartItemWarnings(customer, new ShoppingCartItem() {
                     ShoppingCartType = cartType,
                     StoreId = _storeContext.CurrentStore.Id,
                     CustomerEnteredPrice = decimal.Zero,
@@ -328,9 +327,9 @@ namespace Grand.Web.Controllers
                 }
 
             ShoppingCartItem updatecartitem = null;
-            if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
+            if (_shoppingCartSettings.AllowCartItemEditing && !string.IsNullOrEmpty(updatecartitemid))
             {
-                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, (ShoppingCartType) shoppingCartTypeId);
+                var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, (ShoppingCartType)shoppingCartTypeId);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
 
                 //is it this product?
@@ -468,11 +467,13 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+
             if (updatecartitem == null)
             {
                 //add to the cart
                 addToCartWarnings.AddRange(await _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                    productId, cartType, _storeContext.CurrentStore.Id,
+                    productId, cartType, _storeContext.CurrentStore.Id, warehouseId,
                     attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate, quantity, true, reservationId, parameter, duration));
             }
@@ -480,7 +481,7 @@ namespace Grand.Web.Controllers
             {
                 var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, (ShoppingCartType)shoppingCartTypeId);
                 var otherCartItemWithSameParameters = await _shoppingCartService.FindShoppingCartItemInTheCart(
-                    cart, updatecartitem.ShoppingCartType, productId, attributes, customerEnteredPriceConverted,
+                    cart, updatecartitem.ShoppingCartType, productId, warehouseId, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
                 if (otherCartItemWithSameParameters != null &&
                     otherCartItemWithSameParameters.Id == updatecartitem.Id)
@@ -490,7 +491,7 @@ namespace Grand.Web.Controllers
                 }
                 //update existing item
                 addToCartWarnings.AddRange(await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                    updatecartitem.Id, attributes, customerEnteredPriceConverted,
+                    updatecartitem.Id, warehouseId, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate, quantity, true));
                 if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
                 {

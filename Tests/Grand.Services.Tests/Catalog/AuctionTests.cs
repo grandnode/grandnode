@@ -58,7 +58,7 @@ namespace Grand.Services.Tests.Catalog
             {
                 Amount = 1,
                 Bin = true,
-                CustomerId = "CustomerId",
+                CustomerId = "CustomerIdTest1",
                 Date = date,
                 OrderId = "OrderId",
                 ProductId = "ProductId",
@@ -66,11 +66,11 @@ namespace Grand.Services.Tests.Catalog
                 Win = true
             });
 
-            var inserted = _bidRepository.Table.First();
+            var inserted = _bidRepository.Table.Where(x=>x.CustomerId == "CustomerIdTest1").First();
 
             Assert.AreEqual(1, inserted.Amount);
             Assert.AreEqual(true, inserted.Bin);
-            Assert.AreEqual("CustomerId", inserted.CustomerId);
+            Assert.AreEqual("CustomerIdTest1", inserted.CustomerId);
             Assert.AreEqual(date.Date, inserted.Date.Date);
             Assert.AreEqual("OrderId", inserted.OrderId);
             Assert.AreEqual("ProductId", inserted.ProductId);

@@ -20,14 +20,6 @@ namespace Grand.Services.Security
         #region Constants
         
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// </remarks>
-        private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Grand.aclrecord.entityid-name-{0}-{1}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string ACLRECORD_PATTERN_KEY = "Grand.aclrecord.";
@@ -53,18 +45,18 @@ namespace Grand.Services.Security
         /// <param name="workContext">Work context</param>
         /// <param name="aclRecordRepository">ACL record repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         public AclService(ICacheManager cacheManager, 
             IWorkContext workContext,
             IRepository<AclRecord> aclRecordRepository,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._aclRecordRepository = aclRecordRepository;
-            this._mediator = mediator;
-            this._catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _aclRecordRepository = aclRecordRepository;
+            _mediator = mediator;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

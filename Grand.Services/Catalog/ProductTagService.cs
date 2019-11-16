@@ -1,7 +1,6 @@
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Common;
 using Grand.Services.Events;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -45,8 +44,6 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
 
@@ -58,25 +55,18 @@ namespace Grand.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="commonSettings">Common settings</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
             IRepository<Product> productRepository,
-            IDataProvider dataProvider, 
-            CommonSettings commonSettings,
             ICacheManager cacheManager,
             IMediator mediator
             )
         {
-            this._productTagRepository = productTagRepository;
-            this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
-            this._cacheManager = cacheManager;
-            this._mediator = mediator;
-            this._productRepository = productRepository;
+            _productTagRepository = productTagRepository;
+            _cacheManager = cacheManager;
+            _mediator = mediator;
+            _productRepository = productRepository;
         }
 
         #endregion

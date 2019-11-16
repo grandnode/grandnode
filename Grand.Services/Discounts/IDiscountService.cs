@@ -33,7 +33,7 @@ namespace Grand.Services.Discounts
         /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        Task<IList<Discount>> GetAllDiscounts(DiscountType? discountType,
+        Task<IList<Discount>> GetAllDiscounts(DiscountType? discountType, string storeId = "",
             string couponCode = "", string discountName = "", bool showHidden = false);
 
         /// <summary>

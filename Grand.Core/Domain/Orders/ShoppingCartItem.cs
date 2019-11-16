@@ -13,6 +13,11 @@ namespace Grand.Core.Domain.Orders
         public string StoreId { get; set; }
 
         /// <summary>
+        /// Gets or sets the warehouse identifier
+        /// </summary>
+        public string WarehouseId { get; set; }
+
+        /// <summary>
         /// Gets or sets the shopping cart type identifier
         /// </summary>
         public int ShoppingCartTypeId { get; set; }

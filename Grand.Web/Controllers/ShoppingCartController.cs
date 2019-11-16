@@ -44,6 +44,7 @@ namespace Grand.Web.Controllers
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -62,7 +63,8 @@ namespace Grand.Web.Controllers
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
             IGenericAttributeService genericAttributeService,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            OrderSettings orderSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -77,6 +79,7 @@ namespace Grand.Web.Controllers
             this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._genericAttributeService = genericAttributeService;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -229,7 +232,7 @@ namespace Grand.Web.Controllers
                         if (int.TryParse(form[formKey], out int newQuantity))
                         {
                             var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                sci.Id, sci.WarehouseId, sci.AttributesXml, sci.CustomerEnteredPrice,
                                 sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                 newQuantity, true, sci.ReservationId, sci.Id);
                             innerWarnings.Add(sci.Id, currSciWarnings);
@@ -322,7 +325,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
             }
@@ -332,13 +335,13 @@ namespace Grand.Web.Controllers
             }
         }
 
-        [HttpPost]
-        public virtual async Task<IActionResult> StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
+        public virtual async Task<IActionResult> StartCheckout(IFormCollection form = null)
         {
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             //parse and save checkout attributes
-            await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            if (form != null && form.Count > 0)
+                await _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
             var checkoutAttributes = await _workContext.CurrentCustomer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
@@ -351,7 +354,7 @@ namespace Grand.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                if (!orderSettings.AnonymousCheckoutAllowed)
+                if (!_orderSettings.AnonymousCheckoutAllowed)
                     return Challenge();
 
                 return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
@@ -367,7 +370,7 @@ namespace Grand.Web.Controllers
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
 
             var model = new ShoppingCartModel();
-            if (!String.IsNullOrWhiteSpace(discountcouponcode))
+            if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 discountcouponcode = discountcouponcode.ToUpper();
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
@@ -432,7 +435,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Required");
                 model.DiscountBox.IsApplied = false;
             }
 
@@ -475,7 +478,7 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
-                    model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+                    model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Required");
                     model.GiftCardBox.IsApplied = false;
                 }
             }
@@ -567,10 +570,14 @@ namespace Grand.Web.Controllers
                 : _workContext.CurrentCustomer;
             if (customer == null)
                 return RedirectToRoute("HomePage");
-            var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+
+            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                cart = cart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var model = new WishlistModel();
-            await _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+            await _shoppingCartViewModelService.PrepareWishlist(model, cart.ToList(), !customerGuid.HasValue);
             return View(model);
         }
 
@@ -606,7 +613,7 @@ namespace Grand.Web.Controllers
                             if (int.TryParse(form[formKey], out int newQuantity))
                             {
                                 var currSciWarnings = await _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                    sci.Id, sci.WarehouseId, sci.AttributesXml, sci.CustomerEnteredPrice,
                                     sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                     newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
@@ -654,7 +661,9 @@ namespace Grand.Web.Controllers
             if (pageCustomer == null)
                 return RedirectToRoute("HomePage");
 
-            var pageCart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.Wishlist);
+            var pageCart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist);
+            if (!string.IsNullOrEmpty(_storeContext.CurrentStore.Id))
+                pageCart = pageCart.LimitPerStore(_shoppingCartSettings.CartsSharedBetweenStores, _storeContext.CurrentStore.Id);
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
@@ -668,7 +677,7 @@ namespace Grand.Web.Controllers
                 {
                     var warnings = await _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductId, ShoppingCartType.ShoppingCart,
-                        _storeContext.CurrentStore.Id,
+                        _storeContext.CurrentStore.Id, sci.WarehouseId,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
                     if (!warnings.Any())

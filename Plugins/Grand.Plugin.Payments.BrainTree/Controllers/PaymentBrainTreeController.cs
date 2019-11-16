@@ -56,6 +56,7 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
 
             var model = new ConfigurationModel
             {
+                Use3DS = _brainTreePaymentSettings.Use3DS,
                 UseSandBox = _brainTreePaymentSettings.UseSandBox,
                 PublicKey = _brainTreePaymentSettings.PublicKey,
                 PrivateKey = _brainTreePaymentSettings.PrivateKey,
@@ -77,6 +78,7 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
                 return await Configure();
 
             //save settings
+            _brainTreePaymentSettings.Use3DS = model.Use3DS;
             _brainTreePaymentSettings.UseSandBox = model.UseSandBox;
             _brainTreePaymentSettings.PublicKey = model.PublicKey;
             _brainTreePaymentSettings.PrivateKey = model.PrivateKey;

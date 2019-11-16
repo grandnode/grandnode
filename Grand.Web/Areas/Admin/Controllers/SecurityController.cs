@@ -67,7 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new PermissionMappingModel();
 
             var permissionRecords = await _permissionService.GetAllPermissionRecords();
-            var customerRoles = await _customerService.GetAllCustomerRoles(true);
+            var customerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
             foreach (var pr in permissionRecords)
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
@@ -102,7 +102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!install)
             {
                 var permissionRecords = await _permissionService.GetAllPermissionRecords();
-                var customerRoles = await _customerService.GetAllCustomerRoles(true);
+                var customerRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
 
                 foreach (var cr in customerRoles)
                 {

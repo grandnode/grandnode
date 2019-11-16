@@ -3,7 +3,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Localization;
-using Grand.Services.Events;
 using Grand.Services.Seo;
 using MediatR;
 using Microsoft.AspNetCore.Routing;
@@ -195,6 +194,12 @@ namespace Grand.Framework.Seo
                     currentRouteData.Values["controller"] = "Knowledgebase";
                     currentRouteData.Values["action"] = "ArticlesByCategory";
                     currentRouteData.Values["categoryId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
+                case "course":
+                    currentRouteData.Values["controller"] = "Course";
+                    currentRouteData.Values["action"] = "Details";
+                    currentRouteData.Values["courseId"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
                 default:

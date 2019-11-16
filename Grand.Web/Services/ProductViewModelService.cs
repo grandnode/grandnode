@@ -81,6 +81,7 @@ namespace Grand.Web.Services
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public ProductViewModelService(IPermissionService permissionService, IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService, IProductService productService, IPriceCalculationService priceCalculationService,
@@ -92,44 +93,45 @@ namespace Grand.Web.Services
             IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService, IProductReservationService productReservationService,
             IServiceProvider serviceProvider,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings)
+            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, ShoppingCartSettings shoppingCartSettings)
         {
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._priceCalculationService = priceCalculationService;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._measureService = measureService;
-            this._cacheManager = cacheManager;
-            this._pictureService = pictureService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._webHelper = webHelper;
-            this._productTemplateService = productTemplateService;
-            this._productAttributeParser = productAttributeParser;
-            this._shippingService = shippingService;
-            this._vendorService = vendorService;
-            this._categoryService = categoryService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._productTagService = productTagService;
-            this._productAttributeService = productAttributeService;
-            this._manufacturerService = manufacturerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._workflowMessageService = workflowMessageService;
-            this._productReservationService = productReservationService;
-            this._serviceProvider = serviceProvider;
-            this._mediaSettings = mediaSettings;
-            this._catalogSettings = catalogSettings;
-            this._seoSettings = seoSettings;
-            this._vendorSettings = vendorSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
-            this._localizationSettings = localizationSettings;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _productService = productService;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _currencyService = currencyService;
+            _priceFormatter = priceFormatter;
+            _measureService = measureService;
+            _cacheManager = cacheManager;
+            _pictureService = pictureService;
+            _specificationAttributeService = specificationAttributeService;
+            _webHelper = webHelper;
+            _productTemplateService = productTemplateService;
+            _productAttributeParser = productAttributeParser;
+            _shippingService = shippingService;
+            _vendorService = vendorService;
+            _categoryService = categoryService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _productTagService = productTagService;
+            _productAttributeService = productAttributeService;
+            _manufacturerService = manufacturerService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _workflowMessageService = workflowMessageService;
+            _productReservationService = productReservationService;
+            _serviceProvider = serviceProvider;
+            _mediaSettings = mediaSettings;
+            _catalogSettings = catalogSettings;
+            _seoSettings = seoSettings;
+            _vendorSettings = vendorSettings;
+            _customerSettings = customerSettings;
+            _captchaSettings = captchaSettings;
+            _localizationSettings = localizationSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         public virtual async Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModels(
@@ -142,9 +144,9 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("products");
 
             var currentCustomer = _workContext.CurrentCustomer;
-            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
-            var enableShoppingCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
-            var enableWishlist = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
+            var displayPricesTask = _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
+            var enableShoppingCartTask = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
+            var enableWishlistTask = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
             var currentCurrency = _workContext.WorkingCurrency;
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguage = _workContext.WorkingLanguage;
@@ -163,7 +165,15 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguage.Id) }
             };
 
+            await Task.WhenAll(new Task[] { displayPricesTask, enableShoppingCartTask, enableWishlistTask });
+
+            var displayPrices = displayPricesTask.Result;
+            var enableShoppingCart = enableShoppingCartTask.Result;
+            var enableWishlist = enableWishlistTask.Result;
+
             var models = new List<ProductOverviewModel>();
+
+            var lvl1BackgroundTasks = new List<Task>();
 
             foreach (var product in products)
             {
@@ -188,6 +198,7 @@ namespace Grand.Web.Services
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
                 };
+
                 //price
                 if (preparePriceModel)
                 {
@@ -444,16 +455,20 @@ namespace Grand.Web.Services
                     #region Prepare product picture
                     //prepare picture model
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                    model.DefaultPictureModel = await _cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
+
+                    lvl1BackgroundTasks.Add(_cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
                     {
                         var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
                         var pictureModel = new PictureModel {
-                            ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                            Id = picture.PictureId
                         };
+
+                        await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                        await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                             picture.TitleAttribute :
@@ -464,22 +479,26 @@ namespace Grand.Web.Services
                             string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
 
                         return pictureModel;
-                    });
+                    }).ContinueWith(t => model.DefaultPictureModel = t.Result));
 
                     //prepare second picture model
                     if (_catalogSettings.SecondPictureOnCatalogPages)
                     {
                         var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                        model.SecondPictureModel = await _cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
+
+                        lvl1BackgroundTasks.Add(_cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
                         {
                             var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
                             if (picture == null)
                                 return new PictureModel();
 
                             var pictureModel = new PictureModel {
-                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                                Id = picture.PictureId
                             };
+
+                            await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                            await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
                             //"title" attribute
                             pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                                     picture.TitleAttribute :
@@ -490,23 +509,25 @@ namespace Grand.Web.Services
                                     string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
 
                             return pictureModel;
-                        });
+                        }).ContinueWith(t => model.SecondPictureModel = t.Result));
                     }
-
                     #endregion
                 }
 
                 //specs
                 if (prepareSpecificationAttributes)
                 {
-                    model.SpecificationAttributeModels = await PrepareProductSpecificationModel(product);
+                    lvl1BackgroundTasks.Add(PrepareProductSpecificationModel(product).ContinueWith(t => model.SpecificationAttributeModels = t.Result));
                 }
 
                 //reviews
-                model.ReviewOverviewModel = await PrepareProductReviewOverviewModel(product);
+                lvl1BackgroundTasks.Add(PrepareProductReviewOverviewModel(product).ContinueWith(t => model.ReviewOverviewModel = t.Result));
 
                 models.Add(model);
             }
+
+            await Task.WhenAll(lvl1BackgroundTasks);
+
             return models;
         }
 
@@ -632,7 +653,7 @@ namespace Grand.Web.Services
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
+                StockAvailability = product.FormatStockMessage("", updatecartitem != null ? updatecartitem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId, _localizationService, _productAttributeParser),
                 GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage =
@@ -649,6 +670,23 @@ namespace Grand.Web.Services
                 model.MetaDescription = model.ShortDescription;
             }
 
+            //warehouse
+            model.AllowToSelectWarehouse = _shoppingCartSettings.AllowToSelectWarehouse;
+            if (model.AllowToSelectWarehouse)
+            {
+                foreach (var warehouse in await _shippingService.GetAllWarehouses())
+                {
+                    var productwarehouse = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                    model.ProductWarehouses.Add(new ProductDetailsModel.ProductWarehouseModel {
+                        Use = productwarehouse != null,
+                        StockQuantity = productwarehouse?.StockQuantity ?? 0,
+                        ReservedQuantity = productwarehouse?.ReservedQuantity ?? 0,
+                        WarehouseId = warehouse.Id,
+                        Name = warehouse.Name,
+                        Selected = updatecartitem != null && updatecartitem?.WarehouseId == warehouse.Id
+                    });
+                }
+            }
             //shipping info
             model.IsShipEnabled = product.IsShipEnabled;
             if (product.IsShipEnabled)
@@ -821,6 +859,7 @@ namespace Grand.Web.Services
                     defaultPicture = new ProductPicture();
 
                 var defaultPictureModel = new PictureModel {
+                    Id = defaultPicture.PictureId,
                     ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
                     FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
                 };
@@ -838,6 +877,7 @@ namespace Grand.Web.Services
                 foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
                 {
                     var pictureModel = new PictureModel {
+                        Id = picture.PictureId,
                         ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
@@ -1119,6 +1159,7 @@ namespace Grand.Web.Services
                                 if (imageSquaresPicture != null)
                                 {
                                     return new PictureModel {
+                                        Id = imageSquaresPicture?.Id,
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
@@ -1140,6 +1181,7 @@ namespace Grand.Web.Services
                                 if (valuePicture != null)
                                 {
                                     return new PictureModel {
+                                        Id = attributeValue.PictureId,
                                         FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
                                         ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
                                     };
@@ -1396,6 +1438,7 @@ namespace Grand.Web.Services
                                 picture = new ProductPicture();
 
                             var pictureModel = new PictureModel {
+                                Id = picture.PictureId,
                                 ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                             };
@@ -1536,6 +1579,8 @@ namespace Grand.Web.Services
 
             string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
 
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
@@ -1568,7 +1613,7 @@ namespace Grand.Web.Services
                 model.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock
-            model.StockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _storeContext);
+            model.StockAvailability = product.FormatStockMessage(warehouseId, attributeXml, _localizationService, _productAttributeParser);
 
             //back in stock subscription
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes &&
@@ -1630,6 +1675,7 @@ namespace Grand.Web.Services
                     {
                         var picture = await _pictureService.GetPictureById(pictureId);
                         return picture == null ? new PictureModel() : new PictureModel {
+                            Id = pictureId,
                             FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                             ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
                         };
@@ -1689,7 +1735,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
         {
@@ -1703,15 +1749,18 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
         {
             //load and cache report
             var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
+            var fromdate = DateTime.UtcNow.AddMonths(_catalogSettings.PeriodBestsellers > 0 ? -_catalogSettings.PeriodBestsellers : -12);
             var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
                 async () => await orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
+                        createdFromUtc: fromdate,
+                        ps: Core.Domain.Payments.PaymentStatus.Paid,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
                         );
 
@@ -1725,7 +1774,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRecommended(int? productThumbPictureSize)
         {
@@ -1741,7 +1790,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             //prepare model
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsPersonalized(int? productThumbPictureSize)
         {
@@ -1774,7 +1823,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             //prepare model
-            return (await PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsCrossSell(int? productThumbPictureSize, int count)
         {
@@ -1793,7 +1842,7 @@ namespace Grand.Web.Services
                 return new List<ProductOverviewModel>();
 
             return (await PrepareProductOverviewModels(products,
-                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)
                 ).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRelated(string productId, int? productThumbPictureSize)
@@ -1813,7 +1862,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize)
         {
@@ -1832,7 +1881,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel)
         {
@@ -1869,7 +1918,7 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
         }
     }
 }

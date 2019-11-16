@@ -1,0 +1,73 @@
+﻿@model CustomerProductReviewsModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Reviews })
+}
+    <div class="page account-page product-reviews-page pl-lg-3 pt-lg-0 pt-3">
+        <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Account.Navigation")</span></a>
+        <h1 class="h2 generalTitle">@T("Account.Reviews")</h1>
+        @if (Model.Reviews.Any())
+        {
+            <div class="product-review-list">
+                @foreach (var review in Model.Reviews)
+                {
+                    int ratingPercent = review.Rating * 20;
+                    <div class="card comment product-review-item">
+                        <div class="card-header review-item-head pr-0">
+                            <div class="ratings">
+                                <div class="rating-box">
+                                    <div class="rating" style="width: @(ratingPercent)%">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-info">
+                                <span>
+                                    <span>
+                                        <a href="@Url.RouteUrl("Product", new { SeName = review.ProductSeName })">@review.ProductName</a>
+                                    </span>
+                                </span>
+                                <span class="separator">|</span>
+                                <span class="date">
+                                    <span>@T("Reviews.Date"):</span>
+                                    <span>@review.CreatedOn.ToString("g")</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body mb-3">
+                            <div class="review-title">
+                                <strong>@review.Title</strong>
+                            </div>
+                            <div class="review-content">
+                                <div class="review-text">
+                                    @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(review.ReplyText))
+                            {
+                                <div class="reply-content">
+                                    <blockquote class="blockquote-footer">
+                                        @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                        <p>@review.Signature</p>
+                                    </blockquote>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-data pt-3">
+                @T("Account.Reviews.NoExists")
+            </div>
+        }
+    </div>
+

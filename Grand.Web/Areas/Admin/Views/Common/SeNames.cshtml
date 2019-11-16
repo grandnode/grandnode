@@ -93,7 +93,7 @@
                 field: "Name",
                 title: "@T("Admin.System.SeNames.Name")",
                 width: 300,
-                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="k-link" href="#=DetailsUrl#">#=Name#</a> #} #'
+                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="k-link" href="#=DetailsUrl#">#=kendo.htmlEncode(Name)#</a> #} #'
             }, {
                 field: "EntityName",
                 title: "@T("Admin.System.SeNames.EntityName")",

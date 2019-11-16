@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
+using Grand.Framework.Events;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
@@ -18,7 +19,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -91,8 +91,8 @@ namespace Grand.Framework.Controllers
                 var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
                 (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-                Task<IHtmlContent> result = viewComponentResult.ViewComponentType == null ? 
-                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
+                Task<IHtmlContent> result = viewComponentResult.ViewComponentType == null ?
+                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments) :
                     viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
                 result.Result.WriteTo(writer, HtmlEncoder.Default);
@@ -283,8 +283,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Error's json data</returns>
         protected JsonResult ErrorForKendoGridJson(string errorMessage)
         {
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Errors = errorMessage
             };
 
@@ -297,8 +296,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Error's json data</returns>
         protected JsonResult ErrorForKendoGridJson(ModelStateDictionary modelState)
         {
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Errors = ModelState.SerializeErrors()
             };
             return Json(gridModel);
@@ -343,7 +341,7 @@ namespace Grand.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             await AddLocales(languageService, locales, null);
@@ -356,7 +354,7 @@ namespace Grand.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, string> configure) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             foreach (var language in await languageService.GetAllLanguages(true))
@@ -399,5 +397,17 @@ namespace Grand.Framework.Controllers
 
         #endregion
 
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            // event notification before execute
+            var mediator = EngineContext.Current.Resolve<IMediator>();
+
+            await mediator.Publish(new ActionExecutingContextNotification(context, true));
+
+            await next();
+
+            //event notification after execute
+            await mediator.Publish(new ActionExecutingContextNotification(context, false));
+        }
     }
 }

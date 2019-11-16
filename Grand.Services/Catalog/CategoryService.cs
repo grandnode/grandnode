@@ -125,15 +125,15 @@ namespace Grand.Services.Catalog
             IAclService aclService,
             CatalogSettings catalogSettings)
         {
-            this._cacheManager = cacheManager;
-            this._categoryRepository = categoryRepository;
-            this._productRepository = productRepository;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._mediator = mediator;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
-            this._catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _mediator = mediator;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

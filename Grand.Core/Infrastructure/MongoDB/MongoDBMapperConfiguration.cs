@@ -4,6 +4,7 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Documents;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Media;
@@ -292,6 +293,14 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.AutoMap();
                 cm.UnmapMember(c => c.RoundingType);
             });
+
+            BsonClassMap.RegisterClassMap<Document>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.DocumentStatus);
+                cm.UnmapMember(c => c.Reference);
+            });
+
         }
     }
 }

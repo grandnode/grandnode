@@ -3,7 +3,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
 using Grand.Services.Orders;
@@ -36,7 +35,7 @@ namespace Grand.Services.Media
         /// Ctor
         /// </summary>
         /// <param name="downloadRepository">Download repository</param>
-        /// <param name="eventPubisher"></param>
+        /// <param name="mediator">Mediator</param>
         public DownloadService(IRepository<Download> downloadRepository,
             IMediator mediator, IServiceProvider serviceProvider)
         {

@@ -63,7 +63,7 @@
     Html.AppendScriptParts("~/scripts/typeahead.js", excludeFromBundle: true);
 
     Html.AppendCssFileParts("~/administration/simple-line-icons/simple-line-icons.min.css", excludeFromBundle: true);
-    Html.AppendCssFileParts("~/administration/build/css/font-awesome.css", excludeFromBundle: true);
+    Html.AppendCssFileParts("~/administration/build/css/font-awesome.min.css", excludeFromBundle: true);
     Html.AppendScriptParts(location: ResourceLocation.Head, src: "~/administration/bootstrap/js/daterangepicker.min.js", excludeFromBundle: true);
     Html.AppendCssFileParts("~/administration/bootstrap/css/daterangepicker.min.css", excludeFromBundle: true);
     Html.AppendScriptParts("~/administration/build/js/moment.min.js", excludeFromBundle: true);
@@ -88,7 +88,7 @@
 
 }
 <!DOCTYPE html>
-<html @if (supportRtl) { <text> dir="rtl" </text> }>
+<html @if (supportRtl) { <text> dir="rtl" </text> } onloadstart="myFunction()">
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -97,8 +97,29 @@
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
-<body class="nav-md">
+<body >
+    <script>
+        if (document.readyState == "loading") {
+            let value = localStorage.getItem("sideBarCookie");
+            if (value == "true") {
+                $('body').removeClass('nav-md');
+                $('body').addClass('nav-sm');
+                $(".site_title").css("padding-left", "26px");
+                if ($('body').hasClass('nav-sm')) {
+                    $('#sidebar-menu').find('li.active').addClass('active-sm').removeClass('active');
+                    $('#sidebar-menu').find('li.active-sm ul').hide();
+                }      
+            }
+            else {
+                $('body').removeClass('nav-sm');
+                $('body').addClass('nav-md');
+                $(".site_title").css("padding-left", "0px");
+                $('#sidebar-menu').find('li.active-sm').addClass('active').removeClass('active-sm');
+                $('#sidebar-menu').find('li.active > ul').show();
+            }
+        }
 
+    </script>
     <div class="container body">
         <div class="main_container">
             <vc:admin-widget widget-zone="admin_header_before" additional-data="null" />

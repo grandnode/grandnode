@@ -3,7 +3,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Media;
 using Grand.Core.Html;
-using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;

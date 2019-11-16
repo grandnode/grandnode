@@ -99,13 +99,13 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        protected virtual async Task PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual async Task PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties, string storeId)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-
+            
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
+                .GetAllDiscounts(DiscountType.AssignedToCategories, storeId: storeId, showHidden: true))
                 .Select(d => d.ToModel())
                 .ToList();
 
@@ -197,7 +197,7 @@ namespace Grand.Web.Areas.Admin.Services
             //categories
             await PrepareAllCategoriesModel(model, storeId);
             //discounts
-            await PrepareDiscountModel(model, null, true);
+            await PrepareDiscountModel(model, null, true, storeId);
             //ACL
             await model.PrepareACLModel(null, false, _customerService);
             //Stores
@@ -222,7 +222,7 @@ namespace Grand.Web.Areas.Admin.Services
             //categories
             await PrepareAllCategoriesModel(model, storeId);
             //discounts
-            await PrepareDiscountModel(model, category, false);
+            await PrepareDiscountModel(model, category, false, storeId);
             return model;
         }
 

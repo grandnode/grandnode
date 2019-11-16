@@ -13,9 +13,9 @@ namespace Grand.Services.Orders
     {
         public PlaceOrderContainter()
         {
-            this.Cart = new List<ShoppingCartItem>();
-            this.AppliedDiscounts = new List<AppliedDiscount>();
-            this.AppliedGiftCards = new List<AppliedGiftCard>();
+            Cart = new List<ShoppingCartItem>();
+            AppliedDiscounts = new List<AppliedDiscount>();
+            AppliedGiftCards = new List<AppliedGiftCard>();
         }
 
         public Customer Customer { get; set; }
@@ -24,6 +24,7 @@ namespace Grand.Services.Orders
         public TaxDisplayType CustomerTaxDisplayType { get; set; }
         public string CustomerCurrencyCode { get; set; }
         public decimal CustomerCurrencyRate { get; set; }
+        public string PrimaryCurrencyCode { get; set; }
 
         public Address BillingAddress { get; set; }
         public Address ShippingAddress { get; set; }

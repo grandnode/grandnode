@@ -306,7 +306,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //customer roles
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var role in await _customerService.GetAllCustomerRoles(true))
+            foreach (var role in await _customerService.GetAllCustomerRoles(showHidden: true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
         }
         public virtual async Task PrepareProductAttributeValueModel(Product product, ProductModel.ProductAttributeValueModel model)
@@ -436,6 +436,7 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
                 //reservation
+                model.CalendarModel.ProductId = product.Id;
                 model.CalendarModel.Interval = product.Interval;
                 model.CalendarModel.IntervalUnit = product.IntervalUnitId;
                 model.CalendarModel.IncBothDate = product.IncBothDate;
@@ -612,7 +613,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //discounts
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true))
+                .GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true))
                 .Select(d => d.ToModel())
                 .ToList();
             if (!excludeProperties && product != null)
@@ -971,7 +972,7 @@ namespace Grand.Web.Areas.Admin.Services
             //warehouses
             await SaveProductWarehouseInventory(product, model.ProductWarehouseInventoryModels);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1035,7 +1036,7 @@ namespace Grand.Web.Areas.Admin.Services
             //picture seo names
             await UpdatePictureSeoNames(product);
             //discounts
-            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
+            var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true);
             foreach (var discount in allDiscounts)
             {
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1873,9 +1874,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new BulkEditListModel();
 
             var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
-
+                            
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = await _categoryService.GetAllCategories(showHidden: true, storeId: storeId);
@@ -1891,18 +1890,34 @@ namespace Grand.Web.Areas.Admin.Services
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            // avaible stores
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+                var store = (await _storeService.GetAllStores()).Where(x => x.Id == storeId).FirstOrDefault();
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            }
+            else
+            {
+                model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+
+                foreach (var s in (await _storeService.GetAllStores()))
+                {
+                    model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                }
+            }
             return model;
         }
         public virtual async Task<(IEnumerable<BulkEditProductModel> bulkEditProductModels, int totalCount)> PrepareBulkEditProductModel(BulkEditListModel model, int pageIndex, int pageSize)
         {
+            var storeId = model.SearchStoreId;
+            if (_workContext.CurrentCustomer.IsStaff())
+                storeId = _workContext.CurrentCustomer.StaffStoreId;
+
             var vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
-
-            var storeId = string.Empty;
-            if (_workContext.CurrentCustomer.IsStaff())
-                storeId = _workContext.CurrentCustomer.StaffStoreId;
 
             var searchCategoryIds = new List<string>();
             if (!string.IsNullOrEmpty(model.SearchCategoryId))

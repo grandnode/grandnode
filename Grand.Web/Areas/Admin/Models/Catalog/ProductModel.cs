@@ -885,7 +885,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string OrderId { get; set; }
         }
 
-        [Validator(typeof(GenerateCalendarValidator))]
         public partial class GenerateCalendarModel : BaseGrandModel
         {
 
@@ -894,6 +893,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 Interval = 1;
                 Quantity = 1;
             }
+            public string ProductId { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDate")]
             [UIHint("DateNullable")]
@@ -912,7 +912,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public DateTime EndTime { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Interval")]
-            public int Interval { get; set; }
+            public int Interval { get; set; } = 1;
             public int IntervalUnit { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.IncBothDate")]

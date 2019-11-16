@@ -13,10 +13,10 @@
 
     function toggleAdvancedSearch() {
         if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
-            $('#advanced-search-block').show();
+            $('#advanced-search-block').css('display','flex');
         }
         else {
-            $('#advanced-search-block').hide();
+            $('#advanced-search-block').css('display', 'none');
         }
     }
 </script>

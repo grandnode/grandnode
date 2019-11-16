@@ -2,7 +2,6 @@
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Services.Common;
@@ -10,8 +9,8 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
-using Grand.Web.Models.Order;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

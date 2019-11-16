@@ -110,6 +110,11 @@ namespace Grand.Core.Domain.Orders
         public bool CartsSharedBetweenStores { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a customer will be able to select warehouse before add to cart
+        /// </summary>
+        public bool AllowToSelectWarehouse { get; set; }
+
+        /// <summary>
         /// Gets or sets a value reservation format date 
         /// </summary>
         public string ReservationDateFormat { get; set; }

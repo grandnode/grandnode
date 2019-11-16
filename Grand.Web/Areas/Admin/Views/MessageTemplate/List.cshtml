@@ -92,7 +92,7 @@
                 field: "Name",
                 title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Name")",
                 width: 200,
-                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "Subject",
                 title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Subject")",

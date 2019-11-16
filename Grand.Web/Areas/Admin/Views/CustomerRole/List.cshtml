@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject AdminAreaSettings adminAreaSettings
+
+@{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
@@ -45,15 +47,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false
+                pageSizes: [@(adminAreaSettings.GridPageSizes)] 
             },
             editable: {
                 confirmation: false,
@@ -64,7 +65,7 @@
                 field: "Name",
                 title: "@T("Admin.Customers.CustomerRoles.Fields.Name")",
                 width: 300,
-                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>'
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>'
             }, {
                 field: "FreeShipping",
                 title: "@T("Admin.Customers.CustomerRoles.Fields.FreeShipping")",
@@ -93,13 +94,7 @@
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(IsSystemRole) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-            },{
-                field: "PurchasedWithProductName",
-                title: "@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")",
-                width: 100,
-                minScreenWidth: 750,
             }]
         });
     });
 </script>
-        

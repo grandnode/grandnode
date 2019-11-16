@@ -8,22 +8,22 @@ namespace Grand.Core.Caching.Tests
     public class MemoryCacheManagerTests
     {
         [TestMethod()]
-        public void Set_and_get_example_data_by_passing_specified_key()
+        public async Task Set_and_get_example_data_by_passing_specified_key()
         {
             string key = "exampleKey01";
             byte data = 255;
             int cacheTime = int.MaxValue;
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
 
-            memoryCacheManager.Set(key, data, cacheTime);
-            Assert.AreEqual(memoryCacheManager.Get<byte>(key), data);
+            await memoryCacheManager.Set(key, data, cacheTime);
+            Assert.AreEqual(await memoryCacheManager.Get<byte>(key), data);
         }
 
         [TestMethod()]
-        public void IsSetTest()
+        public async Task IsSetTest()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            memoryCacheManager.Set("exampleKey05", 0, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey05", 0, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey05"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey08"));
@@ -41,16 +41,16 @@ namespace Grand.Core.Caching.Tests
         }
 
         [TestMethod()]
-        public void Clearing_whole_Cache()
+        public async Task Clearing_whole_Cache()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            memoryCacheManager.Set("exampleKey25", 5, int.MaxValue);
-            memoryCacheManager.Set("exampleKey35", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey25", 5, int.MaxValue);
+            await memoryCacheManager.Set("exampleKey35", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey25"));
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey35"));
 
-            memoryCacheManager.Clear();
+            await memoryCacheManager.Clear();
 
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey25"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey35"));

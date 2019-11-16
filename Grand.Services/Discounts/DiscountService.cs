@@ -44,10 +44,11 @@ namespace Grand.Services.Discounts
         /// </summary>
         /// <remarks>
         /// {0} : show hidden records?
-        /// {1} : coupon code
-        /// {2} : discount name
+        /// {1} : store ident
+        /// {2} : coupon code
+        /// {3} : discount name
         /// </remarks>
-        private const string DISCOUNTS_ALL_KEY = "Grand.discount.all-{0}-{1}-{2}";
+        private const string DISCOUNTS_ALL_KEY = "Grand.discount.all-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -68,10 +69,6 @@ namespace Grand.Services.Discounts
         /// Key pattern to clear cache
         /// </summary>
         private const string VENDORS_PATTERN_KEY = "Grand.vendor.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STORES_PATTERN_KEY = "Grand.store.";
 
         #endregion
 
@@ -84,7 +81,6 @@ namespace Grand.Services.Discounts
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Store> _storeRepository;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -93,6 +89,7 @@ namespace Grand.Services.Discounts
         private readonly IMediator _mediator;
         private readonly PerRequestCacheManager _perRequestCache;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -114,27 +111,27 @@ namespace Grand.Services.Discounts
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Vendor> vendorRepository,
-            IRepository<Store> storeRepository,
             PerRequestCacheManager perRequestCache,
-            ShoppingCartSettings shoppingCartSettings
+            ShoppingCartSettings shoppingCartSettings,
+            CatalogSettings catalogSettings
             )
         {
-            this._cacheManager = cacheManager;
-            this._discountRepository = discountRepository;
-            this._discountCouponRepository = discountCouponRepository;
-            this._discountUsageHistoryRepository = discountUsageHistoryRepository;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._genericAttributeService = genericAttributeService;
-            this._pluginFinder = pluginFinder;
-            this._mediator = mediator;
-            this._productRepository = productRepository;
-            this._categoryRepository = categoryRepository;
-            this._manufacturerRepository = manufacturerRepository;
-            this._vendorRepository = vendorRepository;
-            this._storeRepository = storeRepository;
-            this._perRequestCache = perRequestCache;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _cacheManager = cacheManager;
+            _discountRepository = discountRepository;
+            _discountCouponRepository = discountCouponRepository;
+            _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _genericAttributeService = genericAttributeService;
+            _pluginFinder = pluginFinder;
+            _mediator = mediator;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _manufacturerRepository = manufacturerRepository;
+            _vendorRepository = vendorRepository;
+            _perRequestCache = perRequestCache;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -186,14 +183,6 @@ namespace Grand.Services.Discounts
                 await _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
             }
 
-            if (discount.DiscountType == DiscountType.AssignedToStores)
-            {
-                var builderstore = Builders<Store>.Update;
-                var updatefilter = builderstore.Pull(x => x.AppliedDiscounts, discount.Id);
-                await _storeRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
-            }
-
             //remove coupon codes
             var filtersCoupon = Builders<DiscountCoupon>.Filter;
             var filterCrp = filtersCoupon.Eq(x => x.DiscountId, discount.Id);
@@ -227,12 +216,12 @@ namespace Grand.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
         public virtual async Task<IList<Discount>> GetAllDiscounts(DiscountType? discountType,
-            string couponCode = "", string discountName = "", bool showHidden = false)
+            string storeId = "", string couponCode = "", string discountName = "", bool showHidden = false)
         {
             //we load all discounts, and filter them by passed "discountType" parameter later
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
+            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, storeId, couponCode, discountName);
             var result = await _cacheManager.GetAsync(key, () =>
             {
                 var query = _discountRepository.Table;
@@ -246,13 +235,20 @@ namespace Grand.Services.Discounts
                         && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
                         && d.IsEnabled);
                 }
-                if (!String.IsNullOrEmpty(couponCode))
+                if (!string.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    query = from p in query
+                            where !p.LimitedToStores || p.Stores.Contains(storeId)
+                            select p;
+                }
+                if (!string.IsNullOrEmpty(couponCode))
                 {
                     var _coupon = _discountCouponRepository.Table.FirstOrDefault(x => x.CouponCode == couponCode);
                     if (_coupon != null)
                         query = query.Where(d => d.Id == _coupon.DiscountId);
                 }
-                if (!String.IsNullOrEmpty(discountName))
+                if (!string.IsNullOrEmpty(discountName))
                 {
                     query = query.Where(d => d.Name != null && d.Name.ToLower().Contains(discountName.ToLower()));
                 }
@@ -573,19 +569,16 @@ namespace Grand.Services.Discounts
                 if (!discount.IsEnabled)
                     return result;
 
+                //do not allow use discount in the current store
+                if (discount.LimitedToStores && !discount.Stores.Any(x => _storeContext.CurrentStore.Id == x))
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedInStore");
+                    return result;
+                }
+
                 //check coupon code
                 if (discount.RequiresCouponCode)
                 {
-                    //Do not allow use coupon code in the store
-                    if (discount.DiscountType == DiscountType.AssignedToStores)
-                    {
-                        if (_storeContext.CurrentStore.AppliedDiscounts.FirstOrDefault(x => x == discount.Id) == null)
-                        {
-                            result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedInStore");
-                            return result;
-                        }
-                    }
-
                     if (couponCodesToValidate == null || !couponCodesToValidate.Any())
                         return result;
                     var exists = false;
@@ -696,8 +689,7 @@ namespace Grand.Services.Discounts
                     if (!_pluginFinder.AuthenticateStore(discountRequirementPlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                         continue;
 
-                    var ruleRequest = new DiscountRequirementValidationRequest
-                    {
+                    var ruleRequest = new DiscountRequirementValidationRequest {
                         DiscountRequirementId = req.Id,
                         DiscountId = req.DiscountId,
                         Customer = customer,

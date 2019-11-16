@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Logging;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Extensions;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;

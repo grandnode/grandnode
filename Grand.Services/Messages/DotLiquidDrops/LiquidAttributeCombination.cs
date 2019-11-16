@@ -1,9 +1,6 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Infrastructure;
-using Grand.Services.Catalog;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops

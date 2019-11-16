@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grand.Core.Domain.Stores;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Discounts
@@ -6,9 +7,14 @@ namespace Grand.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount
     /// </summary>
-    public partial class Discount : BaseEntity
+    public partial class Discount : BaseEntity, IStoreMappingSupported
     {
         private ICollection<DiscountRequirement> _discountRequirements;
+
+        public Discount()
+        {
+            Stores = new List<string>();
+        }
 
         /// <summary>
         /// Gets or sets the name
@@ -95,6 +101,13 @@ namespace Grand.Core.Domain.Discounts
         /// Gets or sets a value indicating whether discount is enabled
         /// </summary>
         public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
+
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the discount type

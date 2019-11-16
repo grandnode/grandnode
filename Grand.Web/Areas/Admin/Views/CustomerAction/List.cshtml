@@ -63,7 +63,7 @@
                 field: "Name",
                 title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
                 width: 300,
-                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             }, {
                 field: "ActionType",
                 title: "@T("admin.customers.actiontype.fields.name")",

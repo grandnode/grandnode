@@ -125,9 +125,9 @@ namespace Grand.Services.Tax.Tests
             var customer = new Customer { IsTaxExempt = true }; //not taxable
             var product = new Product();
 
-            Assert.AreEqual(909.0909090909090909090909091M, (await _taxService.GetProductPrice(product, "0", 1000M, true, customer, true)).productprice);
+            Assert.AreEqual(Math.Round(909.0909090909090909090909091M,2), (await _taxService.GetProductPrice(product, "0", 1000M, true, customer, true)).productprice);
             Assert.AreEqual(1000M, (await _taxService.GetProductPrice(product, "0", 1000M, true, customer, false)).productprice);
-            Assert.AreEqual(909.0909090909090909090909091M, (await _taxService.GetProductPrice(product, "0", 1000M, false, customer, true)).productprice);
+            Assert.AreEqual(Math.Round(909.0909090909090909090909091M,2), (await _taxService.GetProductPrice(product, "0", 1000M, false, customer, true)).productprice);
             Assert.AreEqual(1000, (await _taxService.GetProductPrice(product, "0", 1000M, false, customer, false)).productprice);
         }
 

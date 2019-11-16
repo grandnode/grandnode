@@ -22,9 +22,9 @@ namespace Grand.Core.Configuration
         public bool ClearPluginShadowDirectoryOnStartup { get; set; }
 
         /// <summary>
-        /// Path to database with user agent strings
+        /// Gets or sets a value indicating whether copy dll plugin files to /Plugins/bin on application startup
         /// </summary>
-        public string UserAgentStringsPath { get; set; }
+        public bool PluginShadowCopy { get; set; }
 
         /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
@@ -34,13 +34,6 @@ namespace Grand.Core.Configuration
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; set; }
-
-
-        /// <summary>
-        /// A value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
-        /// Do not enable it if you run on Azure but use one instance only
-        /// </summary>
-        public bool MultipleInstancesEnabled { get; set; }
 
         /// <summary>
         /// A value indicating whether the site is run on Windows Azure Web Apps
@@ -107,6 +100,11 @@ namespace Grand.Core.Configuration
         /// Gets or sets a value of "Cache-Control" header value for static content
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of "Cookie SecurePolicy Always"
+        /// </summary>
+        public bool CookieSecurePolicyAlways { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display the full error in production environment.

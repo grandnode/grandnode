@@ -49,8 +49,8 @@ namespace Grand.Services.Catalog
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>The stock message</returns>
-        public static string FormatStockMessage(this Product product, string attributesXml,
-            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IStoreContext storeContext)
+        public static string FormatStockMessage(this Product product, string warehouseId, string attributesXml,
+            ILocalizationService localizationService, IProductAttributeParser productAttributeParser)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -72,7 +72,7 @@ namespace Grand.Services.Catalog
                         if (!product.DisplayStockAvailability)
                             return stockMessage;
 
-                        var stockQuantity = product.GetTotalStockQuantity(warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
+                        var stockQuantity = product.GetTotalStockQuantity(warehouseId: warehouseId);
                         if (stockQuantity > 0)
                         {
                             stockMessage = product.DisplayStockQuantity ?
@@ -114,7 +114,7 @@ namespace Grand.Services.Catalog
                         if (combination != null)
                         {
                             //combination exists
-                            var stockQuantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
+                            var stockQuantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: warehouseId);
                             if (stockQuantity > 0)
                             {
                                 stockMessage = product.DisplayStockQuantity ?
@@ -123,13 +123,25 @@ namespace Grand.Services.Catalog
                                     //display "in stock" without stock quantity
                                     localizationService.GetResource("Products.Availability.InStock");
                             }
-                            else if (combination.AllowOutOfStockOrders)
-                            {
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                            }
                             else
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                //out of stock
+                                switch (product.BackorderMode)
+                                {
+                                    case BackorderMode.NoBackorders:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.OutOfStock");
+                                        break;
+                                    case BackorderMode.AllowQtyBelow0:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.InStock");
+                                        break;
+                                    case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
+                                        stockMessage = localizationService.GetResource("Products.Availability.Attributes.Backordering");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                if(!combination.AllowOutOfStockOrders)
+                                    stockMessage = localizationService.GetResource("Products.Availability.Attributes.OutOfStock");
                             }
                         }
                         else

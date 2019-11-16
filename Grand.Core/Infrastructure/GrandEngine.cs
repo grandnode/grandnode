@@ -140,7 +140,7 @@ namespace Grand.Core.Infrastructure
         {
             //set base application path
             var provider = services.BuildServiceProvider();
-            var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
+            var hostingEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
             var grandConfig = provider.GetRequiredService<GrandConfig>();
             CommonHelper.HostingEnvironment = hostingEnvironment;
 
@@ -149,7 +149,7 @@ namespace Grand.Core.Infrastructure
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, grandConfig);
+            PluginManager.Initialize(mvcCoreBuilder, grandConfig);
 
             //initialize CTX sctipts
             RoslynCompiler.Initialize(mvcCoreBuilder.PartManager, grandConfig);

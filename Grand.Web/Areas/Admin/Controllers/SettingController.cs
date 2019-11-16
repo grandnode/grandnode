@@ -788,7 +788,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     };
                 //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
                 originAddress = model.ShippingOriginAddress.ToEntity(originAddress);
-                if (_addressService.GetAddressByIdSettings(addressId) != null)
+                if ((await _addressService.GetAddressByIdSettings(addressId)) != null)
                     await _addressService.UpdateAddressSettings(originAddress);
                 else
                     await _addressService.InsertAddressSettings(originAddress);

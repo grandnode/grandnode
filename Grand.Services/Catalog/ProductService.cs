@@ -128,26 +128,26 @@ namespace Grand.Services.Catalog
             IServiceProvider serviceProvider
             )
         {
-            this._cacheManager = cacheManager;
-            this._productRepository = productRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._urlRecordRepository = urlRecordRepository;
-            this._customerRepository = customerRepository;
-            this._customerRoleProductRepository = customerRoleProductRepository;
-            this._customerTagProductRepository = customerTagProductRepository;
-            this._productDeletedRepository = productDeletedRepository;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._specificationAttributeService = specificationAttributeService;
-            this._workflowMessageService = workflowMessageService;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._commonSettings = commonSettings;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
-            this._productTagRepository = productTagRepository;
-            this._customerProductRepository = customerProductRepository;
-            this._serviceProvider = serviceProvider;
+            _cacheManager = cacheManager;
+            _productRepository = productRepository;
+            _productReviewRepository = productReviewRepository;
+            _urlRecordRepository = urlRecordRepository;
+            _customerRepository = customerRepository;
+            _customerRoleProductRepository = customerRoleProductRepository;
+            _customerTagProductRepository = customerTagProductRepository;
+            _productDeletedRepository = productDeletedRepository;
+            _productAttributeService = productAttributeService;
+            _productAttributeParser = productAttributeParser;
+            _specificationAttributeService = specificationAttributeService;
+            _workflowMessageService = workflowMessageService;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _commonSettings = commonSettings;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
+            _productTagRepository = productTagRepository;
+            _customerProductRepository = customerProductRepository;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -458,6 +458,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.WarehouseId, product.WarehouseId)
                 .Set(x => x.Weight, product.Weight)
                 .Set(x => x.Width, product.Width)
+                .Set(x => x.GenericAttributes, product.GenericAttributes)
                 .CurrentDate("UpdatedOnUtc");
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
@@ -1050,7 +1051,7 @@ namespace Grand.Services.Catalog
                            where
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                            (vendorId == "" || p.VendorId == vendorId) &&
-                           (storeId == "" || p.Stores.Contains(storeId)) 
+                           (storeId == "" || p.Stores.Contains(storeId))
                            from c in p.ProductAttributeCombinations
                            select new ProductAttributeCombination() {
                                ProductId = p.Id,

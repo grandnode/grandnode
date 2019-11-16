@@ -28,11 +28,9 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task DeleteCategory(Discount discount, Category category);
         Task DeleteVendor(Discount discount, Vendor vendor);
         Task DeleteManufacturer(Discount discount, Manufacturer manufacturer);
-        Task DeleteStore(Discount discount, Store store);
         Task InsertCategoryToDiscountModel(DiscountModel.AddCategoryToDiscountModel model);
         Task InsertManufacturerToDiscountModel(DiscountModel.AddManufacturerToDiscountModel model);
         Task InsertVendorToDiscountModel(DiscountModel.AddVendorToDiscountModel model);
-        Task InsertStoreToDiscountModel(DiscountModel.AddStoreToDiscountModel model);
         Task<(IEnumerable<DiscountModel.DiscountUsageHistoryModel> usageHistoryModels, int totalCount)> PrepareDiscountUsageHistoryModel(Discount discount, int pageIndex, int pageSize);
 
     }

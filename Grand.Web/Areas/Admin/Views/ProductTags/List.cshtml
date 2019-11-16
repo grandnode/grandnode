@@ -88,7 +88,7 @@
                     field: "Name",
                     title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
                     width: 300,
-                    template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                    template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Name)#</a>',
                 }, {
                     field: "ProductCount",
                     title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",

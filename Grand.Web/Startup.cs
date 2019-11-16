@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Grand.Framework.Infrastructure.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace Grand.Web
 {
@@ -23,7 +23,7 @@ namespace Grand.Web
 
         #region Ctor
 
-        public Startup(IHostingEnvironment environment)
+        public Startup(IHostEnvironment environment)
         {
             //create configuration
             Configuration = new ConfigurationBuilder()

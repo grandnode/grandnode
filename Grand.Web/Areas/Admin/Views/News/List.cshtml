@@ -92,7 +92,7 @@
                 field: "Title",
                 width: 300,
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")",
-                template: '<a class="k-link" href="Edit/#=Id#">#=Title#</a>',
+                template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Title)#</a>',
             }, {
                 field: "Comments",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",

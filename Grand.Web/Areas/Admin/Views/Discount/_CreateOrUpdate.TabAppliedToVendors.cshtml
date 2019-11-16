@@ -67,7 +67,7 @@
                     columns: [{
                         field: "VendorName",
                         title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")",
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">#=VendorName#</a>',
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">#=kendo.htmlEncode(VendorName)#</a>',
                     }, {
                         command: [{
                             name: "destroy",

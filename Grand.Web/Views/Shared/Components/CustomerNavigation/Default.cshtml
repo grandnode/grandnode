@@ -30,6 +30,15 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-cart"></span><span>@T("Account.CustomerOrders")</span></a>
                                                                 </li>
                                                             }
+            @if (!Model.HideCourses)
+            {
+                <li class="customer-auctions">
+                    <a href="@Url.RouteUrl("CustomerCourses")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Courses)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-message-draw"></span><span>@T("Account.CustomerCourses")</span></a>
+                                                                </li>
+                                                            }
             @if (!Model.HideAuctions)
             {
                 <li class="customer-auctions">
@@ -46,6 +55,15 @@
                                                                     {<text>active</text>}
                                                                              else
                                                                              {<text>inactive</text>}"><span class="mdi mdi-chat"></span><span>@T("Account.CustomerNotes")</span></a>
+                                                                        </li>
+                                                                    }
+            @if (!Model.HideDocuments)
+            {
+                <li class="customer-notes">
+                    <a href="@Url.RouteUrl("CustomerDocuments")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Documents)
+                                                                    {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}"><span class="mdi mdi-file-document-edit-outline"></span><span>@T("Account.CustomerDocuments")</span></a>
                                                                         </li>
                                                                     }
             @if (!Model.HideReturnRequests)
@@ -129,6 +147,16 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-account-supervisor"></span><span>@T("Account.VendorInfo")</span></a>
                                                                 </li>
                                                             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData=Model })
+            @if (!Model.HideReviews)
+            {
+                <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
+                <li class="customer-notes">
+                    <a href="@Url.RouteUrl("CustomerReviews")" class="@if(Model.SelectedTab == CustomerNavigationEnum.Reviews)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-star"></span><span>@T("Account.Reviews")</span></a>
+                                                                </li>
+                                                            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
         </ul>
 </div>

@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Media
 {
-    public partial class PictureModel : BaseGrandModel
+    public partial class PictureModel : BaseGrandEntityModel
     {
         public string ImageUrl { get; set; }
         public string ThumbImageUrl { get; set; }

@@ -93,12 +93,12 @@
                     field: "NewsItemTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
                     width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:kendo.htmlEncode(NewsItemTitle)#</a>'
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
                     width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
                 }, {
                     field: "CommentTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"

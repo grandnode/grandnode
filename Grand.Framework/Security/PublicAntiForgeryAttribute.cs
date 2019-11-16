@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
@@ -18,7 +17,7 @@ namespace Grand.Framework.Security
         public PublicAntiForgeryAttribute(bool ignore = false) : base(typeof(PublicAntiForgeryFilter))
         {
             this._ignoreFilter = ignore;
-            this.Arguments = new object[] {ignore};
+            this.Arguments = new object[] { ignore };
         }
 
         public bool IgnoreFilter => _ignoreFilter;

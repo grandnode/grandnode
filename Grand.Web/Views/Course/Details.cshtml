@@ -1,0 +1,96 @@
+﻿@model CourseModel
+@inject SeoSettings seoSettings
+@inject CommonSettings commonSettings
+@{
+    Layout = "_ColumnsOne";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var courseUrl = Url.RouteUrl("Course", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(courseUrl);
+    }
+
+}
+
+<div class="page category-page">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "coursedetails_top", additionalData = Model.Id })
+    <div class="jumbotron p-4">
+        <div class="container d-inline-flex px-0">
+            <div class="d-inline-flex flex-sm-row flex-column align-items-sm-start w-100">
+                <img src="@Model.PictureUrl" class="mr-3" />
+                <div class="media-body">
+                    <h2 class="d-flex flex-column">@Model.Name<span class="h6">(@Model.Level)</span></h2>
+                    @if (!String.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <p>
+                            @Html.Raw(Model.Description)
+                        </p>
+                    }
+                </div>
+            </div>
+            <div class="d-inline-flex">
+                @if (Model.Approved)
+                {
+                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="customControlInline" checked disabled>
+                        <label class="custom-control-label" for="customControlInline"></label>
+                    </div>
+                }
+                else
+                {
+                    <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="customControlInline" disabled>
+                        <label class="custom-control-label" for="customControlInline"></label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "coursedetails_before_subcategories", additionalData = Model.Id })
+    <div class="list-group">
+        @foreach (var subject in Model.Subjects)
+        {
+            <div class="list-group-item list-group-item-action mb-3">
+                <h4>
+                    <strong>@subject.Name</strong>
+                </h4>
+                <ul class="list-unstyled">
+                    @foreach (var lesson in Model.Lessons.Where(x => x.SubjectId == subject.Id).OrderBy(x => x.DisplayOrder))
+                    {
+                        <li class="media mb-3">
+                            <img src="@lesson.PictureUrl" class="mr-3" />
+                            <div class="media-body d-inline-flex">
+                                <div class="w-100">
+                                    
+                                    <h5 class="mt-0 mb-1">@Html.ActionLink(lesson.Name, "Lesson", "Course", new { id = lesson.Id })</h5>
+                                    @lesson.ShortDescription
+                                </div>
+                                <div class="d-inline-flex">
+                                    @if (lesson.Approved)
+                                    {
+                                        <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="@lesson.Id" checked disabled>
+                                            <label class="custom-control-label" for="@lesson.Id"></label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="custom-control disabled custom-checkbox my-1 mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="2-@lesson.Id" disabled>
+                                            <label class="custom-control-label" for="2-@lesson.Id"></label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+        }
+    </div>
+</div>

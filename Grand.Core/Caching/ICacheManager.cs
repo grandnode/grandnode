@@ -14,7 +14,7 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        T Get<T>(string key);
+        Task<T> Get<T>(string key);
 
         /// <summary>
         /// Gets or sets the value associated with the specified key.

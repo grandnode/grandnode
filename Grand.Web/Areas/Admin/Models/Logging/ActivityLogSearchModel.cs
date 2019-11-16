@@ -13,6 +13,10 @@ namespace Grand.Web.Areas.Admin.Models.Logging
         {
             ActivityLogType = new List<SelectListItem>();
         }
+
+        [GrandResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")]
+        public string Comment { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }

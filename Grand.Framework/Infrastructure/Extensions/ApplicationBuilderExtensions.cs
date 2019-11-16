@@ -15,11 +15,12 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.AspNetCore3;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -45,7 +46,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             var serviceProvider = application.ApplicationServices;
             var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();
-            var hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+            var hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
             bool useDetailedExceptionPage = grandConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
@@ -282,6 +283,20 @@ namespace Grand.Framework.Infrastructure.Extensions
                 .AddContentTypeOptionsNoSniff()
                 .AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365) // maxage = one year in seconds
                 .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+                .AddContentSecurityPolicy(builder =>
+                {
+                    builder.AddUpgradeInsecureRequests();
+                    builder.AddDefaultSrc().Self(); 
+                    builder.AddConnectSrc().From("*");
+                    builder.AddFontSrc().From("*");
+                    builder.AddFrameAncestors().From("*");
+                    builder.AddFrameSource().From("*");
+                    builder.AddMediaSrc().From("*");
+                    builder.AddImgSrc().From("*").Data();
+                    builder.AddObjectSrc().From("*");
+                    builder.AddScriptSrc().From("*").UnsafeInline().UnsafeEval();
+                    builder.AddStyleSrc().From("*").UnsafeEval().UnsafeInline();
+                })
                 .RemoveServerHeader();
 
             application.UseSecurityHeaders(policyCollection);

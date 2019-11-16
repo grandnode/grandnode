@@ -7,7 +7,6 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using Grand.Services.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +38,7 @@ namespace Grand.Services.Media
             ILogger logger,
             IMediator mediator,
             MediaSettings mediaSettings,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             GrandConfig config)
             : base(pictureRepository,
                 settingService,
@@ -49,7 +48,7 @@ namespace Grand.Services.Media
                 mediaSettings, 
                 hostingEnvironment)
         {
-            this._config = config;
+            _config = config;
 
             //Arguments guard
             if (string.IsNullOrEmpty(_config.AmazonAwsAccessKeyId))
@@ -110,8 +109,8 @@ namespace Grand.Services.Media
         /// <summary>
         /// Ensure Every Response Will Have Expected HttpStatusCode
         /// </summary>
-        /// <param name="response">Actual Response</param>
-        /// <param name="validHttpStatusCode">Expected Status Code</param>
+        /// <param name="actualResponse">Actual Response</param>
+        /// <param name="expectedHttpStatusCode">Expected Status Code</param>
         private void EnsureValidResponse(AmazonWebServiceResponse actualResponse, HttpStatusCode expectedHttpStatusCode)
         {
             if (actualResponse.HttpStatusCode != expectedHttpStatusCode)

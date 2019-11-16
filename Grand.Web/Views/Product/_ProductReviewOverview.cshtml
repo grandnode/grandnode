@@ -11,19 +11,17 @@
 {
     <div class="product-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
         <div class="product-review-box d-inline-block">
-            <div class="rating">
-                <div class="rating-ghost">
-                    &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
-                </div>
-                <div class="rating-real" style="width: @(ratingPercent)%">
-                    &#9733;&#9733;&#9733;&#9733;&#9733;
+            <div class="ratings">
+                <div class="rating-box">
+                    <div class="rating" style="width: @(ratingPercent)%">
+                    </div>
                 </div>
             </div>
         </div>
         @if (Model.TotalReviews > 0)
         {
             <div class="product-review-links">
-                <a class="btn btn-sm pr-0 review-scroll-button" href="#review-tab">
+                <a class="btn btn-sm py-0 pr-0 review-scroll-button" href="#review-tab">
                     @Model.TotalReviews
                     @T("Reviews.Overview.Reviews")
                 </a> 
@@ -36,7 +34,7 @@
         else
         { 
             <div class="product-no-reviews">
-                <a class="btn btn-sm pr-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+                <a class="btn btn-sm py-0 pr-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
             </div>
         }
     </div>

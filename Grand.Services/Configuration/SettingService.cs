@@ -3,7 +3,6 @@ using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
-using Grand.Services.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -53,15 +52,15 @@ namespace Grand.Services.Configuration
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="settingRepository">Setting repository</param>
         public SettingService(IEnumerable<ICacheManager> cacheManager, IMediator mediator,
             IRepository<Setting> settingRepository, IServiceProvider serviceProvider)
         {
-            this._cacheManager = cacheManager.FirstOrDefault();
-            this._mediator = mediator;
-            this._settingRepository = settingRepository;
-            this._serviceProvider = serviceProvider;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _mediator = mediator;
+            _settingRepository = settingRepository;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

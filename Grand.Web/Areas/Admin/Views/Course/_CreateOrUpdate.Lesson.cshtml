@@ -1,0 +1,89 @@
+﻿@model CourseModel
+<vc:admin-widget widget-zone="course_details_lesson_top" additional-data="Model" />
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Courses.Course.Lessons")
+        </div>
+        <div class="panel-body">
+            <div id="lessons-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewLesson" name="btnAddNewLesson" onclick="javascript:setLocation('@(Url.Action("CreateLesson", "Course", new { courseId = Model.Id }))'); return false;" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Courses.Course.Lesson.AddNew")</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#lessons-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Lessons", "Course", new { courseId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: false, type: "string" },
+                                DisplayOrder: {editable: false, type: "number" },
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Courses.Course.Lesson.Fields.Name")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Course/EditLesson/")#=Id#">#=kendo.htmlEncode(Name)#</a>',
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.Courses.Course.Lesson.Fields.DisplayOrder")",
+                    //integer format
+                    format: "{0:0}",
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                }]
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Courses.Course.Lesson.SaveBeforeEdit")
+    </div>
+}
+<vc:admin-widget widget-zone="course_details_lesson_bottom" additional-data="Model" />

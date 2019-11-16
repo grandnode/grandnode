@@ -29,21 +29,28 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToProducts")" tab-index="3" id="tab-applied-to-products">
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToStores")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToProducts")" tab-index="4" id="tab-applied-to-products">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToCategories")" tab-index="4" id="tab-applied-to-categories">
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToCategories")" tab-index="5" id="tab-applied-to-categories">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToManufacturers")" tab-index="5" id="tab-applied-to-manufacturers">
+        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToManufacturers")" tab-index="6" id="tab-applied-to-manufacturers">
             <content>
                 <div>
                     <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
@@ -57,16 +64,9 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Promotions.Discounts.AppliedToStores")" tab-index="8" id="tab-applied-to-stores">
-            <content>
-                <div>
-                    <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
-                </div>
-            </content>
-        </tabstrip-item>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <tabstrip-item text="@T("Admin.Promotions.Discounts.History")" tab-index="6">
+            <tabstrip-item text="@T("Admin.Promotions.Discounts.History")" tab-index="8">
                 <content>
                     <div>
                         <partial name="_CreateOrUpdate.TabHistory" model="Model" />

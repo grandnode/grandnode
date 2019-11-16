@@ -1,11 +1,8 @@
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Blogs;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
@@ -30,13 +27,6 @@ namespace Grand.Services.Customers
     {
         #region Constants
 
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        private const string CUSTOMERROLES_ALL_KEY = "Grand.customerrole.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -74,11 +64,6 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<CustomerNote> _customerNoteRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IMediator _mediator;
@@ -96,31 +81,21 @@ namespace Grand.Services.Customers
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<CustomerNote> customerNoteRepository,
-            IRepository<Order> orderRepository,
-            IRepository<ForumPost> forumPostRepository,
-            IRepository<ForumTopic> forumTopicRepository,
-            IRepository<BlogComment> blogCommentRepository,
-            IRepository<ProductReview> productReviewRepository,
             IGenericAttributeService genericAttributeService,
             IMediator mediator,
             IServiceProvider serviceProvider)
         {
-            this._cacheManager = cacheManager;
-            this._customerRepository = customerRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._customerProductRepository = customerProductRepository;
-            this._customerProductPriceRepository = customerProductPriceRepository;
-            this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
-            this._customerRoleProductRepository = customerRoleProductRepository;
-            this._customerNoteRepository = customerNoteRepository;
-            this._orderRepository = orderRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumTopicRepository = forumTopicRepository;
-            this._blogCommentRepository = blogCommentRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._genericAttributeService = genericAttributeService;
-            this._mediator = mediator;
-            this._serviceProvider = serviceProvider;
+            _cacheManager = cacheManager;
+            _customerRepository = customerRepository;
+            _customerRoleRepository = customerRoleRepository;
+            _customerProductRepository = customerProductRepository;
+            _customerProductPriceRepository = customerProductPriceRepository;
+            _customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
+            _customerRoleProductRepository = customerRoleProductRepository;
+            _customerNoteRepository = customerNoteRepository;
+            _genericAttributeService = genericAttributeService;
+            _mediator = mediator;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -815,6 +790,8 @@ namespace Grand.Services.Customers
 
             filter = filter & builder.Eq(x => x.HasContributions, false);
 
+            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
+
             var customers = await _customerRepository.Collection.DeleteManyAsync(filter);
 
             return (int)customers.DeletedCount;
@@ -882,17 +859,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        public virtual async Task<IList<CustomerRole>> GetAllCustomerRoles(bool showHidden = false)
+        public virtual async Task<IPagedList<CustomerRole>> GetAllCustomerRoles(int pageIndex = 0, 
+            int pageSize = int.MaxValue, bool showHidden = false)
         {
-            string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
-            return await _cacheManager.GetAsync(key, () =>
-            {
-                var query = from cr in _customerRoleRepository.Table
-                            where (showHidden || cr.Active)
-                            orderby cr.Name
-                            select cr;
-                return query.ToListAsync();
-            });
+            var query = from cr in _customerRoleRepository.Table
+                        where (showHidden || cr.Active)
+                        orderby cr.Name
+                        select cr;
+            return await PagedList<CustomerRole>.Create(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1235,6 +1209,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
             var update = Builders<Customer>.Update
+                .Set(x => x.ShoppingCartItems.ElementAt(-1).WarehouseId, shoppingCartItem.WarehouseId)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Quantity, shoppingCartItem.Quantity)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).AdditionalShippingChargeProduct, shoppingCartItem.AdditionalShippingChargeProduct)
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).IsFreeShipping, shoppingCartItem.IsFreeShipping)

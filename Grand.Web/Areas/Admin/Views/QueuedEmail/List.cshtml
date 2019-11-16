@@ -128,7 +128,7 @@
                     field: "Subject",
                     title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
                     width: 300,
-                    template: '<a class="k-link" href="Edit/#=Id#">#=Subject#</a>',
+                    template: '<a class="k-link" href="Edit/#=Id#">#=kendo.htmlEncode(Subject)#</a>',
                 }, {
                     field: "From",
                     title: "@T("Admin.System.QueuedEmails.Fields.From")",

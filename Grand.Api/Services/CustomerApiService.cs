@@ -2,7 +2,7 @@
 using Grand.Api.Extensions;
 using Grand.Api.Interfaces;
 using Grand.Core.Domain.Customers;
-using Grand.Data;
+using Grand.Core.Data;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Localization;

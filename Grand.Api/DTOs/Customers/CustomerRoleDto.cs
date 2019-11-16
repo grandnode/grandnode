@@ -14,6 +14,5 @@ namespace Grand.Api.DTOs.Customers
         public bool IsSystemRole { get; set; }
         public string SystemName { get; set; }
         public bool EnablePasswordLifetime { get; set; }
-        public string PurchasedWithProductId { get; set; }
     }
 }

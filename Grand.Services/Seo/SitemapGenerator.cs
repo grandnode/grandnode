@@ -5,8 +5,8 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.News;
-using Grand.Core.Domain.Security;
 using Grand.Services.Catalog;
+using Grand.Services.Helpers;
 using Grand.Services.Topics;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -48,7 +48,6 @@ namespace Grand.Services.Seo
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
         private readonly NewsSettings _newsSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly SecuritySettings _securitySettings;
 
         #endregion
 
@@ -64,21 +63,19 @@ namespace Grand.Services.Seo
             BlogSettings blogSettings,
             KnowledgebaseSettings knowledgebaseSettings,
             NewsSettings newsSettings,
-            ForumSettings forumSettings,
-            SecuritySettings securitySettings)
+            ForumSettings forumSettings)
         {
-            this._storeContext = storeContext;
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._manufacturerService = manufacturerService;
-            this._topicService = topicService;
-            this._webHelper = webHelper;
-            this._commonSettings = commonSettings;
-            this._blogSettings = blogSettings;
-            this._knowledgebaseSettings = knowledgebaseSettings;
-            this._newsSettings = newsSettings;
-            this._forumSettings = forumSettings;
-            this._securitySettings = securitySettings;
+            _storeContext = storeContext;
+            _categoryService = categoryService;
+            _productService = productService;
+            _manufacturerService = manufacturerService;
+            _topicService = topicService;
+            _webHelper = webHelper;
+            _commonSettings = commonSettings;
+            _blogSettings = blogSettings;
+            _knowledgebaseSettings = knowledgebaseSettings;
+            _newsSettings = newsSettings;
+            _forumSettings = forumSettings;
         }
 
         #endregion
@@ -243,7 +240,7 @@ namespace Grand.Services.Seo
 
             return search.products.Select(product =>
                 {
-                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language)}, GetHttpProtocol());
+                    var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName(language) }, GetHttpProtocol());
                     return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
                 });
         }
@@ -283,8 +280,7 @@ namespace Grand.Services.Seo
         /// <param name="sitemapNumber">The number of sitemaps</param>
         protected virtual async Task WriteSitemapIndex(IUrlHelper urlHelper, Stream stream, int sitemapNumber)
         {
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Indent = true,
                 IndentChars = "\t",
@@ -326,8 +322,7 @@ namespace Grand.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual async Task WriteSitemap(IUrlHelper urlHelper, Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            var xwSettings = new XmlWriterSettings
-            {
+            var xwSettings = new XmlWriterSettings {
                 ConformanceLevel = ConformanceLevel.Auto,
                 Indent = true,
                 IndentChars = "\t",

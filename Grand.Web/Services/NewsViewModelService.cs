@@ -4,7 +4,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -126,6 +125,7 @@ namespace Grand.Web.Services
                     var picture = await _pictureService.GetPictureById(newsItem.PictureId);
                     var pictureModel = new PictureModel
                     {
+                        Id = newsItem.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.News.ImageLinkTitleFormat"), newsItem.Title),

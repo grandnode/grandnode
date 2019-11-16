@@ -402,9 +402,18 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerNotes",
                             "customer/notes",
                             new { controller = "Customer", action = "Notes" });
+            routeBuilder.MapLocalizedRoute("CustomerDocuments",
+                            "customer/documents",
+                            new { controller = "Customer", action = "Documents" });
+            routeBuilder.MapLocalizedRoute("CustomerCourses",
+                            "customer/courses",
+                            new { controller = "Customer", action = "Courses" });
             routeBuilder.MapLocalizedRoute("AccountActivation",
                             "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" });
+            routeBuilder.MapLocalizedRoute("CustomerReviews",
+                            "customer/reviews",
+                            new { controller = "Customer", action = "Reviews" });
             routeBuilder.MapLocalizedRoute("CustomerForumSubscriptions",
                             "boards/forumsubscriptions",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" });
@@ -472,7 +481,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapRoute("GetCustomerNoteFile",
                             "download/customernotefile/{customernoteid}",
                             new { controller = "Download", action = "GetCustomerNoteFile" });
-
+            routeBuilder.MapRoute("GetDocumentFile",
+                           "download/documentfile/{documentid}",
+                           new { controller = "Download", action = "GetDocumentFile" });
             //contact vendor
             routeBuilder.MapLocalizedRoute("ContactVendor",
                             "contactvendor/{vendorId}",
@@ -659,41 +670,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("PageNotFound", "page-not-found",
                             new { controller = "Common", action = "PageNotFound" });
 
-            //push notifications
-            routeBuilder.MapRoute(
-               "PushNotifications.Send",
-               "Admin/PushNotifications/Send",
-            new { controller = "PushNotifications", action = "Send" });
-
-            routeBuilder.MapRoute(
-                "PushNotifications.Messages",
-                "Admin/PushNotifications/Messages",
-            new { controller = "PushNotifications", action = "Messages" });
-
-            routeBuilder.MapRoute(
-               "PushNotifications.Receivers",
-               "Admin/PushNotifications/Receivers",
-            new { controller = "PushNotifications", action = "Receivers" });
-
-            routeBuilder.MapRoute(
-                "PushNotifications.DeleteReceiver",
-                "Admin/PushNotifications/DeleteReceiver",
-                new { controller = "PushNotifications", action = "DeleteReceiver" });
-
-            routeBuilder.MapRoute(
-                "PushNotifications.Configure",
-                "Admin/PushNotifications/Configure",
-                new { controller = "PushNotifications", action = "Configure" });
-
-            routeBuilder.MapRoute(
-                "PushNotifications.PushMessagesList",
-                "Admin/PushNotifications/PushMessagesList",
-            new { controller = "PushNotifications", action = "PushMessagesList" });
-
-            routeBuilder.MapRoute(
-                "PushNotifications.PushReceiversList",
-                "Admin/PushNotifications/PushReceiversList",
-            new { controller = "PushNotifications", action = "PushReceiversList" });
+            
 
             //lets encrypt
             routeBuilder.MapRoute("well-known", ".well-known/acme-challenge/{fileName}", 

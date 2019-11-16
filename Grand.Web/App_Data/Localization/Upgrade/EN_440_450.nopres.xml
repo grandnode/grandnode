@@ -590,4 +590,34 @@
   <LocaleResource Name="messages.wishlist.product(s).quantity">
     <Value>Quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="messages.wishlist.product(s).picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow1">
+    <Value>Include in footer (row 1)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow1.Hint">
+    <Value>Check to include this topic in the footer (row 1). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow2">
+    <Value>Include in footer (row 2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow2.Hint">
+    <Value>Check to include this topic in the footer (row 2). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3">
+    <Value>Include in footer (row 3)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterRow3.Hint">
+    <Value>Check to include this topic in the footer (row 3). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="pushnotifications.message.fields.text">
+    <Value>Message content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInStaffRoleWithoutStaffAssociated">
+    <Value>A customer in the Staff role should have a staff account associated.</Value>
+  </LocaleResource>
 </Language>

@@ -12,8 +12,8 @@
                             string textPrompt = attribute.Name;
                         }
                         <label for="@(controlId)" class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="@(controlId)" type="checkbox" name="@(controlId)" value="@attribute.Id" 
-                                   checked="@attribute.Selected" />
+                            <input class="custom-control-input" id="@(controlId)" type="checkbox" name="@(controlId)" value="@(attribute.Id)" 
+                                   checked="@(attribute.Selected)" />
                             <span class="custom-control-label"></span>
                             <span class="custom-control-description">@textPrompt</span>
                         </label>

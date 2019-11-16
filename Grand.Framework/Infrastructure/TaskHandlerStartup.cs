@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Infrastructure;
-using Grand.Data;
 using Grand.Services.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

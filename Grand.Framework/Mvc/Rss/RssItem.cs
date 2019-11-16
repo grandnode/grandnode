@@ -1,5 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Extensions;
+﻿using Grand.Core.Extensions;
+using Grand.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -51,11 +51,11 @@ namespace Grand.Framework.Mvc.Rss
         /// <param name="pubDate">Last build date</param>
         private void Init(string title, string content, Uri link, string id, DateTimeOffset pubDate)
         {
-            this.Title = new XElement("title", title);
-            this.Content = new XElement("description", content);
-            this.Link = new XElement("link", link);
-            this.Id = new XElement("guid", new XAttribute("isPermaLink", false), id);
-            this.PubDate = new XElement("pubDate", pubDate.ToString("r"));
+            Title = new XElement("title", title);
+            Content = new XElement("description", new XCData(content));
+            Link = new XElement("link", link);
+            Id = new XElement("guid", new XAttribute("isPermaLink", false), id);
+            PubDate = new XElement("pubDate", pubDate.ToString("r"));
         }
 
         /// <summary>
@@ -82,11 +82,10 @@ namespace Grand.Framework.Mvc.Rss
         /// <summary>
         /// Get title text
         /// </summary>
-        public string TitleText
-        {
+        public string TitleText {
             get { return Title.Return(t => t.Value, string.Empty); }
         }
-        
+
         /// <summary>
         /// Content
         /// </summary>
@@ -95,11 +94,10 @@ namespace Grand.Framework.Mvc.Rss
         /// <summary>
         /// Get content text
         /// </summary>
-        public string ContentText
-        {
+        public string ContentText {
             get { return XmlHelper.XmlDecode(Content.Return(t => t.Value, string.Empty)); }
         }
-        
+
         /// <summary>
         /// Link
         /// </summary>
@@ -123,8 +121,7 @@ namespace Grand.Framework.Mvc.Rss
         /// <summary>
         /// Publish date
         /// </summary>
-        public DateTimeOffset PublishDate
-        {
+        public DateTimeOffset PublishDate {
             get { return PubDate.Return(e => DateTimeOffset.ParseExact(e.Value, "r", null), DateTimeOffset.Now); }
         }
 

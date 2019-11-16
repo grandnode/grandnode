@@ -50,8 +50,7 @@ namespace Grand.Services.Authentication
         /// <returns>Task</returns>
         public async Task Invoke(HttpContext context)
         {
-            context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
-            {
+            context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature {
                 OriginalPath = context.Request.Path,
                 OriginalPathBase = context.Request.PathBase
             });
@@ -62,7 +61,7 @@ namespace Grand.Services.Authentication
             {
                 try
                 {
-                    if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && await handler.HandleRequestAsync())
+                    if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && handler != null && await handler.HandleRequestAsync())
                         return;
                 }
                 catch { continue; }

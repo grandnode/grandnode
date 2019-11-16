@@ -69,7 +69,7 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Configuration.Shipping.PickupPoint.Fields.Name")",
-                template: '<a class="k-link" href="EditPickupPoint/#=Id#">#=Name#</a>',
+                template: '<a class="k-link" href="EditPickupPoint/#=Id#">#=kendo.htmlEncode(Name)#</a>',
             },
             {
                 field: "Description",

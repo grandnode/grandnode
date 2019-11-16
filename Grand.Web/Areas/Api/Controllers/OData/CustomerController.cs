@@ -55,7 +55,19 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return BadRequest(ModelState);
         }
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] CustomerDto model)
+        {
+            if (!await _permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
 
+            if (ModelState.IsValid)
+            {
+                model = await _customerApiService.UpdateCustomer(model);
+                return Updated(model);
+            }
+            return BadRequest(ModelState);
+        }
         [HttpDelete]
         public async Task<IActionResult> Delete(string key)
         {
@@ -89,7 +101,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         //odata/Customer(email)/UpdateAddress
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateAddress(string key, [FromBody] AddressDto address)
         {
             if (!await _permissionService.Authorize(PermissionSystemName.Customers))
@@ -105,6 +117,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             address = await _customerApiService.UpdateAddress(customer, address);
             return Ok(address);
         }
+
         //odata/Customer(email)/DeleteAddress
         //body: { "addressId": "xxx" }
         [HttpPost]

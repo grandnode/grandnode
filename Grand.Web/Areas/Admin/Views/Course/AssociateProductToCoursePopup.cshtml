@@ -1,0 +1,201 @@
+﻿@model CourseModel.AssociateProductToCourseModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    //page title
+    ViewBag.Title = T("Admin.Courses.Course.Fields.PurchasedWithProduct.Choose").Text;
+}
+
+<form asp-controller="Course" asp-action="AssociateProductToCoursePopup" method="post"
+      asp-route-CustomerRoleId="@Context.Request.Query["CourseId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]"
+      id="associateproduct"
+      >
+    <antiforgery-token />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel light form-fit">
+                <div class="x_title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Courses.Course.Fields.PurchasedWithProduct.Choose")
+                    </div>
+                </div>
+                <div class="x_content form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group popup">
+                                <admin-label asp-for="SearchProductName" class="col-sm-4 control-label" />
+                                <div class="col-xs-8 col-md-4 col-sm-4">
+                                    <admin-input asp-for="SearchProductName" />
+                                </div>
+                                <div class="col-xs-8 col-md-4 col-sm-4 mt-mobile-10">
+                                    <div class="btn-group btn-group-devided">
+                                        <button class="btn btn-success filter-submit" id="search-products">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button type="button" class="btn btn-default filter-extend-button">
+                                            <i class="fa fa-filter"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group extend-collapse">
+                                <admin-label asp-for="SearchCategoryId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                </div>
+                            </div>
+                            <div class="form-group extend-collapse">
+                                <admin-label asp-for="SearchManufacturerId" class="col-sm-3 control-label" />
+                                <div class="col-md-9  col-sm-9">
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                </div>
+                            </div>
+                            <div class="form-group extend-collapse">
+                                <admin-label asp-for="SearchStoreId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group extend-collapse">
+                                <admin-label asp-for="SearchVendorId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                </div>
+                            </div>
+                            <div class="form-group extend-collapse">
+                                <admin-label asp-for="SearchProductTypeId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+                                </div>
+                            </div>
+                            <div id="products-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @if (ViewBag.RefreshPage == true)
+    {
+    <script type="text/javascript">
+    try {
+            window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
+    }
+    catch (e){}
+    window.close();
+    </script>
+    }
+
+    <input asp-for="AssociatedToProductId" type="hidden" />
+
+    <div id="products-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.extend-collapse').hide();
+            $('.filter-extend-button').click(function () {
+                $('.extend-collapse').toggle("slow");
+                $('.filter-text-close').toggle();
+            });
+
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("AssociateProductToCoursePopupList", "Course"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Common.Select")",
+                    width: 50,
+                    template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(\'#=Id#\')" class="k-button" />'
+                },{
+                    field: "Name",
+                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }]
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-products').click(function () {
+                var grid = $('#products-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                return false;
+            });
+        });
+
+        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-products").click();
+                return false;
+            }
+        });
+
+        function additionalData() {
+            var data = {
+                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                SearchStoreId: $('#SearchStoreId').val(),
+                SearchVendorId: $('#SearchVendorId').val(),
+                SearchProductTypeId: $('#SearchProductTypeId').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+        
+        function selectAssociatedProduct(productid) {
+            $("#@Html.FieldIdFor(model => model.AssociatedToProductId)").val(productid);
+            $('#associateproduct').submit();
+        }
+    </script>
+</form>

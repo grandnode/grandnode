@@ -14,16 +14,7 @@ namespace Grand.Api.Validators.Customers
         public CustomerRoleValidator(ILocalizationService localizationService, IProductService productService, ICustomerService customerService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Customers.CustomerRole.Fields.Name.Required"));
-            RuleFor(x => x).MustAsync(async (x, context) =>
-            {
-                if (!string.IsNullOrEmpty(x.PurchasedWithProductId))
-                {
-                    var product = await productService.GetProductById(x.PurchasedWithProductId);
-                    if (product == null)
-                        return false;
-                }
-                return true;
-            }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRole.Fields.PurchasedWithProductId.NotExists"));
+            
             RuleFor(x => x).MustAsync(async (x, context) =>
             {
                 if (!string.IsNullOrEmpty(x.Id))
@@ -57,20 +48,7 @@ namespace Grand.Api.Validators.Customers
                     }
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
-            RuleFor(x => x).MustAsync(async (x, context) =>
-            {
-                if (!string.IsNullOrEmpty(x.Id))
-                {
-                    var customerRole = await customerService.GetCustomerRoleById(x.Id);
-                    if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.OrdinalIgnoreCase) &&
-                            !String.IsNullOrEmpty(x.PurchasedWithProductId))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
+            }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));            
         }
     }
 }

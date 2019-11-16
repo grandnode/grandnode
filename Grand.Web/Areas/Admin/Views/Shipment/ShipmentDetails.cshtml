@@ -46,7 +46,7 @@
         }
     </script>
     <div asp-validation-summary="All"></div>
-    <div class="row col-md-14">
+    <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
                 <div class="x_title">
@@ -161,7 +161,7 @@
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
                                         <div id="divDeliveryDate" style="display: inline-block;"><admin-input asp-for="DeliveryDate" /> &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.Enter")</div>
-                                        <button type="submit" id="btnEditDeliveryDate"  onclick=" toggleDeliveryDate(true);return false; " class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Common.Edit")</button>
+                                        <button type="submit" id="btnEditDeliveryDate" onclick=" toggleDeliveryDate(true);return false; " class="k-button"><span class="k-icon k-i-edit"></span>&nbsp;@T("Admin.Common.Edit")</button>
                                         <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " class="k-button"><span class="k-icon k-i-save"></span>&nbsp;@T("Admin.Common.Save")</button>
                                         <button type="submit" id="btnCancelDeliveryDate" onclick=" toggleDeliveryDate(false);return false; " class="k-button"><span class="k-icon k-i-cancel"></span>&nbsp;@T("Admin.Common.Cancel")</button>
                                     }
@@ -170,147 +170,148 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <table class="table table-bordered table-striped table-hover">
-        <tr>
-            <td>
-                <strong>@T("Admin.Orders.Shipments.Products")</strong>
-            </td>
-        </tr>
-        <tr>
-            <td>
                 <table class="table table-bordered table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ProductName")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.SKU")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.Warehouse")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ItemWeight")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ItemDimensions")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.QtyShipped")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {
-                            <tr>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <p>
-                                                @Html.Raw(item.AttributeInfo)
-                                            </p>
-                                        }
-                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                        {
-                                            <p>
-                                                @Html.Raw(item.RentalInfo)
-                                            </p>
-                                        }
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.Sku
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.ShippedFromWarehouse
-                                    </div>
-                                </td>
-                                <td>
-                                    @item.ItemWeight
-                                </td>
-                                <td>
-                                    @item.ItemDimensions
-                                </td>
-                                <td>
-                                    @item.QuantityInThisShipment
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
-    @if (Model.ShipmentStatusEvents.Count > 0)
-    {
-    <div class="form-horizontal">
-        <div class="note note-info">
-            @T("Admin.Orders.Shipments.ShipmentStatusEvents")
-        </div>
-        <div class="form-body">
-            <div class="form-group">
-                <table class="table table-bordered table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th align="center">
-                                @T("Admin.Orders.Shipments.ShipmentStatusEvents.Event")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Orders.Shipments.ShipmentStatusEvents.Location")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Orders.Shipments.ShipmentStatusEvents.Country")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Orders.Shipments.ShipmentStatusEvents.Date")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ShipmentStatusEvents)
-                        {
-                            <tr>
-                                <td style="width:40%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.EventName
-                                    </div>
-                                </td>
-                                <td style="width:20%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.Location
-                                    </div>
-                                </td>
-                                <td style="width:20%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.Country
-                                    </div>
-                                </td>
-                                <td style="width:20%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @if (item.Date.HasValue)
-                                        {
-                                            @item.Date.Value.ToString("D")
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                    <tr>
+                        <td>
+                            <strong>@T("Admin.Orders.Shipments.Products")</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.ProductName")
+                                        </th>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.SKU")
+                                        </th>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.Warehouse")
+                                        </th>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.ItemWeight")
+                                        </th>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.ItemDimensions")
+                                        </th>
+                                        <th>
+                                            @T("Admin.Orders.Shipments.Products.QtyShipped")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
+                                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                                    {
+                                                        <p>
+                                                            @Html.Raw(item.AttributeInfo)
+                                                        </p>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                                    {
+                                                        <p>
+                                                            @Html.Raw(item.RentalInfo)
+                                                        </p>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @item.Sku
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @item.ShippedFromWarehouse
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @item.ItemWeight
+                                            </td>
+                                            <td>
+                                                @item.ItemDimensions
+                                            </td>
+                                            <td>
+                                                @item.QuantityInThisShipment
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                 </table>
             </div>
+
+            @if (Model.ShipmentStatusEvents.Count > 0)
+            {
+                <div class="form-horizontal">
+                    <div class="note note-info">
+                        @T("Admin.Orders.Shipments.ShipmentStatusEvents")
+                    </div>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th align="center">
+                                            @T("Admin.Orders.Shipments.ShipmentStatusEvents.Event")
+                                        </th>
+                                        <th align="center">
+                                            @T("Admin.Orders.Shipments.ShipmentStatusEvents.Location")
+                                        </th>
+                                        <th align="center">
+                                            @T("Admin.Orders.Shipments.ShipmentStatusEvents.Country")
+                                        </th>
+                                        <th align="center">
+                                            @T("Admin.Orders.Shipments.ShipmentStatusEvents.Date")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ShipmentStatusEvents)
+                                    {
+                                        <tr>
+                                            <td style="width:40%;">
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @item.EventName
+                                                </div>
+                                            </td>
+                                            <td style="width:20%;">
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @item.Location
+                                                </div>
+                                            </td>
+                                            <td style="width:20%;">
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @item.Country
+                                                </div>
+                                            </td>
+                                            <td style="width:20%;">
+                                                <div style="padding-left: 10px; padding-right: 10px;">
+                                                    @if (item.Date.HasValue)
+                                                    {
+                                                        @item.Date.Value.ToString("D")
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-    }
 </form>
 <admin-delete-confirmation button-id="shipment-delete" action-name="DeleteShipment" />

@@ -176,11 +176,6 @@ namespace Grand.Plugin.Payments.PayInStore
             return await Task.FromResult(false);
         }
 
-        public Type GetControllerType()
-        {
-            return typeof(PaymentPayInStoreController);
-        }
-
         public override async Task Install()
         {
             var settings = new PayInStorePaymentSettings()

@@ -9,7 +9,6 @@ using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
-using Grand.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
@@ -63,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ILocalizationService _localizationService;        
+        private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IRepository<Product> _repositoryProduct;
@@ -90,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            ILocalizationService localizationService,            
+            ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
             IRepository<Product> repositoryProduct,
@@ -179,16 +178,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.UtcTime = DateTime.UtcNow;
             foreach (var header in HttpContext.Request.Headers)
             {
-                model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel
-                {
+                model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel {
                     Name = header.Key,
                     Value = header.Value
                 });
             }
             foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
             {
-                model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
-                {
+                model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly {
                     FullName = assembly.FullName,
                 });
             }
@@ -207,14 +204,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ||
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.OrdinalIgnoreCase)
                 ))
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
                 });
             else
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), currentStoreUrl, _webHelper.GetStoreLocation(false))
                 });
@@ -224,15 +219,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var perCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (perCurrency != null)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Set"),
                 });
                 if (perCurrency.Rate != 1)
                 {
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Fail,
                         Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Rate1")
                     });
@@ -240,8 +233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             else
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.NotSet")
                 });
@@ -251,16 +243,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pscCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (pscCurrency != null)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.Set"),
                 });
             }
             else
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.NotSet")
                 });
@@ -271,16 +261,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var bWeight = await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (bWeight != null)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Set"),
                 });
 
                 if (bWeight.Ratio != 1)
                 {
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Fail,
                         Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Ratio1")
                     });
@@ -288,8 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             else
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.NotSet")
                 });
@@ -300,16 +287,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var bDimension = await _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (bDimension != null)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Set"),
                 });
 
                 if (bDimension.Ratio != 1)
                 {
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Fail,
                         Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Ratio1")
                     });
@@ -317,8 +302,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             else
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.NotSet")
                 });
@@ -327,28 +311,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             //shipping rate coputation methods
             var srcMethods = await _shippingService.LoadActiveShippingRateComputationMethods();
             if (srcMethods.Count == 0)
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.NoComputationMethods")
                 });
             if (srcMethods.Count(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline) > 1)
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Warning,
                     Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.OnlyOneOffline")
                 });
 
             //payment methods
             if ((await _paymentService.LoadActivePaymentMethods()).Any())
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.OK")
                 });
             else
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
                 });
@@ -356,8 +336,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //incompatible plugins
             if (PluginManager.IncompatiblePlugins != null)
                 foreach (var pluginName in PluginManager.IncompatiblePlugins)
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Warning,
                         Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
                     });
@@ -365,16 +344,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             //performance settings
             if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStores()).Count == 1)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Warning,
                     Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
                 });
             }
             if (!_catalogSettings.IgnoreAcl)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Warning,
                     Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreAcl")
                 });
@@ -386,16 +363,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                 {
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Warning,
                         Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"), WindowsIdentity.GetCurrent().Name, dir)
                     });
                     dirPermissionsOk = false;
                 }
             if (dirPermissionsOk)
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.OK")
                 });
@@ -405,8 +380,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                 {
-                    model.Add(new SystemWarningModel
-                    {
+                    model.Add(new SystemWarningModel {
                         Level = SystemWarningLevel.Warning,
                         Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"), WindowsIdentity.GetCurrent().Name, file)
                     });
@@ -414,8 +388,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             if (filePermissionsOk)
             {
-                model.Add(new SystemWarningModel
-                {
+                model.Add(new SystemWarningModel {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
@@ -530,8 +503,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var scripts = RoslynCompiler.ReferencedScripts != null ? RoslynCompiler.ReferencedScripts.ToList() : new List<ResultCompiler>();
 
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = scripts.Select(x =>
                 {
                     return new
@@ -567,8 +539,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     var resultCollection = result["cursor"]["firstBatch"].AsBsonArray.ToList();
                     var response = Serialize(resultCollection);
-                    gridModel = new DataSourceResult
-                    {
+                    gridModel = new DataSourceResult {
                         Data = response,
                         Total = response.Count()
                     };
@@ -578,8 +549,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     List<dynamic> n = new List<dynamic>();
                     var number = result["n"].ToInt64();
                     n.Add(new { Number = number });
-                    gridModel = new DataSourceResult
-                    {
+                    gridModel = new DataSourceResult {
                         Data = n
                     };
                 }
@@ -660,6 +630,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                     case "vendor":
                         detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
                         break;
+                    case "course":
+                        detailsUrl = Url.Action("Edit", "Course", new { id = x.EntityId });
+                        break;
                     case "knowledgebasecategory":
                         detailsUrl = Url.Action("EditCategory", "Knowledgebase", new { id = x.EntityId });
                         break;
@@ -670,8 +643,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         break;
                 }
 
-                items.Add(new UrlRecordModel
-                {
+                items.Add(new UrlRecordModel {
                     Id = x.Id,
                     Name = x.Slug,
                     EntityId = x.EntityId,
@@ -682,8 +654,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
 
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = items,
                 Total = urlRecords.TotalCount
             };
@@ -708,7 +679,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-       
+
         #endregion
     }
 }

@@ -8,7 +8,10 @@
                 <div class="card pb-0">
                     <div class="list-picture">
                         <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            <picture>
+                                <source media="(max-width: 480px)" picture-id="@item.PictureModel.Id" picture-size="350" />
+                                <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </picture>
                         </a>
                     </div>
                     <div class="list-title mt-3">

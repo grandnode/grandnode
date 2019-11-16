@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Seo;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Extensions;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;

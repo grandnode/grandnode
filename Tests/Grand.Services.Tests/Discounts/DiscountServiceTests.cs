@@ -34,6 +34,7 @@ namespace Grand.Services.Discounts.Tests
         private IServiceProvider _serviceProvider;
 
         private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -85,11 +86,12 @@ namespace Grand.Services.Discounts.Tests
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
             _shoppingCartSettings = new Mock<ShoppingCartSettings>().Object;
+            _catalogSettings = new Mock<CatalogSettings>().Object;
 
             _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
-                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null),
-                _shoppingCartSettings);
+                new PluginFinder(_serviceProvider), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, new PerRequestCacheManager(null),
+                _shoppingCartSettings, _catalogSettings);
         }
 
         [TestMethod()]

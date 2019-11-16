@@ -15,7 +15,6 @@ using Grand.Core.Domain.Vendors;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
@@ -39,7 +38,6 @@ namespace Grand.Services.Messages
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ILanguageService _languageService;
-        private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
@@ -47,7 +45,6 @@ namespace Grand.Services.Messages
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -57,7 +54,6 @@ namespace Grand.Services.Messages
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService,
             ILanguageService languageService,
-            ITokenizer tokenizer,
             IEmailAccountService emailAccountService,
             IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
@@ -65,22 +61,19 @@ namespace Grand.Services.Messages
             EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings,
             IMediator mediator,
-            IHttpContextAccessor httpContextAccessor,
             IServiceProvider serviceProvider)
         {
-            this._messageTemplateService = messageTemplateService;
-            this._queuedEmailService = queuedEmailService;
-            this._languageService = languageService;
-            this._tokenizer = tokenizer;
-            this._emailAccountService = emailAccountService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._emailAccountSettings = emailAccountSettings;
-            this._commonSettings = commonSettings;
-            this._mediator = mediator;
-            this._httpContextAccessor = httpContextAccessor;
-            this._serviceProvider = serviceProvider;
+            _messageTemplateService = messageTemplateService;
+            _queuedEmailService = queuedEmailService;
+            _languageService = languageService;
+            _emailAccountService = emailAccountService;
+            _messageTokenProvider = messageTokenProvider;
+            _storeService = storeService;
+            _storeContext = storeContext;
+            _emailAccountSettings = emailAccountSettings;
+            _commonSettings = commonSettings;
+            _mediator = mediator;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -350,7 +343,7 @@ namespace Grand.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendor: vendor);
 
             //event notification
             await _mediator.MessageTokensAdded(messageTemplate, liquidObject);
@@ -527,7 +520,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             await _messageTokenProvider.AddStoreTokens(liquidObject, store, language, emailAccount);
-            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendorId: vendor.Id);
+            await _messageTokenProvider.AddOrderTokens(liquidObject, order, customer, store, vendor: vendor);
             if (customer != null)
                 await _messageTokenProvider.AddCustomerTokens(liquidObject, customer, store, language);
 
@@ -2541,12 +2534,7 @@ namespace Grand.Services.Messages
             }
             else
             {
-                string storeId = bid.StoreId;
-                if (string.IsNullOrEmpty(storeId))
-                {
-                    storeId = _storeContext.CurrentStore.Id;
-                }
-                var store = await _storeService.GetStoreById(storeId);
+                var store = (await _storeService.GetAllStores()).FirstOrDefault();
                 var language = await EnsureLanguageIsActive(languageId, store.Id);
                 messageTemplate = await GetEmailAccountOfMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
                 if (messageTemplate == null)

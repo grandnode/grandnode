@@ -32,13 +32,13 @@ namespace Grand.Services.Vendors
         /// Ctor
         /// </summary>
         /// <param name="vendorRepository">Vendor repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public VendorService(IRepository<Vendor> vendorRepository, IRepository<VendorReview> vendorReviewRepository,
             IMediator mediator)
         {
-            this._vendorRepository = vendorRepository;
-            this._vendorReviewRepository = vendorReviewRepository;
-            this._mediator = mediator;
+            _vendorRepository = vendorRepository;
+            _vendorReviewRepository = vendorReviewRepository;
+            _mediator = mediator;
         }
 
         #endregion

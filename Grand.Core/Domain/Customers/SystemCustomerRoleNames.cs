@@ -11,5 +11,7 @@ namespace Grand.Core.Domain.Customers
         public static string Guests { get { return "Guests"; } }
 
         public static string Vendors { get { return "Vendors"; } }
+
+        public static string Staff { get { return "Staff"; } }
     }
 }

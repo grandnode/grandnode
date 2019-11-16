@@ -4,7 +4,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
