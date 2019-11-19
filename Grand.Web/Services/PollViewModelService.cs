@@ -28,12 +28,12 @@ namespace Grand.Web.Services
         public PollViewModelService(IPollService pollService, IWorkContext workContext, IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService,
             IServiceProvider serviceProvider)
         {
-            this._pollService = pollService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._aclService = aclService;
-            this._serviceProvider = serviceProvider;
+            _pollService = pollService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _aclService = aclService;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task<PollModel> PreparePoll(Poll poll, bool setAlreadyVotedProperty)

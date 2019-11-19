@@ -18,9 +18,9 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
 
         public PaymentPayInStoreController(ISettingService settingService, PayInStorePaymentSettings payInStorePaymentSettings, ILocalizationService localizationService)
         {
-            this._settingService = settingService;
-            this._payInStorePaymentSettings = payInStorePaymentSettings;
-            this._localizationService = localizationService;
+            _settingService = settingService;
+            _payInStorePaymentSettings = payInStorePaymentSettings;
+            _localizationService = localizationService;
         }
 
         public IActionResult Configure()

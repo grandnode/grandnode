@@ -17,7 +17,7 @@ namespace Grand.Framework.Mvc.Filters
         public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName) 
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
-            this.Arguments = new object[] { formKeyName, formValue, actionParameterName };
+            Arguments = new object[] { formKeyName, formValue, actionParameterName };
         }
 
         #region Nested filter
@@ -39,9 +39,9 @@ namespace Grand.Framework.Mvc.Filters
 
             public ParameterBasedOnFormNameAndValueFilter(string formKeyName, string formValue, string actionParameterName)
             {
-                this._formKeyName = formKeyName;
-                this._formValue = formValue;
-                this._actionParameterName = actionParameterName;
+                _formKeyName = formKeyName;
+                _formValue = formValue;
+                _actionParameterName = actionParameterName;
             }
 
             #endregion

@@ -14,7 +14,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
     {
         #region Constants
 
-        private const string PICKUP_POINT_ALL_KEY = "Grand.ShippingPoint.all-{0}-{1}";
         private const string PICKUP_POINT_PATTERN_KEY = "Grand.ShippingPoint.";
 
         #endregion
@@ -22,7 +21,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         #region Fields
 
         private readonly ICacheManager _cacheManager;
-        private readonly IRepository<Domain.ShippingPoints> _shippingPointRepository;
+        private readonly IRepository<ShippingPoints> _shippingPointRepository;
 
         #endregion
 
@@ -34,10 +33,10 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="ShippingPointRepository">Store pickup point repository</param>
         public ShippingPointService(ICacheManager cacheManager,
-            IRepository<Domain.ShippingPoints> ShippingPointRepository)
+            IRepository<ShippingPoints> ShippingPointRepository)
         {
-            this._cacheManager = cacheManager;
-            this._shippingPointRepository = ShippingPointRepository;
+            _cacheManager = cacheManager;
+            _shippingPointRepository = ShippingPointRepository;
         }
 
         #endregion
@@ -60,7 +59,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
             var records = await query.ToListAsync();
 
             //paging
-            return await Task.FromResult(new PagedList<Domain.ShippingPoints>(records, pageIndex, pageSize));
+            return await Task.FromResult(new PagedList<ShippingPoints>(records, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// Inserts a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual async Task InsertStoreShippingPoint(Domain.ShippingPoints pickupPoint)
+        public virtual async Task InsertStoreShippingPoint(ShippingPoints pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException("pickupPoint");
@@ -102,7 +101,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// Updates the pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual async Task UpdateStoreShippingPoint(Domain.ShippingPoints pickupPoint)
+        public virtual async Task UpdateStoreShippingPoint(ShippingPoints pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException("pickupPoint");
@@ -115,7 +114,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// Deletes a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual async Task DeleteStoreShippingPoint(Domain.ShippingPoints pickupPoint)
+        public virtual async Task DeleteStoreShippingPoint(ShippingPoints pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException("pickupPoint");

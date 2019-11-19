@@ -21,12 +21,12 @@ namespace Grand.Web.Models.Catalog
 
         public CatalogPagingFilteringModel()
         {
-            this.AvailableSortOptions = new List<SelectListItem>();
-            this.AvailableViewModes = new List<SelectListItem>();
-            this.PageSizeOptions = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
+            AvailableViewModes = new List<SelectListItem>();
+            PageSizeOptions = new List<SelectListItem>();
 
-            this.PriceRangeFilter = new PriceRangeFilterModel();
-            this.SpecificationFilter = new SpecificationFilterModel();
+            PriceRangeFilter = new PriceRangeFilterModel();
+            SpecificationFilter = new SpecificationFilterModel();
         }
 
         #endregion
@@ -79,7 +79,7 @@ namespace Grand.Web.Models.Catalog
 
             public PriceRangeFilterModel()
             {
-                this.Items = new List<PriceRangeFilterItem>();
+                Items = new List<PriceRangeFilterItem>();
             }
 
             #endregion
@@ -264,8 +264,8 @@ namespace Grand.Web.Models.Catalog
 
             public SpecificationFilterModel()
             {
-                this.AlreadyFilteredItems = new List<SpecificationFilterItem>();
-                this.NotFilteredItems = new List<SpecificationFilterItem>();
+                AlreadyFilteredItems = new List<SpecificationFilterItem>();
+                NotFilteredItems = new List<SpecificationFilterItem>();
             }
 
             #endregion

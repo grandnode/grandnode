@@ -24,9 +24,9 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
             ISettingService settingService,
             IPermissionService permissionService)
         {
-            this._taxCategoryService = taxCategoryService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _taxCategoryService = taxCategoryService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
 
 
@@ -75,7 +75,7 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
         [NonAction]
         protected decimal GetTaxRate(string taxCategoryId)
         {
-            var rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            var rate = _settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
     }

@@ -26,10 +26,10 @@ namespace Grand.Plugin.Widgets.Slider
 
         public SliderPlugin(IServiceProvider serviceProvider)
         {
-            this._pictureService = serviceProvider.GetRequiredService<IPictureService>();
-            this._webHelper = serviceProvider.GetRequiredService<IWebHelper>(); ;
-            this._pictureSliderRepository = serviceProvider.GetRequiredService<IRepository<PictureSlider>>();
-            this._serviceProvider = serviceProvider;
+            _pictureService = serviceProvider.GetRequiredService<IPictureService>();
+            _webHelper = serviceProvider.GetRequiredService<IWebHelper>(); ;
+            _pictureSliderRepository = serviceProvider.GetRequiredService<IRepository<PictureSlider>>();
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>

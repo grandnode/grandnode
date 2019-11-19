@@ -27,9 +27,9 @@ namespace Grand.Plugin.ExternalAuth.Facebook
             IServiceProvider serviceProvider,
             IWebHelper webHelper)
         {
-            this._settingService = settingService;
-            this._serviceProvider = serviceProvider;
-            this._webHelper = webHelper;
+            _settingService = settingService;
+            _serviceProvider = serviceProvider;
+            _webHelper = webHelper;
         }
 
         #endregion

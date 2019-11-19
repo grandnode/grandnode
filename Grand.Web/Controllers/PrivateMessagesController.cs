@@ -40,15 +40,15 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext, IDateTimeHelper dateTimeHelper,
             ForumSettings forumSettings, CustomerSettings customerSettings)
         {
-            this._forumService = forumService;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
+            _forumService = forumService;
+            _customerService = customerService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _dateTimeHelper = dateTimeHelper;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
         }
 
         #endregion

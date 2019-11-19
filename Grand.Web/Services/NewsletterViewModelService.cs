@@ -28,13 +28,13 @@ namespace Grand.Web.Services
             IWorkflowMessageService workflowMessageService,
             CustomerSettings customerSettings)
         {
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._localizationService = localizationService;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._customerSettings = customerSettings;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _localizationService = localizationService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _customerSettings = customerSettings;
 
         }
 

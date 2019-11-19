@@ -123,7 +123,7 @@ namespace Grand.Framework
                 cookieExpiresDate = DateTime.Now.AddMonths(-1);
 
             //set new cookie value
-            var options = new Microsoft.AspNetCore.Http.CookieOptions {
+            var options = new CookieOptions {
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };

@@ -99,16 +99,16 @@ namespace Grand.Core
         {
             var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
             int total = range.Count > pageSize ? range.Count : pageSize;
-            this.TotalCount = source.ToListAsync().Result.Count;
+            TotalCount = source.ToListAsync().Result.Count;
             if(pageSize > 0)
-                this.TotalPages = total / pageSize;
+                TotalPages = total / pageSize;
 
             if (total % pageSize > 0)
                 TotalPages++;
 
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(range.Take(pageSize));
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            AddRange(range.Take(pageSize));
         }
 
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)

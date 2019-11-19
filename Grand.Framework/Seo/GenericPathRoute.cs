@@ -46,7 +46,7 @@ namespace Grand.Framework.Seo
         protected async Task<RouteValueDictionary> GetRouteValues(RouteContext context)
         {
             var path = context.HttpContext.Request.Path.Value;
-            if (this.SeoFriendlyUrlsForPathEnabled && !SeoFriendlyUrlsForLanguagesEnabled)
+            if (SeoFriendlyUrlsForPathEnabled && !SeoFriendlyUrlsForLanguagesEnabled)
             {
                 string lastpath = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).LastOrDefault();
                 path = $"/{lastpath}";

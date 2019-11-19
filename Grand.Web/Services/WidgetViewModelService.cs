@@ -20,10 +20,10 @@ namespace Grand.Web.Services
         public WidgetViewModelService(IStoreContext storeContext, ICacheManager cacheManager,
             IWidgetService widgetService, IThemeContext themeContext)
         {
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._widgetService = widgetService;
-            this._themeContext = themeContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _widgetService = widgetService;
+            _themeContext = themeContext;
         }
 
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidget(string widgetZone, object additionalData = null)

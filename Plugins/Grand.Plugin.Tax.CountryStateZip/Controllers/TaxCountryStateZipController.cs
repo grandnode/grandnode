@@ -37,12 +37,12 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
             IPermissionService permissionService,
             IStoreService storeService)
         {
-            this._taxCategoryService = taxCategoryService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._taxRateService = taxRateService;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _taxRateService = taxRateService;
+            _permissionService = permissionService;
+            _storeService = storeService;
         }
         
         public async Task<IActionResult> Configure()

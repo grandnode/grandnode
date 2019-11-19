@@ -99,37 +99,37 @@ namespace Grand.Web.Services
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._webHelper = webHelper;
-            this._productViewModelService = productViewModelService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._topicService = topicService;
-            this._pictureService = pictureService;
-            this._vendorService = vendorService;
-            this._productTagService = productTagService;
-            this._currencyService = currencyService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._searchTermService = searchTermService;
-            this._aclService = aclService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._priceFormatter = priceFormatter;
-            this._addressViewModelService = addressViewModelService;
-            this._blogService = blogService;
-            this._catalogSettings = catalogSettings;
-            this._blogSettings = blogSettings;
-            this._forumSettings = forumSettings;
-            this._menuItemSettings = menuItemSettings;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _webHelper = webHelper;
+            _productViewModelService = productViewModelService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _topicService = topicService;
+            _pictureService = pictureService;
+            _vendorService = vendorService;
+            _productTagService = productTagService;
+            _currencyService = currencyService;
+            _httpContextAccessor = httpContextAccessor;
+            _searchTermService = searchTermService;
+            _aclService = aclService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _specificationAttributeService = specificationAttributeService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _priceFormatter = priceFormatter;
+            _addressViewModelService = addressViewModelService;
+            _blogService = blogService;
+            _catalogSettings = catalogSettings;
+            _blogSettings = blogSettings;
+            _forumSettings = forumSettings;
+            _menuItemSettings = menuItemSettings;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #region Sort,view,size options

@@ -9,7 +9,7 @@ namespace Grand.Web.ViewComponents
         private readonly NewsSettings _newsSettings;
         public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
         {
-            this._newsSettings = newsSettings;
+            _newsSettings = newsSettings;
         }
 
         public IViewComponentResult Invoke()

@@ -38,10 +38,10 @@ namespace Grand.Web.Controllers
         public InstallController(IInstallationLocalizationService locService, GrandConfig config, ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
-            this._locService = locService;
-            this._config = config;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
+            _locService = locService;
+            _config = config;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

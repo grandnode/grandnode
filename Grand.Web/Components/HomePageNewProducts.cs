@@ -17,7 +17,7 @@ namespace Grand.Web.Components
         public HomePageNewProductsViewComponent(
             IProductViewModelService productViewModelService)
         {
-            this._productViewModelService = productViewModelService;
+            _productViewModelService = productViewModelService;
         }
 
         #endregion

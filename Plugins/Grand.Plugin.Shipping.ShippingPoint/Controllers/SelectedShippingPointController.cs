@@ -11,21 +11,15 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 {
     public class SelectedShippingPointController : Controller
     {
-        private readonly ILocalizationService _localizationService;
         private readonly IShippingPointService _shippingPointService;
-        private readonly IStoreContext _storeContext;
         private readonly ICountryService _countryService;
         private readonly IPriceFormatter _priceFormatter;
 
-        public SelectedShippingPointController(ILocalizationService localizationService,
-            IShippingPointService shippingPointService, IStoreContext storeContext,
-            ICountryService countryService, IPriceFormatter priceFormatter)
+        public SelectedShippingPointController(IShippingPointService shippingPointService, ICountryService countryService, IPriceFormatter priceFormatter)
         {
-            this._localizationService = localizationService;
-            this._shippingPointService = shippingPointService;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._priceFormatter = priceFormatter;
+            _shippingPointService = shippingPointService;
+            _countryService = countryService;
+            _priceFormatter = priceFormatter;
         }
         public async Task<IActionResult> Get(string shippingOptionId)
         {

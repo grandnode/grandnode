@@ -159,10 +159,10 @@ namespace Grand.Web.Models.ShoppingCart
         {
             public OrderReviewDataModel()
             {
-                this.BillingAddress = new AddressModel();
-                this.ShippingAddress = new AddressModel();
-                this.PickupAddress = new AddressModel();
-                this.CustomValues= new Dictionary<string, object>();
+                BillingAddress = new AddressModel();
+                ShippingAddress = new AddressModel();
+                PickupAddress = new AddressModel();
+                CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 

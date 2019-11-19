@@ -12,7 +12,7 @@ namespace Grand.Web.ViewComponents
 
         public PopularProductTagsViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogViewModelService = catalogViewModelService;
+            _catalogViewModelService = catalogViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string currentCategoryId, string currentProductId)

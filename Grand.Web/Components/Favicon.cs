@@ -12,7 +12,7 @@ namespace Grand.Web.ViewComponents
 
         public FaviconViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonViewModelService = commonViewModelService;
+            _commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()

@@ -17,7 +17,6 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
@@ -25,22 +24,20 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
         public PaymentCheckMoneyOrderController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            IStoreContext storeContext,
             ILocalizationService localizationService,
             ILanguageService languageService)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _workContext = workContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
         
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel();
@@ -73,7 +70,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
                 return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
 
             //save settings

@@ -20,8 +20,8 @@ namespace Grand.Web.Components
             CatalogSettings catalogSettings
 )
         {
-            this._catalogSettings = catalogSettings;
-            this._productViewModelService = productViewModelService;
+            _catalogSettings = catalogSettings;
+            _productViewModelService = productViewModelService;
         }
 
         #endregion

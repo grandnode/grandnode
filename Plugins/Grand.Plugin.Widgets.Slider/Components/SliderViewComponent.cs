@@ -28,10 +28,10 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             ISliderService sliderService,
             IWorkContext workContext)
         {
-            this._pictureService = pictureService;
-            this._cacheManager = cacheManager;
-            this._sliderService = sliderService;
-            this._workContext = workContext;
+            _pictureService = pictureService;
+            _cacheManager = cacheManager;
+            _sliderService = sliderService;
+            _workContext = workContext;
         }
 
         protected async Task<string> GetPictureUrl(string pictureId)

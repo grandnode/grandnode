@@ -52,17 +52,17 @@ namespace Grand.Web.Controllers
             NewsSettings newsSettings,
             CaptchaSettings captchaSettings)
         {
-            this._newsViewModelService = newsViewModelService;
-            this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._newsSettings = newsSettings;
-            this._captchaSettings = captchaSettings;
+            _newsViewModelService = newsViewModelService;
+            _newsService = newsService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _customerActivityService = customerActivityService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _newsSettings = newsSettings;
+            _captchaSettings = captchaSettings;
         }
 
         #endregion

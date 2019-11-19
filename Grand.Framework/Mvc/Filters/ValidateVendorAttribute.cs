@@ -45,8 +45,8 @@ namespace Grand.Framework.Mvc.Filters
 
             public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._workContext = workContext;
+                _ignoreFilter = ignoreFilter;
+                _workContext = workContext;
             }
 
             #endregion

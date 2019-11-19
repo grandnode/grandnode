@@ -83,32 +83,32 @@ namespace Grand.Web.Services
             ShippingSettings shippingSettings,
             RewardPointsSettings rewardPointsSettings)
         {
-            this._orderService = orderService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._currencyService = currencyService;
-            this._orderProcessingService = orderProcessingService;
-            this._priceFormatter = priceFormatter;
-            this._downloadService = downloadService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._countryService = countryService;
-            this._addressViewModelService = addressViewModelService;
-            this._shipmentService = shipmentService;
-            this._paymentService = paymentService;
-            this._giftCardService = giftCardService;
-            this._shippingService = shippingService;
-            this._rewardPointsService = rewardPointsService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._serviceProvider = serviceProvider;
-            this._orderSettings = orderSettings;
-            this._pdfSettings = pdfSettings;
-            this._taxSettings = taxSettings;
-            this._catalogSettings = catalogSettings;
-            this._shippingSettings = shippingSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
+            _orderService = orderService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _orderProcessingService = orderProcessingService;
+            _priceFormatter = priceFormatter;
+            _downloadService = downloadService;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _countryService = countryService;
+            _addressViewModelService = addressViewModelService;
+            _shipmentService = shipmentService;
+            _paymentService = paymentService;
+            _giftCardService = giftCardService;
+            _shippingService = shippingService;
+            _rewardPointsService = rewardPointsService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _serviceProvider = serviceProvider;
+            _orderSettings = orderSettings;
+            _pdfSettings = pdfSettings;
+            _taxSettings = taxSettings;
+            _catalogSettings = catalogSettings;
+            _shippingSettings = shippingSettings;
+            _rewardPointsSettings = rewardPointsSettings;
         }
 
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderList()
