@@ -83,17 +83,14 @@ namespace Grand.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         protected virtual async Task<bool> Authorize(string permissionRecordSystemName, CustomerRole customerRole)
         {
-            if (String.IsNullOrEmpty(permissionRecordSystemName))
+            if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
             return await _cacheManager.GetAsync(key, async () =>
             {
-                var permissionRecord = await _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToListAsync();
-                if (permissionRecord.Any())
-                    return true;
-
-                return false;
+                var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
+                return permissionRecord?.CustomerRoles.Contains(customerRole.Id) ?? false;
             });
         }
 

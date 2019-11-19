@@ -399,8 +399,7 @@ namespace Grand.Framework.Controllers
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             // event notification before execute
-            var mediator = EngineContext.Current.Resolve<IMediator>();
-
+            var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
             await mediator.Publish(new ActionExecutingContextNotification(context, true));
 
             await next();

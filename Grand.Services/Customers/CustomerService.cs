@@ -1257,10 +1257,7 @@ namespace Grand.Services.Customers
         /// <returns>Customer product price</returns>
         public virtual async Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId)
         {
-            var builder = Builders<CustomerProductPrice>.Filter;
-            var filter = builder.Eq(x => x.CustomerId, customerId);
-            filter = filter & builder.Eq(x => x.ProductId, productId);
-            var productprice = await _customerProductPriceRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            var productprice = await _customerProductPriceRepository.Table.Where(x=>x.CustomerId == customerId && x.ProductId == productId).FirstOrDefaultAsync();
             if (productprice == null)
                 return null;
             else

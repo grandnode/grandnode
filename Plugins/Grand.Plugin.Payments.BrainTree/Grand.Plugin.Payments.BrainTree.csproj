@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Braintree" Version="4.15.0" />
+    <PackageReference Include="Braintree" Version="4.16.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   
@@ -25,8 +25,7 @@
       <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.15.0\lib\netstandard2.0\*.*" />
       <CopyFiles Include="$(NuGetPackageRoot)\system.xml.xpath.xmldocument\4.3.0\lib\netstandard1.3\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(CopyFiles)"
-       DestinationFolder="..\..\Grand.Web\Plugins\Payments.BrainTree\" />
+    <Copy SourceFiles="@(CopyFiles)" DestinationFolder="..\..\Grand.Web\Plugins\Payments.BrainTree\" />
   </Target>
   
   <ItemGroup>
