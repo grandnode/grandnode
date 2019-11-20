@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -340,7 +341,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
+            services.AddSingleton<IActionResultExecutor<RedirectResult>, GrandRedirectResultExecutor>();
         }
 
         public static void AddSettings(this IServiceCollection services)

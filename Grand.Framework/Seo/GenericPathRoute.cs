@@ -117,6 +117,7 @@ namespace Grand.Framework.Seo
                 context.HttpContext.Items["grand.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
                 await _target.RouteAsync(context);
+                return;
             }
 
             //ensure that the slug is the same for the current language, 
@@ -136,6 +137,7 @@ namespace Grand.Framework.Seo
                 context.HttpContext.Items["grand.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
                 await _target.RouteAsync(context);
+                return;
             }
 
             //since we are here, all is ok with the slug, so process URL
