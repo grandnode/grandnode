@@ -30,6 +30,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json.Serialization;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,11 +178,19 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandDataProtection(this IServiceCollection services)
         {
-            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
-
-            //configure the data protection system to persist keys to the specified directory
-            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            var config = services.BuildServiceProvider().GetService<GrandConfig>();
+            if (config.PersistKeysToRedis)
+            {
+                services.AddDataProtection(opt => opt.ApplicationDiscriminator = "grandnode")
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(config.PersistKeysToRedisUrl));
+            }
+            else
+            {
+                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                //configure the data protection system to persist keys to the specified directory
+                services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            }
         }
 
         /// <summary>
