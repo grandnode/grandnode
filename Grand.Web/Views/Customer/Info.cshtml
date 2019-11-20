@@ -211,10 +211,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-       Model.StreetAddress2Enabled ||
-       Model.ZipPostalCodeEnabled ||
-       Model.CityEnabled ||
-       Model.CountryEnabled)
+      Model.StreetAddress2Enabled ||
+      Model.ZipPostalCodeEnabled ||
+      Model.CityEnabled ||
+      Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -458,7 +458,7 @@
                     {
                         //we can add more external records
                         <div class="form-fields add-more-external-records">
-                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, "http")">@Url.RouteUrl("Login", null, "http")</a>
+                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, Context.Request.Scheme)">@Url.RouteUrl("Login", null, Context.Request.Scheme)</a>
                         </div>
                     }
                 </div>
