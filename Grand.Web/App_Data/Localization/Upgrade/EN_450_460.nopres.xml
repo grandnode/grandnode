@@ -305,6 +305,9 @@
   <LocaleResource Name="PageTitle.Documents">
     <Value>Documents</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.TwoFactorAuth">
+    <Value>Two-factor authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerDocuments">
     <Value>Documents</Value>
   </LocaleResource>
@@ -325,6 +328,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.Documents.NoExists">
     <Value>Documents not exists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.TwoFactorAuth">
+    <Value>Two-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DigitCode">
+    <Value>Digital code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Documents">
     <Value>Documents</Value>
@@ -685,6 +694,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab.hint">
     <Value>Check to hide 'My courses' tab on 'My account' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled">
+    <Value>Two factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled.Hint">
+    <Value>Enable two factor authentication</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.Courses">
     <Value>My courses</Value>

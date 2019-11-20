@@ -1,4 +1,5 @@
-﻿using Grand.Core;
+﻿using Google.Authenticator;
+using Grand.Core;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -62,6 +63,10 @@ namespace Grand.Web.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private IShoppingCartService _shoppingCartService;
+
+        // 2fa
+        private const string key = "qazqaz12345";
 
         #endregion
 
@@ -88,7 +93,8 @@ namespace Grand.Web.Controllers
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings,
             LocalizationSettings localizationSettings,
-            TaxSettings taxSettings
+            TaxSettings taxSettings,
+            IShoppingCartService shoppingCartService
             )
         {
             _customerViewModelService = customerViewModelService;
@@ -112,6 +118,7 @@ namespace Grand.Web.Controllers
             _localizationSettings = localizationSettings;
             _captchaSettings = captchaSettings;
             _mediator = mediator;
+            _shoppingCartService = shoppingCartService;
         }
 
         #endregion
@@ -151,6 +158,10 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid,
                        [FromServices] IShoppingCartService shoppingCartService)
         {
+            // 2fa
+            string message = "";
+            bool status = false;
+
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
             {
@@ -169,13 +180,17 @@ namespace Grand.Web.Controllers
                     case CustomerLoginResults.Successful:
                         {
                             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
+                            // 2fa
+                            if (_customerSettings.TwoFactorAuthenticationEnabled)
+                                return RedirectToRoute("TwoFactorAuthorization", model);
+
 
                             //migrate shopping cart
                             await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                             //sign in new customer
                             await _authenticationService.SignIn(customer, model.RememberMe);
-
+                            
                             //raise event       
                             await _mediator.Publish(new CustomerLoggedinEvent(customer));
 
@@ -215,6 +230,7 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+            
             return View(model);
         }
 
@@ -253,6 +269,9 @@ namespace Grand.Web.Controllers
             }
             return RedirectToRoute("HomePage");
         }
+
+        
+
 
         #endregion
 
@@ -1406,7 +1425,59 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-        #region My account / Reviews
+        #region My account / TwoFactorAuth
+
+        public IActionResult TwoFactorAuthenticate(Customer customer, LoginModel model)
+        {
+            var twoFacAuth = new TwoFactorAuthenticator();
+            string userUniqueKey = (customer.Email + key);
+            HttpContext.Session.SetString("UserUniqueKey", userUniqueKey);
+            var setupInfo = twoFacAuth.GenerateSetupCode("GrandNode", customer.Email, userUniqueKey, 300, 300);
+            ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+            ViewBag.SetupCode = setupInfo.ManualEntryKey;
+                        
+            ViewBag.Message = "Two Factor Authentication Verification";
+            ViewBag.Status = true;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorAuthenticate(LoginModel model, string returnUrl)
+        {
+            TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
+            var token = model.CodeDigit.ToString();
+            var userUniqueKey = HttpContext.Session.GetString("UserUniqueKey");
+            bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
+            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
+
+            if (isValid)
+            {
+                HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
+                //migrate shopping cart
+                await _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+                //sign in new customer
+                await _authenticationService.SignIn(customer, model.RememberMe);
+
+                //raise event       
+                await _mediator.Publish(new CustomerLoggedinEvent(customer));
+
+                //activity log
+                await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+
+
+                if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                    return RedirectToRoute("HomePage");
+
+            }
+            return RedirectToRoute("Login");
+        }
+            
+        
+        #endregion
+
+        #region My account / Courses
 
         public virtual async Task<IActionResult> Courses()
         {

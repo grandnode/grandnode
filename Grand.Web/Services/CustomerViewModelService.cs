@@ -654,6 +654,7 @@ namespace Grand.Web.Services
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
+            model.HideTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -868,6 +869,19 @@ namespace Grand.Web.Services
             var courseService = _serviceProvider.GetRequiredService<ICourseViewModelService>();
             var model = await courseService.GetCoursesByCustomer(customer, store.Id);
             return model;
+        }
+
+        public TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(Customer customer)
+        {
+            var model = new TwoFactorAuthenticationModel();
+            model.Is2faEnabled = true;
+            model.IsMachineRemembered = true;
+            model.RecoveryCodesLeft = 0;
+            model.HasAuthenticator = true;
+            model.StatusMessage = "Test message 2fa";
+
+            return model;
+
         }
 
     }

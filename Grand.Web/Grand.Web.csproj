@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GoogleAuthenticator" Version="1.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +41,9 @@
     <Compile Remove="Plugins\**" />
     <EmbeddedResource Remove="Plugins\**" />
     <None Remove="Plugins\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Customer\Reviews.cshtml" />
   </ItemGroup>
   
 </Project>

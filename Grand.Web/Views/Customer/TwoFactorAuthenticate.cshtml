@@ -1,0 +1,54 @@
+﻿@model LoginModel
+@using System.Net
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Login").Text);
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
+}
+<div class="page login-page">
+    <h2 class="generalTitle">@T("Account.Login.Welcome")</h2>
+    <div class="mb-2">
+        <div class="row flex-md-row mt-3 mb-3">
+            @* login main block *@
+            <div class="col-lg-6 col-12">
+                <div class="card">
+                    <div class="col-12 form-group mb-0">
+                        <div>@ViewBag.Message</div>
+                        <div>
+                            <img src="@ViewBag.BarcodeImageUrl" />
+                        </div>
+                        <div>
+                            Manual Setup Code : @ViewBag.SetupCode
+                        </div>
+                    </div>
+                    <form asp-route="TwoFactorAuthenticate" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 form-group mb-0">
+                                    <div class="form-group row">
+                                        <div class="col-lg-3 col-12">
+                                            <label asp-for="CodeDigit" class="col-form-label">@T("Account.DigitCode"):</label>
+                                        </div>
+                                        <div class="col-lg-9 col-12">
+                                            <input asp-for="CodeDigit" name="CodeDigit" type="text" autofocus="autofocus" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="buttons">
+                                <input class="btn btn-info login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                            </div>
+                        </div>
+                    </form>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
