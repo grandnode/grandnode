@@ -2,6 +2,7 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
@@ -198,320 +199,13 @@ namespace Grand.Web.Services
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
                 };
-
-                //price
                 if (preparePriceModel)
                 {
-                    #region Prepare product price
-
-                    var priceModel = new ProductOverviewModel.ProductPriceModel {
-                        ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart
-                    };
-
-                    switch (product.ProductType)
-                    {
-                        case ProductType.GroupedProduct:
-                            {
-                                #region Grouped product
-
-                                var associatedProducts = await _productService.GetAssociatedProducts(product.Id, currentStoreId);
-
-                                //add to cart button (ignore "DisableBuyButton" property for grouped products)
-                                priceModel.DisableBuyButton = !enableShoppingCart || !displayPrices;
-
-                                //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
-                                priceModel.DisableWishlistButton = !enableWishlist || !displayPrices;
-
-                                //compare products
-                                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
-
-                                //catalog price, not used in views, but it's for front developer
-                                if (product.CatalogPrice > 0)
-                                {
-                                    decimal catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                }
-
-                                switch (associatedProducts.Count)
-                                {
-                                    case 0:
-                                        {
-
-                                        }
-                                        break;
-                                    default:
-                                        {
-                                            //we have at least one associated product
-                                            //compare products
-                                            priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
-                                            if (displayPrices)
-                                            {
-                                                //find a minimum possible price
-                                                decimal? minPossiblePrice = null;
-                                                Product minPriceProduct = null;
-                                                foreach (var associatedProduct in associatedProducts)
-                                                {
-                                                    //calculate for the maximum quantity (in case if we have tier prices)
-                                                    var tmpPrice = (await _priceCalculationService.GetFinalPrice(associatedProduct,
-                                                        currentCustomer, decimal.Zero, true, int.MaxValue)).finalPrice;
-                                                    if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
-                                                    {
-                                                        minPriceProduct = associatedProduct;
-                                                        minPossiblePrice = tmpPrice;
-                                                    }
-                                                }
-                                                if (minPriceProduct != null && !minPriceProduct.CustomerEntersPrice)
-                                                {
-                                                    if (minPriceProduct.CallForPrice)
-                                                    {
-                                                        priceModel.OldPrice = null;
-                                                        priceModel.Price = res["Products.CallForPrice"];
-                                                    }
-                                                    else if (minPossiblePrice.HasValue)
-                                                    {
-                                                        //calculate prices
-                                                        decimal finalPriceBase = (await _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, priceIncludesTax, currentCustomer)).productprice;
-                                                        decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
-
-                                                        priceModel.OldPrice = null;
-                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
-                                                        priceModel.PriceValue = finalPrice;
-
-                                                        //PAngV baseprice (used in Germany)
-                                                        if (product.BasepriceEnabled)
-                                                            priceModel.BasePricePAngV = await product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
-                                                    }
-                                                    else
-                                                    {
-                                                        //Actually it's not possible (we presume that minimalPrice always has a value)
-                                                        //We never should get here
-                                                        Debug.WriteLine("Cannot calculate minPrice for product #{0}", product.Id);
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                //hide prices
-                                                priceModel.OldPrice = null;
-                                                priceModel.Price = null;
-                                            }
-                                        }
-                                        break;
-                                }
-
-                                #endregion
-                            }
-                            break;
-                        case ProductType.SimpleProduct:
-                        case ProductType.Reservation:
-                        default:
-                            {
-                                #region Simple product
-
-                                //add to cart button
-                                priceModel.DisableBuyButton = product.DisableBuyButton || !enableShoppingCart || !displayPrices;
-
-                                //add to wishlist button
-                                priceModel.DisableWishlistButton = product.DisableWishlistButton || !enableWishlist || !displayPrices;
-                                //compare products
-                                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
-
-                                //pre-order
-                                if (product.AvailableForPreOrder)
-                                {
-                                    priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
-                                        product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
-                                    priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
-                                }
-
-                                //catalog price, not used in views, but it's for front developer
-                                if (product.CatalogPrice > 0)
-                                {
-                                    decimal catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                }
-
-                                //start price for product auction
-                                if (product.StartPrice > 0)
-                                {
-                                    decimal startPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, currentCurrency);
-                                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                    priceModel.StartPriceValue = startPrice;
-                                }
-
-                                //highest bid for product auction
-                                if (product.HighestBid > 0)
-                                {
-                                    decimal highestBid = await _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, currentCurrency);
-                                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                    priceModel.HighestBidValue = highestBid;
-                                }
-
-                                //prices
-                                if (displayPrices)
-                                {
-                                    if (!product.CustomerEntersPrice)
-                                    {
-                                        if (product.CallForPrice)
-                                        {
-                                            //call for price
-                                            priceModel.OldPrice = null;
-                                            priceModel.Price = res["Products.CallForPrice"];
-                                        }
-                                        else
-                                        {
-                                            //prices
-
-                                            //calculate for the maximum quantity (in case if we have tier prices)
-                                            var infoprice = (await _priceCalculationService.GetFinalPrice(product,
-                                                currentCustomer, decimal.Zero, true, int.MaxValue));
-
-                                            priceModel.AppliedDiscounts = infoprice.appliedDiscounts;
-                                            priceModel.PreferredTierPrice = infoprice.preferredTierPrice;
-
-                                            decimal minPossiblePrice = infoprice.finalPrice;
-
-                                            decimal oldPriceBase = (await _taxService.GetProductPrice(product, product.OldPrice, priceIncludesTax, currentCustomer)).productprice;
-                                            decimal finalPriceBase = (await _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, currentCustomer)).productprice;
-
-                                            decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, currentCurrency);
-                                            decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
-
-                                            //do we have tier prices configured?
-                                            var tierPrices = new List<TierPrice>();
-                                            if (product.TierPrices.Any())
-                                            {
-                                                tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
-                                                    .FilterByStore(currentStoreId)
-                                                    .FilterForCustomer(currentCustomer)
-                                                    .FilterByDate()
-                                                    .RemoveDuplicatedQuantities());
-                                            }
-                                            //When there is just one tier (with  qty 1), 
-                                            //there are no actual savings in the list.
-                                            bool displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
-                                            if (displayFromMessage)
-                                            {
-                                                priceModel.OldPrice = null;
-                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
-                                                priceModel.PriceValue = finalPrice;
-                                            }
-                                            else
-                                            {
-                                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
-                                                {
-                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                                    priceModel.OldPriceValue = oldPrice;
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                                    priceModel.PriceValue = finalPrice;
-                                                }
-                                                else
-                                                {
-                                                    priceModel.OldPrice = null;
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
-                                                    priceModel.PriceValue = finalPrice;
-                                                }
-                                            }
-                                            if (product.ProductType == ProductType.Reservation)
-                                            {
-                                                //rental product
-                                                priceModel.OldPrice = _priceFormatter.FormatReservationProductPeriod(product, priceModel.OldPrice);
-                                                priceModel.Price = _priceFormatter.FormatReservationProductPeriod(product, priceModel.Price);
-                                            }
-
-
-                                            //property for German market
-                                            //we display tax/shipping info only with "shipping enabled" for this product
-                                            //we also ensure this it's not free shipping
-                                            priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
-
-                                            //PAngV baseprice (used in Germany)
-                                            if (product.BasepriceEnabled)
-                                                priceModel.BasePricePAngV = await product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
-
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //hide prices
-                                    priceModel.OldPrice = null;
-                                    priceModel.Price = null;
-                                }
-
-                                #endregion
-                            }
-                            break;
-                    }
-
-                    model.ProductPrice = priceModel;
-
-                    #endregion
+                    lvl1BackgroundTasks.Add(PreparePriceModel(forceRedirectionAfterAddingToCart, currentCustomer, currentCurrency, currentStoreId, currentLanguage, priceIncludesTax, res, displayPrices, enableShoppingCart, enableWishlist, product, model));
                 }
-
-                //picture
                 if (preparePictureModel)
                 {
-                    #region Prepare product picture
-                    //prepare picture model
-                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-
-                    lvl1BackgroundTasks.Add(_cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
-                    {
-                        var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                        if (picture == null)
-                            picture = new ProductPicture();
-
-                        var pictureModel = new PictureModel {
-                            Id = picture.PictureId
-                        };
-
-                        await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
-                        await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
-
-                        //"title" attribute
-                        pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
-                            picture.TitleAttribute :
-                            string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
-                        //"alt" attribute
-                        pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
-                            picture.AltAttribute :
-                            string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
-
-                        return pictureModel;
-                    }).ContinueWith(t => model.DefaultPictureModel = t.Result));
-
-                    //prepare second picture model
-                    if (_catalogSettings.SecondPictureOnCatalogPages)
-                    {
-                        var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-
-                        lvl1BackgroundTasks.Add(_cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
-                        {
-                            var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
-                            if (picture == null)
-                                return new PictureModel();
-
-                            var pictureModel = new PictureModel {
-                                Id = picture.PictureId
-                            };
-
-                            await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
-                            await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
-
-                            //"title" attribute
-                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
-                                    picture.TitleAttribute :
-                                    string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
-                            //"alt" attribute
-                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
-                                    picture.AltAttribute :
-                                    string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
-
-                            return pictureModel;
-                        }).ContinueWith(t => model.SecondPictureModel = t.Result));
-                    }
-                    #endregion
+                    lvl1BackgroundTasks.Add(PreparePictureModel(currentStoreId, currentLanguage, pictureSize, connectionSecured, res, product, model));
                 }
 
                 //specs
@@ -529,6 +223,314 @@ namespace Grand.Web.Services
             await Task.WhenAll(lvl1BackgroundTasks);
 
             return models;
+        }
+
+        private Task PreparePictureModel(string currentStoreId, Language currentLanguage, int pictureSize, bool connectionSecured, Dictionary<string, string> res, Product product, ProductOverviewModel model)
+        {
+            var resultingTasks = new List<Task>();
+            //prepare picture model
+            var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
+
+            resultingTasks.Add(_cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
+            {
+                var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                if (picture == null)
+                    picture = new ProductPicture();
+
+                var pictureModel = new PictureModel {
+                    Id = picture.PictureId
+                };
+
+                await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
+                //"title" attribute
+                pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                picture.TitleAttribute :
+                string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
+                //"alt" attribute
+                pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                picture.AltAttribute :
+                string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
+
+                return pictureModel;
+            }).ContinueWith(t => model.DefaultPictureModel = t.Result));
+
+            //prepare second picture model
+            if (_catalogSettings.SecondPictureOnCatalogPages)
+            {
+                var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
+
+                resultingTasks.Add(_cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
+                {
+                    var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
+                    if (picture == null)
+                        return new PictureModel();
+
+                    var pictureModel = new PictureModel {
+                        Id = picture.PictureId
+                    };
+
+                    await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                    await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
+                    //"title" attribute
+                    pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                        picture.TitleAttribute :
+                        string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
+                    //"alt" attribute
+                    pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                        picture.AltAttribute :
+                        string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
+
+                    return pictureModel;
+                }).ContinueWith(t => model.SecondPictureModel = t.Result));
+            }
+
+            return Task.WhenAll(resultingTasks);
+        }
+
+        private async Task PreparePriceModel(bool forceRedirectionAfterAddingToCart, Customer currentCustomer, Currency currentCurrency, string currentStoreId, Language currentLanguage, bool priceIncludesTax, Dictionary<string, string> res, bool displayPrices, bool enableShoppingCart, bool enableWishlist, Product product, ProductOverviewModel model)
+        {
+            var priceModel = new ProductOverviewModel.ProductPriceModel {
+                ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart
+            };
+
+            model.ProductPrice = priceModel;
+
+            if (product.ProductType == ProductType.GroupedProduct)
+            {
+                var associatedProducts = await _productService.GetAssociatedProducts(product.Id, currentStoreId);
+
+                //add to cart button (ignore "DisableBuyButton" property for grouped products)
+                priceModel.DisableBuyButton = !enableShoppingCart || !displayPrices;
+
+                //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
+                priceModel.DisableWishlistButton = !enableWishlist || !displayPrices;
+
+                //compare products
+                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+
+                //catalog price, not used in views, but it's for front developer
+                if (product.CatalogPrice > 0)
+                {
+                    decimal catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
+                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                }
+
+                if (associatedProducts.Count == 0)
+                {
+                    return;
+                }
+
+                //we have at least one associated product
+                //compare products
+                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+                if (!displayPrices)
+                {
+                    //hide prices
+                    priceModel.OldPrice = null;
+                    priceModel.Price = null;
+                    return;
+                }
+                //find a minimum possible price
+                decimal? minPossiblePrice = null;
+                Product minPriceProduct = null;
+                var priceCalcTasks = new List<Task>();
+                var prices = new List<(decimal, Product)>();
+
+                foreach (var associatedProduct in associatedProducts)
+                {
+                    priceCalcTasks.Add(_priceCalculationService.GetFinalPrice(associatedProduct,
+                        currentCustomer, decimal.Zero, true, int.MaxValue).ContinueWith((resp) =>
+                        {
+                            prices.Add((resp.Result.finalPrice, associatedProduct));
+
+                            var tmpPrice = resp.Result.finalPrice;
+
+                        }));
+                }
+
+                await Task.WhenAll(priceCalcTasks);
+                //calculate for the maximum quantity (in case if we have tier prices)
+                //we do this here and not within the loop above because to avoid rush conditions
+                foreach (var tmpPrice in prices)
+                {
+                    if (!minPossiblePrice.HasValue || tmpPrice.Item1 < minPossiblePrice.Value)
+                    {
+                        minPriceProduct = tmpPrice.Item2;
+                        minPossiblePrice = tmpPrice.Item1;
+                    }
+                }
+
+                if (minPriceProduct == null || minPriceProduct.CustomerEntersPrice)
+                {
+                    return;
+                }
+
+                if (minPriceProduct.CallForPrice)
+                {
+                    priceModel.OldPrice = null;
+                    priceModel.Price = res["Products.CallForPrice"];
+                }
+                else if (minPossiblePrice.HasValue)
+                {
+                    //calculate prices
+                    decimal finalPriceBase = (await _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, priceIncludesTax, currentCustomer)).productprice;
+                    decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
+
+                    priceModel.OldPrice = null;
+                    priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
+                    priceModel.PriceValue = finalPrice;
+
+                    //PAngV baseprice (used in Germany)
+                    if (product.BasepriceEnabled)
+                        priceModel.BasePricePAngV = await product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                }
+                else
+                {
+                    //Actually it's not possible (we presume that minimalPrice always has a value)
+                    //We never should get here
+                    Debug.WriteLine("Cannot calculate minPrice for product #{0}", product.Id);
+                }
+            }
+            else
+            {
+                #region Simple product
+
+                //add to cart button
+                priceModel.DisableBuyButton = product.DisableBuyButton || !enableShoppingCart || !displayPrices;
+
+                //add to wishlist button
+                priceModel.DisableWishlistButton = product.DisableWishlistButton || !enableWishlist || !displayPrices;
+                //compare products
+                priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
+
+                //pre-order
+                if (product.AvailableForPreOrder)
+                {
+                    priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
+                        product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
+                    priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+                }
+
+                //catalog price, not used in views, but it's for front developer
+                if (product.CatalogPrice > 0)
+                {
+                    decimal catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
+                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                }
+
+                //start price for product auction
+                if (product.StartPrice > 0)
+                {
+                    decimal startPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, currentCurrency);
+                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                    priceModel.StartPriceValue = startPrice;
+                }
+
+                //highest bid for product auction
+                if (product.HighestBid > 0)
+                {
+                    decimal highestBid = await _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, currentCurrency);
+                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid, true, currentCurrency, currentLanguage, priceIncludesTax);
+                    priceModel.HighestBidValue = highestBid;
+                }
+
+                //prices
+                if (displayPrices)
+                {
+                    if (!product.CustomerEntersPrice)
+                    {
+                        if (product.CallForPrice)
+                        {
+                            //call for price
+                            priceModel.OldPrice = null;
+                            priceModel.Price = res["Products.CallForPrice"];
+                        }
+                        else
+                        {
+                            //prices
+
+                            //calculate for the maximum quantity (in case if we have tier prices)
+                            var infoprice = (await _priceCalculationService.GetFinalPrice(product,
+                                currentCustomer, decimal.Zero, true, int.MaxValue));
+
+                            priceModel.AppliedDiscounts = infoprice.appliedDiscounts;
+                            priceModel.PreferredTierPrice = infoprice.preferredTierPrice;
+
+                            decimal minPossiblePrice = infoprice.finalPrice;
+
+                            decimal oldPriceBase = (await _taxService.GetProductPrice(product, product.OldPrice, priceIncludesTax, currentCustomer)).productprice;
+                            decimal finalPriceBase = (await _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, currentCustomer)).productprice;
+
+                            decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, currentCurrency);
+                            decimal finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
+
+                            //do we have tier prices configured?
+                            var tierPrices = new List<TierPrice>();
+                            if (product.TierPrices.Any())
+                            {
+                                tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
+                                    .FilterByStore(currentStoreId)
+                                    .FilterForCustomer(currentCustomer)
+                                    .FilterByDate()
+                                    .RemoveDuplicatedQuantities());
+                            }
+                            //When there is just one tier (with  qty 1), 
+                            //there are no actual savings in the list.
+                            bool displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
+                            if (displayFromMessage)
+                            {
+                                priceModel.OldPrice = null;
+                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
+                                priceModel.PriceValue = finalPrice;
+                            }
+                            else
+                            {
+                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                {
+                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                                    priceModel.OldPriceValue = oldPrice;
+                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                                    priceModel.PriceValue = finalPrice;
+                                }
+                                else
+                                {
+                                    priceModel.OldPrice = null;
+                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
+                                    priceModel.PriceValue = finalPrice;
+                                }
+                            }
+                            if (product.ProductType == ProductType.Reservation)
+                            {
+                                //rental product
+                                priceModel.OldPrice = _priceFormatter.FormatReservationProductPeriod(product, priceModel.OldPrice);
+                                priceModel.Price = _priceFormatter.FormatReservationProductPeriod(product, priceModel.Price);
+                            }
+
+
+                            //property for German market
+                            //we display tax/shipping info only with "shipping enabled" for this product
+                            //we also ensure this it's not free shipping
+                            priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
+
+                            //PAngV baseprice (used in Germany)
+                            if (product.BasepriceEnabled)
+                                priceModel.BasePricePAngV = await product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+
+                        }
+                    }
+                }
+                else
+                {
+                    //hide prices
+                    priceModel.OldPrice = null;
+                    priceModel.Price = null;
+                }
+
+                #endregion
+            }
         }
 
         public virtual async Task<IList<ProductSpecificationModel>> PrepareProductSpecificationModel(
