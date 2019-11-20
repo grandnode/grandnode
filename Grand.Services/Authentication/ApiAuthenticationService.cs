@@ -96,7 +96,11 @@ namespace Grand.Services.Authentication
                 return _cachedCustomer;
 
             //try to get authenticated user identity
-            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme).Result;
+            string authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme))
+                return null;
+
+            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync();
             if (!authenticateResult.Succeeded)
                 return null;
 
