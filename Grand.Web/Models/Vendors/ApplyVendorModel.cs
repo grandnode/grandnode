@@ -11,7 +11,7 @@ namespace Grand.Web.Models.Vendors
 
         public ApplyVendorModel()
         {
-            this.Address = new VendorAddressModel();
+            Address = new VendorAddressModel();
         }
 
         public VendorAddressModel Address { get; set; }

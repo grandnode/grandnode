@@ -574,6 +574,8 @@ body:not(.is-ready) .search-box-button {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	height: 100%;
+	justify-content: space-between;
 }
 .advanced-search-results .products-container .product-in,
 .advanced-search-results .products-container .in-separator,
@@ -639,11 +641,16 @@ body:not(.is-ready) .search-box-button {
 	padding-left: 15px;
 }
 .advanced-search-results .products-container .list-group-item {
-	margin-bottom: 0;
-	border-radius: 0;
-	border: 0;
-	padding: 5px 5px 5px 15px;
-	overflow: hidden;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+    border: 0;
+    padding: 10px 5px 10px 15px;
+    border-bottom: 1px solid #dfdfdf;
+    overflow: hidden;
 }
 .advanced-search-results .products-container .product-title,
 .advanced-search-results .blog-container .product-title {
@@ -651,8 +658,13 @@ body:not(.is-ready) .search-box-button {
 	font-size: 14px;
 	color: #212529;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	white-space: pre-wrap;
 	overflow: hidden;
+}
+.advanced-search-results .price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #117a8b;
 }
 .advanced-search-results .products-container .product-desc {
 	color: #6c757d;

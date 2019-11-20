@@ -11,7 +11,7 @@ namespace Grand.Web.ViewComponents
 
         public CurrencySelectorViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonViewModelService = commonViewModelService;
+            _commonViewModelService = commonViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

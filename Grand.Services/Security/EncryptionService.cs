@@ -12,7 +12,7 @@ namespace Grand.Services.Security
 
         public EncryptionService(SecuritySettings securitySettings)
         {
-            this._securitySettings = securitySettings;
+            _securitySettings = securitySettings;
         }
 
         /// <summary>

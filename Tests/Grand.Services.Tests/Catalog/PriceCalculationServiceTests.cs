@@ -2,7 +2,6 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
@@ -10,7 +9,6 @@ using Grand.Core.Tests.Caching;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,11 +34,9 @@ namespace Grand.Services.Catalog.Tests
         private IProductService _productService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private CurrencySettings _currencySettings;
         private ICacheManager _cacheManager;
         private IPriceCalculationService _priceCalcService;
         private IVendorService _vendorService;
-        private IStoreService _storeService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
         [TestInitialize()]
@@ -64,7 +60,6 @@ namespace Grand.Services.Catalog.Tests
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _vendorService = new Mock<IVendorService>().Object;
-            _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
             tempProductService = new Mock<IProductService>();
@@ -74,7 +69,6 @@ namespace Grand.Services.Catalog.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _currencySettings = new CurrencySettings();
             _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             _priceCalcService = new PriceCalculationService(
                 _workContext,
@@ -87,7 +81,6 @@ namespace Grand.Services.Catalog.Tests
                 _customerService,
                 _cacheManager,
                 _vendorService,
-                _storeService,
                 _currencyService,
                 _shoppingCartSettings,
                 _catalogSettings);

@@ -33,7 +33,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
         public TaxRateService(IMediator mediator,

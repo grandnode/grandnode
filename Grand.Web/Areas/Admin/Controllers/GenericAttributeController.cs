@@ -240,6 +240,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _genericAttributeService.SaveAttribute(model.ObjectType, model.Id, model.Key, model.Value, model.StoreId);
+
                 //TO DO - temporary solution
                 //After add new attribute we need clear cache
                 await _cacheManager.Clear();

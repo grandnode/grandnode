@@ -33,12 +33,12 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             CustomerSettings customerSettings)
         {
-            this._downloadService = downloadService;
-            this._productService = productService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._customerSettings = customerSettings;
+            _downloadService = downloadService;
+            _productService = productService;
+            _orderService = orderService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _customerSettings = customerSettings;
         }
 
         public virtual async Task<IActionResult> Sample(string productId)

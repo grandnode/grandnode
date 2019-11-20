@@ -154,7 +154,7 @@ namespace Grand.Web.Services
             model.Name = lesson.Name;
             model.ShortDescription = lesson.ShortDescription;
             model.Description = lesson.Description;
-
+            model.GenericAttributes = lesson.GenericAttributes;
             model.CourseLevel = (await _courseLevelService.GetById(course.LevelId))?.Name;
 
             //prepare picture

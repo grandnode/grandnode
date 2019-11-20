@@ -17,14 +17,12 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
     {
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
         private readonly IServiceProvider _serviceProvider;
-        public GoogleAnalyticPlugin(ISettingService settingService, IWebHelper webHelper, IWorkContext workContext, IServiceProvider serviceProvider)
+        public GoogleAnalyticPlugin(ISettingService settingService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._serviceProvider = serviceProvider;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>

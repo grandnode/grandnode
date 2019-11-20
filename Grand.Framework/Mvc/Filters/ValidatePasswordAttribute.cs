@@ -40,8 +40,8 @@ namespace Grand.Framework.Mvc.Filters
 
             public ValidatePasswordFilter(IWorkContext workContext, CustomerSettings customerSettings)
             {
-                this._workContext = workContext;
-                this._customerSettings = customerSettings;
+                _workContext = workContext;
+                _customerSettings = customerSettings;
             }
 
             #endregion

@@ -72,25 +72,25 @@ namespace Grand.Web.Controllers
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._checkoutViewModelService = checkoutViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._customerService = customerService;
-            this._shoppingCartService = shoppingCartService;
-            this._genericAttributeService = genericAttributeService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._webHelper = webHelper;
-            this._addressViewModelService = addressViewModelService;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _checkoutViewModelService = checkoutViewModelService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _customerService = customerService;
+            _shoppingCartService = shoppingCartService;
+            _genericAttributeService = genericAttributeService;
+            _shippingService = shippingService;
+            _paymentService = paymentService;
+            _pluginFinder = pluginFinder;
+            _logger = logger;
+            _orderService = orderService;
+            _webHelper = webHelper;
+            _addressViewModelService = addressViewModelService;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

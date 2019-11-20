@@ -51,18 +51,18 @@ namespace Grand.Web.Services
             IDateTimeHelper dateTimeHelper,
             IServiceProvider serviceProvider)
         {
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._countryService = countryService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._serviceProvider = serviceProvider;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _countryService = countryService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
+            _mediaSettings = mediaSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual async Task<BoardsIndexModel> PrepareBoardsIndex()

@@ -17,8 +17,8 @@ namespace Grand.Framework.Security
         /// </summary>
         public AdminAntiForgeryAttribute(bool ignore = false) : base(typeof(AdminAntiForgeryFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         public bool IgnoreFilter => _ignoreFilter;
@@ -43,8 +43,8 @@ namespace Grand.Framework.Security
                 ILoggerFactory loggerFactory)
                 : base(antiforgery, loggerFactory)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._securitySettings = securitySettings;
+                _ignoreFilter = ignoreFilter;
+                _securitySettings = securitySettings;
             }
 
             #endregion

@@ -5,7 +5,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Services.Stores;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -40,20 +39,6 @@ namespace Grand.Services.Orders
         /// </remarks>
         private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Grand.checkoutattribute.id-{0}";
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : checkout attribute ID
-        /// </remarks>
-        private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Grand.checkoutattributevalue.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : checkout attribute value ID
-        /// </remarks>
-        private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Grand.checkoutattributevalue.id-{0}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Grand.checkoutattribute.";
@@ -66,7 +51,6 @@ namespace Grand.Services.Orders
         #region Fields
 
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
@@ -81,21 +65,18 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CheckoutAttributeService(ICacheManager cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
-            IStoreMappingService storeMappingService,
             IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
-            this._cacheManager = cacheManager;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._storeMappingService = storeMappingService;
-            this._mediator = mediator;
-            this._workContext = workContext;
-            this._catalogSettings = catalogSettings;
+            _cacheManager = cacheManager;
+            _checkoutAttributeRepository = checkoutAttributeRepository;
+            _mediator = mediator;
+            _workContext = workContext;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

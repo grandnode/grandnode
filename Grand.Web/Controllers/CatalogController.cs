@@ -68,21 +68,21 @@ namespace Grand.Web.Controllers
             IVendorViewModelService vendorViewModelService,
             VendorSettings vendorSettings)
         {
-            this._catalogViewModelService = catalogViewModelService;
-            this._productViewModelService = productViewModelService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._customerActionEventService = customerActionEventService;
-            this._vendorViewModelService = vendorViewModelService;
-            this._vendorSettings = vendorSettings;
+            _catalogViewModelService = catalogViewModelService;
+            _productViewModelService = productViewModelService;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _genericAttributeService = genericAttributeService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _customerActionEventService = customerActionEventService;
+            _vendorViewModelService = vendorViewModelService;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

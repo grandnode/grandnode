@@ -5,10 +5,8 @@ using Grand.Services.Events;
 using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Stores
@@ -31,10 +29,6 @@ namespace Grand.Services.Stores
         /// {0} : store ID
         /// </remarks>
         private const string STORES_BY_ID_KEY = "Grand.stores.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STORES_PATTERN_KEY = "Grand.stores.";
 
         #endregion
         
@@ -55,14 +49,14 @@ namespace Grand.Services.Stores
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeRepository">Store repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public StoreService(ICacheManager cacheManager,
             IRepository<Store> storeRepository,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._storeRepository = storeRepository;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _storeRepository = storeRepository;
+            _mediator = mediator;
         }
 
         #endregion

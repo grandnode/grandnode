@@ -69,24 +69,24 @@ namespace Grand.Web.Services
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._workflowMessageService = workflowMessageService;
-            this._webHelper = webHelper;
-            this._cacheManager = cacheManager;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._serviceProvider = serviceProvider;
-            this._mediaSettings = mediaSettings;
-            this._blogSettings = blogSettings;
-            this._localizationSettings = localizationSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
+            _blogService = blogService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _workflowMessageService = workflowMessageService;
+            _webHelper = webHelper;
+            _cacheManager = cacheManager;
+            _customerActivityService = customerActivityService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _serviceProvider = serviceProvider;
+            _mediaSettings = mediaSettings;
+            _blogSettings = blogSettings;
+            _localizationSettings = localizationSettings;
+            _customerSettings = customerSettings;
+            _captchaSettings = captchaSettings;
         }
 
         public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()

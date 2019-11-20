@@ -47,24 +47,24 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
             ILocalizationService localizationService,
             IServiceProvider serviceProvider)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._localizationService = localizationService;
-            this._serviceProvider = serviceProvider;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _orderService = orderService;
+            _productService = productService;
+            _logger = logger;
+            _categoryService = categoryService;
+            _productAttributeParser = productAttributeParser;
+            _localizationService = localizationService;
+            _serviceProvider = serviceProvider;
         }
 
         [AuthorizeAdmin]
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(storeScope);
             var model = new ConfigurationModel();
             model.GoogleId = googleAnalyticsSettings.GoogleId;
@@ -91,7 +91,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsEcommerceSettings>(storeScope);
             googleAnalyticsSettings.GoogleId = model.GoogleId;
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;

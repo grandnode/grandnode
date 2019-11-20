@@ -23,9 +23,9 @@ namespace Grand.Web.Components
             IProductViewModelService productViewModelService,
             CatalogSettings catalogSettings)
         {
-            this._productService = productService;
-            this._catalogSettings = catalogSettings;
-            this._productViewModelService = productViewModelService;
+            _productService = productService;
+            _catalogSettings = catalogSettings;
+            _productViewModelService = productViewModelService;
         }
 
         #endregion

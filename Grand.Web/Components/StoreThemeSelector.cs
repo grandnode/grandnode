@@ -2,7 +2,6 @@
 using Grand.Framework.Components;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -13,8 +12,8 @@ namespace Grand.Web.ViewComponents
         public StoreThemeSelectorViewComponent(ICommonViewModelService commonViewModelService,
             StoreInformationSettings storeInformationSettings)
         {
-            this._commonViewModelService = commonViewModelService;
-            this._storeInformationSettings = storeInformationSettings;
+            _commonViewModelService = commonViewModelService;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()

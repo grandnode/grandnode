@@ -16,8 +16,8 @@ namespace Grand.Web.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INewsletterCategoryService newsletterCategoryService)
         {
-            this._newsletterViewModelService = newsletterViewModelService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _newsletterViewModelService = newsletterViewModelService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
        
 

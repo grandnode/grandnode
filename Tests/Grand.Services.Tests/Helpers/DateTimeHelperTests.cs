@@ -42,8 +42,7 @@ namespace Grand.Services.Helpers.Tests
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext, _genericAttributeService,
-                _settingService, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_workContext, _dateTimeSettings);
         }
 
         [TestMethod()]

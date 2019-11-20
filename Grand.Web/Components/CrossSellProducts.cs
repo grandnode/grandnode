@@ -21,8 +21,8 @@ namespace Grand.Web.Components
             ShoppingCartSettings shoppingCartSettings
 )
         {
-            this._productViewModelService = productViewModelService;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _productViewModelService = productViewModelService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -38,12 +38,12 @@ namespace Grand.Services.Blogs
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            this._blogPostRepository = blogPostRepository;
-            this._blogCommentRepository = blogCommentRepository;
-            this._blogCategoryRepository = blogCategoryRepository;
-            this._blogProductRepository = blogProductRepository;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _blogPostRepository = blogPostRepository;
+            _blogCommentRepository = blogCommentRepository;
+            _blogCategoryRepository = blogCategoryRepository;
+            _blogProductRepository = blogProductRepository;
+            _catalogSettings = catalogSettings;
+            _mediator = mediator;
         }
 
         #endregion

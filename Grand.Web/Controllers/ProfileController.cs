@@ -39,16 +39,16 @@ namespace Grand.Web.Controllers
             CustomerSettings customerSettings,
             MediaSettings mediaSettings)
         {
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._countryService = countryService;
-            this._customerService = customerService;
-            this._permissionService = permissionService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumSettings = forumSettings;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _countryService = countryService;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumSettings = forumSettings;
+            _customerSettings = customerSettings;
+            _mediaSettings = mediaSettings;
         }
 
         public virtual async Task<IActionResult> Index(string id, int? pageNumber)

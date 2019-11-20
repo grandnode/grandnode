@@ -15,8 +15,8 @@ namespace Grand.Web.ViewComponents
         public ManufacturerNavigationViewComponent(ICatalogViewModelService catalogViewModelService,
             CatalogSettings catalogSettings)
         {
-            this._catalogViewModelService = catalogViewModelService;
-            this._catalogSettings = catalogSettings;
+            _catalogViewModelService = catalogViewModelService;
+            _catalogSettings = catalogSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string currentManufacturerId)

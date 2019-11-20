@@ -48,19 +48,19 @@ namespace Grand.Web.Services
             CaptchaSettings captchaSettings,
             LocalizationSettings localizationSettings)
         {
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._vendorService = vendorService;
-            this._cacheManager = cacheManager;
-            this._vendorService = vendorService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._workflowMessageService = workflowMessageService;
-            this._serviceProvider = serviceProvider;
-            this._vendorSettings = vendorSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
-            this._localizationSettings = localizationSettings;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _vendorService = vendorService;
+            _cacheManager = cacheManager;
+            _vendorService = vendorService;
+            _dateTimeHelper = dateTimeHelper;
+            _workflowMessageService = workflowMessageService;
+            _serviceProvider = serviceProvider;
+            _vendorSettings = vendorSettings;
+            _customerSettings = customerSettings;
+            _captchaSettings = captchaSettings;
+            _localizationSettings = localizationSettings;
         }
 
         public virtual VendorReviewOverviewModel PrepareVendorReviewOverviewModel(Vendor vendor)

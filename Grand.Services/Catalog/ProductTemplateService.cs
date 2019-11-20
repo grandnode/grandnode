@@ -29,12 +29,12 @@ namespace Grand.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTemplateRepository">Product template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository,
             IMediator mediator)
         {
-            this._productTemplateRepository = productTemplateRepository;
-            this._mediator = mediator;
+            _productTemplateRepository = productTemplateRepository;
+            _mediator = mediator;
         }
 
         #endregion

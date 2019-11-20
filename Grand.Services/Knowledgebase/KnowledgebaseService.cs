@@ -112,21 +112,21 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="knowledgebaseCategoryRepository"></param>
         /// <param name="knowledgebaseArticleRepository"></param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="mediator">Mediator</param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IMediator mediator, CommonSettings commonSettings,
             CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext,
             IRepository<KnowledgebaseArticleComment> articleCommentRepository)
         {
-            this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
-            this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
-            this._mediator = mediator;
-            this._commonSettings = commonSettings;
-            this._catalogSettings = catalogSettings;
-            this._workContext = workContext;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._articleCommentRepository = articleCommentRepository;
+            _knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
+            _knowledgebaseArticleRepository = knowledgebaseArticleRepository;
+            _mediator = mediator;
+            _commonSettings = commonSettings;
+            _catalogSettings = catalogSettings;
+            _workContext = workContext;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _articleCommentRepository = articleCommentRepository;
         }
 
         /// <summary>

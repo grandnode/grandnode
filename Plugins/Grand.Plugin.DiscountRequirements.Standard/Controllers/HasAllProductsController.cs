@@ -49,16 +49,16 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
             IVendorService vendorService,
             IProductService productService)
         {
-            this._discountService = discountService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._productService = productService;
+            _discountService = discountService;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _productService = productService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)

@@ -63,15 +63,15 @@ namespace Grand.Services.ExportImport
             IDiscountService discountService,
             IServiceProvider serviceProvider)
         {
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeService = productAttributeService;
-            this._pictureService = pictureService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
-            this._productService = productService;
-            this._discountService = discountService;
-            this._serviceProvider = serviceProvider;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeService = productAttributeService;
+            _pictureService = pictureService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeService = storeService;
+            _productService = productService;
+            _discountService = discountService;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

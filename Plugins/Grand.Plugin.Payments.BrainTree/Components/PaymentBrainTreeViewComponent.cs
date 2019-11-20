@@ -11,7 +11,7 @@ using Grand.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Nop.Plugin.Payments.BrainTree.Components
+namespace Grand.Plugin.Payments.BrainTree.Components
 {
     [ViewComponent(Name = "PaymentBrainTree")]
     public class PaymentBrainTreeViewComponent : ViewComponent

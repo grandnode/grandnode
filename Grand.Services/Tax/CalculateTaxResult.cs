@@ -12,7 +12,7 @@ namespace Grand.Services.Tax
         /// </summary>
         public CalculateTaxResult()
         {
-            this.Errors = new List<string>();
+            Errors = new List<string>();
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Grand.Services.Tax
         {
             get 
             { 
-                return this.Errors.Count == 0; 
+                return Errors.Count == 0; 
             }
         }
 
@@ -42,7 +42,7 @@ namespace Grand.Services.Tax
         /// <param name="error">Error</param>
         public void AddError(string error)
         {
-            this.Errors.Add(error);
+            Errors.Add(error);
         }
     }
 }

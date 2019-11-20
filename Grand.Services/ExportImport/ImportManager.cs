@@ -77,26 +77,26 @@ namespace Grand.Services.ExportImport
             ILanguageService languageService,
             SeoSettings seoSetting)
         {
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._storeContext = storeContext;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._vendorService = vendorService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._productTemplateService = productTemplateService;
-            this._downloadService = downloadService;
-            this._shippingService = shippingService;
-            this._taxService = taxService;
-            this._measureService = measureService;
-            this._languageService = languageService;
-            this._seoSetting = seoSetting;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _storeContext = storeContext;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _vendorService = vendorService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _productTemplateService = productTemplateService;
+            _downloadService = downloadService;
+            _shippingService = shippingService;
+            _taxService = taxService;
+            _measureService = measureService;
+            _languageService = languageService;
+            _seoSetting = seoSetting;
         }
 
         #endregion

@@ -59,18 +59,18 @@ namespace Grand.Framework.Controllers
             if (actionContextAccessor == null)
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
-            var context = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var context = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             var viewComponentResult = ViewComponent(componentName, arguments);
 
-            var viewData = this.ViewData;
+            var viewData = ViewData;
             if (viewData == null)
             {
                 throw new NotImplementedException();
                 //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
-            var tempData = this.TempData;
+            var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
@@ -206,7 +206,6 @@ namespace Grand.Framework.Controllers
         /// <summary>
         /// Display error notification
         /// </summary>
-        /// <param name="message">Message</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected virtual void ErrorNotification(ModelStateDictionary ModelState, bool persistForTheNextRequest = true)
         {
@@ -400,8 +399,7 @@ namespace Grand.Framework.Controllers
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             // event notification before execute
-            var mediator = EngineContext.Current.Resolve<IMediator>();
-
+            var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
             await mediator.Publish(new ActionExecutingContextNotification(context, true));
 
             await next();

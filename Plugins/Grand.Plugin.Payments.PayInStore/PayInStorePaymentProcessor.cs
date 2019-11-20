@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
-using Grand.Plugin.Payments.PayInStore.Controllers;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -34,12 +33,12 @@ namespace Grand.Plugin.Payments.PayInStore
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
             ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider)
         {
-            this._payInStorePaymentSettings = payInStorePaymentSettings;
-            this._settingService = settingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _payInStorePaymentSettings = payInStorePaymentSettings;
+            _settingService = settingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

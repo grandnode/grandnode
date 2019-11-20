@@ -39,13 +39,13 @@ namespace Grand.Plugin.Shipping.ByWeight
             IWorkContext workContext,
             IServiceProvider serviceProvider)
         {
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._priceCalculationService = priceCalculationService;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._serviceProvider = serviceProvider;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _priceCalculationService = priceCalculationService;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _serviceProvider = serviceProvider;
         }
         #endregion
 

@@ -21,12 +21,12 @@ namespace Grand.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
             IMediator mediator)
         {
-            this._emailAccountRepository = emailAccountRepository;
-            this._mediator = mediator;
+            _emailAccountRepository = emailAccountRepository;
+            _mediator = mediator;
         }
 
         /// <summary>

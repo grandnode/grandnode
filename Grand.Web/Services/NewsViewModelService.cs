@@ -51,21 +51,21 @@ namespace Grand.Web.Services
             CaptchaSettings captchaSettings, NewsSettings newsSettings,
             CustomerSettings customerSettings, MediaSettings mediaSettings, LocalizationSettings localizationSettings)
         {
-            this._newsService = newsService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._cacheManager = cacheManager;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
-            this._captchaSettings = captchaSettings;
-            this._newsSettings = newsSettings;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
-            this._localizationSettings = localizationSettings;
+            _newsService = newsService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _pictureService = pictureService;
+            _dateTimeHelper = dateTimeHelper;
+            _cacheManager = cacheManager;
+            _workflowMessageService = workflowMessageService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
+            _captchaSettings = captchaSettings;
+            _newsSettings = newsSettings;
+            _customerSettings = customerSettings;
+            _mediaSettings = mediaSettings;
+            _localizationSettings = localizationSettings;
         }
 
         public virtual async Task PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)

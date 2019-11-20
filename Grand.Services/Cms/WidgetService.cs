@@ -15,7 +15,6 @@ namespace Grand.Services.Cms
         #region Fields
 
         private readonly IPluginFinder _pluginFinder;
-        private readonly ICacheManager _cacheManager;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
@@ -26,14 +25,12 @@ namespace Grand.Services.Cms
         /// Ctor
         /// </summary>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="cacheManager">Cache manager</param>
         /// <param name="widgetSettings">Widget settings</param>
         public WidgetService(IPluginFinder pluginFinder, ICacheManager cacheManager,
             WidgetSettings widgetSettings)
         {
-            this._pluginFinder = pluginFinder;
-            this._cacheManager = cacheManager;
-            this._widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion

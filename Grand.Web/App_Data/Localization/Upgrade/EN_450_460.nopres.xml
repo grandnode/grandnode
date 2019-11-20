@@ -737,4 +737,7 @@
   <LocaleResource Name="Admin.Common.GenericAttributes.Tab">
     <Value>Generic attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.common.genericattributes.fields.store">
+    <Value>Select store</Value>
+  </LocaleResource>
 </Language>

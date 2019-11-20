@@ -33,7 +33,7 @@ namespace Grand.Plugin.ExchangeRate.McExchange
                 provider.CurrencyDecimalSeparator = ".";
                 provider.NumberGroupSeparator = "";
 
-                var exchangeRates = new List<Grand.Core.Domain.Directory.ExchangeRate>();
+                var exchangeRates = new List<Core.Domain.Directory.ExchangeRate>();
                 foreach (XmlNode node2 in ratesNode.ChildNodes)
                 {
                     var rate = decimal.Parse(node2.SelectSingleNode("Mid").InnerText, provider);

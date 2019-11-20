@@ -66,19 +66,19 @@ namespace Grand.Plugin.Payments.PayPalStandard
             IServiceProvider serviceProvider,
             PayPalStandardPaymentSettings paypalStandardPaymentSettings)
         {
-            this._currencySettings = currencySettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._settingService = settingService;
-            this._taxService = taxService;
-            this._productService = productService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
-            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
+            _currencySettings = currencySettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _settingService = settingService;
+            _taxService = taxService;
+            _productService = productService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
+            _paypalStandardPaymentSettings = paypalStandardPaymentSettings;
         }
 
         #endregion

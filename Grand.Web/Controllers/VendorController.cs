@@ -66,21 +66,21 @@ namespace Grand.Web.Controllers
             CommonSettings commonSettings,
             MediaSettings mediaSettings)
         {
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._customerService = customerService;
-            this._workflowMessageService = workflowMessageService;
-            this._vendorService = vendorService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
-            this._addressViewModelService = addressViewModelService;
-            this._countryService = countryService;
-            this._serviceProvider = serviceProvider;
-            this._localizationSettings = localizationSettings;
-            this._vendorSettings = vendorSettings;
-            this._captchaSettings = captchaSettings;
-            this._commonSettings = commonSettings;
-            this._mediaSettings = mediaSettings;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _customerService = customerService;
+            _workflowMessageService = workflowMessageService;
+            _vendorService = vendorService;
+            _urlRecordService = urlRecordService;
+            _pictureService = pictureService;
+            _addressViewModelService = addressViewModelService;
+            _countryService = countryService;
+            _serviceProvider = serviceProvider;
+            _localizationSettings = localizationSettings;
+            _vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _commonSettings = commonSettings;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion

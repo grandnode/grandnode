@@ -25,10 +25,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
     {
         #region Fields
 
-        private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly ISettingService _settingService;
         private readonly IShippingPointService _shippingPointService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
@@ -39,10 +36,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         #endregion
 
         #region Ctor
-        public ShippingPointComputationMethod(IShippingService shippingService,
-            IStoreContext storeContext,
-            IPriceCalculationService priceCalculationService,
-            ISettingService settingService,
+        public ShippingPointComputationMethod(IStoreContext storeContext,
             IShippingPointService shippingPointService,
             ILocalizationService localizationService,
             IWorkContext workContext,
@@ -52,17 +46,14 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             IServiceProvider serviceProvider
             )
         {
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._priceCalculationService = priceCalculationService;
-            this._settingService = settingService;
-            this._shippingPointService = shippingPointService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._countryService = countryService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
+            _storeContext = storeContext;
+            _shippingPointService = shippingPointService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _countryService = countryService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
         #endregion
 

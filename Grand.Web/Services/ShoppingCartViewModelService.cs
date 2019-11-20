@@ -122,46 +122,46 @@ namespace Grand.Web.Services
             RewardPointsSettings rewardPointsSettings,
             CommonSettings commonSettings)
         {
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._webHelper = webHelper;
-            this._paymentService = paymentService;
-            this._productService = productService;
-            this._pictureService = pictureService;
-            this._productAttributeParser = productAttributeParser;
-            this._localizationService = localizationService;
-            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._currencyService = currencyService;
-            this._discountService = discountService;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._permissionService = permissionService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._downloadService = downloadService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressViewModelService = addressViewModelService;
-            this._shippingService = shippingService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._priceCalculationService = priceCalculationService;
-            this._genericAttributeService = genericAttributeService;
-            this._auctionService = auctionService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._dateTimeHelper = dateTimeHelper;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _webHelper = webHelper;
+            _paymentService = paymentService;
+            _productService = productService;
+            _pictureService = pictureService;
+            _productAttributeParser = productAttributeParser;
+            _localizationService = localizationService;
+            _checkoutAttributeFormatter = checkoutAttributeFormatter;
+            _orderProcessingService = orderProcessingService;
+            _currencyService = currencyService;
+            _discountService = discountService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _checkoutAttributeService = checkoutAttributeService;
+            _permissionService = permissionService;
+            _taxService = taxService;
+            _priceFormatter = priceFormatter;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _downloadService = downloadService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressViewModelService = addressViewModelService;
+            _shippingService = shippingService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _priceCalculationService = priceCalculationService;
+            _genericAttributeService = genericAttributeService;
+            _auctionService = auctionService;
+            _httpContextAccessor = httpContextAccessor;
+            _dateTimeHelper = dateTimeHelper;
 
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._commonSettings = commonSettings;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _commonSettings = commonSettings;
         }
 
         public virtual async Task<PictureModel> PrepareCartItemPicture(Product product, string attributesXml,
