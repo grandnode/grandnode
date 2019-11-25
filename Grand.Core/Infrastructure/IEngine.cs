@@ -48,11 +48,5 @@ namespace Grand.Core.Infrastructure
         /// <returns>Resolved service</returns>
         object Resolve(Type type);
 
-        /// <summary>
-        /// Resolve unregistered service
-        /// </summary>
-        /// <param name="type">Type of service</param>
-        /// <returns>Resolved service</returns>
-        object ResolveUnregistered(Type type);
     }
 }

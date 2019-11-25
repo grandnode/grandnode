@@ -232,35 +232,7 @@ namespace Grand.Core.Infrastructure
         {
             return GetServiceProvider().GetRequiredService(type);
         }
-
-        /// <summary>
-        /// Resolve unregistered service
-        /// </summary>
-        /// <param name="type">Type of service</param>
-        /// <returns>Resolved service</returns>
-        public virtual object ResolveUnregistered(Type type)
-        {
-            foreach (var constructor in type.GetConstructors())
-            {
-                try
-                {
-                    //try to resolve constructor parameters
-                    var parameters = constructor.GetParameters().Select(parameter =>
-                    {
-                        var service = Resolve(parameter.ParameterType);
-                        if (service == null)
-                            throw new GrandException("Unknown dependency");
-                        return service;
-                    });
-
-                    //all is ok, so create instance
-                    return Activator.CreateInstance(type, parameters.ToArray());
-                }
-                catch (GrandException) { }
-            }
-            throw new GrandException("No constructor was found that had all the dependencies satisfied.");
-        }
-
+       
         #endregion
 
         #region Properties
