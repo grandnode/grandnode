@@ -3,12 +3,16 @@ using Grand.Core.Domain.Customers;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Models.Customer;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Customer
 {
     public class LoginValidator : BaseGrandValidator<LoginModel>
     {
-        public LoginValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
+        public LoginValidator(
+            IEnumerable<IValidatorConsumer<LoginModel>> validators,
+            ILocalizationService localizationService, CustomerSettings customerSettings)
+            : base(validators)
         {
             if (!customerSettings.UsernamesEnabled)
             {

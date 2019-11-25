@@ -234,16 +234,6 @@ namespace Grand.Core.Infrastructure
         }
 
         /// <summary>
-        /// Resolve dependencies
-        /// </summary>
-        /// <typeparam name="T">Type of resolved services</typeparam>
-        /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
-        {
-            return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
-        }
-
-        /// <summary>
         /// Resolve unregistered service
         /// </summary>
         /// <param name="type">Type of service</param>

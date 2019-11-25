@@ -5,12 +5,16 @@ using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Customers
 {
     public class AddressValidator : BaseGrandValidator<AddressDto>
     {
-        public AddressValidator(ILocalizationService localizationService, IStateProvinceService stateProvinceService, AddressSettings addressSettings)
+        public AddressValidator(
+            IEnumerable<IValidatorConsumer<AddressDto>> validators,
+            ILocalizationService localizationService, IStateProvinceService stateProvinceService, AddressSettings addressSettings)
+            : base(validators)
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()

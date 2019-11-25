@@ -6,12 +6,16 @@ using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Vendors;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class ProductValidator : BaseGrandValidator<ProductDto>
     {
-        public ProductValidator(ILocalizationService localizationService, IProductService productService, IProductTemplateService productTemplateService, IVendorService vendorService, CommonSettings commonSettings)
+        public ProductValidator(
+            IEnumerable<IValidatorConsumer<ProductDto>> validators,
+            ILocalizationService localizationService, IProductService productService, IProductTemplateService productTemplateService, IVendorService vendorService, CommonSettings commonSettings)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.Name.Required"));
             RuleFor(x => x.ProductType).IsInEnum().WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.ProductType.Required"));

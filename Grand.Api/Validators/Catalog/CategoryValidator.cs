@@ -5,13 +5,17 @@ using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class CategoryValidator : BaseGrandValidator<CategoryDto>
     {
-        public CategoryValidator(ILocalizationService localizationService, IPictureService pictureService, ICategoryService categoryService, ICategoryTemplateService categoryTemplateService)
+        public CategoryValidator(IEnumerable<IValidatorConsumer<CategoryDto>> validators,
+            ILocalizationService localizationService, IPictureService pictureService, ICategoryService categoryService, ICategoryTemplateService 
+            categoryTemplateService) : base(validators)
         {
+            
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
             RuleFor(x => x).MustAsync(async (x, y, context) =>

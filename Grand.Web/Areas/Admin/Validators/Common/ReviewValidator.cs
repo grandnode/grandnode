@@ -2,12 +2,16 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Common;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Common
 {
     public class ReviewValidator : BaseGrandValidator<ReviewModel>
     {
-        public ReviewValidator(ILocalizationService localizationService)
+        public ReviewValidator(
+            IEnumerable<IValidatorConsumer<ReviewModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()

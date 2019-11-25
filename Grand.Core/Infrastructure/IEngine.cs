@@ -49,13 +49,6 @@ namespace Grand.Core.Infrastructure
         object Resolve(Type type);
 
         /// <summary>
-        /// Resolve dependencies
-        /// </summary>
-        /// <typeparam name="T">Type of resolved services</typeparam>
-        /// <returns>Collection of resolved services</returns>
-        IEnumerable<T> ResolveAll<T>();
-
-        /// <summary>
         /// Resolve unregistered service
         /// </summary>
         /// <param name="type">Type of service</param>
