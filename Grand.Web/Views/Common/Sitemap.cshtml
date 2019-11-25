@@ -53,7 +53,7 @@
             {
                 foreach (var item in Model.Topics)
                 {
-                    <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("Topic", new {Sename = await Html.GetTopicSeName(item.SystemName)})">@item.Title</a>
+                    <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("Topic", new {Sename = await Html.GetTopicSeName(item.SystemName, Context)})">@item.Title</a>
                 }
             }
         </div>

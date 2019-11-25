@@ -138,14 +138,14 @@ namespace Grand.Framework.Controllers
         protected virtual string RenderPartialViewToString(string viewName, object model)
         {
             //get Razor view engine
-            var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();
+            var razorViewEngine = HttpContext.RequestServices.GetRequiredService<IRazorViewEngine>();
 
             //create action context
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             //set view name as action name in case if not passed
             if (string.IsNullOrEmpty(viewName))
-                viewName = this.ControllerContext.ActionDescriptor.ActionName;
+                viewName = ControllerContext.ActionDescriptor.ActionName;
 
             //set model
             ViewData.Model = model;
@@ -240,9 +240,8 @@ namespace Grand.Framework.Controllers
         /// <param name="exception">Exception</param>
         protected void LogException(Exception exception)
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var logger = EngineContext.Current.Resolve<ILogger>();
-
+            var workContext = HttpContext.RequestServices.GetRequiredService<IWorkContext>();
+            var logger = HttpContext.RequestServices.GetRequiredService<ILogger>();
             var customer = workContext.CurrentCustomer;
             logger.Error(exception.Message, exception, customer);
         }
@@ -306,7 +305,7 @@ namespace Grand.Framework.Controllers
         /// <param name="editPageUrl">Edit page URL</param>
         protected virtual void DisplayEditLink(string editPageUrl)
         {
-            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
 
             pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }
@@ -379,7 +378,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Access denied view</returns>
         protected virtual IActionResult AccessDeniedView()
         {
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var webHelper = HttpContext.RequestServices.GetRequiredService<IWebHelper>();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
         }
 
@@ -389,8 +388,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Access denied json data</returns>
         protected JsonResult AccessDeniedKendoGridJson()
         {
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
+            var localizationService = HttpContext.RequestServices.GetRequiredService<ILocalizationService > ();
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 

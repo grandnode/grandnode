@@ -467,7 +467,7 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                 {
                     var inclTax = Model.PricesIncludeTax;
                     <div class="tax-shipping-info">
-                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
