@@ -332,13 +332,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/odata");
                 options.IgnoredPaths.Add("/health/live");
                 options.IgnoredPaths.Add("/.well-known/acme-challenge");
-                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
-                options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
-
+                    !request.HttpContext.RequestServices.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    request.HttpContext.RequestServices.GetRequiredService<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
             });
         }
 
