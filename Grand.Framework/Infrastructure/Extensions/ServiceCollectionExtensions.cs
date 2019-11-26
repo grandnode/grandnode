@@ -5,7 +5,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
-using Grand.Framework.FluentValidation;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Security.Authorization;
