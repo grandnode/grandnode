@@ -1,9 +1,9 @@
-﻿using Grand.Core;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net;
@@ -20,7 +20,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
         /// Configure
         /// </summary>
         /// <param name="builder">Authentication builder</param>
-        public void Configure(AuthenticationBuilder builder)
+        public void Configure(AuthenticationBuilder builder, IConfiguration configuration)
         {
             builder.AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
             {
@@ -36,18 +36,13 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
                 {
                     OnRemoteFailure = ctx =>
                     {
+                        ctx.HandleResponse();
                         var errorCode = ctx.Request.Query["error_code"].FirstOrDefault();
                         var errorMessage = ctx.Request.Query["error_message"].FirstOrDefault();
                         var state = ctx.Request.Query["state"].FirstOrDefault();
-
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                         errorCode = WebUtility.UrlEncode(errorCode);
                         errorMessage = WebUtility.UrlEncode(errorMessage);
-
-                        var urlToRedirect = $"{webHelper.GetStoreLocation()}fb-signin-failed?error_code={errorCode}&error_message={errorMessage}";
-
-                        ctx.Response.Redirect(urlToRedirect);
-                        ctx.HandleResponse();
+                        ctx.Response.Redirect($"/fb-signin-failed?error_code={errorCode}&error_message={errorMessage}");
 
                         return Task.FromResult(0);
                     }

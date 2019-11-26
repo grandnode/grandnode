@@ -200,7 +200,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var config = services.BuildServiceProvider().GetService<GrandConfig>();
-
+            
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -240,7 +240,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //configure services
             foreach (var instance in externalAuthInstances)
-                instance.Configure(authenticationBuilder);
+                instance.Configure(authenticationBuilder, configuration);
 
             services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
@@ -265,7 +265,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
             
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             if (config.UseHsts)
             {

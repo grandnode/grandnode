@@ -1,11 +1,13 @@
 ﻿@using Grand.Core.Plugins
 @using Grand.Services.Security
+@using Grand.Services.Localization
 @using Grand.Framework.Menu
 @inject IPluginFinder pluginFinder
 @inject IPermissionService permissionService
+@inject ILocalizationService localizationService 
 @{
     //load sitemap
-    var siteMap = new XmlSiteMap();
+    var siteMap = new XmlSiteMap(localizationService, permissionService);
     siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
 }
 

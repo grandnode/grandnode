@@ -6,6 +6,7 @@ using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,7 +16,7 @@ namespace Grand.Api.Infrastructure
 {
     public partial class ApiAuthenticationRegistrar : IExternalAuthenticationRegistrar
     {
-        public void Configure(AuthenticationBuilder builder)
+        public void Configure(AuthenticationBuilder builder, IConfiguration configuration)
         {
             builder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
@@ -50,7 +51,7 @@ namespace Grand.Api.Infrastructure
                     {
                         try
                         {
-                            var apiAuthenticationService = EngineContext.Current.Resolve<IApiAuthenticationService>();
+                            var apiAuthenticationService = context.HttpContext.RequestServices.GetRequiredService<IApiAuthenticationService>();
                             if (await apiAuthenticationService.Valid(context))
                                 await apiAuthenticationService.SignIn();
                             else
