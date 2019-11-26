@@ -7,6 +7,7 @@ using Grand.Services.Seo;
 using MediatR;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,9 +93,8 @@ namespace Grand.Framework.Seo
 
             //virtual directory path
             var pathBase = context.HttpContext.Request.PathBase;
-
             //performance optimization, we load a cached verion here. It reduces number of SQL requests for each page load
-            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+            var urlRecordService = context.HttpContext.RequestServices.GetRequiredService<IUrlRecordService>();
             var urlRecord = await urlRecordService.GetBySlugCached(slug);
 
             //no URL record found
@@ -122,7 +122,7 @@ namespace Grand.Framework.Seo
 
             //ensure that the slug is the same for the current language, 
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
             var slugForCurrentLanguage = await SeoExtensions.GetSeName(urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
             if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
             {
@@ -206,7 +206,7 @@ namespace Grand.Framework.Seo
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    await EngineContext.Current.Resolve<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
+                    await context.HttpContext.RequestServices.GetRequiredService<IMediator>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));
                     break;
             }
             context.RouteData = currentRouteData;
