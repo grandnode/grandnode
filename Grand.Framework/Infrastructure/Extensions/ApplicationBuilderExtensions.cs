@@ -196,7 +196,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             application.UseMvc(routeBuilder =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                routeBuilder.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
         }
 
