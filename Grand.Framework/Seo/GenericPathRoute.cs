@@ -47,17 +47,17 @@ namespace Grand.Framework.Seo
         protected async Task<RouteValueDictionary> GetRouteValues(RouteContext context)
         {
             var path = context.HttpContext.Request.Path.Value;
-            if (SeoFriendlyUrlsForPathEnabled && !SeoFriendlyUrlsForLanguagesEnabled)
+            if (SeoFriendlyUrlsForPathEnabled(context.HttpContext) && !SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
             {
                 string lastpath = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).LastOrDefault();
                 path = $"/{lastpath}";
             }
 
             //remove language code from the path if it's localized URL
-            if (SeoFriendlyUrlsForLanguagesEnabled)
+            if (SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
             {
-                await PrepareLanguages();
-                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
+                await PrepareLanguages(context.HttpContext);
+                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
                     path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
             }
             //parse route data
