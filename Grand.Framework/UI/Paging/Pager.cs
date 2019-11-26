@@ -4,6 +4,7 @@ using Grand.Services.Localization;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -115,7 +116,7 @@ namespace Grand.Framework.UI.Paging
 		{
             if (model.TotalItems == 0)
                 return null;
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var localizationService = viewContext.HttpContext.RequestServices.GetRequiredService<ILocalizationService>();
 
             var links = new StringBuilder();
             if (showTotalSummary && (model.TotalPages > 0))
@@ -278,7 +279,7 @@ namespace Grand.Framework.UI.Paging
                 }
             }
 
-		    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+		    var webHelper = viewContext.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
 		    var url = webHelper.GetThisPageUrl(false);
 		    foreach (var routeValue in routeValues)
 		    {

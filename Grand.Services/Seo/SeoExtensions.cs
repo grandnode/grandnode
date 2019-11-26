@@ -5,6 +5,8 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,19 +138,17 @@ namespace Grand.Services.Seo
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Search engine  name (slug)</returns>
-        public static async Task<string> GetSeName(string entityId, string entityName, string languageId, bool returnDefaultValue = true,
+        public static async Task<string> GetSeName(IUrlRecordService urlRecordService, HttpContext httpContext, string entityId, string entityName, string languageId, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true)
         {
             string result = string.Empty;
-
-            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
-            if (!String.IsNullOrEmpty(languageId))
+            if (!string.IsNullOrEmpty(languageId))
             {
                 //ensure that we have at least two published languages
                 bool loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
-                    var lService = EngineContext.Current.Resolve<ILanguageService>();
+                    var lService = httpContext.RequestServices.GetRequiredService<ILanguageService>();
                     var totalPublishedLanguages = (await lService.GetAllLanguages()).Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }

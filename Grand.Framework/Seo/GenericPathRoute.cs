@@ -123,7 +123,7 @@ namespace Grand.Framework.Seo
             //ensure that the slug is the same for the current language, 
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
             var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
-            var slugForCurrentLanguage = await SeoExtensions.GetSeName(urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
+            var slugForCurrentLanguage = await SeoExtensions.GetSeName(urlRecordService, context.HttpContext, urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
             if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
             {
                 //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
