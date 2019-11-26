@@ -87,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual DiscountListModel PrepareDiscountListModel()
         {
             var model = new DiscountListModel {
-                AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList()
+                AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(_localizationService,_workContext, false).ToList()
             };
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             return model;
@@ -270,7 +270,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }

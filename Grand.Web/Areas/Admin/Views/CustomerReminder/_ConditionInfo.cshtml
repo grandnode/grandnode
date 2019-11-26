@@ -120,7 +120,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList()" />
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList(Context)" />
                 <span asp-validation-for="ConditionId"></span>
             </div>
         </div>

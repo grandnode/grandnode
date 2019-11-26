@@ -15,6 +15,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Courses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -212,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Services
             await _customerActivityService.InsertActivity("DeleteCourseLesson", lesson.Id, _localizationService.GetResource("ActivityLog.DeleteCourseLesson"), lesson.Name);
         }
 
-        public virtual async Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel()
+        public virtual async Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel(HttpContext httpContext)
         {
             var model = new CourseModel.AssociateProductToCourseModel();
             //a vendor should have access only to his products
@@ -245,7 +246,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }

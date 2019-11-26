@@ -15,6 +15,7 @@ using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -103,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             if (model == null)
                 throw new ArgumentNullException("model");
-            
+
             model.AvailableDiscounts = (await _discountService
                 .GetAllDiscounts(DiscountType.AssignedToCategories, storeId: storeId, showHidden: true))
                 .Select(d => d.ToModel())
@@ -119,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList(false).ToList();
+            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList().ToList();
             model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
 
         }
@@ -153,8 +154,8 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<List<TreeNode>> PrepareCategoryNodeListModel(string storeId)
         {
             var categories = await _categoryService.GetAllCategories(storeId: storeId);
-            List<TreeNode> nodeList = new List<TreeNode>();
-            List<ITreeNode> list = new List<ITreeNode>();
+            var nodeList = new List<TreeNode>();
+            var list = new List<ITreeNode>();
             list.AddRange(categories);
             foreach (var node in list)
             {
@@ -379,7 +380,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }

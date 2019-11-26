@@ -20,16 +20,17 @@ namespace Grand.Api.Infrastructure
         {
             builder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                var apiConfig = EngineContext.Current.Resolve<ApiConfig>();
+                var config = new ApiConfig();
+                configuration.GetSection("Api").Bind(config);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = apiConfig.ValidateIssuer,
-                    ValidateAudience = apiConfig.ValidateAudience,
+                    ValidateIssuer = config.ValidateIssuer,
+                    ValidateAudience = config.ValidateAudience,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = apiConfig.ValidIssuer,
-                    ValidAudience = apiConfig.ValidAudience,
-                    IssuerSigningKey = JwtSecurityKey.Create(apiConfig.SecretKey)
+                    ValidIssuer = config.ValidIssuer,
+                    ValidAudience = config.ValidAudience,
+                    IssuerSigningKey = JwtSecurityKey.Create(config.SecretKey)
                 };
 
                 options.Events = new JwtBearerEvents

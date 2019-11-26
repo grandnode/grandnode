@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, 
+            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService,
             ILocalizationService localizationService, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             IVendorService vendorService,
             ILanguageService languageService, SeoSettings seoSettings)
@@ -172,8 +172,7 @@ namespace Grand.Web.Areas.Admin.Services
             var commentsList = new List<BlogCommentModel>();
             foreach (var blogComment in comments.Skip((pageIndex - 1) * pageSize).Take(pageSize))
             {
-                var commentModel = new BlogCommentModel
-                {
+                var commentModel = new BlogCommentModel {
                     Id = blogComment.Id,
                     BlogPostId = blogComment.BlogPostId,
                     BlogPostTitle = blogComment.BlogPostTitle,
@@ -231,7 +230,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return model;
@@ -251,7 +250,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
-                    if(products.FirstOrDefault(x=>x.ProductId == id) == null)
+                    if (products.FirstOrDefault(x => x.ProductId == id) == null)
                     {
                         await _blogService.InsertBlogProduct(new BlogProduct() {
                             BlogPostId = blogPostId,
