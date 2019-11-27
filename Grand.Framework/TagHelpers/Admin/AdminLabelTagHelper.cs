@@ -44,6 +44,16 @@ namespace Grand.Framework.TagHelpers.Admin
                 if (resourceDisplayName != null && DisplayHint)
                 {
                     var langId = _workContext.WorkingLanguage.Id;
+
+                    var resource = _localizationService.GetResource(
+                        resourceDisplayName.ResourceKey, langId, returnEmptyIfNotFound: true,
+                        logIfNotFound: false);
+
+                    if(!string.IsNullOrEmpty(resource))
+                    {
+                        output.Content.SetContent(resource);
+                    }
+
                     var hintResource = _localizationService.GetResource(
                         resourceDisplayName.ResourceKey + ".Hint", langId, returnEmptyIfNotFound: true,
                         logIfNotFound: false);
