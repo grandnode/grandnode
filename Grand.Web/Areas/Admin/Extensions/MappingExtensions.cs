@@ -25,6 +25,7 @@ using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
@@ -905,9 +906,19 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Address
 
-        public static AddressModel ToModel(this Address entity)
+        public static async Task<AddressModel> ToModel(this Address entity, ICountryService countryService = null, IStateProvinceService stateProvinceService = null)
         {
-            return entity.MapTo<Address, AddressModel>();
+            var address = entity.MapTo<Address, AddressModel>();
+            if (!string.IsNullOrEmpty(address.CountryId) && countryService!=null)
+            {
+                address.CountryName = (await countryService.GetCountryById(address.CountryId))?.Name;
+            }
+            if (!string.IsNullOrEmpty(address.StateProvinceId) && stateProvinceService != null)
+            {
+                address.StateProvinceName = (await stateProvinceService.GetStateProvinceById(address.StateProvinceId))?.Name;
+            }
+
+            return address;
         }
 
         public static Address ToEntity(this AddressModel model)

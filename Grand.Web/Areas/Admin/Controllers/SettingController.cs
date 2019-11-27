@@ -685,7 +685,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                                      ? await _addressService.GetAddressByIdSettings(shippingSettings.ShippingOriginAddressId)
                                      : null;
             if (originAddress != null)
-                model.ShippingOriginAddress = originAddress.ToModel();
+            {
+                model.ShippingOriginAddress = await originAddress.ToModel(_countryService, _stateProvinceService);
+            }
             else
                 model.ShippingOriginAddress = new AddressModel();
 
@@ -865,7 +867,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                                      ? await _addressService.GetAddressByIdSettings(taxSettings.DefaultTaxAddressId)
                                      : null;
             if (defaultAddress != null)
-                model.DefaultTaxAddress = defaultAddress.ToModel();
+                model.DefaultTaxAddress = await defaultAddress.ToModel();
             else
                 model.DefaultTaxAddress = new AddressModel();
 

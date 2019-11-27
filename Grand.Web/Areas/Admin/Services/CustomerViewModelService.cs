@@ -1140,7 +1140,7 @@ namespace Grand.Web.Areas.Admin.Services
             var addressesListModel = new List<AddressModel>();
             foreach (var x in addresses)
             {
-                var model = x.ToModel();
+                var model = await x.ToModel(_countryService, _stateProvinceService);
                 var addressHtmlSb = new StringBuilder("<div>");
                 if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(model.Company))
                     addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
@@ -1194,7 +1194,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (!excludeProperties)
                 {
-                    model.Address = address.ToModel();
+                    model.Address = await address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 

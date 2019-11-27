@@ -559,7 +559,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             #region Billing & shipping info
 
-            model.BillingAddress = order.BillingAddress.ToModel();
+            model.BillingAddress = await order.BillingAddress.ToModel(_countryService, _stateProvinceService);
             model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
             model.BillingAddress.FirstNameEnabled = true;
             model.BillingAddress.FirstNameRequired = true;
@@ -596,7 +596,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     if (order.ShippingAddress != null)
                     {
-                        model.ShippingAddress = order.ShippingAddress.ToModel();
+                        model.ShippingAddress = await order.ShippingAddress.ToModel(_countryService, _stateProvinceService);
                         model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
                         model.ShippingAddress.FirstNameEnabled = true;
                         model.ShippingAddress.FirstNameRequired = true;
@@ -632,7 +632,7 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         if (order.PickupPoint.Address != null)
                         {
-                            model.PickupAddress = order.PickupPoint.Address.ToModel();
+                            model.PickupAddress = await order.PickupPoint.Address.ToModel(_countryService, _stateProvinceService);
                             var country = await _countryService.GetCountryById(order.PickupPoint.Address.CountryId);
                             if (country != null)
                                 model.PickupAddress.CountryName = country.Name;
@@ -844,7 +844,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new OrderAddressModel {
                 OrderId = order.Id,
-                Address = address.ToModel()
+                Address = await address.ToModel(_countryService, _stateProvinceService)
             };
             model.Address.Id = address.Id;
             model.Address.FirstNameEnabled = true;

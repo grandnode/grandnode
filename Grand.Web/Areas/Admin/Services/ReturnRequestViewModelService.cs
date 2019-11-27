@@ -172,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (!excludeProperties)
                 {
-                    model = address.ToModel();
+                    model = await address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 

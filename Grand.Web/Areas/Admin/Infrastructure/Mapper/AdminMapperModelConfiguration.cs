@@ -92,11 +92,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.PhoneEnabled, mo => mo.Ignore())
                .ForMember(dest => dest.PhoneRequired, mo => mo.Ignore())
                .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.FaxRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.CountryName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName().Result : null))
-               .ForMember(dest => dest.StateProvinceName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.StateProvinceId) ? src.StateProvinceName().Result : null));
+               .ForMember(dest => dest.FaxRequired, mo => mo.Ignore());
 
 
             //address

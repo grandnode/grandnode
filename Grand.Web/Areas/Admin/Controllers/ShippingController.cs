@@ -485,7 +485,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = warehouse.ToModel();
             if (address != null)
             {
-                model.Address = address.ToModel();
+                model.Address = await address.ToModel(_countryService, _stateProvinceService);
             }
             await PrepareAddressWarehouseModel(model);
             return View(model);
@@ -596,7 +596,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("PickupPoints");
 
             var model = pickuppoint.ToModel();
-            model.Address = pickuppoint.Address.ToModel();
+            model.Address = await pickuppoint.Address.ToModel(_countryService, _stateProvinceService);
             await PreparePickupPointModel(model);
 
             return View(model);
