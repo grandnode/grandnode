@@ -47,7 +47,7 @@ namespace Grand.Services.Authentication
         /// </summary>
         /// <param name="context">HTTP context</param>
         /// <returns>Task</returns>
-        public async Task InvokeAsync(HttpContext context, IAuthenticationHandlerProvider handlers)
+        public async Task Invoke(HttpContext context, IAuthenticationHandlerProvider handlers)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature {
                 OriginalPath = context.Request.Path,
