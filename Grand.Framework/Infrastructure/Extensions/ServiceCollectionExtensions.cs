@@ -250,7 +250,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
+        public static IMvcBuilder AddGrandMvc(this IServiceCollection services, IConfiguration configuration)
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc(options =>
@@ -261,8 +261,9 @@ namespace Grand.Framework.Infrastructure.Extensions
             
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
-            
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //set compatibility version
             mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -447,12 +448,13 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Add Progressive Web App
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddPWA(this IServiceCollection services)
+        public static void AddPWA(this IServiceCollection services, IConfiguration configuration)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
             if (config.EnableProgressiveWebApp)
             {
                 var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {

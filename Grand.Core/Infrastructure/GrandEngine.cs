@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Core.Infrastructure
@@ -117,7 +116,8 @@ namespace Grand.Core.Infrastructure
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 foreach (var instance in instances)
                 {
                     cfg.AddProfile(instance.GetType());
@@ -223,16 +223,6 @@ namespace Grand.Core.Infrastructure
             return (T)GetServiceProvider().GetRequiredService(typeof(T));
         }
 
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <param name="type">Type of resolved service</param>
-        /// <returns>Resolved service</returns>
-        public object Resolve(Type type)
-        {
-            return GetServiceProvider().GetRequiredService(type);
-        }
-       
         #endregion
 
         #region Properties

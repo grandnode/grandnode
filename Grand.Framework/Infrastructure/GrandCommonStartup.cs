@@ -25,6 +25,9 @@ namespace Grand.Framework.Infrastructure
             var config = new GrandConfig();
             configuration.GetSection("Grand").Bind(config);
 
+            //add settings
+            services.AddSettings();
+
             //compression
             services.AddResponseCompression();
 

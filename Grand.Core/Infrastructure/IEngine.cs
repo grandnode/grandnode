@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 
 namespace Grand.Core.Infrastructure
 {
@@ -40,13 +39,6 @@ namespace Grand.Core.Infrastructure
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
         T Resolve<T>() where T : class;
-
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <param name="type">Type of resolved service</param>
-        /// <returns>Resolved service</returns>
-        object Resolve(Type type);
 
     }
 }

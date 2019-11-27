@@ -17,10 +17,7 @@ namespace Grand.Framework.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-        {
-            //add settings
-            services.AddSettings();
-
+        {            
             //add healthChecks
             services.AddGrandHealthChecks();
 
@@ -37,10 +34,10 @@ namespace Grand.Framework.Infrastructure
             services.AddDetectionDevice();
 
             //add and configure MVC feature
-            services.AddGrandMvc();
+            services.AddGrandMvc(configuration);
 
             //add pwa
-            services.AddPWA();
+            services.AddPWA(configuration);
 
             //add custom redirect result executor
             services.AddGrandRedirectResultExecutor();
