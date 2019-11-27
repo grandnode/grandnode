@@ -930,19 +930,6 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
-
-        public static async Task<string> CountryName(this Address model)
-        {
-            var country = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.ICountryService>().GetCountryById(model.CountryId);
-            return country?.Name;
-        }
-
-        public static async Task<string> StateProvinceName(this Address model)
-        {
-            var state = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.IStateProvinceService>().GetStateProvinceById(model.StateProvinceId);
-            return state?.Name;
-        }
-
         public static async Task PrepareCustomAddressAttributes(this AddressModel model,
             Address address,
             IAddressAttributeService addressAttributeService,
