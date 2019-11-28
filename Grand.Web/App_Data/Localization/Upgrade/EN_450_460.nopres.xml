@@ -650,9 +650,9 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Hint">
     <Value>A customer is added to this course once a specified product is purchased (paid).</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Products.Commission">
+  <LocaleResource Name="Admin.Orders.Products.Commission">
     <Value>Commission</Value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Commission">
     <Value>Commission</Value>
   </LocaleResource>

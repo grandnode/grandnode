@@ -13754,9 +13754,9 @@
   <LocaleResource Name="Admin.Orders.Products.Discount">
     <Value>Discount</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Products.Commission">
+  <LocaleResource Name="Admin.Orders.Products.Commission">
     <Value>Commission</Value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products.Download">
     <Value>Downloadable product</Value>
   </LocaleResource>
