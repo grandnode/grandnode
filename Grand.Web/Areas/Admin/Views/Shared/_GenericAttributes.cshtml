@@ -95,7 +95,7 @@
                 data: postData,
                 success: function (data) {
                     if (data.success)
-                        location.reload();
+                        window.location.href=window.location.href;
                     else
                         alert(data.errors);
                 },
