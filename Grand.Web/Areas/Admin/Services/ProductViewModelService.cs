@@ -614,7 +614,7 @@ namespace Grand.Web.Areas.Admin.Services
             //discounts
             model.AvailableDiscounts = (await _discountService
                 .GetAllDiscounts(DiscountType.AssignedToSkus, storeId: _workContext.CurrentCustomer.StaffStoreId, showHidden: true))
-                .Select(d => d.ToModel())
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
             if (!excludeProperties && product != null)
             {
@@ -867,7 +867,7 @@ namespace Grand.Web.Areas.Admin.Services
             var items = new List<ProductModel>();
             foreach (var x in products)
             {
-                var productModel = x.ToModel();
+                var productModel = x.ToModel(_dateTimeHelper);
                 //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
                 //also it improves performance
                 productModel.FullDescription = "";
@@ -955,7 +955,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //product
-            var product = model.ToEntity();
+            var product = model.ToEntity(_dateTimeHelper);
             product.CreatedOnUtc = DateTime.UtcNow;
             product.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -1020,7 +1020,7 @@ namespace Grand.Web.Areas.Admin.Services
             var prevSampleDownloadId = product.SampleDownloadId;
 
             //product
-            product = model.ToEntity(product);
+            product = model.ToEntity(product, _dateTimeHelper);
             product.UpdatedOnUtc = DateTime.UtcNow;
 
             model.SeName = await product.ValidateSeName(model.SeName, product.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(), _urlRecordService, _languageService);
@@ -1156,7 +1156,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddRelatedProductModel model, int pageIndex, int pageSize)
         {
@@ -1169,7 +1169,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddSimilarProductModel model, int pageIndex, int pageSize)
         {
@@ -1182,7 +1182,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddBundleProductModel model, int pageIndex, int pageSize)
         {
@@ -1196,7 +1196,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, (int)ProductType.SimpleProduct, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddCrossSellProductModel model, int pageIndex, int pageSize)
         {
@@ -1211,7 +1211,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.AddAssociatedProductModel model, int pageIndex, int pageSize)
         {
@@ -1225,7 +1225,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model, int pageIndex, int pageSize)
         {
@@ -1239,7 +1239,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
 
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, (int)ProductType.SimpleProduct, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<IList<ProductModel.ProductCategoryModel>> PrepareProductCategoryModel(Product product)
         {

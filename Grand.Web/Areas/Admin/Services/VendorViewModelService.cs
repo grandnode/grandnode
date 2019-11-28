@@ -72,7 +72,7 @@ namespace Grand.Web.Areas.Admin.Services
             
             model.AvailableDiscounts = (await _discountService
                 .GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true))
-                .Select(d => d.ToModel())
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
 
             if (!excludeProperties && vendor != null)

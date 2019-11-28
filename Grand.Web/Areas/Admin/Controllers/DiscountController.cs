@@ -7,6 +7,7 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Discounts;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
@@ -33,7 +34,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
-
+        private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
 
         #region Constructors
@@ -43,13 +44,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDiscountService discountService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            IStoreService storeService)
+            IStoreService storeService,
+            IDateTimeHelper dateTimeHelper)
         {
             _discountViewModelService = discountViewModelService;
             _discountService = discountService;
             _localizationService = localizationService;
             _workContext = workContext;
             _storeService = storeService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -133,7 +136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var model = discount.ToModel();
+            var model = discount.ToModel(_dateTimeHelper);
             await _discountViewModelService.PrepareDiscountModel(model, discount);
 
             //Stores
