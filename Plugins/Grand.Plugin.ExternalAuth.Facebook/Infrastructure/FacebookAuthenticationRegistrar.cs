@@ -1,4 +1,6 @@
-﻿using Grand.Core.Infrastructure;
+﻿using Grand.Core.Data;
+using Grand.Core.Domain.Configuration;
+using Grand.Core.Infrastructure;
 using Grand.Services.Authentication.External;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -24,7 +26,10 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
         {
             builder.AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
             {
-                var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
+                var fbSettings = new MongoDBRepository<Setting>(DataSettingsHelper.ConnectionString()).Table.Where(x=>x.Name.StartsWith("facebookexternalauthsettings"));
+                var settings = new FacebookExternalAuthSettings();
+                settings.ClientKeyIdentifier = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientkeyidentifier")?.Value;
+                settings.ClientSecret = fbSettings.FirstOrDefault(x => x.Name == "facebookexternalauthsettings.clientsecret")?.Value;
 
                 //no empty values allowed. otherwise, an exception could be thrown on application startup
                 options.AppId = !string.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "000";
