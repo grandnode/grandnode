@@ -704,13 +704,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             //customer action
             CreateMap<CustomerAction, CustomerActionModel>()
                 .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
-                .ForMember(dest => dest.Banners, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()));
+                .ForMember(dest => dest.Banners, mo => mo.Ignore());
 
             CreateMap<CustomerActionModel, CustomerAction>()
-                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
@@ -727,15 +723,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //Customer reminder
             CreateMap<CustomerReminderModel, CustomerReminder>()
-                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-            CreateMap<CustomerReminder, CustomerReminderModel>()
-                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUserTime()));
+            CreateMap<CustomerReminder, CustomerReminderModel>();
 
             CreateMap<CustomerReminder.ReminderLevel, CustomerReminderModel.ReminderLevelModel>()
                 .ForMember(dest => dest.EmailAccounts, mo => mo.Ignore());

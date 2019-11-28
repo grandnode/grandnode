@@ -1356,21 +1356,29 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region Customer Action
 
         //customer action
-        public static CustomerActionModel ToModel(this CustomerAction entity)
+        public static CustomerActionModel ToModel(this CustomerAction entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<CustomerAction, CustomerActionModel>();
+            var action = entity.MapTo<CustomerAction, CustomerActionModel>();
+            action.StartDateTime = entity.StartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            action.EndDateTime = entity.EndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            return action;
         }
 
-        public static CustomerAction ToEntity(this CustomerActionModel model)
+        public static CustomerAction ToEntity(this CustomerActionModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<CustomerActionModel, CustomerAction>();
+            var action = model.MapTo<CustomerActionModel, CustomerAction>();
+            action.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            action.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            return action;
         }
 
-        public static CustomerAction ToEntity(this CustomerActionModel model, CustomerAction destination)
+        public static CustomerAction ToEntity(this CustomerActionModel model, CustomerAction destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var action = model.MapTo(destination);
+            action.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            action.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            return action;
         }
-
 
         public static CustomerActionConditionModel ToModel(this CustomerAction.ActionCondition entity)
         {
@@ -1401,22 +1409,34 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region Customer Reminder
 
         //customer action
-        public static CustomerReminderModel ToModel(this CustomerReminder entity)
+        public static CustomerReminderModel ToModel(this CustomerReminder entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<CustomerReminder, CustomerReminderModel>();
+            var reminder = entity.MapTo<CustomerReminder, CustomerReminderModel>();
+            reminder.StartDateTime = entity.StartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            reminder.EndDateTime = entity.EndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            reminder.LastUpdateDate = entity.LastUpdateDate.ConvertToUserTime(dateTimeHelper);
+            return reminder;
+
         }
 
-        public static CustomerReminder ToEntity(this CustomerReminderModel model)
+        public static CustomerReminder ToEntity(this CustomerReminderModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<CustomerReminderModel, CustomerReminder>();
+            var reminder = model.MapTo<CustomerReminderModel, CustomerReminder>();
+            reminder.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.LastUpdateDate = model.LastUpdateDate.ConvertToUtcTime(dateTimeHelper);
+            return reminder;
+
         }
 
-        public static CustomerReminder ToEntity(this CustomerReminderModel model, CustomerReminder destination)
+        public static CustomerReminder ToEntity(this CustomerReminderModel model, CustomerReminder destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var reminder = model.MapTo(destination);
+            reminder.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.LastUpdateDate = model.LastUpdateDate.ConvertToUtcTime(dateTimeHelper);
+            return reminder;
         }
-
-
 
         public static CustomerReminderModel.ReminderLevelModel ToModel(this CustomerReminder.ReminderLevel entity)
         {
@@ -1806,18 +1826,14 @@ namespace Grand.Web.Areas.Admin.Extensions
             }
             return datetime;
         }
-        public static DateTime ConvertToUserTime(this DateTime datetime)
+        public static DateTime ConvertToUserTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
         {
-            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            datetime = dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
-            return datetime;
+            return dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
         }
 
-        public static DateTime ConvertToUtcTime(this DateTime datetime)
+        public static DateTime ConvertToUtcTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
         {
-            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            datetime = dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
-            return datetime;
+            return dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
         }
 
         #endregion

@@ -23,23 +23,9 @@ namespace Grand.Core.Infrastructure
     /// </summary>
     public class GrandEngine : IEngine
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
+       
 
         #region Utilities
-
-        protected IServiceProvider GetServiceProvider()
-        {
-            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : ServiceProvider;
-        }
 
         /// <summary>
         /// Run startup tasks
@@ -94,8 +80,7 @@ namespace Grand.Core.Infrastructure
             containerBuilder.Populate(services);
 
             //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-            return _serviceProvider;
+            return new AutofacServiceProvider(containerBuilder.Build());
         }
 
         /// <summary>
@@ -183,13 +168,13 @@ namespace Grand.Core.Infrastructure
 
             //register dependencies
             var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-            RegisterDependencies(grandConfig, services, typeFinder);
+            var serviceProvider = RegisterDependencies(grandConfig, services, typeFinder);
 
             //run startup tasks
             if (!grandConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
 
-            return _serviceProvider;
+            return serviceProvider;
         }
 
         /// <summary>
@@ -199,7 +184,7 @@ namespace Grand.Core.Infrastructure
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = Resolve<ITypeFinder>();
+            var typeFinder = new WebAppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -213,25 +198,7 @@ namespace Grand.Core.Infrastructure
                 instance.Configure(application);
         }
 
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <typeparam name="T">Type of resolved service</typeparam>
-        /// <returns>Resolved service</returns>
-        public T Resolve<T>() where T : class
-        {
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
-        }
-
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Service provider
-        /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
-
-        #endregion
     }
 }

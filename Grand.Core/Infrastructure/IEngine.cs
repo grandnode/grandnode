@@ -33,12 +33,5 @@ namespace Grand.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         void ConfigureRequestPipeline(IApplicationBuilder application);
 
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <typeparam name="T">Type of resolved service</typeparam>
-        /// <returns>Resolved service</returns>
-        T Resolve<T>() where T : class;
-
     }
 }

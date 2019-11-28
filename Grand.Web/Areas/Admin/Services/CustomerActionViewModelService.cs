@@ -159,7 +159,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<CustomerAction> InsertCustomerActionModel(CustomerActionModel model)
         {
-            var customeraction = model.ToEntity();
+            var customeraction = model.ToEntity(_dateTimeHelper);
             await _customerActionService.InsertCustomerAction(customeraction);
             await _customerActivityService.InsertActivity("AddNewCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customeraction.Name);
             return customeraction;
@@ -171,7 +171,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (String.IsNullOrEmpty(model.ActionTypeId))
                 model.ActionTypeId = customeraction.ActionTypeId;
 
-            customeraction = model.ToEntity(customeraction);
+            customeraction = model.ToEntity(customeraction, _dateTimeHelper);
             await _customerActionService.UpdateCustomerAction(customeraction);
             await _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
             return customeraction;
