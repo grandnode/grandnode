@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.Middleware
 {
     public class WorkContextMiddleware
     {

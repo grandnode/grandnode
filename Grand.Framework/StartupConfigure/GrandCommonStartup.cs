@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
     /// <summary>
     /// Represents object for the configuring common features and middleware on application startup

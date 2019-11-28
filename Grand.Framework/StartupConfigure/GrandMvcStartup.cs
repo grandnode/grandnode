@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
     /// <summary>
     /// Represents object for the configuring MVC on application startup
