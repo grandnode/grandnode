@@ -728,25 +728,7 @@ namespace Grand.Web.Services
             model.ProductType = product.ProductType;
             #endregion
 
-            #region Vendor details
-
-            //vendor
-            if (_vendorSettings.ShowVendorOnProductDetailsPage)
-            {
-                var vendor = await _vendorService.GetVendorById(product.VendorId);
-                if (vendor != null && !vendor.Deleted && vendor.Active)
-                {
-                    model.ShowVendor = true;
-
-                    model.VendorModel = new VendorBriefInfoModel {
-                        Id = vendor.Id,
-                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
-                    };
-                }
-            }
-
-            #endregion
+            await PrepareVendor(product, model);
 
             #region Page sharing
 
@@ -781,39 +763,7 @@ namespace Grand.Web.Services
             //do not prepare this model for the associated products. anyway it's not used
             if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
             {
-                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
-                    product.Id,
-                    _workContext.WorkingLanguage.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                    _storeContext.CurrentStore.Id);
-                model.Breadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
-                {
-                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel {
-
-                        Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                        ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id)
-                    };
-                    var productCategories = product.ProductCategories;
-                    if (productCategories.Any())
-                    {
-                        var category = await _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
-                        if (category != null)
-                        {
-                            foreach (var catBr in await category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
-                            {
-                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel {
-                                    Id = catBr.Id,
-                                    Name = catBr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                                    SeName = catBr.GetSeName(_workContext.WorkingLanguage.Id),
-                                    IncludeInTopMenu = catBr.IncludeInTopMenu
-                                });
-                            }
-                        }
-                    }
-                    return breadcrumbModel;
-                });
+                await PrepareBreadcrumb(product, model);
             }
 
             #endregion
@@ -823,188 +773,137 @@ namespace Grand.Web.Services
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
-                var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-                model.ProductTags = await _cacheManager.GetAsync(productTagsCacheKey, async () =>
-                {
-                    List<ProductTagModel> tags = new List<ProductTagModel>();
-                    foreach (var item in product.ProductTags)
-                    {
-                        var tag = await _productTagService.GetProductTagByName(item);
-                        if (tag != null)
-                        {
-                            tags.Add(new ProductTagModel() {
-                                Id = tag.Id,
-                                Name = tag.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
-                                SeName = tag.SeName,
-                                ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
-                            });
-                        }
-                    }
-                    return tags;
-                });
-
+                await PrepareTags(product, model);
             }
 
             #endregion
 
-            #region Pictures
 
-            model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
-            //default picture
-            var defaultPictureSize = isAssociatedProduct ?
-                _mediaSettings.AssociatedProductPictureSize :
-                _mediaSettings.ProductDetailsPictureSize;
-            //prepare picture models
-            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var cachedPictures = await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
+            var defaultPictureSize = await PreparePictures(product, isAssociatedProduct, model);
+
+            var displayPrices = await PreparePrice(product, model);
+
+            await PrepareAddToCart(product, updatecartitem, model);
+
+            PrepareGiftCard(product, updatecartitem, model);
+
+            await PrepareAttributes(product, updatecartitem, model, defaultPictureSize, displayPrices);
+
+            model.ProductSpecifications = await PrepareProductSpecificationModel(product);
+
+            model.ProductReviewOverview = await PrepareProductReviewOverviewModel(product);
+
+            #region Tier prices
+            if (product.TierPrices.Any() && await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
-                var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                if (defaultPicture == null)
-                    defaultPicture = new ProductPicture();
-
-                var defaultPictureModel = new PictureModel {
-                    Id = defaultPicture.PictureId,
-                    ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
-                };
-                //"title" attribute
-                defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
-                    defaultPicture.TitleAttribute :
-                    string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
-                //"alt" attribute
-                defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
-                    defaultPicture.AltAttribute :
-                    string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
-
-                //all pictures
-                var pictureModels = new List<PictureModel>();
-                foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
+                foreach (var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
+                                    .FilterByStore(_storeContext.CurrentStore.Id)
+                                    .FilterForCustomer(_workContext.CurrentCustomer)
+                                    .FilterByDate()
+                                    .RemoveDuplicatedQuantities())
                 {
-                    var pictureModel = new PictureModel {
-                        Id = picture.PictureId,
-                        ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
-                    };
-                    //"title" attribute
-                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
-                        picture.TitleAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
-                    //"alt" attribute
-                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
-                        picture.AltAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
-
-                    pictureModels.Add(pictureModel);
+                    var tier = new ProductDetailsModel.TierPriceModel();
+                    var priceBase = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product,
+                                           _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity)).finalPrice);
+                    var price = await _currencyService.ConvertFromPrimaryStoreCurrency(priceBase.productprice, _workContext.WorkingCurrency);
+                    tier.Quantity = tierPrice.Quantity;
+                    tier.Price = _priceFormatter.FormatPrice(price, false, false);
+                    model.TierPrices.Add(tier);
                 }
-
-                return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
-            });
-            model.DefaultPictureModel = cachedPictures.DefaultPictureModel;
-            model.PictureModels = cachedPictures.PictureModels;
+            }
 
             #endregion
 
-            #region Product price
-            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+            #region Manufacturers
 
-            model.ProductPrice.ProductId = product.Id;
-            if (displayPrices)
+            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
+                product.Id,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            model.ProductManufacturers = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
             {
-                model.ProductPrice.HidePrices = false;
-                if (product.CustomerEntersPrice)
+                var listManuf = new List<ManufacturerModel>();
+                foreach (var item in product.ProductManufacturers)
                 {
-                    model.ProductPrice.CustomerEntersPrice = true;
+                    var manuf = (await _manufacturerService.GetManufacturerById(item.ManufacturerId)).ToModel(_workContext.WorkingLanguage);
+                    listManuf.Add(manuf);
+                }
+                return listManuf;
+            });
+
+            #endregion
+
+            #region Associated products
+
+            if (product.ProductType == ProductType.GroupedProduct)
+            {
+                //ensure no circular references
+                if (!isAssociatedProduct)
+                {
+                    var associatedProducts = await _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
+                    foreach (var associatedProduct in associatedProducts)
+                        model.AssociatedProducts.Add(await PrepareProductDetailsPage(associatedProduct, null, true));
+                }
+            }
+
+            #endregion
+
+            #region Product reservations
+            await PrepareReservations(product, model);
+
+            #endregion Product reservations
+
+            #region Product Bundle
+
+            await PrepareProductBundle(product, model, displayPrices);
+            #endregion
+
+            #region Auctions
+
+            model.StartPrice = product.StartPrice;
+            model.HighestBidValue = product.HighestBid;
+            model.AddToCart.IsAuction = product.ProductType == ProductType.Auction;
+            model.EndTime = product.AvailableEndDateTimeUtc;
+            model.EndTimeLocalTime = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?();
+
+            model.AuctionEnded = product.AuctionEnded;
+
+            #endregion
+
+            return model;
+        }
+
+        private void PrepareGiftCard(Product product, ShoppingCartItem updatecartitem, ProductDetailsModel model)
+        {
+            model.GiftCard.IsGiftCard = product.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+            {
+                model.GiftCard.GiftCardType = product.GiftCardType;
+
+                if (updatecartitem == null)
+                {
+                    model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
+                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
                 }
                 else
                 {
-                    if (product.CallForPrice)
-                    {
-                        model.ProductPrice.CallForPrice = true;
-                    }
-                    else
-                    {
-                        var productprice = await _taxService.GetProductPrice(product, product.OldPrice);
-                        decimal taxRate = productprice.taxRate;
-                        decimal oldPriceBase = productprice.productprice;
-                        decimal finalPriceWithoutDiscountBase = (await (_taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false)).finalPrice))).productprice;
+                    string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
+                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
+                        out giftCardRecipientName, out giftCardRecipientEmail,
+                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
-                        var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true));
-                        decimal finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
-
-                        decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                        decimal finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
-                        decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
-
-                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
-                            model.ProductPrice.OldPrice = _priceFormatter.FormatPrice(oldPrice);
-
-                        model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
-                        if (appliedPrice.appliedDiscounts.Any())
-                            model.ProductPrice.AppliedDiscounts = appliedPrice.appliedDiscounts;
-                        if (appliedPrice.preferredTierPrice != null)
-                            model.ProductPrice.PreferredTierPrice = appliedPrice.preferredTierPrice;
-
-                        if (product.CatalogPrice > 0)
-                        {
-                            var catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, _workContext.WorkingCurrency);
-                            model.ProductPrice.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
-                        }
-
-                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-                            model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-
-                        model.ProductPrice.PriceValue = finalPriceWithDiscount;
-
-                        //property for German market
-                        //we display tax/shipping info only with "shipping enabled" for this product
-                        //we also ensure this it's not free shipping
-                        model.ProductPrice.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductDetailsPage
-                            && product.IsShipEnabled &&
-                            !product.IsFreeShipping;
-
-                        //PAngV baseprice (used in Germany)
-                        model.ProductPrice.BasePricePAngV = await product.FormatBasePrice(finalPriceWithDiscountBase,
-                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
-
-                        //currency code
-                        model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
-
-                        //reservation
-                        if (product.ProductType == ProductType.Reservation)
-                        {
-                            model.ProductPrice.IsReservation = true;
-                            var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                            model.ProductPrice.ReservationPrice = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
-                        }
-                        //auction
-                        if (product.ProductType == ProductType.Auction)
-                        {
-                            model.ProductPrice.IsAuction = true;
-                            decimal highestBid = await _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, _workContext.WorkingCurrency);
-                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(highestBid);
-                            model.ProductPrice.HighestBidValue = highestBid;
-                            model.ProductPrice.DisableBuyButton = product.DisableBuyButton;
-                            decimal startPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, _workContext.WorkingCurrency);
-                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(startPrice);
-                            model.ProductPrice.StartPriceValue = startPrice;
-                        }
-                    }
+                    model.GiftCard.RecipientName = giftCardRecipientName;
+                    model.GiftCard.RecipientEmail = giftCardRecipientEmail;
+                    model.GiftCard.SenderName = giftCardSenderName;
+                    model.GiftCard.SenderEmail = giftCardSenderEmail;
+                    model.GiftCard.Message = giftCardMessage;
                 }
             }
-            else
-            {
-                model.ProductPrice.HidePrices = true;
-                model.ProductPrice.OldPrice = null;
-                model.ProductPrice.CatalogPrice = null;
-                model.ProductPrice.Price = null;
-            }
-            #endregion
+        }
 
-            #region 'Add to cart' model
-
+        private async Task PrepareAddToCart(Product product, ShoppingCartItem updatecartitem, ProductDetailsModel model)
+        {
             model.AddToCart.ProductId = product.Id;
             if (updatecartitem != null)
             {
@@ -1059,41 +958,125 @@ namespace Grand.Web.Services
                     _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                     _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
             }
+        }
 
-
-            #endregion
-
-            #region Gift card
-
-            model.GiftCard.IsGiftCard = product.IsGiftCard;
-            if (model.GiftCard.IsGiftCard)
+        private async Task PrepareProductBundle(Product product, ProductDetailsModel model, bool displayPrices)
+        {
+            if (product.ProductType == ProductType.BundledProduct)
             {
-                model.GiftCard.GiftCardType = product.GiftCardType;
-
-                if (updatecartitem == null)
+                foreach (var bundle in product.BundleProducts.OrderBy(x => x.DisplayOrder))
                 {
-                    model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
-                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+                    var p1 = await _productService.GetProductById(bundle.ProductId);
+                    if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
+                    {
+
+                        var bundleProduct = new ProductDetailsModel.ProductBundleModel() {
+                            ProductId = p1.Id,
+                            Name = p1.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                            ShortDescription = p1.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
+                            SeName = p1.GetSeName(_workContext.WorkingLanguage.Id),
+                            Sku = p1.Sku,
+                            Mpn = p1.ManufacturerPartNumber,
+                            Gtin = p1.Gtin,
+                            Quantity = bundle.Quantity
+                        };
+                        if (displayPrices)
+                        {
+                            var productprice = await _taxService.GetProductPrice(p1, (await _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice);
+                            decimal taxRateBundle = productprice.taxRate;
+                            decimal finalPriceWithDiscountBase = productprice.productprice;
+                            decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                            bundleProduct.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            bundleProduct.PriceValue = finalPriceWithDiscount;
+                        }
+
+                        //prepare picture model
+                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
+                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
+                            _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+
+                        bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
+                        {
+                            var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                            if (picture == null)
+                                picture = new ProductPicture();
+
+                            var pictureModel = new PictureModel {
+                                Id = picture.PictureId,
+                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
+                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                            };
+                            //"title" attribute
+                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                                picture.TitleAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
+                            //"alt" attribute
+                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                                picture.AltAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
+
+                            return pictureModel;
+                        });
+
+                        model.ProductBundleModels.Add(bundleProduct);
+                    }
+
                 }
-                else
-                {
-                    string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
-                        out giftCardRecipientName, out giftCardRecipientEmail,
-                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
-                    model.GiftCard.RecipientName = giftCardRecipientName;
-                    model.GiftCard.RecipientEmail = giftCardRecipientEmail;
-                    model.GiftCard.SenderName = giftCardSenderName;
-                    model.GiftCard.SenderEmail = giftCardSenderEmail;
-                    model.GiftCard.Message = giftCardMessage;
+            }
+        }
+
+        private async Task PrepareReservations(Product product, ProductDetailsModel model)
+        {
+            if (product.ProductType == ProductType.Reservation)
+            {
+                model.AddToCart.IsReservation = true;
+                var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
+                var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+                foreach (var cartItem in inCart)
+                {
+                    var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
+                    if (matching.Any())
+                    {
+                        reservations.Remove(matching.First());
+                    }
+                }
+
+                if (reservations.Any())
+                {
+                    var first = reservations.Where(x => x.Date >= DateTime.UtcNow).OrderBy(x => x.Date).FirstOrDefault();
+                    if (first != null)
+                    {
+                        model.StartDate = first.Date;
+                    }
+                    else
+                    {
+                        model.StartDate = DateTime.UtcNow;
+                    }
+                }
+
+                model.IntervalUnit = product.IntervalUnitType;
+                model.Interval = product.Interval;
+                model.IncBothDate = product.IncBothDate;
+
+                var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
+                foreach (var item in list)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        model.Parameters.Add(new SelectListItem { Text = item, Value = item });
+                    }
+                }
+
+                if (model.Parameters.Any())
+                {
+                    model.Parameters.Insert(0, new SelectListItem { Text = "", Value = "" });
                 }
             }
+        }
 
-            #endregion
-
-            #region Product attributes
-
+        private async Task PrepareAttributes(Product product, ShoppingCartItem updatecartitem, ProductDetailsModel model, int defaultPictureSize, bool displayPrices)
+        {
             //performance optimization
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = product.ProductAttributeMappings.ToList();
@@ -1279,206 +1262,243 @@ namespace Grand.Web.Services
 
                 model.ProductAttributes.Add(attributeModel);
             }
+        }
 
-            #endregion 
+        private async Task<bool> PreparePrice(Product product, ProductDetailsModel model)
+        {
+            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
 
-            #region Product specifications
-
-            model.ProductSpecifications = await PrepareProductSpecificationModel(product);
-
-            #endregion
-
-            #region Product review overview
-
-            model.ProductReviewOverview = await PrepareProductReviewOverviewModel(product);
-
-            #endregion
-
-            #region Tier prices
-            if (product.TierPrices.Any() && await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            model.ProductPrice.ProductId = product.Id;
+            if (displayPrices)
             {
-
-                foreach (var tierPrice in product.TierPrices.OrderBy(x => x.Quantity)
-                                    .FilterByStore(_storeContext.CurrentStore.Id)
-                                    .FilterForCustomer(_workContext.CurrentCustomer)
-                                    .FilterByDate()
-                                    .RemoveDuplicatedQuantities())
+                model.ProductPrice.HidePrices = false;
+                if (product.CustomerEntersPrice)
                 {
-                    var tier = new ProductDetailsModel.TierPriceModel();
-                    var priceBase = await _taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product,
-                                           _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity)).finalPrice);
-                    var price = await _currencyService.ConvertFromPrimaryStoreCurrency(priceBase.productprice, _workContext.WorkingCurrency);
-                    tier.Quantity = tierPrice.Quantity;
-                    tier.Price = _priceFormatter.FormatPrice(price, false, false);
-                    model.TierPrices.Add(tier);
+                    model.ProductPrice.CustomerEntersPrice = true;
                 }
-            }
-
-            #endregion
-
-            #region Manufacturers
-
-            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
-                product.Id,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            model.ProductManufacturers = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
-            {
-                var listManuf = new List<ManufacturerModel>();
-                foreach (var item in product.ProductManufacturers)
+                else
                 {
-                    var manuf = (await _manufacturerService.GetManufacturerById(item.ManufacturerId)).ToModel(_workContext.WorkingLanguage);
-                    listManuf.Add(manuf);
-                }
-                return listManuf;
-            });
-
-            #endregion
-
-            #region Associated products
-
-            if (product.ProductType == ProductType.GroupedProduct)
-            {
-                //ensure no circular references
-                if (!isAssociatedProduct)
-                {
-                    var associatedProducts = await _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
-                    foreach (var associatedProduct in associatedProducts)
-                        model.AssociatedProducts.Add(await PrepareProductDetailsPage(associatedProduct, null, true));
-                }
-            }
-
-            #endregion
-
-            #region Product reservations
-            if (product.ProductType == ProductType.Reservation)
-            {
-                model.AddToCart.IsReservation = true;
-                var reservations = await _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
-                var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
-                foreach (var cartItem in inCart)
-                {
-                    var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
-                    if (matching.Any())
+                    if (product.CallForPrice)
                     {
-                        reservations.Remove(matching.First());
-                    }
-                }
-
-                if (reservations.Any())
-                {
-                    var first = reservations.Where(x => x.Date >= DateTime.UtcNow).OrderBy(x => x.Date).FirstOrDefault();
-                    if (first != null)
-                    {
-                        model.StartDate = first.Date;
+                        model.ProductPrice.CallForPrice = true;
                     }
                     else
                     {
-                        model.StartDate = DateTime.UtcNow;
-                    }
-                }
+                        var productprice = await _taxService.GetProductPrice(product, product.OldPrice);
+                        decimal taxRate = productprice.taxRate;
+                        decimal oldPriceBase = productprice.productprice;
+                        decimal finalPriceWithoutDiscountBase = (await (_taxService.GetProductPrice(product, (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false)).finalPrice))).productprice;
 
-                model.IntervalUnit = product.IntervalUnitType;
-                model.Interval = product.Interval;
-                model.IncBothDate = product.IncBothDate;
+                        var appliedPrice = (await _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true));
+                        decimal finalPriceWithDiscountBase = (await _taxService.GetProductPrice(product, appliedPrice.finalPrice)).productprice;
 
-                var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
-                foreach (var item in list)
-                {
-                    if (!string.IsNullOrEmpty(item))
-                    {
-                        model.Parameters.Add(new SelectListItem { Text = item, Value = item });
-                    }
-                }
+                        decimal oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
 
-                if (model.Parameters.Any())
-                {
-                    model.Parameters.Insert(0, new SelectListItem { Text = "", Value = "" });
-                }
-            }
+                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
+                            model.ProductPrice.OldPrice = _priceFormatter.FormatPrice(oldPrice);
 
-            #endregion Product reservations
+                        model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+                        if (appliedPrice.appliedDiscounts.Any())
+                            model.ProductPrice.AppliedDiscounts = appliedPrice.appliedDiscounts;
+                        if (appliedPrice.preferredTierPrice != null)
+                            model.ProductPrice.PreferredTierPrice = appliedPrice.preferredTierPrice;
 
-            #region Product Bundle
-
-            if (product.ProductType == ProductType.BundledProduct)
-            {
-                foreach (var bundle in product.BundleProducts.OrderBy(x => x.DisplayOrder))
-                {
-                    var p1 = await _productService.GetProductById(bundle.ProductId);
-                    if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
-                    {
-
-                        var bundleProduct = new ProductDetailsModel.ProductBundleModel() {
-                            ProductId = p1.Id,
-                            Name = p1.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                            ShortDescription = p1.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
-                            SeName = p1.GetSeName(_workContext.WorkingLanguage.Id),
-                            Sku = p1.Sku,
-                            Mpn = p1.ManufacturerPartNumber,
-                            Gtin = p1.Gtin,
-                            Quantity = bundle.Quantity
-                        };
-                        if (displayPrices)
+                        if (product.CatalogPrice > 0)
                         {
-                            var productprice = await _taxService.GetProductPrice(p1, (await _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice);
-                            decimal taxRateBundle = productprice.taxRate;
-                            decimal finalPriceWithDiscountBase = productprice.productprice;
-                            decimal finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
-                            bundleProduct.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                            bundleProduct.PriceValue = finalPriceWithDiscount;
+                            var catalogPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, _workContext.WorkingCurrency);
+                            model.ProductPrice.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
                         }
 
-                        //prepare picture model
-                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
-                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
-                            _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                            model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
 
-                        bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
+                        model.ProductPrice.PriceValue = finalPriceWithDiscount;
+
+                        //property for German market
+                        //we display tax/shipping info only with "shipping enabled" for this product
+                        //we also ensure this it's not free shipping
+                        model.ProductPrice.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductDetailsPage
+                            && product.IsShipEnabled &&
+                            !product.IsFreeShipping;
+
+                        //PAngV baseprice (used in Germany)
+                        model.ProductPrice.BasePricePAngV = await product.FormatBasePrice(finalPriceWithDiscountBase,
+                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+
+                        //currency code
+                        model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
+
+                        //reservation
+                        if (product.ProductType == ProductType.Reservation)
                         {
-                            var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                            if (picture == null)
-                                picture = new ProductPicture();
-
-                            var pictureModel = new PictureModel {
-                                Id = picture.PictureId,
-                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
-                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
-                            };
-                            //"title" attribute
-                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
-                                picture.TitleAttribute :
-                                string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
-                            //"alt" attribute
-                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
-                                picture.AltAttribute :
-                                string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
-
-                            return pictureModel;
-                        });
-
-                        model.ProductBundleModels.Add(bundleProduct);
+                            model.ProductPrice.IsReservation = true;
+                            var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            model.ProductPrice.ReservationPrice = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
+                        }
+                        //auction
+                        if (product.ProductType == ProductType.Auction)
+                        {
+                            model.ProductPrice.IsAuction = true;
+                            decimal highestBid = await _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, _workContext.WorkingCurrency);
+                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(highestBid);
+                            model.ProductPrice.HighestBidValue = highestBid;
+                            model.ProductPrice.DisableBuyButton = product.DisableBuyButton;
+                            decimal startPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, _workContext.WorkingCurrency);
+                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(startPrice);
+                            model.ProductPrice.StartPriceValue = startPrice;
+                        }
                     }
+                }
+            }
+            else
+            {
+                model.ProductPrice.HidePrices = true;
+                model.ProductPrice.OldPrice = null;
+                model.ProductPrice.CatalogPrice = null;
+                model.ProductPrice.Price = null;
+            }
 
+            return displayPrices;
+        }
+
+        private async Task<int> PreparePictures(Product product, bool isAssociatedProduct, ProductDetailsModel model)
+        {
+            model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
+            //default picture
+            var defaultPictureSize = isAssociatedProduct ?
+                _mediaSettings.AssociatedProductPictureSize :
+                _mediaSettings.ProductDetailsPictureSize;
+            //prepare picture models
+            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var cachedPictures = await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
+            {
+                var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                if (defaultPicture == null)
+                    defaultPicture = new ProductPicture();
+
+                var defaultPictureModel = new PictureModel {
+                    Id = defaultPicture.PictureId,
+                    ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
+                };
+                //"title" attribute
+                defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
+                    defaultPicture.TitleAttribute :
+                    string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
+                //"alt" attribute
+                defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
+                    defaultPicture.AltAttribute :
+                    string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
+
+                //all pictures
+                var pictureModels = new List<PictureModel>();
+                foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
+                {
+                    var pictureModel = new PictureModel {
+                        Id = picture.PictureId,
+                        ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
+                    };
+                    //"title" attribute
+                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
+                        picture.TitleAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
+                    //"alt" attribute
+                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
+                        picture.AltAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
+
+                    pictureModels.Add(pictureModel);
                 }
 
+                return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
+            });
+            model.DefaultPictureModel = cachedPictures.DefaultPictureModel;
+            model.PictureModels = cachedPictures.PictureModels;
+            return defaultPictureSize;
+        }
+
+        private async Task PrepareTags(Product product, ProductDetailsModel model)
+        {
+            var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            model.ProductTags = await _cacheManager.GetAsync(productTagsCacheKey, async () =>
+            {
+                List<ProductTagModel> tags = new List<ProductTagModel>();
+                foreach (var item in product.ProductTags)
+                {
+                    var tag = await _productTagService.GetProductTagByName(item);
+                    if (tag != null)
+                    {
+                        tags.Add(new ProductTagModel() {
+                            Id = tag.Id,
+                            Name = tag.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
+                            SeName = tag.SeName,
+                            ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                        });
+                    }
+                }
+                return tags;
+            });
+        }
+
+        private async Task PrepareBreadcrumb(Product product, ProductDetailsModel model)
+        {
+            var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
+                                product.Id,
+                                _workContext.WorkingLanguage.Id,
+                                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                                _storeContext.CurrentStore.Id);
+            model.Breadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
+            {
+                var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel {
+
+                    Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+                    ProductId = product.Id,
+                    ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                    ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id)
+                };
+                var productCategories = product.ProductCategories;
+                if (productCategories.Any())
+                {
+                    var category = await _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
+                    if (category != null)
+                    {
+                        foreach (var catBr in await category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                        {
+                            breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel {
+                                Id = catBr.Id,
+                                Name = catBr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                                SeName = catBr.GetSeName(_workContext.WorkingLanguage.Id),
+                                IncludeInTopMenu = catBr.IncludeInTopMenu
+                            });
+                        }
+                    }
+                }
+                return breadcrumbModel;
+            });
+        }
+
+        private async Task PrepareVendor(Product product, ProductDetailsModel model)
+        {
+            if (_vendorSettings.ShowVendorOnProductDetailsPage)
+            {
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                {
+                    model.ShowVendor = true;
+
+                    model.VendorModel = new VendorBriefInfoModel {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
+                    };
+                }
             }
-            #endregion
-
-            #region Auctions
-
-            model.StartPrice = product.StartPrice;
-            model.HighestBidValue = product.HighestBid;
-            model.AddToCart.IsAuction = product.ProductType == ProductType.Auction;
-            model.EndTime = product.AvailableEndDateTimeUtc;
-            model.EndTimeLocalTime = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?();
-
-            model.AuctionEnded = product.AuctionEnded;
-
-            #endregion
-
-            return model;
         }
 
         public virtual async Task PrepareProductReviewsModel(ProductReviewsModel model, Product product, int size = 0)
