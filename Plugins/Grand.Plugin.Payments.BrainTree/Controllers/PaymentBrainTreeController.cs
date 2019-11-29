@@ -1,11 +1,9 @@
-﻿using Grand.Core;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -18,30 +16,21 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
         #region Fields
 
         private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
         private readonly BrainTreePaymentSettings _brainTreePaymentSettings;
         #endregion
 
         #region Ctor
 
         public PaymentBrainTreeController(ISettingService settingService,
-            IStoreContext storeContext,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
-            IStoreService storeService,
-            IWorkContext workContext,
             BrainTreePaymentSettings brainTreePaymentSettings)
         {
-            _storeContext = storeContext;
             _settingService = settingService;
             _localizationService = localizationService;
             _permissionService = permissionService;
-            _storeService = storeService;
-            _workContext = workContext;
             _brainTreePaymentSettings = brainTreePaymentSettings;
         }
 

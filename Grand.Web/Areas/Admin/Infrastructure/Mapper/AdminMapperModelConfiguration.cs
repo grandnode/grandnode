@@ -92,12 +92,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.PhoneEnabled, mo => mo.Ignore())
                .ForMember(dest => dest.PhoneRequired, mo => mo.Ignore())
                .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.FaxRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.CountryName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName().Result : null))
-               .ForMember(dest => dest.StateProvinceName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.StateProvinceId) ? src.StateProvinceName().Result : null))
-               .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+               .ForMember(dest => dest.FaxRequired, mo => mo.Ignore());
 
 
             //address
@@ -118,12 +113,11 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.NumberOfStates, mo => mo.MapFrom(src => src.StateProvinces != null ? src.StateProvinces.Count : 0))
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             //state/provinces
             CreateMap<StateProvince, StateProvinceModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<StateProvinceModel, StateProvince>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -133,8 +127,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore());
+
             CreateMap<LanguageModel, Language>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
@@ -143,11 +137,12 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<EmailAccount, EmailAccountModel>()
                 .ForMember(dest => dest.Password, mo => mo.Ignore())
                 .ForMember(dest => dest.IsDefaultEmailAccount, mo => mo.Ignore())
-                .ForMember(dest => dest.SendTestEmailTo, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SendTestEmailTo, mo => mo.Ignore());
+
             CreateMap<EmailAccountModel, EmailAccount>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Password, mo => mo.Ignore());
+
             //message template
             CreateMap<MessageTemplate, MessageTemplateModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -157,8 +152,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableEmailAccounts, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.ListOfStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             CreateMap<MessageTemplateModel, MessageTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore())
@@ -171,8 +166,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.PriorityName, mo => mo.Ignore())
                 .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())
                 .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
-                .ForMember(dest => dest.SentOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SentOn, mo => mo.Ignore());
+
             CreateMap<QueuedEmailModel, QueuedEmail>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Priority, dt => dt.Ignore())
@@ -183,15 +178,15 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore());
+
             //contact form
             CreateMap<ContactUs, ContactFormModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
 
             //banner
             CreateMap<Banner, BannerModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<BannerModel, Banner>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -200,23 +195,23 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<InteractiveForm, InteractiveFormModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableEmailAccounts, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableTokens, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.AvailableTokens, mo => mo.Ignore());
+
             CreateMap<InteractiveFormModel, InteractiveForm>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.FormAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             CreateMap<InteractiveForm.FormAttribute, InteractiveFormAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<InteractiveFormAttributeModel, InteractiveForm.FormAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             CreateMap<InteractiveForm.FormAttributeValue, InteractiveFormAttributeValueModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<InteractiveFormAttributeValueModel, InteractiveForm.FormAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -226,11 +221,12 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.TestEmail, mo => mo.Ignore());
+
             CreateMap<CampaignModel, Campaign>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+
             //topcis
             CreateMap<Topic, TopicModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -240,8 +236,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore());
+
             CreateMap<TopicModel, Topic>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -262,8 +258,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             CreateMap<CategoryModel, Category>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -272,6 +268,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+
             //manufacturer
             CreateMap<Manufacturer, ManufacturerModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -283,8 +280,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
@@ -302,8 +299,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)));
+
             CreateMap<VendorModel, Vendor>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -349,13 +346,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
-                .ForPath(dest => dest.CalendarModel.IncBothDate, mo => mo.MapFrom(x => x.IncBothDate))
-                .ForMember(dest => dest.MarkAsNewStartDateTime, mo => mo.MapFrom(x => x.MarkAsNewStartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.MarkAsNewEndDateTime, mo => mo.MapFrom(x => x.MarkAsNewEndDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.AvailableStartDateTime, mo => mo.MapFrom(x => x.AvailableStartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.AvailableEndDateTime, mo => mo.MapFrom(x => x.AvailableEndDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.PreOrderAvailabilityStartDateTime, mo => mo.MapFrom(x => x.PreOrderAvailabilityStartDateTimeUtc.ConvertToUserTime()));
+                .ForPath(dest => dest.CalendarModel.IncBothDate, mo => mo.MapFrom(x => x.IncBothDate));
 
             CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
@@ -388,16 +379,10 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
-                .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate))
-                .ForMember(dest => dest.MarkAsNewStartDateTimeUtc, mo => mo.MapFrom(x => x.MarkAsNewStartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.MarkAsNewEndDateTimeUtc, mo => mo.MapFrom(x => x.MarkAsNewEndDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.AvailableStartDateTimeUtc, mo => mo.MapFrom(x => x.AvailableStartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.AvailableEndDateTimeUtc, mo => mo.MapFrom(x => x.AvailableEndDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.PreOrderAvailabilityStartDateTimeUtc, mo => mo.MapFrom(x => x.PreOrderAvailabilityStartDateTime.ConvertToUtcTime()));
+                .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate));
 
             //product attributes combination
             CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.UseMultipleWarehouses, mo => mo.Ignore())
                 .ForMember(dest => dest.WarehouseInventoryModels, mo => mo.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
@@ -410,30 +395,25 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //product attributes mapping
-            CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>();
+
             CreateMap<ProductModel.ProductAttributeMappingModel, ProductAttributeMapping>()
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //Tier prices
             CreateMap<TierPrice, ProductModel.TierPriceModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()));
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
 
             CreateMap<ProductModel.TierPriceModel, TierPrice>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()));
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //logs
             CreateMap<Log, LogModel>()
                 .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
+
             CreateMap<LogModel, Log>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -443,14 +423,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ActivityLogTypeModel, ActivityLogType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
-            CreateMap<ActivityLogType, ActivityLogTypeModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<ActivityLogType, ActivityLogTypeModel>();
+
             CreateMap<ActivityLog, ActivityLogModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
+
             CreateMap<ActivityStats, ActivityStatsModel>()
                 .ForMember(dest => dest.ActivityLogTypeName, mo => mo.Ignore());
-
 
             //currencies
             CreateMap<Currency, CurrencyModel>()
@@ -460,76 +440,74 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.IsPrimaryStoreCurrency, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             CreateMap<CurrencyModel, Currency>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+
             //measure weights
             CreateMap<MeasureWeight, MeasureWeightModel>()
-                .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore());
+
             CreateMap<MeasureWeightModel, MeasureWeight>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //measure units
-            CreateMap<MeasureUnit, MeasureUnitModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<MeasureUnit, MeasureUnitModel>();
             CreateMap<MeasureUnitModel, MeasureUnit>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //measure dimensions
             CreateMap<MeasureDimension, MeasureDimensionModel>()
-            .ForMember(dest => dest.IsPrimaryDimension, mo => mo.Ignore())
-            .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.IsPrimaryDimension, mo => mo.Ignore());
+
             CreateMap<MeasureDimensionModel, MeasureDimension>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //tax providers
             CreateMap<ITaxProvider, TaxProviderModel>()
-            .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
-            .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
-            .ForMember(dest => dest.IsPrimaryTaxProvider, mo => mo.Ignore())
-            .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
+                .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
+                .ForMember(dest => dest.IsPrimaryTaxProvider, mo => mo.Ignore());
+
             //tax categories
-            CreateMap<TaxCategory, TaxCategoryModel>()
-            .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<TaxCategory, TaxCategoryModel>();
             CreateMap<TaxCategoryModel, TaxCategory>()
-            .ForMember(dest => dest.Id, mo => mo.Ignore());
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //shipping methods
             CreateMap<ShippingMethod, ShippingMethodModel>()
-            .ForMember(dest => dest.Locales, mo => mo.Ignore())
-            .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<ShippingMethodModel, ShippingMethod>()
-            .ForMember(dest => dest.Id, mo => mo.Ignore())
-            .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-            .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
 
             //delivery dates
             CreateMap<DeliveryDate, DeliveryDateModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<DeliveryDateModel, DeliveryDate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             //warehouse
             CreateMap<Warehouse, WarehouseModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Address, mo => mo.Ignore());
+
             CreateMap<WarehouseModel, Warehouse>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //warehouse
             CreateMap<PickupPoint, PickupPointModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Address, mo => mo.Ignore());
+
             CreateMap<PickupPointModel, PickupPoint>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
 
@@ -539,8 +517,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
-                .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.LogoUrl, mo => mo.Ignore());
 
             //payment methods
             CreateMap<IPaymentMethod, PaymentMethodModel>()
@@ -553,23 +530,22 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SupportCapture, mo => mo.MapFrom(src => src.SupportCapture().GetAwaiter().GetResult()))
                 .ForMember(dest => dest.SupportPartiallyRefund, mo => mo.MapFrom(src => src.SupportPartiallyRefund().GetAwaiter().GetResult()))
                 .ForMember(dest => dest.SupportRefund, mo => mo.MapFrom(src => src.SupportRefund().GetAwaiter().GetResult()))
-                .ForMember(dest => dest.SupportVoid, mo => mo.MapFrom(src => src.SupportVoid().GetAwaiter().GetResult()))
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SupportVoid, mo => mo.MapFrom(src => src.SupportVoid().GetAwaiter().GetResult()));
 
             //external authentication methods
             CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
-                .ForMember(dest => dest.IsActive, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.IsActive, mo => mo.Ignore());
+
             //widgets
             CreateMap<IWidgetPlugin, WidgetModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
-                .ForMember(dest => dest.IsActive, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.IsActive, mo => mo.Ignore());
+
             //plugins
             CreateMap<PluginDescriptor, PluginModel>()
                 .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
@@ -579,13 +555,13 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             //newsLetter subscriptions
             CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
                 .ForMember(dest => dest.StoreName, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
+
             CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.StoreId, mo => mo.Ignore())
@@ -594,8 +570,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //newsLetter categories
             CreateMap<NewsletterCategory, NewsletterCategoryModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             CreateMap<NewsletterCategoryModel, NewsletterCategory>()
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
@@ -603,8 +579,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //forums
             CreateMap<ForumGroup, ForumGroupModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
+
             CreateMap<ForumGroupModel, ForumGroup>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -612,8 +588,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Forum, ForumModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.ForumGroups, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.ForumGroups, mo => mo.Ignore());
+
             CreateMap<ForumModel, Forum>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.NumTopics, mo => mo.Ignore())
@@ -651,27 +627,22 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+
             CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
 
             //blog categories
             CreateMap<BlogCategory, BlogCategoryModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
 
             CreateMap<BlogCategoryModel, BlogCategory>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
@@ -684,82 +655,61 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore());
 
             CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()));
             //news
             CreateMap<Poll, PollModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore());
 
             CreateMap<PollModel, Poll>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(model => model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(model => model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>()))
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()));
+                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             CreateMap<PollAnswer, PollAnswerModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
 
             //customer roles
-            CreateMap<CustomerRole, CustomerRoleModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CustomerRole, CustomerRoleModel>();
             CreateMap<CustomerRoleModel, CustomerRole>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-
             //customer tags
-            CreateMap<CustomerTag, CustomerTagModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CustomerTag, CustomerTagModel>();
             CreateMap<CustomerTagModel, CustomerTag>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
-
 
             //customer action
             CreateMap<CustomerAction, CustomerActionModel>()
                 .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
-                .ForMember(dest => dest.Banners, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()));
+                .ForMember(dest => dest.Banners, mo => mo.Ignore());
 
             CreateMap<CustomerActionModel, CustomerAction>()
-                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
             CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
@@ -769,30 +719,20 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CustomerActionTypeModel, CustomerActionType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
-            CreateMap<CustomerActionType, CustomerActionTypeModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CustomerActionType, CustomerActionTypeModel>();
 
             //Customer reminder
             CreateMap<CustomerReminderModel, CustomerReminder>()
-                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
-                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-            CreateMap<CustomerReminder, CustomerReminderModel>()
-                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUserTime()))
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CustomerReminder, CustomerReminderModel>();
 
             CreateMap<CustomerReminder.ReminderLevel, CustomerReminderModel.ReminderLevelModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccounts, mo => mo.Ignore());
             CreateMap<CustomerReminderModel.ReminderLevelModel, CustomerReminder.ReminderLevel>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             CreateMap<CustomerReminder.ReminderCondition, CustomerReminderModel.ConditionModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionType, mo => mo.Ignore());
             CreateMap<CustomerReminderModel.ConditionModel, CustomerReminder.ReminderCondition>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
@@ -800,16 +740,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //user api
             CreateMap<UserApi, UserApiModel>()
-                .ForMember(dest => dest.Password, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Password, mo => mo.Ignore());
             CreateMap<UserApiModel, UserApi>()
                 .ForMember(dest => dest.Password, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //product attributes
             CreateMap<ProductAttribute, ProductAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<ProductAttributeModel, ProductAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -820,31 +758,28 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.HelpfulNoTotal, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.ProductReviewHelpfulnessEntries, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.ProductReviewHelpfulnessEntries, mo => mo.Ignore());
 
             //product attribute value
             CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.PriceAdjustmentStr, mo => mo.MapFrom(x => x.PriceAdjustment.ToString("N2")))
-                .ForMember(dest => dest.WeightAdjustmentStr, mo => mo.MapFrom(x => x.WeightAdjustment.ToString("N2")))
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.WeightAdjustmentStr, mo => mo.MapFrom(x => x.WeightAdjustment.ToString("N2")));
+
             CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             //specification attributes
             CreateMap<SpecificationAttribute, SpecificationAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<SpecificationAttributeModel, SpecificationAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.SpecificationAttributeOptions, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -859,8 +794,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAllowed, mo => mo.Ignore())
-                .ForMember(dest => dest.ConditionModel, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.ConditionModel, mo => mo.Ignore());
             CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
@@ -871,8 +805,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
 
             CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
-               .ForMember(dest => dest.Locales, mo => mo.Ignore())
-               .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+               .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -886,8 +819,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAllowed, mo => mo.Ignore())
-                .ForMember(dest => dest.ConditionModel, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.ConditionModel, mo => mo.Ignore());
             CreateMap<ContactAttributeModel, ContactAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
@@ -898,8 +830,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ContactAttributeValues, mo => mo.Ignore());
 
             CreateMap<ContactAttributeValue, ContactAttributeValueModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<ContactAttributeValueModel, ContactAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -908,8 +839,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CustomerAttribute, CustomerAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<CustomerAttributeModel, CustomerAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
@@ -918,18 +848,15 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             //customer attributes value
             CreateMap<CustomerAttributeValue, CustomerAttributeValueModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             //address attributes
             CreateMap<AddressAttribute, AddressAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<AddressAttributeModel, AddressAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
@@ -937,9 +864,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
             //address attributes value
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
@@ -953,17 +878,15 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountAmountProviders, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
-                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()));
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
 
             CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
-                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()));
+                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
 
             //gift cards
             CreateMap<GiftCard, GiftCardModel>()
@@ -971,8 +894,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AmountStr, mo => mo.Ignore())
                 .ForMember(dest => dest.RemainingAmountStr, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore());
             CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
@@ -985,52 +907,43 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<StoreModel, Store>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
 
             //return request reasons
             CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<ReturnRequestReasonModel, ReturnRequestReason>()
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
             //return request actions
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>()
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //category template
-            CreateMap<CategoryTemplate, CategoryTemplateModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CategoryTemplate, CategoryTemplateModel>();
             CreateMap<CategoryTemplateModel, CategoryTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
             //manufacturer template
-            CreateMap<ManufacturerTemplate, ManufacturerTemplateModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<ManufacturerTemplate, ManufacturerTemplateModel>();
             CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
             //product template
-            CreateMap<ProductTemplate, ProductTemplateModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<ProductTemplate, ProductTemplateModel>();
             CreateMap<ProductTemplateModel, ProductTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
             //topic template
-            CreateMap<TopicTemplate, TopicTemplateModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<TopicTemplate, TopicTemplateModel>();
             CreateMap<TopicTemplateModel, TopicTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-
             //document type
-            CreateMap<DocumentType, DocumentTypeModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<DocumentType, DocumentTypeModel>();
             CreateMap<DocumentTypeModel, DocumentType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
@@ -1040,8 +953,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
-               .ForMember(dest => dest.AvailableDocumentTypes, mo => mo.Ignore())
-               .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+               .ForMember(dest => dest.AvailableDocumentTypes, mo => mo.Ignore());
             CreateMap<DocumentModel, Document>()
                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
@@ -1049,16 +961,13 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-
             //course level
-            CreateMap<CourseLevel, CourseLevelModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseLevel, CourseLevelModel>();
             CreateMap<CourseLevelModel, CourseLevel>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //course subject
-            CreateMap<CourseSubject, CourseSubjectModel>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+            CreateMap<CourseSubject, CourseSubjectModel>();
             CreateMap<CourseSubjectModel, CourseSubject>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
@@ -1069,7 +978,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableLevels, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductName, mo => mo.Ignore());
 
             CreateMap<CourseModel, Course>()
@@ -1079,11 +987,10 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
-            
+
             //course lesson
             CreateMap<CourseLesson, CourseLessonModel>()
-                .ForMember(dest => dest.AvailableSubjects, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.AvailableSubjects, mo => mo.Ignore());
             CreateMap<CourseLessonModel, CourseLesson>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 

@@ -66,20 +66,20 @@ namespace Grand.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
-            this._localizationService = localizationService;
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._giftCardService = giftCardService;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._permissionService = permissionService;
-            this._downloadService = downloadService;
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._genericAttributeService = genericAttributeService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._orderSettings = orderSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _shoppingCartService = shoppingCartService;
+            _localizationService = localizationService;
+            _discountService = discountService;
+            _customerService = customerService;
+            _giftCardService = giftCardService;
+            _checkoutAttributeService = checkoutAttributeService;
+            _permissionService = permissionService;
+            _downloadService = downloadService;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _genericAttributeService = genericAttributeService;
+            _shoppingCartSettings = shoppingCartSettings;
+            _orderSettings = orderSettings;
         }
 
         #endregion
@@ -116,7 +116,7 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                htmlordertotal = RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }

@@ -59,6 +59,7 @@
         public const string MessageContactForm = "ManageMessageContactForm";
         public const string Maintenance = "ManageMaintenance";
         public const string Files = "ManageFiles";
+        public const string GenericAttributes = "GenericAttributes";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
 

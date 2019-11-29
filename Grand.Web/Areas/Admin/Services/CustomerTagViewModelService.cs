@@ -4,6 +4,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Stores;
@@ -30,6 +31,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerTagService _customerTagService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         public CustomerTagViewModelService(
            ILocalizationService localizationService,
@@ -40,7 +42,8 @@ namespace Grand.Web.Areas.Admin.Services
            IStoreService storeService,
            IVendorService vendorService,
            IWorkContext workContext,
-           ICustomerTagService customerTagService)
+           ICustomerTagService customerTagService,
+           IDateTimeHelper dateTimeHelper)
         {
             _localizationService = localizationService;
             _customerActivityService = customerActivityService;
@@ -51,6 +54,7 @@ namespace Grand.Web.Areas.Admin.Services
             _vendorService = vendorService;
             _workContext = workContext;
             _customerTagService = customerTagService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         public virtual CustomerModel PrepareCustomerModelForList(Customer customer)
@@ -119,14 +123,14 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CustomerTagProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task InsertProductModel(CustomerTagProductModel.AddProductModel model)
         {

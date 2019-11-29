@@ -97,12 +97,7 @@ namespace Grand.Core.Plugins
             }
             catch
             {
-                //try resolve
-            }
-            if (instance == null)
-            {
-                //not resolved
-                instance = EngineContext.Current.ResolveUnregistered(PluginType);
+                throw new GrandException("Plugin has not been registered getRequiredService - dependency");
             }
             var typedInstance = instance as T;
             if (typedInstance != null)

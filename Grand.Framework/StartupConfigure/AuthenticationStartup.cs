@@ -1,15 +1,17 @@
-﻿using Grand.Core.Infrastructure;
+﻿using Grand.Core.Data;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Framework.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
     /// <summary>
-    /// Represents object for the configuring exceptions and errors handling on application startup
+    /// Represents object for the configuring authentication middleware on application startup
     /// </summary>
-    public class ErrorHandlerStartup : IGrandStartup
+    public class AuthenticationStartup : IGrandStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -18,6 +20,10 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //add data protection
+            services.AddGrandDataProtection();
+            //add authentication
+            services.AddGrandAuthentication(configuration);
         }
 
         /// <summary>
@@ -26,14 +32,22 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //exception handling
-            application.UseGrandExceptionHandler();
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
 
-            //handle 400 errors (bad request)
-            application.UseBadRequestResult();
+            //configure authentication
+            application.UseGrandAuthentication();
 
-            //handle 404 errors
-            application.UsePageNotFound();
+            //set storecontext
+            application.UseMiddleware<StoreContextMiddleware>();
+
+            //set workcontext
+            application.UseMiddleware<WorkContextMiddleware>();
+
+            //set culture
+            application.UseMiddleware<CultureMiddleware>();
+
         }
 
         /// <summary>
@@ -41,8 +55,8 @@ namespace Grand.Framework.Infrastructure
         /// </summary>
         public int Order
         {
-            //error handlers should be loaded first
-            get { return 0; }
+            //authentication should be loaded before MVC
+            get { return 500; }
         }
     }
 }

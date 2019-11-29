@@ -74,7 +74,7 @@ namespace Grand.Core
         public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
             var randomNumberBuffer = new byte[10];
-            System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(randomNumberBuffer);
+            RandomNumberGenerator.Create().GetBytes(randomNumberBuffer);
             return new Random(BitConverter.ToInt32(randomNumberBuffer, 0)).Next(min, max);
         }
 

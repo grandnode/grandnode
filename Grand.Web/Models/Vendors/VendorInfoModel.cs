@@ -10,7 +10,7 @@ namespace Grand.Web.Models.Vendors
     {
         public VendorInfoModel()
         {
-            this.Address = new VendorAddressModel();
+            Address = new VendorAddressModel();
         }
 
         [GrandResourceDisplayName("Account.VendorInfo.Name")]

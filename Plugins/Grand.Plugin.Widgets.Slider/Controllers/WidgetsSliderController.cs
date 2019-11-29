@@ -41,14 +41,14 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             ICategoryService categoryService,
             IManufacturerService manufacturerService)
         {
-            this._storeService = storeService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._sliderService = sliderService;
-            this._languageService = languageService;
-            this._permissionService = permissionService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _sliderService = sliderService;
+            _languageService = languageService;
+            _permissionService = permissionService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
         }
 
         protected virtual async Task PrepareAllCategoriesModel(SlideModel model)

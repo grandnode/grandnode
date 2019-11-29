@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Events;
 using MediatR;
 using MongoDB.Driver.Linq;
@@ -21,7 +20,6 @@ namespace Grand.Services.Messages
 
         private readonly IMediator _mediator;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
-        private readonly ICustomerService _customerService;
         private readonly IHistoryService _historyService;
 
         #endregion
@@ -31,13 +29,11 @@ namespace Grand.Services.Messages
         public NewsLetterSubscriptionService(
             IRepository<NewsLetterSubscription> subscriptionRepository,
             IMediator mediator,
-            ICustomerService customerService,
             IHistoryService historyService)
         {
-            this._subscriptionRepository = subscriptionRepository;
-            this._mediator = mediator;
-            this._customerService = customerService;
-            this._historyService = historyService;
+            _subscriptionRepository = subscriptionRepository;
+            _mediator = mediator;
+            _historyService = historyService;
         }
 
         #endregion

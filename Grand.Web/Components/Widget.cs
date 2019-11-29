@@ -12,7 +12,7 @@ namespace Grand.Web.ViewComponents
 
         public WidgetViewComponent(IWidgetViewModelService widgetViewModelService)
         {
-            this._widgetViewModelService = widgetViewModelService;
+            _widgetViewModelService = widgetViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)

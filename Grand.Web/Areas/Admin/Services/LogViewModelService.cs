@@ -39,7 +39,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new LogListModel
             {
-                AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList()
+                AvailableLogLevels = LogLevel.Debug.ToSelectList(_localizationService, _workContext, false).ToList()
             };
             model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;

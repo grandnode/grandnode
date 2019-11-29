@@ -1,12 +1,14 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
+using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
@@ -14,6 +16,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Order;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -38,8 +41,10 @@ namespace Grand.Web.Services
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAddressViewModelService _addressViewModelService;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IServiceProvider _serviceProvider;
         private readonly OrderSettings _orderSettings;
+        private readonly LocalizationSettings _localizationSettings;
 
         public ReturnRequestViewModelService(IReturnRequestService returnRequestService,
             IOrderService orderService,
@@ -54,24 +59,28 @@ namespace Grand.Web.Services
             ICountryService countryService,
             IStoreMappingService storeMappingService,
             IAddressViewModelService addressViewModelService,
+            IWorkflowMessageService workflowMessageService,
             IServiceProvider serviceProvider,
-            OrderSettings orderSettings)
+            OrderSettings orderSettings,
+            LocalizationSettings localizationSettings)
         {
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._cacheManager = cacheManager;
-            this._countryService = countryService;
-            this._storeMappingService = storeMappingService;
-            this._addressViewModelService = addressViewModelService;
-            this._serviceProvider = serviceProvider;
-            this._orderSettings = orderSettings;
+            _returnRequestService = returnRequestService;
+            _orderService = orderService;
+            _productService = productService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _currencyService = currencyService;
+            _priceFormatter = priceFormatter;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _cacheManager = cacheManager;
+            _countryService = countryService;
+            _storeMappingService = storeMappingService;
+            _addressViewModelService = addressViewModelService;
+            _workflowMessageService = workflowMessageService;
+            _serviceProvider = serviceProvider;
+            _orderSettings = orderSettings;
+            _localizationSettings = localizationSettings;
         }
 
         public virtual async Task<SubmitReturnRequestModel> PrepareReturnRequest(SubmitReturnRequestModel model, Order order)
@@ -90,8 +99,7 @@ namespace Grand.Web.Services
                 {
                     var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
                     foreach (var rrr in await _returnRequestService.GetAllReturnRequestReasons())
-                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel()
-                        {
+                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel() {
                             Id = rrr.Id,
                             Name = rrr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
                         });
@@ -104,8 +112,7 @@ namespace Grand.Web.Services
                 {
                     var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
                     foreach (var rra in await _returnRequestService.GetAllReturnRequestActions())
-                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel()
-                        {
+                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel() {
                             Id = rra.Id,
                             Name = rra.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
                         });
@@ -133,8 +140,7 @@ namespace Grand.Web.Services
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.NotReturnable)
                 {
-                    var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
-                    {
+                    var orderItemModel = new SubmitReturnRequestModel.OrderItemModel {
                         Id = orderItem.Id,
                         ProductId = orderItem.ProductId,
                         ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
@@ -233,8 +239,7 @@ namespace Grand.Web.Services
                     unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency);
                 }
 
-                model.ReturnRequestItems.Add(new ReturnRequestDetailsModel.ReturnRequestItemModel
-                {
+                model.ReturnRequestItems.Add(new ReturnRequestDetailsModel.ReturnRequestItemModel {
                     OrderItemId = item.OrderItemId,
                     Quantity = item.Quantity,
                     ReasonForReturn = item.ReasonForReturn,
@@ -246,7 +251,6 @@ namespace Grand.Web.Services
             }
             return model;
         }
-
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequests()
         {
             var model = new CustomerReturnRequestsModel();
@@ -274,8 +278,7 @@ namespace Grand.Web.Services
                     }
                 }
 
-                var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
-                {
+                var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel {
                     Id = returnRequest.Id,
                     ReturnNumber = returnRequest.ReturnNumber,
                     ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -288,6 +291,79 @@ namespace Grand.Web.Services
             }
 
             return model;
+        }
+        public virtual async Task<(SubmitReturnRequestModel model, ReturnRequest rr)> ReturnRequestSubmit(SubmitReturnRequestModel model, Order order, Address address, DateTime pickupDate, IFormCollection form)
+        {
+            var rr = new ReturnRequest {
+                StoreId = _storeContext.CurrentStore.Id,
+                OrderId = order.Id,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                CustomerComments = model.Comments,
+                StaffNotes = string.Empty,
+                ReturnRequestStatus = ReturnRequestStatus.Pending,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                PickupAddress = address,
+                PickupDate = pickupDate
+            };
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                var product = await _productService.GetProductById(orderItem.ProductId);
+                if (!product.NotReturnable)
+                {
+                    int quantity = 0; //parse quantity
+                    string rrrId = "";
+                    string rraId = "";
+
+                    foreach (string formKey in form.Keys)
+                    {
+                        if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            int.TryParse(form[formKey], out quantity);
+                        }
+
+                        if (formKey.Equals(string.Format("reason{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            rrrId = form[formKey];
+                        }
+
+                        if (formKey.Equals(string.Format("action{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            rraId = form[formKey];
+                        }
+                    }
+
+                    if (quantity > 0)
+                    {
+                        var rrr = await _returnRequestService.GetReturnRequestReasonById(rrrId);
+                        var rra = await _returnRequestService.GetReturnRequestActionById(rraId);
+                        rr.ReturnRequestItems.Add(new ReturnRequestItem {
+                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : "not available",
+                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) : "not available",
+                            Quantity = quantity,
+                            OrderItemId = orderItem.Id
+                        });
+                    }
+                }
+            }
+            model = await PrepareReturnRequest(model, order);
+
+            if (rr.ReturnRequestItems.Any())
+            {
+                await _returnRequestService.InsertReturnRequest(rr);
+
+                //notify store owner here (email)
+                await _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, order, _localizationSettings.DefaultAdminLanguageId);
+                //notify customer
+                await _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, order, order.CustomerLanguageId);
+            }
+            else
+            {
+                model.Error = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+            }
+
+            return (model, rr);
         }
     }
 }

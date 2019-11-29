@@ -62,7 +62,7 @@
                             <div class="form-group">
                                 <admin-label asp-for="AttributeControlType" />
                                 <div class="col-md-9 col-sm-9">
-                                    <admin-select asp-for="AttributeControlTypeId" asp-items="((AttributeControlType)Model.AttributeControlTypeId).ToSelectList()" />
+                                    <admin-select asp-for="AttributeControlTypeId" asp-items="((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(Context)" />
                                     <span asp-validation-for="AttributeControlTypeId"></span>
                                 </div>
                             </div>

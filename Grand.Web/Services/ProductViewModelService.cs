@@ -144,9 +144,9 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("products");
 
             var currentCustomer = _workContext.CurrentCustomer;
-            var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
-            var enableShoppingCart = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
-            var enableWishlist = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
+            var displayPricesTask = _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
+            var enableShoppingCartTask = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
+            var enableWishlistTask = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
             var currentCurrency = _workContext.WorkingCurrency;
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguage = _workContext.WorkingLanguage;
@@ -165,7 +165,15 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguage.Id) }
             };
 
+            await Task.WhenAll(new Task[] { displayPricesTask, enableShoppingCartTask, enableWishlistTask });
+
+            var displayPrices = displayPricesTask.Result;
+            var enableShoppingCart = enableShoppingCartTask.Result;
+            var enableWishlist = enableWishlistTask.Result;
+
             var models = new List<ProductOverviewModel>();
+
+            var lvl1BackgroundTasks = new List<Task>();
 
             foreach (var product in products)
             {
@@ -190,6 +198,7 @@ namespace Grand.Web.Services
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
                 };
+
                 //price
                 if (preparePriceModel)
                 {
@@ -446,17 +455,20 @@ namespace Grand.Web.Services
                     #region Prepare product picture
                     //prepare picture model
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                    model.DefaultPictureModel = await _cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
+
+                    lvl1BackgroundTasks.Add(_cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
                     {
                         var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
                         var pictureModel = new PictureModel {
-                            Id = picture.PictureId,
-                            ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                            Id = picture.PictureId
                         };
+
+                        await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                        await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                             picture.TitleAttribute :
@@ -467,23 +479,26 @@ namespace Grand.Web.Services
                             string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
 
                         return pictureModel;
-                    });
+                    }).ContinueWith(t => model.DefaultPictureModel = t.Result));
 
                     //prepare second picture model
                     if (_catalogSettings.SecondPictureOnCatalogPages)
                     {
                         var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                        model.SecondPictureModel = await _cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
+
+                        lvl1BackgroundTasks.Add(_cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
                         {
                             var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
                             if (picture == null)
                                 return new PictureModel();
 
                             var pictureModel = new PictureModel {
-                                Id = picture.PictureId,
-                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
+                                Id = picture.PictureId
                             };
+
+                            await _pictureService.GetPictureUrl(picture.PictureId, pictureSize).ContinueWith(t => pictureModel.ImageUrl = t.Result);
+                            await _pictureService.GetPictureUrl(picture.PictureId).ContinueWith(t => pictureModel.FullSizeImageUrl = t.Result);
+
                             //"title" attribute
                             pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                                     picture.TitleAttribute :
@@ -494,23 +509,25 @@ namespace Grand.Web.Services
                                     string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
 
                             return pictureModel;
-                        });
+                        }).ContinueWith(t => model.SecondPictureModel = t.Result));
                     }
-
                     #endregion
                 }
 
                 //specs
                 if (prepareSpecificationAttributes)
                 {
-                    model.SpecificationAttributeModels = await PrepareProductSpecificationModel(product);
+                    lvl1BackgroundTasks.Add(PrepareProductSpecificationModel(product).ContinueWith(t => model.SpecificationAttributeModels = t.Result));
                 }
 
                 //reviews
-                model.ReviewOverviewModel = await PrepareProductReviewOverviewModel(product);
+                lvl1BackgroundTasks.Add(PrepareProductReviewOverviewModel(product).ContinueWith(t => model.ReviewOverviewModel = t.Result));
 
                 models.Add(model);
             }
+
+            await Task.WhenAll(lvl1BackgroundTasks);
+
             return models;
         }
 
@@ -1738,9 +1755,12 @@ namespace Grand.Web.Services
         {
             //load and cache report
             var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
+            var fromdate = DateTime.UtcNow.AddMonths(_catalogSettings.PeriodBestsellers > 0 ? -_catalogSettings.PeriodBestsellers : -12);
             var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
                 async () => await orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
+                        createdFromUtc: fromdate,
+                        ps: Core.Domain.Payments.PaymentStatus.Paid,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
                         );
 

@@ -15,8 +15,8 @@ namespace Grand.Services.Tasks
 
         public DeleteGuestsScheduleTask(ICustomerService customerService, CommonSettings commonSettings)
         {
-            this._customerService = customerService;
-            this._commonSettings = commonSettings;
+            _customerService = customerService;
+            _commonSettings = commonSettings;
         }
 
         /// <summary>

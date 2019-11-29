@@ -4,6 +4,7 @@ using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
 using Grand.Services.Security;
@@ -26,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
 
         #region Constructors
@@ -33,13 +35,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         public PollController(IPollService pollService, ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper)
         {
-            this._pollService = pollService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _pollService = pollService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -58,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Data = polls.Select(x =>
                 {
-                    var m = x.ToModel();
+                    var m = x.ToModel(_dateTimeHelper);
                     return m;
                 }),
                 Total = polls.TotalCount
@@ -90,7 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity();
+                var poll = model.ToEntity(_dateTimeHelper);
                 await _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
@@ -116,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No poll found with the specified id
                 return RedirectToAction("List");
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
-            var model = poll.ToModel();
+            var model = poll.ToModel(_dateTimeHelper);
             //Store
             await model.PrepareStoresMappingModel(poll, _storeService, false);
             //locales
@@ -140,7 +144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                poll = model.ToEntity(poll);
+                poll = model.ToEntity(poll, _dateTimeHelper);
                 await _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));

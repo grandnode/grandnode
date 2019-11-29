@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Localization;
@@ -7,7 +6,6 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
-using Grand.Services.Events;
 using Grand.Services.Media;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
@@ -134,7 +132,7 @@ namespace Grand.Services.Orders.Tests
 
 
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _checkoutAttributeRepo,
-                _storeMappingService, _eventPublisher, null, null);
+               _eventPublisher, null, null);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 

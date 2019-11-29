@@ -79,7 +79,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
             <div class="form-group">
-                <label asp-for="OrderStatus" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="OrderStatus" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                 <div class="col-xs-12 col-md-9 col-sm-9 orderEditBtn">
                     <strong>
                         @Model.OrderStatus
@@ -91,7 +91,7 @@
                     <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
                     <div id="pnlChangeOrderStatus">
                         <div class="note note-info">@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</div>
-                        <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList()" />
+                        <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList(Context)" />
                         <div class="form-actions btn-group btn-group-devided">
                             <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                             <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="k-button" />
@@ -101,7 +101,7 @@
             </div>
             }
             <div class="form-group">
-                <label asp-for="OrderNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="OrderNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
                     <label class="control-label">@Model.OrderNumber</label>
                 </div>
@@ -109,14 +109,14 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    <label asp-for="OrderGuid" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="OrderGuid" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderGuid</label>
                     </div>
                 </div>
             }
             <div class="form-group">
-                <label asp-for="StoreName" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="StoreName" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
                     <label class="control-label">@Model.StoreName</label>
                 </div>
@@ -125,7 +125,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    <label asp-for="CustomerId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="CustomerId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">
                             @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CustomerIp" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="CustomerIp" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">@Model.CustomerIp</label>
                     </div>
@@ -141,7 +141,7 @@
                 if (!String.IsNullOrEmpty(Model.UrlReferrer))
                 {
                     <div class="form-group">
-                        <label asp-for="UrlReferrer" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="UrlReferrer" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.UrlReferrer</label>
                         </div>
@@ -150,7 +150,7 @@
                 if (!String.IsNullOrEmpty(Model.RecurringPaymentId))
                 {
                     <div class="form-group">
-                        <label asp-for="RecurringPaymentId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="RecurringPaymentId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">
                                 <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
@@ -161,7 +161,7 @@
                 if (!String.IsNullOrEmpty(Model.VatNumber))
                 {
                     <div class="form-group">
-                        <label asp-for="VatNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="VatNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.VatNumber</label>
                         </div>
@@ -170,7 +170,7 @@
                 if (!String.IsNullOrEmpty(Model.AffiliateId))
                 {
                     <div class="form-group">
-                        <label asp-for="AffiliateId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="AffiliateId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">
                                 <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
@@ -181,7 +181,7 @@
                 if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     <div class="form-group">
-                        <label asp-for="OrderSubtotalInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderSubtotalInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderSubtotalInclTax</label>
                         </div>
@@ -190,7 +190,7 @@
                 if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                 {
                     <div class="form-group">
-                        <label asp-for="OrderSubtotalExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderSubtotalExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderSubtotalExclTax</label>
                         </div>
@@ -200,7 +200,7 @@
                     && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
                 {
                     <div class="form-group">
-                        <label asp-for="OrderSubTotalDiscountInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderSubTotalDiscountInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderSubTotalDiscountInclTax</label>
                         </div>
@@ -210,7 +210,7 @@
                     && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
                 {
                     <div class="form-group">
-                        <label asp-for="OrderSubTotalDiscountExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderSubTotalDiscountExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderSubTotalDiscountExclTax</label>
                         </div>
@@ -219,7 +219,7 @@
                 if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     <div class="form-group">
-                        <label asp-for="OrderShippingInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderShippingInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderShippingInclTax</label>
                         </div>
@@ -228,7 +228,7 @@
                 if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                 {
                     <div class="form-group">
-                        <label asp-for="OrderShippingExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderShippingExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderShippingExclTax</label>
                         </div>
@@ -238,7 +238,7 @@
                     && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
                 {
                     <div class="form-group">
-                        <label asp-for="PaymentMethodAdditionalFeeInclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="PaymentMethodAdditionalFeeInclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.PaymentMethodAdditionalFeeInclTax</label>
                         </div>
@@ -248,7 +248,7 @@
                     && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
                 {
                     <div class="form-group">
-                        <label asp-for="PaymentMethodAdditionalFeeExclTax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="PaymentMethodAdditionalFeeExclTax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.PaymentMethodAdditionalFeeExclTax</label>
                         </div>
@@ -259,7 +259,7 @@
                     foreach (var tr in Model.TaxRates)
                     {
                         <div class="form-group">
-                            <label asp-for="Tax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label> @tr.Rate%:
+                            <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label> @tr.Rate%:
                             <div class="col-xs-9 col-md-9 col-sm-9">
                                 <label class="control-label">@tr.Value</label>
                             </div>
@@ -269,7 +269,7 @@
                 if (Model.DisplayTax)
                 {
                     <div class="form-group">
-                        <label asp-for="Tax" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="Tax" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.Tax</label>
                         </div>
@@ -278,7 +278,7 @@
                 if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
                 {
                     <div class="form-group">
-                        <label asp-for="OrderTotalDiscount" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="OrderTotalDiscount" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.OrderTotalDiscount</label>
                         </div>
@@ -287,7 +287,7 @@
                 foreach (var gc in Model.GiftCards)
                 {
                     <div class="form-group">
-                        <label asp-for="GiftCards[0].CouponCode" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="GiftCards[0].CouponCode" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">(@(gc.CouponCode))</label>
                             <label class="control-label">@gc.Amount</label>
@@ -297,7 +297,7 @@
                 if (Model.RedeemedRewardPoints > 0)
                 {
                     <div class="form-group">
-                        <label asp-for="RedeemedRewardPoints" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="RedeemedRewardPoints" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">
                                 @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
@@ -308,7 +308,7 @@
                     </div>
                 }
                 <div class="form-group">
-                    <label asp-for="OrderTotal" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="OrderTotal" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderTotal</label>
                     </div>
@@ -316,7 +316,7 @@
                 if (!String.IsNullOrEmpty(Model.RefundedAmount))
                 {
                     <div class="form-group">
-                        <label asp-for="RefundedAmount" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="RefundedAmount" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.RefundedAmount</label>
                         </div>
@@ -325,7 +325,7 @@
                 if (Model.UsedDiscounts.Count > 0)
                 {
                     <div class="form-group">
-                        <label asp-for="UsedDiscounts" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="UsedDiscounts" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             @for (int i = 0; i < Model.UsedDiscounts.Count; i++)
                             {
@@ -342,7 +342,7 @@
                     </div>
                 }
                 <div class="form-group">
-                    <label asp-for="Profit" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="Profit" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">@Model.Profit</label>
                     </div>
@@ -353,7 +353,7 @@
                         <div class="form-horizontal portlet light bg-inverse form-fit">
                             <div class="form-body">
                                 <div class="form-group">
-                                    <label asp-for="OrderSubtotalInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="OrderSubtotalInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-xs-8 col-md-4 col-sm-6">
                                         <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
                                         <admin-input asp-for="OrderSubtotalInclTaxValue" />
@@ -364,7 +364,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="OrderSubTotalDiscountInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="OrderSubTotalDiscountInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-xs-8 col-md-4 col-sm-6">
                                         <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
                                         <admin-input asp-for="OrderSubTotalDiscountInclTaxValue" />
@@ -375,7 +375,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="OrderShippingInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="OrderShippingInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-xs-8 col-md-4 col-sm-6">
                                         <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
                                         <admin-input asp-for="OrderShippingInclTaxValue" />
@@ -386,7 +386,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="PaymentMethodAdditionalFeeInclTaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="PaymentMethodAdditionalFeeInclTaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-xs-8 col-md-4 col-sm-6">
                                         <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
                                         <admin-input asp-for="PaymentMethodAdditionalFeeInclTaxValue" />
@@ -397,25 +397,25 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="TaxRatesValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="TaxRatesValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-md-8">
                                         <admin-input asp-for="TaxRatesValue" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="TaxValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="TaxValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-md-8">
                                         <admin-input asp-for="TaxValue" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="OrderTotalDiscountValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="OrderTotalDiscountValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-md-8">
                                         <admin-input asp-for="OrderTotalDiscountValue" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="OrderTotalValue" class="control-label col-xs-12 col-md-3 col-sm-3" ></label>
+                                    <admin-label asp-for="OrderTotalValue" asp-display-hint="false" class="control-label col-xs-12 col-md-3 col-sm-3" ></admin-label>
                                     <div class="col-md-8">
                                         <admin-input asp-for="OrderTotalValue" />
                                     </div>
@@ -435,7 +435,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <label asp-for="CardType" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardType" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardType">@Model.CardType</label>
                             <admin-input asp-for="CardType" />
@@ -445,7 +445,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <label asp-for="CardName" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardName" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardName">@Model.CardName</label>
                             <admin-input asp-for="CardName" />
@@ -455,7 +455,7 @@
                 if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
                 {
                     <div class="form-group">
-                        <label asp-for="CardNumber" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardNumber" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardNumber">@Model.CardNumber</label>
                             <admin-input asp-for="CardNumber" />
@@ -465,7 +465,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <label asp-for="CardCvv2" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardCvv2" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardCvv2">@Model.CardCvv2</label>
                             <admin-input asp-for="CardCvv2" />
@@ -475,7 +475,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <label asp-for="CardExpirationMonth" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardExpirationMonth" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardExpirationMonth">@Model.CardExpirationMonth</label>
                             <admin-input asp-for="CardExpirationMonth" />
@@ -485,7 +485,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <label asp-for="CardExpirationYear" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CardExpirationYear" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label" id="lblCardExpirationYear">@Model.CardExpirationYear</label>
                             <admin-input asp-for="CardExpirationYear" />
@@ -506,7 +506,7 @@
                 if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
                 {
                     <div class="form-group">
-                        <label asp-for="AuthorizationTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="AuthorizationTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.AuthorizationTransactionId</label>
                         </div>
@@ -515,7 +515,7 @@
                 if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
                 {
                     <div class="form-group">
-                        <label asp-for="CaptureTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="CaptureTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label">@Model.CaptureTransactionId</label>
                         </div>
@@ -524,21 +524,21 @@
                 if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
                 {
                     <div class="form-group">
-                        <label asp-for="SubscriptionTransactionId" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                        <admin-label asp-for="SubscriptionTransactionId" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                         <div class="col-xs-9 col-md-9 col-sm-9">
                             <label class="control-label"> @Model.SubscriptionTransactionId</label>
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <label asp-for="PaymentMethod" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="PaymentMethod" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <label class="control-label">@Model.PaymentMethod</label>
                     </div>
                 </div>
             }
             <div class="form-group">
-                <label asp-for="PaymentStatus" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="PaymentStatus" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
                     @{
                         var labelStatus = "";
@@ -615,7 +615,7 @@
             @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
                         {
                 <div class="form-group">
-                    <label asp-for="CustomValues" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                    <admin-label asp-for="CustomValues" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                     <div class="col-xs-9 col-md-9 col-sm-9">
                         <table>
                             @foreach (var item in Model.CustomValues)
@@ -630,7 +630,7 @@
                 </div>
             }
             <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label col-xs-3 col-md-3 col-sm-3" ></label>
+                <admin-label asp-for="CreatedOn" asp-display-hint="false" class="control-label col-xs-3 col-md-3 col-sm-3" ></admin-label>
                 <div class="col-xs-9 col-md-9 col-sm-9">
                     <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
                 </div>

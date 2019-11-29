@@ -20,12 +20,12 @@ namespace Grand.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="bannerRepository">Banner repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public BannerService(IRepository<Banner> bannerRepository,
             IMediator mediator)
         {
-            this._bannerRepository = bannerRepository;
-            this._mediator = mediator;
+            _bannerRepository = bannerRepository;
+            _mediator = mediator;
         }
 
         /// <summary>

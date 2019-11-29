@@ -36,7 +36,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
-        private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService,
@@ -48,21 +47,19 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             IStoreContext storeContext,
             ILogger logger,
             IWebHelper webHelper,
-            PaymentSettings paymentSettings,
-            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
+            PaymentSettings paymentSettings)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._paymentService = paymentService;
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._logger = logger;
-            this._webHelper = webHelper;
-            this._paymentSettings = paymentSettings;
-            this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
+            _workContext = workContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _paymentService = paymentService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _logger = logger;
+            _webHelper = webHelper;
+            _paymentSettings = paymentSettings;
         }
 
         [AuthorizeAdmin]
@@ -70,7 +67,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel();
@@ -309,16 +306,12 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         public async Task<IActionResult> IPNHandler()
         {
-            byte[] param = default(byte[]);
-            using (MemoryStream ms = new MemoryStream())
+            string strRequest = string.Empty;
+            using (var stream = new StreamReader(Request.Body))
             {
-                Request.Body.CopyTo(ms);
-                param = ms.ToArray();
+                strRequest = await stream.ReadToEndAsync();
             }
-
-            string strRequest = Encoding.ASCII.GetString(param);
             Dictionary<string, string> values;
-
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)

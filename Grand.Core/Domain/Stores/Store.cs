@@ -8,12 +8,11 @@ namespace Grand.Core.Domain.Stores
     /// </summary>
     public partial class Store : BaseEntity, ILocalizedEntity
     {
-        private ICollection<string> _appliedDiscounts;
-
         public Store()
         {
             Locales = new List<LocalizedProperty>();
         }
+
         /// <summary>
         /// Gets or sets the store name
         /// </summary>
@@ -93,13 +92,6 @@ namespace Grand.Core.Domain.Stores
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
-        /// <summary>
-        /// Gets or sets the collection of applied discounts
-        /// </summary>
-        public virtual ICollection<string> AppliedDiscounts
-        {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
-            protected set { _appliedDiscounts = value; }
-        }
+
     }
 }

@@ -1,16 +1,14 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core.Configuration;
+using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
-    /// <summary>
-    /// Represents object for the configuring authentication middleware on application startup
-    /// </summary>
-    public class AuthenticationStartup : IGrandStartup
+    public class ForwardedHeadersStartup : IGrandStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -19,10 +17,7 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add data protection
-            services.AddGrandDataProtection();
-            //add authentication
-            services.AddGrandAuthentication(configuration);
+
         }
 
         /// <summary>
@@ -35,17 +30,11 @@ namespace Grand.Framework.Infrastructure
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            //configure authentication
-            application.UseGrandAuthentication();
+            var serviceProvider = application.ApplicationServices;
+            var hostingConfig = serviceProvider.GetRequiredService<HostingConfig>();
 
-            //set storecontext
-            application.UseMiddleware<StoreContextMiddleware>();
-
-            //set workcontext
-            application.UseMiddleware<WorkContextMiddleware>();
-
-            //set culture
-            application.UseMiddleware<CultureMiddleware>();
+            if (hostingConfig.UseForwardedHeaders)
+                application.UseGrandForwardedHeaders();
 
         }
 
@@ -54,8 +43,8 @@ namespace Grand.Framework.Infrastructure
         /// </summary>
         public int Order
         {
-            //authentication should be loaded before MVC
-            get { return 500; }
+            //ForwardedHeadersStartup should be loaded before authentication 
+            get { return 0; }
         }
     }
 }

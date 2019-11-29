@@ -283,7 +283,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> AssociateProductToCoursePopup()
         {
-            var model = await _courseViewModelService.PrepareAssociateProductToCourseModel();
+            var model = await _courseViewModelService.PrepareAssociateProductToCourseModel(HttpContext);
             return View(model);
         }
 

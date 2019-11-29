@@ -28,10 +28,10 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             ICustomerService customerService, ISettingService settingService,
             IPermissionService permissionService)
         {
-            this._discountService = discountService;
-            this._customerService = customerService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _discountService = discountService;
+            _customerService = customerService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)

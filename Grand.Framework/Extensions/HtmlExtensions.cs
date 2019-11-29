@@ -1,11 +1,11 @@
-﻿using Grand.Core.Infrastructure;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,11 +28,11 @@ namespace Grand.Framework
             where T : ILocalizedModel<TLocalizedModelLocal>
             where TLocalizedModelLocal : ILocalizedModelLocal
         {
-            
+
             var localizationSupported = helper.ViewData.Model.Locales.Count > 1;
             if (ignoreIfSeveralStores)
             {
-                var storeService = EngineContext.Current.Resolve<IStoreService>();
+                var storeService = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<IStoreService>();
                 if (storeService.GetAllStores().GetAwaiter().GetResult().Count >= 2)
                 {
                     localizationSupported = false;
@@ -49,7 +49,7 @@ namespace Grand.Framework
                 tabStrip.AppendLine("Standard");
                 tabStrip.AppendLine("</li>");
 
-                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var languageService = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ILanguageService>();
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages

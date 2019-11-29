@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Services.Helpers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -29,7 +30,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
-
+        private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
 
         #region Constructors
@@ -40,14 +41,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService, 
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper)
         {
-            this._newsViewModelService = newsViewModelService;
-            this._newsService = newsService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._customerService = customerService;
+            _newsViewModelService = newsViewModelService;
+            _newsService = newsService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -124,7 +127,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             ViewBag.AllLanguages = await _languageService.GetAllLanguages(true);
-            var model = newsItem.ToModel();
+            var model = newsItem.ToModel(_dateTimeHelper);
             //Store
             await model.PrepareStoresMappingModel(newsItem, _storeService, false);
             //ACL

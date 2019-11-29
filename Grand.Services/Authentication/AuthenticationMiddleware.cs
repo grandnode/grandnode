@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -48,15 +47,13 @@ namespace Grand.Services.Authentication
         /// </summary>
         /// <param name="context">HTTP context</param>
         /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IAuthenticationHandlerProvider handlers)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature {
                 OriginalPath = context.Request.Path,
                 OriginalPathBase = context.Request.PathBase
             });
 
-            // Give any IAuthenticationRequestHandler schemes a chance to handle the request
-            var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
             foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
             {
                 try

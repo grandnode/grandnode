@@ -4,7 +4,6 @@ using Grand.Core.Domain.Seo;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,46 +18,28 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IProductService _productService;
-        private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
         private readonly IPictureService _pictureService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDownloadService _downloadService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly SeoSettings _seoSettings;
         #endregion
 
         #region Ctor
 
         public CopyProductService(IProductService productService,
-            IProductAttributeService productAttributeService,
             ILanguageService languageService,
             IPictureService pictureService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            ISpecificationAttributeService specificationAttributeService,
             IDownloadService downloadService,
-            IProductAttributeParser productAttributeParser,
             IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService,
             SeoSettings seoSettings)
         {
-            this._productService = productService;
-            this._productAttributeService = productAttributeService;
-            this._languageService = languageService;
-            this._pictureService = pictureService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._downloadService = downloadService;
-            this._productAttributeParser = productAttributeParser;
-            this._urlRecordService = urlRecordService;
-            this._storeMappingService = storeMappingService;
-            this._seoSettings = seoSettings;
+            _productService = productService;
+            _languageService = languageService;
+            _pictureService = pictureService;
+            _downloadService = downloadService;
+            _urlRecordService = urlRecordService;
+            _seoSettings = seoSettings;
         }
 
         #endregion

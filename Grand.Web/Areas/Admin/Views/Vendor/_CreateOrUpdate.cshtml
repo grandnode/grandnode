@@ -42,6 +42,15 @@
                 </content>
             </tabstrip-item>
         }
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="5">
+            <content>
+                <div>
+                    @{ViewData["ObjectType"] = "Vendor";}
+                    <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                </div>
+            </content>
+        </tabstrip-item>
+
         <vc:admin-widget widget-zone="vendor_details_tabs" additional-data="Model" />
     </items>
 </admin-tabstrip>

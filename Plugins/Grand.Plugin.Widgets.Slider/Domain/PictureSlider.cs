@@ -25,11 +25,11 @@ namespace Grand.Plugin.Widgets.Slider.Domain
         {
             get
             {
-                return (SliderType)this.SliderTypeId;
+                return (SliderType)SliderTypeId;
             }
             set
             {
-                this.SliderTypeId = (int)value;
+                SliderTypeId = (int)value;
             }
 
         }

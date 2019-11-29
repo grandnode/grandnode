@@ -20,6 +20,7 @@
     <PackageReference Include="GoogleAuthenticator" Version="1.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
   </ItemGroup>
+  </ItemGroup>  
   <ItemGroup>
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml" />

@@ -45,10 +45,10 @@ namespace Grand.Framework.Mvc.Filters
                 IWorkContext workContext, ILanguageService languageService,
                 LocalizationSettings localizationSettings)
             {
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._languageService = languageService;
-                this._localizationSettings = localizationSettings;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _languageService = languageService;
+                _localizationSettings = localizationSettings;
             }
 
             #endregion

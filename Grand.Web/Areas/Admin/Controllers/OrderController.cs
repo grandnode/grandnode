@@ -906,6 +906,38 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("save-generic-attributes")]
+        public async Task<IActionResult> EditGenericAttributes(string id, OrderModel model)
+        {
+            var order = await _orderService.GetOrderById(id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("Edit", "Order", new { id = id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && order.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("Edit", "Order", new { id = id });
+            }
+
+            order.GenericAttributes = model.GenericAttributes;
+
+            await _orderService.UpdateOrder(order);
+            await _orderViewModelService.LogEditOrder(order.Id);
+
+            await _orderViewModelService.PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+            return View(model);
+        }
+
+
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         public async Task<IActionResult> EditOrderItem(string id, IFormCollection form, [FromServices] IProductService productService)
         {

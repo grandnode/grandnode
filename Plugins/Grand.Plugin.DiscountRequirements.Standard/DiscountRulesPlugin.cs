@@ -1,12 +1,9 @@
-using Grand.Core;
 using Grand.Core.Plugins;
 using Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount;
 using Grand.Plugin.DiscountRequirements.HasAllProducts;
 using Grand.Plugin.DiscountRequirements.HasOneProduct;
-using Grand.Services.Configuration;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
-using Grand.Services.Orders;
 using System.Collections.Generic;
 using Grand.Plugin.DiscountRequirements.ShoppingCart;
 using Grand.Plugin.DiscountRequirements.CustomerRoles;
@@ -17,20 +14,11 @@ namespace Grand.Plugin.DiscountRequirements.Standard
 {
     public partial class DiscountRequirementsPlugin : BasePlugin, IDiscount
     {
-        private readonly ISettingService _settingService;
-        private readonly IOrderService _orderService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
         private readonly IServiceProvider _serviceProvider;
 
-        public DiscountRequirementsPlugin(ISettingService settingService, IOrderService orderService, ILocalizationService localizationService, IWebHelper webHelper,
-            IServiceProvider serviceProvider)
+        public DiscountRequirementsPlugin(IServiceProvider serviceProvider)
         {
-            this._serviceProvider = serviceProvider;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
+            _serviceProvider = serviceProvider;
         }
 
         public IList<IDiscountRequirementRule> GetRequirementRules()

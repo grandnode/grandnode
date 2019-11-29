@@ -1,4 +1,3 @@
-using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Configuration;
@@ -17,14 +16,12 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount
         private readonly ISettingService _settingService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
 
         public HadSpentAmountDiscountRequirementRule(IServiceProvider serviceProvider)
         {
-            this._settingService = serviceProvider.GetRequiredService<ISettingService>();
-            this._orderService = serviceProvider.GetRequiredService<IOrderService>();
-            this._localizationService = serviceProvider.GetRequiredService<ILocalizationService>();
-            this._webHelper = serviceProvider.GetRequiredService<IWebHelper>();
+            _settingService = serviceProvider.GetRequiredService<ISettingService>();
+            _orderService = serviceProvider.GetRequiredService<IOrderService>();
+            _localizationService = serviceProvider.GetRequiredService<ILocalizationService>();
         }
 
         /// <summary>

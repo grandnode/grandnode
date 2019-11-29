@@ -12,8 +12,8 @@ namespace Grand.Core.Caching
 
         public DistributedRedisCache(IDistributedCache distributedCache, IDistributedRedisCacheExtended distributedRedisCacheExtended)
         {
-            this._distributedCache = distributedCache;
-            this._distributedRedisCacheExtended = distributedRedisCacheExtended;
+            _distributedCache = distributedCache;
+            _distributedRedisCacheExtended = distributedRedisCacheExtended;
         }
 
         /// <summary>

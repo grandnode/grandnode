@@ -55,7 +55,6 @@ namespace Grand.Services.Forums
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<ForumPostVote> _forumPostVoteRepository;
         private readonly ForumSettings _forumSettings;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerService _customerService;
@@ -78,12 +77,11 @@ namespace Grand.Services.Forums
         /// <param name="forumPrivateMessageRepository">Private message repository</param>
         /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
         /// <param name="forumSettings">Forum settings</param>
-        /// <param name="customerRepository">Customer repository</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ForumService(ICacheManager cacheManager,
             IRepository<ForumGroup> forumGroupRepository,
             IRepository<Forum> forumRepository,
@@ -93,7 +91,6 @@ namespace Grand.Services.Forums
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<ForumPostVote> forumPostVoteRepository,
             ForumSettings forumSettings,
-            IRepository<Customer> customerRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerService customerService,
             IWorkContext workContext,
@@ -110,7 +107,6 @@ namespace Grand.Services.Forums
             _forumSubscriptionRepository = forumSubscriptionRepository;
             _forumPostVoteRepository = forumPostVoteRepository;
             _forumSettings = forumSettings;
-            _customerRepository = customerRepository;
             _genericAttributeService = genericAttributeService;
             _customerService = customerService;
             _workContext = workContext;

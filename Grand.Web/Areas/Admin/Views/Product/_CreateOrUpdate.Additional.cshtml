@@ -42,7 +42,7 @@
         <div class="form-group" id="pnlGiftCardType">
             <admin-label asp-for="GiftCardTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList()" />
+                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="GiftCardTypeId"></span>
             </div>
         </div>
@@ -102,7 +102,7 @@
         <div class="form-group" id="pnlDownloadActivationType">
             <admin-label asp-for="DownloadActivationTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="DownloadActivationTypeId" asp-items="((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList()" />
+                <admin-select asp-for="DownloadActivationTypeId" asp-items="((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="DownloadActivationTypeId"></span>
             </div>
         </div>
@@ -164,7 +164,7 @@
         <div class="form-group" id="pnlCyclePeriod">
             <admin-label asp-for="RecurringCyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="RecurringCyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList()" />
+                <admin-select asp-for="RecurringCyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList(Context)" />
                 <span asp-validation-for="RecurringCyclePeriodId"></span>
             </div>
         </div>

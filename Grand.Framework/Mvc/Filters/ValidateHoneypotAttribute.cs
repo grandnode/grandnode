@@ -41,9 +41,9 @@ namespace Grand.Framework.Mvc.Filters
                 IWebHelper webHelper,
                 SecuritySettings securitySettings)
             {
-                this._logger = logger;
-                this._webHelper = webHelper;
-                this._securitySettings = securitySettings;
+                _logger = logger;
+                _webHelper = webHelper;
+                _securitySettings = securitySettings;
             }
 
             #endregion

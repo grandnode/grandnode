@@ -2,12 +2,16 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Directory;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Directory
 {
     public class CountryValidator : BaseGrandValidator<CountryModel>
     {
-        public CountryValidator(ILocalizationService localizationService)
+        public CountryValidator(
+            IEnumerable<IValidatorConsumer<CountryModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

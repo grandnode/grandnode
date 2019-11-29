@@ -33,11 +33,11 @@ namespace Grand.Services.Customers
             IMediator mediator,
             ICacheManager cacheManager)
         {
-            this._customerActionRepository = customerActionRepository;
-            this._customerActionTypeRepository = customerActionTypeRepository;
-            this._customerActionHistoryRepository = customerActionHistoryRepository;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
+            _customerActionRepository = customerActionRepository;
+            _customerActionTypeRepository = customerActionTypeRepository;
+            _customerActionHistoryRepository = customerActionHistoryRepository;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
         }
 
         #endregion

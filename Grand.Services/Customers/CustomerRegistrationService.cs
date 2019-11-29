@@ -1,6 +1,5 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Events;
 using Grand.Services.Events.Web;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -43,7 +42,7 @@ namespace Grand.Services.Customers
         /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="storeService">Store service</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="rewardPointsService">Reward points service</param>
@@ -57,15 +56,15 @@ namespace Grand.Services.Customers
             CustomerSettings customerSettings,
             IRewardPointsService rewardPointsService)
         {
-            this._customerService = customerService;
-            this._encryptionService = encryptionService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._localizationService = localizationService;
-            this._storeService = storeService;
-            this._mediator = mediator;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._customerSettings = customerSettings;
-            this._rewardPointsService = rewardPointsService;
+            _customerService = customerService;
+            _encryptionService = encryptionService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _localizationService = localizationService;
+            _storeService = storeService;
+            _mediator = mediator;
+            _rewardPointsSettings = rewardPointsSettings;
+            _customerSettings = customerSettings;
+            _rewardPointsService = rewardPointsService;
         }
 
         #endregion

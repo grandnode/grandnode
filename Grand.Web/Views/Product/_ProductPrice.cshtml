@@ -113,7 +113,7 @@
             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
             //of course, you can modify appropriate locales to include VAT info there
             <div class="tax-shipping-info generalMarginSupporter">
-                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
             </div>
         }
         if (!String.IsNullOrEmpty(Model.CurrencyCode))

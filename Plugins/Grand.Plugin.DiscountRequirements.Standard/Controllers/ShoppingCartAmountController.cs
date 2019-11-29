@@ -24,9 +24,9 @@ namespace Grand.Plugin.DiscountRequirements.Standard.Controllers
             ISettingService settingService,
             IPermissionService permissionService)
         {
-            this._discountService = discountService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _discountService = discountService;
+            _settingService = settingService;
+            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)

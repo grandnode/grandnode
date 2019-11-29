@@ -28,12 +28,12 @@ namespace Grand.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="categoryTemplateRepository">Category template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
             IMediator mediator)
         {
-            this._categoryTemplateRepository = categoryTemplateRepository;
-            this._mediator = mediator;
+            _categoryTemplateRepository = categoryTemplateRepository;
+            _mediator = mediator;
         }
 
         #endregion

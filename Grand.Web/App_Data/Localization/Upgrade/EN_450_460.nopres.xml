@@ -659,9 +659,9 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Hint">
     <Value>A customer is added to this course once a specified product is purchased (paid).</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Products.Commission">
+  <LocaleResource Name="Admin.Orders.Products.Commission">
     <Value>Commission</Value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Commission">
     <Value>Commission</Value>
   </LocaleResource>
@@ -718,5 +718,43 @@
   </LocaleResource>
   <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
     <Value>Security code is wrong</Value>
+  <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
+    <Value>You can't edit this discount, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew">
+    <Value>Add new generic attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
+    <Value>Id is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key">
+    <Value>Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Key.Required">
+    <Value>Key is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.ObjectType.Required">
+    <Value>Object type is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Value.Required">
+    <Value>Value is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Permission">
+    <Value>You don't have permission to add new value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.SaveBeforeEdit">
+    <Value>You need to save object before you can add values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.GenericAttributes.Tab">
+    <Value>Generic attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.genericattributes.fields.store">
+    <Value>Select store</Value>
   </LocaleResource>
 </Language>

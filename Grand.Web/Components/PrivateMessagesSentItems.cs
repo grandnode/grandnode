@@ -30,14 +30,14 @@ namespace Grand.Web.ViewComponents
             IWorkContext workContext, IStoreContext storeContext, ICustomerService customerService,
             CustomerSettings customerSettings, IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
-            this._forumSettings = forumSettings;
-            this._forumService = forumService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._customerSettings = customerSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
+            _forumSettings = forumSettings;
+            _forumService = forumService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _customerService = customerService;
+            _customerSettings = customerSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int pageNumber, string tab)

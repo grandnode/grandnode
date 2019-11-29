@@ -59,18 +59,18 @@ namespace Grand.Framework.Controllers
             if (actionContextAccessor == null)
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
-            var context = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var context = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             var viewComponentResult = ViewComponent(componentName, arguments);
 
-            var viewData = this.ViewData;
+            var viewData = ViewData;
             if (viewData == null)
             {
                 throw new NotImplementedException();
                 //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
-            var tempData = this.TempData;
+            var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
@@ -138,14 +138,14 @@ namespace Grand.Framework.Controllers
         protected virtual string RenderPartialViewToString(string viewName, object model)
         {
             //get Razor view engine
-            var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();
+            var razorViewEngine = HttpContext.RequestServices.GetRequiredService<IRazorViewEngine>();
 
             //create action context
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             //set view name as action name in case if not passed
             if (string.IsNullOrEmpty(viewName))
-                viewName = this.ControllerContext.ActionDescriptor.ActionName;
+                viewName = ControllerContext.ActionDescriptor.ActionName;
 
             //set model
             ViewData.Model = model;
@@ -206,7 +206,6 @@ namespace Grand.Framework.Controllers
         /// <summary>
         /// Display error notification
         /// </summary>
-        /// <param name="message">Message</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected virtual void ErrorNotification(ModelStateDictionary ModelState, bool persistForTheNextRequest = true)
         {
@@ -241,9 +240,8 @@ namespace Grand.Framework.Controllers
         /// <param name="exception">Exception</param>
         protected void LogException(Exception exception)
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var logger = EngineContext.Current.Resolve<ILogger>();
-
+            var workContext = HttpContext.RequestServices.GetRequiredService<IWorkContext>();
+            var logger = HttpContext.RequestServices.GetRequiredService<ILogger>();
             var customer = workContext.CurrentCustomer;
             logger.Error(exception.Message, exception, customer);
         }
@@ -307,7 +305,7 @@ namespace Grand.Framework.Controllers
         /// <param name="editPageUrl">Edit page URL</param>
         protected virtual void DisplayEditLink(string editPageUrl)
         {
-            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            var pageHeadBuilder = HttpContext.RequestServices.GetRequiredService<IPageHeadBuilder>();
 
             pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }
@@ -380,7 +378,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Access denied view</returns>
         protected virtual IActionResult AccessDeniedView()
         {
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var webHelper = HttpContext.RequestServices.GetRequiredService<IWebHelper>();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
         }
 
@@ -390,8 +388,7 @@ namespace Grand.Framework.Controllers
         /// <returns>Access denied json data</returns>
         protected JsonResult AccessDeniedKendoGridJson()
         {
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
+            var localizationService = HttpContext.RequestServices.GetRequiredService<ILocalizationService > ();
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
@@ -400,8 +397,7 @@ namespace Grand.Framework.Controllers
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             // event notification before execute
-            var mediator = EngineContext.Current.Resolve<IMediator>();
-
+            var mediator = context.HttpContext.RequestServices.GetService<IMediator>();
             await mediator.Publish(new ActionExecutingContextNotification(context, true));
 
             await next();

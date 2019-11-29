@@ -108,7 +108,7 @@
                         //of course, you can modify appropriate locales to include VAT info there
                         <li class="">
                             <span class="tax-shipping-info">
-                                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                             </span>
                         </li>
                     }

@@ -13,8 +13,8 @@ namespace Grand.Web.ViewComponents
 
         public BlogTagsViewComponent(IBlogViewModelService blogViewModelService, BlogSettings blogSettings)
         {
-            this._blogViewModelService = blogViewModelService;
-            this._blogSettings = blogSettings;
+            _blogViewModelService = blogViewModelService;
+            _blogSettings = blogSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

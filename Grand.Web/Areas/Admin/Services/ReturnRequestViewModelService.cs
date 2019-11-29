@@ -150,11 +150,11 @@ namespace Grand.Web.Areas.Admin.Services
             DateTime? endDateValue = (model.EndDate == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId, 
-                customerId, 
-                "", 
-                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null), 
-                pageIndex - 1, 
+            var returnRequests = await _returnRequestService.SearchReturnRequests(model.StoreId,
+                customerId,
+                "",
+                (model.SearchReturnRequestStatusId >= 0 ? (ReturnRequestStatus?)model.SearchReturnRequestStatusId : null),
+                pageIndex - 1,
                 pageSize,
                 startDateValue,
                 endDateValue);
@@ -172,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 if (!excludeProperties)
                 {
-                    model = address.ToModel();
+                    model = await address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 
@@ -230,10 +230,9 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual ReturnReqestListModel PrepareReturnReqestListModel()
         {
-            var model = new ReturnReqestListModel
-            {
+            var model = new ReturnReqestListModel {
                 //Return request status
-                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList()
+                ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList().ToList()
             };
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
 
@@ -249,8 +248,7 @@ namespace Grand.Web.Areas.Admin.Services
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
 
-                items.Add(new ReturnRequestModel.ReturnRequestItemModel
-                {
+                items.Add(new ReturnRequestModel.ReturnRequestItemModel {
                     ProductId = orderItem.ProductId,
                     ProductName = (await _productService.GetProductByIdIncludeArch(orderItem.ProductId)).Name,
                     Quantity = item.Quantity,

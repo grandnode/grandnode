@@ -28,11 +28,11 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
             ILocalizationService localizationService,
             ILanguageService languageService)
         {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
+            _workContext = workContext;
+            _storeService = storeService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _languageService = languageService;
         }
         
         public async Task<IActionResult> Configure()

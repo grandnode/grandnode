@@ -1,9 +1,10 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Data;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 
-namespace Grand.Core.Http
+namespace Grand.Framework.Middleware
 {
     public class InstallUrlMiddleware
     {
@@ -30,7 +31,7 @@ namespace Grand.Core.Http
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
         /// <returns>Task</returns>
-        public async Task Invoke(Microsoft.AspNetCore.Http.HttpContext context, IWebHelper webHelper)
+        public async Task Invoke(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
             if (!DataSettingsHelper.DatabaseIsInstalled())

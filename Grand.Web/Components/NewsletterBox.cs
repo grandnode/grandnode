@@ -11,7 +11,7 @@ namespace Grand.Web.ViewComponents
 
         public NewsletterBoxViewComponent(INewsletterViewModelService newsletterViewModelService)
         {
-            this._newsletterViewModelService = newsletterViewModelService;
+            _newsletterViewModelService = newsletterViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

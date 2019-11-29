@@ -43,13 +43,13 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ForumSettings forumSettings)
         {
-            this._boardsViewModelService = boardsViewModelService;
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumSettings = forumSettings;
+            _boardsViewModelService = boardsViewModelService;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _forumSettings = forumSettings;
         }
         #endregion
 

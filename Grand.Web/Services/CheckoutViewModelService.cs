@@ -73,27 +73,27 @@ namespace Grand.Web.Services
             PaymentSettings paymentSettings,
             OrderSettings orderSettings)
         {
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._workContext = workContext;
-            this._countryService = countryService;
-            this._storeMappingService = storeMappingService;
-            this._addressViewModelService = addressViewModelService;
-            this._taxService = taxService;
-            this._shippingService = shippingService;
-            this._localizationService = localizationService;
-            this._currencyService = currencyService;
-            this._storeContext = storeContext;
-            this._priceFormatter = priceFormatter;
-            this._genericAttributeService = genericAttributeService;
-            this._paymentService = paymentService;
-            this._rewardPointsService = rewardPointsService;
-            this._webHelper = webHelper;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._shippingSettings = shippingSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._orderSettings = orderSettings;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _workContext = workContext;
+            _countryService = countryService;
+            _storeMappingService = storeMappingService;
+            _addressViewModelService = addressViewModelService;
+            _taxService = taxService;
+            _shippingService = shippingService;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _storeContext = storeContext;
+            _priceFormatter = priceFormatter;
+            _genericAttributeService = genericAttributeService;
+            _paymentService = paymentService;
+            _rewardPointsService = rewardPointsService;
+            _webHelper = webHelper;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _shippingSettings = shippingSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _paymentSettings = paymentSettings;
+            _orderSettings = orderSettings;
         }
         public virtual async Task<bool> IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null)
         {

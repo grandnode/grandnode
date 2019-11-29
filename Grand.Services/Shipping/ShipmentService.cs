@@ -31,12 +31,12 @@ namespace Grand.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IMediator mediator)
         {
-            this._shipmentRepository = shipmentRepository;
-            this._mediator = mediator;
+            _shipmentRepository = shipmentRepository;
+            _mediator = mediator;
         }
 
         #endregion

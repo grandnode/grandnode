@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Seo;
 using Grand.Framework.Extensions;
@@ -41,6 +42,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
+        private readonly IWorkContext _workContext;
         private readonly SeoSettings _seoSettings;
 
         #endregion
@@ -61,23 +63,25 @@ namespace Grand.Web.Areas.Admin.Services
             IVendorService vendorService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
+            IWorkContext workContext,
             SeoSettings seoSettings)
         {
-            this._categoryService = categoryService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._discountService = discountService;
-            this._customerActivityService = customerActivityService;
-            this._vendorService = vendorService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._seoSettings = seoSettings;
+            _categoryService = categoryService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _customerService = customerService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _discountService = discountService;
+            _customerActivityService = customerActivityService;
+            _vendorService = vendorService;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _workContext = workContext;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -105,8 +109,8 @@ namespace Grand.Web.Areas.Admin.Services
                 throw new ArgumentNullException("model");
 
             model.AvailableDiscounts = (await _discountService
-                .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true))
-                .Select(d => d.ToModel())
+                .GetAllDiscounts(DiscountType.AssignedToManufacturers, storeId: _workContext.CurrentCustomer.Id, showHidden: true))
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
 
             if (!excludeProperties && manufacturer != null)
@@ -222,7 +226,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             return model;
         }
@@ -230,7 +234,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(ManufacturerModel.AddManufacturerProductModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
 
         public virtual async Task<(IEnumerable<ManufacturerModel.ManufacturerProductModel> manufacturerProductModels, int totalCount)> PrepareManufacturerProductModel(string manufacturerId, int pageIndex, int pageSize)

@@ -21,12 +21,12 @@ namespace Grand.Web.Models.Catalog
 
         public CatalogPagingFilteringModel()
         {
-            this.AvailableSortOptions = new List<SelectListItem>();
-            this.AvailableViewModes = new List<SelectListItem>();
-            this.PageSizeOptions = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
+            AvailableViewModes = new List<SelectListItem>();
+            PageSizeOptions = new List<SelectListItem>();
 
-            this.PriceRangeFilter = new PriceRangeFilterModel();
-            this.SpecificationFilter = new SpecificationFilterModel();
+            PriceRangeFilter = new PriceRangeFilterModel();
+            SpecificationFilter = new SpecificationFilterModel();
         }
 
         #endregion
@@ -79,7 +79,7 @@ namespace Grand.Web.Models.Catalog
 
             public PriceRangeFilterModel()
             {
-                this.Items = new List<PriceRangeFilterItem>();
+                Items = new List<PriceRangeFilterItem>();
             }
 
             #endregion
@@ -157,56 +157,80 @@ namespace Grand.Web.Models.Catalog
                 return null;
             }
 
+            public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, IEnumerable<PriceRange> priceRanges)
+            {
+                var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
+                if (String.IsNullOrEmpty(range))
+                    return null;
+                string[] fromTo = range.Trim().Split(new[] { '-' });
+                if (fromTo.Length == 2)
+                {
+                    decimal? from = null;
+                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                        from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
+                    decimal? to = null;
+                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                        to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
+
+                    foreach (var pr in priceRanges)
+                    {
+                        if (pr.From == from && pr.To == to)
+                            return pr;
+                    }
+                }
+                return null;
+            }
+
             public virtual void LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
-                if (priceRangeList.Any())
+
+                if (!priceRangeList.Any())
                 {
-                    this.Enabled = true;
+                    Enabled = false;
+                    return;
+                }
 
-                    var selectedPriceRange = GetSelectedPriceRange(webHelper, priceRangeStr);
+                this.Enabled = true;
 
-                    this.Items = priceRangeList.ToList().Select(x =>
-                    {
+                var selectedPriceRange = GetSelectedPriceRange(webHelper, priceRangeList);
+
+                this.Items = priceRangeList.Select(x =>
+                {
                         //from&to
                         var item = new PriceRangeFilterItem();
-                        if (x.From.HasValue)
-                            item.From = priceFormatter.FormatPrice(x.From.Value, true, false);
-                        if (x.To.HasValue)
-                            item.To = priceFormatter.FormatPrice(x.To.Value, true, false);
-                        string fromQuery = string.Empty;
-                        if (x.From.HasValue)
-                            fromQuery = x.From.Value.ToString(new CultureInfo("en-US"));
-                        string toQuery = string.Empty;
-                        if (x.To.HasValue)
-                            toQuery = x.To.Value.ToString(new CultureInfo("en-US"));
+                    if (x.From.HasValue)
+                        item.From = priceFormatter.FormatPrice(x.From.Value, true, false);
+                    if (x.To.HasValue)
+                        item.To = priceFormatter.FormatPrice(x.To.Value, true, false);
+                    string fromQuery = string.Empty;
+                    if (x.From.HasValue)
+                        fromQuery = x.From.Value.ToString(new CultureInfo("en-US"));
+                    string toQuery = string.Empty;
+                    if (x.To.HasValue)
+                        toQuery = x.To.Value.ToString(new CultureInfo("en-US"));
 
                         //is selected?
                         if (selectedPriceRange != null
-                            && selectedPriceRange.From == x.From
-                            && selectedPriceRange.To == x.To)
-                            item.Selected = true;
+                        && selectedPriceRange.From == x.From
+                        && selectedPriceRange.To == x.To)
+                        item.Selected = true;
 
                         //filter URL
                         string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, $"{fromQuery}-{toQuery}");
-                        url = ExcludeQueryStringParams(url, webHelper);
-                        item.FilterUrl = url;
+                    url = ExcludeQueryStringParams(url, webHelper);
+                    item.FilterUrl = url;
 
 
-                        return item;
-                    }).ToList();
+                    return item;
+                }).ToList();
 
-                    if (selectedPriceRange != null)
-                    {
-                        //remove filter URL
-                        string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, null);
-                        url = ExcludeQueryStringParams(url, webHelper);
-                        this.RemoveFilterUrl = url;
-                    }
-                }
-                else
+                if (selectedPriceRange != null)
                 {
-                    this.Enabled = false;
+                    //remove filter URL
+                    string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, null);
+                    url = ExcludeQueryStringParams(url, webHelper);
+                    this.RemoveFilterUrl = url;
                 }
             }
 
@@ -240,8 +264,8 @@ namespace Grand.Web.Models.Catalog
 
             public SpecificationFilterModel()
             {
-                this.AlreadyFilteredItems = new List<SpecificationFilterItem>();
-                this.NotFilteredItems = new List<SpecificationFilterItem>();
+                AlreadyFilteredItems = new List<SpecificationFilterItem>();
+                NotFilteredItems = new List<SpecificationFilterItem>();
             }
 
             #endregion
@@ -305,8 +329,7 @@ namespace Grand.Web.Models.Catalog
                         var sa = await specificationAttributeService.GetSpecificationAttributeByOptionId(sao);
                         if (sa != null)
                         {
-                            _allFilters.Add(new SpecificationAttributeOptionFilter
-                            {
+                            _allFilters.Add(new SpecificationAttributeOptionFilter {
                                 SpecificationAttributeId = sa.Id,
                                 SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
                                 SpecificationAttributeDisplayOrder = sa.DisplayOrder,
@@ -338,8 +361,7 @@ namespace Grand.Web.Models.Catalog
                 AlreadyFilteredItems = alreadyFilteredOptions.Select(x =>
                 {
                     var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFilteredOptions.Where(y => y.SpecificationAttributeOptionId != x.SpecificationAttributeOptionId).Select(z => z.SpecificationAttributeOptionId).ToList()));
-                    return new SpecificationFilterItem
-                    {
+                    return new SpecificationFilterItem {
                         SpecificationAttributeName = x.SpecificationAttributeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
                         SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,
@@ -353,8 +375,7 @@ namespace Grand.Web.Models.Catalog
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<string> { x.SpecificationAttributeOptionId });
                     var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
-                    return new SpecificationFilterItem()
-                    {
+                    return new SpecificationFilterItem() {
                         SpecificationAttributeName = x.SpecificationAttributeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
                         SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,

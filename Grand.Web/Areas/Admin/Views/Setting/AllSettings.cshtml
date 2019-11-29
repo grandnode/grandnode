@@ -1,5 +1,6 @@
 ﻿@model SettingFilterModel
 @inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
 @using Grand.Services.Stores
 @{
     //page title
@@ -167,7 +168,6 @@
             Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
         }
         @{
-            var storeService = EngineContext.Current.Resolve<IStoreService>();
             var allStores = await storeService.GetAllStores();
         }
         @foreach (var store in allStores)

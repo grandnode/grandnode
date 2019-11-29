@@ -39,15 +39,15 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
             IServiceProvider serviceProvider
             )
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._serviceProvider = serviceProvider;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _settingService = settingService;
+            _orderService = orderService;
+            _productService = productService;
+            _logger = logger;
+            _categoryService = categoryService;
+            _productAttributeParser = productAttributeParser;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)

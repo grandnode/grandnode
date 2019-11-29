@@ -28,8 +28,8 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
         public ShippingByWeightService(ICacheManager cacheManager,
             IRepository<ShippingByWeightRecord> sbwRepository)
         {
-            this._cacheManager = cacheManager;
-            this._sbwRepository = sbwRepository;
+            _cacheManager = cacheManager;
+            _sbwRepository = sbwRepository;
         }
 
         #endregion

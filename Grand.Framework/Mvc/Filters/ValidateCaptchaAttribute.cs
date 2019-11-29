@@ -46,8 +46,8 @@ namespace Grand.Framework.Mvc.Filters
 
             public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
             {
-                this._actionParameterName = actionParameterName;
-                this._captchaSettings = captchaSettings;
+                _actionParameterName = actionParameterName;
+                _captchaSettings = captchaSettings;
             }
 
             #endregion

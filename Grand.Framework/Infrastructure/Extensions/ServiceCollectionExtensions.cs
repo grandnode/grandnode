@@ -5,7 +5,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
-using Grand.Framework.FluentValidation;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Security.Authorization;
@@ -20,15 +19,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json.Serialization;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -176,11 +176,19 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandDataProtection(this IServiceCollection services)
         {
-            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
-
-            //configure the data protection system to persist keys to the specified directory
-            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            var config = services.BuildServiceProvider().GetService<GrandConfig>();
+            if (config.PersistKeysToRedis)
+            {
+                services.AddDataProtection(opt => opt.ApplicationDiscriminator = "grandnode")
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(config.PersistKeysToRedisUrl));
+            }
+            else
+            {
+                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+                //configure the data protection system to persist keys to the specified directory
+                services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            }
         }
 
         /// <summary>
@@ -190,7 +198,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var config = services.BuildServiceProvider().GetService<GrandConfig>();
-
+            
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -230,7 +238,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //configure services
             foreach (var instance in externalAuthInstances)
-                instance.Configure(authenticationBuilder);
+                instance.Configure(authenticationBuilder, configuration);
 
             services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
@@ -241,7 +249,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
+        public static IMvcBuilder AddGrandMvc(this IServiceCollection services, IConfiguration configuration)
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc(options =>
@@ -252,10 +260,11 @@ namespace Grand.Framework.Infrastructure.Extensions
             
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
-            
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             if (config.UseHsts)
             {
@@ -323,13 +332,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.IgnoredPaths.Add("/odata");
                 options.IgnoredPaths.Add("/health/live");
                 options.IgnoredPaths.Add("/.well-known/acme-challenge");
-                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
-                options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results
                 options.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
-
+                    !request.HttpContext.RequestServices.GetRequiredService<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    request.HttpContext.RequestServices.GetRequiredService<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel).Result;
             });
         }
 
@@ -340,7 +346,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
+            services.AddSingleton<IActionResultExecutor<RedirectResult>, GrandRedirectResultExecutor>();
         }
 
         public static void AddSettings(this IServiceCollection services)
@@ -441,12 +447,13 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Add Progressive Web App
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddPWA(this IServiceCollection services)
+        public static void AddPWA(this IServiceCollection services, IConfiguration configuration)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
             if (config.EnableProgressiveWebApp)
             {
                 var options = new WebEssentials.AspNetCore.Pwa.PwaOptions {

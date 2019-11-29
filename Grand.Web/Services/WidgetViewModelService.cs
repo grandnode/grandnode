@@ -7,6 +7,7 @@ using Grand.Web.Interfaces;
 using Grand.Web.Models.Cms;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Services
@@ -17,13 +18,13 @@ namespace Grand.Web.Services
         private readonly ICacheManager _cacheManager;
         private readonly IWidgetService _widgetService;
         private readonly IThemeContext _themeContext;
-        public WidgetViewModelService(IStoreContext storeContext, ICacheManager cacheManager,
+        public WidgetViewModelService(IStoreContext storeContext, IEnumerable<ICacheManager> cacheManager,
             IWidgetService widgetService, IThemeContext themeContext)
         {
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._widgetService = widgetService;
-            this._themeContext = themeContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _widgetService = widgetService;
+            _themeContext = themeContext;
         }
 
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidget(string widgetZone, object additionalData = null)

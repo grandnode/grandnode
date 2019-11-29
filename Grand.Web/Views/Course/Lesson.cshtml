@@ -48,13 +48,15 @@
                     <script asp-location="Footer">
                         $(document).ready(function () {
                             $("#btnApprove").click(function (event) {
-                                var posting = $.post('@Url.Action("Approved", "Course", new { Id = Model.Id })');
-                                posting.done(function (result) {
+                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                                    var posting = $.post('@Url.Action("Approved", "Course", new { Id = Model.Id })');
+                                    posting.done(function (result) {
                                     if (result) {
                                         $('#btnApprove').hide();
                                         $('#customControlInline').prop("checked", true);
                                     }
                                 });
+                                }
                             });
                         });
                     </script>

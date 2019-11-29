@@ -56,7 +56,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Inserts push message
         /// </summary>
-        /// <param name="registration"></param>
+        /// <param name="message"></param>
         Task InsertPushMessage(PushMessage message);
 
         /// <summary>

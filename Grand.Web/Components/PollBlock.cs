@@ -12,7 +12,7 @@ namespace Grand.Web.ViewComponents
 
         public PollBlockViewComponent(IPollViewModelService pollViewModelService)
         {
-            this._pollViewModelService = pollViewModelService;
+            _pollViewModelService = pollViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)

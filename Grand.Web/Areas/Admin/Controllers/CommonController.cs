@@ -455,7 +455,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ClearCache(bool memory, string returnUrl = "")
         {
-            var cacheManagers = EngineContext.Current.ResolveAll<ICacheManager>();
+            var cacheManagers = _serviceProvider.GetRequiredService<IEnumerable<ICacheManager>>();
             foreach (var cacheManager in cacheManagers)
             {
                 if (memory)

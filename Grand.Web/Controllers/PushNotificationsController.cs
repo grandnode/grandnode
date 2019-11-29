@@ -20,10 +20,10 @@ namespace Grand.Web.Controllers
         public PushNotificationsController(IWorkContext workContext, IPushNotificationsService pushNotificationsService, ILogger logger,
             ILocalizationService localizationService)
         {
-            this._workContext = workContext;
-            this._pushNotificationsService = pushNotificationsService;
-            this._logger = logger;
-            this._localizationService = localizationService;
+            _workContext = workContext;
+            _pushNotificationsService = pushNotificationsService;
+            _logger = logger;
+            _localizationService = localizationService;
         }
 
         [HttpPost]

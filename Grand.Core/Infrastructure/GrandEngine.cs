@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Core.Infrastructure
@@ -24,23 +23,9 @@ namespace Grand.Core.Infrastructure
     /// </summary>
     public class GrandEngine : IEngine
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
+       
 
         #region Utilities
-
-        protected IServiceProvider GetServiceProvider()
-        {
-            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : ServiceProvider;
-        }
 
         /// <summary>
         /// Run startup tasks
@@ -95,8 +80,7 @@ namespace Grand.Core.Infrastructure
             containerBuilder.Populate(services);
 
             //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-            return _serviceProvider;
+            return new AutofacServiceProvider(containerBuilder.Build());
         }
 
         /// <summary>
@@ -117,7 +101,8 @@ namespace Grand.Core.Infrastructure
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 foreach (var instance in instances)
                 {
                     cfg.AddProfile(instance.GetType());
@@ -183,13 +168,13 @@ namespace Grand.Core.Infrastructure
 
             //register dependencies
             var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-            RegisterDependencies(grandConfig, services, typeFinder);
+            var serviceProvider = RegisterDependencies(grandConfig, services, typeFinder);
 
             //run startup tasks
             if (!grandConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
 
-            return _serviceProvider;
+            return serviceProvider;
         }
 
         /// <summary>
@@ -199,7 +184,7 @@ namespace Grand.Core.Infrastructure
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = Resolve<ITypeFinder>();
+            var typeFinder = new WebAppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -213,73 +198,7 @@ namespace Grand.Core.Infrastructure
                 instance.Configure(application);
         }
 
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <typeparam name="T">Type of resolved service</typeparam>
-        /// <returns>Resolved service</returns>
-        public T Resolve<T>() where T : class
-        {
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
-        }
-
-        /// <summary>
-        /// Resolve dependency
-        /// </summary>
-        /// <param name="type">Type of resolved service</param>
-        /// <returns>Resolved service</returns>
-        public object Resolve(Type type)
-        {
-            return GetServiceProvider().GetRequiredService(type);
-        }
-
-        /// <summary>
-        /// Resolve dependencies
-        /// </summary>
-        /// <typeparam name="T">Type of resolved services</typeparam>
-        /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
-        {
-            return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
-        }
-
-        /// <summary>
-        /// Resolve unregistered service
-        /// </summary>
-        /// <param name="type">Type of service</param>
-        /// <returns>Resolved service</returns>
-        public virtual object ResolveUnregistered(Type type)
-        {
-            foreach (var constructor in type.GetConstructors())
-            {
-                try
-                {
-                    //try to resolve constructor parameters
-                    var parameters = constructor.GetParameters().Select(parameter =>
-                    {
-                        var service = Resolve(parameter.ParameterType);
-                        if (service == null)
-                            throw new GrandException("Unknown dependency");
-                        return service;
-                    });
-
-                    //all is ok, so create instance
-                    return Activator.CreateInstance(type, parameters.ToArray());
-                }
-                catch (GrandException) { }
-            }
-            throw new GrandException("No constructor was found that had all the dependencies satisfied.");
-        }
-
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Service provider
-        /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
-
-        #endregion
     }
 }

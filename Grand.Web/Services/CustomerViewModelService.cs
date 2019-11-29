@@ -112,39 +112,39 @@ namespace Grand.Web.Services
                     VendorSettings vendorSettings
             )
         {
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._genericAttributeService = genericAttributeService;
-            this._workflowMessageService = workflowMessageService;
-            this._returnRequestService = returnRequestService;
-            this._storeMappingService = storeMappingService;
-            this._addressViewModelService = addressViewModelService;
-            this._orderService = orderService;
-            this._downloadService = downloadService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._auctionService = auctionService;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._serviceProvider = serviceProvider;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._taxSettings = taxSettings;
-            this._forumSettings = forumSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._securitySettings = securitySettings;
-            this._captchaSettings = captchaSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._orderSettings = orderSettings;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _externalAuthenticationService = externalAuthenticationService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _genericAttributeService = genericAttributeService;
+            _workflowMessageService = workflowMessageService;
+            _returnRequestService = returnRequestService;
+            _storeMappingService = storeMappingService;
+            _addressViewModelService = addressViewModelService;
+            _orderService = orderService;
+            _downloadService = downloadService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _auctionService = auctionService;
+            _newsletterCategoryService = newsletterCategoryService;
+            _serviceProvider = serviceProvider;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _taxSettings = taxSettings;
+            _forumSettings = forumSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _securitySettings = securitySettings;
+            _captchaSettings = captchaSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _orderSettings = orderSettings;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         public virtual async Task DeleteAccount(Customer customer)

@@ -5,12 +5,16 @@ using Grand.Services.Customers;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Api.Models.Common;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Api.Validators.Common
 {
     public class LoginValidator : BaseGrandValidator<LoginModel>
     {
-        public LoginValidator(ApiConfig apiConfig, ICustomerService customerService, IStoreService storeService, IUserApiService userApiService, IEncryptionService encryptionService)
+        public LoginValidator(
+            IEnumerable<IValidatorConsumer<LoginModel>> validators,
+            ApiConfig apiConfig, ICustomerService customerService, IStoreService storeService, IUserApiService userApiService, IEncryptionService encryptionService)
+            : base(validators)
         {
             if (!apiConfig.Enabled)
                 RuleFor(x => x).Must((x) => false).WithMessage("API is disabled");

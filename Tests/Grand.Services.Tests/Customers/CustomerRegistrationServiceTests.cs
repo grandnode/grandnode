@@ -1,5 +1,4 @@
-﻿using Grand.Core.Caching;
-using Grand.Core.Data;
+﻿using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
@@ -7,7 +6,6 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Security;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Common;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
@@ -160,8 +158,7 @@ namespace Grand.Services.Customers.Tests
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
             _customerService = new CustomerService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _customerRepo, _customerRoleRepo, _customerProductRepo, _customerProductPriceRepo,
-                _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, _orderRepo, _forumPostRepo, _forumTopicRepo, null, null, _genericAttributeService,
-                _eventPublisher, _serviceProvider);
+                _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, null, _eventPublisher, _serviceProvider);
 
             _customerRegistrationService = new CustomerRegistrationService(
                 _customerService,

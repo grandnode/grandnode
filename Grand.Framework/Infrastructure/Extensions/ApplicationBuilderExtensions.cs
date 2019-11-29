@@ -4,6 +4,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain;
 using Grand.Core.Http;
 using Grand.Core.Infrastructure;
+using Grand.Framework.Middleware;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Authentication;
 using Grand.Services.Logging;
@@ -196,7 +197,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             application.UseMvc(routeBuilder =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                routeBuilder.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
         }
 

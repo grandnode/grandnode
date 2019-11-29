@@ -41,10 +41,10 @@ namespace Grand.Core
         /// <param name="httpContext">HTTP context</param>
         public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
         {
-            this._hostingConfig = hostingConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._applicationLifetime = applicationLifetime;
-            this._serviceProvider = serviceProvider;
+            _hostingConfig = hostingConfig;
+            _httpContextAccessor = httpContextAccessor;
+            _applicationLifetime = applicationLifetime;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion

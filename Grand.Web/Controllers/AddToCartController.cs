@@ -72,25 +72,25 @@ namespace Grand.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             MediaSettings mediaSettings)
         {
-            this._productService = productService;
-            this._productReservationService = productReservationService;
-            this._shoppingCartService = shoppingCartService;
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._currencyService = currencyService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._cacheManager = cacheManager;
-            this._taxService = taxService;
-            this._productAttributeParser = productAttributeParser;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._pictureService = pictureService;
-            this._mediaSettings = mediaSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _productService = productService;
+            _productReservationService = productReservationService;
+            _shoppingCartService = shoppingCartService;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _currencyService = currencyService;
+            _permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _cacheManager = cacheManager;
+            _taxService = taxService;
+            _productAttributeParser = productAttributeParser;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _pictureService = pictureService;
+            _mediaSettings = mediaSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

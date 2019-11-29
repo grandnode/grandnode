@@ -22,7 +22,7 @@ namespace Grand.Web.Models.Polls
         public object Clone()
         {
             //we use a shallow copy (deep clone is not required here)
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 
