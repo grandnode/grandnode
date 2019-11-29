@@ -306,16 +306,12 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         public async Task<IActionResult> IPNHandler()
         {
-            byte[] param = default(byte[]);
-            using (MemoryStream ms = new MemoryStream())
+            string strRequest = string.Empty;
+            using (var stream = new StreamReader(Request.Body))
             {
-                Request.Body.CopyTo(ms);
-                param = ms.ToArray();
+                strRequest = await stream.ReadToEndAsync();
             }
-
-            string strRequest = Encoding.ASCII.GetString(param);
             Dictionary<string, string> values;
-
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
