@@ -318,6 +318,9 @@
   <LocaleResource Name="Account.TwoFactorAuth">
     <Value>Two-factor authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
+    <Value>Security code is wrong</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.DeleteAccount">
     <Value>Delete account</Value>
   </LocaleResource>

@@ -1,5 +1,6 @@
 ﻿using Google.Authenticator;
 using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -31,6 +32,7 @@ using Grand.Web.Models.Customer;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,9 +66,10 @@ namespace Grand.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private IShoppingCartService _shoppingCartService;
+        private readonly GrandConfig _grandConfig;
 
         // 2fa
-        private const string key = "qazqaz12345";
+        //private const string key = "qazqaz12345";
 
         #endregion
 
@@ -94,7 +97,8 @@ namespace Grand.Web.Controllers
             DateTimeSettings dateTimeSettings,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings,
-            IShoppingCartService shoppingCartService
+            IShoppingCartService shoppingCartService,
+            GrandConfig grandConfig
             )
         {
             _customerViewModelService = customerViewModelService;
@@ -119,6 +123,7 @@ namespace Grand.Web.Controllers
             _captchaSettings = captchaSettings;
             _mediator = mediator;
             _shoppingCartService = shoppingCartService;
+            _grandConfig = grandConfig;
         }
 
         #endregion
@@ -158,10 +163,6 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid,
                        [FromServices] IShoppingCartService shoppingCartService)
         {
-            // 2fa
-            string message = "";
-            bool status = false;
-
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
             {
@@ -1429,8 +1430,9 @@ namespace Grand.Web.Controllers
 
         public IActionResult TwoFactorAuthenticate(Customer customer, LoginModel model)
         {
+            var key = _grandConfig.TwoFactorAuthKey;
             var twoFacAuth = new TwoFactorAuthenticator();
-            string userUniqueKey = (customer.Email + key);
+            string userUniqueKey = (customer.Email + key); //GetSection("Grand").Get("TwoFactorAuthKey"));
             HttpContext.Session.SetString("UserUniqueKey", userUniqueKey);
             var setupInfo = twoFacAuth.GenerateSetupCode("GrandNode", customer.Email, userUniqueKey, 300, 300);
             ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
@@ -1446,11 +1448,18 @@ namespace Grand.Web.Controllers
         public async Task<IActionResult> TwoFactorAuthenticate(LoginModel model, string returnUrl)
         {
             TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
-            var token = model.CodeDigit.ToString();
+            var token = model.CodeDigit;
+            // this is no good solution. in the future must be refactored
+            if (token == null)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
+                return View(model);
+            }
+            
             var userUniqueKey = HttpContext.Session.GetString("UserUniqueKey");
             bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
-
+                        
             if (isValid)
             {
                 HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
@@ -1469,9 +1478,11 @@ namespace Grand.Web.Controllers
 
                 if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                     return RedirectToRoute("HomePage");
+                return Redirect(returnUrl);
 
             }
-            return RedirectToRoute("Login");
+            ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
+            return View(model);
         }
             
         

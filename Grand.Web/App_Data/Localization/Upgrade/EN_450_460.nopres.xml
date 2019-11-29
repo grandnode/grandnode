@@ -716,4 +716,7 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
   </LocaleResource>
+  <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
+    <Value>Security code is wrong</Value>
+  </LocaleResource>
 </Language>

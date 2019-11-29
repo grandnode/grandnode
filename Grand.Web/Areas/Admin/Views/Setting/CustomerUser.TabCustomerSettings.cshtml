@@ -389,7 +389,10 @@
                 <admin-label asp-for="CustomerSettings.TwoFactorAuthenticationEnabled" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-input asp-for="CustomerSettings.TwoFactorAuthenticationEnabled" />
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="CustomerSettings.TwoFactorAuthenticationEnabled" />
+                    <div class="control__indicator"></div>
+                </label>
                 <span asp-validation-for="CustomerSettings.TwoFactorAuthenticationEnabled"></span>
             </div>
         </div>
