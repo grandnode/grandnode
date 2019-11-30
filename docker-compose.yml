@@ -6,3 +6,11 @@ services:
     build:
       context: .
       dockerfile: Grand.Web/Dockerfile
+    container_name: grandnodeWeb
+    ports: 
+      - "81:80"
+    depends_on:
+      - grandnode_database
+  grandnode_database:
+    image: "mongo"
+    container_name: mongoDB
