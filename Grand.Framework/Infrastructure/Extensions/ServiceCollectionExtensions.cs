@@ -51,7 +51,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             //add GrandConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
@@ -66,16 +66,14 @@ namespace Grand.Framework.Infrastructure.Extensions
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
             engine.Initialize(services);
-            var serviceProvider = engine.ConfigureServices(services, configuration);
+            engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //log application start
-                var logger = serviceProvider.GetRequiredService<ILogger>();
-                logger.Information("Application started", null, null);
-            }
-
-            return serviceProvider;
+            //if (DataSettingsHelper.DatabaseIsInstalled())
+            //{
+            //    //log application start
+            //    var logger = serviceProvider.GetRequiredService<ILogger>();
+            //    logger.Information("Application started", null, null);
+            //}
         }
 
         /// <summary>
@@ -198,7 +196,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var config = services.BuildServiceProvider().GetService<GrandConfig>();
-            
+
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -257,7 +255,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 options.EnableEndpointRouting = false;
             });
-            
+
             mvcBuilder.AddRazorRuntimeCompilation();
 
             var config = new GrandConfig();
@@ -360,8 +358,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     var type = item.GetType();
                     var storeId = string.Empty;
-                    var settingService = x.GetService<ISettingService>();
-                    var storeContext = x.GetService<IStoreContext>();
+                    var settingService = x.GetRequiredService<ISettingService>();
+                    var storeContext = x.GetRequiredService<IStoreContext>();
                     if (storeContext.CurrentStore == null)
                         storeId = ""; //storeContext.SetCurrentStore().Result.Id;
                     else

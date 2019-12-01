@@ -10,7 +10,6 @@ using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -23,8 +22,6 @@ namespace Grand.Core.Infrastructure
     /// </summary>
     public class GrandEngine : IEngine
     {
-       
-
         #region Utilities
 
         /// <summary>
@@ -147,7 +144,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -168,13 +165,12 @@ namespace Grand.Core.Infrastructure
 
             //register dependencies
             var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-            var serviceProvider = RegisterDependencies(grandConfig, services, typeFinder);
+            //var serviceProvider = RegisterDependencies(grandConfig, services, typeFinder);
 
             //run startup tasks
             if (!grandConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
 
-            return serviceProvider;
         }
 
         /// <summary>
@@ -198,6 +194,37 @@ namespace Grand.Core.Infrastructure
                 instance.Configure(application);
         }
 
+        /// <summary>
+        /// ConfigureContainer is where you can register things directly
+        /// with Autofac. This runs after ConfigureServices so the things
+        /// here will override registrations made in ConfigureServices.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configuration"></param>
+        public void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration)
+        {
+            var typeFinder = new WebAppTypeFinder();
+
+            //register type finder
+            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+
+            //find dependency registrars provided by other assemblies
+            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+
+            //create and sort instances of dependency registrars
+            var instances = dependencyRegistrars
+                //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
+                .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
+
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
+            //register all provided dependencies
+            foreach (var dependencyRegistrar in instances)
+                dependencyRegistrar.Register(builder, typeFinder, config);
+
+        }
         #endregion
 
     }

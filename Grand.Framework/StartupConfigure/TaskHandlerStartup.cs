@@ -57,6 +57,7 @@ namespace Grand.Framework.StartupConfigure
                     throw new Exception(ex.Message);
                 }
             }
+
         }
 
         /// <summary>
