@@ -65,7 +65,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
-            engine.Initialize(services);
+            engine.Initialize(services, configuration);
             engine.ConfigureServices(services, configuration);
 
             //if (DataSettingsHelper.DatabaseIsInstalled())

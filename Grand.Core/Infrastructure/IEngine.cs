@@ -17,7 +17,8 @@ namespace Grand.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        void Initialize(IServiceCollection services);
+        /// <param name="configuration">Configuration root of the application</param>
+        void Initialize(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Add and configure services
