@@ -1,4 +1,5 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core.Configuration;
+using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Framework.Middleware;
@@ -20,8 +21,11 @@ namespace Grand.Framework.StartupConfigure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //add data protection
-            services.AddGrandDataProtection();
+            services.AddGrandDataProtection(config);
             //add authentication
             services.AddGrandAuthentication(configuration);
         }

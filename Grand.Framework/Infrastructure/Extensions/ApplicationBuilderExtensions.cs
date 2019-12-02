@@ -197,8 +197,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandAuthentication(this IApplicationBuilder application)
         {
-            //application.UseMiddleware<AuthenticationMiddleware>();
-            //TO DO AuthenticationMiddleware should be remove and use this
             application.UseAuthentication();
             application.UseAuthorization();
         }

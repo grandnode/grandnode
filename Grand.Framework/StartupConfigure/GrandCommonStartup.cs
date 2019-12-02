@@ -50,10 +50,10 @@ namespace Grand.Framework.StartupConfigure
             }
 
             //add HTTP sesion state feature
-            services.AddHttpSession();
+            services.AddHttpSession(config);
 
             //add anti-forgery
-            services.AddAntiForgery();
+            services.AddAntiForgery(config);
 
             //add localization
             services.AddLocalization();
