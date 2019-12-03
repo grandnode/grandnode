@@ -231,7 +231,7 @@
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info d-flex justify-content-end mt-2 mb-2">
                     <span class="taxHelper">
-                        @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
                     </span>
                 </div>
             }
@@ -282,7 +282,7 @@
                                         }
                                         else
                                         {
-                                            <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a></span>
+                                            <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("conditionsofuse", Context) })">@T("Checkout.TermsOfService.Read")</a></span>
                                         }
                                     </label>
                                 </div>

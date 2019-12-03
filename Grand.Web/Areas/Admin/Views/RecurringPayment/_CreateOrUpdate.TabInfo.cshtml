@@ -30,7 +30,7 @@
         <div class="form-group">
             <admin-label asp-for="CyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="CyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList()" />
+                <admin-select asp-for="CyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList(Context)" />
                 <span asp-validation-for="CyclePeriodId"></span>
             </div>
         </div>

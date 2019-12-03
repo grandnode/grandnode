@@ -1,15 +1,14 @@
-﻿using Grand.Core.Infrastructure;
+﻿using Grand.Core.Configuration;
+using Grand.Core.Data;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
-    /// <summary>
-    /// Represents object for the configuring exceptions and errors handling on application startup
-    /// </summary>
-    public class ErrorHandlerStartup : IGrandStartup
+    public class ForwardedHeadersStartup : IGrandStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -18,6 +17,7 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+
         }
 
         /// <summary>
@@ -26,14 +26,16 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //exception handling
-            application.UseGrandExceptionHandler();
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
 
-            //handle 400 errors (bad request)
-            application.UseBadRequestResult();
+            var serviceProvider = application.ApplicationServices;
+            var hostingConfig = serviceProvider.GetRequiredService<HostingConfig>();
 
-            //handle 404 errors
-            application.UsePageNotFound();
+            if (hostingConfig.UseForwardedHeaders)
+                application.UseGrandForwardedHeaders();
+
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace Grand.Framework.Infrastructure
         /// </summary>
         public int Order
         {
-            //error handlers should be loaded first
+            //ForwardedHeadersStartup should be loaded before authentication 
             get { return 0; }
         }
     }

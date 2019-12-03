@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService, 
+            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService,
             ILocalizationService localizationService, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             IVendorService vendorService,
             ILanguageService languageService, SeoSettings seoSettings)
@@ -68,7 +68,7 @@ namespace Grand.Web.Areas.Admin.Services
             var blogPosts = await _blogService.GetAllBlogPosts("", null, null, pageIndex - 1, pageSize, true);
             return (blogPosts.Select(x =>
                 {
-                    var m = x.ToModel();
+                    var m = x.ToModel(_dateTimeHelper);
                     m.Body = "";
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
@@ -104,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPost blogPost)
         {
-            var model = blogPost.ToModel();
+            var model = blogPost.ToModel(_dateTimeHelper);
             //Store
             await model.PrepareStoresMappingModel(blogPost, _storeService, false);
             return model;
@@ -112,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<BlogPost> InsertBlogPostModel(BlogPostModel model)
         {
-            var blogPost = model.ToEntity();
+            var blogPost = model.ToEntity(_dateTimeHelper);
             blogPost.CreatedOnUtc = DateTime.UtcNow;
             await _blogService.InsertBlogPost(blogPost);
 
@@ -132,7 +132,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<BlogPost> UpdateBlogPostModel(BlogPostModel model, BlogPost blogPost)
         {
             string prevPictureId = blogPost.PictureId;
-            blogPost = model.ToEntity(blogPost);
+            blogPost = model.ToEntity(blogPost, _dateTimeHelper);
             await _blogService.UpdateBlogPost(blogPost);
 
             //search engine name
@@ -172,8 +172,7 @@ namespace Grand.Web.Areas.Admin.Services
             var commentsList = new List<BlogCommentModel>();
             foreach (var blogComment in comments.Skip((pageIndex - 1) * pageSize).Take(pageSize))
             {
-                var commentModel = new BlogCommentModel
-                {
+                var commentModel = new BlogCommentModel {
                     Id = blogComment.Id,
                     BlogPostId = blogComment.BlogPostId,
                     BlogPostTitle = blogComment.BlogPostTitle,
@@ -231,7 +230,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return model;
@@ -240,7 +239,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(BlogProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
 
         public virtual async Task InsertProductModel(string blogPostId, BlogProductModel.AddProductModel model)
@@ -251,7 +250,7 @@ namespace Grand.Web.Areas.Admin.Services
                 var product = await _productService.GetProductById(id);
                 if (product != null)
                 {
-                    if(products.FirstOrDefault(x=>x.ProductId == id) == null)
+                    if (products.FirstOrDefault(x => x.ProductId == id) == null)
                     {
                         await _blogService.InsertBlogProduct(new BlogProduct() {
                             BlogPostId = blogPostId,

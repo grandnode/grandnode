@@ -70,7 +70,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<CustomerReminder> InsertCustomerReminderModel(CustomerReminderModel model)
         {
-            var customerreminder = model.ToEntity();
+            var customerreminder = model.ToEntity(_dateTimeHelper);
             await _customerReminderService.InsertCustomerReminder(customerreminder);
             //activity log
             await _customerActivityService.InsertActivity("AddNewCustomerReminder", customerreminder.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerReminder"), customerreminder.Name);
@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (model.ReminderRuleId == 0)
                 model.ReminderRuleId = customerReminder.ReminderRuleId;
 
-            customerReminder = model.ToEntity(customerReminder);
+            customerReminder = model.ToEntity(customerReminder, _dateTimeHelper);
             await _customerReminderService.UpdateCustomerReminder(customerReminder);
             await _customerActivityService.InsertActivity("EditCustomerReminder", customerReminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminder"), customerReminder.Name);
             return customerReminder;
@@ -471,7 +471,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var productService = _serviceProvider.GetRequiredService<IProductService>();
             var products = await productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task<CustomerReminderModel.ConditionModel.AddProductToConditionModel> PrepareProductToConditionModel(string customerReminderId, string conditionId)
         {
@@ -505,7 +505,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return model;

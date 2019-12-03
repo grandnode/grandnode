@@ -74,7 +74,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = await Html.GetTopicSeName("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = await Html.GetTopicSeName("VendorTermsOfService", Context) })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </label>
 

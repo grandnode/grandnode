@@ -6,13 +6,16 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {
     public class ManufacturerProductModelValidator : BaseGrandValidator<ManufacturerModel.ManufacturerProductModel>
     {
-        public ManufacturerProductModelValidator(ILocalizationService localizationService, IManufacturerService manufacturerService, IWorkContext workContext)
+        public ManufacturerProductModelValidator(
+            IEnumerable<IValidatorConsumer<ManufacturerModel.ManufacturerProductModel>> validators,
+            ILocalizationService localizationService, IManufacturerService manufacturerService, IWorkContext workContext)
+            : base(validators)
         {
             if (workContext.CurrentCustomer.IsStaff())
             {

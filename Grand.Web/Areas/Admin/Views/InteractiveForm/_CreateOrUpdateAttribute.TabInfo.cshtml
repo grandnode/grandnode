@@ -94,7 +94,7 @@
         <div class="form-group">
             <admin-label asp-for="FormControlTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="FormControlTypeId" asp-items="((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList()" />
+                <admin-select asp-for="FormControlTypeId" asp-items="((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="FormControlTypeId"></span>
             </div>
         </div>

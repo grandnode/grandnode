@@ -41,9 +41,20 @@ namespace Grand.Framework.TagHelpers.Admin
             if (For.Metadata.AdditionalValues.TryGetValue("GrandResourceDisplayNameAttribute", out object value))
             {
                 var resourceDisplayName = value as GrandResourceDisplayNameAttribute;
+                var langId = _workContext.WorkingLanguage.Id;
+
+                var resource = _localizationService.GetResource(
+                    resourceDisplayName.ResourceKey.ToLowerInvariant(), langId, returnEmptyIfNotFound: true,
+                    logIfNotFound: false);
+
+                if (!string.IsNullOrEmpty(resource))
+                {
+                    output.Content.SetContent(resource);
+                }
+
                 if (resourceDisplayName != null && DisplayHint)
                 {
-                    var langId = _workContext.WorkingLanguage.Id;
+
                     var hintResource = _localizationService.GetResource(
                         resourceDisplayName.ResourceKey + ".Hint", langId, returnEmptyIfNotFound: true,
                         logIfNotFound: false);

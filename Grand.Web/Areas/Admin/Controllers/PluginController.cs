@@ -184,7 +184,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new PluginListModel
             {
                 //load modes
-                AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList()
+                AvailableLoadModes = LoadPluginsMode.All.ToSelectList(HttpContext, false).ToList()
             };
             //groups
             model.AvailableGroups.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });

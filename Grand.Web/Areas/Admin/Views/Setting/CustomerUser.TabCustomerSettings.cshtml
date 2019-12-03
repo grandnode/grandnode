@@ -75,7 +75,7 @@
                 <admin-label asp-for="CustomerSettings.UserRegistrationType" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="CustomerSettings.UserRegistrationType" asp-items="((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList()" />
+                <admin-select asp-for="CustomerSettings.UserRegistrationType" asp-items="((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.UserRegistrationType"></span>
             </div>
         </div>
@@ -252,7 +252,7 @@
                 <admin-label asp-for="CustomerSettings.CustomerNameFormat" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="CustomerSettings.CustomerNameFormat" asp-items="((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList()" />
+                <admin-select asp-for="CustomerSettings.CustomerNameFormat" asp-items="((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.CustomerNameFormat"></span>
             </div>
         </div>
@@ -261,7 +261,7 @@
                 <admin-label asp-for="CustomerSettings.DefaultPasswordFormat" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList()" />
+                <admin-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList(Context)" />
                 <span asp-validation-for="CustomerSettings.DefaultPasswordFormat"></span>
             </div>
         </div>

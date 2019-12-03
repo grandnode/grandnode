@@ -6,6 +6,7 @@ using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using System;
 using System.Linq;
@@ -18,11 +19,11 @@ namespace Grand.Api.Infrastructure
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            var apiConfig = EngineContext.Current.Resolve<ApiConfig>();
+            var apiConfig = routeBuilder.ServiceProvider.GetRequiredService<ApiConfig>();
             if (apiConfig.Enabled)
             {
                 //OData
-                var serviceProvider = EngineContext.Current.Resolve<IServiceProvider>();
+                var serviceProvider = routeBuilder.ServiceProvider;
                 IEdmModel model = GetEdmModel(serviceProvider, apiConfig);
                 routeBuilder.Count().Filter().OrderBy().MaxTop(Configurations.MaxLimit);
                 routeBuilder.MapODataServiceRoute(Configurations.ODataRouteName, Configurations.ODataRoutePrefix, model);

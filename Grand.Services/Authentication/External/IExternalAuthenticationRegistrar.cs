@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
 
 namespace Grand.Services.Authentication.External
 {
@@ -11,7 +12,7 @@ namespace Grand.Services.Authentication.External
         /// Configure
         /// </summary>
         /// <param name="builder">Authentication builder</param>
-        void Configure(AuthenticationBuilder builder);
+        void Configure(AuthenticationBuilder builder, IConfiguration configuration);
 
         /// <summary>
         /// Gets order of this registrar implementation

@@ -126,7 +126,7 @@
         <div class="form-group">
             <admin-label asp-for="DiscountTypeId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="DiscountTypeId" asp-items="((DiscountType)Model.DiscountTypeId).ToSelectList()" />
+                <admin-select asp-for="DiscountTypeId" asp-items="((DiscountType)Model.DiscountTypeId).ToSelectList(Context)" />
                 <span asp-validation-for="DiscountTypeId"></span>
             </div>
         </div>
@@ -225,7 +225,7 @@
         <div class="form-group">
             <admin-label asp-for="DiscountLimitationId" />
             <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="DiscountLimitationId" asp-items="((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList()" />
+                <admin-select asp-for="DiscountLimitationId" asp-items="((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList(Context)" />
                 <span asp-validation-for="DiscountLimitationId"></span>
             </div>
         </div>

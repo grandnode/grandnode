@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: PayPal Standard
 SystemName: Payments.PayPalStandard
-Version: 1.30
+Version: 1.31
 SupportedVersions: 4.60
 Author: grandnode team, nopcommerce team
 DisplayOrder: 1

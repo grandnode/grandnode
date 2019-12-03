@@ -15,7 +15,7 @@
 @using Grand.Services.Security;
 @using Grand.Core.Domain.Common;
 @{
-    var currentCustomer = this.WorkContext.CurrentCustomer;
+    var currentCustomer = workContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
     var currentVersion = GrandVersion.CurrentVersion;
     var kendoVersion = "2019.2.514";

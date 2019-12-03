@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.Middleware
 {
     public class CultureMiddleware
     {

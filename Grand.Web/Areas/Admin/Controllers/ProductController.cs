@@ -12,6 +12,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Documents;
 using Grand.Services.ExportImport;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -37,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ProductController : BaseAdminController
     {
         #region Fields
+
         private readonly IProductViewModelService _productViewModelService;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
@@ -49,6 +51,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
         private readonly IDocumentService _documentService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
         #endregion
 
         #region Constructors
@@ -65,7 +69,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IProductReservationService productReservationService,
             IAuctionService auctionService, 
-            IDocumentService documentService)
+            IDocumentService documentService,
+            IDateTimeHelper dateTimeHelper)
         {
             _productViewModelService = productViewModelService;
             _productService = productService;
@@ -79,6 +84,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _productReservationService = productReservationService;
             _auctionService = auctionService;
             _documentService = documentService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -207,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var model = product.ToModel();
+            var model = product.ToModel(_dateTimeHelper);
             model.Ticks = product.UpdatedOnUtc.Ticks;
 
             await _productViewModelService.PrepareProductModel(model, product, false, false);
@@ -1455,7 +1461,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (product == null)
                     throw new ArgumentException("No product found with the specified id");
 
-                var tierPrice = model.ToEntity();
+                var tierPrice = model.ToEntity(_dateTimeHelper);
                 await _productService.InsertTierPrice(tierPrice);
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -1483,7 +1489,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id && !_workContext.CurrentCustomer.IsStaff())
                 return Content("This is not your product");
 
-            var model = tierPrice.ToModel();
+            var model = tierPrice.ToModel(_dateTimeHelper);
             model.ProductId = productId;
             await _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
@@ -1502,7 +1508,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (tierPrice == null)
                     return Content("Empty tier price");
 
-                tierPrice = model.ToEntity(tierPrice);
+                tierPrice = model.ToEntity(tierPrice, _dateTimeHelper);
                 await _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;

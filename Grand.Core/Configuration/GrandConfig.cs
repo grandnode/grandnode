@@ -30,10 +30,22 @@ namespace Grand.Core.Configuration
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
         public bool RedisCachingEnabled { get; set; }
+
         /// <summary>
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; set; }
+
+        /// <summary>
+        /// Indicates whether we should use Redis server for persist keys - required in farm scenario
+        /// </summary>
+        public bool PersistKeysToRedis { get; set; }
+
+        /// <summary>
+        /// Redis connection string. Used when PersistKeysToRedis is enabled
+        /// </summary>
+        public string PersistKeysToRedisUrl { get; set; }
+
 
         /// <summary>
         /// A value indicating whether the site is run on Windows Azure Web Apps

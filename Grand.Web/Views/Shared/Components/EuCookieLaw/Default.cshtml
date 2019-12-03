@@ -25,7 +25,7 @@
             <p>@T("EUCookieLaw.Description2")</p>
             <p class="pt-3">
                 <a class="ok-button btn-sm btn btn-light text-dark" id="eu-cookie-ok">@T("Common.OK")</a>
-                <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
+                <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("privacyinfo", Context) })">@T("EUCookieLaw.LearnMore")</a>
             </p>
         </blockquote>
     </div>

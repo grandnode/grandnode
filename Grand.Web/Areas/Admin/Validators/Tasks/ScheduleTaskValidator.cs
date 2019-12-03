@@ -2,12 +2,16 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Tasks;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Tasks
 {
     public class ScheduleTaskValidator : BaseGrandValidator<ScheduleTaskModel>
     {
-        public ScheduleTaskValidator(ILocalizationService localizationService)
+        public ScheduleTaskValidator(
+            IEnumerable<IValidatorConsumer<ScheduleTaskModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.TimeInterval).GreaterThan(0).WithMessage("Time interval must be greater than zero");
         }

@@ -443,7 +443,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AllowPostVoting_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPostVoting, storeScope);
                 model.MaxVotesPerDay_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.MaxVotesPerDay, storeScope);
             }
-            model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
+            model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList(HttpContext);
 
             return View(model);
         }
@@ -685,7 +685,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                                      ? await _addressService.GetAddressByIdSettings(shippingSettings.ShippingOriginAddressId)
                                      : null;
             if (originAddress != null)
-                model.ShippingOriginAddress = originAddress.ToModel();
+            {
+                model.ShippingOriginAddress = await originAddress.ToModel(_countryService, _stateProvinceService);
+            }
             else
                 model.ShippingOriginAddress = new AddressModel();
 
@@ -843,8 +845,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeScope);
             }
 
-            model.TaxBasedOnValues = taxSettings.TaxBasedOn.ToSelectList();
-            model.TaxDisplayTypeValues = taxSettings.TaxDisplayType.ToSelectList();
+            model.TaxBasedOnValues = taxSettings.TaxBasedOn.ToSelectList(HttpContext);
+            model.TaxDisplayTypeValues = taxSettings.TaxDisplayType.ToSelectList(HttpContext);
 
             //tax categories
             var taxCategories = await _taxCategoryService.GetAllTaxCategories();
@@ -865,7 +867,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                                      ? await _addressService.GetAddressByIdSettings(taxSettings.DefaultTaxAddressId)
                                      : null;
             if (defaultAddress != null)
-                model.DefaultTaxAddress = defaultAddress.ToModel();
+                model.DefaultTaxAddress = await defaultAddress.ToModel();
             else
                 model.DefaultTaxAddress = new AddressModel();
 
@@ -1668,9 +1670,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //gift card activation/deactivation
-            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
-            model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
             model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
             //order ident
@@ -2431,7 +2433,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
             model.SeoSettings.PageTitleSeparator = seoSettings.PageTitleSeparator;
             model.SeoSettings.PageTitleSeoAdjustment = (int)seoSettings.PageTitleSeoAdjustment;
-            model.SeoSettings.PageTitleSeoAdjustmentValues = seoSettings.PageTitleSeoAdjustment.ToSelectList();
+            model.SeoSettings.PageTitleSeoAdjustmentValues = seoSettings.PageTitleSeoAdjustment.ToSelectList(HttpContext);
             model.SeoSettings.DefaultTitle = seoSettings.DefaultTitle;
             model.SeoSettings.DefaultMetaKeywords = seoSettings.DefaultMetaKeywords;
             model.SeoSettings.DefaultMetaDescription = seoSettings.DefaultMetaDescription;
@@ -2439,7 +2441,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
             model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
             model.SeoSettings.WwwRequirement = (int)seoSettings.WwwRequirement;
-            model.SeoSettings.WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList();
+            model.SeoSettings.WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(HttpContext);
             model.SeoSettings.EnableJsBundling = seoSettings.EnableJsBundling;
             model.SeoSettings.EnableCssBundling = seoSettings.EnableCssBundling;
             model.SeoSettings.TwitterMetaTags = seoSettings.TwitterMetaTags;
@@ -2489,7 +2491,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
             model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
-            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version2.ToSelectList(false).ToList();
+            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version2.ToSelectList(HttpContext, false).ToList();
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 
@@ -2523,7 +2525,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.FullTextSettings.Supported = true;
             model.FullTextSettings.Enabled = commonSettings.UseFullTextSearch;
             model.FullTextSettings.SearchMode = (int)commonSettings.FullTextMode;
-            model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList();
+            model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList(HttpContext);
 
             //google analytics
             model.GoogleAnalyticsSettings.gaprivateKey = googleAnalyticsSettings.gaprivateKey;

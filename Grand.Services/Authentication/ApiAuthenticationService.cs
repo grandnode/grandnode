@@ -100,7 +100,7 @@ namespace Grand.Services.Authentication
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith(JwtBearerDefaults.AuthenticationScheme))
                 return null;
 
-            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded)
                 return null;
 

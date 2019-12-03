@@ -70,7 +70,7 @@ namespace Grand.Web.Areas.Admin.Services
                     model.AdminComment = affiliate.AdminComment;
                     model.FriendlyUrlName = affiliate.FriendlyUrlName;
                     model.Active = affiliate.Active;
-                    model.Address = affiliate.Address.ToModel();
+                    model.Address = await affiliate.Address.ToModel(_countryService, _stateProvinceService);
                 }
             }
 

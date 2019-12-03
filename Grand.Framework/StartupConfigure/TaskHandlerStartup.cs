@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Grand.Framework.Infrastructure
+namespace Grand.Framework.StartupConfigure
 {
     /// <summary>
     /// Represents object for the configuring task on application startup
@@ -57,6 +57,7 @@ namespace Grand.Framework.Infrastructure
                     throw new Exception(ex.Message);
                 }
             }
+
         }
 
         /// <summary>

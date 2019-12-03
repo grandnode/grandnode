@@ -5,14 +5,18 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Common
 {
     public class AddressValidator : BaseGrandValidator<AddressModel>
     {
-        public AddressValidator(ILocalizationService localizationService,
+        public AddressValidator(
+            IEnumerable<IValidatorConsumer<AddressModel>> validators,
+            ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             AddressSettings addressSettings)
+            : base(validators)
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()

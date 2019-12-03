@@ -25,6 +25,7 @@ using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
@@ -132,19 +133,39 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Products
 
-        public static ProductModel ToModel(this Product entity)
+        public static ProductModel ToModel(this Product entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<Product, ProductModel>();
+            var product = entity.MapTo<Product, ProductModel>();
+            product.MarkAsNewStartDateTime = entity.MarkAsNewStartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            product.MarkAsNewEndDateTime = entity.MarkAsNewEndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            product.AvailableStartDateTime = entity.AvailableStartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            product.AvailableEndDateTime = entity.AvailableEndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            product.PreOrderAvailabilityStartDateTime = entity.PreOrderAvailabilityStartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            return product;
+
         }
 
-        public static Product ToEntity(this ProductModel model)
+        public static Product ToEntity(this ProductModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<ProductModel, Product>();
+            var product = model.MapTo<ProductModel, Product>();
+            product.MarkAsNewStartDateTimeUtc = model.MarkAsNewStartDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.MarkAsNewEndDateTimeUtc = model.MarkAsNewEndDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.AvailableStartDateTimeUtc = model.AvailableStartDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.AvailableEndDateTimeUtc = model.AvailableEndDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.PreOrderAvailabilityStartDateTimeUtc = model.PreOrderAvailabilityStartDateTime.ConvertToUtcTime(dateTimeHelper);
+
+            return product;
         }
 
-        public static Product ToEntity(this ProductModel model, Product destination)
+        public static Product ToEntity(this ProductModel model, Product destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var product = model.MapTo(destination);
+            product.MarkAsNewStartDateTimeUtc = model.MarkAsNewStartDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.MarkAsNewEndDateTimeUtc = model.MarkAsNewEndDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.AvailableStartDateTimeUtc = model.AvailableStartDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.AvailableEndDateTimeUtc = model.AvailableEndDateTime.ConvertToUtcTime(dateTimeHelper);
+            product.PreOrderAvailabilityStartDateTimeUtc = model.PreOrderAvailabilityStartDateTime.ConvertToUtcTime(dateTimeHelper);
+            return product;
         }
 
         public static ProductAttributeValue ToEntity(this PredefinedProductAttributeValue model)
@@ -272,19 +293,28 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region TierPrices
         //attributes
-        public static ProductModel.TierPriceModel ToModel(this TierPrice entity)
+        public static ProductModel.TierPriceModel ToModel(this TierPrice entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<TierPrice, ProductModel.TierPriceModel>();
+            var tierprice = entity.MapTo<TierPrice, ProductModel.TierPriceModel>();
+            tierprice.StartDateTime = tierprice.StartDateTime.ConvertToUserTime(dateTimeHelper);
+            tierprice.EndDateTime = tierprice.EndDateTime.ConvertToUserTime(dateTimeHelper);
+            return tierprice;
         }
 
-        public static TierPrice ToEntity(this ProductModel.TierPriceModel model)
+        public static TierPrice ToEntity(this ProductModel.TierPriceModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<ProductModel.TierPriceModel, TierPrice>();
+            var tierprice = model.MapTo<ProductModel.TierPriceModel, TierPrice>();
+            tierprice.StartDateTimeUtc = tierprice.StartDateTimeUtc.ConvertToUtcTime(dateTimeHelper);
+            tierprice.EndDateTimeUtc = tierprice.EndDateTimeUtc.ConvertToUtcTime(dateTimeHelper);
+            return tierprice;
         }
 
-        public static TierPrice ToEntity(this ProductModel.TierPriceModel model, TierPrice destination)
+        public static TierPrice ToEntity(this ProductModel.TierPriceModel model, TierPrice destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var tierprice = model.MapTo(destination);
+            tierprice.StartDateTimeUtc = tierprice.StartDateTimeUtc.ConvertToUtcTime(dateTimeHelper);
+            tierprice.EndDateTimeUtc = tierprice.EndDateTimeUtc.ConvertToUtcTime(dateTimeHelper);
+            return tierprice;
         }
 
         #endregion
@@ -905,9 +935,19 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Address
 
-        public static AddressModel ToModel(this Address entity)
+        public static async Task<AddressModel> ToModel(this Address entity, ICountryService countryService = null, IStateProvinceService stateProvinceService = null)
         {
-            return entity.MapTo<Address, AddressModel>();
+            var address = entity.MapTo<Address, AddressModel>();
+            if (!string.IsNullOrEmpty(address.CountryId) && countryService!=null)
+            {
+                address.CountryName = (await countryService.GetCountryById(address.CountryId))?.Name;
+            }
+            if (!string.IsNullOrEmpty(address.StateProvinceId) && stateProvinceService != null)
+            {
+                address.StateProvinceName = (await stateProvinceService.GetStateProvinceById(address.StateProvinceId))?.Name;
+            }
+
+            return address;
         }
 
         public static Address ToEntity(this AddressModel model)
@@ -919,19 +959,6 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
-
-        public static async Task<string> CountryName(this Address model)
-        {
-            var country = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.ICountryService>().GetCountryById(model.CountryId);
-            return country?.Name;
-        }
-
-        public static async Task<string> StateProvinceName(this Address model)
-        {
-            var state = await Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Directory.IStateProvinceService>().GetStateProvinceById(model.StateProvinceId);
-            return state?.Name;
-        }
-
         public static async Task PrepareCustomAddressAttributes(this AddressModel model,
             Address address,
             IAddressAttributeService addressAttributeService,
@@ -1067,19 +1094,28 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Discounts
 
-        public static DiscountModel ToModel(this Discount entity)
+        public static DiscountModel ToModel(this Discount entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<Discount, DiscountModel>();
+            var discount = entity.MapTo<Discount, DiscountModel>();
+            discount.StartDate = entity.StartDateUtc.ConvertToUserTime(dateTimeHelper);
+            discount.EndDate = entity.EndDateUtc.ConvertToUserTime(dateTimeHelper);
+            return discount;
         }
 
-        public static Discount ToEntity(this DiscountModel model)
+        public static Discount ToEntity(this DiscountModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<DiscountModel, Discount>();
+            var discount = model.MapTo<DiscountModel, Discount>();
+            discount.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            discount.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return discount;
         }
 
-        public static Discount ToEntity(this DiscountModel model, Discount destination)
+        public static Discount ToEntity(this DiscountModel model, Discount destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var discount = model.MapTo(destination);
+            discount.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            discount.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return discount;
         }
 
         #endregion
@@ -1155,19 +1191,28 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region Blog
 
         //blog posts
-        public static BlogPostModel ToModel(this BlogPost entity)
+        public static BlogPostModel ToModel(this BlogPost entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<BlogPost, BlogPostModel>();
+            var blogpost = entity.MapTo<BlogPost, BlogPostModel>();
+            blogpost.StartDate = entity.StartDateUtc.ConvertToUserTime(dateTimeHelper);
+            blogpost.EndDate = entity.EndDateUtc.ConvertToUserTime(dateTimeHelper);
+            return blogpost;
         }
 
-        public static BlogPost ToEntity(this BlogPostModel model)
+        public static BlogPost ToEntity(this BlogPostModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<BlogPostModel, BlogPost>();
+            var blogpost = model.MapTo<BlogPostModel, BlogPost>();
+            blogpost.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            blogpost.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return blogpost;
         }
 
-        public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination)
+        public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var blogpost = model.MapTo(destination);
+            blogpost.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            blogpost.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return blogpost;
         }
 
         #endregion
@@ -1194,39 +1239,59 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region News
 
         //news items
-        public static NewsItemModel ToModel(this NewsItem entity)
+        public static NewsItemModel ToModel(this NewsItem entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<NewsItem, NewsItemModel>();
+            var newsitem = entity.MapTo<NewsItem, NewsItemModel>();
+            newsitem.StartDate = entity.StartDateUtc.ConvertToUserTime(dateTimeHelper);
+            newsitem.EndDate = entity.EndDateUtc.ConvertToUserTime(dateTimeHelper);
+            return newsitem;
         }
 
-        public static NewsItem ToEntity(this NewsItemModel model)
+        public static NewsItem ToEntity(this NewsItemModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<NewsItemModel, NewsItem>();
+            var newsitem = model.MapTo<NewsItemModel, NewsItem>();
+            newsitem.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            newsitem.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return newsitem;
         }
 
-        public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination)
+        public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var newsitem = model.MapTo(destination);
+            newsitem.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            newsitem.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return newsitem;
         }
 
         #endregion
 
         #region Polls
 
-        //news items
-        public static PollModel ToModel(this Poll entity)
+        //poll items
+        public static PollModel ToModel(this Poll entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<Poll, PollModel>();
+            var poll = entity.MapTo<Poll, PollModel>();
+            poll.StartDate = entity.StartDateUtc.ConvertToUserTime(dateTimeHelper);
+            poll.EndDate = entity.EndDateUtc.ConvertToUserTime(dateTimeHelper);
+            return poll;
+        }
+        
+        public static Poll ToEntity(this PollModel model, IDateTimeHelper dateTimeHelper)
+        {
+            var poll = model.MapTo<PollModel, Poll>();
+            poll.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            poll.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return poll;
+
         }
 
-        public static Poll ToEntity(this PollModel model)
+        public static Poll ToEntity(this PollModel model, Poll destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<PollModel, Poll>();
-        }
+            var poll = model.MapTo(destination);
+            poll.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
+            poll.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
+            return poll;
 
-        public static Poll ToEntity(this PollModel model, Poll destination)
-        {
-            return model.MapTo(destination);
         }
 
         //poll answer
@@ -1291,21 +1356,29 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region Customer Action
 
         //customer action
-        public static CustomerActionModel ToModel(this CustomerAction entity)
+        public static CustomerActionModel ToModel(this CustomerAction entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<CustomerAction, CustomerActionModel>();
+            var action = entity.MapTo<CustomerAction, CustomerActionModel>();
+            action.StartDateTime = entity.StartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            action.EndDateTime = entity.EndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            return action;
         }
 
-        public static CustomerAction ToEntity(this CustomerActionModel model)
+        public static CustomerAction ToEntity(this CustomerActionModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<CustomerActionModel, CustomerAction>();
+            var action = model.MapTo<CustomerActionModel, CustomerAction>();
+            action.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            action.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            return action;
         }
 
-        public static CustomerAction ToEntity(this CustomerActionModel model, CustomerAction destination)
+        public static CustomerAction ToEntity(this CustomerActionModel model, CustomerAction destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var action = model.MapTo(destination);
+            action.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            action.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            return action;
         }
-
 
         public static CustomerActionConditionModel ToModel(this CustomerAction.ActionCondition entity)
         {
@@ -1336,22 +1409,34 @@ namespace Grand.Web.Areas.Admin.Extensions
         #region Customer Reminder
 
         //customer action
-        public static CustomerReminderModel ToModel(this CustomerReminder entity)
+        public static CustomerReminderModel ToModel(this CustomerReminder entity, IDateTimeHelper dateTimeHelper)
         {
-            return entity.MapTo<CustomerReminder, CustomerReminderModel>();
+            var reminder = entity.MapTo<CustomerReminder, CustomerReminderModel>();
+            reminder.StartDateTime = entity.StartDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            reminder.EndDateTime = entity.EndDateTimeUtc.ConvertToUserTime(dateTimeHelper);
+            reminder.LastUpdateDate = entity.LastUpdateDate.ConvertToUserTime(dateTimeHelper);
+            return reminder;
+
         }
 
-        public static CustomerReminder ToEntity(this CustomerReminderModel model)
+        public static CustomerReminder ToEntity(this CustomerReminderModel model, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo<CustomerReminderModel, CustomerReminder>();
+            var reminder = model.MapTo<CustomerReminderModel, CustomerReminder>();
+            reminder.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.LastUpdateDate = model.LastUpdateDate.ConvertToUtcTime(dateTimeHelper);
+            return reminder;
+
         }
 
-        public static CustomerReminder ToEntity(this CustomerReminderModel model, CustomerReminder destination)
+        public static CustomerReminder ToEntity(this CustomerReminderModel model, CustomerReminder destination, IDateTimeHelper dateTimeHelper)
         {
-            return model.MapTo(destination);
+            var reminder = model.MapTo(destination);
+            reminder.StartDateTimeUtc = model.StartDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.EndDateTimeUtc = model.EndDateTime.ConvertToUtcTime(dateTimeHelper);
+            reminder.LastUpdateDate = model.LastUpdateDate.ConvertToUtcTime(dateTimeHelper);
+            return reminder;
         }
-
-
 
         public static CustomerReminderModel.ReminderLevelModel ToModel(this CustomerReminder.ReminderLevel entity)
         {
@@ -1724,37 +1809,31 @@ namespace Grand.Web.Areas.Admin.Extensions
         #endregion
 
         #region Datetime
-        public static DateTime? ConvertToUserTime(this DateTime? datetime)
+        public static DateTime? ConvertToUserTime(this DateTime? datetime, IDateTimeHelper dateTimeHelper)
         {
             if (datetime.HasValue)
             {
-                var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
                 datetime = dateTimeHelper.ConvertToUserTime(datetime.Value, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
             }
             return datetime;
         }
 
-        public static DateTime? ConvertToUtcTime(this DateTime? datetime)
+        public static DateTime? ConvertToUtcTime(this DateTime? datetime, IDateTimeHelper dateTimeHelper)
         {
             if (datetime.HasValue)
             {
-                var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
                 datetime = dateTimeHelper.ConvertToUtcTime(datetime.Value, dateTimeHelper.DefaultStoreTimeZone);
             }
             return datetime;
         }
-        public static DateTime ConvertToUserTime(this DateTime datetime)
+        public static DateTime ConvertToUserTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
         {
-            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            datetime = dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
-            return datetime;
+            return dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
         }
 
-        public static DateTime ConvertToUtcTime(this DateTime datetime)
+        public static DateTime ConvertToUtcTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
         {
-            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
-            datetime = dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
-            return datetime;
+            return dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
         }
 
         #endregion

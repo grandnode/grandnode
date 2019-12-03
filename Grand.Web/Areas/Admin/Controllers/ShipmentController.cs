@@ -36,6 +36,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
+using Grand.Services.Helpers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -74,6 +75,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -114,6 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IReturnRequestService returnRequestService,
             ICustomerService customerService,
             ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper,
             CurrencySettings currencySettings,
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -151,6 +154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
              _taxService = taxService;
              _returnRequestService = returnRequestService;
              _customerActivityService = customerActivityService;
+             _dateTimeHelper = dateTimeHelper;
              _currencySettings = currencySettings;
              _taxSettings = taxSettings;
              _measureSettings = measureSettings;
@@ -539,7 +543,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     throw new Exception("Enter shipped date");
                 }
-                shipment.ShippedDateUtc = model.ShippedDate.ConvertToUtcTime();
+                shipment.ShippedDateUtc = model.ShippedDate.ConvertToUtcTime(_dateTimeHelper);
                 await _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
@@ -617,7 +621,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     throw new Exception("Enter delivery date");
                 }
-                shipment.DeliveryDateUtc = model.DeliveryDate.ConvertToUtcTime();
+                shipment.DeliveryDateUtc = model.DeliveryDate.ConvertToUtcTime(_dateTimeHelper);
                 await _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }

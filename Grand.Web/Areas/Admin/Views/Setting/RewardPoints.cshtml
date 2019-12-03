@@ -111,7 +111,7 @@
                                     <admin-label asp-for="PointsForPurchases_Awarded" class="control-label" />
                                 </div>
                                 <div class="col-xs-4 col-md-8 col-sm-8">
-                                    <admin-select asp-for="PointsForPurchases_Awarded" asp-items="((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList()" />
+                                    <admin-select asp-for="PointsForPurchases_Awarded" asp-items="((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList(Context)" />
                                     <span asp-validation-for="PointsForPurchases_Awarded"></span>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                                     <admin-label asp-for="PointsForPurchases_Canceled" class="control-label" />
                                 </div>
                                 <div class="col-xs-4 col-md-8 col-sm-8">
-                                    <admin-select asp-for="PointsForPurchases_Canceled" asp-items="((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList()" />
+                                    <admin-select asp-for="PointsForPurchases_Canceled" asp-items="((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList(Context)" />
                                     <span asp-validation-for="PointsForPurchases_Canceled"></span>
                                 </div>
                             </div>
