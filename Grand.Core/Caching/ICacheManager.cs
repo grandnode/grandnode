@@ -9,11 +9,13 @@ namespace Grand.Core.Caching
     public interface ICacheManager: IDisposable
     {
         /// <summary>
-        /// Gets or sets the value associated with the specified key.
+        /// Gets the value associated with the specified key.
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
-        /// <returns>The value associated with the specified key.</returns>
+        /// <returns>The value associated with the specified key, or the default for the type T. If T is not nullable, a FALSE positive
+        /// might happen i.e. fetch a bool and you dont know if the result "false" is what is stored on the cache or if there's
+        /// no value and it's the default value for boolen.</returns>
         Task<T> Get<T>(string key);
 
         /// <summary>
@@ -22,6 +24,13 @@ namespace Grand.Core.Caching
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
         (T result, bool fromCache) TryGetValue<T>(string key);
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>The value associated with the specified key.</returns>
+        Task<(T result, bool fromCache)> TryGetValueAsync<T>(string key);
 
         /// <summary>
         /// Adds the specified key and object to the cache.

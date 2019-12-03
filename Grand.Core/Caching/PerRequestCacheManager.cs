@@ -147,6 +147,12 @@ namespace Grand.Core.Caching
             //nothing special
         }
 
+        public Task<(T result, bool fromCache)> TryGetValueAsync<T>(string key)
+        {
+            var res = TryGetValue<T>(key);
+            return Task.FromResult(res);
+        }
+
         #endregion
     }
 }
