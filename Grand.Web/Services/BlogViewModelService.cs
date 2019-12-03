@@ -375,6 +375,7 @@ namespace Grand.Web.Services
             {
                 BlogPostId = blogPost.Id,
                 CustomerId = customer.Id,
+                StoreId = _storeContext.CurrentStore.Id,
                 CommentText = model.AddNewComment.CommentText,
                 CreatedOnUtc = DateTime.UtcNow,
                 BlogPostTitle = blogPost.Title,

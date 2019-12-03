@@ -13,6 +13,11 @@ namespace Grand.Core.Domain.Blogs
         public string CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public string StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the comment text
         /// </summary>
         public string CommentText { get; set; }
