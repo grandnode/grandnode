@@ -1,18 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Media;
 using Grand.Services.Orders;
-using Grand.Services.Security;
 using Grand.Services.Seo;
-using Grand.Services.Tax;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,17 +30,8 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
         private readonly ICurrencyService _currencyService;
-        private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICacheManager _cacheManager;
-        private readonly ITaxService _taxService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IPictureService _pictureService;
-        private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -59,18 +45,9 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper,
             ICurrencyService currencyService,
-            IPermissionService permissionService,
             ICustomerActivityService customerActivityService,
-            ICacheManager cacheManager,
-            ITaxService taxService,
-            IProductAttributeParser productAttributeParser,
-            IPriceCalculationService priceCalculationService,
-            IPriceFormatter priceFormatter,
-            IPictureService pictureService,
-            ShoppingCartSettings shoppingCartSettings,
-            MediaSettings mediaSettings)
+            ShoppingCartSettings shoppingCartSettings)
         {
             _productService = productService;
             _productReservationService = productReservationService;
@@ -79,17 +56,8 @@ namespace Grand.Web.Controllers
             _workContext = workContext;
             _storeContext = storeContext;
             _localizationService = localizationService;
-            _webHelper = webHelper;
             _currencyService = currencyService;
-            _permissionService = permissionService;
             _customerActivityService = customerActivityService;
-            _cacheManager = cacheManager;
-            _taxService = taxService;
-            _productAttributeParser = productAttributeParser;
-            _priceCalculationService = priceCalculationService;
-            _priceFormatter = priceFormatter;
-            _pictureService = pictureService;
-            _mediaSettings = mediaSettings;
             _shoppingCartSettings = shoppingCartSettings;
         }
 

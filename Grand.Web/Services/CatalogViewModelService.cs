@@ -51,7 +51,6 @@ namespace Grand.Web.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISearchTermService _searchTermService;
         private readonly IAclService _aclService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICategoryTemplateService _categoryTemplateService;
@@ -84,7 +83,6 @@ namespace Grand.Web.Services
             IHttpContextAccessor httpContextAccessor,
             ISearchTermService searchTermService,
             IAclService aclService,
-            IPermissionService permissionService,
             IStoreMappingService storeMappingService,
             ISpecificationAttributeService specificationAttributeService,
             ICategoryTemplateService categoryTemplateService,
@@ -116,7 +114,6 @@ namespace Grand.Web.Services
             _httpContextAccessor = httpContextAccessor;
             _searchTermService = searchTermService;
             _aclService = aclService;
-            _permissionService = permissionService;
             _storeMappingService = storeMappingService;
             _specificationAttributeService = specificationAttributeService;
             _categoryTemplateService = categoryTemplateService;

@@ -33,7 +33,6 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly ICatalogViewModelService _catalogViewModelService;
-        private readonly IProductViewModelService _productViewModelService;        
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -53,7 +52,6 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public CatalogController(ICatalogViewModelService catalogViewModelService,
-            IProductViewModelService productViewModelService,
             IVendorService vendorService,
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -69,7 +67,6 @@ namespace Grand.Web.Controllers
             VendorSettings vendorSettings)
         {
             _catalogViewModelService = catalogViewModelService;
-            _productViewModelService = productViewModelService;
             _vendorService = vendorService;
             _workContext = workContext;
             _storeContext = storeContext;

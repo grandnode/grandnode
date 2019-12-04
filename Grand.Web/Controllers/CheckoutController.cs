@@ -47,7 +47,6 @@ namespace Grand.Web.Controllers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Constructors
@@ -69,8 +68,7 @@ namespace Grand.Web.Controllers
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShippingSettings shippingSettings)
         {
             _checkoutViewModelService = checkoutViewModelService;
             _workContext = workContext;
@@ -90,7 +88,6 @@ namespace Grand.Web.Controllers
             _rewardPointsSettings = rewardPointsSettings;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
-            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -889,8 +886,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult GetShippingFormPartialView(string shippingOption)
         {
-            string viewcomponent = "";
-            GetShippingComputation(shippingOption).GetPublicViewComponent(out viewcomponent);
+            GetShippingComputation(shippingOption).GetPublicViewComponent(out string viewcomponent);
             if (string.IsNullOrEmpty(viewcomponent))
                 return Content("");
 

@@ -24,7 +24,6 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
@@ -39,7 +38,6 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IShoppingCartViewModelService shoppingCartViewModelService,
-            IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter,
             CatalogSettings catalogSettings,
             CustomerSettings customerSettings)
@@ -51,7 +49,6 @@ namespace Grand.Web.Controllers
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _shoppingCartViewModelService = shoppingCartViewModelService;
             _productAttributeFormatter = productAttributeFormatter;
-            _productAttributeParser = productAttributeParser;
             _catalogSettings = catalogSettings;
             _customerSettings = customerSettings;
         }
@@ -68,7 +65,6 @@ namespace Grand.Web.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             var customer = _workContext.CurrentCustomer;
-            var store = _storeContext.CurrentStore;
             if (!customer.IsRegistered())
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.NotifyMeWhenAvailable"));
 
@@ -158,7 +154,6 @@ namespace Grand.Web.Controllers
                 product.AllowBackInStockSubscriptions)
             {
                 string attributeXml = await _shoppingCartViewModelService.ParseProductAttributes(product, form);
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributeXml);
                 var subscription = await _backInStockSubscriptionService
                     .FindSubscription(customer.Id, product.Id, attributeXml, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
 
