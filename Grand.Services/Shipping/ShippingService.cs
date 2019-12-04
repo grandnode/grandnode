@@ -73,7 +73,6 @@ namespace Grand.Services.Shipping
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
@@ -101,7 +100,6 @@ namespace Grand.Services.Shipping
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IAddressService addressService,
             ICountryService countryService,
@@ -123,7 +121,6 @@ namespace Grand.Services.Shipping
             _productService = productService;
             _productAttributeParser = productAttributeParser;
             _checkoutAttributeParser = checkoutAttributeParser;
-            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _addressService = addressService;
             _countryService = countryService;

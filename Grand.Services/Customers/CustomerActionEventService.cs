@@ -31,20 +31,15 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<Banner> _bannerRepository;
         private readonly IRepository<InteractiveForm> _interactiveFormRepository;
-        private readonly IRepository<PopupActive> _popupActiveRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IMediator _mediator;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IMessageTemplateService _messageTemplateService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
-        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerTagService _customerTagService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICacheManager _cacheManager;
         private readonly IPopupService _popupService;
         private readonly IStoreContext _storeContext;
@@ -58,48 +53,38 @@ namespace Grand.Services.Customers
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
             IRepository<Banner> bannerRepository,
             IRepository<InteractiveForm> interactiveFormRepository,
-            IRepository<PopupActive> popupActiveRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IMediator mediator,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
-            IMessageTemplateService messageTemplateService,
             IWorkflowMessageService workflowMessageService,
             IWorkContext workContext,
             ICustomerService customerService,
-            ICustomerAttributeService customerAttributeService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
-            IHttpContextAccessor httpContextAccessor,
             ICacheManager cacheManager,
             IPopupService popupService,
             IStoreContext storeContext,
             ILocalizationService localizationService)
         {
-            this._customerActionRepository = customerActionRepository;
-            this._customerActionTypeRepository = customerActionTypeRepository;
-            this._customerActionHistoryRepository = customerActionHistoryRepository;
-            this._bannerRepository = bannerRepository;
-            this._interactiveFormRepository = interactiveFormRepository;
-            this._popupActiveRepository = popupActiveRepository;
-            this._activityLogRepository = activityLogRepository;
-            this._activityLogTypeRepository = activityLogTypeRepository;
-            this._mediator = mediator;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
-            this._messageTemplateService = messageTemplateService;
-            this._workflowMessageService = workflowMessageService;
-            this._workContext = workContext;
-            this._customerService = customerService;
-            this._customerAttributeService = customerAttributeService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerTagService = customerTagService;
-            this._httpContextAccessor = httpContextAccessor;
-            this._cacheManager = cacheManager;
-            this._popupService = popupService;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
+            _customerActionRepository = customerActionRepository;
+            _customerActionTypeRepository = customerActionTypeRepository;
+            _customerActionHistoryRepository = customerActionHistoryRepository;
+            _bannerRepository = bannerRepository;
+            _interactiveFormRepository = interactiveFormRepository;
+            _activityLogRepository = activityLogRepository;
+            _activityLogTypeRepository = activityLogTypeRepository;
+            _productService = productService;
+            _productAttributeParser = productAttributeParser;
+            _workflowMessageService = workflowMessageService;
+            _workContext = workContext;
+            _customerService = customerService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerTagService = customerTagService;
+            _cacheManager = cacheManager;
+            _popupService = popupService;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
         }
 
         #endregion
