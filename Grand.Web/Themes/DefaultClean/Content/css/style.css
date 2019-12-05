@@ -4681,6 +4681,12 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+    .product-box.grid-box .top {
+        align-items: flex-start;
+    }
+    .product-box.grid-box .ratings {
+        display: none;
+    }
     .mobile-menu .rest-categories {
         padding: 0;
     }
