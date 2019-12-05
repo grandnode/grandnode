@@ -78,7 +78,7 @@ function mainMenuReplace() {
             
         });
         $('#pills-mobile-tabContent .navbar-nav .nav-item.cat-back').click(function () {
-            $(this).parent().removeClass('show');
+            $(this).parents(".dropdown-menu:first").removeClass('show');
         });
 
     }
@@ -103,6 +103,24 @@ function mainMenuReplace() {
             $(this).insertAfter('.blank-link');
         });
     }
+}
+function FLmainImg() {
+    // Get on screen image
+    $(".mainNav .first-level img").each(function () {
+        var screenImage = $(this);
+
+        // Create new offscreen image to test
+        var theImage = new Image();
+        theImage.src = screenImage.attr("src");
+
+        // Get accurate measurements from that.
+        var imageWidth = theImage.width;
+        var imageHeight = theImage.height;
+
+        $(this).attr("style", "min-width:" + imageWidth + "px");
+        //$(this).parents(".first-level").attr("style", "min-height:" + imageHeight + "px");
+        //$(this).parents(".first-level").find(".nav-item").attr("style", "margin-left:" + imageWidth + "px");
+    });
 }
 function BackToTop() {
     if ($('#back-to-top').length) {
@@ -176,6 +194,15 @@ function LeftSide() {
     }
 }
 
+// productbox info
+
+function productInfo() {
+    $('.product-box').each(function () {
+        var PB_bottom_h = $('.product-info .bottom', this).height();
+        $('.box-unvisible', this).css('margin-bottom', - PB_bottom_h);
+    });
+}
+
 $(document).ready(function () {
 
     CartFix();
@@ -185,11 +212,14 @@ $(document).ready(function () {
     IpadMenuFix();
     dataCountdown();
     BackToTop();
+    FLmainImg();
+    productInfo();
 
     $(window).resize(function () {
         mainMenuReplace();
         IpadMenuFix();
         LeftSide();
+        productInfo();
     });
 
     function newsletter_subscribe(subscribe) {
