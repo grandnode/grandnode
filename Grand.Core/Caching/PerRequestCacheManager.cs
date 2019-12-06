@@ -153,6 +153,11 @@ namespace Grand.Core.Caching
             return Task.FromResult(res);
         }
 
+        public Task RemoveByPatternAsync(string pattern)
+        {
+            return this.RemoveByPattern(pattern);
+        }
+
         #endregion
     }
 }

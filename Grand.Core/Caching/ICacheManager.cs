@@ -23,13 +23,6 @@ namespace Grand.Core.Caching
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        (T result, bool fromCache) TryGetValue<T>(string key);
-
-        /// <summary>
-        /// Gets or sets the value associated with the specified key.
-        /// </summary>
-        /// <param name="key">The key of the value to get.</param>
-        /// <returns>The value associated with the specified key.</returns>
         Task<(T result, bool fromCache)> TryGetValueAsync<T>(string key);
 
         /// <summary>
@@ -63,5 +56,11 @@ namespace Grand.Core.Caching
         /// Clear all cache data
         /// </summary>
         Task Clear();
+
+        /// <summary>
+        /// Removes items by pattern
+        /// </summary>
+        /// <param name="pattern">pattern</param>
+        Task RemoveByPatternAsync(string pattern);
     }
 }

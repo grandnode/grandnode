@@ -71,7 +71,6 @@ namespace Grand.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
-
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
@@ -109,8 +108,7 @@ namespace Grand.Framework.Infrastructure
 
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<DistributedRedisCache>().As<ICacheManager>().SingleInstance();
-                builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
+                builder.Register(r => new DistributedRedisCache(config.RedisCachingConnectionString)).As<ICacheManager>().SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)
