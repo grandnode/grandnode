@@ -28,11 +28,11 @@ namespace Grand.Web.Areas.Admin.Services
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IServiceProvider serviceProvider)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._serviceProvider = serviceProvider;
+            _logger = logger;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _serviceProvider = serviceProvider;
         }
 
         public virtual LogListModel PrepareLogListModel()

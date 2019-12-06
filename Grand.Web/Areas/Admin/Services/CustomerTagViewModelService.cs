@@ -29,7 +29,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
         private readonly ICustomerTagService _customerTagService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
@@ -41,7 +40,6 @@ namespace Grand.Web.Areas.Admin.Services
            IManufacturerService manufacturerService,
            IStoreService storeService,
            IVendorService vendorService,
-           IWorkContext workContext,
            ICustomerTagService customerTagService,
            IDateTimeHelper dateTimeHelper)
         {
@@ -52,7 +50,6 @@ namespace Grand.Web.Areas.Admin.Services
             _manufacturerService = manufacturerService;
             _storeService = storeService;
             _vendorService = vendorService;
-            _workContext = workContext;
             _customerTagService = customerTagService;
             _dateTimeHelper = dateTimeHelper;
         }

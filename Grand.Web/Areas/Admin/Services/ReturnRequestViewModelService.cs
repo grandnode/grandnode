@@ -66,23 +66,23 @@ namespace Grand.Web.Areas.Admin.Services
             IAddressAttributeParser addressAttributeParser,
             OrderSettings orderSettings)
         {
-            this._orderService = orderService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._customerActivityService = customerActivityService;
-            this._returnRequestService = returnRequestService;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._addressSettings = addressSettings;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._orderSettings = orderSettings;
+            _orderService = orderService;
+            _productService = productService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _customerActivityService = customerActivityService;
+            _returnRequestService = returnRequestService;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _addressSettings = addressSettings;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeParser = addressAttributeParser;
+            _orderSettings = orderSettings;
         }
 
         #endregion
