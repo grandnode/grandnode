@@ -91,12 +91,7 @@ namespace Grand.Core.Configuration
         /// A list of plugins ignored during installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; set; }
-
-        /// <summary>
-        /// Allow recompiling views on file change
-        /// </summary>
-        public bool AllowRecompilingViewsOnFileChange { get; set; }
-
+      
         /// <summary>
         /// Enable scripting C# applications to execute code.
         /// </summary>

@@ -17,15 +17,13 @@ namespace Grand.Services.Messages
     /// </summary>
     public partial class EmailSender : IEmailSender
     {
-        private readonly ILogger _logger;
         private readonly IDownloadService _downloadService;
         private readonly IMimeMappingService _mimeMappingService;
 
-        public EmailSender(ILogger logger, IDownloadService downloadService, IMimeMappingService mimeMappingService)
+        public EmailSender(IDownloadService downloadService, IMimeMappingService mimeMappingService)
         {
             _downloadService = downloadService;
             _mimeMappingService = mimeMappingService;
-            _logger = logger;
         }
 
         /// <summary>

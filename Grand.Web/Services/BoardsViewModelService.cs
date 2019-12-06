@@ -29,9 +29,7 @@ namespace Grand.Web.Services
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
         private readonly ICountryService _countryService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
@@ -42,9 +40,7 @@ namespace Grand.Web.Services
             ILocalizationService localizationService,
             IPictureService pictureService,
             ICountryService countryService,
-            IWebHelper webHelper,
             IWorkContext workContext,
-            IStoreContext storeContext,
             ForumSettings forumSettings,
             CustomerSettings customerSettings,
             MediaSettings mediaSettings,
@@ -55,9 +51,7 @@ namespace Grand.Web.Services
             _localizationService = localizationService;
             _pictureService = pictureService;
             _countryService = countryService;
-            _webHelper = webHelper;
             _workContext = workContext;
-            _storeContext = storeContext;
             _forumSettings = forumSettings;
             _customerSettings = customerSettings;
             _mediaSettings = mediaSettings;

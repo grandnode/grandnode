@@ -25,7 +25,6 @@ namespace Grand.Web.Areas.Admin.Services
     public partial class CustomerReminderViewModelService : ICustomerReminderViewModelService
     {
         private readonly ICustomerService _customerService;
-        private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerReminderService _customerReminderService;
@@ -36,7 +35,6 @@ namespace Grand.Web.Areas.Admin.Services
         #region Constructors
 
         public CustomerReminderViewModelService(ICustomerService customerService,
-            ICustomerTagService customerTagService,
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             ICustomerReminderService customerReminderService,
@@ -45,7 +43,6 @@ namespace Grand.Web.Areas.Admin.Services
             IServiceProvider serviceProvider)
         {
             _customerService = customerService;
-            _customerTagService = customerTagService;
             _localizationService = localizationService;
             _customerActivityService = customerActivityService;
             _customerReminderService = customerReminderService;

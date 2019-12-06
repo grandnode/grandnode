@@ -2,7 +2,6 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
-using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -32,8 +31,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IStoreService _storeService;
-        private readonly ICustomerService _customerService;
 
 
         public CheckoutAttributeViewModelService(ICheckoutAttributeService checkoutAttributeService,
@@ -46,9 +43,7 @@ namespace Grand.Web.Areas.Admin.Services
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            IStoreService storeService,
-            IStoreMappingService storeMappingService,
-            ICustomerService customerService
+            IStoreService storeService
             )
         {
             _checkoutAttributeService = checkoutAttributeService;
@@ -61,8 +56,6 @@ namespace Grand.Web.Areas.Admin.Services
             _currencySettings = currencySettings;
             _measureService = measureService;
             _measureSettings = measureSettings;
-            _storeService = storeService;
-            _customerService = customerService;
         }
 
         #region Utilities
@@ -93,22 +86,19 @@ namespace Grand.Web.Areas.Admin.Services
             var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
             var selectedValues = await _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
 
-            model.ConditionModel = new ConditionModel()
-            {
+            model.ConditionModel = new ConditionModel() {
                 EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
                 SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
                 ConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes())
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
                     .Select(x =>
-                        new AttributeConditionModel()
-                        {
+                        new AttributeConditionModel() {
                             Id = x.Id,
                             Name = x.Name,
                             AttributeControlType = x.AttributeControlType,
                             Values = x.CheckoutAttributeValues
-                                .Select(v => new SelectListItem()
-                                {
+                                .Select(v => new SelectListItem() {
                                     Text = v.Name,
                                     Value = v.Id.ToString(),
                                     Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id)
@@ -184,8 +174,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var values = checkoutAttribute.CheckoutAttributeValues;
-            return values.Select(x => new CheckoutAttributeValueModel
-            {
+            return values.Select(x => new CheckoutAttributeValueModel {
                 Id = x.Id,
                 CheckoutAttributeId = x.CheckoutAttributeId,
                 Name = checkoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),

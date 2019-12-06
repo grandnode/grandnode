@@ -12,7 +12,6 @@ using Grand.Framework.Themes;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Configuration;
-using Grand.Services.Logging;
 using Grand.Services.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -51,7 +50,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             //add GrandConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
@@ -65,17 +64,15 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
-            engine.Initialize(services);
-            var serviceProvider = engine.ConfigureServices(services, configuration);
+            engine.Initialize(services, configuration);
+            engine.ConfigureServices(services, configuration);
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //log application start
-                var logger = serviceProvider.GetRequiredService<ILogger>();
-                logger.Information("Application started", null, null);
-            }
-
-            return serviceProvider;
+            //if (DataSettingsHelper.DatabaseIsInstalled())
+            //{
+            //    //log application start
+            //    var logger = serviceProvider.GetRequiredService<ILogger>();
+            //    logger.Information("Application started", null, null);
+            //}
         }
 
         /// <summary>
@@ -119,7 +116,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds services required for anti-forgery support
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddAntiForgery(this IServiceCollection services)
+        public static void AddAntiForgery(this IServiceCollection services, GrandConfig config)
         {
             //override cookie name
             services.AddAntiforgery(options =>
@@ -130,7 +127,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
                     //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+
                 }
             });
         }
@@ -139,7 +137,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds services required for application session state
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddHttpSession(this IServiceCollection services)
+        public static void AddHttpSession(this IServiceCollection services, GrandConfig config)
         {
             services.AddSession(options =>
             {
@@ -149,7 +147,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.Cookie.SecurePolicy = config.CookieSecurePolicyAlways ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
                 }
             });
         }
@@ -174,9 +172,8 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Adds data protection services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        public static void AddGrandDataProtection(this IServiceCollection services)
+        public static void AddGrandDataProtection(this IServiceCollection services, GrandConfig config)
         {
-            var config = services.BuildServiceProvider().GetService<GrandConfig>();
             if (config.PersistKeysToRedis)
             {
                 services.AddDataProtection(opt => opt.ApplicationDiscriminator = "grandnode")
@@ -197,8 +194,9 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var config = services.BuildServiceProvider().GetService<GrandConfig>();
-            
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -257,7 +255,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 options.EnableEndpointRouting = false;
             });
-            
+
             mvcBuilder.AddRazorRuntimeCompilation();
 
             var config = new GrandConfig();
@@ -360,8 +358,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     var type = item.GetType();
                     var storeId = string.Empty;
-                    var settingService = x.GetService<ISettingService>();
-                    var storeContext = x.GetService<IStoreContext>();
+                    var settingService = x.GetRequiredService<ISettingService>();
+                    var storeContext = x.GetRequiredService<IStoreContext>();
                     if (storeContext.CurrentStore == null)
                         storeId = ""; //storeContext.SetCurrentStore().Result.Id;
                     else

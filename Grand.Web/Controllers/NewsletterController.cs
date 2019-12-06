@@ -13,8 +13,7 @@ namespace Grand.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
         public NewsletterController(INewsletterViewModelService newsletterViewModelService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            INewsletterCategoryService newsletterCategoryService)
+            INewsLetterSubscriptionService newsLetterSubscriptionService)
         {
             _newsletterViewModelService = newsletterViewModelService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;

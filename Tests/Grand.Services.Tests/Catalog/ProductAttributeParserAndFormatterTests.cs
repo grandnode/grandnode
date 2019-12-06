@@ -142,7 +142,7 @@ namespace Grand.Services.Catalog.Tests
                 _productAttributeRepo,
                 _productRepo,
                 _eventPublisher);
-            _productAttributeParser = new ProductAttributeParser(_productAttributeService);
+            _productAttributeParser = new ProductAttributeParser();
             _priceCalculationService = new Mock<IPriceCalculationService>().Object;
 
             var tempWorkContext = new Mock<IWorkContext>();

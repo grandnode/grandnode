@@ -30,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IPictureService _pictureService;
         private readonly ICustomerService _customerService;
         private readonly IProductService _productService;
@@ -42,15 +41,13 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
-            IStoreMappingService storeMappingService, IPictureService pictureService, ICustomerService customerService,
-            ILocalizationService localizationService, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
-            IVendorService vendorService,
+            IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService, IProductService productService, 
+            ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService,
             ILanguageService languageService, SeoSettings seoSettings)
         {
             _blogService = blogService;
             _dateTimeHelper = dateTimeHelper;
             _storeService = storeService;
-            _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
             _customerService = customerService;

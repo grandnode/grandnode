@@ -149,7 +149,6 @@ namespace Grand.Services.Orders.Tests
             _productService,
             _productAttributeParser,
             _checkoutAttributeParser,
-            _genericAttributeService,
             _localizationService,
             _addressService,
             _countryService,

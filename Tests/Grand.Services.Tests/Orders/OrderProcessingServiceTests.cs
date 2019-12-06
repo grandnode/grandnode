@@ -63,7 +63,6 @@ namespace Grand.Services.Orders.Tests
         private IRepository<ShippingMethod> _shippingMethodRepository;
         private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
-        private IRepository<PickupPoint> _pickupPointRepository;
         private IOrderService _orderService;
         private IWebHelper _webHelper;
         private ILocalizationService _localizationService;
@@ -151,7 +150,6 @@ namespace Grand.Services.Orders.Tests
             _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>().Object;
             _deliveryDateRepository = new Mock<IRepository<DeliveryDate>>().Object;
             _warehouseRepository = new Mock<IRepository<Warehouse>>().Object;
-            _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository,
@@ -162,7 +160,6 @@ namespace Grand.Services.Orders.Tests
             _productService,
             _productAttributeParser,
             _checkoutAttributeParser,
-            _genericAttributeService,
             _localizationService,
             _addressService,
             _countryService,

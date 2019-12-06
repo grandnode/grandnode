@@ -1,12 +1,16 @@
 ﻿/* carousel */
 
-#GrandCarousel {
-    width: calc(100vw - 10px);
-}
+    #GrandCarousel {
+        width: calc(100vw - 10px);
+    }
 
     #GrandCarousel .carousel-item.img-desc,
     #GrandCarousel .carousel-item.img-desc .carousel-caption {
         height: 500px;
+    }
+
+    #GrandCarousel .carousel-item[onclick] {
+        cursor: pointer;
     }
 
     #GrandCarousel .carousel-item .carousel-caption {

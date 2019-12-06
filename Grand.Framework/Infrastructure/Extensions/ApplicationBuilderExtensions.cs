@@ -1,4 +1,6 @@
-﻿using Grand.Core;
+﻿using Autofac;
+using AutoMapper.Configuration;
+using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain;
@@ -34,9 +36,19 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Configure the application HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void ConfigureRequestPipeline(this IApplicationBuilder application)
+        public static void ConfigureRequestPipeline(this IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             EngineContext.Current.ConfigureRequestPipeline(application);
+        }
+
+        /// <summary>
+        /// Configure container
+        /// </summary>
+        /// <param name="container">ContainerBuilder from autofac</param>
+        /// <param name="configuration">configuration</param>
+        public static void ConfigureContainer(this ContainerBuilder container, Microsoft.Extensions.Configuration.IConfiguration configuration)
+        {
+            EngineContext.Current.ConfigureContainer(container, configuration);
         }
 
         /// <summary>
@@ -185,7 +197,8 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandAuthentication(this IApplicationBuilder application)
         {
-            application.UseMiddleware<AuthenticationMiddleware>();
+            application.UseAuthentication();
+            application.UseAuthorization();
         }
 
         /// <summary>

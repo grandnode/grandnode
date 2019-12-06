@@ -12,17 +12,11 @@ namespace Grand.Services.Catalog
     /// </summary>
     public partial class ProductAttributeParser : IProductAttributeParser
     {
-        #region Fields
-
-        private readonly IProductAttributeService _productAttributeService;
-
-        #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IProductAttributeService productAttributeService)
+        public ProductAttributeParser()
         {
-            this._productAttributeService = productAttributeService;
         }
 
         #endregion

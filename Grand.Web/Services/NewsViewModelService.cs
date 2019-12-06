@@ -188,6 +188,7 @@ namespace Grand.Web.Services
             {
                 NewsItemId = newsItem.Id,
                 CustomerId = _workContext.CurrentCustomer.Id,
+                StoreId = _storeContext.CurrentStore.Id,
                 CommentTitle = model.AddNewComment.CommentTitle,
                 CommentText = model.AddNewComment.CommentText,
                 CreatedOnUtc = DateTime.UtcNow,

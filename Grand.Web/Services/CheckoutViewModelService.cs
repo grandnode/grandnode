@@ -8,7 +8,6 @@ using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
-using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
@@ -164,8 +163,7 @@ namespace Grand.Web.Services
                 {
                     foreach (var pickupPoint in pickupPoints)
                     {
-                        var pickupPointModel = new CheckoutPickupPointModel()
-                        {
+                        var pickupPointModel = new CheckoutPickupPointModel() {
                             Id = pickupPoint.Id,
                             Name = pickupPoint.Name,
                             Description = pickupPoint.Description,
@@ -250,8 +248,7 @@ namespace Grand.Web.Services
 
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
-                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel
-                    {
+                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel {
                         Name = shippingOption.Name,
                         Description = shippingOption.Description,
                         ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
@@ -325,7 +322,7 @@ namespace Grand.Web.Services
                     model.DisplayRewardPoints = true;
                     model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
                     model.RewardPointsBalance = rewardPointsBalance;
-                    model.RewardPointsEnoughToPayForOrder = !(await  IsPaymentWorkflowRequired(cart, true));
+                    model.RewardPointsEnoughToPayForOrder = !(await IsPaymentWorkflowRequired(cart, true));
                 }
             }
 
@@ -345,8 +342,7 @@ namespace Grand.Web.Services
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
-                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
-                {
+                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel {
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? await pm.PaymentMethodDescription() : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
@@ -386,8 +382,7 @@ namespace Grand.Web.Services
         {
             paymentMethod.GetPublicViewComponent(out string viewComponentName);
 
-            var model = new CheckoutPaymentInfoModel
-            {
+            var model = new CheckoutPaymentInfoModel {
                 PaymentViewComponentName = viewComponentName,
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             };

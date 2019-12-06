@@ -18,22 +18,19 @@ namespace Grand.Services.Messages
     public partial class ContactAttributeFormatter : IContactAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly IContactAttributeService _contactAttributeService;
         private readonly IContactAttributeParser _contactAttributeParser;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
 
         public ContactAttributeFormatter(IWorkContext workContext,
-            IContactAttributeService contactAttributeService,
             IContactAttributeParser contactAttributeParser,
             IDownloadService downloadService,
             IWebHelper webHelper)
         {
-            this._workContext = workContext;
-            this._contactAttributeService = contactAttributeService;
-            this._contactAttributeParser = contactAttributeParser;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            _workContext = workContext;
+            _contactAttributeParser = contactAttributeParser;
+            _downloadService = downloadService;
+            _webHelper = webHelper;
         }
 
         /// <summary>

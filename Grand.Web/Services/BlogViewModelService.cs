@@ -13,9 +13,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
-using Grand.Services.Security;
 using Grand.Services.Seo;
-using Grand.Services.Stores;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Blogs;
@@ -40,8 +38,6 @@ namespace Grand.Web.Services
         private readonly IWebHelper _webHelper;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
         private readonly IServiceProvider _serviceProvider;
 
         private readonly MediaSettings _mediaSettings;
@@ -60,8 +56,6 @@ namespace Grand.Web.Services
             IWebHelper webHelper,
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
             IServiceProvider serviceProvider,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
@@ -79,8 +73,6 @@ namespace Grand.Web.Services
             _webHelper = webHelper;
             _cacheManager = cacheManager;
             _customerActivityService = customerActivityService;
-            _storeMappingService = storeMappingService;
-            _permissionService = permissionService;
             _serviceProvider = serviceProvider;
             _mediaSettings = mediaSettings;
             _blogSettings = blogSettings;
@@ -105,7 +97,7 @@ namespace Grand.Web.Services
                     var description = post.GetLocalized(x => x.BodyOverview, _workContext.WorkingLanguage.Id);
                     item.SeName = post.GetSeName(_workContext.WorkingLanguage.Id);
                     item.Title = post.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
-                    item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage): description;
+                    item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage) : description;
                     item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
 
                     //prepare picture model
@@ -116,8 +108,7 @@ namespace Grand.Web.Services
                         item.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                         {
                             var picture = await _pictureService.GetPictureById(post.PictureId);
-                            var pictureModel = new PictureModel
-                            {
+                            var pictureModel = new PictureModel {
                                 Id = post.PictureId,
                                 FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                                 ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
@@ -138,8 +129,7 @@ namespace Grand.Web.Services
         public async Task<BlogCommentModel> PrepareBlogPostCommentModel(BlogComment blogComment)
         {
             var customer = await _serviceProvider.GetRequiredService<ICustomerService>().GetCustomerById(blogComment.CustomerId);
-            var model = new BlogCommentModel
-            {
+            var model = new BlogCommentModel {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
                 CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
@@ -249,8 +239,7 @@ namespace Grand.Web.Services
                 model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var picture = await _pictureService.GetPictureById(blogPost.PictureId);
-                    var pictureModel = new PictureModel
-                    {
+                    var pictureModel = new PictureModel {
                         Id = blogPost.PictureId,
                         FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
                         ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
@@ -279,8 +268,7 @@ namespace Grand.Web.Services
                 tags = tags.OrderBy(x => x.Name).ToList();
 
                 foreach (var tag in tags)
-                    model.Tags.Add(new BlogPostTagModel
-                    {
+                    model.Tags.Add(new BlogPostTagModel {
                         Name = tag.Name,
                         BlogPostCount = tag.BlogPostCount
                     });
@@ -326,15 +314,13 @@ namespace Grand.Web.Services
 
                         if (date.Year > current || !model.Any())
                         {
-                            var yearModel = new BlogPostYearModel
-                            {
+                            var yearModel = new BlogPostYearModel {
                                 Year = date.Year
                             };
                             model.Insert(0, yearModel);
                         }
 
-                        model.First().Months.Insert(0, new BlogPostMonthModel
-                        {
+                        model.First().Months.Insert(0, new BlogPostMonthModel {
                             Month = date.Month,
                             BlogPostCount = blogPostCount
                         });
@@ -356,13 +342,12 @@ namespace Grand.Web.Services
                 var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
                 foreach (var item in categories)
                 {
-                    model.Add(new BlogPostCategoryModel()
-                    {
+                    model.Add(new BlogPostCategoryModel() {
                         Id = item.Id,
-                        Name = item.GetLocalized(x=>x.Name, _workContext.WorkingLanguage.Id),
+                        Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         BlogPostCount = item.BlogPosts.Count
                     });
-                }  
+                }
                 return model;
             });
             return cachedModel;
@@ -371,10 +356,10 @@ namespace Grand.Web.Services
         public async Task<BlogComment> InsertBlogComment(BlogPostModel model, BlogPost blogPost)
         {
             var customer = _workContext.CurrentCustomer;
-            var comment = new BlogComment
-            {
+            var comment = new BlogComment {
                 BlogPostId = blogPost.Id,
                 CustomerId = customer.Id,
+                StoreId = _storeContext.CurrentStore.Id,
                 CommentText = model.AddNewComment.CommentText,
                 CreatedOnUtc = DateTime.UtcNow,
                 BlogPostTitle = blogPost.Title,

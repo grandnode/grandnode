@@ -21,7 +21,6 @@ namespace Grand.Services.Orders
     public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
     {
         private readonly IWorkContext _workContext;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICurrencyService _currencyService;
         private readonly ITaxService _taxService;
@@ -30,7 +29,6 @@ namespace Grand.Services.Orders
         private readonly IWebHelper _webHelper;
 
         public CheckoutAttributeFormatter(IWorkContext workContext,
-            ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
             ITaxService taxService,
@@ -38,14 +36,13 @@ namespace Grand.Services.Orders
             IDownloadService downloadService,
             IWebHelper webHelper)
         {
-            this._workContext = workContext;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            _workContext = workContext;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _currencyService = currencyService;
+            _taxService = taxService;
+            _priceFormatter = priceFormatter;
+            _downloadService = downloadService;
+            _webHelper = webHelper;
         }
 
         /// <summary>

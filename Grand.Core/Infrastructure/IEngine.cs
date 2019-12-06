@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Autofac;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Grand.Core.Infrastructure
 {
@@ -17,7 +17,8 @@ namespace Grand.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        void Initialize(IServiceCollection services);
+        /// <param name="configuration">Configuration root of the application</param>
+        void Initialize(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Add and configure services
@@ -25,7 +26,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline
@@ -33,5 +34,13 @@ namespace Grand.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         void ConfigureRequestPipeline(IApplicationBuilder application);
 
+        /// <summary>
+        /// ConfigureContainer is where you can register things directly
+        /// with Autofac. This runs after ConfigureServices so the things
+        /// here will override registrations made in ConfigureServices.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configuration"></param>
+        void ConfigureContainer(ContainerBuilder builder, IConfiguration configuration);
     }
 }

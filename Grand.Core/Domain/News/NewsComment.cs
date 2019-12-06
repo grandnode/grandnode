@@ -25,7 +25,10 @@ namespace Grand.Core.Domain.News
         /// Gets or sets the customer identifier
         /// </summary>
         public string CustomerId { get; set; }
-
+        /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public string StoreId { get; set; }
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
