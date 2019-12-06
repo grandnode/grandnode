@@ -91,7 +91,7 @@ namespace Grand.Services.Configuration
 
             //cache
             string key = string.Format(SETTINGS_ALL_KEY);
-            _allSettings = _cacheManager.Get(key, () =>
+            var task = _cacheManager.GetAsync(key, async () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -126,6 +126,8 @@ namespace Grand.Services.Configuration
                 }
                 return dictionary;
             });
+            task.Wait();
+            _allSettings = task.Result;
             return _allSettings;
         }
 

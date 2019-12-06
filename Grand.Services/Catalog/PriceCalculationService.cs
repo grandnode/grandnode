@@ -425,20 +425,19 @@ namespace Grand.Services.Catalog
                 price = price + additionalCharge;
 
                 //reservations
-                if (product.ProductType == ProductType.Reservation)
-                    if (rentalStartDate.HasValue && rentalEndDate.HasValue)
+                if (product.ProductType == ProductType.Reservation && rentalStartDate.HasValue && rentalEndDate.HasValue)
+                {
+                    decimal d = 0;
+                    if (product.IncBothDate)
                     {
-                        decimal d = 0;
-                        if (product.IncBothDate)
-                        {
-                            decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
-                        }
-                        else
-                        {
-                            decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
-                        }
-                        price = price * d;
+                        decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
                     }
+                    else
+                    {
+                        decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                    }
+                    price = price * d;
+                }
 
                 if (includeDiscounts)
                 {
@@ -470,7 +469,7 @@ namespace Grand.Services.Catalog
                 return result;
             }
 
-            var cachedPrice = cacheTime > 0 ? await _cacheManager.Get(cacheKey, cacheTime, () => { return PrepareModel(); }) : await PrepareModel();
+            var cachedPrice = cacheTime > 0 ? await _cacheManager.GetAsync(cacheKey, cacheTime, () => { return PrepareModel(); }) : await PrepareModel();
 
             if (includeDiscounts)
             {
