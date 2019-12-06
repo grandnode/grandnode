@@ -718,6 +718,7 @@
   </LocaleResource>
   <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
     <Value>Security code is wrong</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
     <Value>You can't edit this discount, because it can be used in many stores.</Value>
   </LocaleResource>
@@ -757,4 +758,14 @@
   <LocaleResource Name="admin.common.genericattributes.fields.store">
     <Value>Select store</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.EnableTwoFactorAuth">
+    <Value>Enable Two-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.SendCode">
+    <Value>Send code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.FormSendCode">
+    <Value>Please, send verification code</Value>
+  </LocaleResource>
+  
 </Language>

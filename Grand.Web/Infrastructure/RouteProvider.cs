@@ -682,6 +682,14 @@ namespace Grand.Web.Infrastructure
             // two factor authorization digit code page
             routeBuilder.MapRoute("TwoFactorAuthorization", "two-facto-authorization",
                 new { controller = "Customer", action = "TwoFactorAuthenticate" });
+
+            // enable or disable two factor auth
+            routeBuilder.MapRoute("SettingTwoFactorAuthenticator", "setting-auth",
+                new { controller = "Customer", action = "SettingTwoFactorAuthenticator" });
+
+            // two factor authorization digit code page
+            routeBuilder.MapRoute("EnableTwoFactorAuthorization", "enable-two-facto-authorization",
+                new { controller = "Customer", action = "EnableTwoFactorAuthenticator" });
         }
 
         public int Priority

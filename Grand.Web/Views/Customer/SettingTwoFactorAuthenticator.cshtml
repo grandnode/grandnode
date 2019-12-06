@@ -1,0 +1,25 @@
+﻿@model TwoFactorAuthenticationModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.TwoFactorAuth").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+}
+
+<dt>
+    Two factor Authenticator:
+</dt>
+<dd>
+    @if (Model.Is2faEnabled)
+    {
+        @Html.ActionLink("Disable", "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+    }
+    else
+    {
+        @Html.ActionLink("Enable", "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+    }
+</dd>

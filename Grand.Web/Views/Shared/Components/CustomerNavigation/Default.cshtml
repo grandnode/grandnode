@@ -148,7 +148,7 @@
                                                                 </li>
                                                             }
             @if (!Model.HideReviews)
-            { 
+            {
                 <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
                 <li class="customer-notes">
                     <a href="@Url.RouteUrl("CustomerReviews")" class="@if(Model.SelectedTab == CustomerNavigationEnum.Reviews)
@@ -157,7 +157,17 @@
                                                                      {<text>inactive</text>}"><span class="mdi mdi-account-star"></span><span>@T("Account.Reviews")</span></a>
                                                                 </li>
                                                             }
-                        
+            @if (!Model.HideTwoFactorAuth)
+            {
+                <!--todo change class customer-notes to other (change icon???) and mdi mdi-account-supervisor - also change-->
+                <li class="customer-two-fact-auth">
+                    <a href="@Url.RouteUrl("SettingTwoFactorAuthenticator")" class="@if(Model.SelectedTab == CustomerNavigationEnum.TwoFactorAuth)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}"><span class="mdi mdi-account-star"></span><span>@T("Account.TwoFactorAuth")</span></a>
+                                                                </li>
+                                                            }
+
 
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after", additionalData = Model })
         </ul>

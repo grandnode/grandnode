@@ -182,9 +182,11 @@ namespace Grand.Web.Controllers
                         {
                             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
                             // 2fa
-                            if (_customerSettings.TwoFactorAuthenticationEnabled)
-                                return RedirectToRoute("TwoFactorAuthorization", model);
-
+                            if (customer.TwoFactorEnabled)
+                            {
+                                var authModel = new TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = customer.TwoFactorSecretKey };
+                                return RedirectToRoute("TwoFactorAuthorization", authModel);
+                            }
 
                             //migrate shopping cart
                             await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
@@ -1428,37 +1430,27 @@ namespace Grand.Web.Controllers
 
         #region My account / TwoFactorAuth
 
-        public IActionResult TwoFactorAuthenticate(Customer customer, LoginModel model)
+        public IActionResult TwoFactorAuthenticate(TwoFactorAuthenticationModel model)
         {
-            var key = _grandConfig.TwoFactorAuthKey;
-            var twoFacAuth = new TwoFactorAuthenticator();
-            string userUniqueKey = (customer.Email + key); //GetSection("Grand").Get("TwoFactorAuthKey"));
-            HttpContext.Session.SetString("UserUniqueKey", userUniqueKey);
-            var setupInfo = twoFacAuth.GenerateSetupCode("GrandNode", customer.Email, userUniqueKey, 300, 300);
-            ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-            ViewBag.SetupCode = setupInfo.ManualEntryKey;
-                        
-            ViewBag.Message = "Two Factor Authentication Verification";
-            ViewBag.Status = true;
-
+            model.UserUniqueKey = model.UserUniqueKey;
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> TwoFactorAuthenticate(LoginModel model, string returnUrl)
+        public async Task<IActionResult> TwoFactorAuthenticate(TwoFactorAuthenticationModel model, string returnUrl)
         {
             TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
-            var token = model.CodeDigit;
+            var token = model.Code;
             // this is no good solution. in the future must be refactored
             if (token == null)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
                 return View(model);
             }
-            
-            var userUniqueKey = HttpContext.Session.GetString("UserUniqueKey");
+
+            var userUniqueKey = model.UserUniqueKey;
             bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
-            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
+            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.UserName) : await _customerService.GetCustomerByEmail(model.Email);
                         
             if (isValid)
             {
@@ -1467,7 +1459,7 @@ namespace Grand.Web.Controllers
                 await _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                 //sign in new customer
-                await _authenticationService.SignIn(customer, model.RememberMe);
+                await _authenticationService.SignIn(customer, true);
 
                 //raise event       
                 await _mediator.Publish(new CustomerLoggedinEvent(customer));
@@ -1484,8 +1476,86 @@ namespace Grand.Web.Controllers
             ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
             return View(model);
         }
+
+        public IActionResult SettingTwoFactorAuthenticator()
+        {
+            var customer = _workContext.CurrentCustomer;
+            var model = _customerViewModelService.PrepareTwoFactorAuthModel(customer, null, null, null);
+            return View(model);
+        }
+
+        public IActionResult EnableTwoFactorAuthenticator()
+        {
+            var customer = _workContext.CurrentCustomer;
+             
+            var secretKey = _grandConfig.TwoFactorAuthKey;
+            var twoFacAuth = new TwoFactorAuthenticator();
+            string userUniqueKey = customer.Email + secretKey;
+            var setupInfo = twoFacAuth.GenerateSetupCode("GrandNode", "GrandNode", userUniqueKey, 300, 300);
+            string barcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+            string manualCode = setupInfo.ManualEntryKey;
+
+            var model = new TwoFactorAuthenticationModel 
+            {
+                Is2faEnabled = true,
+                IsMachineRemembered = true,
+                RecoveryCodesLeft = 0,
+                HasAuthenticator = true,
+                StatusMessage = "Test message 2fa",
+                UserUniqueKey = userUniqueKey,
+                ManualInputCode = manualCode,
+                QrCodeSetupImageUrl = barcodeImageUrl
+            };
             
-        
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EnableTwoFactorAuthenticator(TwoFactorAuthenticationModel model, string returnUrl)
+        {
+            TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
+            var token = model.Code;
+            
+            if (token == null)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
+                return View(model);
+            }
+
+            var userUniqueKey = model.UserUniqueKey;
+            bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
+            
+            if (isValid)
+            {
+                HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
+                var customer = _workContext.CurrentCustomer;
+                customer.TwoFactorEnabled = model.Is2faEnabled;
+                customer.TwoFactorSecretKey = userUniqueKey;
+
+                _customerService.UpdateCustomerTwoFactorAuth(customer);
+
+                if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                    return RedirectToRoute("HomePage");
+                return Redirect(returnUrl);
+            }
+            return View(model);
+        }
+
+        public IActionResult DisableTwoFactorAuthenticator()
+        {
+            var customer = _workContext.CurrentCustomer;
+            if (customer != null)
+            {
+                customer.TwoFactorEnabled = false;
+                customer.TwoFactorSecretKey = null;
+                _customerService.UpdateCustomerTwoFactorAuth(customer);
+
+                return RedirectToRoute("HomePage");
+            }
+            return View();
+        }
+
+
         #endregion
 
         #region My account / Courses

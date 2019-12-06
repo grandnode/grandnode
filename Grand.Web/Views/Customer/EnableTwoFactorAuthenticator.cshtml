@@ -1,0 +1,65 @@
+﻿@model TwoFactorAuthenticationModel
+@using Grand.Web.Models.Customer;
+@using System.Net
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.TwoFactorAuth").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+}
+
+    <div class="page login-page">
+        <h2 class="generalTitle">@T("Account.EnableTwoFactorAuth")</h2>
+        <h3>1. Add GrandNode to Authenticator application</h3>
+        <p>Open Authenticator application and add GrandNode   by scanning the QR Code.</p>
+        <h3>2. Enter the 6 digit code that Authenticator application generates</h3>
+
+        <p>Verify that GrandNode is added correctly in Authenticator application by entering the 6 digit code which  Authenticator application generates for Movie Manager below, and then click Enable. </p>
+        <div class="mb-2">
+            <div class="row flex-md-row mt-3 mb-3">
+                @* login main block *@
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="col-12 form-group mb-0">
+                            <div>
+                                <img src="@Model.QrCodeSetupImageUrl" />
+                            </div>
+                            <div>
+                                Manual Setup Code : @Model.ManualInputCode
+                            </div>
+                        </div>
+                        <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                            @Html.HiddenFor(m => m.Is2faEnabled);
+                            @Html.HiddenFor(m => m.UserUniqueKey);
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                                    <div class="col-12 form-group mb-0">
+                                        <div class="form-group row">
+                                            <div class="col-lg-3 col-12">
+                                                <label asp-for="Code" class="col-form-label">@T("Account.DigitCode"):</label>
+                                            </div>
+                                            <div class="col-lg-9 col-12">
+                                                <input asp-for="Code" name="Code" type="text" autofocus="autofocus" />
+                                                <span asp-validation-for="Code"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="buttons">
+                                    <input class="btn btn-info login-button" type="submit" value="@T("Account.Login.SendCode")" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

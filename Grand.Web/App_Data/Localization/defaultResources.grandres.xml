@@ -318,6 +318,9 @@
   <LocaleResource Name="Account.TwoFactorAuth">
     <Value>Two-factor authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.EnableTwoFactorAuth">
+    <Value>Enable Two-factor authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
     <Value>Security code is wrong</Value>
   </LocaleResource>
@@ -572,6 +575,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.Login.LoginButton">
     <Value>Log in</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.SendCode">
+    <Value>Send code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.FormSendCode">
+    <Value>Please, send verification code</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.NewCustomer">
     <Value>New Customer</Value>

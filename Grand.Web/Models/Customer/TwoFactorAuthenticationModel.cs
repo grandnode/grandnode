@@ -19,5 +19,16 @@ namespace Grand.Web.Models.Customer
 
         public string StatusMessage { get; set; }
 
+        public string Code { get; set; }
+
+        public string UserUniqueKey { get; set; }
+
+        public string QrCodeSetupImageUrl { get; set; }
+
+        public string ManualInputCode { get; set; }
+
+        public string UserName { get; set; }
+
+        public string Email { get; set; }
     }
 }

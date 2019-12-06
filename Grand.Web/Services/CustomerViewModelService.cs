@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -75,7 +76,7 @@ namespace Grand.Web.Services
         private readonly OrderSettings _orderSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
-
+        
         public CustomerViewModelService(
                     IExternalAuthenticationService externalAuthenticationService,
                     ICustomerAttributeParser customerAttributeParser,
@@ -110,7 +111,7 @@ namespace Grand.Web.Services
                     OrderSettings orderSettings,
                     MediaSettings mediaSettings,
                     VendorSettings vendorSettings
-            )
+                 )
         {
             _externalAuthenticationService = externalAuthenticationService;
             _customerAttributeParser = customerAttributeParser;
@@ -871,17 +872,24 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(Customer customer)
+        public TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(
+            Customer customer, 
+            string securityKey, 
+            string barcodeImageUrl, 
+            string manualCode)
         {
-            var model = new TwoFactorAuthenticationModel();
-            model.Is2faEnabled = true;
-            model.IsMachineRemembered = true;
-            model.RecoveryCodesLeft = 0;
-            model.HasAuthenticator = true;
-            model.StatusMessage = "Test message 2fa";
+            var model = new TwoFactorAuthenticationModel {
+                Is2faEnabled = customer.TwoFactorEnabled,
+                IsMachineRemembered = true,
+                RecoveryCodesLeft = 0,
+                HasAuthenticator = true,
+                StatusMessage = "Test message 2fa",
+                UserUniqueKey = securityKey,
+                ManualInputCode = manualCode,
+                QrCodeSetupImageUrl = barcodeImageUrl
+            };
 
             return model;
-
         }
 
     }

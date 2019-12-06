@@ -178,6 +178,16 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public DateTime? PasswordChangeDateUtc { get; set; }
 
+        /// <summary>
+        /// Gets or sets the two factor auth for user
+        /// </summary>
+        public bool TwoFactorEnabled { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the two factor auth code
+        /// </summary>
+        public string TwoFactorSecretKey { get; set; }
+
         #region Navigation properties
 
         /// <summary>

@@ -242,6 +242,13 @@ namespace Grand.Services.Customers
         /// <returns>Number of deleted customers</returns>
         Task<int> DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
 
+
+        /// <summary>
+        /// Update values two factor authorization for customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        Task UpdateCustomerTwoFactorAuth(Customer customer);
+
         #endregion
 
         #region Password history
