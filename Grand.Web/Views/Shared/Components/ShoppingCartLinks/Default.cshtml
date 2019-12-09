@@ -3,13 +3,10 @@
     <ul class="shopping-links">
         @if (Model.WishlistEnabled)
         {
-            <li class="nav-item wishlist-container">
+            <li class="nav-item wishlist-container d-lg-block d-none">
                 <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
                     <span class="wishlist-label hl-label">
                         <span class="mdi mdi-heart-outline"></span>
-                    </span>
-                    <span class="d-flex align-items-center wish-name mobile-desc">
-                        @T("Wishlist")
                     </span>
                     <span class="wishlist-qty d-none d-lg-flex">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
                 </a>
@@ -22,9 +19,6 @@
                     <a @if (Model.MiniShoppingCartEnabled) { <text> class="nav-link js-offcanvas-trigger" data-offcanvas-trigger="right" href="#right" </text>  } else { <text> class="nav-link" href="@Url.RouteUrl("ShoppingCart")" </text>  }>
                         <span class="cart-label hl-label">
                             <span class="mdi mdi-cart-outline"></span>
-                        </span>
-                        <span class="d-flex align-items-center cart-name mobile-desc">
-                            @T("ShoppingCart")
                         </span>
                         <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
                     </a>

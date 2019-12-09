@@ -17,18 +17,18 @@
     });
 }
 <div class="btn-group btn-group-sm float-xs-right pr-1 d-flex tax-type-button">
-    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
         <span>@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
         <span class="sr-only">Toggle Dropdown</span>
         <span class="mdi mdi-chevron-down"></span>
     </button>
-    <div class="dropdown-menu dropdown-menu-left tax">
+    <div class="dropdown-menu tax">
         <ul class="pl-0 mb-0">
             @foreach (var item in taxTypes)
             {
                 var className = item.Selected ? "active" : "";
                 <li class="@className">
-                    <a href="@item.Value">@item.Text</a>
+                    <a class="text-dark" href="@item.Value">@item.Text</a>
                 </li>
             }
         </ul>
