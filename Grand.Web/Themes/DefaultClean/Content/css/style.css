@@ -2195,8 +2195,6 @@ list settings .list__item,
     color: #999;
 }
 .product-box .ratings {
-    -webkit-transform: translateY(22px);
-    transform: translateY(22px);
     font-size: 20px;
     height: 22px;
     backface-visibility: hidden;
@@ -2308,8 +2306,6 @@ list settings .list__item,
     background-color: #7dae32;
 }
 .product-box.list-box .ratings {
-	-webkit-transform: none;
-	transform: none;
     justify-content: flex-start;
 }
 .product-box.list-box .desc {

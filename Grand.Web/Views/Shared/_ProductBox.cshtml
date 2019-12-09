@@ -99,6 +99,20 @@
     </div>
     <div class="product-info">
         <div class="top">
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                int ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
+                {
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                }
+                <div class="ratings">
+                    <div class="rating-box">
+                        <div class="rating" style="width: @(ratingPercent)%">
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="title">
                 <h5 class="mb-0">
                     <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
@@ -136,20 +150,6 @@
                         </div>
                     }
                 </div>
-                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
-                {
-                    int ratingPercent = 0;
-                    if (Model.ReviewOverviewModel.TotalReviews != 0)
-                    {
-                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
-                    }
-                    <div class="ratings">
-                        <div class="rating-box">
-                            <div class="rating" style="width: @(ratingPercent)%">
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
         </div>
         <div class="bottom">

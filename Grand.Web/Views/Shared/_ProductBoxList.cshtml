@@ -77,6 +77,20 @@
                 <span class="sku">@Model.Sku</span>
             }
             <div class="prices-rating">
+                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+                {
+                    int ratingPercent = 0;
+                    if (Model.ReviewOverviewModel.TotalReviews != 0)
+                    {
+                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                    }
+                    <div class="ratings">
+                        <div class="rating-box">
+                            <div class="rating" style="width: @(ratingPercent)%">
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="prices d-inline-flex align-items-center">
                     @if (Model.ProductType != ProductType.Auction)
                     {
@@ -104,20 +118,6 @@
                         </div>
                     }
                 </div>
-                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
-                {
-                    int ratingPercent = 0;
-                    if (Model.ReviewOverviewModel.TotalReviews != 0)
-                    {
-                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
-                    }
-                    <div class="ratings">
-                        <div class="rating-box">
-                            <div class="rating" style="width: @(ratingPercent)%">
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
             @if (Model.ProductType == ProductType.Auction)
             {
