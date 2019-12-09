@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace Grand.Framework.StartupConfigure
 {
@@ -32,32 +33,23 @@ namespace Grand.Framework.StartupConfigure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //database is already installed, so start scheduled tasks
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsHelper.DatabaseIsInstalled())
             {
-                try
-                {
-                    var machineName = Environment.MachineName;
-                    var tasks = new MongoDBRepository<ScheduleTask>(DataSettingsHelper.ConnectionString()).Table;
-                    foreach (var task in tasks)
-                    {
-                        if (task.Enabled)
-                        {
-                            if (string.IsNullOrEmpty(task.LeasedByMachineName) || (machineName == task.LeasedByMachineName))
-                            {
-                                services.AddSingleton<IHostedService, BackgroundServiceTask>(sp =>
-                                {
-                                    return new BackgroundServiceTask(task, sp);
-                                });
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                return;
             }
 
+            var machineName = Environment.MachineName;
+            var tasks = new MongoDBRepository<ScheduleTask>(DataSettingsHelper.ConnectionString()).Table;
+            foreach (var task in tasks.Where(t => t.Enabled))
+            {
+                if (string.IsNullOrEmpty(task.LeasedByMachineName) || (machineName == task.LeasedByMachineName))
+                {
+                    services.AddSingleton<IHostedService, BackgroundServiceTask>(sp =>
+                    {
+                        return new BackgroundServiceTask(task, sp);
+                    });
+                }
+            }
         }
 
         /// <summary>
