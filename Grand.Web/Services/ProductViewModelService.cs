@@ -34,6 +34,7 @@ using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,6 +84,8 @@ namespace Grand.Web.Services
         private readonly CaptchaSettings _captchaSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+
+        private readonly string MainPageProductsCacheKey = "Grand.MainPage.Products-{0}-{1}";
 
         public ProductViewModelService(IPermissionService permissionService, IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService, IProductService productService, IPriceCalculationService priceCalculationService,
@@ -1760,6 +1763,15 @@ namespace Grand.Web.Services
 
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
         {
+            var key = string.Format(MainPageProductsCacheKey, _storeContext.CurrentStore.Id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
+
+            var cached = await _cacheManager.TryGetValueAsync<IList<ProductOverviewModel>>(key);
+
+            if (cached.fromCache)
+            {
+                return cached.result;
+            }
+
             var products = await _productService.GetAllProductsDisplayedOnHomePage();
 
             //ACL and store mapping
@@ -1770,7 +1782,27 @@ namespace Grand.Web.Services
             if (!products.Any())
                 return new List<ProductOverviewModel>();
 
-            return (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
+            var info = (await PrepareProductOverviewModels(products, true, true, productThumbPictureSize, prepareSpecificationAttributes: _catalogSettings.ShowSpecAttributeOnCatalogPages)).ToList();
+
+            //Stripping unecessary info from model. Cache is usually 50%+ lighter
+            foreach (var item in info)
+            {
+                item.FullDescription = null;
+                item.ShortDescription = null;
+                item.GenericAttributes = null;
+                item.ProductType = 0;
+                item.TaxDisplayType = 0;
+                item.ProductPrice.GenericAttributes = null;
+                item.DefaultPictureModel.GenericAttributes = null;
+                item.SecondPictureModel.GenericAttributes = null;
+                item.SpecificationAttributeModels = null;
+                item.ReviewOverviewModel.GenericAttributes = null;
+            }
+
+            var toCache = JsonConvert.SerializeObject(info, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
+            await _cacheManager.Set(key, toCache, 5);
+
+            return info;
         }
 
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
