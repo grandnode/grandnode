@@ -2173,9 +2173,16 @@ list settings .list__item,
     -o-transition: .3s ease;
     transition: .3s ease;
 }
+.product-box.grid-box .prices.reservation-price {
+	height: 50px;
+	line-height: 1;
+}
+.product-box.grid-box .prices.reservation-price .old-price {
+	line-height: 1;
+}
 .product-box.grid-box:hover .prices {
-    /* -webkit-transform: translateY(-22px); */
-    /* transform: translateY(-22px); */
+	/* -webkit-transform: translateY(-22px); */
+	/* transform: translateY(-22px); */
 }
 .product-box.grid-box:hover .ratings {
     -webkit-transform: translateY(0);
@@ -2307,6 +2314,11 @@ list settings .list__item,
 }
 .product-box.list-box .ratings {
     justify-content: flex-start;
+}
+.countdown-box {
+	text-align: center;
+	font-weight: 500;
+	margin: 10px 0;
 }
 .product-box.list-box .desc {
     text-align: left;
@@ -2530,6 +2542,7 @@ list settings .list__item,
 .overview-buttons .prices .actual-price,
 .associatedItem .actual-price,
 .catalog-product-price {
+	color: #0091b5;
 	font-size: 1.25rem;
     font-weight: 500;
 }

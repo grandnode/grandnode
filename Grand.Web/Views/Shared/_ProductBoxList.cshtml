@@ -100,7 +100,7 @@
                     }
                     else
                     {
-                        <div class="auction-price price">
+                        <div class="actual-price price">
                             @(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)
                         </div>
                     }
@@ -123,27 +123,11 @@
             {
                 @if (Model.EndTime.HasValue)
                 {
-                    <div class="countdown-box">
+                    <div class="countdown-box text-left p-sm-2 p-1 bg-light">
                         @if (Model.EndTime > DateTime.UtcNow)
                         {
-                            <div class="countdown-container">
-                                <div class="time-holder">
-                                    <div class="countdown days" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
-                                    <div class="title">@T("countdown.days")</div>
-                                </div>
-                                <div class="time-holder">
-                                    <div class="countdown hours" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
-                                    <div class="title">@T("countdown.hours")</div>
-                                </div>
-                                <div class="time-holder">
-                                    <div class="countdown minutes" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
-                                    <div class="title">@T("countdown.minutes")</div>
-                                </div>
-                                <div class="time-holder">
-                                    <div class="countdown seconds" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
-                                    <div class="title">@T("countdown.seconds")</div>
-                                </div>
-                            </div>
+                            <label class="d-inline-block mb-0">@T("AddToCart.Timeleft"): </label>
+                            <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
                         }
                         else
                         {
