@@ -62,10 +62,7 @@
         }
         @if (!string.IsNullOrEmpty(Model.Flag))
         {
-            if (Model.Flag.ToString().Length > 25)
-            {
-                @Html.Raw(Model.Flag)
-            }
+            <span class="product-box-label bg-info">@Model.Flag</span>
         }
     </div>
     <div class="product-info">
@@ -203,6 +200,11 @@
                 @Html.Raw(Model.ShortDescription)
             </div>
             <div class="buttons btn-group">
+                @if (Model.ShowQty)
+                {
+                    var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
+                    <input class="form-control input-group-addon catalog-quantity" type="number" id="@qtyId" name="@qtyId" value="1">
+                }
                 @if (!Model.ProductPrice.DisableBuyButton)
                 {
                     var addToCartText = T("ShoppingCart.AddToCart").Text;

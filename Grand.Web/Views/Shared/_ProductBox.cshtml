@@ -94,10 +94,7 @@
         }
         @if (!string.IsNullOrEmpty(Model.Flag))
         {
-            if (Model.Flag.ToString().Length > 25)
-            {
-                @Html.Raw(Model.Flag)
-            }
+            <span class="product-box-label badge bg-info text-white">@Model.Flag</span>
         }
     </div>
     <div class="product-info">
