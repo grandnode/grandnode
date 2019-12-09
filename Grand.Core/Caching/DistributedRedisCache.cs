@@ -28,8 +28,6 @@ namespace Grand.Core.Caching
 
             //deserialize item
             var item = JsonConvert.DeserializeObject<T>(serializedItem);
-            if (item == null)
-                return default(T);
 
             return item;
         }
@@ -43,7 +41,13 @@ namespace Grand.Core.Caching
             }
             else
             {
-                return (JsonConvert.DeserializeObject<T>(res), true);
+                if (typeof(T) == typeof(string))
+                {
+                    return ((T)Convert.ChangeType(res, typeof(T)), true);
+                }
+                var result = JsonConvert.DeserializeObject<T>(res);
+
+                return (result, true);
             }
         }
 
@@ -57,8 +61,16 @@ namespace Grand.Core.Caching
             if (data == null)
                 return;
 
-            //serialize item
-            var serializedItem = JsonConvert.SerializeObject(data);
+            string serializedItem = "";
+            if (data is string)
+            {
+                //serialize item
+                serializedItem = data as string;
+            }
+            else
+            {
+                serializedItem = JsonConvert.SerializeObject(data);
+            }
 
             //and set it to cache
             await _distributedCache.StringSetAsync(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);

@@ -74,6 +74,14 @@ namespace Grand.Services.Catalog
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_PERSONAL = "Grand.product.personal-{0}";
 
+        /// <summary>
+        /// Key for caching homepage featured products
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer ID
+        /// </remarks>
+        private const string PRODUCTS_FEATURED_AT_HOMEPAGE = "Grand.product.featured_home-{0}";
+
         #endregion
 
         #region Fields
@@ -228,12 +236,23 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetAllProductsDisplayedOnHomePage()
         {
+            var result = await _cacheManager.Get<List<Product>>(PRODUCTS_FEATURED_AT_HOMEPAGE);
+            if (result != null)
+            {
+                return result;
+            }
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
             filter = filter & builder.Eq(x => x.VisibleIndividually, true);
             var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name);
-            return await query.ToListAsync();
+            result = await query.ToListAsync();
+
+            var toCache = JsonConvert.SerializeObject(result, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
+
+            await _cacheManager.Set(PRODUCTS_FEATURED_AT_HOMEPAGE, toCache, 5);
+
+            return result;
         }
 
         /// <summary>
