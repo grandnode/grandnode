@@ -740,4 +740,10 @@
   <LocaleResource Name="admin.common.genericattributes.fields.store">
     <Value>Select store</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.NewCustomer">
+    <Value>Don't have an account? Create one for free</Value>
+  </LocaleResource>
+  <LocaleResource Name="SideBar.NewCustomer">
+    <Value>New Customer</Value>
+  </LocaleResource>
 </Language>

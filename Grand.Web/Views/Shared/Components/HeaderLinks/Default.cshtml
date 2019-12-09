@@ -33,22 +33,21 @@
 }
 else
 {
-    <li class="nav-item mb-4">
-        <h5>@T("Account.Login.ReturningCustomer")</h5>
+    <li class="nav-item sidebar-info d-inline-flex justify-content-center flex-wrap my-3">
+        <h5 class="d-flex justify-content-center mb-3 w-100">@T("Account.Login.ReturningCustomer") / @T("SideBar.NewCustomer")</h5>
         <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("Login")">
             <span class="mdi mdi-lock-open"></span>
-            <span class="text text-uppercase ml-3">@T("Account.Login")</span>
+            <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Login")</span>
+        </a>
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary ml-3" href="@registerUrl">
+            <span class="mdi mdi-account-plus-outline"></span>
+            <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Register")</span>
         </a>
     </li>
     <li class="nav-item">
-        <h5>@T("Account.Login.NewCustomer")</h5>
-        <div class="text generalMarginSupporter">
+        <div class="text-center generalMarginSupporter">
             @T("Account.Login.NewCustomerText")
         </div>
-        <a class="d-flex align-items-center nav-link btn btn-secondary" href="@registerUrl">
-            <span class="mdi mdi-account-plus-outline"></span>
-            <span class="text text-uppercase ml-3">@T("Account.Register")</span>
-        </a>
     </li>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })

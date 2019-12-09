@@ -670,7 +670,7 @@ ul.ui-autocomplete li img {
 
 .user-panel-trigger .mdi {
     color: #000;
-    font-size: 34px;
+    font-size: 40px;
 }
 .user-panel-content {
     margin: 0;
@@ -1137,6 +1137,9 @@ nav .nav-item.list-inline {
 .dropdown-menu a {
 	width: 100%;
 	letter-spacing: 0.5px;
+}
+.selectors-container .dropdown-menu  a {
+	text-align: center;
 }
 .generalDropDown {
 	padding-top: 0;
@@ -4601,9 +4604,6 @@ footer .socicon-pinterest:hover {
 	.wishlist-content th:first-of-type {
 		width: 10%;
 	}
-	.register-block .register-button {
-		margin-top: 85px;
-	}
 	.first-level .dropdown:hover .next-level {
 		display: block;
 		position: absolute;
@@ -4669,6 +4669,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+	.product-details-page .product-tabs .nav-link, #pills-mobile-tab .nav-item .nav-link {
+		font-size: 14px;
+	}
 	.shopping-links .nav-link {
 		padding: 0 0 0 .5rem;
 	}
@@ -4998,7 +5001,7 @@ footer .socicon-pinterest:hover {
         border-bottom: 1px solid rgba(0,0,0,.15);
     }
     .advanced-search-results.open {
-        top: 47px;
+        top: 60px;
     }
 	.category-icon {
 		font-size: 26px;
@@ -5647,6 +5650,10 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+	.sidebar-info h5 {
+		font-size: 14px;
+		letter-spacing: -.7px;
+	}
     .product-box .labels {
         top: 5px;
         left: 5px;
