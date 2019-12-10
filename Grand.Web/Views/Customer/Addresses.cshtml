@@ -119,9 +119,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="card-footer buttons text-xs-center btn-group btn-group-sm" role="group">
+                            <div class="card-footer px-0 buttons text-xs-center btn-group btn-group-sm" role="group">
                                 <input type="button" class="btn btn-secondary edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'" value='@T("Common.Edit")' />
-                                <input type="button" class="btn btn-secondary delete-address-button" onclick="deletecustomeraddress('@(address.Id)')" value="@T("Common.Delete")" />
+                                <input type="button" class="btn btn-danger delete-address-button" onclick="deletecustomeraddress('@(address.Id)')" value="@T("Common.Delete")" />
                             </div>
                         </div>
                     </div>
