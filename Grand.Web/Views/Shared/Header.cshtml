@@ -17,4 +17,11 @@
             @await Component.InvokeAsync("ShoppingCartLinks")
         </div>
     </div>
+    <nav class="navbar mainNav navbar-expand-sm offcanvas-desktop">
+        <div class="navbar-collapse container">
+            <ul class="navbar-nav">
+                @await Component.InvokeAsync("TopMenu")
+            </ul>
+        </div>
+    </nav>
 </header>

@@ -7,13 +7,6 @@
 <partial name="_OldInternetExplorerWarning" />
 <main class="c-offcanvas-content-wrap" role="main">
     <partial name="Header" />
-    <nav class="navbar mainNav navbar-expand-sm offcanvas-desktop">
-        <div class="navbar-collapse container">
-            <ul class="navbar-nav">
-                @await Component.InvokeAsync("TopMenu")
-            </ul>
-        </div>
-    </nav>
     <div class="container page-container">
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
         @if (IsSectionDefined("Breadcrumb"))

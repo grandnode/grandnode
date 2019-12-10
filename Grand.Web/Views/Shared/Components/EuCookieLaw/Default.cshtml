@@ -19,14 +19,14 @@
     });
 </script>
 
-<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification generalNote card text-white card-success text-xs-center" style="display:none;">
+<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification" style="display:none;">
     <div class="buttons-more">
-        <blockquote class="card-bodyquote mb-0">
-            <p>@T("EUCookieLaw.Description2")</p>
-            <p class="pt-3">
+        <blockquote class="card-bodyquote d-inline-flex justify-content-center align-items-center w-100 mb-0">
+            <p class="mb-0 text-white">@T("EUCookieLaw.Description2")</p>
+            <div class="btn-group ml-2 ml-sm-3">
                 <a class="ok-button btn-sm btn btn-light text-dark" id="eu-cookie-ok">@T("Common.OK")</a>
                 <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("privacyinfo", Context) })">@T("EUCookieLaw.LearnMore")</a>
-            </p>
+            </div>
         </blockquote>
     </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
@@ -19,18 +19,30 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\DiscountRequirements.Standard\refs" />
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>
+      <ExcludeAssets></ExcludeAssets>
+      <IncludeAssets></IncludeAssets>
+      <PrivateAssets></PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj">
       <Private>false</Private>
+      <ExcludeAssets></ExcludeAssets>
+      <PrivateAssets></PrivateAssets>
+      <IncludeAssets></IncludeAssets>
     </ProjectReference>
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj">
       <Private>false</Private>
+      <ExcludeAssets></ExcludeAssets>
+      <IncludeAssets></IncludeAssets>
+      <PrivateAssets></PrivateAssets>
     </ProjectReference>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Description.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
