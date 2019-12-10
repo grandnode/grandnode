@@ -1,6 +1,6 @@
 ﻿@model SearchBoxModel
 @using System.Text.Encodings.Web
-<form asp-route="ProductSearch" method="get" id="small-search-box-form">
+<form asp-route="ProductSearch" method="get" id="small-search-box-form" class="w-100">
     <input type="hidden" asp-for="Box" value="true" />
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
     <div class="input-group flex-row">
