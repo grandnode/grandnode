@@ -17,6 +17,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Widgets.Slider\refs" />
+  </Target>
+
   <ItemGroup>
     <EmbeddedResource Include="Views\**\*.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

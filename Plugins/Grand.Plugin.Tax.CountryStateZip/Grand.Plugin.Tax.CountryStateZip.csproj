@@ -19,6 +19,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Tax.CountryStateZip\refs" />
+  </Target>
+
   <ItemGroup>
     <Content Include="Views\TaxCountryStateZip\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -19,6 +19,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Feed.GoogleShopping\refs" />
+  </Target>
+
   <ItemGroup>
     <None Remove="Files\taxonomy.txt" />
   </ItemGroup>
