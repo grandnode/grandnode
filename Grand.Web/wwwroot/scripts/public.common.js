@@ -72,24 +72,6 @@ function searchReplace() {
         $('#small-search-box-form').prependTo('.formSearch');
     }
 }
-function FLmainImg() {
-    // Get on screen image
-    $(".mainNav .first-level img").each(function () {
-        var screenImage = $(this);
-
-        // Create new offscreen image to test
-        var theImage = new Image();
-        theImage.src = screenImage.attr("src");
-
-        // Get accurate measurements from that.
-        var imageWidth = theImage.width;
-        var imageHeight = theImage.height;
-
-        $(this).attr("style", "min-width:" + imageWidth + "px");
-        //$(this).parents(".first-level").attr("style", "min-height:" + imageHeight + "px");
-        //$(this).parents(".first-level").find(".nav-item").attr("style", "margin-left:" + imageWidth + "px");
-    });
-}
 function BackToTop() {
     if ($('#back-to-top').length) {
         var scrollTrigger = 100, // px
@@ -113,18 +95,11 @@ function BackToTop() {
         });
     }
 }
-function IpadMenuFix() {
-    if (navigator.platform == "iPad") {
-        $('.mainNav li.dropdown > .dropdown-toggle').click(function () {
-            if ($(this).parent().hasClass("show")) {
-                window.location = $(this).attr('href');
-            }
-        });
-    }
-    else {
-        $('.mainNav li.dropdown > .dropdown-toggle').click(function () {
-            window.location = $(this).attr('href');
-        });
+function edgeFix() {
+    if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+        if (typeof ($.fn.popover) != 'undefined') {
+            $("body").addClass("IE-ready");
+        }
     }
 }
 
@@ -173,21 +148,21 @@ function productInfo() {
 
 $(document).ready(function () {
 
+    edgeFix();
     CartFix();
     mainMenuReplace();
     searchReplace();
     LeftSide();
     itemsStatistics();
-    IpadMenuFix();
+    //IpadMenuFix();
     dataCountdown();
     BackToTop();
-    FLmainImg();
-    productInfo();
+    productInfo(); 
 
     $(window).resize(function () {
         mainMenuReplace();
         searchReplace();
-        IpadMenuFix();
+        //IpadMenuFix();
         LeftSide();
         productInfo();
     });
@@ -349,6 +324,7 @@ function displayPopupQuickView(html) {
     $('#ModalQuickView').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
+    dataCountdown();
 }
 
 
