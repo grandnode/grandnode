@@ -24,6 +24,13 @@ namespace Grand.Core.Caching
         (T result, bool fromCache) TryGetValue<T>(string key);
 
         /// <summary>
+        /// Gets or sets the value associated with the specified key asynchronosly
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>The value associated with the specified key.</returns>
+        Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key);
+
+        /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>
         /// <param name="key">key</param>

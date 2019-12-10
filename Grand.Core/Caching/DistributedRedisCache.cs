@@ -43,6 +43,33 @@ namespace Grand.Core.Caching
             return item;
         }
 
+        public async Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
+        {
+            byte[] result;
+            try
+            {
+                result = await _distributedCache.GetAsync(key);
+                if (result == null)
+                    return (default(T), false);
+            }
+            catch
+            {
+                return (default(T), false);
+            }
+
+            //get serialized item from cache
+            var serializedItem = System.Text.Encoding.Default.GetString(result);
+            if (string.IsNullOrEmpty(serializedItem))
+                return (default(T), true);
+
+            //deserialize item
+            var item = JsonConvert.DeserializeObject<T>(serializedItem);
+            if (item == null)
+                return (default(T), true);
+
+            return (item, true);
+        }
+
         public virtual (T, bool) TryGetValue<T>(string key)
         {
             byte[] result;
@@ -107,7 +134,5 @@ namespace Grand.Core.Caching
         {
             //nothing special
         }
-
-        
     }
 }
