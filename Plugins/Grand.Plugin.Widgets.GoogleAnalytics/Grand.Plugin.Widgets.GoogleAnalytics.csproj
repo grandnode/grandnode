@@ -19,6 +19,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Widgets.GoogleAnalytics\refs" />
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">
       <Private>false</Private>

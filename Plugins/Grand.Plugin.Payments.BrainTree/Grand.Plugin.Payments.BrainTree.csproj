@@ -15,6 +15,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Payments.BrainTree\refs" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Braintree" Version="4.16.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />

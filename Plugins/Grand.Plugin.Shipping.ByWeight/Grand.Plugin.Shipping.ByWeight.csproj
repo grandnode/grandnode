@@ -18,7 +18,11 @@
     <OutputPath>..\..\Grand.Web\Plugins\Shipping.ByWeight\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
-  
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Shipping.ByWeight\refs" />
+  </Target>
+
   <ItemGroup>
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -18,6 +18,10 @@
     <OutputPath>..\..\Grand.Web\Plugins\Shipping.FixedRateShipping</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Shipping.FixedRateShipping\refs" />
+  </Target>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj">

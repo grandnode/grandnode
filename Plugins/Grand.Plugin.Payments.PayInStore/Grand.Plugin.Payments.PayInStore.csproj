@@ -19,6 +19,10 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Payments.PayInStore\refs" />
+  </Target>
+  
   <ItemGroup>
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
