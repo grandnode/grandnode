@@ -50,8 +50,6 @@ namespace Grand.Plugin.Feed.GoogleShopping
         private readonly MeasureSettings _measureSettings;
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
-        private readonly MediaSettings _mediaSettings;
-        private readonly SecuritySettings _securitySettings;
         private readonly IWebHelper _webHelper;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -74,33 +72,29 @@ namespace Grand.Plugin.Feed.GoogleShopping
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
-            MediaSettings mediaSettings,
-            SecuritySettings securitySettings,
             IWebHelper webHelper,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor)
         {
-            this._googleService = googleService;
-            this._priceCalculationService = priceCalculationService;
-            this._taxService = taxService;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
-            this._currencyService = currencyService;
-            this._languageService = languageService;
-            this._settingService = settingService;
-            this._workContext = workContext;
-            this._measureService = measureService;
-            this._serviceProvider = serviceProvider;
-            this._measureSettings = measureSettings;
-            this._googleShoppingSettings = googleShoppingSettings;
-            this._currencySettings = currencySettings;
-            this._mediaSettings = mediaSettings;
-            this._securitySettings = securitySettings;
-            this._webHelper = webHelper;
-            this._urlHelperFactory = urlHelperFactory;
-            this._actionContextAccessor = actionContextAccessor;
+            _googleService = googleService;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _pictureService = pictureService;
+            _currencyService = currencyService;
+            _languageService = languageService;
+            _settingService = settingService;
+            _workContext = workContext;
+            _measureService = measureService;
+            _serviceProvider = serviceProvider;
+            _measureSettings = measureSettings;
+            _googleShoppingSettings = googleShoppingSettings;
+            _currencySettings = currencySettings;
+            _webHelper = webHelper;
+            _urlHelperFactory = urlHelperFactory;
+            _actionContextAccessor = actionContextAccessor;
         }
 
         #endregion

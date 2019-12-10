@@ -41,5 +41,6 @@
     <EmbeddedResource Remove="Plugins\**" />
     <None Remove="Plugins\**" />
   </ItemGroup>
+ 
   
 </Project>

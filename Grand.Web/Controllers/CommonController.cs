@@ -68,17 +68,17 @@ namespace Grand.Web.Controllers
             VendorSettings vendorSettings
             )
         {
-            this._commonViewModelService = commonViewModelService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._customerActivityService = customerActivityService;
-            this._customerActionEventService = customerActionEventService;
-            this._popupService = popupService;
-            this._contactAttributeService = contactAttributeService;
-            this._commonSettings = commonSettings;
-            this._captchaSettings = captchaSettings;
-            this._vendorSettings = vendorSettings;
+            _commonViewModelService = commonViewModelService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _customerActivityService = customerActivityService;
+            _customerActionEventService = customerActionEventService;
+            _popupService = popupService;
+            _contactAttributeService = contactAttributeService;
+            _commonSettings = commonSettings;
+            _captchaSettings = captchaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion

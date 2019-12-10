@@ -29,12 +29,12 @@ namespace Grand.Services.Topics
         /// Ctor
         /// </summary>
         /// <param name="topicTemplateRepository">Topic template repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository, 
             IMediator mediator)
         {
-            this._topicTemplateRepository = topicTemplateRepository;
-            this._mediator = mediator;
+            _topicTemplateRepository = topicTemplateRepository;
+            _mediator = mediator;
         }
 
         #endregion

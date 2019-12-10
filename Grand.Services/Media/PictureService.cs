@@ -45,12 +45,10 @@ namespace Grand.Services.Media
         /// Ctor
         /// </summary>
         /// <param name="pictureRepository">Picture repository</param>
-        /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="logger">Logger</param>
-        /// <param name="dbContext">Database context</param>
-        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="mediator">Mediator</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
@@ -60,13 +58,13 @@ namespace Grand.Services.Media
             MediaSettings mediaSettings,
             IWebHostEnvironment hostingEnvironment)
         {
-            this._pictureRepository = pictureRepository;
-            this._settingService = settingService;
-            this._webHelper = webHelper;
-            this._logger = logger;
-            this._mediator = mediator;
-            this._mediaSettings = mediaSettings;
-            this._hostingEnvironment = hostingEnvironment;
+            _pictureRepository = pictureRepository;
+            _settingService = settingService;
+            _webHelper = webHelper;
+            _logger = logger;
+            _mediator = mediator;
+            _mediaSettings = mediaSettings;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -221,7 +219,6 @@ namespace Grand.Services.Media
         /// Get picture local path. Used when images stored on file system (not in the database)
         /// </summary>
         /// <param name="fileName">Filename</param>
-        /// <param name="imagesDirectoryPath">Directory path with images; if null, then default one is used</param>
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {

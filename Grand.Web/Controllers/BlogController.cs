@@ -47,14 +47,14 @@ namespace Grand.Web.Controllers
             BlogSettings blogSettings,
             CaptchaSettings captchaSettings)
         {
-            this._blogViewModelService = blogViewModelService;
-            this._blogService = blogService;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._blogSettings = blogSettings;
-            this._captchaSettings = captchaSettings;
-            this._workContext = workContext;
+            _blogViewModelService = blogViewModelService;
+            _blogService = blogService;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _workContext = workContext;
         }
 
 		#endregion

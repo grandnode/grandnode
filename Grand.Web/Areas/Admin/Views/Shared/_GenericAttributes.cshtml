@@ -1,4 +1,13 @@
 ﻿@model Grand.Framework.Mvc.Models.BaseGrandEntityModel
+@inject Grand.Services.Stores.IStoreService storeService
+
+@{ 
+    var stores = (await storeService.GetAllStores()).Select(store => new SelectListItem
+    {
+        Text = store.Name,
+        Value = store.Id,
+    }).ToList();
+}
 @if (!string.IsNullOrEmpty(Model.Id))
 {
     if (Model.GenericAttributes.Any())
@@ -10,10 +19,13 @@
                     <div class="form-body">
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3">@Model.GenericAttributes[item].Key</label>
-                            <div class="col-md-9 col-sm-9">
+                            <div class="col-md-6 col-sm-6">
                                 <admin-input asp-for="@Model.GenericAttributes[item].Value" />
                                 <input type="hidden" asp-for="@Model.GenericAttributes[item].Key" />
                                 <span asp-validation-for="@Model.GenericAttributes[item].Value"></span>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <admin-select asp-for="@Model.GenericAttributes[item].StoreId" asp-items="@stores" />
                             </div>
                         </div>
                     </div>
@@ -39,6 +51,12 @@
                     <input class="form-control k-input text-box single-line valid" id="ga_value" name="ga_value" type="text" value="">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3">@T("Admin.Common.GenericAttributes.Fields.Store")</label>
+                <div class="col-md-9 col-sm-9">
+                    @Html.DropDownList("ga_store", stores, new { @class = "form-control" } )
+                </div>
+            </div>
             <div class="form-actions">
                 <div class="col-md-offset-3 col-md-9 col-sm-9">
                     <button type="button" id="addGenericAttr" class="k-button"><i class="fa fa-plus"></i>@T("Admin.Common.GenericAttributes.AddNew.Button")</button>
@@ -51,7 +69,7 @@
         $('#addGenericAttr').click(function () {
             var attrKey = $("#ga_key").val();
             var attrValue = $("#ga_value").val();
-
+            var attrStore = $("#ga_store").val();
             //some validation
             if (attrKey === "") {
                 alert('@T("Admin.Common.GenericAttributes.Fields.Key.Required")');
@@ -64,6 +82,7 @@
             var postData = {
                 Key: attrKey,
                 Value: attrValue,
+                StoreId: attrStore,
                 ObjectType: "@ViewData["ObjectType"]",
                 Id: '@Model.Id',
             };
@@ -76,7 +95,7 @@
                 data: postData,
                 success: function (data) {
                     if (data.success)
-                        location.reload();
+                        window.location.href=window.location.href;
                     else
                         alert(data.errors);
                 },

@@ -87,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual DiscountListModel PrepareDiscountListModel()
         {
             var model = new DiscountListModel {
-                AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList()
+                AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(_localizationService,_workContext, false).ToList()
             };
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             return model;
@@ -104,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Services
             var items = new List<DiscountModel>();
             foreach (var x in discounts.Skip((pageIndex - 1) * pageSize).Take(pageSize))
             {
-                var discountModel = x.ToModel();
+                var discountModel = x.ToModel(_dateTimeHelper);
                 discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
                 discountModel.PrimaryStoreCurrencyCode = x.CalculateByPlugin ? "" : (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
                 discountModel.TimesUsed = (await _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1)).TotalCount;
@@ -155,7 +155,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual async Task<Discount> InsertDiscountModel(DiscountModel model)
         {
-            var discount = model.ToEntity();
+            var discount = model.ToEntity(_dateTimeHelper);
             await _discountService.InsertDiscount(discount);
 
             //activity log
@@ -166,7 +166,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<Discount> UpdateDiscountModel(Discount discount, DiscountModel model)
         {
             var prevDiscountType = discount.DiscountType;
-            discount = model.ToEntity(discount);
+            discount = model.ToEntity(discount, _dateTimeHelper);
             await _discountService.UpdateDiscount(discount);
 
             //clean up old references (if changed) and update "HasDiscountsApplied" properties
@@ -270,14 +270,14 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList().ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             return model;
         }
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(DiscountModel.AddProductToDiscountModel model, int pageIndex, int pageSize)
         {
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
-            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+            return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }
         public virtual async Task InsertProductToDiscountModel(DiscountModel.AddProductToDiscountModel model)
         {

@@ -32,13 +32,13 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService,
             IWorkContext workContext)
         {
-            this._topicService = topicService;
-            this._topicViewModelService = topicViewModelService;
-            this._localizationService = localizationService;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
+            _topicService = topicService;
+            _topicViewModelService = topicViewModelService;
+            _localizationService = localizationService;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion

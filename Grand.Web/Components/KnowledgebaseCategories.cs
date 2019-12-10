@@ -19,9 +19,9 @@ namespace Grand.Web.ViewComponents
 
         public KnowledgebaseCategories(IKnowledgebaseService knowledgebaseService, IWorkContext workContext, KnowledgebaseSettings knowledgebaseSettings)
         {
-            this._knowledgebaseService = knowledgebaseService;
-            this._workContext = workContext;
-            this._knowledgebaseSettings = knowledgebaseSettings;
+            _knowledgebaseService = knowledgebaseService;
+            _workContext = workContext;
+            _knowledgebaseSettings = knowledgebaseSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(KnowledgebaseHomePageModel model)

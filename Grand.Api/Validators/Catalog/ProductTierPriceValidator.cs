@@ -4,12 +4,16 @@ using Grand.Framework.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class ProductTierPriceValidator : BaseGrandValidator<ProductTierPriceDto>
     {
-        public ProductTierPriceValidator(ILocalizationService localizationService, IStoreService storeService, ICustomerService customerService)
+        public ProductTierPriceValidator(
+            IEnumerable<IValidatorConsumer<ProductTierPriceDto>> validators,
+            ILocalizationService localizationService, IStoreService storeService, ICustomerService customerService)
+            : base(validators)
         {
             RuleFor(x => x.Quantity).GreaterThan(0).WithMessage(localizationService.GetResource("Api.Catalog.ProductTierPrice.Fields.Quantity.GreaterThan0"));
             RuleFor(x => x.Price).GreaterThan(0).WithMessage(localizationService.GetResource("Api.Catalog.ProductTierPrice.Fields.Price.GreaterThan0"));

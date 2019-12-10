@@ -73,11 +73,11 @@
     @*subcategories*@
     @if (Model.SubCategories.Any())
     {
-        <div class="categoryItems">
-            <div class="row">
+        <div class="categoryGrid">
+            <div class="flex-grid form-row">
                 @foreach (var item in Model.SubCategories)
                 {
-                    <div class="col-md-4 col-sm-6 col-12 mb-2">
+                    <div class="col-md-4 col-6 mb-2">
                         <div class="card">
                             <div class="list-picture">
                                 <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">

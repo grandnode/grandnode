@@ -73,7 +73,6 @@ namespace Grand.Services.Shipping
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
@@ -101,7 +100,6 @@ namespace Grand.Services.Shipping
             IProductService productService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
-            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IAddressService addressService,
             ICountryService countryService,
@@ -115,27 +113,26 @@ namespace Grand.Services.Shipping
             ShoppingCartSettings shoppingCartSettings,
             ShippingSettings shippingSettings)
         {
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._warehouseRepository = warehouseRepository;
-            this._pickupPointsRepository = pickupPointsRepository;
-            this._logger = logger;
-            this._productService = productService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._pluginFinder = pluginFinder;
-            this._storeContext = storeContext;
-            this._currencyService = currencyService;
-            this._mediator = mediator;
-            this._cacheManager = cacheManager;
-            this._productRepository = productRepository;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._shippingSettings = shippingSettings;
+            _shippingMethodRepository = shippingMethodRepository;
+            _deliveryDateRepository = deliveryDateRepository;
+            _warehouseRepository = warehouseRepository;
+            _pickupPointsRepository = pickupPointsRepository;
+            _logger = logger;
+            _productService = productService;
+            _productAttributeParser = productAttributeParser;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _localizationService = localizationService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _pluginFinder = pluginFinder;
+            _storeContext = storeContext;
+            _currencyService = currencyService;
+            _mediator = mediator;
+            _cacheManager = cacheManager;
+            _productRepository = productRepository;
+            _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion

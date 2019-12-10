@@ -64,13 +64,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <param name="behavior">The JSON request behavior</param>
         public override JsonResult Json(object data)
         {
-            //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
-            //TODO rename setting
-            var useIsoDateTime = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson;
             var serializerSettings = new JsonSerializerSettings {
-                DateFormatHandling = useIsoDateTime ? DateFormatHandling.IsoDateFormat : DateFormatHandling.MicrosoftDateFormat
+                DateFormatHandling = DateFormatHandling.IsoDateFormat 
             };
-
             return base.Json(data, serializerSettings);
         }
     }

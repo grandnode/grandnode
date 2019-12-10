@@ -10,7 +10,9 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -228,17 +230,17 @@ namespace Grand.Web.Extensions
         ///// <param name="html">HTML helper</param>
         ///// <param name="systemName">System name</param>
         ///// <returns>Topic SEO Name</returns>
-        public static async Task<string> GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName)
+        public static async Task<string> GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName, HttpContext httpContext)
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
+            var storeContext = httpContext.RequestServices.GetRequiredService<IStoreContext>();
 
             //static cache manager
-            var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            var cacheManager = httpContext.RequestServices.GetRequiredService<ICacheManager>();
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
             var cachedSeName = await cacheManager.GetAsync(cacheKey, async () =>
             {
-                var topicService = EngineContext.Current.Resolve<ITopicService>();
+                var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
                 var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
                 if (topic == null)
                     return "";

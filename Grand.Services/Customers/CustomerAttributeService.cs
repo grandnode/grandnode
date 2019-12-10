@@ -32,20 +32,6 @@ namespace Grand.Services.Customers
         /// </remarks>
         private const string CUSTOMERATTRIBUTES_BY_ID_KEY = "Grand.customerattribute.id-{0}";
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_ALL_KEY = "Grand.customerattributevalue.all-{0}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute value ID
-        /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_BY_ID_KEY = "Grand.customerattributevalue.id-{0}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string CUSTOMERATTRIBUTES_PATTERN_KEY = "Grand.customerattribute.";
@@ -70,15 +56,14 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
-        /// <param name="customerAttributeValueRepository">Customer attribute value repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CustomerAttributeService(ICacheManager cacheManager,
             IRepository<CustomerAttribute> customerAttributeRepository,            
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._customerAttributeRepository = customerAttributeRepository;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _customerAttributeRepository = customerAttributeRepository;
+            _mediator = mediator;
         }
 
         #endregion

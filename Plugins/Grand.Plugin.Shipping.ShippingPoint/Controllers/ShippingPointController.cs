@@ -44,15 +44,15 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             IPriceFormatter priceFormatter
             )
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._shippingPointService = ShippingPointService;
-            this._countryService = countryService;
-            this._storeService = storeService;
-            this._priceFormatter = priceFormatter;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _shippingPointService = ShippingPointService;
+            _countryService = countryService;
+            _storeService = storeService;
+            _priceFormatter = priceFormatter;
         }
 
         public IActionResult Configure()

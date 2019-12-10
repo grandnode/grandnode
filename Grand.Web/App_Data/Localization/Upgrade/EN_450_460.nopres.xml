@@ -650,9 +650,9 @@
   <LocaleResource Name="Admin.Courses.Course.Fields.ProductId.Hint">
     <Value>A customer is added to this course once a specified product is purchased (paid).</Value>
   </LocaleResource>
-  <LocalResource Name="Admin.Orders.Products.Commission">
+  <LocaleResource Name="Admin.Orders.Products.Commission">
     <Value>Commission</Value>
-  </LocalResource>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Commission">
     <Value>Commission</Value>
   </LocaleResource>
@@ -736,5 +736,14 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Tab">
     <Value>Generic attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.genericattributes.fields.store">
+    <Value>Select store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.NewCustomer">
+    <Value>Don't have an account? Create one for free</Value>
+  </LocaleResource>
+  <LocaleResource Name="SideBar.NewCustomer">
+    <Value>New Customer</Value>
   </LocaleResource>
 </Language>

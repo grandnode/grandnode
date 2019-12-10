@@ -1,6 +1,5 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Interfaces;
-using Grand.Api.Services;
 using Grand.Api.Tests.Helpers;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;

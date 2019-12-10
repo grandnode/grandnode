@@ -16,9 +16,9 @@ namespace Grand.Web.Services
         public ExternalAuthenticationViewModelService(IExternalAuthenticationService externalAuthenticationService,
             IStoreContext storeContext, IWorkContext workContext)
         {
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
+            _externalAuthenticationService = externalAuthenticationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
         }
 
         public virtual List<ExternalAuthenticationMethodModel> PrepereExternalAuthenticationMethodModel()

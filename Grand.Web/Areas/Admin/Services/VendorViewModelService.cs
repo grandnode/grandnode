@@ -7,7 +7,6 @@ using Grand.Core.Domain.Vendors;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -72,7 +71,7 @@ namespace Grand.Web.Areas.Admin.Services
             
             model.AvailableDiscounts = (await _discountService
                 .GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true))
-                .Select(d => d.ToModel())
+                .Select(d => d.ToModel(_dateTimeHelper))
                 .ToList();
 
             if (!excludeProperties && vendor != null)

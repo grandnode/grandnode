@@ -35,7 +35,6 @@ namespace Grand.Services.Catalog
         private readonly ICustomerService _customerService;
         private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
-        private readonly IStoreService _storeService;
         private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -54,25 +53,23 @@ namespace Grand.Services.Catalog
             ICustomerService customerService,
             ICacheManager cacheManager,
             IVendorService vendorService,
-            IStoreService storeService,
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._discountService = discountService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeParser = productAttributeParser;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._cacheManager = cacheManager;
-            this._vendorService = vendorService;
-            this._storeService = storeService;
-            this._currencyService = currencyService;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _discountService = discountService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeParser = productAttributeParser;
+            _productService = productService;
+            _customerService = customerService;
+            _cacheManager = cacheManager;
+            _vendorService = vendorService;
+            _currencyService = currencyService;
+            _shoppingCartSettings = shoppingCartSettings;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

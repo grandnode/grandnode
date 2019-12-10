@@ -14,8 +14,8 @@ namespace Grand.Web.ViewComponents
         public HomePageNewsViewComponent(INewsViewModelService newsViewModelService,
             NewsSettings newsSettings)
         {
-            this._newsViewModelService = newsViewModelService;
-            this._newsSettings = newsSettings;
+            _newsViewModelService = newsViewModelService;
+            _newsSettings = newsSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

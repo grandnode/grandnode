@@ -5,14 +5,18 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Vendors;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Validators.Common
 {
     public class VendorAddressValidator : BaseGrandValidator<VendorAddressModel>
     {
-        public VendorAddressValidator(ILocalizationService localizationService,
+        public VendorAddressValidator(
+            IEnumerable<IValidatorConsumer<VendorAddressModel>> validators,
+            ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             VendorSettings addressSettings)
+            : base(validators)
         {
             if (addressSettings.CountryEnabled)
             {

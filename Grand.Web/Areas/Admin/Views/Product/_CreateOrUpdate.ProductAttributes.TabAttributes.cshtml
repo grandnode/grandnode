@@ -172,7 +172,7 @@
 
         var allAttributeControlTypes = [
             @{
-                var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
+                var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList(Context)
                     select new {Id = act.Value, Name = act.Text}).ToList();
             }
             @for (int i = 0; i < allAttributeControlTypes.Count; i++)

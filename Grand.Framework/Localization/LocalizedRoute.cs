@@ -1,8 +1,9 @@
 ﻿using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
-using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -48,12 +49,12 @@ namespace Grand.Framework.Localization
             if (data == null)
                 return null;
 
-            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
                 return data;
 
             //add language code to page URL in case if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
-            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
+            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
                 data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
 
             return data;
@@ -66,17 +67,17 @@ namespace Grand.Framework.Localization
         /// <returns>Task of the routing</returns>
         public override async Task RouteAsync(RouteContext context)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
             {
                 await base.RouteAsync(context);
                 return;
             }
 
-            await PrepareLanguages();
+            await PrepareLanguages(context.HttpContext);
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages, out Language language))
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
             {
                 await base.RouteAsync(context);
                 return;
@@ -106,32 +107,30 @@ namespace Grand.Framework.Localization
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForLanguagesEnabled settings
         /// </summary>
-        protected bool SeoFriendlyUrlsForLanguagesEnabled {
-            get {
-                if (!_seoFriendlyUrlsForLanguagesEnabled.HasValue)
-                    _seoFriendlyUrlsForLanguagesEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForLanguagesEnabled;
+        protected bool SeoFriendlyUrlsForLanguagesEnabled(HttpContext httpContext)
+        {
+            if (!_seoFriendlyUrlsForLanguagesEnabled.HasValue)
+                _seoFriendlyUrlsForLanguagesEnabled = httpContext.RequestServices.GetRequiredService<LocalizationSettings>().SeoFriendlyUrlsForLanguagesEnabled;
 
-                return _seoFriendlyUrlsForLanguagesEnabled.Value;
-            }
+            return _seoFriendlyUrlsForLanguagesEnabled.Value;
         }
 
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForPathEnabled settings
         /// </summary>
-        protected bool SeoFriendlyUrlsForPathEnabled {
-            get {
-                if (!_seoFriendlyUrlsForPathEnabled.HasValue)
-                    _seoFriendlyUrlsForPathEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForPathEnabled;
+        protected bool SeoFriendlyUrlsForPathEnabled(HttpContext httpContext)
+        {
+            if (!_seoFriendlyUrlsForPathEnabled.HasValue)
+                _seoFriendlyUrlsForPathEnabled = httpContext.RequestServices.GetRequiredService<LocalizationSettings>().SeoFriendlyUrlsForPathEnabled;
 
-                return _seoFriendlyUrlsForPathEnabled.Value;
-            }
+            return _seoFriendlyUrlsForPathEnabled.Value;
         }
 
-        protected async Task PrepareLanguages()
+        protected async Task PrepareLanguages(HttpContext httpContext)
         {
             if (_languages == null)
             {
-                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var languageService = httpContext.RequestServices.GetRequiredService<ILanguageService>();
                 _languages = await languageService.GetAllLanguages();
             }
         }
@@ -139,16 +138,13 @@ namespace Grand.Framework.Localization
         /// <summary>
         /// Gets all languges
         /// </summary>
-        protected IList<Language> Languages 
+        protected IList<Language> Languages(HttpContext context)
         {
-            get 
+            if (_languages == null)
             {
-                if (_languages == null)
-                {
-                    PrepareLanguages().GetAwaiter().GetResult();
-                }
-                return _languages;
+                PrepareLanguages(context).GetAwaiter().GetResult();
             }
+            return _languages;
         }
 
         #endregion

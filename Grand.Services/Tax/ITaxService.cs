@@ -49,7 +49,6 @@ namespace Grand.Services.Tax
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
-        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         Task<(decimal productprice, decimal taxRate)> GetProductPrice(Product product, decimal price, Customer customer);
 
@@ -60,7 +59,6 @@ namespace Grand.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
-        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         Task<(decimal productprice, decimal taxRate)> GetProductPrice(Product product, decimal price, bool includingTax, Customer customer);
 
@@ -73,7 +71,6 @@ namespace Grand.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
-        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         Task<(decimal productprice, decimal taxRate)> GetProductPrice(Product product, string taxCategoryId, decimal price, bool includingTax, Customer customer, bool priceIncludesTax);
 
@@ -83,12 +80,9 @@ namespace Grand.Services.Tax
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="price">Price</param>
-        /// <param name="taxRate">Tax rate</param>
-        /// <param name="unitprice">Unit Price</param>
+        /// <param name="unitPrice">Unit Price</param>
         /// <param name="unitPricewithoutDisc">Unit price without discount</param>
-        /// <param name="subtotal">Sub-Total</param>
+        /// <param name="subTotal">Sub-Total</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <returns>TaxProductPrice</returns>

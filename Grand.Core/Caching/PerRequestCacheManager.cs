@@ -24,7 +24,7 @@ namespace Grand.Core.Caching
         /// </summary>
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion

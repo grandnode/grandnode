@@ -8,7 +8,7 @@ namespace Grand.Web.Models.Customer
     {
         public CustomerAuctionsModel()
         {
-            this.ProductBidList = new List<ProductBidTuple>();
+            ProductBidList = new List<ProductBidTuple>();
         }
 
         public List<ProductBidTuple> ProductBidList { get; set; }

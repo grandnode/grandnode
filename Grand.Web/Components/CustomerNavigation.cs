@@ -11,7 +11,7 @@ namespace Grand.Web.Components
 
         public CustomerNavigationViewComponent(ICustomerViewModelService customerViewModelService)
         {
-            this._customerViewModelService = customerViewModelService;
+            _customerViewModelService = customerViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int selectedTabId = 0)

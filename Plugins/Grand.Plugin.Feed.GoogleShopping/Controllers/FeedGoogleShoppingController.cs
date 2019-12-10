@@ -54,18 +54,18 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             IPermissionService permissionService,
             IServiceProvider serviceProvider)
         {
-            this._googleService = googleService;
-            this._productService = productService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._pluginFinder = pluginFinder;
-            this._logger = logger;
-            this._webHelper = webHelper;
-            this._storeService = storeService;
-            this._GoogleShoppingSettings = GoogleShoppingSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._serviceProvider = serviceProvider;
+            _googleService = googleService;
+            _productService = productService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _pluginFinder = pluginFinder;
+            _logger = logger;
+            _webHelper = webHelper;
+            _storeService = storeService;
+            _GoogleShoppingSettings = GoogleShoppingSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IActionResult> Configure()

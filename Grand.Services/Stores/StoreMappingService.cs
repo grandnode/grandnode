@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Stores;
-using MediatR;
 using System;
 using System.Linq;
 
@@ -23,10 +22,6 @@ namespace Grand.Services.Stores
         /// {1} : entity name
         /// </remarks>
         private const string STOREMAPPING_BY_ENTITYID_NAME_KEY = "Grand.storemapping.entityid-name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string STOREMAPPING_PATTERN_KEY = "Grand.storemapping.";
 
         #endregion
 
@@ -34,7 +29,6 @@ namespace Grand.Services.Stores
 
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
-        private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -47,16 +41,13 @@ namespace Grand.Services.Stores
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
         public StoreMappingService(ICacheManager cacheManager,
             IStoreContext storeContext,
-            CatalogSettings catalogSettings,
-            IMediator mediator)
+            CatalogSettings catalogSettings)
         {
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._catalogSettings = catalogSettings;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion

@@ -28,11 +28,11 @@ namespace Grand.Web.ViewComponents
             ILocalizationService localizationService,
             ForumSettings forumSettings)
         {
-            this._forumService = forumService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._forumSettings = forumSettings;
+            _forumService = forumService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _forumSettings = forumSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string customerProfileId, int pageNumber)

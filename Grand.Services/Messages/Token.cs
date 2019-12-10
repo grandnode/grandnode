@@ -13,9 +13,9 @@
         }
         public Token(string key, string value, bool neverHtmlEncoded)
         {
-            this._key = key;
-            this._value = value;
-            this._neverHtmlEncoded = neverHtmlEncoded;
+            _key = key;
+            _value = value;
+            _neverHtmlEncoded = neverHtmlEncoded;
         }
 
         /// <summary>

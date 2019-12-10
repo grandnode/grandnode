@@ -9,7 +9,7 @@ namespace Grand.Web.ViewComponents
         private readonly BlogSettings _blogSettings;
         public BlogRssHeaderLinkViewComponent(BlogSettings blogSettings)
         {
-            this._blogSettings = blogSettings;
+            _blogSettings = blogSettings;
         }
 
         public IViewComponentResult Invoke()

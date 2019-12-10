@@ -8,7 +8,6 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Events.Web;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
@@ -45,7 +44,6 @@ namespace Grand.Services.Orders
         private readonly IStoreMappingService _storeMappingService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IProductReservationService _productReservationService;
         private readonly IShippingService _shippingService;
@@ -72,7 +70,6 @@ namespace Grand.Services.Orders
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="dateTimeHelper">Datetime helper</param>
         /// <param name="customerActionEventService">Customer action event service</param>
         /// <param name="productReservationService">Product reservation service</param>
         /// <param name="shippingService">Shipping service</param>
@@ -94,7 +91,6 @@ namespace Grand.Services.Orders
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper,
             ICustomerActionEventService customerActionEventService,
             IProductReservationService productReservationService,
             IShippingService shippingService,
@@ -116,7 +112,6 @@ namespace Grand.Services.Orders
             _storeMappingService = storeMappingService;
             _genericAttributeService = genericAttributeService;
             _productAttributeService = productAttributeService;
-            _dateTimeHelper = dateTimeHelper;
             _customerActionEventService = customerActionEventService;
             _productReservationService = productReservationService;
             _shippingService = shippingService;

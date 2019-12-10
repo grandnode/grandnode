@@ -174,7 +174,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             //order statuses
             var model = new OrderListModel {
-                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(_localizationService, _workContext, false).ToList()
             };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             if (orderStatusId.HasValue)
@@ -186,7 +186,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             if (paymentStatusId.HasValue)
             {
@@ -197,7 +197,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             //shipping statuses
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             if (shippingStatusId.HasValue)
             {
@@ -356,6 +356,7 @@ namespace Grand.Web.Areas.Admin.Services
             var store = await _storeService.GetStoreById(order.StoreId);
             model.StoreName = store != null ? store.Name : "Unknown";
             model.CustomerId = order.CustomerId;
+            model.GenericAttributes = order.GenericAttributes;
 
             var customer = await _customerService.GetCustomerById(order.CustomerId);
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -558,7 +559,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             #region Billing & shipping info
 
-            model.BillingAddress = order.BillingAddress.ToModel();
+            model.BillingAddress = await order.BillingAddress.ToModel(_countryService, _stateProvinceService);
             model.BillingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
             model.BillingAddress.FirstNameEnabled = true;
             model.BillingAddress.FirstNameRequired = true;
@@ -595,7 +596,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     if (order.ShippingAddress != null)
                     {
-                        model.ShippingAddress = order.ShippingAddress.ToModel();
+                        model.ShippingAddress = await order.ShippingAddress.ToModel(_countryService, _stateProvinceService);
                         model.ShippingAddress.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
                         model.ShippingAddress.FirstNameEnabled = true;
                         model.ShippingAddress.FirstNameRequired = true;
@@ -631,7 +632,7 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         if (order.PickupPoint.Address != null)
                         {
-                            model.PickupAddress = order.PickupPoint.Address.ToModel();
+                            model.PickupAddress = await order.PickupPoint.Address.ToModel(_countryService, _stateProvinceService);
                             var country = await _countryService.GetCountryById(order.PickupPoint.Address.CountryId);
                             if (country != null)
                                 model.PickupAddress.CountryName = country.Name;
@@ -768,7 +769,7 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(_localizationService, _workContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return model;
@@ -843,7 +844,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new OrderAddressModel {
                 OrderId = order.Id,
-                Address = address.ToModel()
+                Address = await address.ToModel(_countryService, _stateProvinceService)
             };
             model.Address.Id = address.Id;
             model.Address.FirstNameEnabled = true;

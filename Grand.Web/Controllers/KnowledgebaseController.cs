@@ -53,22 +53,22 @@ namespace Grand.Web.Controllers
             ICustomerActivityService customerActivityService, IDateTimeHelper dateTimeHelper, CustomerSettings customerSettings,
             MediaSettings mediaSettings, IPictureService pictureService)
         {
-            this._knowledgebaseSettings = knowledgebaseSettings;
-            this._knowledgebaseService = knowledgebaseService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._localizationService = localizationService;
-            this._captchaSettings = captchaSettings;
-            this._localizationSettings = localizationSettings;
-            this._workflowMessageService = workflowMessageService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._customerSettings = customerSettings;
-            this._mediaSettings = mediaSettings;
-            this._pictureService = pictureService;
+            _knowledgebaseSettings = knowledgebaseSettings;
+            _knowledgebaseService = knowledgebaseService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _localizationService = localizationService;
+            _captchaSettings = captchaSettings;
+            _localizationSettings = localizationSettings;
+            _workflowMessageService = workflowMessageService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _customerSettings = customerSettings;
+            _mediaSettings = mediaSettings;
+            _pictureService = pictureService;
         }
 
         public virtual IActionResult List()

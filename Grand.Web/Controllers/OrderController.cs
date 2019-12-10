@@ -44,13 +44,13 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             OrderSettings orderSettings)
         {
-            this._orderViewModelService = orderViewModelService;
-            this._orderService = orderService;
-            this._workContext = workContext;
-            this._orderProcessingService = orderProcessingService;
-            this._paymentService = paymentService;
-            this._localizationService = localizationService;
-            this._orderSettings = orderSettings;
+            _orderViewModelService = orderViewModelService;
+            _orderService = orderService;
+            _workContext = workContext;
+            _orderProcessingService = orderProcessingService;
+            _paymentService = paymentService;
+            _localizationService = localizationService;
+            _orderSettings = orderSettings;
         }
 
         #endregion

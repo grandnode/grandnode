@@ -66,9 +66,9 @@ namespace Grand.Services.Seo
             IRepository<UrlRecord> urlRecordRepository,
             LocalizationSettings localizationSettings)
         {
-            this._cacheManager = cacheManager;
-            this._urlRecordRepository = urlRecordRepository;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _urlRecordRepository = urlRecordRepository;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -297,7 +297,7 @@ namespace Grand.Services.Seo
             {
                 //gradual loading
                 string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return _cacheManager.Get(key, () =>
+                return await _cacheManager.GetAsync(key, async () =>
                 {
 
                     var source = _urlRecordRepository.Table;
@@ -307,7 +307,7 @@ namespace Grand.Services.Seo
                                 ur.LanguageId == languageId &&
                                 ur.IsActive
                                 select ur.Slug;
-                    var slug = query.FirstOrDefault();
+                    var slug = await query.FirstOrDefaultAsync();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
                         slug = "";

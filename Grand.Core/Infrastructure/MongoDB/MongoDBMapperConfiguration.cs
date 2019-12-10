@@ -26,8 +26,7 @@ namespace Grand.Core.Infrastructure.MongoDB
         /// <summary>
         /// Register MongoDB mappings
         /// </summary>
-        /// <param name="config">Config</param>
-        public static void RegisterMongoDBMappings(GrandConfig config)
+        public static void RegisterMongoDBMappings()
         {
             BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
             BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));

@@ -49,16 +49,16 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
             IVendorService vendorService,
             IProductService productService)
         {
-            this._discountService = discountService;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._productService = productService;
+            _discountService = discountService;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _productService = productService;
         }
 
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId)
@@ -156,7 +156,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(HttpContext, false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
 

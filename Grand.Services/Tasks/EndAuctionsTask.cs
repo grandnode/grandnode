@@ -14,7 +14,6 @@ namespace Grand.Services.Tasks
     /// </summary>
     public partial class EndAuctionsTask : IScheduleTask
     {
-        private readonly IProductService _productService;
         private readonly IAuctionService _auctionService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
@@ -22,17 +21,16 @@ namespace Grand.Services.Tasks
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
 
-        public EndAuctionsTask(IProductService productService, IAuctionService auctionService, IQueuedEmailService queuedEmailService,
+        public EndAuctionsTask(IAuctionService auctionService,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationService, IShoppingCartService shoppingCartService,
             ICustomerService customerService, ILogger logger)
         {
-            this._productService = productService;
-            this._auctionService = auctionService;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationService;
-            this._shoppingCartService = shoppingCartService;
-            this._customerService = customerService;
-            this._logger = logger;
+            _auctionService = auctionService;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationService;
+            _shoppingCartService = shoppingCartService;
+            _customerService = customerService;
+            _logger = logger;
         }
 
         /// <summary>

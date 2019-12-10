@@ -55,19 +55,19 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             IMeasureService measureService,
             MeasureSettings measureSettings)
         {
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingByWeightSettings = shippingByWeightSettings;
-            this._shippingByWeightService = shippingByWeightService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _shippingByWeightSettings = shippingByWeightSettings;
+            _shippingByWeightService = shippingByWeightService;
+            _settingService = settingService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
         }
         public IActionResult Configure()
         {

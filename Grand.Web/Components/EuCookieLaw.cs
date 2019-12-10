@@ -17,9 +17,9 @@ namespace Grand.Web.ViewComponents
         public EuCookieLawViewComponent(StoreInformationSettings storeInformationSettings,
             IWorkContext workContext, IStoreContext storeContext)
         {
-            this._storeInformationSettings = storeInformationSettings;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
+            _storeInformationSettings = storeInformationSettings;
+            _workContext = workContext;
+            _storeContext = storeContext;
         }
 
         public IViewComponentResult Invoke()

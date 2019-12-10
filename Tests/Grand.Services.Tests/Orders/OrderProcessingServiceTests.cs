@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -21,7 +20,6 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
@@ -31,7 +29,6 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Moq;
-using Grand.Services.Stores;
 using Grand.Core.Tests.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
@@ -66,7 +63,6 @@ namespace Grand.Services.Orders.Tests
         private IRepository<ShippingMethod> _shippingMethodRepository;
         private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
-        private IRepository<PickupPoint> _pickupPointRepository;
         private IOrderService _orderService;
         private IWebHelper _webHelper;
         private ILocalizationService _localizationService;
@@ -88,11 +84,9 @@ namespace Grand.Services.Orders.Tests
         private CatalogSettings _catalogSettings;
         private IOrderProcessingService _orderProcessingService;
         private IMediator _eventPublisher;
-        private CurrencySettings _currencySettings;
         private IAffiliateService _affiliateService;
         private IVendorService _vendorService;
         private IPdfService _pdfService;
-        private IStoreService _storeService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
         private IStateProvinceService _stateProvinceService;
@@ -119,7 +113,6 @@ namespace Grand.Services.Orders.Tests
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _currencySettings = new CurrencySettings();
 
             var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
@@ -129,7 +122,6 @@ namespace Grand.Services.Orders.Tests
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
-            _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
             _productReservationService = new Mock<IProductReservationService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
@@ -141,7 +133,7 @@ namespace Grand.Services.Orders.Tests
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _storeService, _currencyService, _shoppingCartSettings, _catalogSettings);
+                cacheManager, _vendorService, _currencyService, _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IMediator>();
             {
@@ -158,7 +150,6 @@ namespace Grand.Services.Orders.Tests
             _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>().Object;
             _deliveryDateRepository = new Mock<IRepository<DeliveryDate>>().Object;
             _warehouseRepository = new Mock<IRepository<Warehouse>>().Object;
-            _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository,
@@ -169,7 +160,6 @@ namespace Grand.Services.Orders.Tests
             _productService,
             _productAttributeParser,
             _checkoutAttributeParser,
-            _genericAttributeService,
             _localizationService,
             _addressService,
             _countryService,
@@ -248,7 +238,6 @@ namespace Grand.Services.Orders.Tests
             _orderSettings = new OrderSettings();
             _localizationSettings = new LocalizationSettings();
             ICustomerActionEventService tempICustomerActionEventService = new Mock<ICustomerActionEventService>().Object;
-            _currencySettings = new CurrencySettings();
 
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,

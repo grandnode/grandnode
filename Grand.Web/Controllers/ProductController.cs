@@ -76,22 +76,22 @@ namespace Grand.Web.Controllers
             CaptchaSettings captchaSettings
         )
         {
-            this._productService = productService;
-            this._productViewModelService = productViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._recentlyViewedProductsService = recentlyViewedProductsService;
-            this._shoppingCartService = shoppingCartService;
-            this._compareProductsService = compareProductsService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._customerActionEventService = customerActionEventService;
-            this._catalogSettings = catalogSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
-            this._captchaSettings = captchaSettings;
+            _productService = productService;
+            _productViewModelService = productViewModelService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _shoppingCartService = shoppingCartService;
+            _compareProductsService = compareProductsService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _customerActionEventService = customerActionEventService;
+            _catalogSettings = catalogSettings;
+            _shoppingCartSettings = shoppingCartSettings;
+            _captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -382,9 +382,9 @@ namespace Grand.Web.Controllers
 
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
-            await _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
             await _productService.UpdateMostView(productId, 1);
-            var qhtml = this.RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
+            var qhtml = RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
             return Json(new
             {
                 success = true,

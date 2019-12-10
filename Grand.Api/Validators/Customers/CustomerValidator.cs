@@ -6,13 +6,17 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
+using System.Collections.Generic;
 
 namespace Grand.Api.Validators.Customers
 {
     public class CustomerValidator : BaseGrandValidator<CustomerDto>
     {
-        public CustomerValidator(ILocalizationService localizationService, IStateProvinceService stateProvinceService, 
+        public CustomerValidator(
+            IEnumerable<IValidatorConsumer<CustomerDto>> validators,
+            ILocalizationService localizationService, IStateProvinceService stateProvinceService, 
             ICustomerService customerService, IStoreService storeService, CustomerSettings customerSettings)
+            : base(validators)
         {
 
             RuleFor(x => x).MustAsync(async (x, context) =>

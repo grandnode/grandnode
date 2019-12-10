@@ -46,7 +46,7 @@ namespace Grand.Services.Media
                 mediaSettings,
                 hostingEnvironment)
         {
-            this._config = config;
+            _config = config;
 
             if (String.IsNullOrEmpty(_config.AzureBlobStorageConnectionString))
                 throw new Exception("Azure connection string for BLOB is not specified");

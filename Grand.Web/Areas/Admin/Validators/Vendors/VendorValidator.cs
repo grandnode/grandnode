@@ -3,12 +3,16 @@ using Grand.Framework.Extensions;
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Validators.Vendors
 {
     public class VendorValidator : BaseGrandValidator<VendorModel>
     {
-        public VendorValidator(ILocalizationService localizationService)
+        public VendorValidator(
+            IEnumerable<IValidatorConsumer<VendorModel>> validators,
+            ILocalizationService localizationService)
+            : base(validators)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Vendors.Fields.Name.Required"));
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Admin.Vendors.Fields.Email.Required"));

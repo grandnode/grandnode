@@ -31,7 +31,7 @@ namespace Grand.Services.Affiliates
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IMediator mediator)

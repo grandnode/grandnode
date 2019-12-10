@@ -65,7 +65,7 @@ namespace Grand.Services.Directory
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher">Event published</param>
+        /// <param name="mediator">Mediator</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService,
@@ -73,12 +73,12 @@ namespace Grand.Services.Directory
             IPluginFinder pluginFinder,
             IMediator mediator)
         {
-            this._cacheManager = cacheManager;
-            this._currencyRepository = currencyRepository;
-            this._storeMappingService = storeMappingService;
-            this._currencySettings = currencySettings;
-            this._pluginFinder = pluginFinder;
-            this._mediator = mediator;
+            _cacheManager = cacheManager;
+            _currencyRepository = currencyRepository;
+            _storeMappingService = storeMappingService;
+            _currencySettings = currencySettings;
+            _pluginFinder = pluginFinder;
+            _mediator = mediator;
         }
 
         #endregion

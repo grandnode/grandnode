@@ -30,12 +30,12 @@ namespace Grand.Services.PushNotifications
         public PushNotificationsService(IRepository<PushRegistration> pushRegistratiosnRepository, IRepository<PushMessage> pushMessagesRepository,
             IMediator mediator, PushNotificationsSettings pushNotificationsSettings, ILocalizationService localizationService, ILogger logger)
         {
-            this._pushRegistratiosnRepository = pushRegistratiosnRepository;
-            this._pushMessagesRepository = pushMessagesRepository;
-            this._mediator = mediator;
-            this._pushNotificationsSettings = pushNotificationsSettings;
-            this._localizationService = localizationService;
-            this._logger = logger;
+            _pushRegistratiosnRepository = pushRegistratiosnRepository;
+            _pushMessagesRepository = pushMessagesRepository;
+            _mediator = mediator;
+            _pushNotificationsSettings = pushNotificationsSettings;
+            _localizationService = localizationService;
+            _logger = logger;
         }
 
         /// <summary>

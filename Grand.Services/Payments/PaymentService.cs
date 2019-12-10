@@ -44,11 +44,11 @@ namespace Grand.Services.Payments
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._paymentSettings = paymentSettings;
-            this._pluginFinder = pluginFinder;
-            this._settingService = settingService;
-            this._currencyService = currencyService;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _paymentSettings = paymentSettings;
+            _pluginFinder = pluginFinder;
+            _settingService = settingService;
+            _currencyService = currencyService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

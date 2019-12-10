@@ -34,13 +34,13 @@ namespace Grand.Web.Services
             IStoreMappingService storeMappingService,
             IAclService aclService)
         {
-            this._topicService = topicService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._topicTemplateService = topicTemplateService;
-            this._storeMappingService = storeMappingService;
-            this._aclService = aclService;
+            _topicService = topicService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _topicTemplateService = topicTemplateService;
+            _storeMappingService = storeMappingService;
+            _aclService = aclService;
         }
         public virtual TopicModel PrepareTopicModel(Topic topic)
         {

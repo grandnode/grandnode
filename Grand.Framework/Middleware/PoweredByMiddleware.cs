@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace Grand.Core.Http
+namespace Grand.Framework.Middleware
 {
     /// <summary>
     /// Adds the X-Powered-By header with values grandnode.

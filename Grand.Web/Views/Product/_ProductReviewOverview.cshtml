@@ -10,7 +10,7 @@
 @if (Model.AllowCustomerReviews)
 {
     <div class="product-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
-        <div class="product-review-box d-inline-block">
+        <div class="product-review-box d-inline-block order-2">
             <div class="ratings">
                 <div class="rating-box">
                     <div class="rating" style="width: @(ratingPercent)%">
@@ -20,20 +20,20 @@
         </div>
         @if (Model.TotalReviews > 0)
         {
-            <div class="product-review-links">
+            <div class="product-review-links order-3">
                 <a class="btn btn-sm py-0 pr-0 review-scroll-button" href="#review-tab">
                     @Model.TotalReviews
                     @T("Reviews.Overview.Reviews")
                 </a> 
             </div>
-            @*hidden microdata info*@
-        decimal ratingValue = ratingPercent / (decimal)20;
-        <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
+            @* microdata info*@
+            decimal ratingValue = ratingPercent / (decimal)20;
+            <span class="order-1 mr-2 review-count" itemprop="ratingValue">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
             <span itemprop="reviewCount" style="display: none;">@Model.TotalReviews</span>
         }
         else
         { 
-            <div class="product-no-reviews">
+            <div class="product-no-reviews order-3">
                 <a class="btn btn-sm py-0 pr-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
             </div>
         }

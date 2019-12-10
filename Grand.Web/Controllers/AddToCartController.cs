@@ -1,18 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Media;
 using Grand.Services.Orders;
-using Grand.Services.Security;
 using Grand.Services.Seo;
-using Grand.Services.Tax;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,17 +30,8 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
         private readonly ICurrencyService _currencyService;
-        private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICacheManager _cacheManager;
-        private readonly ITaxService _taxService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IPictureService _pictureService;
-        private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -59,38 +45,20 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper,
             ICurrencyService currencyService,
-            IPermissionService permissionService,
             ICustomerActivityService customerActivityService,
-            ICacheManager cacheManager,
-            ITaxService taxService,
-            IProductAttributeParser productAttributeParser,
-            IPriceCalculationService priceCalculationService,
-            IPriceFormatter priceFormatter,
-            IPictureService pictureService,
-            ShoppingCartSettings shoppingCartSettings,
-            MediaSettings mediaSettings)
+            ShoppingCartSettings shoppingCartSettings)
         {
-            this._productService = productService;
-            this._productReservationService = productReservationService;
-            this._shoppingCartService = shoppingCartService;
-            this._shoppingCartViewModelService = shoppingCartViewModelService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._currencyService = currencyService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._cacheManager = cacheManager;
-            this._taxService = taxService;
-            this._productAttributeParser = productAttributeParser;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._pictureService = pictureService;
-            this._mediaSettings = mediaSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _productService = productService;
+            _productReservationService = productReservationService;
+            _shoppingCartService = shoppingCartService;
+            _shoppingCartViewModelService = shoppingCartViewModelService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -13,8 +13,8 @@ namespace Grand.Web.ViewComponents
         public AdminHeaderLinksViewComponent(ICommonViewModelService commonViewModelService,
             IWorkContext workContext)
         {
-            this._commonViewModelService = commonViewModelService;
-            this._workContext = workContext;
+            _commonViewModelService = commonViewModelService;
+            _workContext = workContext;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()

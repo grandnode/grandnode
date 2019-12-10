@@ -11,7 +11,7 @@ namespace Grand.Web.ViewComponents
 
         public SearchBoxViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogViewModelService = catalogViewModelService;
+            _catalogViewModelService = catalogViewModelService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
