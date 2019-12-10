@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
@@ -10,14 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.103.64" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.106.6" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.104.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.109.1" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="Google.Apis" Version="1.42.0" />
-    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.42.0.1769" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.42.0.1799" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.1" />
     <PackageReference Include="MailKit" Version="2.4.1" />
-    <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
     <PackageReference Include="SkiaSharp" Version="1.68.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="1.68.1" />
 
@@ -26,10 +26,10 @@
       <PackageReference Include="Jellyfin.SkiaSharp.NativeAssets.LinuxArm" Version="1.68.0" />
     -->
     
-    <PackageReference Include="System.ServiceModel.Duplex" Version="4.6.0" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.6.0" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.6.0" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.6.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
 
