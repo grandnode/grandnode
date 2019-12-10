@@ -357,19 +357,19 @@ function displayBarNotification(message, messagetype, timeout) {
     }
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
-        .fadeIn('slow')
+        .addClass('show')
         .mouseenter(function () {
             clearTimeout(barNotificationTimeout);
         });
 
     $('#bar-notification .close').unbind('click').click(function () {
-        $('#bar-notification').fadeOut('slow');
+        $('#bar-notification').removeClass('show');
     });
 
     //timeout (if set)
     if (timeout > 0) {
         barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').fadeOut('slow');
+            $('#bar-notification').removeClass('show');
         }, timeout);
     }
 }
