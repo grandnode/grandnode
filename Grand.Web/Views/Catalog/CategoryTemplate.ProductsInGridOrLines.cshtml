@@ -78,14 +78,14 @@
                 @foreach (var item in Model.SubCategories)
                 {
                     <div class="col-md-4 col-6 mb-2">
-                        <div class="card">
+                        <div class="card p-0">
                             <div class="list-picture">
                                 <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                     <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                 </a>
                             </div>
                             <div class="list-title mt-3">
-                                <h3 class="h5 card-title m-0 p-0">
+                                <h3 class="h6 card-title m-0 p-0">
                                     <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">
                                         @item.Name
                                     </a>

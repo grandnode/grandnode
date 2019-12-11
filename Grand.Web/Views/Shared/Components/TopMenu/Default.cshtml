@@ -34,6 +34,11 @@
                         <span>@T("Mobile.Categories.Back")</span>
                     </a>
                 </li>
+                <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
+                    <a class="nav-link sub-cat-name" href="@Url.RouteUrl("ManufacturerList")">
+                        <span>@T("Mobile.Category.Show") @T("Manufacturers.List")</span>
+                    </a>
+                </li>
                 @foreach (var manuf in Model.Manufacturers)
                 {
                     <li class="nav-item">
