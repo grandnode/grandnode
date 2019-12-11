@@ -3,6 +3,7 @@
 */
 $(document).ready(function () {
     $('body').addClass('is-ready');
+    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid").scrollLeft(30);
 });
 
 $(function () {
@@ -45,7 +46,7 @@ function mainMenuReplace() {
         $('.mainNav .navbar-collapse').prependTo('#mobile_menu');
         Popper.Defaults.modifiers.computeStyle.enabled = false;
         $("#mobile_menu .nav-item.dropdown .dropdown-toggle").each(function () {
-            $(this).on("click", function (e) {
+            $(this).on("touchstart", function (e) {
                 e.preventDefault();
                 $(this).parent().addClass("show");
                 $(this).parent().find(".dropdown-menu:first").addClass("show");
@@ -57,13 +58,13 @@ function mainMenuReplace() {
                 $(this).parents(".dropdown-menu:first").removeClass("show");
             });
         });
-        $(".categoryGrid .flex-grid").scrollLeft(30);
     }
     else {
         $('#mobile_menu .navbar-collapse').prependTo('.mainNav');
         Popper.Defaults.modifiers.computeStyle.enabled = true;
     }
 }
+
 function searchReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
         $('#small-search-box-form').prependTo('#searchModal');
@@ -154,7 +155,6 @@ $(document).ready(function () {
     searchReplace();
     LeftSide();
     itemsStatistics();
-    //IpadMenuFix();
     dataCountdown();
     BackToTop();
     productInfo(); 
@@ -162,7 +162,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         mainMenuReplace();
         searchReplace();
-        //IpadMenuFix();
         LeftSide();
         productInfo();
     });
