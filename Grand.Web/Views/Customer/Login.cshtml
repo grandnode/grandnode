@@ -22,12 +22,12 @@
                         <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
                         <div class="card-body">
                             <div class="row">
-                                <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+                                <div asp-validation-summary="ModelOnly" class="message-error w-100 text-center">@T("Account.Login.Unsuccessful")</div>
                                 <div class="col-12 form-group mb-0">
                                     @if (Model.UsernamesEnabled)
                                     {
                                         <div class="form-group row">
-                                            <div class="col-lg-3 col-12 d-flex align-items-center justify-content-sm-start">
+                                            <div class="col-lg-3 col-12 d-flex align-items-start justify-content-sm-start">
                                                 <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
@@ -39,7 +39,7 @@
                                     else
                                     {
                                         <div class="form-group row">
-                                            <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
+                                            <div class="col-lg-3 col-12 d-flex align-items-start justify-content-start">
                                                 <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
