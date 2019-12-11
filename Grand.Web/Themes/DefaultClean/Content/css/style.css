@@ -1205,13 +1205,6 @@ section .product-filters,
 header section {
 	overflow: initial;
 }
-.categoryGrid .flex-grid {
-	display: inline-flex;
-	flex-wrap: nowrap;
-	width: 100%;
-	overflow-y: hidden;
-	overflow-x: auto;
-}
 .page-separator {
     width: 100%;
     height: 1px;
@@ -4656,6 +4649,13 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+	.categoryGrid .flex-grid {
+		display: inline-flex;
+		flex-wrap: nowrap;
+		width: 100%;
+		overflow-y: hidden;
+		overflow-x: auto;
+	}
 	#mobile_menu {
 		overflow-x: hidden;
 	}
@@ -4718,7 +4718,9 @@ footer .socicon-pinterest:hover {
 		-webkit-transition: all .3s ease;
 		transition: all .3s ease;
 	}
-	#mobile_menu .dropdown-menu.show {
+	#mobile_menu .dropdown-menu.show,
+	#mobile_menu .dropdown.show > .dropdown-menu {
+		display: block;
 		-webkit-transform: translateX(0);
 		transform: translateX(0);
 	}
