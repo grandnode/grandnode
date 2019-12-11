@@ -18,11 +18,12 @@
     <h1 class="h2 generalTitle">@T("Account.CustomerAddresses")</h1>
     @if (Model.Addresses.Any())
     {
-        <div class="row px-3 address-list">
+        <div class="col-12 px-0">
+            <div class="row address-list">
                 @for (int i = 0; i < Model.Addresses.Count; i++)
                 {
                     var address = Model.Addresses[i];
-                    <div class="col-md-6 col-12 pl-lg-0 mb-3">
+                    <div class="col-md-6 col-12 mb-3">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
@@ -126,6 +127,7 @@
                         </div>
                     </div>
                 }
+            </div>
         </div>
         <script asp-location="Footer">
                 function deletecustomeraddress(addressId) {

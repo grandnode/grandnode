@@ -1,24 +1,26 @@
 ﻿@model IList<ManufacturerModel>
 @inject DisplayOrderHomePage order
-<div class="manufacturerGrid order-@order.HomePageManufacturers">
-    <div class="flex-grid row">
-        @foreach (var item in Model)
-        {
-            <div class="col-xl-@order.Pm_Xl col-lg-@order.Pm_Lg col-md-@order.Pm_Md col-sm-@order.Pm_Sm col-@order.Pm_Col  mb-2">
-                <div class="card pb-0">
-                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                        <picture>
-                            <source media="(max-width: 480px)" picture-id="@item.PictureModel.Id" picture-size="350" />
-                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
-                        </picture>
-                    </a>
-                    <h4 class="h6 p-sm-3 p-2 mb-0 card-title">
+<div class="manufacturerGrid text-center order-@order.HomePageManufacturers">
+    <div class="col-12 px-0">
+        <div class="flex-grid form-row">
+            @foreach (var item in Model)
+            {
+                <div class="col-xl-@order.Pm_Xl col-lg-@order.Pm_Lg col-md-@order.Pm_Md col-sm-@order.Pm_Sm col-@order.Pm_Col  mb-2">
+                    <div class="card p-0">
                         <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            @item.Name
+                            <picture>
+                                <source media="(max-width: 480px)" picture-id="@item.PictureModel.Id" picture-size="350" />
+                                <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </picture>
                         </a>
-                    </h4>
+                        <h4 class="h6 p-sm-3 p-2 mb-0 card-title">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                @item.Name
+                            </a>
+                        </h4>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>

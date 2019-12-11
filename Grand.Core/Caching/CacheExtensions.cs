@@ -71,9 +71,9 @@ namespace Grand.Core.Caching
         /// <returns>Cached item</returns>
         public static async Task<T> GetAsync<T>(this ICacheManager cacheManager, string key, int cacheTime, Func<Task<T>> acquire)
         {
-            var value = cacheManager.TryGetValue<T>(key);
-            if (value.fromCache == true)
-                return value.result;
+            var value = await cacheManager.TryGetValueAsync<T>(key);
+            if (value.FromCache == true)
+                return value.Result;
 
             var result = await acquire();
             if (cacheTime > 0)

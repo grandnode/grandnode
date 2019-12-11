@@ -2,16 +2,18 @@
 @if (Model.Any())
 {
     <div class="col-12 cross-sell-container">
-        <div class="product-grid row cross-sells pt-1">
-            <div class="col-12 px-0">
-                <h5 class="generalTitle"><strong>@T("ShoppingCart.CrossSells")</strong></h5>
-                <div class="row flex-grid w-100">
-                    @foreach (var product in Model)
-                    {
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-2">
-                            <partial name="_ProductBox" model="product" />
-                        </div>
-                    }
+        <div class="row">
+            <div class="product-grid row cross-sells pt-1">
+                <div class="col-12 px-0">
+                    <h5 class="generalTitle"><strong>@T("ShoppingCart.CrossSells")</strong></h5>
+                    <div class="form-row flex-grid">
+                        @foreach (var product in Model)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12 product-container mb-2">
+                                <partial name="_ProductBox" model="product" />
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

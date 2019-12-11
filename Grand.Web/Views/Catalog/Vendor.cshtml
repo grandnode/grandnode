@@ -142,21 +142,27 @@
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-                <div class="row flex-grid">
-                    @foreach (var product in Model.Products)
-                    {
-                        <div class="col-lg-4 col-sm-6 col-6">
-                            <partial name="_ProductBox" model="product" />
-                        </div>
-                    }
+                <div class="product-grid col-12 px-0">
+                    <div class="form-row flex-grid">
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
+                                <partial name="_ProductBox" model="product" />
+                            </div>
+                        }
+                    </div>
                 </div>
         }
         else
         {
-                @foreach (var product in Model.Products)
-                {
-                    <partial name="_ProductBoxList" model="product" />
-                }
+                <div class="product-grid col-12">
+                    <div class="row">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_ProductBoxList" model="product" />
+                        }
+                    </div>
+                </div>
         }
     }
     </div>
