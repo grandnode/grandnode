@@ -30,26 +30,21 @@
                                             <div class="col-lg-3 col-12 d-flex align-items-center justify-content-sm-start">
                                                 <label asp-for="Username" class="h5 m-0">@T("Account.Login.Fields.UserName"):</label>
                                             </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="form-group row">
-                                                <div class="col-lg-3 col-12">
-                                                    <label asp-for="Email" class="col-form-label">@T("Account.Login.Fields.Email"):</label>
-                                                </div>
-                                                <div class="col-lg-9 col-12">
-                                                    <input asp-for="Email" class="form-control email" autofocus="autofocus" />
-                                                    <span asp-validation-for="Email"></span>
-                                                </div>
+                                            <div class="col-lg-9 col-12">
+                                                <input asp-for="Email" class="form-control email" autofocus="autofocus" />
+                                                <span asp-validation-for="Email"></span>
                                             </div>
-                                        }
+                                         </div>
+                                    }
+                                    else
+                                    { 
                                         <div class="form-group row">
                                             <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start">
                                                 <label asp-for="Email" class="h5 m-0">@T("Account.Login.Fields.Email"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
-                                                <input asp-for="Password" class="form-control password" />
-                                                <span asp-validation-for="Password"></span>
+                                                <input asp-for="Email" class="form-control email" />
+                                                <span asp-validation-for="Email"></span>
                                             </div>
                                         </div>
                                     }
@@ -92,7 +87,8 @@
                             <div class="buttons">
                                 <input class="btn btn-info login-button px-5" type="submit" value="@T("Account.Login.LoginButton")" />
                             </div>
-                        </form>
+                        </div>
+                    </form>
                  </div>
             </div>
             @* want some register? *@
