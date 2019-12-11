@@ -84,16 +84,4 @@
         });
         </script>
     }
-
-    <script asp-location="Footer">
-        $(".poll .poll-item .list-group-item").each(function (index, value) {
-            var putter = $(this).text();
-            putter = putter.split('(s) - ');
-            putter = putter[1].split(')');
-            $(this).find(".progress-bar").width(putter[0]);
-            if (putter[0] == "0.0%") {
-                $(this).find(".progress-bar").css("display", "none");
-            };
-        });
-    </script>
 </div>

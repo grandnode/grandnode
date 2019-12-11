@@ -4649,7 +4649,8 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
-	.categoryGrid .flex-grid {
+	.categoryGrid .flex-grid,
+	.manufacturerGrid .flex-grid {
 		display: inline-flex;
 		flex-wrap: nowrap;
 		width: 100%;
@@ -4703,6 +4704,7 @@ footer .socicon-pinterest:hover {
 		transform: rotate(-90deg);
 	}
 	#mobile_menu .dropdown-menu {
+		display: block;
 		-webkit-transform: translateX(calc(100% + 1px));
 		transform: translateX(calc(100% + 1px));
 		position: absolute;
@@ -4720,7 +4722,6 @@ footer .socicon-pinterest:hover {
 	}
 	#mobile_menu .dropdown-menu.show,
 	#mobile_menu .dropdown.show > .dropdown-menu {
-		display: block;
 		-webkit-transform: translateX(0);
 		transform: translateX(0);
 	}
