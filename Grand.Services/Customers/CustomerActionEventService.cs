@@ -746,7 +746,7 @@ namespace Grand.Services.Customers
         {
             var actiontypes = await GetAllCustomerActionType();
             var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            if (actionType?.Enabled == true)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
                 var query = from a in _customerActionRepository.Table
@@ -771,7 +771,7 @@ namespace Grand.Services.Customers
         {
             var actiontypes = await GetAllCustomerActionType();
             var actionType = actiontypes.Where(x => x.SystemKeyword == customerActionType.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            if (actionType?.Enabled == true)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
                 var query = from a in _customerActionRepository.Table
@@ -806,7 +806,7 @@ namespace Grand.Services.Customers
             {
                 var actiontypes = await GetAllCustomerActionType();
                 var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
-                if (actionType.Enabled)
+                if (actionType?.Enabled == true)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
                     var query = from a in _customerActionRepository.Table
@@ -834,7 +834,7 @@ namespace Grand.Services.Customers
             {
                 var actiontypes = await GetAllCustomerActionType();
                 var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
-                if (actionType.Enabled)
+                if (actionType?.Enabled == true)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
                     var query = from a in _customerActionRepository.Table
@@ -861,7 +861,7 @@ namespace Grand.Services.Customers
         {
             var actiontypes = await GetAllCustomerActionType();
             var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            if (actionType?.Enabled == true)
             {
                 var datetimeUtcNow = DateTime.UtcNow;
                 var query = from a in _customerActionRepository.Table
