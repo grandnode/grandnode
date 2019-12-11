@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
@@ -18,7 +18,11 @@
     <OutputPath>..\..\Grand.Web\Plugins\Tax.FixedRate\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
-  
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="..\..\Grand.Web\Plugins\Tax.FixedRate\refs" />
+  </Target>
+
   <ItemGroup>
     <None Remove="Views\Configure.cshtml" />
   </ItemGroup>

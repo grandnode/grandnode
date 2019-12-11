@@ -1,7 +1,7 @@
 ﻿@model TopMenuModel.CategoryLineModel
     <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
 
-        <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false") href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+        <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "aria-haspopup=true aria-expanded=false") href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
             @if (!string.IsNullOrEmpty(Model.Category.Icon))
             {
                 <span class="category-icon @Model.Category.Icon"></span>
@@ -11,13 +11,13 @@
             {
                 <span class="mdi mdi-chevron-down arrow-down"></span>
             }
+            @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
+            {
+                <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
+            }
         </a>
 
 
-        @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
-        {
-            <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
-        }
         @{
             //subcategories
             var subCategories =
@@ -40,7 +40,7 @@
                                 <a class="picture" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
                                     <picture>
                                         <source media="(max-width: 991px)" sizes="1px" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 1w" />
-                                        <img class="img-fluid" src="@Model.Category.ImageUrl" alt="" />
+                                        <img src="@Model.Category.ImageUrl" alt="" />
                                     </picture>
                                 </a>
                             </li>
@@ -56,7 +56,7 @@
                             </li>
                             <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
                                 <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
-                                    <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
+                                    <span>@T("Mobile.Category.Show") @Model.Category.Name</span>
                                 </a>
                             </li>
                             @foreach (var subCategory in subCategories)
@@ -87,7 +87,7 @@
                     </li>
                     <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
                         <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
-                            <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
+                            <span>@T("Mobile.Category.Show") @Model.Category.Name</span>
                         </a>
                     </li>
                     @foreach (var subCategory in subCategories)

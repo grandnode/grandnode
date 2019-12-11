@@ -154,11 +154,16 @@ namespace Grand.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual (T, bool) TryGetValue<T>(string key)
         {
-            if(_cache.TryGetValue(key, out T value))
+            if (_cache.TryGetValue(key, out T value))
             {
                 return (value, true);
             }
             return (default(T), false);
+        }
+
+        public Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
+        {
+            return Task.FromResult(TryGetValue<T>(key));
         }
 
         /// <summary>

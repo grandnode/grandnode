@@ -72,6 +72,11 @@ namespace Grand.Core.Caching
             return ((T)items[key], true);
         }
 
+        public Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
+        {
+            return Task.FromResult(TryGetValue<T>(key));
+        }
+
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
