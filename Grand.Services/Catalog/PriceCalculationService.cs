@@ -470,7 +470,7 @@ namespace Grand.Services.Catalog
                 return result;
             }
 
-            var cachedPrice = cacheTime > 0 ? await _cacheManager.Get(cacheKey, cacheTime, () => { return PrepareModel(); }) : await PrepareModel();
+            var cachedPrice = cacheTime > 0 ? await _cacheManager.GetAsync(cacheKey, cacheTime, async () => { return await PrepareModel(); }) : await PrepareModel();
 
             if (includeDiscounts)
             {
