@@ -746,4 +746,17 @@
   <LocaleResource Name="SideBar.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
+
+
 </Language>
+

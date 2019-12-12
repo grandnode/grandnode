@@ -15776,6 +15776,15 @@
   <LocaleResource Name="Admin.System.Maintenance">
     <Value>Maintenance</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ClearMostViewed">
     <Value>Clear field Most Viewed on the product</Value>
   </LocaleResource>
