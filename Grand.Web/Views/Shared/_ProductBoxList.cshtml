@@ -110,15 +110,15 @@
                             @Model.ProductPrice.OldPrice
                         </div>
                     }
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        <div class="tax-shipping-info">
-                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                        </div>
-                    }
                 </div>
             </div>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
             @if (Model.ProductType == ProductType.Auction)
             {
                 @if (Model.EndTime.HasValue)

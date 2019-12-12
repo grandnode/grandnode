@@ -142,15 +142,15 @@
                             @(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)
                         </div>
                     }
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        <div class="tax-shipping-info">
-                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                        </div>
-                    }
                 </div>
             </div>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
         </div>
         <div class="bottom">
             @if (Model.ProductType == ProductType.Auction)
