@@ -5,6 +5,7 @@ using Grand.Core.Domain.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,9 +21,12 @@ namespace Grand.Services.Logging
 
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
-        
+        private readonly ConcurrentQueue<Log> _buffer;
+        private bool shutdownOrdered = false;
+        private readonly Task flusherThread = null;
+
         #endregion
-        
+
         #region Ctor
 
         /// <summary>
@@ -30,11 +34,13 @@ namespace Grand.Services.Logging
         /// </summary>
         /// <param name="logRepository">Log repository</param>
         /// <param name="webHelper">Web helper</param>
-        public DefaultLogger(IRepository<Log> logRepository, 
+        public DefaultLogger(IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
             _logRepository = logRepository;
             _webHelper = webHelper;
+            _buffer = new ConcurrentQueue<Log>();
+            flusherThread = Task.Factory.StartNew(async () => await FlushLogBuffer());
         }
 
         #endregion
@@ -48,7 +54,7 @@ namespace Grand.Services.Logging
         /// <returns>Result</returns>
         public virtual bool IsEnabled(LogLevel level)
         {
-            switch(level)
+            switch (level)
             {
                 case LogLevel.Debug:
                     return false;
@@ -88,7 +94,7 @@ namespace Grand.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
         public virtual async Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = "", LogLevel? logLevel = null, 
+            string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
 
@@ -161,21 +167,34 @@ namespace Grand.Services.Logging
         /// <returns>A log item</returns>
         public virtual async Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
-            var log = new Log
-            {
+            var log = new Log {
                 LogLevelId = (int)logLevel,
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                CustomerId = customer!=null ? customer.Id : "",
+                CustomerId = customer != null ? customer.Id : "",
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _logRepository.InsertAsync(log);
+            _buffer.Enqueue(log);
 
             return log;
+        }
+
+        internal async Task FlushLogBuffer()
+        {
+            while (!shutdownOrdered)
+            {
+                if (!_buffer.IsEmpty)
+                {
+                    var items = _buffer.ToArray();
+                    _buffer.Clear();
+                    await _logRepository.InsertAsync(items);
+                }
+                await Task.Delay(1000);
+            }
         }
 
         #endregion

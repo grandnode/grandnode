@@ -257,7 +257,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<TaxService>().As<ITaxService>().InstancePerLifetimeScope();
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
-            builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultLogger>().As<ILogger>().SingleInstance();
             builder.RegisterType<ContactUsService>().As<IContactUsService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerLifetimeScope();
             builder.RegisterType<ActivityKeywordsProvider>().As<IActivityKeywordsProvider>().InstancePerLifetimeScope();
