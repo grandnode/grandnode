@@ -152,6 +152,11 @@ namespace Grand.Core.Caching
             //nothing special
         }
 
+        public Task RemoveByPatternAsync(string pattern)
+        {
+            return this.RemoveByPattern(pattern);
+        }
+
         #endregion
     }
 }
