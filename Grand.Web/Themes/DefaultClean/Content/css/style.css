@@ -2137,12 +2137,14 @@ list settings .list__item,
     z-index: 2;
 }
 .product-box.grid-box .title h5 {
+	text-align: center;
 	line-height: 1;
 }
 .product-box.grid-box .title a {
     color: #292929;
     font-size: 15px;
     font-weight: 500;
+	text-align: center;
 }
 .product-box.grid-box .prices-rating {
     text-align: center;
@@ -2925,21 +2927,7 @@ table {
 }
 .flex-grid .card,
 .manufactureGrid .card,
-.product-tag-grid .card,
-.manuList .card,
-.page .product-grid .card,
-.page .select-billing-address .card,
-.page .news-list-homepage .card,
-.page .blog-list-homepage .card,
-.page .subCategoryList .card,
-.page .home-page-product-grid .card,
-.product-grid.bestsellers .card,
-.generalFlexBox .card,
-.related-products-grid .card,
-.page.recently-viewed-products-page .card,
-.select-billing-address .card,
-.recently-added-products-page .card,
-.categoryItems .card {
+.categoryGrid .card {
     margin-bottom: 0;
     width: 100%;
     border: 0;
@@ -4411,23 +4399,6 @@ footer .socicon-pinterest:hover {
 		flex-direction: row;
         margin-top: -1px;
 	}
-	.mainNav .category-icon {
-		font-size: 26px !important;
-		position: static !important;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.mainNav .navbar-nav > .nav-item > .category-icon {
-		padding-top: 10px;
-	}
-	.mainNav .nav-item.dropdown .dropdown-menu .category-icon {
-		padding-right: 15px;
-		font-size: 20px !important;
-	}
-	.mainNav .navbar-nav > .nav-item > .nav-link .category-icon {
-		padding-bottom: 5px;
-	}
 	.mainNav .navbar-nav {
 		align-items: center;
         flex-wrap: wrap;
@@ -4702,6 +4673,7 @@ footer .socicon-pinterest:hover {
         align-items: flex-start;
     }
 	.product-box.grid-box .top .title h5 {
+		text-align: left;
 		line-height: 1;
 	}
     .product-box.grid-box .ratings {
