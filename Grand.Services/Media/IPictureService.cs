@@ -112,7 +112,7 @@ namespace Grand.Services.Media
         /// <returns>Picture</returns>
         Task<Picture> InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, 
             string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true);
+            bool isNew = true, bool validateBinary = false);
 
         /// <summary>
         /// Updates the picture
