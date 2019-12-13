@@ -303,7 +303,7 @@ function displayPopupNotification(message, messagetype, modal) {
     //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<div class="p-3"><h5 class="text-white text-center">' + message + '</h5></div>';
+        htmlcode = '<div class="p-3"><h5 class="text-center">' + message + '</h5></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
