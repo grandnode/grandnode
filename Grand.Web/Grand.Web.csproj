@@ -17,11 +17,6 @@
     <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GoogleAuthenticator" Version="1.2.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>

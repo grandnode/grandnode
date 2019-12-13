@@ -1,5 +1,4 @@
-﻿using Google.Authenticator;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
@@ -37,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+//using st Grand.Services.Authentication.TwoFactorAuthenticationService;
 
 namespace Grand.Web.Controllers
 {
@@ -65,11 +65,8 @@ namespace Grand.Web.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-        private IShoppingCartService _shoppingCartService;
         private readonly GrandConfig _grandConfig;
-
-        // 2fa
-        //private const string key = "qazqaz12345";
+        private readonly ITwoFactorAuthenticationService _twoFactorAuthenticationService;
 
         #endregion
 
@@ -97,8 +94,8 @@ namespace Grand.Web.Controllers
             DateTimeSettings dateTimeSettings,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings,
-            IShoppingCartService shoppingCartService,
-            GrandConfig grandConfig
+            GrandConfig grandConfig,
+            ITwoFactorAuthenticationService twoFactorAuthenticationService
             )
         {
             _customerViewModelService = customerViewModelService;
@@ -122,8 +119,8 @@ namespace Grand.Web.Controllers
             _localizationSettings = localizationSettings;
             _captchaSettings = captchaSettings;
             _mediator = mediator;
-            _shoppingCartService = shoppingCartService;
             _grandConfig = grandConfig;
+            _twoFactorAuthenticationService = twoFactorAuthenticationService;
         }
 
         #endregion
@@ -1437,11 +1434,10 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TwoFactorAuthenticate(TwoFactorAuthenticationModel model, string returnUrl)
+        public async Task<IActionResult> TwoFactorAuthenticate(TwoFactorAuthenticationModel model, string returnUrl,
+             [FromServices] IShoppingCartService shoppingCartService)
         {
-            TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
             var token = model.Code;
-            // this is no good solution. in the future must be refactored
             if (token == null)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
@@ -1449,14 +1445,14 @@ namespace Grand.Web.Controllers
             }
 
             var userUniqueKey = model.UserUniqueKey;
-            bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
+            bool isValid = _twoFactorAuthenticationService.AuthenticateTwoFactor(userUniqueKey, token);
             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.UserName) : await _customerService.GetCustomerByEmail(model.Email);
                         
             if (isValid)
             {
                 HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
                 //migrate shopping cart
-                await _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+                await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                 //sign in new customer
                 await _authenticationService.SignIn(customer, true);
@@ -1489,11 +1485,11 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
              
             var secretKey = _grandConfig.TwoFactorAuthKey;
-            var twoFacAuth = new TwoFactorAuthenticator();
             string userUniqueKey = customer.Email + secretKey;
-            var setupInfo = twoFacAuth.GenerateSetupCode("GrandNode", "GrandNode", userUniqueKey, 300, 300);
-            string barcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-            string manualCode = setupInfo.ManualEntryKey;
+            QrCodeSetup setupInfo = _twoFactorAuthenticationService.GenerateQrCodeSetup(userUniqueKey);
+
+            string barcodeImageUrl = setupInfo.QrCodeImageUrl;
+            string manualCode = setupInfo.ManualEntryQrCode;
 
             var model = new TwoFactorAuthenticationModel 
             {
@@ -1513,7 +1509,6 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public IActionResult EnableTwoFactorAuthenticator(TwoFactorAuthenticationModel model, string returnUrl)
         {
-            TwoFactorAuthenticator twoFactorAuth = new TwoFactorAuthenticator();
             var token = model.Code;
             
             if (token == null)
@@ -1523,7 +1518,7 @@ namespace Grand.Web.Controllers
             }
 
             var userUniqueKey = model.UserUniqueKey;
-            bool isValid = twoFactorAuth.ValidateTwoFactorPIN(userUniqueKey, token);
+            bool isValid = _twoFactorAuthenticationService.AuthenticateTwoFactor(userUniqueKey, token);
             
             if (isValid)
             {
