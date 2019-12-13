@@ -41,23 +41,7 @@ namespace Grand.Web.Services
 
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
-                //model
-                var model = new List<RenderWidgetModel>();
-
-                var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _storeContext.CurrentStore.Id);
-                foreach (var widget in widgets)
-                {
-                    widget.GetPublicViewComponent(widgetZone, out string viewComponentName);
-
-                    var widgetModel = new RenderWidgetModel
-                    {
-                        WidgetViewComponentName = viewComponentName,
-                        WidgetViewComponentArguments = additionalData
-                    };
-
-                    model.Add(widgetModel);
-                }
-                return await Task.FromResult(model);
+                return await AcquireForPrepareRenderWidget(widgetZone, additionalData);
             });
 
             //"WidgetViewComponentArguments" property of widget models depends on "additionalData".
@@ -86,6 +70,26 @@ namespace Grand.Web.Services
             }
 
             return clonedModel;
+        }
+
+        private async Task<List<RenderWidgetModel>> AcquireForPrepareRenderWidget(string widgetZone, object additionalData)
+        {
+            //model
+            var model = new List<RenderWidgetModel>();
+
+            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _storeContext.CurrentStore.Id);
+            foreach (var widget in widgets)
+            {
+                widget.GetPublicViewComponent(widgetZone, out string viewComponentName);
+
+                var widgetModel = new RenderWidgetModel {
+                    WidgetViewComponentName = viewComponentName,
+                    WidgetViewComponentArguments = additionalData
+                };
+
+                model.Add(widgetModel);
+            }
+            return await Task.FromResult(model);
         }
     }
 }

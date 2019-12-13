@@ -222,41 +222,7 @@ namespace Grand.Services.Discounts
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
             string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, storeId, couponCode, discountName);
-            var result = await _cacheManager.GetAsync(key, () =>
-            {
-                var query = _discountRepository.Table;
-                if (!showHidden)
-                {
-                    //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-                    //That's why we pass the date value
-                    var nowUtc = DateTime.UtcNow;
-                    query = query.Where(d =>
-                        (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
-                        && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
-                        && d.IsEnabled);
-                }
-                if (!string.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
-                {
-                    //Store mapping
-                    query = from p in query
-                            where !p.LimitedToStores || p.Stores.Contains(storeId)
-                            select p;
-                }
-                if (!string.IsNullOrEmpty(couponCode))
-                {
-                    var _coupon = _discountCouponRepository.Table.FirstOrDefault(x => x.CouponCode == couponCode);
-                    if (_coupon != null)
-                        query = query.Where(d => d.Id == _coupon.DiscountId);
-                }
-                if (!string.IsNullOrEmpty(discountName))
-                {
-                    query = query.Where(d => d.Name != null && d.Name.ToLower().Contains(discountName.ToLower()));
-                }
-                query = query.OrderBy(d => d.Name);
-
-                var discounts = query.ToListAsync();
-                return discounts;
-            });
+            var result = await _cacheManager.GetAsync(key, () => AcquireForGetAllDiscounts(storeId, couponCode, discountName, showHidden));
             //we know that this method is usually inkoved multiple times
             //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
@@ -264,6 +230,42 @@ namespace Grand.Services.Discounts
                 result = result.Where(d => d.DiscountType == discountType.Value).ToList();
             }
             return result;
+        }
+
+        private Task<List<Discount>> AcquireForGetAllDiscounts(string storeId, string couponCode, string discountName, bool showHidden)
+        {
+            var query = _discountRepository.Table;
+            if (!showHidden)
+            {
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
+                query = query.Where(d =>
+                    (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
+                    && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
+                    && d.IsEnabled);
+            }
+            if (!string.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                //Store mapping
+                query = from p in query
+                        where !p.LimitedToStores || p.Stores.Contains(storeId)
+                        select p;
+            }
+            if (!string.IsNullOrEmpty(couponCode))
+            {
+                var _coupon = _discountCouponRepository.Table.FirstOrDefault(x => x.CouponCode == couponCode);
+                if (_coupon != null)
+                    query = query.Where(d => d.Id == _coupon.DiscountId);
+            }
+            if (!string.IsNullOrEmpty(discountName))
+            {
+                query = query.Where(d => d.Name != null && d.Name.ToLower().Contains(discountName.ToLower()));
+            }
+            query = query.OrderBy(d => d.Name);
+
+            var discounts = query.ToListAsync();
+            return discounts;
         }
 
         /// <summary>

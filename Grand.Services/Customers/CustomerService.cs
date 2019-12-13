@@ -849,9 +849,14 @@ namespace Grand.Services.Customers
             string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.GetAsync(key, () =>
             {
-                var filter = Builders<CustomerRole>.Filter.Eq(x => x.SystemName, systemName);
-                return _customerRoleRepository.Collection.Find(filter).FirstOrDefaultAsync();
+                return AcquireForGetCustomerRoleBySystemName(systemName);
             });
+        }
+
+        private Task<CustomerRole> AcquireForGetCustomerRoleBySystemName(string systemName)
+        {
+            var filter = Builders<CustomerRole>.Filter.Eq(x => x.SystemName, systemName);
+            return _customerRoleRepository.Collection.Find(filter).FirstOrDefaultAsync();
         }
 
         /// <summary>

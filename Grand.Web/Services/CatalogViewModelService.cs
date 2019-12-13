@@ -586,28 +586,30 @@ namespace Grand.Web.Services
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
 
-            var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
-            {
-                var cat = new List<CategoryModel>();
-                foreach (var x in (await _categoryService.GetAllCategoriesDisplayedOnHomePage()))
-                {
-                    var catModel = x.ToModel(_workContext.WorkingLanguage);
-                    //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var picture = await _pictureService.GetPictureById(x.PictureId);
-                    catModel.PictureModel = new PictureModel {
-                        Id = x.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
-                    };
-                    cat.Add(catModel);
-                }
-                return cat;
-            });
+            var model = await _cacheManager.GetAsync(categoriesCacheKey, () => AcquireForPrepareHomepageCategory());
 
             return model;
+        }
+
+        private async Task<List<CategoryModel>> AcquireForPrepareHomepageCategory()
+        {
+            var cat = new List<CategoryModel>();
+            foreach (var x in (await _categoryService.GetAllCategoriesDisplayedOnHomePage()))
+            {
+                var catModel = x.ToModel(_workContext.WorkingLanguage);
+                //prepare picture model
+                int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                var picture = await _pictureService.GetPictureById(x.PictureId);
+                catModel.PictureModel = new PictureModel {
+                    Id = x.PictureId,
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
+                    Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
+                };
+                cat.Add(catModel);
+            }
+            return cat;
         }
 
         public virtual async Task<List<CategoryModel>> PrepareCategoryFeaturedProducts()
@@ -1345,7 +1347,7 @@ namespace Grand.Web.Services
                     }
                 }
             }
-            
+
             if (_blogSettings.ShowBlogPostsInSearchAutoComplete)
             {
                 var posts = await _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);

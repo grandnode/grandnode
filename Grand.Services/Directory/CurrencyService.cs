@@ -174,12 +174,7 @@ namespace Grand.Services.Directory
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             var currencies = await _cacheManager.GetAsync(key, () =>
             {
-                var query = _currencyRepository.Table;
-
-                if (!showHidden)
-                    query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder);
-                return query.ToListAsync();
+                return AcquireForGetAllCurrencies(showHidden);
             });
 
             //store mapping
@@ -188,6 +183,16 @@ namespace Grand.Services.Directory
                 currencies = currencies.Where(c => _storeMappingService.Authorize(c, storeId)).ToList();
             }
             return currencies;
+        }
+
+        private Task<List<Currency>> AcquireForGetAllCurrencies(bool showHidden)
+        {
+            var query = _currencyRepository.Table;
+
+            if (!showHidden)
+                query = query.Where(c => c.Published);
+            query = query.OrderBy(c => c.DisplayOrder);
+            return query.ToListAsync();
         }
 
         /// <summary>

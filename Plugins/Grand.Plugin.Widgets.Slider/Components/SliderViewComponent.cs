@@ -40,12 +40,17 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             string cacheKey = string.Format(PICTURE_URL_MODEL_KEY, pictureId);
             return await _cacheManager.GetAsync(cacheKey, async () =>
             {
-                var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
-                if (url == null)
-                    url = "";
-
-                return url;
+                return await AcquireForGetPrictureUrl(pictureId);
             });
+        }
+
+        private async Task<string> AcquireForGetPrictureUrl(string pictureId)
+        {
+            var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
+            if (url == null)
+                url = "";
+
+            return url;
         }
 
         protected async Task PrepareModel(IList<PictureSlider> sliders, PublicInfoModel model)
