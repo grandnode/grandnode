@@ -47,7 +47,7 @@
             <div class="labels">
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
-                    <span class="product-discount product-box-label">
+                    <span class="product-discount badge product-box-label">
                         <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
                     </span>
                 }
@@ -96,17 +96,6 @@
                         <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
                     }
 
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
-                        //of course, you can modify appropriate locales to include VAT info there
-                        <li class="">
-                            <span class="tax-shipping-info">
-                                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                            </span>
-                        </li>
-                    }
                     @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
                     {
                         <li class="base-price-pangv">
@@ -115,6 +104,15 @@
                     }
 
                 </ul>
+                @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                {
+                    var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                    //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                    //of course, you can modify appropriate locales to include VAT info there
+                    <div class="tax-shipping-info">
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                    </div>
+                }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
             </div>

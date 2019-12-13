@@ -384,7 +384,7 @@ namespace Grand.Web.Controllers
             await _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
             await _productService.UpdateMostView(productId, 1);
-            var qhtml = RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
+            var qhtml = await RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
             return Json(new
             {
                 success = true,

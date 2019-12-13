@@ -1,5 +1,4 @@
 ﻿using Grand.Api.Constants;
-using Grand.Api.Infrastructure.Extensions;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNet.OData.Extensions;
@@ -28,7 +27,13 @@ namespace Grand.Api.Infrastructure
             if (apiConfig.Enabled)
             {
                 //cors
-                services.ConfigureCors();
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(Configurations.CorsPolicyName,
+                        builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+                });
 
                 //Add OData
                 services.AddOData();

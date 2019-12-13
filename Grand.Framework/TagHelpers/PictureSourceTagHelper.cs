@@ -37,7 +37,7 @@ namespace Grand.Framework.TagHelpers
                 var srcset = new TagHelperAttribute("srcset", pictureurl);
                 output.Attributes.Add(srcset);
             }
-            base.Process(context, output);
+            await base.ProcessAsync(context, output);
         }
     }
 }

@@ -88,7 +88,7 @@
     <div class="labels">
         @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
         {
-            <span class="product-discount product-box-label">
+            <span class="product-discount badge product-box-label">
                 <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
             </span>
         }
@@ -142,15 +142,15 @@
                             @(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)
                         </div>
                     }
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        <div class="tax-shipping-info">
-                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                        </div>
-                    }
                 </div>
             </div>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
         </div>
         <div class="bottom">
             @if (Model.ProductType == ProductType.Auction)

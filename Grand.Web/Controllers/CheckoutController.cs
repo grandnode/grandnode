@@ -936,7 +936,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "shipping-method",
-                    html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                    html = await RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
                 },
                 goto_section = "shipping_method"
             });
@@ -988,7 +988,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-method",
-                        html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
                     },
                     goto_section = "payment_method"
                 });
@@ -1004,7 +1004,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "confirm-order",
-                    html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                 },
                 goto_section = "confirm_order"
             });
@@ -1028,7 +1028,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });
@@ -1042,7 +1042,7 @@ namespace Grand.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
-                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                    html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                 },
                 goto_section = "payment_info"
             });
@@ -1123,7 +1123,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "billing",
-                                html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                                html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                             },
                             wrong_billing_address = true,
                         });
@@ -1179,7 +1179,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             },
                             goto_section = "shipping"
                         });
@@ -1305,7 +1305,7 @@ namespace Grand.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             }
                         });
                     }
@@ -1454,7 +1454,7 @@ namespace Grand.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1510,7 +1510,7 @@ namespace Grand.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1523,7 +1523,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-info",
-                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                        html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                     }
                 });
             }
@@ -1607,7 +1607,7 @@ namespace Grand.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });

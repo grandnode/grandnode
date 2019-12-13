@@ -363,7 +363,7 @@ namespace Grand.Services.Media
                     mutex.WaitOne();
                     using (var image = SKBitmap.Decode(filePath))
                     {
-                        var pictureBinary = await ApplyResize(image, targetSize);
+                        var pictureBinary = await ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
                     mutex.ReleaseMutex();
@@ -468,7 +468,7 @@ namespace Grand.Services.Media
                         mutex.WaitOne();
                         using (var image = SKBitmap.Decode(pictureBinary))
                         {
-                            pictureBinary = await ApplyResize(image, targetSize);
+                            pictureBinary = await ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
                         }
                         SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         mutex.ReleaseMutex();
@@ -587,7 +587,7 @@ namespace Grand.Services.Media
         /// <returns>Picture</returns>
         public virtual async Task<Picture> InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true)
+            bool isNew = true, bool validateBinary = false)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -704,6 +704,7 @@ namespace Grand.Services.Media
         {
             try
             {
+                var format = EncodedImageFormat(mimeType);
                 using (var ms = new MemoryStream(byteArray))
                 {
                     using (var image = SKBitmap.Decode(byteArray))
@@ -712,13 +713,13 @@ namespace Grand.Services.Media
                         {
                             //horizontal rectangle or square
                             if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
-                                byteArray = await ApplyResize(image, _mediaSettings.MaximumImageSize);
+                                byteArray = await ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
                         else if (image.Width < image.Height)
                         {
                             //vertical rectangle
                             if (image.Width > _mediaSettings.MaximumImageSize)
-                                byteArray = await ApplyResize(image, _mediaSettings.MaximumImageSize);
+                                byteArray = await ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
                         return byteArray;
                     }
@@ -729,8 +730,39 @@ namespace Grand.Services.Media
                 return byteArray;
             }
         }
+        protected SKEncodedImageFormat EncodedImageFormat(string mimetype)
+        {
+            SKEncodedImageFormat defaultFormat = SKEncodedImageFormat.Jpeg;
+            if (string.IsNullOrEmpty(mimetype))
+                return defaultFormat;
 
-        protected async Task<byte[]> ApplyResize(SKBitmap image, int targetSize)
+            mimetype = mimetype.ToLower();
+
+            if (mimetype.Contains("jpeg") || mimetype.Contains("jpg") || mimetype.Contains("pjpeg"))
+                return defaultFormat;
+
+            if (mimetype.Contains("png"))
+                return SKEncodedImageFormat.Png;
+
+            if (mimetype.Contains("webp"))
+                return SKEncodedImageFormat.Webp;
+
+            if (mimetype.Contains("webp"))
+                return SKEncodedImageFormat.Webp;
+
+            if (mimetype.Contains("gif"))
+                return SKEncodedImageFormat.Gif;
+
+            if (mimetype.Contains("bmp"))
+                return SKEncodedImageFormat.Bmp;
+
+            if (mimetype.Contains("ico"))
+                return SKEncodedImageFormat.Ico;
+
+            return defaultFormat;
+
+        }
+        protected async Task<byte[]> ApplyResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
         {
             if (image == null)
                 throw new ArgumentNullException("image");
@@ -758,12 +790,11 @@ namespace Grand.Services.Media
                 width = image.Width;
                 height = image.Height;
             }
-
-            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.High))
+            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Low))
             {
                 using (var resimage = SKImage.FromBitmap(resized))
                 {
-                    return await Task.FromResult(resimage.Encode().ToArray());
+                    return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
                 }
             }
         }
