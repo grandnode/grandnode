@@ -1,6 +1,6 @@
 language: csharp
 solution: GrandNode.sln
-dist: xenial
+dist: bionic
 mono: none
 dotnet: 3.1.100
 
