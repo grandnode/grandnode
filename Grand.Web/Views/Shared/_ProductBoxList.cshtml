@@ -56,13 +56,13 @@
     <div class="labels">
         @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
         {
-            <span class="product-discount product-box-label">
+            <span class="product-discount badge product-box-label">
                 <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
             </span>
         }
         @if (!string.IsNullOrEmpty(Model.Flag))
         {
-            <span class="product-box-label bg-info">@Model.Flag</span>
+            <span class="product-box-label badge bg-info">@Model.Flag</span>
         }
     </div>
     <div class="product-info">

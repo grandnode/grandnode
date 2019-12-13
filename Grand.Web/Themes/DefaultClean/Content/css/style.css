@@ -1347,11 +1347,6 @@ pagination .pagination a:not([href]) {
 	top: 5px;
 	left: 5px;
 }
-.featured-product.product-box .product-discount {
-	width: 45px;
-	height: 30px;
-	border-radius: 4px;
-}
 .featured-product  .prod-list {
     display: inline-flex;
 }
@@ -2073,27 +2068,28 @@ list settings .list__item,
 }
 .product-box .labels,
 .product-details-page .product-labels {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	z-index: 2;
 }
 .product-box .product-box-label:not(:last-child) {
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
 }
 .product-box .product-box-label,
 .product-details-page .product-label {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	line-height: 50px;
+	padding: 5px;
 	color: #fff;
 	font-weight: 500;
 	letter-spacing: .5px;
 	font-size: 14px;
+	line-height: 14px;
 }
 .product-box .product-discount {
 	background-color: #7dae32;
@@ -2731,6 +2727,10 @@ ul.opc .order-summary-content h5 {
 }
 .product-details-page .overview .generalTitle {
     font-weight: 300;
+}
+.product-details-page #hoursDiv .btn {
+	display: flex;
+	align-items: center;
 }
 
 /* product quickview */
@@ -4513,8 +4513,9 @@ footer .socicon-pinterest:hover {
 		top: 0;
 		border: 1px solid rgba(0, 0, 0, .1);
 	}
-	.shopping-cart-page .card {
-		padding-bottom: 0;
+	.shopping-cart-page .cart-collaterals .card {
+		margin: 0;
+		padding: 0;
 	}
 	.subrow .quantity .td-title {
 		position: relative;
@@ -4646,11 +4647,6 @@ footer .socicon-pinterest:hover {
 	}
 	#mobile_menu .rest-categories {
 		padding: 0;
-	}
-	.product-box .product-box-label {
-		width: 50px;
-		height: 30px;
-		border-radius: 3px;
 	}
 	header {
 		margin: 0 0 15px 0;
