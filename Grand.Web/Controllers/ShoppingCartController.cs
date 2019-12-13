@@ -116,7 +116,7 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
