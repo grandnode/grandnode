@@ -2158,15 +2158,11 @@ list settings .list__item,
     transition: .3s ease;
 }
 .product-box.grid-box .prices.reservation-price {
-	height: 50px;
+	height: auto;
 	line-height: 1;
 }
 .product-box.grid-box .prices.reservation-price .old-price {
 	line-height: 1;
-}
-.product-box.grid-box:hover .prices {
-	/* -webkit-transform: translateY(-22px); */
-	/* transform: translateY(-22px); */
 }
 .product-box.grid-box:hover .ratings {
     -webkit-transform: translateY(0);
@@ -2886,6 +2882,15 @@ ul.opc .order-summary-content h5 {
 .vote.up {
 	margin-top: 24px;
 }
+
+/* review helpfulness */
+
+.product-review-helpfulness .result {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
 /* Sitemap */
 
 .sitemap-products-group {
@@ -3755,7 +3760,8 @@ span.product-quantity {
 	border: 2px solid #0091b5;
 }
 .product-details-page .attributes table {
-    overflow: hidden;
+	overflow: hidden;
+	border-bottom: 1px solid #dee2e6;
 }
 /*datapicker*/
 
