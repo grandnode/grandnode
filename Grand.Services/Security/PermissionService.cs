@@ -89,9 +89,14 @@ namespace Grand.Services.Security
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
             return await _cacheManager.GetAsync(key, async () =>
             {
-                var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
-                return permissionRecord?.CustomerRoles.Contains(customerRole.Id) ?? false;
+                return await AcquireForAuthorize(permissionRecordSystemName, customerRole);
             });
+        }
+
+        private async Task<bool> AcquireForAuthorize(string permissionRecordSystemName, CustomerRole customerRole)
+        {
+            var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
+            return permissionRecord?.CustomerRoles.Contains(customerRole.Id) ?? false;
         }
 
         #endregion

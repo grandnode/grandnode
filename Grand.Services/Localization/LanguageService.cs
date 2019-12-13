@@ -126,12 +126,7 @@ namespace Grand.Services.Localization
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             var languages = await _cacheManager.GetAsync(key, () =>
             {
-                var query = _languageRepository.Table;
-
-                if (!showHidden)
-                    query = query.Where(l => l.Published);
-                query = query.OrderBy(l => l.DisplayOrder);
-                return query.ToListAsync();
+                return AcquireForGetAllLanguages(showHidden);
             });
 
             //store mapping
@@ -142,6 +137,16 @@ namespace Grand.Services.Localization
                     .ToList();
             }
             return languages;
+        }
+
+        private Task<List<Language>> AcquireForGetAllLanguages(bool showHidden)
+        {
+            var query = _languageRepository.Table;
+
+            if (!showHidden)
+                query = query.Where(l => l.Published);
+            query = query.OrderBy(l => l.DisplayOrder);
+            return query.ToListAsync();
         }
 
         /// <summary>

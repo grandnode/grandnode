@@ -75,16 +75,21 @@ namespace Grand.Plugin.Widgets.Slider.Services
             string cacheKey = string.Format(SLIDERS_MODEL_KEY, _storeContext.CurrentStore.Id, sliderType.ToString(), objectEntry);
             return await _cacheManager.GetAsync(cacheKey, async () =>
             {
-                var query = from s in _reporistoryPictureSlider.Table
-                            where s.SliderTypeId == (int)sliderType && s.Published
-                            select s;
-
-                if (!string.IsNullOrEmpty(objectEntry))
-                    query = query.Where(x => x.ObjectEntry == objectEntry);
-
-                var items = await query.ToListAsync();
-                return items.Where(c => _storeMappingService.Authorize(c)).ToList();
+                return await AcquireForGetPictureSliders(sliderType, objectEntry);
             });
+        }
+
+        private async Task<List<PictureSlider>> AcquireForGetPictureSliders(SliderType sliderType, string objectEntry)
+        {
+            var query = from s in _reporistoryPictureSlider.Table
+                        where s.SliderTypeId == (int)sliderType && s.Published
+                        select s;
+
+            if (!string.IsNullOrEmpty(objectEntry))
+                query = query.Where(x => x.ObjectEntry == objectEntry);
+
+            var items = await query.ToListAsync();
+            return items.Where(c => _storeMappingService.Authorize(c)).ToList();
         }
 
 

@@ -121,21 +121,27 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
-                //load by store
-                var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
-                if (topic == null || !topic.Published)
-                    return null;
-                //Store mapping
-                if (!_storeMappingService.Authorize(topic))
-                    return null;
-                //ACL (access control list)
-                if (!_aclService.Authorize(topic))
-                    return null;
-                return PrepareTopicModel(topic);
+                return await AcquireForTopicBlock(systemName);
             });
 
             return cacheModel;
         }
+
+        private async Task<TopicModel> AcquireForTopicBlock(string systemName)
+        {
+            //load by store
+            var topic = await _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
+            if (topic == null || !topic.Published)
+                return null;
+            //Store mapping
+            if (!_storeMappingService.Authorize(topic))
+                return null;
+            //ACL (access control list)
+            if (!_aclService.Authorize(topic))
+                return null;
+            return PrepareTopicModel(topic);
+        }
+
         public virtual async Task<string> PrepareTopicTemplateViewPath(string templateId)
         {
             var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, templateId);

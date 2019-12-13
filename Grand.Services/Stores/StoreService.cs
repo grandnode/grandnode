@@ -96,10 +96,15 @@ namespace Grand.Services.Stores
                 string key = STORES_ALL_KEY;
                 _allStores = await _cacheManager.GetAsync(key, () =>
                 {
-                    return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
+                    return AcquireForGetAllStores();
                 });
             }
             return _allStores;
+        }
+
+        private Task<List<Store>> AcquireForGetAllStores()
+        {
+            return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
         }
 
         /// <summary>
