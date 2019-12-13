@@ -18,7 +18,7 @@
                                     @if (!string.IsNullOrEmpty(Model.Flag))
                                     {
                                         <div class="product-labels">
-                                            <span class="product-label bg-info text-white">@Model.Flag</span>
+                                            <span class="product-label badge bg-info text-white">@Model.Flag</span>
                                         </div>
                                     }
                                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })

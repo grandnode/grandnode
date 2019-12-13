@@ -303,7 +303,7 @@ function displayPopupNotification(message, messagetype, modal) {
     //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<div class="p-3"><h5 class="text-white text-center">' + message + '</h5></div>';
+        htmlcode = '<div class="p-3"><h5 class="text-center">' + message + '</h5></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
@@ -404,7 +404,7 @@ function sendcontactusform(urladd) {
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
             Id: $('#AskQuestionProductId').val(),
-            'g-recaptcha-response-value': $("input[id^='g-recaptcha-response']").val()
+            'g-recaptcha-response-value': $("textarea[id^='g-recaptcha-response']").val()
         };
         addAntiForgeryToken(contactData);
         $.ajax({
