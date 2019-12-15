@@ -756,7 +756,14 @@
   <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
     <Value>Number of converted picture</Value>
   </LocaleResource>
-
-
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
 </Language>
 

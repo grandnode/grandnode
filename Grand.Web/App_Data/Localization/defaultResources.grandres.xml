@@ -13223,6 +13223,15 @@
   <LocaleResource Name="Admin.Orders.Fields.CreatedOn.Hint">
     <Value>The date/time the order was placed/created.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Customer">
     <Value>Customer</Value>
   </LocaleResource>
