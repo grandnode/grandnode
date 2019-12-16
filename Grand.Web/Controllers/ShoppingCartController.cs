@@ -671,7 +671,7 @@ namespace Grand.Web.Controllers
                 .Select(x => x)
                 .ToList()
                 : new List<string>();
-            foreach (var sci in pageCart)
+            foreach (var sci in pageCart.ToList())
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
