@@ -258,6 +258,33 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(GenericAttributeModel model)
+        {
+            if (!await CheckPermission(model.ObjectType, model.Id))
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Admin.Common.GenericAttributes.Permission"));
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _genericAttributeService.SaveAttribute(model.ObjectType, model.Id, model.Key, string.Empty, model.StoreId);
+                //TO DO - temporary solution
+                //After delete attribute we need clear cache
+                await _cacheManager.Clear();
+                return Json(new
+                {
+                    success = true,
+                });
+            }
+            return Json(new
+            {
+                success = false,
+                errors = ModelState.Keys.SelectMany(k => ModelState[k].Errors)
+                               .Select(m => m.ErrorMessage).ToArray()
+            });
+        }
+
         #endregion
 
     }

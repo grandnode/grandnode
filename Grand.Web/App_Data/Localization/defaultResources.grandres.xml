@@ -4705,7 +4705,7 @@
     <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
-    <Value>Save</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
