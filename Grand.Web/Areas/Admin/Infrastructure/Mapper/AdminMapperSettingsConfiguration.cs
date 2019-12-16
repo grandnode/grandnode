@@ -257,7 +257,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<OrderSettings, OrderSettingsModel>()
                 .ForMember(dest => dest.GiftCards_Activated_OrderStatuses, mo => mo.Ignore())
-                .ForMember(dest => dest.GiftCards_Deactivated_OrderStatuses, mo => mo.Ignore())
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.OrderIdent, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

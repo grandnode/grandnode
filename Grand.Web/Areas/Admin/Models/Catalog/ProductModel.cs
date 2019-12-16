@@ -212,7 +212,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
+        public bool IsTele { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }

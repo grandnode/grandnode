@@ -745,6 +745,7 @@ namespace Grand.Services.Installation
         }
         private async Task From450To460()
         {
+            
             #region Install String resources
 
             await InstallStringResources("EN_450_460.nopres.xml");
@@ -862,6 +863,16 @@ namespace Grand.Services.Installation
                 urlrecord.Slug = urlrecord.Slug.ToLowerInvariant();
                 _urlRecordRepository.Update(urlrecord);
             }
+
+            #endregion
+            
+            #region Update product - rename fields
+
+            var renameFields = Builders<object>.Update
+                .Rename("IsTelecommunicationsOrBroadcastingOrElectronicServices", "IsTele");
+
+            var dbContext = _serviceProvider.GetRequiredService<IMongoDatabase>();
+            await dbContext.GetCollection<object>(typeof(Product).Name).UpdateManyAsync(new BsonDocument(), renameFields);
 
             #endregion
 

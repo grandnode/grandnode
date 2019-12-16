@@ -81,7 +81,7 @@ namespace Grand.Api.DTOs.Catalog
         public string DeliveryDateId { get; set; }
         public bool IsTaxExempt { get; set; }
         public string TaxCategoryId { get; set; }
-        public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
+        public bool IsTele { get; set; }
         public bool UseMultipleWarehouses { get; set; }
         public string WarehouseId { get; set; }
         public int StockQuantity { get; set; }

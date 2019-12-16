@@ -3,7 +3,7 @@
 */
 $(document).ready(function () {
     $('body').addClass('is-ready');
-    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid").scrollLeft(30);
+    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid, .customGrid .flex-grid").scrollLeft(30);
 });
 
 $(function () {
@@ -146,6 +146,12 @@ function productInfo() {
         $('.box-unvisible', this).css('margin-bottom', - PB_bottom_h);
     });
 }
+
+// tooltips
+
+$(function () {
+    $('.product-box [data-toggle="title"]').tooltip();
+});
 
 $(document).ready(function () {
 
@@ -334,15 +340,15 @@ function displayBarNotification(message, messagetype, timeout) {
     //types: success, error
     var cssclass = 'success';
     if (messagetype == 'success') {
-        cssclass = 'card-success';
+        cssclass = 'success';
     }
     else if (messagetype == 'error') {
-        cssclass = 'card-danger';
+        cssclass = 'danger';
     }
     //remove previous CSS classes and notifications
     $('#bar-notification')
-        .removeClass('card-success')
-        .removeClass('card-danger');
+        .removeClass('success')
+        .removeClass('danger');
     $('#bar-notification .content').remove();
 
     //add new notifications
