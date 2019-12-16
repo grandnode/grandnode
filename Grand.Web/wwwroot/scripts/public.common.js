@@ -3,7 +3,7 @@
 */
 $(document).ready(function () {
     $('body').addClass('is-ready');
-    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid").scrollLeft(30);
+    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid, .customGrid .flex-grid").scrollLeft(30);
 });
 
 $(function () {
@@ -146,6 +146,12 @@ function productInfo() {
         $('.box-unvisible', this).css('margin-bottom', - PB_bottom_h);
     });
 }
+
+// tooltips
+
+$(function () {
+    $('.product-box [data-toggle="title"]').tooltip();
+});
 
 $(document).ready(function () {
 

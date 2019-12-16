@@ -133,3 +133,12 @@ var SearchAction = {
 
     }
 }
+
+$(document).ready(function () {
+    $(window).click(function () {
+        $('.advanced-search-results').removeClass("open");
+    });
+    $('.advanced-search-results').click(function (event) {
+        event.stopPropagation();
+    });
+});

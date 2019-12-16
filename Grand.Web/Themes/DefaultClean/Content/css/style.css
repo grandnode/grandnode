@@ -619,6 +619,10 @@ body:not(.is-ready) .search-box-button {
 	white-space: nowrap;
 	max-width: 100%;
 }
+.advanced-search-results .rating-box::before,
+.advanced-search-results .rating-box .rating:before {
+	font-size: 18px;
+}
 ul.ui-autocomplete li:hover {
 	cursor: pointer;
 	background-color: #f7f7f9;
@@ -2375,7 +2379,7 @@ list settings .list__item,
 	left: 0;
 	width: 100%;
 	height: 2px;
-	background: #1D1F20;
+	background: #0091b5;
 }
 .product-details-page #product_tab_content {
 	margin-top: 15px;
@@ -2925,7 +2929,8 @@ table {
 	width: 32px !important;
 	height: 32px !important;
 	border-radius: 50%;
-	border: 1px solid #444 !important;
+	-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.15);
+    box-shadow: 0 0 3px rgba(0,0,0,0.15);
 	cursor: pointer;
 }
 .flex-grid .card,
@@ -3769,7 +3774,7 @@ span.product-quantity {
     background-position: center center;
     width: 1rem;
     height: 1rem;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23dfdfdf' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
 }
 .product-details-page .attributes table {
 	overflow: hidden;
@@ -4586,7 +4591,8 @@ footer .socicon-pinterest:hover {
 }
 @media (max-width: 991px) {
 	.categoryGrid .flex-grid,
-	.manufacturerGrid .flex-grid {
+	.manufacturerGrid .flex-grid,
+	.customGrid .flex-grid {
 		display: inline-flex;
 		flex-wrap: nowrap;
 		width: 100%;
@@ -5206,9 +5212,12 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 767px) {
-    .product-box.list-box .title a {
-        font-size: 14px;
-    }
+	.product-details-page .product-tabs .nav-link .mdi, #pills-mobile-tab .nav-item .nav-link .mdi {
+		font-size: 34px;
+	}
+	.product-box.list-box .title a {
+		font-size: 14px;
+	}
     .product-box.list-box .ratings {
         display: none;
     }
@@ -5588,7 +5597,6 @@ footer .socicon-pinterest:hover {
         margin-right: 0 !important;
     }
 	.product-simple-share .btn:not(.add-to-cart-button) {
-		width: calc(33% - 2px);
 		margin: 10px 0 0 0;
 		border-radius: 0 !important;
 	}

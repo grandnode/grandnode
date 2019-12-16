@@ -223,7 +223,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
 </div>
 <script asp-location="Footer">
-    $('.add-to-compare-list-button, .ask-a-question-button, .email-a-friend-button').tooltip({
+    $('.product-simple-share .btn').tooltip({
         boundary: 'window',
         template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
     });
