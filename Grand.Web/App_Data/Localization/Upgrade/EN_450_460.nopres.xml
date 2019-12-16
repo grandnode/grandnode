@@ -746,7 +746,6 @@
   <LocaleResource Name="SideBar.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
     <Value>Convert picture to webp format</Value>
   </LocaleResource>
@@ -765,5 +764,11 @@
   <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
     <Value>Currency rate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>  
 </Language>
 

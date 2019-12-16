@@ -7980,6 +7980,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
     <Value>Deactivate gift cards after deleting of an order</Value>
   </LocaleResource>
@@ -8005,15 +8011,6 @@
     <Value>Gift cards are activated when the order status is...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
-    <Value>Order status could not be set to Pending</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated">
-    <Value>Gift card deactivation order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Hint">
-    <Value>Gift cards are deactivated when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Pending">
     <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
@@ -8324,9 +8321,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Hint">
     <Value>Points are canceled when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
-    <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>

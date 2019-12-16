@@ -1388,8 +1388,8 @@ namespace Grand.Services.Orders
             }
 
             //gift cards deactivation
-            if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
-               _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
+            if (_orderSettings.DeactivateGiftCardsAfterCancelOrder &&
+                order.OrderStatus == OrderStatus.Cancelled)
             {
                 await SetActivatedValueForPurchasedGiftCards(order, false);
             }
