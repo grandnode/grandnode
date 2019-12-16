@@ -1,7 +1,7 @@
 ﻿@model IList<ProductOverviewModel>
 @if (Model.Any())
 {
-    <div class="col-12 related-products-grid product-grid px-0">
+    <div class="col-12 customGrid related-products-grid product-grid px-0">
         <h2 class="h3 generalTitle text-center">@T("Products.RelatedProducts")</h2>
         <div class="flex-grid form-row">
                 @foreach (var item in Model)
