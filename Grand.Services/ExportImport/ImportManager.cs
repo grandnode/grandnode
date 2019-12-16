@@ -391,8 +391,8 @@ namespace Grand.Services.ExportImport
                                 if (taxes.FirstOrDefault(x => x.Id == taxcategoryid) != null)
                                     product.TaxCategoryId = property.StringValue;
                                 break;
-                            case "istelecommunicationsorbroadcastingorelectronicservices":
-                                product.IsTelecommunicationsOrBroadcastingOrElectronicServices = property.BooleanValue;
+                            case "istele":
+                                product.IsTele = property.BooleanValue;
                                 break;
                             case "manageinventorymethodid":
                                 product.ManageInventoryMethodId = property.IntValue;

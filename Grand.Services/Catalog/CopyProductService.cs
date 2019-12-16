@@ -158,7 +158,7 @@ namespace Grand.Services.Catalog
                 DeliveryDateId = product.DeliveryDateId,
                 IsTaxExempt = product.IsTaxExempt,
                 TaxCategoryId = product.TaxCategoryId,
-                IsTelecommunicationsOrBroadcastingOrElectronicServices = product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
+                IsTele = product.IsTele,
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 UseMultipleWarehouses = product.UseMultipleWarehouses,
                 WarehouseId = product.WarehouseId,

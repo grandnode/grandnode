@@ -167,7 +167,7 @@ namespace Grand.Services.Tax
             if (_taxSettings.EuVatEnabled)
             {
                 //telecommunications, broadcasting and electronic services?
-                if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                if (product != null && product.IsTele)
                 {
                     //Europe Union consumer?
                     if (await IsEuConsumer(customer))
