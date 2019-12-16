@@ -1102,10 +1102,6 @@ nav .nav-item.list-inline {
 .mainNav .badge.bg-success::before {
 	border-top: 5px solid #28a745;
 }
-.mainNav .dropdown-menu .badge {
-	bottom: 0;
-	top: unset;
-}
 .mainNav .navbar-nav .nav-item.dropdown .dropdown-toggle .arrow-down {
     font-size: 18px;
 }

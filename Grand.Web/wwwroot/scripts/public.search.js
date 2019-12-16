@@ -133,12 +133,22 @@ var SearchAction = {
 
     }
 }
-
+function closeSearchBox() {
+    if (window.matchMedia('(min-width: 992px)').matches) {
+        $(window).click(function () {
+            $('.advanced-search-results').removeClass("open");
+        });
+        $('.advanced-search-results').click(function (event) {
+            event.stopPropagation();
+        });
+    }
+}
 $(document).ready(function () {
-    $(window).click(function () {
-        $('.advanced-search-results').removeClass("open");
+
+    closeSearchBox();
+
+    $(window).resize(function () {
+        closeSearchBox();
     });
-    $('.advanced-search-results').click(function (event) {
-        event.stopPropagation();
-    });
+
 });
