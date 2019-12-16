@@ -110,7 +110,7 @@ input {
 	right: 15px;
 	font-size: 16px;
 	font-weight: 500;
-	/* display: none; */
+	 display: none; 
 	text-align: center;
 	z-index: 1041;
 }
@@ -5591,6 +5591,10 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+	.generalNote {
+		left: 15px;
+		font-size: 14px;
+	}
 	.wishlist-content .btn-group {
 		width: 100%;
 	}
