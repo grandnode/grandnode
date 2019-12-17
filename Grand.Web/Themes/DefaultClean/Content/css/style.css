@@ -108,31 +108,63 @@ input {
 	position: fixed;
 	bottom: 15px;
 	right: 15px;
-	min-width: 200px;
-	padding: 15px;
-	display: none;
+	font-weight: 500;
 	text-align: center;
-	z-index: 1041;
+	z-index: 1051;
+}
+.generalNote .content {
+	position: relative;
+	padding: 30px 30px 30px 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+}
+.generalNote.danger .content {
+	border-left: 4px solid #dc3545;
+}
+.generalNote .content::before {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 15px;
+	top: 0;
+	bottom: 0;
+	min-width: 40px;
+	min-height: 40px;
+	margin: 0 15px 0 0;
+	color: #fff;
+	font-weight: 700;
+	border-radius: 50%;
+	font-size: 24px;
+}
+.generalNote.danger .content::before {
+	content: "!";
+	background: #dc3545;
+}
+.generalNote.success .content::before {
+	content: "\02713";
+	background: #28a745;
+}
+.generalNote.success .content {
+	border-left: 4px solid #28a745;
 }
 .generalNote .close {
     position: absolute;
     top: 5px;
     right: 5px;
 	display: flex;
-	color: #fff;
 	opacity: 1;
 	cursor: pointer;
 }
 .generalNote .close .mdi {
 	font-size: 14px;
 }
-.generalNote p {
-	margin: 0;
-}
 .generalNote a {
+	display: contents;
 	color: #000;
-    font-weight: 500;
-    white-space: nowrap;
+	font-weight: 500;
+	white-space: nowrap;
 }
 
 
@@ -1582,7 +1614,7 @@ pagination .pagination a:not([href]) {
 	height: 60px;
 	border-radius: 0;
 	border: 0;
-	background: #f7f7f7;
+	background: #fff;
 }
 #searchModal .search-box-button {
 	width: 60px;
@@ -1591,13 +1623,12 @@ pagination .pagination a:not([href]) {
 	border-radius: 0;
 	justify-content: center;
 }
-#searchModal .fa-search {
-	font-size: 22px;
-	color: #fff;
-}
-#searchModal .fa-pencil-square-o {
-	font-size: 22px;
-	color: rgba(0, 0, 0, .5);
+#searchModal .search-box-select {
+	max-width: 90px;
+	height: 60px;
+	border-top: 0;
+	border-bottom: 0;
+	border-left: 1px solid #9da6b2;
 }
 #searchModal.modal.fade .modal-dialog {
 	transition: unset;
@@ -3392,7 +3423,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 	width: 70px;
 	border-radius: 0;
 }
-/* wishlist new */
+/* wishlist */
 
 .shopping-cart tbody {
 	border: 0;
@@ -3483,7 +3514,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
     align-items: center;
     text-align: center;
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 400;
     padding: 5px;
     background: #0091b5;
     color: #fff;
@@ -3537,6 +3568,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 .flyout-cart-header a {
     color: #fff;
     font-size: 16px;
+	font-weight: 500;
 }
 .flyout-cart-header .close-cart {
     order: 2;
@@ -4595,6 +4627,9 @@ footer .socicon-pinterest:hover {
 		overflow-y: hidden;
 		overflow-x: auto;
 	}
+	.product-box .hover-img {
+		display: none;
+	}
 	#mobile_menu {
 		overflow-x: hidden;
 	}
@@ -4705,16 +4740,6 @@ footer .socicon-pinterest:hover {
         line-height: 1;
         padding: 5px 0 0 0;
         letter-spacing: -.01px;
-    }
-    #topcartlink .cart-qty:before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        left: -1px;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #fff;
-        border-radius: 100%;
     }
     .product-details-page .thumbnails img {
         width: 90px;
@@ -5003,14 +5028,6 @@ footer .socicon-pinterest:hover {
 		display: flex;
 		left: -15px;
 		top: -15px;
-	}
-	#searchModal .search-box-select {
-		max-width: 180px;
-		width: auto;
-		height: 52px;
-		border-top: 0;
-		border-bottom: 0;
-		border-left: 1px solid #9da6b2;
 	}
 	.footer .block {
 		cursor: pointer;
@@ -5532,10 +5549,6 @@ footer .socicon-pinterest:hover {
     }
 }
 @media (min-width: 767px) {
-	.checkoutAttributes {
-		padding-left: 0;
-		padding-right: 0;
-	}
 	.navUp li a {
 		font-size: 14px;
 	}
@@ -5574,6 +5587,13 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+	.generalNote {
+		left: 15px;
+		font-size: 14px;
+	}
+	.wishlist-content .btn-group {
+		width: 100%;
+	}
 	.product-review-helpfulness  {
 		font-size: 14px;
 		white-space: nowrap;
@@ -5694,9 +5714,6 @@ footer .socicon-pinterest:hover {
 	#ModalAddToCart .modal-dialog {
 		min-width: auto;
 	}
-	#searchModal .search-box-select {
-		max-width: 120px;
-	}
 	.subrow .qty-input {
 		margin-top: 0;
 		margin-left: 21px;
@@ -5793,13 +5810,6 @@ footer .socicon-pinterest:hover {
 		border-top-right-radius: 5px !important;
 		border-bottom-left-radius: 5px !important;
 		border-bottom-right-radius: 5px !important;
-	}
-	#searchModal .search-box-select {
-		max-width: 90px;
-		height: 52px;
-		border-top: 0;
-		border-bottom: 0;
-		border-left: 1px solid #9da6b2;
 	}
 	.wishlist-content .btn-section .btn {
 		width: 100%;
