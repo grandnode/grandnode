@@ -93,7 +93,6 @@ namespace Grand.Core.Caching
             }
         }
 
-
         public virtual void Dispose()
         {
             //nothing special
@@ -113,6 +112,19 @@ namespace Grand.Core.Caching
         public Task RemoveByPattern(string pattern)
         {
             return RemoveByPatternAsync(pattern);
+        }
+
+        public (T Result, bool FromCache) TryGetValue<T>(string key)
+        {
+            var res = _distributedCache.StringGet(key);
+            if (string.IsNullOrEmpty(res.ToString()))
+            {
+                return (default, res.HasValue);
+            }
+            else
+            {
+                return (JsonConvert.DeserializeObject<T>(res), true);
+            }
         }
     }
 }
