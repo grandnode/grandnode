@@ -101,7 +101,7 @@ namespace Grand.Services.Common
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == valueStr); 
+                        var value = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == valueStr);
                         if (value != null)
                             values.Add(value);
                     }
@@ -130,17 +130,13 @@ namespace Grand.Services.Common
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    if (node1.Attributes?["ID"]?.InnerText?.Trim() == addressAttributeId)
                     {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        if (str1 == addressAttributeId)
+                        var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
+                        foreach (XmlNode node2 in nodeList2)
                         {
-                            var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
-                            foreach (XmlNode node2 in nodeList2)
-                            {
-                                string value = node2.InnerText.Trim();
-                                selectedAddressAttributeValues.Add(value);
-                            }
+                            string value = node2.InnerText.Trim();
+                            selectedAddressAttributeValues.Add(value);
                         }
                     }
                 }
@@ -230,35 +226,30 @@ namespace Grand.Services.Common
 
             //validate required address attributes (whether they're chosen/selected/entered)
             var attributes2 = await _addressAttributeService.GetAllAddressAttributes();
-            foreach (var a2 in attributes2)
+            foreach (var a2 in attributes2.Where(i => i.IsRequired))
             {
-                if (a2.IsRequired)
+                bool found = false;
+                //selected address attributes
+                foreach (var a1 in attributes1.Where(i => i.Id == a2.Id))
                 {
-                    bool found = false;
-                    //selected address attributes
-                    foreach (var a1 in attributes1)
+                    var valuesStr = ParseValues(attributesXml, a1.Id);
+                    foreach (string str1 in valuesStr)
                     {
-                        if (a1.Id == a2.Id)
+                        if (!String.IsNullOrEmpty(str1.Trim()))
                         {
-                            var valuesStr = ParseValues(attributesXml, a1.Id);
-                            foreach (string str1 in valuesStr)
-                            {
-                                if (!String.IsNullOrEmpty(str1.Trim()))
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
+                            found = true;
+                            break;
                         }
                     }
-
-                    //if not found
-                    if (!found)
-                    {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name, ""));
-                        warnings.Add(notFoundWarning);
-                    }
                 }
+
+                //if not found
+                if (!found)
+                {
+                    var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name, ""));
+                    warnings.Add(notFoundWarning);
+                }
+
             }
 
             return warnings;
