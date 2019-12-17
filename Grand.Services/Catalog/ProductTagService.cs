@@ -80,7 +80,7 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -91,19 +91,17 @@ namespace Grand.Services.Catalog
         private Dictionary<string, int> GetProductCount(string storeId)
         {
             string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
-            var task = _cacheManager.GetAsync(key, async () =>
-            {
-                var query = from pt in _productTagRepository.Table
-                            select pt;
+            return _cacheManager.Get(key, () =>
+             {
+                 var query = from pt in _productTagRepository.Table
+                             select pt;
 
-                var dictionary = new Dictionary<string, int>();
-                foreach (var item in query.ToList())
-                    dictionary.Add(item.Id, item.Count);
-                return dictionary;
+                 var dictionary = new Dictionary<string, int>();
+                 foreach (var item in query.ToList())
+                     dictionary.Add(item.Id, item.Count);
+                 return dictionary;
 
-            });
-            task.Wait();
-            return task.Result;
+             });
         }
 
         #endregion
@@ -238,7 +236,7 @@ namespace Grand.Services.Catalog
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
-            
+
             return 0;
         }
 

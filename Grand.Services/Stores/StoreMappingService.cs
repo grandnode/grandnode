@@ -70,12 +70,10 @@ namespace Grand.Services.Stores
             string entityName = typeof(T).Name;
 
             string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
-            var task = _cacheManager.GetAsync(key, async () =>
+            return _cacheManager.Get(key, () =>
             {
                 return entity.Stores.ToArray();
             });
-            task.Wait();
-            return task.Result;
         }
 
         /// <summary>

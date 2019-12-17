@@ -225,7 +225,7 @@ namespace Grand.Services.Localization
                 else
                 {
                     string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-                    var task = _cacheManager.GetAsync(key, async () =>
+                    _alllocaleStringResource = _cacheManager.Get(key, () =>
                     {
                         var dictionary = new Dictionary<string, LocaleStringResource>();
                         var locales = GetAllResources(languageId);
@@ -241,8 +241,6 @@ namespace Grand.Services.Localization
                         }
                         return dictionary;
                     });
-                    task.Wait();
-                    _alllocaleStringResource = task.Result;
                     if (_alllocaleStringResource.ContainsKey(resourceKey.ToLowerInvariant()))
                         result = _alllocaleStringResource[resourceKey.ToLowerInvariant()].ResourceValue;
                 }
@@ -251,15 +249,13 @@ namespace Grand.Services.Localization
             {
                 //gradual loading
                 string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
-                var task = _cacheManager.GetAsync(key, async () =>
+                string lsr = _cacheManager.Get(key, () =>
                 {
                     var builder = Builders<LocaleStringResource>.Filter;
                     var filter = builder.Eq(x => x.LanguageId, languageId);
                     filter = filter & builder.Eq(x => x.ResourceName, resourceKey.ToLowerInvariant());
-                    return (await _lsrRepository.Collection.Find(filter).FirstOrDefaultAsync())?.ResourceValue;
+                    return _lsrRepository.Collection.Find(filter).FirstOrDefault()?.ResourceValue;
                 });
-                task.Wait();
-                string lsr = task.Result;
 
                 if (lsr != null)
                     result = lsr;
