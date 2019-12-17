@@ -126,5 +126,17 @@ namespace Grand.Core.Caching
                 return (JsonConvert.DeserializeObject<T>(res), true);
             }
         }
+
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+                return;
+
+            //serialize item
+            var serializedItem = JsonConvert.SerializeObject(data);
+
+            //and set it to cache
+            _distributedCache.StringSet(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
+        }
     }
 }

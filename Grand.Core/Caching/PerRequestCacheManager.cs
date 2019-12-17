@@ -166,6 +166,20 @@ namespace Grand.Core.Caching
             return (T)items[key];
         }
 
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            var items = GetItems();
+            if (items == null)
+                return;
+
+            items[key] = data;
+        }
+
         #endregion
     }
 }

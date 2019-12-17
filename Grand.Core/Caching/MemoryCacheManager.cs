@@ -245,6 +245,14 @@ namespace Grand.Core.Caching
             return _cache.Get<T>(key);
         }
 
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data != null)
+            {
+                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
+            }
+        }
+
         #endregion
     }
 }
