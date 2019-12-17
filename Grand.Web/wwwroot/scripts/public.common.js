@@ -349,32 +349,31 @@ function displayBarNotification(message, messagetype, timeout) {
     $('#bar-notification')
         .removeClass('success')
         .removeClass('danger');
-    $('#bar-notification .content').remove();
+    $('#bar-notification .toast').remove();
 
     //add new notifications
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<p class="content">' + message + '</p>';
+        htmlcode = '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message + '</div></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
-            htmlcode = htmlcode + '<p class="content">' + message[i] + '</p>';
+            htmlcode = htmlcode + '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message[i] + '</div></div>';
         }
     }
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
-        .addClass('show')
         .mouseenter(function () {
             clearTimeout(barNotificationTimeout);
         });
 
     $('#bar-notification .close').unbind('click').click(function () {
-        $('#bar-notification').removeClass('show');
+        $(this).parents(".toast").removeClass('show');
     });
 
     //timeout (if set)
     if (timeout > 0) {
         barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').removeClass('show');
+            $('#bar-notification .toast').removeClass('show');
         }, timeout);
     }
 }

@@ -108,11 +108,9 @@ input {
 	position: fixed;
 	bottom: 15px;
 	right: 15px;
-	font-size: 16px;
 	font-weight: 500;
-	 display: none; 
 	text-align: center;
-	z-index: 1041;
+	z-index: 1051;
 }
 .generalNote .content {
 	position: relative;
@@ -120,6 +118,7 @@ input {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	font-size: 16px;
 }
 .generalNote.danger .content {
 	border-left: 4px solid #dc3545;
@@ -160,9 +159,6 @@ input {
 }
 .generalNote .close .mdi {
 	font-size: 14px;
-}
-.generalNote p {
-	margin: 0;
 }
 .generalNote a {
 	display: contents;
