@@ -232,31 +232,33 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            if (!string.IsNullOrEmpty(product.VendorId))
+            if (string.IsNullOrEmpty(product.VendorId))
             {
-                var vendor = await _vendorService.GetVendorById(product.VendorId);
-                if (vendor != null)
+                return allowedDiscounts;
+            }
+
+            var vendor = await _vendorService.GetVendorById(product.VendorId);
+
+            var appliedDiscounts = vendor?.AppliedDiscounts ?? Enumerable.Empty<string>();
+
+            foreach (var appliedDiscount in appliedDiscounts)
+            {
+                var discount = await _discountService.GetDiscountById(appliedDiscount);
+                if (discount == null)
                 {
-                    if (vendor.AppliedDiscounts.Any())
-                    {
-                        foreach (var appliedDiscount in vendor.AppliedDiscounts)
-                        {
-                            var discount = await _discountService.GetDiscountById(appliedDiscount);
-                            if (discount != null)
-                            {
-                                var validDiscount = await _discountService.ValidateDiscount(discount, customer);
-                                if (validDiscount.IsValid &&
-                                         discount.DiscountType == DiscountType.AssignedToVendors)
-                                    allowedDiscounts.Add(new AppliedDiscount() {
-                                        CouponCode = validDiscount.CouponCode,
-                                        DiscountId = discount.Id,
-                                        IsCumulative = discount.IsCumulative,
-                                    });
-                            }
-                        }
-                    }
+                    continue;
+                }
+                var validDiscount = await _discountService.ValidateDiscount(discount, customer);
+                if (validDiscount.IsValid && discount.DiscountType == DiscountType.AssignedToVendors)
+                {
+                    allowedDiscounts.Add(new AppliedDiscount() {
+                        CouponCode = validDiscount.CouponCode,
+                        DiscountId = discount.Id,
+                        IsCumulative = discount.IsCumulative,
+                    });
                 }
             }
+
             return allowedDiscounts;
         }
 
