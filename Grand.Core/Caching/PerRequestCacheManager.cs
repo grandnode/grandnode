@@ -157,6 +157,15 @@ namespace Grand.Core.Caching
             return this.RemoveByPattern(pattern);
         }
 
+        public T Get<T>(string key)
+        {
+            var items = GetItems();
+            if (items == null)
+                return default(T);
+
+            return (T)items[key];
+        }
+
         #endregion
     }
 }

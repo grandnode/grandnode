@@ -240,6 +240,11 @@ namespace Grand.Core.Caching
             return this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
         }
 
+        public T Get<T>(string key)
+        {
+            return _cache.Get<T>(key);
+        }
+
         #endregion
     }
 }

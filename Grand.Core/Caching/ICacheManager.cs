@@ -17,6 +17,14 @@ namespace Grand.Core.Caching
         Task<T> GetAsync<T>(string key);
 
         /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>The value associated with the specified key.</returns>
+        T Get<T>(string key);
+
+        /// <summary>
         /// Gets or sets the value associated with the specified key asynchronosly
         /// </summary>
         /// <param name="key">The key of the value to get.</param>

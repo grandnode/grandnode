@@ -34,6 +34,21 @@ namespace Grand.Core.Caching
             return item;
         }
 
+        public T Get<T>(string key)
+        {
+            //get serialized item from cache
+            var serializedItem = _distributedCache.StringGet(key);
+            if (string.IsNullOrEmpty(serializedItem))
+                return default(T);
+
+            //deserialize item
+            var item = JsonConvert.DeserializeObject<T>(serializedItem);
+            if (item == null)
+                return default(T);
+
+            return item;
+        }
+
         public virtual async Task<(T, bool)> TryGetValueAsync<T>(string key)
         {
             var res = await _distributedCache.StringGetAsync(key);
