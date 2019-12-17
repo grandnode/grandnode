@@ -713,6 +713,7 @@ namespace Grand.Services.Discounts
 
         private async Task<string> ApplyRequirements(Customer customer, List<DiscountRequirement> requirements)
         {
+            string result = null;
             foreach (var req in requirements)
             {
                 //load a plugin
@@ -735,10 +736,11 @@ namespace Grand.Services.Discounts
                 var ruleResult = await singleRequirementRule.CheckRequirement(ruleRequest);
                 if (!ruleResult.IsValid)
                 {
-                    return ruleResult.UserError;
+                    result = ruleResult.UserError;
+                    break;
                 }
             }
-            return null;
+            return result;
         }
 
         /// <summary>
