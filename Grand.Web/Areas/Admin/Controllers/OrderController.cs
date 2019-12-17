@@ -853,6 +853,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
+            order.CurrencyRate = model.CurrencyRate;
             await _orderService.UpdateOrder(order);
 
             //add a note

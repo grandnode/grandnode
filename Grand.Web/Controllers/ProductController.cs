@@ -211,6 +211,21 @@ namespace Grand.Web.Controllers
             });
         }
 
+        //handle product warehouse selection event. this way we return stock
+        //currently we use this method on the product details pages
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductDetails_WarehouseChange(string productId, string warehouseId, [FromServices] IProductAttributeParser productAttributeParser)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var stock = product.FormatStockMessage(warehouseId, "", _localizationService, productAttributeParser);
+            return Json(new
+            {
+                stockAvailability = stock
+            });
+        }
 
         [HttpPost]
         public virtual async Task<IActionResult> UploadFileProductAttribute(string attributeId, string productId,
@@ -384,7 +399,7 @@ namespace Grand.Web.Controllers
             await _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
             await _customerActionEventService.Viewed(customer, HttpContext.Request.Path.ToString(), Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
             await _productService.UpdateMostView(productId, 1);
-            var qhtml = RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
+            var qhtml = await RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
             return Json(new
             {
                 success = true,

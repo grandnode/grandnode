@@ -201,7 +201,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
-                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                            html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
                         });
                     }
@@ -233,7 +233,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                            html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
                         });
@@ -510,7 +510,7 @@ namespace Grand.Web.Controllers
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
-                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                            html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                         });
                     }
                 case ShoppingCartType.ShoppingCart:
@@ -541,7 +541,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
+                            html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
                             refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day
@@ -601,10 +601,13 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+
             var shoppingCartItem = new ShoppingCartItem {
                 AttributesXml = "",
                 CreatedOnUtc = DateTime.UtcNow,
                 ProductId = product.Id,
+                WarehouseId = warehouseId,
                 ShoppingCartType = ShoppingCartType.Auctions,
                 StoreId = _storeContext.CurrentStore.Id,
                 CustomerEnteredPrice = bid,
@@ -630,7 +633,7 @@ namespace Grand.Web.Controllers
             }
 
             //insert new bid
-            await auctionService.NewBid(customer, product, _storeContext.CurrentStore, _workContext.WorkingLanguage, bid);
+            await auctionService.NewBid(customer, product, _storeContext.CurrentStore, _workContext.WorkingLanguage, warehouseId, bid);
 
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);
@@ -641,7 +644,7 @@ namespace Grand.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.Yourbidhasbeenplaced"),
-                html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel)
+                html = await RenderPartialViewToString("_PopupAddToCart", addtoCartModel)
             });
         }
 

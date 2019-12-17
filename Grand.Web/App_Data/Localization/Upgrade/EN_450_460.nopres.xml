@@ -708,7 +708,7 @@
     <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
-    <Value>Save</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
@@ -746,4 +746,29 @@
   <LocaleResource Name="SideBar.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>  
 </Language>
+

@@ -116,7 +116,7 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
@@ -671,7 +671,7 @@ namespace Grand.Web.Controllers
                 .Select(x => x)
                 .ToList()
                 : new List<string>();
-            foreach (var sci in pageCart)
+            foreach (var sci in pageCart.ToList())
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {

@@ -19,8 +19,8 @@
     @await Component.InvokeAsync("Footer")
 </main>
 <a class="js-offcanvas-trigger filter-button d-none" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
-<aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":true}' id="leftSide" role="complementary"></aside>
-<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":true}' id="user_panel" role="complementary">
+<aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="leftSide" role="complementary"></aside>
+<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":false}' id="user_panel" role="complementary">
     <div class="user-panel-head">
         @T("Account.MyAccount")
     </div>
@@ -35,7 +35,7 @@
         @await Component.InvokeAsync("HeaderLinks")
     </ul>
 </aside>
-<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":true}' id="mobile_menu" role="complementary"></aside>
+<aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="mobile_menu" role="complementary"></aside>
 @await Component.InvokeAsync("FlyoutShoppingCart")
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

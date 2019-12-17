@@ -147,7 +147,7 @@ namespace Grand.Web.Controllers
                     var client = new MongoClient(connectionString);
                     var databaseName = new MongoUrl(connectionString).DatabaseName;
                     var database = client.GetDatabase(databaseName);
-                    database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
+                    await database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
 
                     var filter = new BsonDocument("name", "GrandNodeVersion");
                     var found = database.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter }).Result;

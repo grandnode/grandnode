@@ -54,7 +54,7 @@
                 @if (!string.IsNullOrEmpty(Model.Flag))
                 {
                     <div class="product-labels">
-                        <span class="product-label bg-info text-white">@Model.Flag</span>
+                        <span class="product-label badge bg-info text-white">@Model.Flag</span>
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
@@ -223,7 +223,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
 </div>
 <script asp-location="Footer">
-    $('.add-to-compare-list-button, .ask-a-question-button, .email-a-friend-button').tooltip({
+    $('.product-simple-share .btn').tooltip({
         boundary: 'window',
         template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
     });

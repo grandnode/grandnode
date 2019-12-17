@@ -27,7 +27,7 @@ namespace Grand.Web.Controllers
             if(model.NewsletterCategory!=null)
             {
                 model.ShowCategories = true;
-                model.ResultCategory = this.RenderPartialViewToString("NewsletterCategory", model.NewsletterCategory);
+                model.ResultCategory = await RenderPartialViewToString("NewsletterCategory", model.NewsletterCategory);
             }
             return Json(new
             {

@@ -207,18 +207,18 @@
             {
                 <div class="common-buttons btn-group btn-group-sm mb-3">
                     <button type="button" onclick="setLocation('@(Url.RouteUrl("ClearCart"))')" class="btn btn-danger d-flex justify-content-center removeAll-cart-button"><span class="mdi mdi-delete-forever-outline pr-1"></span><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
-                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><span class="mdi mdi-forward pr-1"></span><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
+                    <button type="button" onclick="setLocation('@(Url.RouteUrl("ContinueShopping"))')" class="btn btn-outline-secondary d-sm-flex d-none justify-content-center continue-shopping-button ml-sm-1"><span class="mdi mdi-forward pr-1"></span><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
                 </div>
             }
-            <div class="container cart-options">
+            <div class="cart-options">
                 <div class="row">
                     @if (Model.IsEditable)
                     {
-                        <div class="col-12 col-md-6 checkoutAttributes px-0">
+                        <div class="col-12 col-md-6 checkoutAttributes">
                             <partial name="_CheckoutAttributes" model="Model.CheckoutAttributes" />
                         </div>
                     }
-                    <div class="selected-checkout-attributes col-sm-3 col-md-6 col-12 px-0 ml-auto justify-content-end text-right mt-3">
+                    <div class="selected-checkout-attributes col-sm-3 col-md-6 col-12 ml-auto justify-content-end text-right mt-3">
                         @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                         {
                             @Html.Raw(Model.CheckoutAttributeInfo)

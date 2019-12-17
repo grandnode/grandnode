@@ -3,7 +3,7 @@
 */
 $(document).ready(function () {
     $('body').addClass('is-ready');
-    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid").scrollLeft(30);
+    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid, .customGrid .flex-grid").scrollLeft(30);
 });
 
 $(function () {
@@ -146,6 +146,12 @@ function productInfo() {
         $('.box-unvisible', this).css('margin-bottom', - PB_bottom_h);
     });
 }
+
+// tooltips
+
+$(function () {
+    $('.product-box [data-toggle="title"]').tooltip();
+});
 
 $(document).ready(function () {
 
@@ -303,7 +309,7 @@ function displayPopupNotification(message, messagetype, modal) {
     //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<div class="p-3"><h5 class="text-white text-center">' + message + '</h5></div>';
+        htmlcode = '<div class="p-3"><h5 class="text-center">' + message + '</h5></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
@@ -334,41 +340,40 @@ function displayBarNotification(message, messagetype, timeout) {
     //types: success, error
     var cssclass = 'success';
     if (messagetype == 'success') {
-        cssclass = 'card-success';
+        cssclass = 'success';
     }
     else if (messagetype == 'error') {
-        cssclass = 'card-danger';
+        cssclass = 'danger';
     }
     //remove previous CSS classes and notifications
     $('#bar-notification')
-        .removeClass('card-success')
-        .removeClass('card-danger');
-    $('#bar-notification .content').remove();
+        .removeClass('success')
+        .removeClass('danger');
+    $('#bar-notification .toast').remove();
 
     //add new notifications
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<p class="content">' + message + '</p>';
+        htmlcode = '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message + '</div></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
-            htmlcode = htmlcode + '<p class="content">' + message[i] + '</p>';
+            htmlcode = htmlcode + '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message[i] + '</div></div>';
         }
     }
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
-        .addClass('show')
         .mouseenter(function () {
             clearTimeout(barNotificationTimeout);
         });
 
     $('#bar-notification .close').unbind('click').click(function () {
-        $('#bar-notification').removeClass('show');
+        $(this).parents(".toast").removeClass('show');
     });
 
     //timeout (if set)
     if (timeout > 0) {
         barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').removeClass('show');
+            $('#bar-notification .toast').removeClass('show');
         }, timeout);
     }
 }
@@ -404,7 +409,7 @@ function sendcontactusform(urladd) {
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
             Id: $('#AskQuestionProductId').val(),
-            'g-recaptcha-response-value': $("input[id^='g-recaptcha-response']").val()
+            'g-recaptcha-response-value': $("textarea[id^='g-recaptcha-response']").val()
         };
         addAntiForgeryToken(contactData);
         $.ajax({

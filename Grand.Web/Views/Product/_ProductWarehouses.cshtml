@@ -22,4 +22,29 @@
         });
         </script>
     }
+    else
+    {
+        <script asp-location="Footer">
+            function warehouse_change_handler() {
+                $.ajax({
+                    cache: false,
+                    url: '@Html.Raw(Url.Action("productdetails_warehousechange", "product", new { productId = Model.Id }))',
+                    data: { warehouseId: $('#WarehouseId').val() },
+                    type: 'post',
+                    context: { product: '@Model.Id' },
+                    success: function (data, url) {
+                        if (data.stockAvailability) {
+                            $('#stock-availability-value-@Model.Id').text(data.stockAvailability);
+                        }
+                    }
+                });
+            }
+            $(document).ready(function () {
+                $('#WarehouseId').on('change', function() {
+                    warehouse_change_handler();
+                });
+                warehouse_change_handler();
+            });
+        </script>
+    }
 }

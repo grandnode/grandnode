@@ -56,13 +56,13 @@
     <div class="labels">
         @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
         {
-            <span class="product-discount product-box-label">
+            <span class="product-discount badge product-box-label">
                 <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
             </span>
         }
         @if (!string.IsNullOrEmpty(Model.Flag))
         {
-            <span class="product-box-label bg-info">@Model.Flag</span>
+            <span class="product-box-label badge bg-info">@Model.Flag</span>
         }
     </div>
     <div class="product-info">
@@ -110,15 +110,15 @@
                             @Model.ProductPrice.OldPrice
                         </div>
                     }
-                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
-                    {
-                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                        <div class="tax-shipping-info">
-                            @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                        </div>
-                    }
                 </div>
             </div>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
             @if (Model.ProductType == ProductType.Auction)
             {
                 @if (Model.EndTime.HasValue)
@@ -235,7 +235,7 @@
                             <span class="mdi mdi-repeat"></span>
                         </button>
                     }
-                    <button type="button" value="@T("Products.QuickView")" title="@T("Products.QuickView")" class="btn btn-secondary d-flex align-items-center" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
+                    <button type="button" value="@T("Products.QuickView")" data-toggle="title" title="@T("Products.QuickView")" class="btn btn-secondary d-flex align-items-center" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
                         <span class="mdi mdi-magnify"></span>
                     </button>
                 </div>

@@ -370,7 +370,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId);
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId);
-                xmlWriter.WriteElementString("IsTelecommunicationsOrBroadcastingOrElectronicServices", null, product.IsTelecommunicationsOrBroadcastingOrElectronicServices.ToString());
+                xmlWriter.WriteElementString("IsTele", null, product.IsTele.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
                 xmlWriter.WriteElementString("UseMultipleWarehouses", null, product.UseMultipleWarehouses.ToString());
                 xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId);
@@ -636,7 +636,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId),
                 new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
-                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices),
+                new PropertyByName<Product>("IsTele", p => p.IsTele),
                 new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses),
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId),

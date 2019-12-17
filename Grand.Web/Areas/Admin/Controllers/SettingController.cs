@@ -1669,11 +1669,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
-            //gift card activation/deactivation
-            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
+            //gift card activation
+            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false, new int[] { 10, 40}).ToList();
             model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
-            model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
-            model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
             //order ident
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
@@ -1800,7 +1798,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, "", false);
-                await _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, "", false);
+                await _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancelOrder, "", false);
 
                 //now clear cache
                 await ClearCache();

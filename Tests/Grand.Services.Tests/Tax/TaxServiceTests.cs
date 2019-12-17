@@ -177,7 +177,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = false;
             var customer = new Customer();
             customer.IsTaxExempt = false;
@@ -210,7 +210,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "57516fc81b0dc92b20fdd2ef";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = true;
             var customer = new Customer();
             customer.IsTaxExempt = true;
@@ -243,7 +243,7 @@ namespace Grand.Services.Tax.Tests
         {
             var product = new Product();
             product.TaxCategoryId = "57516fc81b0dc92b20fdd2ef";
-            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = false;
+            product.IsTele = false;
             product.IsTaxExempt = true;
             var customer = new Customer();
             customer.IsTaxExempt = true;

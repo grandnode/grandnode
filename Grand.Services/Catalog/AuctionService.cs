@@ -148,9 +148,10 @@ namespace Grand.Services.Catalog
         /// <param name="customer"></param>
         /// <param name="product"></param>
         /// <param name="store"></param>
+        /// <param name="warehouseId"></param>
         /// <param name="language"></param>
         /// <param name="amount"></param>
-        public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
+        public virtual async Task NewBid(Customer customer, Product product, Store store, Language language, string warehouseId, decimal amount)
         {
             var latestbid = await GetLatestBid(product.Id);
             await InsertBid(new Bid {
@@ -158,7 +159,8 @@ namespace Grand.Services.Catalog
                 Amount = amount,
                 CustomerId = customer.Id,
                 ProductId = product.Id,
-                StoreId = store.Id
+                StoreId = store.Id,
+                WarehouseId = warehouseId,
             });
 
             if (latestbid != null)

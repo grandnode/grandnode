@@ -1,8 +1,8 @@
 ﻿/* carousel */
 
-    #GrandCarousel {
-        width: calc(100vw - 10px);
-    }
+#GrandCarousel {
+    width: calc(100vw - 10px);
+}
 
     #GrandCarousel .carousel-item.img-desc,
     #GrandCarousel .carousel-item.img-desc .carousel-caption {
@@ -55,6 +55,7 @@
         font-weight: 500;
         color: #1D1F20;
     }
+
     #GrandCarousel .carousel-item .slide-title.grandslide h2 {
         font-size: 44px;
         font-weight: 400;
@@ -64,15 +65,16 @@
         font-size: 20px;
         font-weight: 300;
         color: #dfdfdf;
-        text-align: left;
+        text-align: right;
     }
-    #GrandCarousel .carousel-item .slide-content.grandslide {
-        max-width: 90%;
-        margin: 0 auto 0 auto;
-        font-size: 32px;
-        text-align: center;
-        color: #dfdfdf;
-    }
+
+        #GrandCarousel .carousel-item .slide-content.grandslide {
+            max-width: 90%;
+            margin: 0 auto 0 auto;
+            font-size: 32px;
+            text-align: center;
+            color: #dfdfdf;
+        }
 
     #GrandCarousel .carousel-item .slide-price .actual {
         font-size: 32px;
@@ -126,9 +128,11 @@
     #GrandCarousel .carousel-item .slide-content.grandslide {
         font-size: 18px;
     }
+
     #GrandCarousel .carousel-item .slide-title.grandslide h2 {
         font-size: 36px;
     }
+
     #GrandCarousel .carousel-item .slide-title h2,
     #GrandCarousel .carousel-item .slide-price .actual {
         font-size: 26px;
@@ -149,16 +153,20 @@
     #GrandCarousel .carousel-item .slideRow {
         margin: 0;
     }
+
     #GrandCarousel .btn {
         padding: 5px 20px;
     }
+
     #GrandCarousel .carousel-item.img-desc,
     #GrandCarousel .carousel-item.img-desc .carousel-caption {
         height: 335px;
     }
+
     #GrandCarousel .carousel-item.grandslide .slide-content {
         font-size: 24px;
     }
+
     #GrandCarousel .carousel-item .slide-content:not(.grandslide) {
         display: none;
     }

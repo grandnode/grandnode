@@ -4705,7 +4705,7 @@
     <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
-    <Value>Save</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
@@ -7980,6 +7980,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
     <Value>Deactivate gift cards after deleting of an order</Value>
   </LocaleResource>
@@ -8005,15 +8011,6 @@
     <Value>Gift cards are activated when the order status is...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
-    <Value>Order status could not be set to Pending</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated">
-    <Value>Gift card deactivation order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Hint">
-    <Value>Gift cards are deactivated when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Pending">
     <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
@@ -8324,9 +8321,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Hint">
     <Value>Points are canceled when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
-    <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>
@@ -13223,6 +13217,15 @@
   <LocaleResource Name="Admin.Orders.Fields.CreatedOn.Hint">
     <Value>The date/time the order was placed/created.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Customer">
     <Value>Customer</Value>
   </LocaleResource>
@@ -15775,6 +15778,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance">
     <Value>Maintenance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ClearMostViewed">
     <Value>Clear field Most Viewed on the product</Value>

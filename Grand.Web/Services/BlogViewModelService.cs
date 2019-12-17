@@ -188,14 +188,12 @@ namespace Grand.Web.Services
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
 
-            model.BlogPosts = blogPosts
-                .Select(x =>
-                {
-                    var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModel(blogPostModel, x, false).Wait();
-                    return blogPostModel;
-                })
-                .ToList();
+            foreach (var blogpost in blogPosts)
+            {
+                var blogPostModel = new BlogPostModel();
+                await PrepareBlogPostModel(blogPostModel, blogpost, false);
+                model.BlogPosts.Add(blogPostModel);
+            }
 
             return model;
         }
