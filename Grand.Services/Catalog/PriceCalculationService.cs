@@ -77,7 +77,7 @@ namespace Grand.Services.Catalog
         #region Nested classes
 
         [Serializable]
-        protected class ProductPriceForCaching
+        internal class ProductPriceForCaching
         {
             public ProductPriceForCaching()
             {
@@ -401,76 +401,16 @@ namespace Grand.Services.Catalog
             if (product.ProductType == ProductType.Reservation)
                 cacheTime = 0;
 
-            async Task<ProductPriceForCaching> PrepareModel()
+            ProductPriceForCaching cachedPrice = null;
+
+            if (cacheTime > 0)
             {
-                var result = new ProductPriceForCaching();
-
-                //initial price
-                decimal price = product.Price;
-
-                //tier prices
-                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
-                if (tierPrice != null)
-                {
-                    price = tierPrice.Price;
-                    result.PreferredTierPrice = tierPrice;
-                }
-
-                //customer product price
-                var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
-                if (customerPrice.HasValue && customerPrice.Value < price)
-                    price = customerPrice.Value;
-
-                //additional charge
-                price = price + additionalCharge;
-
-                //reservations
-                if (product.ProductType == ProductType.Reservation)
-                    if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                    {
-                        decimal d = 0;
-                        if (product.IncBothDate)
-                        {
-                            decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
-                        }
-                        else
-                        {
-                            decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
-                        }
-                        price = price * d;
-                    }
-
-                if (includeDiscounts)
-                {
-                    //discount
-                    var discountamount = await GetDiscountAmount(product, customer, price);
-                    decimal tmpDiscountAmount = discountamount.discountAmount;
-                    List<AppliedDiscount> tmpAppliedDiscounts = discountamount.appliedDiscounts;
-                    price = price - tmpDiscountAmount;
-
-                    if (tmpAppliedDiscounts != null)
-                    {
-                        result.AppliedDiscounts = tmpAppliedDiscounts.ToList();
-                        result.AppliedDiscountAmount = tmpDiscountAmount;
-                    }
-                }
-
-                if (price < decimal.Zero)
-                    price = decimal.Zero;
-
-                //rounding
-                if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                {
-                    var primaryCurrency = await _currencyService.GetPrimaryExchangeRateCurrency();
-                    result.Price = RoundingHelper.RoundPrice(price, primaryCurrency);
-                }
-                else
-                    result.Price = price;
-
-                return result;
+                cachedPrice = await _cacheManager.GetAsync(cacheKey, cacheTime, async () => await PrepareModel(product, customer, additionalCharge, includeDiscounts, quantity, rentalStartDate, rentalEndDate));
             }
-
-            var cachedPrice = cacheTime > 0 ? await _cacheManager.GetAsync(cacheKey, cacheTime, async () => { return await PrepareModel(); }) : await PrepareModel();
+            else
+            {
+                cachedPrice = await PrepareModel(product, customer, additionalCharge, includeDiscounts, quantity, rentalStartDate, rentalEndDate);
+            }
 
             if (includeDiscounts)
             {
@@ -484,6 +424,74 @@ namespace Grand.Services.Catalog
             return (cachedPrice.Price, discountAmount, appliedDiscounts, cachedPrice.PreferredTierPrice);
         }
 
+        internal async Task<ProductPriceForCaching> PrepareModel(Product product, Customer customer, decimal additionalCharge, bool includeDiscounts, int quantity, DateTime? rentalStartDate, DateTime? rentalEndDate)
+        {
+            var result = new ProductPriceForCaching();
+
+            //initial price
+            decimal price = product.Price;
+
+            //tier prices
+            var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
+            if (tierPrice != null)
+            {
+                price = tierPrice.Price;
+                result.PreferredTierPrice = tierPrice;
+            }
+
+            //customer product price
+            var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
+            if (customerPrice.HasValue && customerPrice.Value < price)
+                price = customerPrice.Value;
+
+            //additional charge
+            price = price + additionalCharge;
+
+            //reservations
+            if (product.ProductType == ProductType.Reservation)
+                if (rentalStartDate.HasValue && rentalEndDate.HasValue)
+                {
+                    decimal d = 0;
+                    if (product.IncBothDate)
+                    {
+                        decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
+                    }
+                    else
+                    {
+                        decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                    }
+                    price = price * d;
+                }
+
+            if (includeDiscounts)
+            {
+                //discount
+                var discountamount = await GetDiscountAmount(product, customer, price);
+                decimal tmpDiscountAmount = discountamount.discountAmount;
+                List<AppliedDiscount> tmpAppliedDiscounts = discountamount.appliedDiscounts;
+                price = price - tmpDiscountAmount;
+
+                if (tmpAppliedDiscounts != null)
+                {
+                    result.AppliedDiscounts = tmpAppliedDiscounts.ToList();
+                    result.AppliedDiscountAmount = tmpDiscountAmount;
+                }
+            }
+
+            if (price < decimal.Zero)
+                price = decimal.Zero;
+
+            //rounding
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+            {
+                var primaryCurrency = await _currencyService.GetPrimaryExchangeRateCurrency();
+                result.Price = RoundingHelper.RoundPrice(price, primaryCurrency);
+            }
+            else
+                result.Price = price;
+
+            return result;
+        }
 
         /// <summary>
         /// Gets the shopping cart unit price (one item)
