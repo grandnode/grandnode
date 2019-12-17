@@ -601,10 +601,13 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+
             var shoppingCartItem = new ShoppingCartItem {
                 AttributesXml = "",
                 CreatedOnUtc = DateTime.UtcNow,
                 ProductId = product.Id,
+                WarehouseId = warehouseId,
                 ShoppingCartType = ShoppingCartType.Auctions,
                 StoreId = _storeContext.CurrentStore.Id,
                 CustomerEnteredPrice = bid,
@@ -630,7 +633,7 @@ namespace Grand.Web.Controllers
             }
 
             //insert new bid
-            await auctionService.NewBid(customer, product, _storeContext.CurrentStore, _workContext.WorkingLanguage, bid);
+            await auctionService.NewBid(customer, product, _storeContext.CurrentStore, _workContext.WorkingLanguage, warehouseId, bid);
 
             //activity log
             await _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);

@@ -211,6 +211,21 @@ namespace Grand.Web.Controllers
             });
         }
 
+        //handle product warehouse selection event. this way we return stock
+        //currently we use this method on the product details pages
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductDetails_WarehouseChange(string productId, string warehouseId, [FromServices] IProductAttributeParser productAttributeParser)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var stock = product.FormatStockMessage(warehouseId, "", _localizationService, productAttributeParser);
+            return Json(new
+            {
+                stockAvailability = stock
+            });
+        }
 
         [HttpPost]
         public virtual async Task<IActionResult> UploadFileProductAttribute(string attributeId, string productId,
