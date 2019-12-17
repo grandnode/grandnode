@@ -142,7 +142,7 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual Task<T> Get<T>(string key)
+        public virtual Task<T> GetAsync<T>(string key)
         {
             return Task.FromResult(_cache.Get<T>(key));
         }
@@ -172,7 +172,7 @@ namespace Grand.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual Task Set(string key, object data, int cacheTime)
+        public virtual Task SetAsync(string key, object data, int cacheTime)
         {
             if (data != null)
             {
@@ -195,7 +195,7 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual Task Remove(string key)
+        public virtual Task RemoveAsync(string key)
         {
             _cache.Remove(RemoveKey(key));
             return Task.CompletedTask;

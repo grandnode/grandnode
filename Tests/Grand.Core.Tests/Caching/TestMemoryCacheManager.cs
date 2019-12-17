@@ -6,7 +6,7 @@ namespace Grand.Core.Tests.Caching
 {
     public class TestMemoryCacheManager : MemoryCacheManager
     {
-        public override Task Set(string key, object data, int cacheTime)
+        public override Task SetAsync(string key, object data, int cacheTime)
         {
             return Task.CompletedTask;
         }

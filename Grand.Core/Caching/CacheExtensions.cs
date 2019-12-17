@@ -43,7 +43,7 @@ namespace Grand.Core.Caching
 
             var result = await acquire();
             if (cacheTime > 0)
-                await cacheManager.Set(key, result, cacheTime);
+                await cacheManager.SetAsync(key, result, cacheTime);
             return result;
         }
     }

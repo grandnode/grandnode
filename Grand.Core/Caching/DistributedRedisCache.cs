@@ -19,7 +19,7 @@ namespace Grand.Core.Caching
             _distributedCache = _connectionMultiplexer.GetDatabase(0);
         }
 
-        public virtual async Task<T> Get<T>(string key)
+        public virtual async Task<T> GetAsync<T>(string key)
         {
             //get serialized item from cache
             var serializedItem = await _distributedCache.StringGetAsync(key);
@@ -47,12 +47,12 @@ namespace Grand.Core.Caching
             }
         }
 
-        public virtual async Task Remove(string key)
+        public virtual async Task RemoveAsync(string key)
         {
             await _distributedCache.KeyDeleteAsync(key, CommandFlags.PreferMaster);
         }
 
-        public virtual async Task Set(string key, object data, int cacheTime)
+        public virtual async Task SetAsync(string key, object data, int cacheTime)
         {
             if (data == null)
                 return;

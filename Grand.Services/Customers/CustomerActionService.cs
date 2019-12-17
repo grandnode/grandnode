@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Services.Customers
 {
-    public partial class CustomerActionService: ICustomerActionService
+    public partial class CustomerActionService : ICustomerActionService
     {
         #region Fields
         private const string CUSTOMER_ACTION_TYPE = "Grand.customer.action.type";
@@ -43,7 +43,7 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets customer action
         /// </summary>
@@ -88,7 +88,7 @@ namespace Grand.Services.Customers
         public virtual async Task DeleteCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
-                throw new ArgumentNullException("customerAction"); 
+                throw new ArgumentNullException("customerAction");
 
             await _customerActionRepository.DeleteAsync(customerAction);
 
@@ -143,7 +143,7 @@ namespace Grand.Services.Customers
             await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
-            await _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
+            await _cacheManager.RemoveAsync(CUSTOMER_ACTION_TYPE);
             //event notification
             await _mediator.EntityUpdated(customerActionType);
         }

@@ -14,7 +14,7 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        Task<T> Get<T>(string key);
+        Task<T> GetAsync<T>(string key);
 
         /// <summary>
         /// Gets or sets the value associated with the specified key asynchronosly
@@ -29,7 +29,7 @@ namespace Grand.Core.Caching
         /// <param name="key">key</param>
         /// <param name="data">Data</param>
         /// <param name="cacheTime">Cache time</param>
-        Task Set(string key, object data, int cacheTime);
+        Task SetAsync(string key, object data, int cacheTime);
 
         /// <summary>
         /// Gets a value indicating whether the value associated with the specified key is cached
@@ -42,7 +42,7 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        Task Remove(string key);
+        Task RemoveAsync(string key);
 
         /// <summary>
         /// Removes items by pattern
