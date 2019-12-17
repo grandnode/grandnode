@@ -4702,7 +4702,12 @@ footer .socicon-pinterest:hover {
 		padding: 0;
 	}
 	header {
+		position: sticky;
+		top: 0;
 		margin: 0 0 15px 0;
+		background: #fff;
+		border-bottom: 1px solid #f2f2f2;
+		z-index: 1040;
 	}
 	.mobile-search-trigger .mdi {
 		font-size: 34px;
@@ -5017,7 +5022,8 @@ footer .socicon-pinterest:hover {
 		border-radius: 0;
 	}
 	#ModalAddToCart .modal-dialog {
-		min-width: 700px;
+		min-width: unset;
+		max-width: 100%;
 	}
 	.news-item-page img {
 		padding: 0;
@@ -5587,6 +5593,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+	.shopping-cart-page .common-buttons {
+		width: 100%;
+	}
 	.generalNote {
 		left: 15px;
 		font-size: 14px;
@@ -5703,17 +5712,6 @@ footer .socicon-pinterest:hover {
 	.wishlist-content .btn-section {
 		flex-wrap: wrap;
 	}
-	.shopping-cart-page .common-buttons {
-		justify-content: center !important;
-	}
-	.shopping-cart-page .common-buttons .update-cart-button,
-	.shopping-cart-page .common-buttons .continue-shopping-button {
-		font-size: 16px;
-		letter-spacing: .6px;
-	}
-	#ModalAddToCart .modal-dialog {
-		min-width: auto;
-	}
 	.subrow .qty-input {
 		margin-top: 0;
 		margin-left: 21px;
@@ -5800,9 +5798,6 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 385px) {
-	.shopping-cart-page .common-buttons {
-		flex-direction: column;
-	}
 	.shopping-cart-page .common-buttons .btn {
 		margin-left: 0;
 		margin-bottom: 5px;
