@@ -5022,7 +5022,8 @@ footer .socicon-pinterest:hover {
 		border-radius: 0;
 	}
 	#ModalAddToCart .modal-dialog {
-		min-width: 700px;
+		min-width: unset;
+		max-width: 100%;
 	}
 	.news-item-page img {
 		padding: 0;
