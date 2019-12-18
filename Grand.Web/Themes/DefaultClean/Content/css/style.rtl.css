@@ -465,6 +465,14 @@ span.rotate {
 .flycart-container:not(.c-offcanvas--overlay) .flyout-cart {
 	display: none;
 }
+.offcanvas-close {
+	display: flex;
+	align-items: center;
+	margin: 0 0 0 10px;
+	color: #fff;
+	float: left;
+	cursor: pointer;
+}
 
 /*loading animation*/
 
@@ -542,9 +550,6 @@ span.rotate {
 
 .headBottom {
 	position: relative;
-}
-.headBottom .formSearch {
-	transition: all .3s ease;
 }
 body:not(.is-ready) .search-box-button {
     width: 50px;
@@ -4824,7 +4829,7 @@ footer .socicon-pinterest:hover {
 }
 @media (max-width: 991px) {
 	#topcartlink .cart-qty, .wishlist-qty {
-		right: 35px;
+		right: 30px;
 	} 
 	.mobile-menu-trigger {
 		margin-right: 0 !important;
@@ -4932,9 +4937,13 @@ footer .socicon-pinterest:hover {
 		border-bottom: 1px solid #f2f2f2;
 		z-index: 1040;
 	}
-	.mobile-search-trigger .mdi {
-		font-size: 34px;
+	.mobile-search-trigger .mdi,
+	.shopping-links .nav-link .mdi {
+		font-size: 28px;
 		color: #000;
+	}
+	.user-panel-trigger .mdi {
+		font-size: 32px;
 	}
 	#small-search-box-form {
 		display: none;
@@ -5410,6 +5419,7 @@ footer .socicon-pinterest:hover {
 	}
     #leftSide .generalLeftSide {
         display: block;
+		order: 2;
     }
 	.navbar-expand-md .navbar-nav .dropdown-menu.open {
 		display: block;

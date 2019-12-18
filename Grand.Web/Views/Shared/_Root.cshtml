@@ -19,10 +19,23 @@
     @await Component.InvokeAsync("Footer")
 </main>
 <a class="js-offcanvas-trigger filter-button d-none" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
-<aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="leftSide" role="complementary"></aside>
+<aside class="js-offcanvas mobile-filters d-lg-none d-flex flex-column" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":false}' id="leftSide" role="complementary">
+    <div class="user-panel-head d-lg-none d-flex order-1">
+        <div class="text-center w-100">
+            <div class="offcanvas-close js-offcanvas-close" data-button-options='{"modifiers":"close-left"}'>
+                <span class="mdi mdi-close"></span>
+            </div>
+        </div>
+    </div>
+</aside>
 <aside class="js-offcanvas" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":false}' id="user_panel" role="complementary">
     <div class="user-panel-head">
-        @T("Account.MyAccount")
+        <div class="text-center w-100">
+            @T("Account.MyAccount")
+            <div class="offcanvas-close js-offcanvas-close" data-button-options='{"modifiers":"close-right"}'>
+                <span class="mdi mdi-close"></span>
+            </div>
+        </div>
     </div>
     <ul class="user-panel-content">
         <li class="selectors-container mb-3">
