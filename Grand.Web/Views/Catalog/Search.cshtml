@@ -21,16 +21,19 @@
     }
 </script>
 
-
+<div class="page search-page">
     <h2 class="generalTitle">@T("Search")</h2>
     <div class="search-input">
         <form asp-route="ProductSearch" method="get">
             <div class="fieldset">
                 <div class="form-fields">
                     <div class="basic-search">
-                        <div class="inputs">
-                            <label class="col-form-label" asp-for="q">@T("Search.SearchTerm"):</label>
+                        <label class="col-form-label" asp-for="q">@T("Search.SearchTerm"):</label>
+                        <div class="input-group mb-2">
                             <input asp-for="q" class="form-control search-text" />
+                            <div class="input-group-append">
+                                <input type="submit" class="btn btn-info search-button" value="@T("Search.Button")" />
+                            </div>
                         </div>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
                         <div class="inputs reversed">
@@ -106,67 +109,65 @@
                     </div>
                 </div>
             </div>
-            <div class="buttons mt-1 mb-1">
-                <input type="submit" class="btn btn-info search-button" value="@T("Search.Button")" />
-            </div>
         </form>
     </div>
-@await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
-<div class="search-results">
-
-    @if (Model.Products.Any())
-    {
-            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
-    }
     @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
-    @if (!String.IsNullOrEmpty(Model.Warning))
-    {
-        <div class="warning text-danger pt-1 pb-1">
-            @Model.Warning
-        </div>
-    }
-    @if (Model.NoResults)
-    {
-        <div class="no-result text-danger text-center pt-1 pb-1">
-            @T("Search.NoResultsText")
-        </div>
-    }
+    <div class="search-results">
 
-    @if (Model.Products.Any())
-    {
-        if (Model.PagingFilteringContext.ViewMode == "grid")
+        @if (Model.Products.Any())
         {
-            <div class="product-grid col-12 px-0">
-                <div class="form-row flex-grid">
-                    @foreach (var product in Model.Products)
-                    {
-                        <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
-                            <partial name="_ProductBox" model="product" />
-                        </div>
-                    }
-                </div>
+                <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
+        @if (!String.IsNullOrEmpty(Model.Warning))
+        {
+            <div class="warning text-danger pt-1 pb-1">
+                @Model.Warning
             </div>
         }
-        else
+        @if (Model.NoResults)
         {
-            <div class="product-grid col-12">
-                <div class="row">
-                    @foreach (var product in Model.Products)
-                    {
-                        <partial name="_ProductBoxList" model="product" />
-                    }
-                </div>
+            <div class="no-result text-danger text-center pt-1 pb-1">
+                @T("Search.NoResultsText")
             </div>
         }
-    }
-    @{
-        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
-    }
-    @if (!pager.IsEmpty())
-    {
-        <div class="pager">
-            @pager
-        </div>
-    }
+
+        @if (Model.Products.Any())
+        {
+            if (Model.PagingFilteringContext.ViewMode == "grid")
+            {
+                <div class="product-grid col-12 px-0">
+                    <div class="form-row flex-grid">
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="col-lg-4 col-sm-6 col-6 product-container mb-2">
+                                <partial name="_ProductBox" model="product" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="product-grid col-12">
+                    <div class="row">
+                        @foreach (var product in Model.Products)
+                        {
+                            <partial name="_ProductBoxList" model="product" />
+                        }
+                    </div>
+                </div>
+            }
+        }
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
+        }
+        @if (!pager.IsEmpty())
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+    </div>
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })
