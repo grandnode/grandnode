@@ -4636,6 +4636,12 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+	#mobile_menu .navbar-nav {
+		max-height: 100vh;
+		overflow-x: hidden;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 	#topcartlink .cart-qty, .wishlist-qty {
 		left: 30px;
 	}

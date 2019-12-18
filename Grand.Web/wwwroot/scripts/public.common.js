@@ -46,7 +46,7 @@ function mainMenuReplace() {
         $('.mainNav .navbar-collapse').prependTo('#mobile_menu');
         Popper.Defaults.modifiers.computeStyle.enabled = false;
         $("#mobile_menu .nav-item.dropdown .dropdown-toggle").each(function () {
-            $(this).on("touchstart", function (e) {
+            $(this).on("click", function (e) {
                 e.preventDefault();
                 $(this).parent().addClass("show");
                 $(this).parent().find(".dropdown-menu:first").addClass("show");
