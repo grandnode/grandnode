@@ -151,14 +151,15 @@ input {
 }
 .generalNote .close {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0;
+    right: 0;
+	padding: 15px;
 	display: flex;
 	opacity: 1;
 	cursor: pointer;
 }
 .generalNote .close .mdi {
-	font-size: 14px;
+	font-size: 16px;
 }
 .generalNote a {
 	display: contents;
@@ -932,9 +933,12 @@ ul.ui-autocomplete li img {
 }
 #ModalAddToCart .close {
 	position: absolute;
-	top: 20px;
+	top: 15px;
 	right: 20px;
 	opacity: 1;
+}
+#ModalAddToCart .close .mdi {
+	font-size: 16px;
 }
 #ModalAddToCart .cross-sell-container {
 	max-height: 500px;
@@ -4704,7 +4708,7 @@ footer .socicon-pinterest:hover {
 	header {
 		position: sticky;
 		top: 0;
-		margin: 0 0 15px 0;
+		margin: 0;
 		background: #fff;
 		border-bottom: 1px solid #f2f2f2;
 		z-index: 1040;
@@ -5593,6 +5597,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+	#ModalAddToCart .modal-dialog {
+		min-width: unset;
+	}
 	.shopping-cart-page .common-buttons {
 		width: 100%;
 	}
