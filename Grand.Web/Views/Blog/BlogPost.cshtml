@@ -17,7 +17,7 @@
     @await Component.InvokeAsync("BlogTags")
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
 }
-<div class="page blogpost-page pt-lg-0 pt-3">
+<div class="page blogpost-page">
     @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model.Id })
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("Blog") @T("catalog.selectors.fiters")</span></a>
     <div class="card border-0 px-0 pb-3 pt-0">
@@ -27,7 +27,7 @@
                 <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
             </div>
         }
-        <h4 class="card-header generalTitle h2 border-bottom-0 ml-0 pb-0">@Model.Title</h4>
+        <h4 class="card-header generalTitle h2 border-bottom-0 ml-0 py-0">@Model.Title</h4>
         <div class="card-body px-0 pt-0">
             <div class="post-date generalMarginSupporter text-muted">
                 <div class="d-inline-flex align-items-center"><span class="mdi mdi-alarm mr-2"></span><strong>@Model.CreatedOn.ToString("D")</strong></div>

@@ -67,10 +67,14 @@ function mainMenuReplace() {
 
 function searchReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
-        $('#small-search-box-form').prependTo('#searchModal');
+        if ($("#searchModal #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('#searchModal');
+        }
     }
     else {
-        $('#small-search-box-form').prependTo('.formSearch');
+        if ($(".formSearch #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('.formSearch');
+        }
     }
 }
 function BackToTop() {
