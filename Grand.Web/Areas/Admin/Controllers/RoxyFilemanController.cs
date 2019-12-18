@@ -22,7 +22,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
     //do not validate request token (XSRF)
     [PermissionAuthorize(PermissionSystemName.Files)]
-    [IgnoreAntiforgeryToken]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Constants
@@ -180,6 +179,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Process request
         /// </summary>
+        [IgnoreAntiforgeryToken]
         public virtual async Task ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
