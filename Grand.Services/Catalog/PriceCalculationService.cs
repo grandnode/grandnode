@@ -274,30 +274,28 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            //discounts applied to products
-            foreach (var discount in await GetAllowedDiscountsAppliedToProduct(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
+            //Now the queries run in parallel and not serialized
+            var t1 = GetAllowedDiscountsAppliedToProduct(product, customer);
+            var t2 = GetAllowedDiscountsAppliedToAllProduct(product, customer);
+            var t3 = GetAllowedDiscountsAppliedToCategories(product, customer);
+            var t4 = GetAllowedDiscountsAppliedToManufacturers(product, customer);
+            var t5 = GetAllowedDiscountsAppliedToVendors(product, customer);
 
-            //discounts applied to all products
-            foreach (var discount in await GetAllowedDiscountsAppliedToAllProduct(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
+            //We w8 for all. We could evolve to a producer/consumer pattern but
+            //previous implementation of the pattern have been reject due to
+            //the increase difficulty on troubleshooting
+            await Task.WhenAll(t1, t2, t3, t4, t5);
 
-            //discounts applied to categories
-            foreach (var discount in await GetAllowedDiscountsAppliedToCategories(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
+            var allDiscounts = new List<AppliedDiscount>();
 
-            //discounts applied to manufacturers
-            foreach (var discount in await GetAllowedDiscountsAppliedToManufacturers(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
+            foreach (var item in new []{ t1,t2,t3,t4,t5})
+            {
+                allDiscounts.AddRange(await item);
+            }
 
-            //discounts applied to vendors
-            foreach (var discount in await GetAllowedDiscountsAppliedToVendors(product, customer))
-                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
-                    allowedDiscounts.Add(discount);
+            //This is the equivalent of DistinctBy which is not implemented by default
+            //on LINQ and i didnt want to add MoreLINQ just because of this
+            allowedDiscounts = allDiscounts.GroupBy(i => i.DiscountId).Select(i => i.First()).ToList();
 
             return allowedDiscounts;
         }
