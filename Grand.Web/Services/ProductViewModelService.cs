@@ -1614,7 +1614,9 @@ namespace Grand.Web.Services
 
             string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
 
-            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
+                form["WarehouseId"].ToString() :
+                (!string.IsNullOrEmpty(product.WarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             //rental attributes
             DateTime? rentalStartDate = null;

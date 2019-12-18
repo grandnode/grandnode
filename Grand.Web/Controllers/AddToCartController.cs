@@ -435,7 +435,9 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? 
+                form["WarehouseId"].ToString() : 
+                (!string.IsNullOrEmpty(product.WarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (updatecartitem == null)
             {
