@@ -370,8 +370,8 @@ function displayBarNotification(message, messagetype, timeout) {
             clearTimeout(barNotificationTimeout);
         });
 
-    $('#bar-notification .close').unbind('click').click(function () {
-        $(this).parents(".toast").removeClass('show');
+    $('#bar-notification .close').unbind('click touchstart').click(function () {
+        $(this).parents(".toast").remove();
     });
 
     //timeout (if set)

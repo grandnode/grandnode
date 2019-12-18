@@ -177,6 +177,9 @@ input {
 .generalNote.success .content {
 	border-right: 4px solid #28a745;
 }
+.generalNote .toast {
+	position: relative;
+}
 .generalNote .close {
     position: absolute;
     top: 0;
@@ -1065,6 +1068,9 @@ ul.ui-autocomplete li img {
 .modal-content .product-box.grid-box:hover {
     -webkit-transform: none;
     transform: none;
+}
+.modal-content .product-box .hover-img.no-img {
+	display: none;
 }
 
 /*navbar*/
@@ -2457,9 +2463,10 @@ list settings .list__item,
     justify-content: flex-start;
 }
 .countdown-box {
+	width: 100%;
+	margin: 10px 0;
 	text-align: center;
 	font-weight: 500;
-	margin: 10px 0;
 }
 .product-box.list-box .desc {
     text-align: right;
@@ -3062,12 +3069,15 @@ ul.opc .order-summary-content h5 {
     color: #ff6c2f;
 }
 .rating-options {
-	padding-top: 7px;
+	margin-right: 15px;
 }
 .rating-options .custom-control-label {
 	color: #ff6c2f;
     font-size: 30px;
 	cursor: pointer;
+}
+.rating-options .custom-control {
+	padding: 0;
 }
 .rating-options .custom-control-label::after {
     display: none;
