@@ -10,7 +10,7 @@
 }
 <form asp-controller="Shipment" asp-action="AddShipment" method="post"
       asp-route-orderId="@Context.Request.Query["orderId"]">
-    <antiforgery-token />
+    
     <div asp-validation-summary="All"></div>
 
     <div class="col-md-12">

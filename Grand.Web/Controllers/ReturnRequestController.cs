@@ -114,7 +114,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = await _orderService.GetOrderById(orderId);

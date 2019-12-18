@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Orders").Text;
 }
 <form asp-controller="Order" asp-action="List" method="post">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -514,7 +514,7 @@
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
-    <antiforgery-token />
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 
@@ -534,7 +534,7 @@
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
-    <antiforgery-token />
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 <script type="text/javascript">
@@ -553,7 +553,7 @@
 
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfInvoiceSelected" method="post" id="pdf-invoice-selected-form">    
-    <antiforgery-token />
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 

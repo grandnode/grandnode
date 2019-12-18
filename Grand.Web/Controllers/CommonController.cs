@@ -247,7 +247,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("ContactUs")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -301,7 +301,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ContactVendorSend(ContactVendorModel model, bool captchaValid, [FromServices] IVendorService vendorService)
         {

@@ -252,7 +252,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("VendorReviews")]
         [FormValueRequired("add-review")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid, 
             [FromServices] IOrderService orderService, [FromServices] IMediator eventPublisher, [FromServices] CaptchaSettings captchaSettings)

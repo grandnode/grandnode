@@ -259,7 +259,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("KnowledgebaseArticle")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ArticleCommentAdd(string articleId, KnowledgebaseArticleModel model, bool captchaValid,

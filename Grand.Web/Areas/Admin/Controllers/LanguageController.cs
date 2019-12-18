@@ -193,7 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Resources(string languageId, DataSourceRequest command,
             LanguageResourceFilterModel model)
         {

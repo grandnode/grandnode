@@ -60,7 +60,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, decimal spentAmount)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

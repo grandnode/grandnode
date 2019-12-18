@@ -69,7 +69,7 @@ namespace Grand.Web.Controllers
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual async Task<IActionResult> CancelRecurringPayment(IFormCollection form)
         {
@@ -194,7 +194,7 @@ namespace Grand.Web.Controllers
 
         //My account / Order details page / Add order note
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> AddOrderNote(AddOrderNoteModel model)
         {
             if (!_orderSettings.AllowCustomerToAddOrderNote)
@@ -229,7 +229,7 @@ namespace Grand.Web.Controllers
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
         [FormValueRequired("repost-payment")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> RePostPayment(string orderId, [FromServices] IWebHelper webHelper)
         {
             var order = await _orderService.GetOrderById(orderId);

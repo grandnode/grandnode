@@ -5,7 +5,6 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Rss;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Blogs;
 using Grand.Services.Localization;
@@ -151,7 +150,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("BlogPost")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid,

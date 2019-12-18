@@ -334,7 +334,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -361,7 +361,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> TopicDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -418,7 +418,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> TopicCreate(EditForumTopicModel model, [FromServices] ICustomerService customerService)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -582,7 +582,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> TopicEdit(EditForumTopicModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -720,7 +720,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> PostDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -796,7 +796,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> PostCreate(EditForumPostModel model, [FromServices] ICustomerService customerService)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -964,7 +964,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> PostEdit(EditForumPostModel model)
         {
             if (!_forumSettings.ForumsEnabled)

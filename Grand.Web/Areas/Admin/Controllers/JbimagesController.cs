@@ -15,7 +15,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
+    [IgnoreAntiforgeryToken]
     public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;

@@ -1,17 +1,15 @@
 ﻿using Grand.Core;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
-using SkiaSharp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -23,8 +21,8 @@ namespace Grand.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
     [PermissionAuthorize(PermissionSystemName.Files)]
+    [IgnoreAntiforgeryToken]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Constants
@@ -317,7 +315,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
-            if(Grand.Core.OperatingSystem.IsWindows())
+            if (Grand.Core.OperatingSystem.IsWindows())
                 virtualPath = virtualPath.Replace('/', '\\');
 
             return _hostingEnvironment.WebRootPath + virtualPath;
@@ -499,7 +497,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
             var rootDirectory = new DirectoryInfo(rootDirectoryPath);
             if (!rootDirectory.Exists)
-                throw new Exception("Invalid files root directory. Check your configuration - "+ rootDirectoryPath);
+                throw new Exception("Invalid files root directory. Check your configuration - " + rootDirectoryPath);
 
             var allDirectories = GetDirectories(rootDirectory.FullName);
             allDirectories.Insert(0, rootDirectory.FullName);
@@ -565,7 +563,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                             }
                         }
                     }
-                    catch {
+                    catch
+                    {
                         continue;
                     }
                 }
@@ -990,7 +989,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 await HttpContext.Response.Body.WriteAsync(file, 0, file.Length);
                 HttpContext.Response.Body.Close();
-                
+
             }
             catch { }
         }
