@@ -27,10 +27,10 @@
                                 {
                                     var item = Model.Items[i];
                                     <div class="col-12 px-0 item @(i == 0 ? "first" : null)">
-                                        <div class="d-flex flex-wrap">
+                                        <div class="d-flex flex-nowrap">
                                             @if (Model.ShowProductImages)
                                             {
-                                                <div class="col-3 picture px-0">
+                                                <div class="d-inline-flex picture px-0">
                                                     <a class="pl-0" href="@Url.RouteUrl("Product", new { SeName=item.ProductSeName })" title="@item.Picture.Title">
                                                         <img class="img-fluid" alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
                                                     </a>

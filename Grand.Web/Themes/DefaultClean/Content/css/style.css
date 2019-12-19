@@ -2482,7 +2482,7 @@ list settings .list__item,
 .viewBox > .list > li.active {
 	position: relative;
 }
-.viewBox > .list > li.active::after {
+.viewBox > .list > li.active:hover::after {
 	content: "";
 	position: absolute;
 	top: -7px;
@@ -3721,9 +3721,10 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 }
 .flyout-cart .price span,
 .flyout-cart .quantity span {
+	color: #888;
 	font-size: 14px;
 	line-height: 1;
-	font-weight: 300;
+	font-weight: 400;
 }
 .flyout-cart {
     position: absolute;
