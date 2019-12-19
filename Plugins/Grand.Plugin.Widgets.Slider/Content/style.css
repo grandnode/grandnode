@@ -67,9 +67,9 @@
         text-align: left;
     }
     #GrandCarousel .carousel-item .slide-content.grandslide {
-        max-width: 90%;
+        max-width: 100%;
         margin: 0 auto 0 auto;
-        font-size: 30px;
+        font-size: 24px;
         text-align: center;
         color: #dfdfdf;
     }
@@ -98,7 +98,7 @@
     }
 
     #GrandCarousel .carousel-indicators {
-        margin-bottom: 0;
+        margin-bottom: 15px;
     }
 
     #GrandCarousel .carousel-control-prev,
