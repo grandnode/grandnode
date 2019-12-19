@@ -458,22 +458,23 @@ span.rotate {
 /*back to top*/
 
 #back-to-top {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-    transition: opacity .3s ease-out;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: auto;
+	position: fixed;
+	bottom: 15px;
+	right: 15px;
+	width: 45px;
+	height: 45px;
+	border-radius: .25rem;
+	cursor: pointer;
+	transition: opacity .3s ease-out;
 	-webkit-transition: opacity .3s ease-out;
-    opacity: 0;
-    z-index: 997;
-    background: #0091b5;
-    color: #fff;
+	opacity: 0;
+	z-index: 997;
+	background: #0091b5;
+	color: #fff;
 }
 #back-to-top .mdi {
     font-size: 36px;
@@ -1902,6 +1903,9 @@ list settings .list__item,
 .home-page-product-grid p {
 	font-size: 12px;
 	padding-top: 15px;
+}
+.home-page .product-grid {
+	padding: 30px 0;
 }
 .login-page .inputs {
 	padding-left: 3px;
@@ -5294,6 +5298,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 767px) {
+	.home-page .product-grid {
+		padding: 15px 0;
+	}
 	.product-details-page .product-tabs .nav-link .mdi, #pills-mobile-tab .nav-item .nav-link .mdi {
 		font-size: 34px;
 	}
