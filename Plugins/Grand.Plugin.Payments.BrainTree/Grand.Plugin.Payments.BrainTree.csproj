@@ -26,7 +26,7 @@
   
   <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.15.0\lib\netstandard2.0\*.*" />
+      <CopyFiles Include="$(NuGetPackageRoot)\braintree\4.16.0\lib\netstandard2.0\*.*" />
       <CopyFiles Include="$(NuGetPackageRoot)\system.xml.xpath.xmldocument\4.3.0\lib\netstandard1.3\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyFiles)" DestinationFolder="..\..\Grand.Web\Plugins\Payments.BrainTree\" />
