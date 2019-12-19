@@ -35,7 +35,7 @@ namespace Grand.Services.Catalog.Tests
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private ICacheManager _cacheManager;
-        private IPriceCalculationService _priceCalcService;
+        private PriceCalculationService _priceCalcService;
         private IVendorService _vendorService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
@@ -89,8 +89,7 @@ namespace Grand.Services.Catalog.Tests
         [TestMethod()]
         public async Task Can_get_final_product_price()
         {
-            var product = new Product
-            {
+            var product = new Product {
                 Id = "1",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -108,8 +107,7 @@ namespace Grand.Services.Catalog.Tests
         [TestMethod()]
         public async Task Can_get_final_product_price_with_tier_prices()
         {
-            var product = new Product
-            {
+            var product = new Product {
                 Id = "1",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -152,8 +150,7 @@ namespace Grand.Services.Catalog.Tests
                 > CustomerRole (some of our customers are more "valuable" than others e.g. wholesale customer
             */
 
-            var product = new Product
-            {
+            var product = new Product {
                 Id = "1",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -219,8 +216,7 @@ namespace Grand.Services.Catalog.Tests
         public async Task Can_get_final_product_price_with_additionalFee()
         {
             //tests if price is valid for additional charge (additional fee) 
-            var product = new Product
-            {
+            var product = new Product {
                 Id = "1",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -238,8 +234,7 @@ namespace Grand.Services.Catalog.Tests
         [TestMethod()]
         public async Task Can_get_final_product_price_with_discount()
         {
-            var product = new Product
-            {
+            var product = new Product {
                 Id = "1",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -249,8 +244,7 @@ namespace Grand.Services.Catalog.Tests
 
             var customer = new Customer();
 
-            var discount001 = new Discount
-            {
+            var discount001 = new Discount {
                 Id = "1",
                 Name = "Discount 001",
                 DiscountType = DiscountType.AssignedToSkus,
@@ -284,8 +278,7 @@ namespace Grand.Services.Catalog.Tests
             var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);
 
-            var product001 = new Product
-            {
+            var product001 = new Product {
                 Id = "242422",
                 Name = "product name 01",
                 Price = 49.99M,
@@ -294,8 +287,7 @@ namespace Grand.Services.Catalog.Tests
             };
             tempProductService.Setup(x => x.GetProductById("242422")).ReturnsAsync(product001);
 
-            var shoppingCartItem = new ShoppingCartItem
-            {
+            var shoppingCartItem = new ShoppingCartItem {
                 ProductId = "242422",// product001.Id, //222
                 Quantity = 2
             };
@@ -312,8 +304,7 @@ namespace Grand.Services.Catalog.Tests
         [TestMethod()]
         public async Task Can_get_shopping_cart_item_subTotal()
         {
-            var product001 = new Product
-            {
+            var product001 = new Product {
                 Id = "242422",
                 Name = "product name 01",
                 Price = 55.11M,
@@ -325,8 +316,7 @@ namespace Grand.Services.Catalog.Tests
             var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);
 
-            var shoppingCartItem = new ShoppingCartItem
-            {
+            var shoppingCartItem = new ShoppingCartItem {
                 ProductId = product001.Id, //222
                 Quantity = 2
             };
@@ -337,7 +327,59 @@ namespace Grand.Services.Catalog.Tests
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "1", "", "", false)).ReturnsAsync(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "1", "", "", false)).ReturnsAsync(new List<Discount>());
 
-            Assert.AreEqual(110.22M,(await _priceCalcService.GetSubTotal(shoppingCartItem)).subTotal);
+            Assert.AreEqual(110.22M, (await _priceCalcService.GetSubTotal(shoppingCartItem)).subTotal);
+        }
+
+        [TestMethod()]
+        public async Task GetAllowedDiscountsAppliedToAllProduct_When_Catalog_Discount_Are_Ignore_return_empty()
+        {
+            _catalogSettings.IgnoreDiscounts = true;
+
+            var res = await _priceCalcService.GetAllowedDiscountsAppliedToAllProduct(null, null);
+
+            Assert.IsTrue(res.Count == 0);
+        }
+
+        [TestMethod()]
+        public async Task GetAllowedDiscountsAppliedToAllProduct_When_No_Discounts()
+        {
+            _catalogSettings.IgnoreDiscounts = false;
+
+            tempDiscountServiceMock.Setup(i => i.GetAllDiscounts(DiscountType.AssignedToAllProducts, It.IsAny<string>(), "", "", false)).ReturnsAsync(new List<Discount>());
+
+            var res = await _priceCalcService.GetAllowedDiscountsAppliedToAllProduct(null, null);
+
+            Assert.IsTrue(res.Count == 0);
+        }
+
+        [TestMethod()]
+        public async Task GetAllowedDiscountsAppliedToAllProduct_When_No_Valid_Discounts()
+        {
+            _catalogSettings.IgnoreDiscounts = false;
+
+            var fakeDiscounts = new List<Discount>() { new Discount(), new Discount() };
+
+            tempDiscountServiceMock.Setup(i => i.GetAllDiscounts(DiscountType.AssignedToAllProducts, It.IsAny<string>(), "", "", false)).ReturnsAsync(fakeDiscounts);
+            tempDiscountServiceMock.Setup(i => i.ValidateDiscount(It.IsAny<Discount>(), It.IsAny<Customer>())).ReturnsAsync(new DiscountValidationResult() { IsValid = false });
+
+            var res = await _priceCalcService.GetAllowedDiscountsAppliedToAllProduct(null, null);
+
+            Assert.IsTrue(res.Count == 0);
+        }
+
+        [TestMethod()]
+        public async Task GetAllowedDiscountsAppliedToAllProduct_When_ALL_Valid_Discounts()
+        {
+            _catalogSettings.IgnoreDiscounts = false;
+
+            var fakeDiscounts = new List<Discount>() { new Discount() { Id = "xpto", IsCumulative = true }, new Discount() { Id = "xptz", IsCumulative = false } };
+
+            tempDiscountServiceMock.Setup(i => i.GetAllDiscounts(DiscountType.AssignedToAllProducts, It.IsAny<string>(), "", "", false)).ReturnsAsync(fakeDiscounts);
+            tempDiscountServiceMock.Setup(i => i.ValidateDiscount(It.IsAny<Discount>(), It.IsAny<Customer>())).ReturnsAsync(new DiscountValidationResult() { IsValid = true });
+
+            var res = await _priceCalcService.GetAllowedDiscountsAppliedToAllProduct(null, null);
+
+            Assert.IsTrue(res.Count == 2);
         }
     }
 }

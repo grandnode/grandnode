@@ -15,7 +15,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Grand.Services.Tests")]
 namespace Grand.Services.Catalog
 {
     /// <summary>
@@ -126,7 +128,7 @@ namespace Grand.Services.Catalog
             return allowedDiscounts;
         }
 
-        protected virtual async Task<IList<AppliedDiscount>> GetAllowedDiscountsAppliedToAllProduct(Product product, Customer customer)
+        internal virtual async Task<IList<AppliedDiscount>> GetAllowedDiscountsAppliedToAllProduct(Product product, Customer customer)
         {
             var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
