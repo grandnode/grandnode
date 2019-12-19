@@ -33,7 +33,7 @@
             <div class="viewBox">
                 @foreach (var item in Model.Items)
                 {
-                    <a class="btn btn-sm btn-outline-info mb-1" href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a>
+                    <a class="btn btn-sm btn-light mb-1 mr-1" href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a>
                 }
             </div>
         </div>

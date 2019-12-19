@@ -12,7 +12,7 @@
             <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
                 <span class="quick-close"></span>
             </button>
-            <div class="page product-details-page">
+            <div class="product-details-page">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
                 <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
                     <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">

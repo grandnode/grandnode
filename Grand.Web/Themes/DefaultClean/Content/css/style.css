@@ -746,7 +746,7 @@ ul.ui-autocomplete li img {
 	align-items: center;
 	text-align: center;
 	font-size: 16px;
-	font-weight: 400;
+	font-weight: 500;
 	padding: 5px;
 	background: #0091b5;
 	color: #fff;
@@ -946,6 +946,7 @@ ul.ui-autocomplete li img {
 }
 #ModalAddToCart .modal-content {
 	overflow: auto;
+	max-height: 100%;
 }
 #ModalAddToCart .btn-group .btn {
 	font-weight: 500;
@@ -1187,7 +1188,7 @@ nav .nav-item.list-inline {
 	margin-top: 0;
 }
 .dropdown-menu a:hover {
-	color: #0069d9;
+	color: #17a2b8;
 }
 .dropdown-menu a {
 	width: 100%;
@@ -1927,7 +1928,7 @@ list settings .list__item,
 .product-box.grid-box .btn-info .add-cart-text,
 .product-box.list-box .btn-info .add-cart-text {
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     text-transform: uppercase;
     transform: translateY(0);
     -webkit-transition: .3s ease;
@@ -2070,9 +2071,6 @@ list settings .list__item,
     -moz-transition: .3s ease;
     -o-transition: .3s ease;
     transition: .3s ease;
-}
-.product-box.grid-box img,
-.product-box.list-box img {
 }
 .product-box .hover-img {
     position: absolute;
@@ -2549,10 +2547,19 @@ list settings .list__item,
 .generalLeftSide .block-poll .poll-total-votes {
     font-size: 14px;
 }
-.product-price-filter .btn-sm {
-    min-width: 185px;
-    margin-bottom: 5px !important;
+.block.product-filter .btn-light {
+	background-color: #f2f2f2;
+	font-weight: 500;
 }
+.block.product-filter .item {
+	color: #888;
+	font-weight: 400;
+}
+.block.product-filter .item span {
+	color: #212529;
+	font-weight: 500;
+}
+
 /*forum*/
 
 .forum-edit-page .forum-post-text {
@@ -3449,9 +3456,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 .shopping-cart-page .update-cart-button,
 .shopping-cart-page .continue-shopping-button,
 .shopping-cart-page .removeAll-cart-button {
-	font-family: inherit;
-	font-weight: 400;
-	font-size: 16px !important;
+	align-items: center;
 }
 .shopping-cart-page select:focus {
 	background-color: #eee;
@@ -3677,6 +3682,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 }
 .flyout-cart .cart-button {
 	color: #fff;
+	text-transform: uppercase;
 	background: rgba(255, 255, 255, 0);
 	border-color: rgba(255, 255, 255, 0.6);
 	box-shadow: none;
