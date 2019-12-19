@@ -211,6 +211,21 @@ namespace Grand.Web.Controllers
             });
         }
 
+        //handle product warehouse selection event. this way we return stock
+        //currently we use this method on the product details pages
+        [HttpPost]
+        public virtual async Task<IActionResult> ProductDetails_WarehouseChange(string productId, string warehouseId, [FromServices] IProductAttributeParser productAttributeParser)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var stock = product.FormatStockMessage(warehouseId, "", _localizationService, productAttributeParser);
+            return Json(new
+            {
+                stockAvailability = stock
+            });
+        }
 
         [HttpPost]
         public virtual async Task<IActionResult> UploadFileProductAttribute(string attributeId, string productId,
@@ -484,7 +499,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid,
             [FromServices] IOrderService orderService, [FromServices] IMediator mediator)
@@ -625,7 +640,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("ProductEmailAFriend")]
         [FormValueRequired("send-email")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
@@ -685,7 +700,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("AskQuestion")]
         [FormValueRequired("send-email")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> AskQuestion(ProductAskQuestionModel model, bool captchaValid)
         {
@@ -724,7 +739,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> AskQuestionOnProduct(ProductAskQuestionSimpleModel model, bool captchaValid)
         {

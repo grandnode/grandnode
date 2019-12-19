@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.System.ContactForm.Details").Text;
 }
 <form asp-controller="ContactForm" asp-action="Details" method="post">
-    <antiforgery-token />
+    
     <input asp-for="Id" type="hidden" />
     <div class="row">
         <div class="col-md-12">

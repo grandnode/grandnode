@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
 }
 <form asp-controller="Shipment" asp-action="ShipmentDetails" method="post">
-    <antiforgery-token />
+    
     <script type="text/javascript">
         $(document).ready(function () {
             toggleShippedDate(false);

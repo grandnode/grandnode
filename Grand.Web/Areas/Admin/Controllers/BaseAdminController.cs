@@ -1,8 +1,5 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Infrastructure;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -10,7 +7,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 {
     [ValidateIpAddress]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     [Area("Admin")]
     [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController

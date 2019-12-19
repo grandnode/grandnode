@@ -59,7 +59,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> ShippingRateUpdate(FixedShippingRateModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

@@ -4,7 +4,7 @@
     @if (Model.IsCustomerImpersonated)
     {
         <li class="nav-item">
-            <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
                 <span class="mdi mdi-close"></span>
                 <span class="text text-uppercase ml-3">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
             </a>
@@ -13,7 +13,7 @@
     @if (Model.DisplayAdminLink)
     {
         <li class="nav-item">
-            <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.Content("~/Admin")">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.Content("~/Admin")">
                 <span class="mdi mdi-settings"></span>
                 <span class="text text-uppercase ml-3">@T("admin")</span>
             </a>
@@ -22,7 +22,7 @@
     @if (!string.IsNullOrEmpty(Model.EditPageUrl))
     {
         <li class="nav-item">
-            <a target="_blank" class="d-flex align-items-center nav-link btn btn-secondary" href="@Model.EditPageUrl">
+            <a target="_blank" class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Model.EditPageUrl">
                 <span class="mdi mdi-wrench-outline"></span>
                 <span class="text text-uppercase ml-3">@T("edit")</span>
             </a>

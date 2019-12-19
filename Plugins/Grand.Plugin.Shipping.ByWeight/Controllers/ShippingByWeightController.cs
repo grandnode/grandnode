@@ -79,7 +79,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> SaveGeneralSettings(ShippingByWeightListModel model)
         {
             //save settings
@@ -91,7 +91,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -162,7 +162,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateDelete(string id)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -211,7 +211,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             return View("~/Plugins/Shipping.ByWeight/Views/AddPopup.cshtml", model);
         }
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddPopup(ShippingByWeightModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -301,7 +301,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             return View("~/Plugins/Shipping.ByWeight/Views/EditPopup.cshtml", model);
         }
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> EditPopup(ShippingByWeightModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

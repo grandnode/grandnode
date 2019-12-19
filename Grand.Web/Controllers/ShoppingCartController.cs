@@ -213,7 +213,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
@@ -363,7 +363,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode)
         {
@@ -447,7 +447,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyGiftCard(string giftcardcouponcode)
         {
@@ -495,7 +495,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -508,7 +508,7 @@ namespace Grand.Web.Controllers
             return PartialView("_EstimateShippingResult", model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveDiscountCoupon(string discountId)
         {
@@ -534,7 +534,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
         {
@@ -740,7 +740,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("EmailWishlist")]
         [FormValueRequired("send-email")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid,
             [FromServices] IWorkflowMessageService workflowMessageService,

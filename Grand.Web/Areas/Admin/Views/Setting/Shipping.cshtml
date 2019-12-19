@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
 }
 <form asp-controller="Setting" asp-action="Shipping" method="post">
-    <antiforgery-token />
+    
     <div asp-validation-summary="All"></div>
     <script type="text/javascript">
     $(document).ready(function () {

@@ -6,7 +6,7 @@
 }
 
 <form asp-controller="Shipment" asp-action="List" method="post">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -388,7 +388,7 @@
 </form>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Shipment" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
-    <antiforgery-token />
+    
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
 

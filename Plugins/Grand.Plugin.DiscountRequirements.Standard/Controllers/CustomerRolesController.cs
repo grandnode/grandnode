@@ -70,7 +70,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

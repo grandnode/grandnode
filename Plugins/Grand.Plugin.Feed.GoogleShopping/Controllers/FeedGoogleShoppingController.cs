@@ -168,7 +168,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductList(DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -209,7 +209,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GoogleProductUpdate(FeedGoogleShoppingModel.GoogleProductModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
 <form asp-controller="NewsletterSubscription" asp-action="List" method="post">
-    <antiforgery-token />
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -216,7 +216,7 @@
     @*import emails form*@
     <div id="importcsv-window" style="display:none;">
         <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
-            <antiforgery-token />
+            
             <table style="text-align:left;">
                 <tr>
                     <td>

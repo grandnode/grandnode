@@ -132,7 +132,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
@@ -247,7 +247,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual async Task<IActionResult> Info(VendorInfoModel model, IFormFile uploadedFile)
         {
@@ -315,7 +315,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual async Task<IActionResult> RemovePicture()
         {

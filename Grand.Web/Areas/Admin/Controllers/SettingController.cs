@@ -3071,7 +3071,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AllSettings() => View();
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AllSettings(DataSourceRequest command, SettingFilterModel model)
         {
             var settings = new List<SettingModel>();
@@ -3136,7 +3136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> PushNotifications(DataSourceRequest command, ConfigurationModel model)
         {
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -3234,7 +3234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AdminSearch(DataSourceRequest command, AdminSearchSettingsModel model)
         {
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -3267,7 +3267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingUpdate(SettingModel model)
         {
             if (model.Name != null)
@@ -3309,7 +3309,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingAdd(SettingModel model)
         {
             if (model.Name != null)
@@ -3338,7 +3338,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingDelete(string id)
         {
             var setting = _settingService.GetSettingById(id);

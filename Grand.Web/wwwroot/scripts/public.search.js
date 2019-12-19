@@ -119,7 +119,7 @@ var SearchAction = {
                 }
                 var pricereviewline = "";
                 if (item.SearchType === "Product") {
-                    pricereviewline = "<div class='d-flex justify-content-between w-100 ratings'><div class='price'></div>";
+                    pricereviewline = "<div class='d-flex justify-content-between w-100 ratings'><div class='price'>" + item.Price + "</div>";
                     if (item.AllowCustomerReviews)
                         pricereviewline += "<div class='rating-box'><div class='rating' style='width: " + item.Rating + "%'></div></div>";
                     pricereviewline += "</div>";

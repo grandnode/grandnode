@@ -6,7 +6,7 @@
     Html.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
 }
 <div class="page email-a-friend-page">
-        <h1 class="h2 generalTitle text-xs-center">@T("Wishlist.EmailAFriend.Title")</h1>
+        <h2 class="h2 generalTitle text-xs-center">@T("Wishlist.EmailAFriend.Title")</h2>
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -19,17 +19,17 @@
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="form-fields">
                         <div class="inputs pb-1">
-                            <label asp-for="FriendEmail">@T("Wishlist.EmailAFriend.FriendEmail"):</label>
+                            <label class="col-form-label" asp-for="FriendEmail">@T("Wishlist.EmailAFriend.FriendEmail"):</label>
                             <input asp-for="FriendEmail" class="form-control friend-email" placeholder="@T("Wishlist.EmailAFriend.FriendEmail.Hint")" />
                             <span asp-validation-for="FriendEmail"></span>
                         </div>
                         <div class="inputs pb-1">
-                            <label asp-for="YourEmailAddress">@T("Wishlist.EmailAFriend.YourEmailAddress"):</label>
+                            <label class="col-form-label" asp-for="YourEmailAddress">@T("Wishlist.EmailAFriend.YourEmailAddress"):</label>
                             <input asp-for="YourEmailAddress" class="form-control your-email" placeholder="@T("Wishlist.EmailAFriend.YourEmailAddress.Hint")" />
                             <span asp-validation-for="YourEmailAddress"></span>
                         </div>
                         <div class="inputs pb-1">
-                            <label asp-for="PersonalMessage">@T("Wishlist.EmailAFriend.PersonalMessage"):</label>
+                            <label class="col-form-label" asp-for="PersonalMessage">@T("Wishlist.EmailAFriend.PersonalMessage"):</label>
                             <textarea asp-for="PersonalMessage" class="form-control personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"></textarea>
                             <span asp-validation-for="PersonalMessage"></span>
                         </div>
@@ -40,7 +40,7 @@
                             </div>
                         }
                     </div>
-                <div class="btn-group pb-1">
+                <div class="btn-group mt-3">
                     <input type="submit" name="send-email" class="btn btn-info send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" >
                 </div>
             </form>

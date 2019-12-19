@@ -15,7 +15,7 @@
     var ordersToday = await orderReportService.GetOrderPeriodReport(0, workContext.CurrentCustomer.StaffStoreId);
     var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
-<antiforgery-token />
+
 <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
 @if (!Model.IsLoggedInAsVendor && canManageOrders)
 {

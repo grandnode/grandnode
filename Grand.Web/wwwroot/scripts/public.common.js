@@ -46,7 +46,7 @@ function mainMenuReplace() {
         $('.mainNav .navbar-collapse').prependTo('#mobile_menu');
         Popper.Defaults.modifiers.computeStyle.enabled = false;
         $("#mobile_menu .nav-item.dropdown .dropdown-toggle").each(function () {
-            $(this).on("touchstart", function (e) {
+            $(this).on("click", function (e) {
                 e.preventDefault();
                 $(this).parent().addClass("show");
                 $(this).parent().find(".dropdown-menu:first").addClass("show");
@@ -67,10 +67,14 @@ function mainMenuReplace() {
 
 function searchReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
-        $('#small-search-box-form').prependTo('#searchModal');
+        if ($("#searchModal #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('#searchModal');
+        }
     }
     else {
-        $('#small-search-box-form').prependTo('.formSearch');
+        if ($(".formSearch #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('.formSearch');
+        }
     }
 }
 function BackToTop() {
@@ -349,32 +353,31 @@ function displayBarNotification(message, messagetype, timeout) {
     $('#bar-notification')
         .removeClass('success')
         .removeClass('danger');
-    $('#bar-notification .content').remove();
+    $('#bar-notification .toast').remove();
 
     //add new notifications
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<p class="content">' + message + '</p>';
+        htmlcode = '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message + '</div></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
-            htmlcode = htmlcode + '<p class="content">' + message[i] + '</p>';
+            htmlcode = htmlcode + '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message[i] + '</div></div>';
         }
     }
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
-        .addClass('show')
         .mouseenter(function () {
             clearTimeout(barNotificationTimeout);
         });
 
-    $('#bar-notification .close').unbind('click').click(function () {
-        $('#bar-notification').removeClass('show');
+    $('#bar-notification .close').unbind('click touchstart').click(function () {
+        $(this).parents(".toast").remove();
     });
 
     //timeout (if set)
     if (timeout > 0) {
         barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').removeClass('show');
+            $('#bar-notification .toast').removeClass('show');
         }, timeout);
     }
 }

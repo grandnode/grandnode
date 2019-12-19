@@ -1272,6 +1272,7 @@ namespace Grand.Web.Services
                         pictureUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
                 }
                 var rating = await _productViewModelService.PrepareProductReviewOverviewModel(item);
+                var price = await _productViewModelService.PrepareProductPriceModel(item);
                 model.Add(new SearchAutoCompleteModel() {
                     SearchType = "Product",
                     Label = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id) ?? "",
@@ -1279,6 +1280,8 @@ namespace Grand.Web.Services
                     PictureUrl = pictureUrl,
                     AllowCustomerReviews = rating.AllowCustomerReviews,
                     Rating = rating.TotalReviews > 0 ? (((rating.RatingSum * 100) / rating.TotalReviews) / 5) : 0,
+                    Price = price.Price,
+                    PriceWithDiscount = price.PriceWithDiscount,
                     Url = $"{storeurl}{item.SeName}"
                 });
                 foreach (var category in item.ProductCategories)

@@ -361,7 +361,9 @@ namespace Grand.Services.Orders
                 warnings.Add(_localizationService.GetResource("ShoppingCart.RequiredWarehouse"));
             }
 
-            var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+            var warehouseId = !string.IsNullOrEmpty(shoppingCartItem.WarehouseId) ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+                            //_shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+
             if (!string.IsNullOrEmpty(warehouseId))
             {
                 var warehouse = await _shippingService.GetWarehouseById(warehouseId);

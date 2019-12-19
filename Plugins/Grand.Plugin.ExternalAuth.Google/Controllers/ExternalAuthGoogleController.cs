@@ -68,7 +68,7 @@ namespace Grand.Plugin.ExternalAuth.Google.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [AuthorizeAdmin]
         [Area("Admin")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
