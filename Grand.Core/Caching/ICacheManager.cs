@@ -74,10 +74,15 @@ namespace Grand.Core.Caching
         Task RemoveByPattern(string pattern);
 
         /// <summary>
+        /// Removes items by pattern
+        /// </summary>
+        /// <param name="pattern">pattern</param>
+        Task RemoveByPatternAsync(string pattern);
+
+        /// <summary>
         /// Clear all cache data
         /// </summary>
         Task Clear();
-
-        Task RemoveByPatternAsync(string pattern);
+        
     }
 }

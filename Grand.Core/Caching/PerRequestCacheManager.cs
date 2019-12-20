@@ -63,6 +63,21 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
         /// <returns>The cached value associated with the specified key</returns>
+        public T Get<T>(string key)
+        {
+            var items = GetItems();
+            if (items == null)
+                return default(T);
+
+            return (T)items[key];
+        }
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
         public virtual (T, bool) TryGetValue<T>(string key)
         {
             var items = GetItems();
@@ -93,6 +108,26 @@ namespace Grand.Core.Caching
                 items[key] = data;
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Adds the specified key and object to the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        /// <param name="cacheTime">Cache time in minutes</param>
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            var items = GetItems();
+            if (items == null)
+                return;
+
+            items[key] = data;
         }
 
         /// <summary>
@@ -133,6 +168,15 @@ namespace Grand.Core.Caching
         }
 
         /// <summary>
+        /// Removes items by key pattern
+        /// </summary>
+        /// <param name="pattern">String key pattern</param>
+        public Task RemoveByPatternAsync(string pattern)
+        {
+            return RemoveByPattern(pattern);
+        }
+
+        /// <summary>
         /// Clear all cache data
         /// </summary>
         public virtual Task Clear()
@@ -150,34 +194,6 @@ namespace Grand.Core.Caching
         public virtual void Dispose()
         {
             //nothing special
-        }
-
-        public Task RemoveByPatternAsync(string pattern)
-        {
-            return this.RemoveByPattern(pattern);
-        }
-
-        public T Get<T>(string key)
-        {
-            var items = GetItems();
-            if (items == null)
-                return default(T);
-
-            return (T)items[key];
-        }
-
-        public void Set(string key, object data, int cacheTime)
-        {
-            if (data == null)
-            {
-                return;
-            }
-
-            var items = GetItems();
-            if (items == null)
-                return;
-
-            items[key] = data;
         }
 
         #endregion

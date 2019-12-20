@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -61,6 +60,19 @@ namespace Grand.Core.Caching
                 return (JsonConvert.DeserializeObject<T>(res), true);
             }
         }
+        public (T Result, bool FromCache) TryGetValue<T>(string key)
+        {
+            var res = _distributedCache.StringGet(key);
+            if (string.IsNullOrEmpty(res.ToString()))
+            {
+                return (default, res.HasValue);
+            }
+            else
+            {
+                return (JsonConvert.DeserializeObject<T>(res), true);
+            }
+        }
+
 
         public virtual async Task RemoveAsync(string key)
         {
@@ -79,23 +91,20 @@ namespace Grand.Core.Caching
             await _distributedCache.StringSetAsync(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
         }
 
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+                return;
+
+            //serialize item
+            var serializedItem = JsonConvert.SerializeObject(data);
+
+            //and set it to cache
+            _distributedCache.StringSet(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
+        }
         public bool IsSet(string key)
         {
             return _distributedCache.KeyExists(key);
-        }
-
-        public virtual async Task Clear()
-        {
-            foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
-            {
-                var server = _connectionMultiplexer.GetServer(endPoint);
-                await server.FlushDatabaseAsync(0);
-            }
-        }
-
-        public virtual void Dispose()
-        {
-            //nothing special
         }
 
         public async Task RemoveByPatternAsync(string pattern)
@@ -114,29 +123,23 @@ namespace Grand.Core.Caching
             return RemoveByPatternAsync(pattern);
         }
 
-        public (T Result, bool FromCache) TryGetValue<T>(string key)
+        public virtual async Task Clear()
         {
-            var res = _distributedCache.StringGet(key);
-            if (string.IsNullOrEmpty(res.ToString()))
+            foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
             {
-                return (default, res.HasValue);
-            }
-            else
-            {
-                return (JsonConvert.DeserializeObject<T>(res), true);
+                var server = _connectionMultiplexer.GetServer(endPoint);
+                await server.FlushDatabaseAsync(0);
             }
         }
 
-        public void Set(string key, object data, int cacheTime)
+        public virtual void Dispose()
         {
-            if (data == null)
-                return;
-
-            //serialize item
-            var serializedItem = JsonConvert.SerializeObject(data);
-
-            //and set it to cache
-            _distributedCache.StringSet(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
+            //nothing special
         }
+
+        
+
+        
+       
     }
 }
