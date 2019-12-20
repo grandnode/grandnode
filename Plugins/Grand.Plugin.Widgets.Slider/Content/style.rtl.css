@@ -1,7 +1,7 @@
 ﻿/* carousel */
 
     #GrandCarousel {
-        width: calc(100vw - 10px);
+        width: 100%;
     }
 
     #GrandCarousel .carousel-item.img-desc,
