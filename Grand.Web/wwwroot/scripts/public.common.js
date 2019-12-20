@@ -16,14 +16,15 @@ function MenuScroll() {
 
     window.addEventListener("scroll", () => {
         var currentScroll = window.pageYOffset;
-        if (currentScroll == 0) {
-            $(body).removeClass(scrollUp);
-            return;
-        }
         if (currentScroll > lastScroll && !$(body).hasClass(scrollDown)) {
             // down
             $(body).removeClass(scrollUp);
-            $(body).addClass(scrollDown);
+            if (lastScroll != 0) {
+                $(body).addClass(scrollDown);
+                return;
+            } else {
+                $(body).removeClass(scrollDown);
+            }
         } else if (currentScroll < lastScroll && $(body).hasClass(scrollDown)) {
             // up
             $(body).removeClass(scrollDown);
@@ -359,6 +360,11 @@ function displayPopupNotification(message, messagetype, modal) {
     }
     container.html(htmlcode);
     $('#generalModal').modal('show');
+}
+
+function closeOffcanvas() {
+    var dataOffcanvas = $('#right').data('offcanvas-component');
+    dataOffcanvas.close();
 }
 
 function displayPopupAddToCart(html) {

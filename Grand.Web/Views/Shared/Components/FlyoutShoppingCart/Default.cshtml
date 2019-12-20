@@ -11,7 +11,7 @@
                 {
                     @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts))))
                 }
-                <div class="offcanvas-close js-offcanvas-close" data-button-options='{"modifiers":"close-right"}'>
+                <div class="offcanvas-close" onclick="closeOffcanvas()">
                     <span class="mdi mdi-close"></span>
                 </div>
             </div>
