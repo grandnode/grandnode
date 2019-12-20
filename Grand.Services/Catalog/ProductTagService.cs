@@ -231,7 +231,7 @@ namespace Grand.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
-        public virtual int GetProductCount(string productTagId, string storeId)
+        public virtual async Task<int> GetProductCount(string productTagId, string storeId)
         {
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
