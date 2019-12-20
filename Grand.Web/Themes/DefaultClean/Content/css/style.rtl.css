@@ -209,6 +209,24 @@ input {
 	right: -1.5rem;
 }
 
+/* header scroll */
+
+header {
+	position: sticky;
+	top: 0;
+	background: #fff;
+	-webkit-transition: transform .3s ease;
+	transition: transform .3s ease;
+	z-index: 1037;
+}
+body.scroll-down header {
+	-webkit-transform: translateY(-100%);
+	transform: translateY(-100%);
+}
+body.scroll-up header {
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+}
 
 /* Custom Select */
 
