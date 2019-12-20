@@ -15,15 +15,15 @@ namespace Grand.Core.Caching.Tests
             int cacheTime = int.MaxValue;
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
 
-            await memoryCacheManager.Set(key, data, cacheTime);
-            Assert.AreEqual(await memoryCacheManager.Get<byte>(key), data);
+            await memoryCacheManager.SetAsync(key, data, cacheTime);
+            Assert.AreEqual(await memoryCacheManager.GetAsync<byte>(key), data);
         }
 
         [TestMethod()]
         public async Task IsSetTest()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey05", 0, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey05", 0, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey05"));
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey08"));
@@ -33,10 +33,10 @@ namespace Grand.Core.Caching.Tests
         public async Task Removing_one_item_of_Cache()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey15", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey15", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey15"));
-            await memoryCacheManager.Remove("exampleKey15");
+            await memoryCacheManager.RemoveAsync("exampleKey15");
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey15"));
         }
 
@@ -44,8 +44,8 @@ namespace Grand.Core.Caching.Tests
         public async Task Clearing_whole_Cache()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey25", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey35", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey25", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey35", 5, int.MaxValue);
 
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey25"));
             Assert.IsTrue(memoryCacheManager.IsSet("exampleKey35"));
@@ -60,11 +60,11 @@ namespace Grand.Core.Caching.Tests
         public async Task RemoveByPatternTest()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await memoryCacheManager.Set("exampleKey025", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey026", 5, int.MaxValue);
-            await memoryCacheManager.Set("exampleKey027", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey025", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey026", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey027", 5, int.MaxValue);
 
-            await memoryCacheManager.Set("exampleKey127", 5, int.MaxValue);
+            await memoryCacheManager.SetAsync("exampleKey127", 5, int.MaxValue);
 
             string pattern = @"exampleKey0\d\d";
             await memoryCacheManager.RemoveByPattern(pattern);

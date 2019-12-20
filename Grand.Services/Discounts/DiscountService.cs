@@ -674,9 +674,9 @@ namespace Grand.Services.Discounts
 
                 //discount requirements
                 string keyReq = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
-                var requirements = _cacheManager.Get(keyReq, () =>
+                var requirements = await _cacheManager.GetAsync(keyReq, async () =>
                 {
-                    return discount.DiscountRequirements.ToList();
+                    return await Task.FromResult(discount.DiscountRequirements.ToList());
                 });
                 foreach (var req in requirements)
                 {

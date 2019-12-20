@@ -2685,6 +2685,21 @@ button, .buttons, .btn, .modal-footer .btn+.btn {
     margin-bottom: 10px
 }
 
+.custom-input-group.input-group {
+    display: inline-flex;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.custom-input-group.input-group .form-control {
+    margin-right: 5px;
+    padding: 6px 12px;
+}
+.custom-input-group.input-group .input-group-addon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .ln_solid {
     border-top: 1px solid #e5e5e5;
     color: #ffffff;

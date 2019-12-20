@@ -1,37 +1,27 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Caching
 {
     public partial class DistributedRedisCache : ICacheManager
     {
-        private readonly IDistributedCache _distributedCache;
-        private readonly IDistributedRedisCacheExtended _distributedRedisCacheExtended;
+        private readonly IDatabase _distributedCache;
+        private readonly IConnectionMultiplexer _connectionMultiplexer;
 
-        public DistributedRedisCache(IDistributedCache distributedCache, IDistributedRedisCacheExtended distributedRedisCacheExtended)
+        public DistributedRedisCache(string redisConnectionString)
         {
-            _distributedCache = distributedCache;
-            _distributedRedisCacheExtended = distributedRedisCacheExtended;
+            _connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+            _distributedCache = _connectionMultiplexer.GetDatabase(0);
         }
 
-        /// <summary>
-        /// Create entry options to item of redis cache 
-        /// </summary>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        /// <returns></returns>
-        protected DistributedCacheEntryOptions GetDistributedCacheEntryOptions(int cacheTime)
-        {
-            return new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(cacheTime));
-        }
-
-      
-        public virtual async Task<T> Get<T>(string key)
+        public virtual async Task<T> GetAsync<T>(string key)
         {
             //get serialized item from cache
-            var serializedItem = await _distributedCache.GetStringAsync(key);
+            var serializedItem = await _distributedCache.StringGetAsync(key);
             if (string.IsNullOrEmpty(serializedItem))
                 return default(T);
 
@@ -43,71 +33,53 @@ namespace Grand.Core.Caching
             return item;
         }
 
-        public async Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key)
+        public T Get<T>(string key)
         {
-            byte[] result;
-            try
-            {
-                result = await _distributedCache.GetAsync(key);
-                if (result == null)
-                    return (default(T), false);
-            }
-            catch
-            {
-                return (default(T), false);
-            }
-
             //get serialized item from cache
-            var serializedItem = System.Text.Encoding.Default.GetString(result);
+            var serializedItem = _distributedCache.StringGet(key);
             if (string.IsNullOrEmpty(serializedItem))
-                return (default(T), true);
+                return default(T);
 
             //deserialize item
             var item = JsonConvert.DeserializeObject<T>(serializedItem);
             if (item == null)
-                return (default(T), true);
+                return default(T);
 
-            return (item, true);
+            return item;
         }
 
-        public virtual (T, bool) TryGetValue<T>(string key)
+        public virtual async Task<(T, bool)> TryGetValueAsync<T>(string key)
         {
-            byte[] result;
-            try
+            var res = await _distributedCache.StringGetAsync(key);
+            if (string.IsNullOrEmpty(res.ToString()))
             {
-                result = _distributedCache.Get(key);
-                if (result == null)
-                    return (default(T), false);
+                return (default, res.HasValue);
             }
-            catch
+            else
             {
-                return (default(T), false);
+                return (JsonConvert.DeserializeObject<T>(res), true);
             }
-
-            //get serialized item from cache
-            var serializedItem = System.Text.Encoding.Default.GetString(result);
-            if (string.IsNullOrEmpty(serializedItem))
-                return (default(T), true);
-
-            //deserialize item
-            var item = JsonConvert.DeserializeObject<T>(serializedItem);
-            if (item == null)
-                return (default(T), true);
-
-            return (item, true);
         }
-
-        public virtual async Task Remove(string key)
+        public (T Result, bool FromCache) TryGetValue<T>(string key)
         {
-            await _distributedCache.RemoveAsync(key);
+            var res = _distributedCache.StringGet(key);
+            if (string.IsNullOrEmpty(res.ToString()))
+            {
+                return (default, res.HasValue);
+            }
+            else
+            {
+                return (JsonConvert.DeserializeObject<T>(res), true);
+            }
         }
 
-        public virtual async Task RemoveByPattern(string pattern)
+
+        public virtual async Task RemoveAsync(string key)
         {
-            await _distributedRedisCacheExtended.RemoveByPatternAsync(pattern);
+            await _distributedCache.KeyDeleteAsync(key, CommandFlags.PreferMaster);
         }
 
-        public virtual async Task Set(string key, object data, int cacheTime)
+        public virtual async Task SetAsync(string key, object data, int cacheTime)
         {
             if (data == null)
                 return;
@@ -116,23 +88,58 @@ namespace Grand.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await _distributedCache.SetStringAsync(key, serializedItem, GetDistributedCacheEntryOptions(cacheTime));
+            await _distributedCache.StringSetAsync(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
         }
 
+        public void Set(string key, object data, int cacheTime)
+        {
+            if (data == null)
+                return;
+
+            //serialize item
+            var serializedItem = JsonConvert.SerializeObject(data);
+
+            //and set it to cache
+            _distributedCache.StringSet(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
+        }
         public bool IsSet(string key)
         {
-            return _distributedCache.Get(key)?.Length > 0;
+            return _distributedCache.KeyExists(key);
+        }
+
+        public async Task RemoveByPatternAsync(string pattern)
+        {
+            var keys = new List<RedisKey>();
+            foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
+            {
+                var server = _connectionMultiplexer.GetServer(endPoint);
+                keys.AddRange(server.Keys(_distributedCache.Database, $"*{pattern}*"));
+            }
+            await _distributedCache.KeyDeleteAsync(keys.Distinct().ToArray());
+        }
+
+        public Task RemoveByPattern(string pattern)
+        {
+            return RemoveByPatternAsync(pattern);
         }
 
         public virtual async Task Clear()
         {
-            await _distributedRedisCacheExtended.ClearAsync();
+            foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
+            {
+                var server = _connectionMultiplexer.GetServer(endPoint);
+                await server.FlushDatabaseAsync(0);
+            }
         }
-
 
         public virtual void Dispose()
         {
             //nothing special
         }
+
+        
+
+        
+       
     }
 }

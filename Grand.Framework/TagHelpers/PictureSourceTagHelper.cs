@@ -1,6 +1,8 @@
 ﻿using Grand.Core.Caching;
 using Grand.Services.Media;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Framework.TagHelpers
@@ -19,10 +21,10 @@ namespace Grand.Framework.TagHelpers
         private readonly IPictureService _pictureService;
         private readonly ICacheManager _cacheManager;
 
-        public PictureSourceTagHelper(IPictureService pictureService, ICacheManager cacheManager)
+        public PictureSourceTagHelper(IPictureService pictureService, IEnumerable<ICacheManager> cacheManager)
         {
             _pictureService = pictureService;
-            _cacheManager = cacheManager;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
         }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

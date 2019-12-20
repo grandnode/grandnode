@@ -6,6 +6,36 @@ $(document).ready(function () {
     $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid, .customGrid .flex-grid").scrollLeft(30);
 });
 
+// meno scrolls up and down
+
+function MenuScroll() {
+    var body = document.body;
+    var scrollUp = "scroll-up";
+    var scrollDown = "scroll-down";
+    let lastScroll = 0;
+
+    window.addEventListener("scroll", () => {
+        var currentScroll = window.pageYOffset;
+        if (currentScroll > lastScroll && !$(body).hasClass(scrollDown)) {
+            // down
+            $(body).removeClass(scrollUp);
+            if (lastScroll != 0) {
+                $(body).addClass(scrollDown);
+                return;
+            } else {
+                $(body).removeClass(scrollDown);
+            }
+        } else if (currentScroll < lastScroll && $(body).hasClass(scrollDown)) {
+            // up
+            $(body).removeClass(scrollDown);
+            $(body).addClass(scrollUp);
+        }
+        lastScroll = currentScroll;
+    });
+}
+
+// offcanvas
+
 $(function () {
     $(document).bind("beforecreate.offcanvas", function (e) {
         var dataOffcanvas = $(e.target).data('offcanvas-component');
@@ -40,6 +70,7 @@ $(function () {
     $(document).trigger("enhance");
 });
 
+// main menu system
 
 function mainMenuReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
@@ -65,6 +96,8 @@ function mainMenuReplace() {
     }
 }
 
+// search box
+
 function searchReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
         if ($("#searchModal #small-search-box-form").length < 1) {
@@ -77,6 +110,9 @@ function searchReplace() {
         }
     }
 }
+
+// back to top
+
 function BackToTop() {
     if ($('#back-to-top').length) {
         var scrollTrigger = 100, // px
@@ -107,6 +143,8 @@ function edgeFix() {
         }
     }
 }
+
+// auctions
 
 function dataCountdown() {
     $('[data-countdown]').each(function () {
@@ -159,6 +197,7 @@ $(function () {
 
 $(document).ready(function () {
 
+    MenuScroll();
     edgeFix();
     CartFix();
     mainMenuReplace();
@@ -321,6 +360,11 @@ function displayPopupNotification(message, messagetype, modal) {
     }
     container.html(htmlcode);
     $('#generalModal').modal('show');
+}
+
+function closeOffcanvas() {
+    var dataOffcanvas = $('#right').data('offcanvas-component');
+    dataOffcanvas.close();
 }
 
 function displayPopupAddToCart(html) {
