@@ -88,19 +88,18 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<string, int> GetProductCount(string storeId)
+        private async Task<Dictionary<string, int>> GetProductCount(string storeId)
         {
             string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
-            return _cacheManager.Get(key, () =>
+            return await _cacheManager.GetAsync(key, async () =>
              {
                  var query = from pt in _productTagRepository.Table
                              select pt;
 
                  var dictionary = new Dictionary<string, int>();
-                 foreach (var item in query.ToList())
+                 foreach (var item in await query.ToListAsync())
                      dictionary.Add(item.Id, item.Count);
                  return dictionary;
-
              });
         }
 
@@ -233,7 +232,7 @@ namespace Grand.Services.Catalog
         /// <returns>Number of products</returns>
         public virtual async Task<int> GetProductCount(string productTagId, string storeId)
         {
-            var dictionary = GetProductCount(storeId);
+            var dictionary = await GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
 
