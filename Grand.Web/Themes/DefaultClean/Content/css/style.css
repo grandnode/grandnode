@@ -77,6 +77,8 @@ input {
 .tax-type-button .btn,
 .language-selector .btn,
 .store-selector .btn {
+	display: flex;
+	align-items: center;
     height: 30px;
     border: 0;
     color: #1D1F20;
@@ -952,7 +954,8 @@ ul.ui-autocomplete li img {
 	z-index: 1051 !important;
 }
 .modal-padding-off {
-	background-color: #ddd;
+	padding: 10px;
+	background-color: #f2f2f2;
 }
 #ModalQuickView {
 	overflow-x: hidden;
@@ -985,7 +988,7 @@ ul.ui-autocomplete li img {
 	margin-top: 15px;
 }
 #ModalAddToCart .modal-header {
-	min-height: 54px;
+	padding: 10px;
 }
 #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .add-cart-text {
 	display: none !important;
@@ -1307,6 +1310,8 @@ ul.color-squares input {
 	display: none;
 }
 .product-simple-share .btn {
+	max-width: 50px;
+	height: 50px;
 	margin: 0 4px 4px 0 !important;
 	display: flex;
     justify-content: center;
@@ -2721,8 +2726,11 @@ ul.opc .order-summary-content h5 {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	max-width: 100%;
+	padding: 6px 22px;
 	margin: 0 4px 4px 0 !important;
-    font-size: 14px;
+    font-size: 16px;
+	font-weight: 500;
     text-transform: uppercase;
 }
 .product-details-page .associatedItem .btn-secondary {
@@ -3831,6 +3839,7 @@ span.product-quantity {
 }
 .generalAdToCart input {
 	max-width: 75px;
+	height: 50px;
 	display: inline;
 	position: relative;
 	margin-right: 5px;
@@ -4134,9 +4143,41 @@ footer .socicon-pinterest:hover {
 /*media*/
 
 @media screen and (max-width: 1400px) {
-    .flyout-cart .count, .flyout-cart .count a {
-        font-size: 16px;
-    }
+	.flyout-cart .count, .flyout-cart .count a {
+		font-size: 16px;
+	}
+
+	::-webkit-scrollbar-track {
+		width: 6px;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+		background-color: #fff;
+	}
+
+	::-webkit-scrollbar {
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	::-webkit-scrollbar-thumb {
+		width: 6px;
+		border-radius: .25rem;
+		-webkit-box-shadow: none;
+		background-color: #d1d1d1;
+	}
+
+	body::-webkit-scrollbar {
+		all: unset;
+		border-radius: 0;
+	}
+
+	body::-webkit-scrollbar-thumb {
+		border-radius: 0;
+	}
+
+	body::-webkit-scrollbar-track {
+		background-color: #f2f2f2;
+	}
 }
 @media screen and (max-width: 1200px) and (min-width: 901px) {
 	.shopping-cart tr {
@@ -4164,6 +4205,9 @@ footer .socicon-pinterest:hover {
 	} 
 }
 @media screen and (max-width: 1200px) {
+	.product-details-page .add-to-cart-button {
+		padding: 6px 14px;
+	}
 	.product-box.grid-box .btn-info .add-cart-text,
 	.product-box.list-box .btn-info .add-cart-text {
 		font-size: 12px;
@@ -4694,6 +4738,25 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
+	.product-details-page .add-to-cart-button {
+		width: calc(100% - 80px);
+		height: auto;
+		border-top-right-radius: 3px !important;
+		border-bottom-right-radius: 3px !important;
+		margin-right: 0 !important;
+	}
+	.generalAdToCart input {
+		height: auto;
+		margin: 0 0 4px 0;
+	}
+	.product-simple-share .btn {
+		max-width: unset;
+		height: auto;
+	}
+	.product-simple-share .btn:last-child {
+		margin: 0 0 4px 0 !important;
+		border-radius: 0;
+	}
 	#mobile_menu .navbar-nav {
 		max-height: 100vh;
 		overflow-x: hidden;
@@ -5238,10 +5301,6 @@ footer .socicon-pinterest:hover {
     footer .about-us .list-pad {
         text-align: center;
     }
-	.product-simple-share .btn {
-		display: inline-block;
-		height: 38px;
-	}
     .product-simple-share .btn-
 	#collapsing-navbar-2 .dropdown-menu {
 		position: static;
@@ -5718,12 +5777,6 @@ footer .socicon-pinterest:hover {
     .product-box .labels {
         top: 5px;
         left: 5px;
-    }
-    .product-details-page .add-to-cart-button {
-        width: calc(100% - 48px);
-        border-top-right-radius: 3px !important;
-        border-bottom-right-radius: 3px !important;
-        margin-right: 0 !important;
     }
 	.product-simple-share .btn:not(.add-to-cart-button) {
 		margin: 10px 0 0 0;
