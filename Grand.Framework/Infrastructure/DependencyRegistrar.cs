@@ -109,8 +109,7 @@ namespace Grand.Framework.Infrastructure
 
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<DistributedRedisCache>().As<ICacheManager>().SingleInstance();
-                builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
+                builder.Register(r => new DistributedRedisCache(config.RedisCachingConnectionString)).As<ICacheManager>().SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)

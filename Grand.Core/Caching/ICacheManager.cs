@@ -14,14 +14,15 @@ namespace Grand.Core.Caching
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        Task<T> Get<T>(string key);
+        Task<T> GetAsync<T>(string key);
 
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        (T result, bool fromCache) TryGetValue<T>(string key);
+        T Get<T>(string key);
 
         /// <summary>
         /// Gets or sets the value associated with the specified key asynchronosly
@@ -31,12 +32,27 @@ namespace Grand.Core.Caching
         Task<(T Result, bool FromCache)> TryGetValueAsync<T>(string key);
 
         /// <summary>
+        /// Gets or sets the value associated with the specified key synchronosly
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>The value associated with the specified key.</returns>
+        (T Result, bool FromCache) TryGetValue<T>(string key);
+
+        /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="data">Data</param>
         /// <param name="cacheTime">Cache time</param>
-        Task Set(string key, object data, int cacheTime);
+        Task SetAsync(string key, object data, int cacheTime);
+
+        /// <summary>
+        /// Adds the specified key and object to the cache.
+        /// </summary>
+        /// <param name="key">key</param>
+        /// <param name="data">Data</param>
+        /// <param name="cacheTime">Cache time</param>
+        void Set(string key, object data, int cacheTime);
 
         /// <summary>
         /// Gets a value indicating whether the value associated with the specified key is cached
@@ -49,7 +65,7 @@ namespace Grand.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        Task Remove(string key);
+        Task RemoveAsync(string key);
 
         /// <summary>
         /// Removes items by pattern
@@ -61,5 +77,7 @@ namespace Grand.Core.Caching
         /// Clear all cache data
         /// </summary>
         Task Clear();
+
+        Task RemoveByPatternAsync(string pattern);
     }
 }

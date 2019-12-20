@@ -34,21 +34,6 @@ namespace Grand.Framework.StartupConfigure
             //add options feature
             services.AddOptions();
             
-            //add memory cache
-            services.AddMemoryCache();
-
-            //add distributed memory cache
-            services.AddDistributedMemoryCache();
-
-            //add distributed Redis cache
-            if (config.RedisCachingEnabled)
-            {
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = config.RedisCachingConnectionString;
-                });
-            }
-
             //add HTTP sesion state feature
             services.AddHttpSession(config);
 

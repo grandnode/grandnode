@@ -51,7 +51,8 @@ namespace Grand.Web.Controllers
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
         /// </summary>
-        protected bool UseMars {
+        protected bool UseMars
+        {
             get { return false; }
         }
 
@@ -65,11 +66,12 @@ namespace Grand.Web.Controllers
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
 
-            var installed = await _cacheManager.Get<bool>("Installed");
+            var installed = await _cacheManager.GetAsync<bool>("Installed");
             if (installed)
                 return View(new InstallModel() { Installed = true });
 
-            var model = new InstallModel {
+            var model = new InstallModel
+            {
                 AdminEmail = "admin@yourstore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
@@ -77,7 +79,8 @@ namespace Grand.Web.Controllers
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
@@ -86,7 +89,8 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem {
+                model.AvailableCollation.Add(new SelectListItem
+                {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
@@ -178,7 +182,8 @@ namespace Grand.Web.Controllers
                 try
                 {
                     //save settings
-                    var settings = new DataSettings {
+                    var settings = new DataSettings
+                    {
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString
                     };
@@ -239,7 +244,7 @@ namespace Grand.Web.Controllers
                     }
 
                     //restart application
-                    await _cacheManager.Set("Installed", true, 120);
+                    await _cacheManager.SetAsync("Installed", true, 120);
                     return View(new InstallModel() { Installed = true });
                 }
                 catch (Exception exception)
@@ -257,7 +262,8 @@ namespace Grand.Web.Controllers
             //prepare language list
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
@@ -267,7 +273,8 @@ namespace Grand.Web.Controllers
             //prepare collation list
             foreach (var col in _locService.GetAvailableCollations())
             {
-                model.AvailableCollation.Add(new SelectListItem {
+                model.AvailableCollation.Add(new SelectListItem
+                {
                     Value = col.Value,
                     Text = col.Name,
                     Selected = _locService.GetCurrentLanguage().Code == col.Value,
