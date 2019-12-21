@@ -114,36 +114,6 @@ namespace Grand.Services.Media
             return File.ReadAllBytes(filePath);
         }
 
-        /// <summary>
-        /// Save picture on file system
-        /// </summary>
-        /// <param name="pictureId">Picture identifier</param>
-        /// <param name="pictureBinary">Picture binary</param>
-        /// <param name="mimeType">MIME type</param>
-        protected virtual void SavePictureInFile(string pictureId, byte[] pictureBinary, string mimeType)
-        {
-            string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId, lastPart);
-            File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
-        }
-
-        /// <summary>
-        /// Delete a picture on file system
-        /// </summary>
-        /// <param name="picture">Picture</param>
-        protected virtual void DeletePictureOnFileSystem(Picture picture)
-        {
-            if (picture == null)
-                throw new ArgumentNullException("picture");
-
-            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string fileName = string.Format("{0}_0.{1}", picture.Id, lastPart);
-            string filePath = GetPictureLocalPath(fileName);
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-        }
 
         /// <summary>
         /// Delete picture thumbs
@@ -231,7 +201,7 @@ namespace Grand.Services.Media
         /// <param name="picture">Picture</param>
         /// <param name="fromDb">Load from database; otherwise, from file system</param>
         /// <returns>Picture binary</returns>
-        protected virtual async Task<byte[]> LoadPictureBinaryAsync(Picture picture, bool fromDb)
+        public virtual async Task<byte[]> LoadPictureBinary(Picture picture, bool fromDb)
         {
             if (picture == null)
                 throw new ArgumentNullException("picture");
@@ -243,23 +213,7 @@ namespace Grand.Services.Media
             return result;
         }
 
-        /// <summary>
-        /// Gets the loaded picture binary depending on picture storage settings
-        /// </summary>
-        /// <param name="picture">Picture</param>
-        /// <param name="fromDb">Load from database; otherwise, from file system</param>
-        /// <returns>Picture binary</returns>
-        protected virtual byte[] LoadPictureBinary(Picture picture, bool fromDb)
-        {
-            if (picture == null)
-                throw new ArgumentNullException("picture");
-
-            var result = fromDb
-                ? (_pictureRepository.GetById(picture.Id)).PictureBinary
-                : LoadPictureFromFile(picture.Id, picture.MimeType);
-
-            return result;
-        }
+       
 
         /// <summary>
         /// Get a value indicating whether some file (thumb) already exists
@@ -296,7 +250,7 @@ namespace Grand.Services.Media
         /// <returns>Picture binary</returns>
         public virtual async Task<byte[]> LoadPictureBinary(Picture picture)
         {
-            return await LoadPictureBinaryAsync(picture, this.StoreInDb);
+            return await LoadPictureBinary(picture, StoreInDb);
         }
 
         /// <summary>
@@ -522,7 +476,7 @@ namespace Grand.Services.Media
             DeletePictureThumbs(picture);
 
             //delete from file system
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 DeletePictureOnFileSystem(picture);
 
             //delete from database
@@ -530,6 +484,24 @@ namespace Grand.Services.Media
 
             //event notification
             await _mediator.EntityDeleted(picture);
+        }
+
+        /// <summary>
+        /// Delete a picture on file system
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        public virtual void DeletePictureOnFileSystem(Picture picture)
+        {
+            if (picture == null)
+                throw new ArgumentNullException("picture");
+
+            var lastPart = GetFileExtensionFromMimeType(picture.MimeType);
+            var fileName = string.Format("{0}_0.{1}", picture.Id, lastPart);
+            var filePath = GetPictureLocalPath(fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
 
         /// <summary>
@@ -607,7 +579,7 @@ namespace Grand.Services.Media
             };
             await _pictureRepository.InsertAsync(picture);
 
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -657,13 +629,26 @@ namespace Grand.Services.Media
 
             await _pictureRepository.UpdateAsync(picture);
 
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
             await _mediator.EntityUpdated(picture);
 
             return picture;
+        }
+
+        /// <summary>
+        /// Save picture on file system
+        /// </summary>
+        /// <param name="pictureId">Picture identifier</param>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        public virtual void SavePictureInFile(string pictureId, byte[] pictureBinary, string mimeType)
+        {
+            var lastPart = GetFileExtensionFromMimeType(mimeType);
+            var fileName = string.Format("{0}_0.{1}", pictureId, lastPart);
+            File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
         /// <summary>
@@ -809,46 +794,6 @@ namespace Grand.Services.Media
         public virtual bool StoreInDb {
             get {
                 return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
-            }
-            set {
-                //check whether it's a new value
-                if (this.StoreInDb == value)
-                    return;
-
-                //save the new setting value
-                _settingService.SetSetting("Media.Images.StoreInDB", value).GetAwaiter().GetResult();
-
-                int pageIndex = 0;
-                const int pageSize = 400;
-                try
-                {
-
-                    while (true)
-                    {
-                        var pictures = this.GetPictures(pageIndex, pageSize);
-                        pageIndex++;
-                        if (!pictures.Any())
-                            break;
-
-                        foreach (var picture in pictures)
-                        {
-                            var pictureBinary = LoadPictureBinary(picture, !value);
-
-                            if (value)
-                                DeletePictureOnFileSystem(picture);
-                            else
-                                //now on file system
-                                SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
-                            picture.PictureBinary = value ? pictureBinary : new byte[0];
-                            picture.IsNew = true;
-                        }
-                        //save all at once
-                        _pictureRepository.Update(pictures);
-                    }
-                }
-                finally
-                {
-                }
             }
         }
 
