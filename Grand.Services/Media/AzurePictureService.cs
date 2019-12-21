@@ -11,6 +11,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Media
 {
@@ -76,7 +77,7 @@ namespace Grand.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected override void DeletePictureThumbs(Picture picture)
+        protected override async Task DeletePictureThumbs(Picture picture)
         {
             BlobContinuationToken continuationToken = null;
             
@@ -86,7 +87,7 @@ namespace Grand.Services.Media
             foreach (var ff in files.Results)
             {
                 CloudBlockBlob blockBlob = (CloudBlockBlob)ff;
-                blockBlob.DeleteAsync().GetAwaiter().GetResult();
+                await blockBlob.DeleteAsync();
             }
         }
 

@@ -119,7 +119,7 @@ namespace Grand.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual void DeletePictureThumbs(Picture picture)
+        protected virtual Task DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id);
             var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
@@ -129,6 +129,7 @@ namespace Grand.Services.Media
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
                 File.Delete(thumbFilePath);
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -379,7 +380,7 @@ namespace Grand.Services.Media
             string thumbFileName;
             if (picture.IsNew)
             {
-                DeletePictureThumbs(picture);
+                await DeletePictureThumbs(picture);
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                 picture = await UpdatePicture(picture.Id,
@@ -473,7 +474,7 @@ namespace Grand.Services.Media
                 throw new ArgumentNullException("picture");
 
             //delete thumbs
-            DeletePictureThumbs(picture);
+            await DeletePictureThumbs(picture);
 
             //delete from file system
             if (!StoreInDb)
@@ -618,9 +619,9 @@ namespace Grand.Services.Media
 
             //delete old thumbs if a picture has been changed
             if (seoFilename != picture.SeoFilename)
-                DeletePictureThumbs(picture);
+                await DeletePictureThumbs(picture);
 
-            picture.PictureBinary = this.StoreInDb ? pictureBinary : new byte[0];
+            picture.PictureBinary = StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
             picture.AltAttribute = altAttribute;

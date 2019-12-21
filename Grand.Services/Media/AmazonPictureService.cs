@@ -121,18 +121,18 @@ namespace Grand.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected override void DeletePictureThumbs(Picture picture)
+        protected override async Task DeletePictureThumbs(Picture picture)
         {
             var listObjectsRequest = new ListObjectsV2Request()
             {
                 BucketName = _bucketName,
                 Prefix = picture.Id
             };
-            var listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest).Result;
+            var listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest);
 
             foreach (var s3Object in listObjectsResponse.S3Objects)
             {
-                EnsureValidResponse(_s3Client.DeleteObjectAsync(_bucketName, s3Object.Key).Result, HttpStatusCode.NoContent);
+                EnsureValidResponse(await _s3Client.DeleteObjectAsync(_bucketName, s3Object.Key), HttpStatusCode.NoContent);
             }
         }
 
