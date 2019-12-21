@@ -3,7 +3,7 @@
 <div class="form-horizontal">
     <vc:admin-widget widget-zone="blog_category_info_top" additional-data="Model" />
     <div class="form-body">
-        @(Html.LocalizedEditor<BlogCategoryModel, BlogCategoryLocalizedModel>("blogcategory-info-localized",
+        @(await Html.LocalizedEditor<BlogCategoryModel, BlogCategoryLocalizedModel>("blogcategory-info-localized",
                             @<div class="form-horizontal">
                                 <div class="form-body">
                                     <div class="form-group">

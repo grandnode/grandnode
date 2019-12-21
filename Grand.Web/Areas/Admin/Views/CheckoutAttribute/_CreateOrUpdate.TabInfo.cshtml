@@ -63,7 +63,7 @@
             }
 </script>
 <vc:admin-widget widget-zone="checkout_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+@(await Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

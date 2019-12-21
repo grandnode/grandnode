@@ -2,7 +2,7 @@
 <div class="form-horizontal">
     <vc:admin-widget widget-zone="news_details_info_top" additional-data="Model" />
     <div class="form-body">
-        @(Html.LocalizedEditor<NewsItemModel, NewsLocalizedModel>("newsitem-info-localized",
+        @(await Html.LocalizedEditor<NewsItemModel, NewsLocalizedModel>("newsitem-info-localized",
                             @<div class="form-horizontal">
                                 <div class="form-body">
                                     <div class="form-group">

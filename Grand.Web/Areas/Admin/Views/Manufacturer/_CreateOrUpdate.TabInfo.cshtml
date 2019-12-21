@@ -17,7 +17,7 @@
         }
 </script>
 <vc:admin-widget widget-zone="manufacturer_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
+@(await Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

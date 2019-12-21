@@ -1,6 +1,6 @@
 ﻿@model TopicModel
 <vc:admin-widget widget-zone="topic_details_seo_top" additional-data="Model" />
-@(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
+@(await Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
