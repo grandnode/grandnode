@@ -235,7 +235,8 @@ namespace Grand.Services.Media
         /// <param name="binary">Picture binary</param>
         protected virtual Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
-            return File.WriteAllBytesAsync(thumbFilePath, binary);
+            File.WriteAllBytes(thumbFilePath, binary);
+            return Task.CompletedTask;
         }
 
 
@@ -312,21 +313,15 @@ namespace Grand.Services.Media
                 if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
                     return GetThumbUrl(thumbFileName, storeLocation);
 
-                using (var semaphore = new Semaphore(1, 1, thumbFileName))
+                using (var mutex = new Mutex(false, thumbFileName))
                 {
-                    try
+                    mutex.WaitOne();
+                    using (var image = SKBitmap.Decode(filePath))
                     {
-                        semaphore.WaitOne();
-                        using (var image = SKBitmap.Decode(filePath))
-                        {
-                            var pictureBinary = await ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
-                            await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                        }
+                        var pictureBinary = await ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
+                        await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
+                    mutex.ReleaseMutex();
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
@@ -407,17 +402,11 @@ namespace Grand.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using (var semaphore = new Semaphore(1, 1, thumbFileName))
+                    using (var mutex = new Mutex(false, thumbFileName))
                     {
-                        try
-                        {
-                            semaphore.WaitOne();
-                            await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                        }
-                        finally
-                        {
-                            semaphore.Release();
-                        }
+                        mutex.WaitOne();
+                        await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                        mutex.ReleaseMutex();
                     }
                 }
             }
@@ -428,21 +417,15 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
-                    using (var semaphore = new Semaphore(1, 1, thumbFileName))
+                    using (var mutex = new Mutex(false, thumbFileName))
                     {
-                        try
+                        mutex.WaitOne();
+                        using (var image = SKBitmap.Decode(pictureBinary))
                         {
-                            semaphore.WaitOne();
-                            using (var image = SKBitmap.Decode(pictureBinary))
-                            {
-                                pictureBinary = await ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
-                            }
-                            await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                            pictureBinary = await ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
                         }
-                        finally
-                        {
-                            semaphore.Release();
-                        }
+                        await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                        mutex.ReleaseMutex();
                     }
             }
             url = GetThumbUrl(thumbFileName, storeLocation);
