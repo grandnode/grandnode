@@ -222,9 +222,9 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected virtual bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected virtual Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
-            return File.Exists(thumbFilePath);
+            return Task.FromResult(File.Exists(thumbFilePath));
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Grand.Services.Media
                     fileExtension);
 
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (GeneratedThumbExists(thumbFilePath, thumbFileName))
+                if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
                     return GetThumbUrl(thumbFileName, storeLocation);
 
                 using (var semaphore = new Semaphore(1, 1, thumbFileName))
@@ -405,7 +405,7 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
                     string.Format("{0}.{1}", picture.Id, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
                     using (var semaphore = new Semaphore(1, 1, thumbFileName))
                     {
@@ -427,7 +427,7 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
                     string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                     using (var semaphore = new Semaphore(1, 1, thumbFileName))
                     {
                         try

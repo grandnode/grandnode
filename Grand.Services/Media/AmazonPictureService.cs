@@ -26,6 +26,7 @@ namespace Grand.Services.Media
 
         private readonly GrandConfig _config;
         private readonly string _bucketName;
+        private bool _bucketExist = false;
         private readonly IAmazonS3 _s3Client;
 
         #endregion
@@ -76,35 +77,42 @@ namespace Grand.Services.Media
 
             //Bucket guard
             _bucketName = _config.AmazonBucketName;
-            var bucketExists = _s3Client.DoesS3BucketExistAsync(_bucketName).Result;
-            while (bucketExists == false)
-            {
-                S3Region s3region = S3Region.FindValue(_config.AmazonRegion);
-                var putBucketRequest = new PutBucketRequest
-                {
-                    BucketName = _bucketName,
-                    BucketRegion = s3region,
-                };
 
-                try
-                {
-                    EnsureValidResponse(_s3Client.PutBucketAsync(putBucketRequest).Result, HttpStatusCode.OK);
-
-                }
-                catch (AmazonS3Exception ex)
-                {
-                    if (ex.ErrorCode == "BucketAlreadyOwnedByYou")
-                        break;
-
-                    throw;
-                }
-                bucketExists = _s3Client.DoesS3BucketExistAsync(_bucketName).Result;
-            }
         }
 
         #endregion
 
         #region Utilities
+
+        private async Task CheckBucketExists()
+        {
+            if (!_bucketExist)
+            {
+                _bucketExist = await _s3Client.DoesS3BucketExistAsync(_bucketName);
+                while (_bucketExist == false)
+                {
+                    S3Region s3region = S3Region.FindValue(_config.AmazonRegion);
+                    var putBucketRequest = new PutBucketRequest {
+                        BucketName = _bucketName,
+                        BucketRegion = s3region,
+                    };
+
+                    try
+                    {
+                        EnsureValidResponse(await _s3Client.PutBucketAsync(putBucketRequest), HttpStatusCode.OK);
+
+                    }
+                    catch (AmazonS3Exception ex)
+                    {
+                        if (ex.ErrorCode == "BucketAlreadyOwnedByYou")
+                            break;
+
+                        throw;
+                    }
+                    _bucketExist = await _s3Client.DoesS3BucketExistAsync(_bucketName);
+                }
+            }
+        }
 
         /// <summary>
         /// Ensure Every Response Will Have Expected HttpStatusCode
@@ -123,6 +131,8 @@ namespace Grand.Services.Media
         /// <param name="picture">Picture</param>
         protected override async Task DeletePictureThumbs(Picture picture)
         {
+            await CheckBucketExists();
+
             var listObjectsRequest = new ListObjectsV2Request()
             {
                 BucketName = _bucketName,
@@ -143,7 +153,7 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbLocalPath(string thumbFileName)
         {
-            var url = string.Format("http://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+            var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
             return url;
         }
 
@@ -155,7 +165,7 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected override string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            var url = string.Format("http://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
+            var url = string.Format("https://{0}.s3.amazonAws.com/{1}", _bucketName, thumbFileName);
             return url;
         }
 
@@ -165,11 +175,12 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected override bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected override async Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
             try
             {
-                var getObjectResponse = _s3Client.GetObjectAsync(_bucketName, thumbFileName).Result;
+                await CheckBucketExists();
+                var getObjectResponse = await _s3Client.GetObjectAsync(_bucketName, thumbFileName);
                 EnsureValidResponse(getObjectResponse, HttpStatusCode.OK);
 
                 if (getObjectResponse.BucketName != _bucketName && getObjectResponse.Key != thumbFileName)
@@ -191,6 +202,8 @@ namespace Grand.Services.Media
         /// <param name="binary">Picture binary</param>
         protected override async Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
+            await CheckBucketExists();
+
             using (Stream stream = new MemoryStream(binary))
             {
                 var putObjectRequest = new PutObjectRequest()
@@ -210,6 +223,8 @@ namespace Grand.Services.Media
         /// </summary>
         public override async Task ClearThumbs()
         {
+            await CheckBucketExists();
+
             var listObjectsRequest = new ListObjectsV2Request()
             {
                 BucketName = _bucketName

@@ -3,7 +3,6 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
-using Grand.Services.Events;
 using Grand.Services.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -62,16 +61,23 @@ namespace Grand.Services.Media
 
             //should we do it for each HTTP request?
             blobClient = _storageAccount.CreateCloudBlobClient();
-            BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
-            containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-            container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
-            container_thumb.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-            container_thumb.SetPermissionsAsync(containerPermissions).GetAwaiter().GetResult();
         }
 
         #endregion
 
         #region Utilities
+
+        protected async Task InitContainerThumb()
+        {
+            if (container_thumb == null)
+            {
+                var containerPermissions = new BlobContainerPermissions();
+                containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
+                container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
+                await container_thumb.CreateIfNotExistsAsync();
+                await container_thumb.SetPermissionsAsync(containerPermissions);
+            }
+        }
 
         /// <summary>
         /// Delete picture thumbs
@@ -79,10 +85,11 @@ namespace Grand.Services.Media
         /// <param name="picture">Picture</param>
         protected override async Task DeletePictureThumbs(Picture picture)
         {
+            await InitContainerThumb();
+
             BlobContinuationToken continuationToken = null;
-            
             string filter = string.Format("{0}", picture.Id);
-            var files = container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null).Result;
+            var files = await container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null);
 
             foreach (var ff in files.Results)
             {
@@ -122,12 +129,13 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected override bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected override async Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
             try
             {
+                await InitContainerThumb();
                 CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-                return blockBlob.ExistsAsync().Result;
+                return await blockBlob.ExistsAsync();
             }
             catch (Exception ex)
             {
@@ -144,6 +152,8 @@ namespace Grand.Services.Media
         /// <param name="binary">Picture binary</param>
         protected override async Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
+            await InitContainerThumb();
+
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
         }
