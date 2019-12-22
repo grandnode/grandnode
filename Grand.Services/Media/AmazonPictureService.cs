@@ -60,20 +60,12 @@ namespace Grand.Services.Media
                 throw new ArgumentNullException("AmazonBucketName");
 
             //Region guard
-            RegionEndpoint regionEndpoint = RegionEndpoint.GetBySystemName(_config.AmazonRegion);
+            var regionEndpoint = RegionEndpoint.GetBySystemName(_config.AmazonRegion);
             if (regionEndpoint.DisplayName == "Unknown")
                 throw new NullReferenceException("specified Region is invalid");
 
             //Client guard
             _s3Client = new AmazonS3Client(_config.AmazonAwsAccessKeyId, _config.AmazonAwsSecretAccessKey, regionEndpoint);
-            try
-            {
-                EnsureValidResponse(_s3Client.ListBucketsAsync().Result, HttpStatusCode.OK);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
 
             //Bucket guard
             _bucketName = _config.AmazonBucketName;

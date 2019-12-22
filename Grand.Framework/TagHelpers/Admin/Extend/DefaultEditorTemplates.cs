@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,7 +25,7 @@ namespace Grand.Framework.TagHelpers.Admin
         private const string HtmlAttributeKey = "htmlAttributes";
         private const string UsePasswordValue = "Switch.Microsoft.AspNetCore.Mvc.UsePasswordValue";
 
-        public static IHtmlContent BooleanTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> BooleanTemplate(IHtmlHelper htmlHelper)
         {
             bool? value = null;
             if (htmlHelper.ViewData.Model != null)
@@ -33,28 +34,28 @@ namespace Grand.Framework.TagHelpers.Admin
             }
 
             return htmlHelper.ViewData.ModelMetadata.IsNullableValueType ?
-                BooleanTemplateDropDownList(htmlHelper, value) :
-                BooleanTemplateCheckbox(htmlHelper, value ?? false);
+                await BooleanTemplateDropDownList(htmlHelper, value) :
+                await BooleanTemplateCheckbox(htmlHelper, value ?? false);
         }
 
-        private static IHtmlContent BooleanTemplateCheckbox(IHtmlHelper htmlHelper, bool value)
+        private static async Task<IHtmlContent> BooleanTemplateCheckbox(IHtmlHelper htmlHelper, bool value)
         {
-            return htmlHelper.CheckBox(
+            return await Task.FromResult(htmlHelper.CheckBox(
                 expression: null,
                 isChecked: value,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "check-box"));
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "check-box")));
         }
 
-        private static IHtmlContent BooleanTemplateDropDownList(IHtmlHelper htmlHelper, bool? value)
+        private static async Task<IHtmlContent> BooleanTemplateDropDownList(IHtmlHelper htmlHelper, bool? value)
         {
-            return htmlHelper.DropDownList(
+            return await Task.FromResult(htmlHelper.DropDownList(
                 expression: null,
                 selectList: DefaultDisplayTemplates.TriStateValues(value),
                 optionLabel: null,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "list-box tri-state"));
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "list-box tri-state")));
         }
 
-        public static IHtmlContent CollectionTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> CollectionTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var model = viewData.Model;
@@ -119,7 +120,7 @@ namespace Grand.Framework.TagHelpers.Admin
                         templateName: null,
                         readOnly: false,
                         additionalViewData: null);
-                    result.AppendHtml(templateBuilder.Build());
+                    result.AppendHtml(await templateBuilder.Build());
                 }
 
                 return result;
@@ -130,7 +131,7 @@ namespace Grand.Framework.TagHelpers.Admin
             }
         }
 
-        public static IHtmlContent DecimalTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> DecimalTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper.ViewData.TemplateInfo.FormattedModelValue == htmlHelper.ViewData.Model)
             {
@@ -138,10 +139,10 @@ namespace Grand.Framework.TagHelpers.Admin
                     string.Format(CultureInfo.CurrentCulture, "{0:0.00}", htmlHelper.ViewData.Model);
             }
 
-            return StringTemplate(htmlHelper);
+            return await StringTemplate(htmlHelper);
         }
 
-        public static IHtmlContent HiddenInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> HiddenInputTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var model = viewData.Model;
@@ -153,7 +154,7 @@ namespace Grand.Framework.TagHelpers.Admin
             }
             else
             {
-                display = DefaultDisplayTemplates.StringTemplate(htmlHelper);
+                display = await DefaultDisplayTemplates.StringTemplate(htmlHelper);
             }
 
             var htmlAttributesObject = viewData[HtmlAttributeKey];
@@ -218,17 +219,17 @@ namespace Grand.Framework.TagHelpers.Admin
             return htmlAttributes;
         }
 
-        public static IHtmlContent MultilineTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> MultilineTemplate(IHtmlHelper htmlHelper)
         {
-            return htmlHelper.TextArea(
+            return await Task.FromResult(htmlHelper.TextArea(
                 expression: string.Empty,
                 value: htmlHelper.ViewContext.ViewData.TemplateInfo.FormattedModelValue.ToString(),
                 rows: 0,
                 columns: 0,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box multi-line"));
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box multi-line")));
         }
 
-        public static IHtmlContent ObjectTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> ObjectTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var templateInfo = viewData.TemplateInfo;
@@ -274,7 +275,7 @@ namespace Grand.Framework.TagHelpers.Admin
                     readOnly: false,
                     additionalViewData: null);
 
-                var templateBuilderResult = templateBuilder.Build();
+                var templateBuilderResult = await templateBuilder.Build();
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
                     var label = htmlHelper.Label(propertyMetadata.PropertyName, labelText: null, htmlAttributes: null);
@@ -312,7 +313,7 @@ namespace Grand.Framework.TagHelpers.Admin
             return content;
         }
 
-        public static IHtmlContent PasswordTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> PasswordTemplate(IHtmlHelper htmlHelper)
         {
             object value = null;
             if (AppContext.TryGetSwitch(UsePasswordValue, out var usePasswordValue) && usePasswordValue)
@@ -320,10 +321,10 @@ namespace Grand.Framework.TagHelpers.Admin
                 value = htmlHelper.ViewData.TemplateInfo.FormattedModelValue;
             }
 
-            return htmlHelper.Password(
+            return await Task.FromResult(htmlHelper.Password(
                 expression: null,
                 value: value,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box single-line password"));
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box single-line password")));
         }
 
         private static bool ShouldShow(ModelExplorer modelExplorer, TemplateInfo templateInfo)
@@ -334,79 +335,79 @@ namespace Grand.Framework.TagHelpers.Admin
                 !templateInfo.Visited(modelExplorer);
         }
 
-        public static IHtmlContent StringTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> StringTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper);
+            return await Task.FromResult(GenerateTextBox(htmlHelper));
         }
 
-        public static IHtmlContent PhoneNumberInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> PhoneNumberInputTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper, inputType: "tel");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "tel"));
         }
 
-        public static IHtmlContent UrlInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> UrlInputTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper, inputType: "url");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "url"));
         }
 
-        public static IHtmlContent EmailAddressInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> EmailAddressInputTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper, inputType: "email");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "email"));
         }
 
-        public static IHtmlContent DateTimeOffsetTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> DateTimeOffsetTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, @"{0:yyyy-MM-ddTHH\:mm\:ss.fffK}");
-            return GenerateTextBox(htmlHelper, inputType: "text");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "text"));
         }
 
-        public static IHtmlContent DateTimeLocalInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> DateTimeLocalInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, @"{0:yyyy-MM-ddTHH\:mm\:ss.fff}");
-            return GenerateTextBox(htmlHelper, inputType: "datetime-local");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "datetime-local"));
         }
 
-        public static IHtmlContent DateInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> DateInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:yyyy-MM-dd}");
-            return GenerateTextBox(htmlHelper, inputType: "date");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "date"));
         }
 
-        public static IHtmlContent TimeInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> TimeInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, @"{0:HH\:mm\:ss.fff}");
-            return GenerateTextBox(htmlHelper, inputType: "time");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "time"));
         }
 
-        public static IHtmlContent MonthInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> MonthInputTemplate(IHtmlHelper htmlHelper)
         {
             // "month" is a new HTML5 input type that only will be rendered in Rfc3339 mode
             htmlHelper.Html5DateRenderingMode = Html5DateRenderingMode.Rfc3339;
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:yyyy-MM}");
-            return GenerateTextBox(htmlHelper, inputType: "month");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "month"));
         }
 
-        public static IHtmlContent WeekInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> WeekInputTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper, inputType: "week");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "week"));
         }
 
-        public static IHtmlContent NumberInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> NumberInputTemplate(IHtmlHelper htmlHelper)
         {
-            return GenerateTextBox(htmlHelper, inputType: "number");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "number"));
         }
 
-        public static IHtmlContent FileInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> FileInputTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper == null)
             {
                 throw new ArgumentNullException(nameof(htmlHelper));
             }
 
-            return GenerateTextBox(htmlHelper, inputType: "file");
+            return await Task.FromResult(GenerateTextBox(htmlHelper, inputType: "file"));
         }
 
-        public static IHtmlContent FileCollectionInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> FileCollectionInputTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper == null)
             {
@@ -417,7 +418,7 @@ namespace Grand.Framework.TagHelpers.Admin
                 CreateHtmlAttributes(htmlHelper, className: "text-box single-line", inputType: "file");
             htmlAttributes["multiple"] = "multiple";
 
-            return GenerateTextBox(htmlHelper, htmlHelper.ViewData.TemplateInfo.FormattedModelValue, htmlAttributes);
+            return await Task.FromResult(GenerateTextBox(htmlHelper, htmlHelper.ViewData.TemplateInfo.FormattedModelValue, htmlAttributes));
         }
 
         private static void ApplyRfc3339DateFormattingIfNeeded(IHtmlHelper htmlHelper, string format)
