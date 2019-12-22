@@ -142,11 +142,10 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="binary">Picture binary</param>
-        protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected override async Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-            blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length).GetAwaiter().GetResult();
-
+            await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
         }
 
         #endregion

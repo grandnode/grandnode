@@ -189,7 +189,7 @@ namespace Grand.Services.Media
         /// <param name="thumbFilePath">Thumb file path (unused in Amazon S3)</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="binary">Picture binary</param>
-        protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected override async Task SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
             using (Stream stream = new MemoryStream(binary))
             {
@@ -200,9 +200,9 @@ namespace Grand.Services.Media
                     Key = thumbFileName,
                     StorageClass = S3StorageClass.Standard,
                 };
-                EnsureValidResponse(_s3Client.PutObjectAsync(putObjectRequest).Result, HttpStatusCode.OK);
+                EnsureValidResponse(await _s3Client.PutObjectAsync(putObjectRequest), HttpStatusCode.OK);
             }
-            _s3Client.MakeObjectPublicAsync(_bucketName, thumbFileName, true).GetAwaiter().GetResult();
+            await _s3Client.MakeObjectPublicAsync(_bucketName, thumbFileName, true);
         }
 
         /// <summary>
