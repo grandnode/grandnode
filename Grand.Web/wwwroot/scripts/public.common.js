@@ -12,10 +12,16 @@ function MenuScroll() {
     var body = document.body;
     var scrollUp = "scroll-up";
     var scrollDown = "scroll-down";
+    var onTop = "onTop";
     let lastScroll = 0;
 
-    window.addEventListener("scroll", () => {
+    $(document).scroll(function () {
         var currentScroll = window.pageYOffset;
+        if ($(this).scrollTop() <= 120) {
+            $(body).addClass(onTop);
+        } else {
+            $(body).removeClass(onTop);
+        }
         if (currentScroll > lastScroll && !$(body).hasClass(scrollDown)) {
             // down
             $(body).removeClass(scrollUp);
