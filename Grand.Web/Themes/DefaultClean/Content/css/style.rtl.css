@@ -2349,6 +2349,7 @@ list settings .list__item,
     font-size: 16px;
     font-weight: 500;
     color: #17a2b8;
+	text-align: right;
     line-height: 1;
 }
 .product-box .prices .old-price {
