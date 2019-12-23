@@ -101,6 +101,11 @@ namespace Grand.Core.Domain.Catalog
         public string Icon { get; set; }
 
         /// <summary>
+        /// Gets or sets the Default sort
+        /// </summary>
+        public int DefaultSort { get; set; } = -1;
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
  	    /// </summary>
         public bool SubjectToAcl { get; set; }

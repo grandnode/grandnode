@@ -25,6 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             AvailableManufacturerTemplates = new List<SelectListItem>();
             AvailableStores = new List<StoreModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
+            AvailableSortOptions = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -83,6 +84,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Icon")]
         public string Icon { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.DefaultSort")]
+        public int DefaultSort { get; set; }
+        public IList<SelectListItem> AvailableSortOptions { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Published")]
         public bool Published { get; set; }

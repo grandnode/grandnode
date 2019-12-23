@@ -940,6 +940,9 @@ namespace Grand.Web.Services
             var model = manufacturer.ToModel(_workContext.WorkingLanguage);
             var currency = _workContext.WorkingCurrency;
 
+            if (command != null && command.OrderBy == null && manufacturer.DefaultSort >= 0)
+                command.OrderBy = manufacturer.DefaultSort;
+
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode

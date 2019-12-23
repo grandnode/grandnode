@@ -140,6 +140,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.PageSizeOptions = catalogSettings.DefaultManufacturerPageSizeOptions;
             model.Published = true;
             model.AllowCustomersToSelectPageSize = true;
+            //sort options
+            _manufacturerViewModelService.PrepareSortOptionsModel(model);
 
             return View(model);
         }
@@ -169,6 +171,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await model.PrepareACLModel(null, true, _customerService);
             //Stores
             await model.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
+            //sort options
+            _manufacturerViewModelService.PrepareSortOptionsModel(model);
 
             return View(model);
         }
@@ -210,6 +214,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await model.PrepareACLModel(manufacturer, false, _customerService);
             //Stores
             await model.PrepareStoresMappingModel(manufacturer, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
+            //sort options
+            _manufacturerViewModelService.PrepareSortOptionsModel(model);
 
             return View(model);
         }
@@ -257,6 +263,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             await model.PrepareACLModel(manufacturer, true, _customerService);
             //Stores
             await model.PrepareStoresMappingModel(manufacturer, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
+            //sort options
+            _manufacturerViewModelService.PrepareSortOptionsModel(model);
 
             return View(model);
         }
