@@ -4307,6 +4307,8 @@ footer .socicon-pinterest:hover {
     .flyout-cart .count, .flyout-cart .count a {
         font-size: 16px;
     }
+}
+@media screen and (max-width: 1400px) and (min-width: 1200px) {
 	::-webkit-scrollbar-track {
 		width: 6px;
 		-webkit-box-shadow: none;
@@ -4906,15 +4908,16 @@ footer .socicon-pinterest:hover {
 		background: #fff;
 		border-bottom: 1px solid #f2f2f2;
 		-webkit-transform: translateZ(0);
-		-webkit-transition: transform .3s ease;
-		transition: transform .3s ease;
+		-webkit-transition: transform .2s ease;
+		transition: transform .2s ease;
 		z-index: 1037;
 	}
-	body.scroll-down header {
+	body.scroll-down:not(.onTop) header {
 		-webkit-transform: translateY(-100%);
 		transform: translateY(-100%);
 	}
-	body.scroll-up header {
+	body.scroll-up header,
+	body.onTop header {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
 	}
@@ -5096,6 +5099,7 @@ footer .socicon-pinterest:hover {
         white-space: nowrap;
         text-overflow: ellipsis;
         max-width: 150px;
+		min-width: 150px;
     }
     .flyout-cart .flyout-cart-bottom strong {
         font-size: 18px;
@@ -5962,7 +5966,7 @@ footer .socicon-pinterest:hover {
 	}
     .product-box .labels {
         top: 5px;
-        left: 5px;
+        right: 5px;
     }
 	.product-simple-share .btn:not(.add-to-cart-button) {
 		margin: 10px 0 0 0;
