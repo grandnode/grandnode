@@ -19,10 +19,10 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.4.0" />
-    <PackageReference Include="MongoDB.Bson" Version="2.9.3" />
-    <PackageReference Include="MongoDB.Driver" Version="2.9.3" />
-    <PackageReference Include="MongoDB.Driver.Core" Version="2.9.3" />
-    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.9.3" />
+    <PackageReference Include="MongoDB.Bson" Version="2.10.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.10.0" />
+    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.10.0" />
     <PackageReference Include="DotLiquid" Version="2.0.314" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />

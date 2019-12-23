@@ -50,6 +50,22 @@ namespace Grand.Core
             PageIndex = pageIndex;
         }
 
+        private async Task InitializeAsync(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var range = source.Skip(pageIndex * pageSize).Limit(pageSize + 1).ToList();
+            int total = range.Count > pageSize ? range.Count : pageSize;
+            TotalCount = (await source.ToListAsync()).Count;
+            if (pageSize > 0)
+                TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            AddRange(range.Take(pageSize));
+        }
+
         private void Initialize(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
             if (source == null)
@@ -85,7 +101,12 @@ namespace Grand.Core
             await pagelist.InitializeAsync(source, pageIndex, pageSize);
             return pagelist;
         }
-
+        public static async Task<PagedList<T>> Create(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var pagelist = new PagedList<T>();
+            await pagelist.InitializeAsync(source, pageIndex, pageSize);
+            return pagelist;
+        }
 
         public PagedList()
         {
@@ -95,22 +116,6 @@ namespace Grand.Core
             Initialize(source, pageIndex, pageSize);
         }
         
-        public PagedList(IAggregateFluent<T> source, int pageIndex, int pageSize)
-        {
-            var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
-            int total = range.Count > pageSize ? range.Count : pageSize;
-            TotalCount = source.ToListAsync().Result.Count;
-            if(pageSize > 0)
-                TotalPages = total / pageSize;
-
-            if (total % pageSize > 0)
-                TotalPages++;
-
-            PageSize = pageSize;
-            PageIndex = pageIndex;
-            AddRange(range.Take(pageSize));
-        }
-
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
             Initialize(source, pageIndex, pageSize, totalCount);

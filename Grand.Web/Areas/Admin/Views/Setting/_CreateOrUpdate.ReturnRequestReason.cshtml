@@ -2,7 +2,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input id="active-menu-item" type="hidden" value="/Admin/Setting/Order" />
-@(Html.LocalizedEditor<ReturnRequestReasonModel, ReturnRequestReasonLocalizedModel>("returnrequestreason-localized",
+@(await Html.LocalizedEditor<ReturnRequestReasonModel, ReturnRequestReasonLocalizedModel>("returnrequestreason-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">

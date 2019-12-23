@@ -908,9 +908,16 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Payment methods
 
-        public static PaymentMethodModel ToModel(this IPaymentMethod entity)
+        public static async Task<PaymentMethodModel> ToModel(this IPaymentMethod entity)
         {
-            return entity.MapTo<IPaymentMethod, PaymentMethodModel>();
+            var paymentmethod = entity.MapTo<IPaymentMethod, PaymentMethodModel>();
+
+            paymentmethod.SupportCapture = await entity.SupportCapture();
+            paymentmethod.SupportPartiallyRefund = await entity.SupportPartiallyRefund();
+            paymentmethod.SupportRefund = await entity.SupportRefund();
+            paymentmethod.SupportVoid = await entity.SupportVoid();
+
+            return paymentmethod;
         }
 
         #endregion

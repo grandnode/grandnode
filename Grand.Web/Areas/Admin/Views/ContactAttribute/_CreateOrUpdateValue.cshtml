@@ -17,7 +17,7 @@
     </script>
 }
 <vc:admin-widget widget-zone="contact_attribute_top" additional-data="Model" />
-@(Html.LocalizedEditor<ContactAttributeValueModel, ContactAttributeValueLocalizedModel>("contactattributevalue-localized",
+@(await Html.LocalizedEditor<ContactAttributeValueModel, ContactAttributeValueLocalizedModel>("contactattributevalue-localized",
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">

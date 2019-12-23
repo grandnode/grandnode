@@ -12,7 +12,7 @@
     </script>
 }
     <vc:admin-widget widget-zone="product_attribute_predefined_values_details_top" additional-data="Model" />
-@(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
+@(await Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">

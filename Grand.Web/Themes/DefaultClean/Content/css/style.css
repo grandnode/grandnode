@@ -2223,6 +2223,7 @@ list settings .list__item,
     font-size: 16px;
     font-weight: 500;
     color: #17a2b8;
+	text-align: left;
     line-height: 1;
 }
 .product-box .prices .old-price {
@@ -4124,6 +4125,8 @@ footer .socicon-pinterest:hover {
 	.flyout-cart .count, .flyout-cart .count a {
 		font-size: 16px;
 	}
+}
+@media screen and (max-width: 1400px) and (min-width: 1200px) {
 	::-webkit-scrollbar-track {
 		width: 6px;
 		-webkit-box-shadow: none;
@@ -4719,15 +4722,16 @@ footer .socicon-pinterest:hover {
 		width: 100%;
 		background: #fff;
 		border-bottom: 1px solid #f2f2f2;
-		-webkit-transition: transform .3s ease;
-		transition: transform .3s ease;
+		-webkit-transition: transform .2s ease;
+		transition: transform .2s ease;
 		z-index: 1037;
 	}
-	body.scroll-down header {
+	body.scroll-down:not(.onTop) header {
 		-webkit-transform: translateY(-100%);
 		transform: translateY(-100%);
 	}
-	body.scroll-up header {
+	body.scroll-up header,
+	body.onTop header {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
 	}
@@ -4903,6 +4907,7 @@ footer .socicon-pinterest:hover {
         white-space: nowrap;
         text-overflow: ellipsis;
         max-width: 150px;
+		min-width: 150px;
     }
     .flyout-cart .flyout-cart-bottom strong {
         font-size: 18px;

@@ -121,7 +121,6 @@ namespace Grand.Web.Areas.Admin.Services
 
             model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList().ToList();
             model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
-
         }
 
         protected void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)

@@ -57,7 +57,7 @@ namespace Grand.Framework.Seo
             if (SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
             {
                 await PrepareLanguages(context.HttpContext);
-                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
+                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, await LanguagesAsync(context.HttpContext), out Language language))
                     path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
             }
             //parse route data

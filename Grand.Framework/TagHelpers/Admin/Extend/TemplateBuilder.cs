@@ -3,6 +3,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -76,7 +77,7 @@ namespace Grand.Framework.TagHelpers.Admin
             _metadata = modelExplorer.Metadata;
         }
 
-        public IHtmlContent Build()
+        public async Task<IHtmlContent> Build()
         {
             if (_metadata.ConvertEmptyStringToNull && string.Empty.Equals(_model))
             {
@@ -152,7 +153,7 @@ namespace Grand.Framework.TagHelpers.Admin
                 _templateName,
                 _readOnly);
 
-            return templateRenderer.Render();
+            return await templateRenderer.Render();
         }
     }
 }

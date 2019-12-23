@@ -343,7 +343,7 @@ namespace Grand.Services.Logging
                     })
                     .SortByDescending(x => x.Count);
 
-            return await Task.FromResult(new PagedList<ActivityStats>(query, pageIndex, pageSize));
+            return await PagedList<ActivityStats>.Create(query, pageIndex, pageSize);
         }
         /// <summary>
         /// Gets category activity log items

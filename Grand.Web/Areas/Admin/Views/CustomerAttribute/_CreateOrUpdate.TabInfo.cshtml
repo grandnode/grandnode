@@ -18,7 +18,7 @@
 
 </script>
 <vc:admin-widget widget-zone="customer_attribute_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+@(await Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

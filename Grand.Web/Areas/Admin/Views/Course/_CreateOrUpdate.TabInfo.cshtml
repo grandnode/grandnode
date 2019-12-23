@@ -13,7 +13,7 @@
     }
 </script>
 <vc:admin-widget widget-zone="course_details_info_top" additional-data="Model" />
-@(Html.LocalizedEditor<CourseModel, CourseLocalizedModel>("course-info-localized",
+@(await Html.LocalizedEditor<CourseModel, CourseLocalizedModel>("course-info-localized",
             @<div class="form-horizontal">
                  <div class="form-body">
                      <div class="form-group">

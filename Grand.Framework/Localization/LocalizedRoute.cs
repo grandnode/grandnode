@@ -42,23 +42,23 @@ namespace Grand.Framework.Localization
         /// </summary>
         /// <param name="context">A context for virtual path generation operations</param>
         /// <returns>Information about the route and virtual path</returns>
-        public override VirtualPathData GetVirtualPath(VirtualPathContext context)
-        {
-            //get base virtual path
-            var data = base.GetVirtualPath(context);
-            if (data == null)
-                return null;
+        //public override VirtualPathData GetVirtualPath(VirtualPathContext context)
+        //{
+        //    //get base virtual path
+        //    var data = base.GetVirtualPath(context);
+        //    if (data == null)
+        //        return null;
 
-            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
-                return data;
+        //    if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled(context.HttpContext))
+        //        return data;
 
-            //add language code to page URL in case if it's localized URL
-            var path = context.HttpContext.Request.Path.Value;
-            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
-                data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
+        //    //add language code to page URL in case if it's localized URL
+        //    var path = context.HttpContext.Request.Path.Value;
+        //    if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
+        //        data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
 
-            return data;
-        }
+        //    return data;
+        //}
 
         /// <summary>
         /// Route request to the particular action
@@ -77,7 +77,7 @@ namespace Grand.Framework.Localization
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, Languages(context.HttpContext), out Language language))
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, await LanguagesAsync(context.HttpContext), out Language language))
             {
                 await base.RouteAsync(context);
                 return;
@@ -138,11 +138,20 @@ namespace Grand.Framework.Localization
         /// <summary>
         /// Gets all languges
         /// </summary>
-        protected IList<Language> Languages(HttpContext context)
+        //protected IList<Language> Languages(HttpContext context)
+        //{
+        //    if (_languages == null)
+        //    {
+        //        PrepareLanguages(context).GetAwaiter().GetResult();
+        //    }
+        //    return _languages;
+        //}
+
+        protected async Task<IList<Language>> LanguagesAsync(HttpContext context)
         {
             if (_languages == null)
             {
-                PrepareLanguages(context).GetAwaiter().GetResult();
+                await PrepareLanguages(context);
             }
             return _languages;
         }

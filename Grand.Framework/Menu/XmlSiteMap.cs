@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Grand.Framework.Menu
@@ -23,7 +24,7 @@ namespace Grand.Framework.Menu
 
         public SiteMapNode RootNode { get; set; }
 
-        public virtual void LoadFrom(string physicalPath)
+        public virtual async Task LoadFrom(string physicalPath)
         {
             string filePath = CommonHelper.MapPath(physicalPath);
             string content = File.ReadAllText(filePath);
@@ -47,16 +48,16 @@ namespace Grand.Framework.Menu
                         if ((doc.DocumentElement != null) && doc.HasChildNodes)
                         {
                             XmlNode xmlRootNode = doc.DocumentElement.FirstChild;
-                            Iterate(RootNode, xmlRootNode);
+                            await Iterate(RootNode, xmlRootNode);
                         }
                     }
                 }
             }
         }
 
-        private void Iterate(SiteMapNode siteMapNode, XmlNode xmlNode)
+        private async Task Iterate(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
-            PopulateNode(siteMapNode, xmlNode);
+            await PopulateNode(siteMapNode, xmlNode);
 
             foreach (XmlNode xmlChildNode in xmlNode.ChildNodes)
             {
@@ -65,12 +66,12 @@ namespace Grand.Framework.Menu
                     var siteMapChildNode = new SiteMapNode();
                     siteMapNode.ChildNodes.Add(siteMapChildNode);
 
-                    Iterate(siteMapChildNode, xmlChildNode);
+                    await Iterate(siteMapChildNode, xmlChildNode);
                 }
             }
         }
 
-        private void PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
+        private async Task PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
             //system name
             siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
@@ -105,13 +106,21 @@ namespace Grand.Framework.Menu
                 var fullpermissions = GetStringValueFromAttribute(xmlNode, "AllPermissions");
                 if (!string.IsNullOrEmpty(fullpermissions) && fullpermissions == "true")
                 {
-                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                       .All(permissionName => _permissionService.Authorize(permissionName.Trim()).Result);
+                    siteMapNode.Visible = true;
+                    foreach (var permissionName in permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (!await _permissionService.Authorize(permissionName.Trim()))
+                            siteMapNode.Visible = false;
+                    }
                 }
                 else
                 {
-                    siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                       .Any(permissionName => _permissionService.Authorize(permissionName.Trim()).Result);
+                    siteMapNode.Visible = false;
+                    foreach (var permissionName in permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (await _permissionService.Authorize(permissionName.Trim()))
+                            siteMapNode.Visible = true;
+                    }
                 }
             }
             else

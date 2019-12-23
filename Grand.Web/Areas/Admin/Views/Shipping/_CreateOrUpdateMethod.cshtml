@@ -3,7 +3,7 @@
 <input asp-for="Id" type="hidden" />
 <vc:admin-widget widget-zone="shipping_method_details_top" additional-data="Model" />
 <input id="active-menu-item" type="hidden" value="/Admin/Shipping/Methods" />
-@(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
+@(await Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
     @<div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">

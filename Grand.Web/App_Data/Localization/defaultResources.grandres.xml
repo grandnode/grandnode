@@ -2685,6 +2685,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this manufacturer</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
