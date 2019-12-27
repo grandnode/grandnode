@@ -148,10 +148,10 @@ namespace Grand.Web.Areas.Admin.Services
                     var shipmentTracker = srcm.ShipmentTracker;
                     if (shipmentTracker != null)
                     {
-                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                        model.TrackingNumberUrl = await shipmentTracker.GetUrl(shipment.TrackingNumber);
                         if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                         {
-                            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                            var shipmentEvents = await shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
                             if (shipmentEvents != null)
                             {
                                 foreach (var shipmentEvent in shipmentEvents)
