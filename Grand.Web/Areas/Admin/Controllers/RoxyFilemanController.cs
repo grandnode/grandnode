@@ -250,7 +250,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         await CreateThumbnail(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
-                        await UploadFilesAsync(HttpContext.Request.Form["d"]);
+                        var form = await HttpContext.Request.ReadFormAsync();
+                        await UploadFilesAsync(form["d"]);
                         break;
                     default:
                         await HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
@@ -259,7 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !IsAjaxRequest())
+                if (action == "UPLOAD" && !await IsAjaxRequest())
                     await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
                     await HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
@@ -998,11 +999,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// Whether the request is made with ajax 
         /// </summary>
         /// <returns>True or false</returns>
-        protected virtual bool IsAjaxRequest()
+        protected virtual async Task<bool> IsAjaxRequest()
         {
-            return HttpContext.Request.Form != null &&
-                !StringValues.IsNullOrEmpty(HttpContext.Request.Form["method"]) &&
-                HttpContext.Request.Form["method"] == "ajax";
+            var form = await HttpContext.Request.ReadFormAsync();
+            return form != null &&
+                !StringValues.IsNullOrEmpty(form["method"]) &&
+                form["method"] == "ajax";
         }
 
         /// <summary>
@@ -1017,9 +1019,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < HttpContext.Request.Form.Files.Count; i++)
+                var form = await HttpContext.Request.ReadFormAsync();
+                for (var i = 0; i < form.Files.Count; i++)
                 {
-                    var fileName = HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = form.Files[i].FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
@@ -1027,7 +1030,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            form.Files[i].CopyTo(stream);
                         }
                     }
                     else
@@ -1041,7 +1044,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
-            if (IsAjaxRequest())
+            if (await IsAjaxRequest())
             {
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));

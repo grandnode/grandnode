@@ -901,7 +901,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -932,7 +932,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1020,7 +1020,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1062,7 +1062,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
                     //selected tab
-                    SaveSelectedTabIndex(persistForTheNextRequest: false);
+                    await SaveSelectedTabIndex(persistForTheNextRequest: false);
                     var model = new OrderModel();
                     await _orderViewModelService.PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -1081,7 +1081,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -1107,7 +1107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1149,7 +1149,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1190,7 +1190,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }

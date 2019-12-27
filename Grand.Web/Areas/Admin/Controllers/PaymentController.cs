@@ -256,7 +256,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
             return RedirectToAction("MethodRestrictions");
         }
         #endregion

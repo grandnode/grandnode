@@ -72,7 +72,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> AsyncUpload()
         {
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var form = await HttpContext.Request.ReadFormAsync();
+            var httpPostedFile = form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -87,8 +88,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (String.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
+                fileName = form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
 

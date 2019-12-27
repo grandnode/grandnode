@@ -660,7 +660,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _shipmentService.UpdateShipment(shipment);
             
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
         }

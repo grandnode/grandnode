@@ -1479,7 +1479,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Catalog");
         }
@@ -1826,7 +1826,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Order");
         }
@@ -1975,11 +1975,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Return request reasons
 
-        public IActionResult ReturnRequestReasonList()
+        public async Task<IActionResult> ReturnRequestReasonList()
         {
             //select second tab
             const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            await SaveSelectedTabIndex(customerFormFieldIndex);
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
@@ -2048,7 +2048,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("ReturnRequestReasonEdit", new { id = rrr.Id });
                 }
@@ -2073,11 +2073,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Return request actions
 
-        public IActionResult ReturnRequestActionList()
+        public async Task<IActionResult> ReturnRequestActionList()
         {
             //select second tab
             const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            await SaveSelectedTabIndex(customerFormFieldIndex);
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
@@ -2145,7 +2145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("ReturnRequestActionEdit", new { id = rra.Id });
                 }
@@ -2385,7 +2385,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("CustomerUser");
         }
@@ -2973,7 +2973,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -3051,7 +3051,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -3087,7 +3087,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
