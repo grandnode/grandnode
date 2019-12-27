@@ -38,7 +38,7 @@ namespace Grand.Framework.TagHelpers.Admin
             var content = await output.GetChildContentAsync();
             var list = (List<string>)ViewContext.ViewData[typeof(AdminTabContentTagHelper).FullName];
             if (_resolver.Device.Type != DeviceType.Desktop && SetTabPos)
-                SetTabPos = false;
+                SetTabPos = true;
 
             output.TagName = "div";
             output.Attributes.SetAttribute("id", Name);
