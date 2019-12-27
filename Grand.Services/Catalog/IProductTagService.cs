@@ -60,6 +60,6 @@ namespace Grand.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
-        int GetProductCount(string productTagId, string storeId);
+        Task<int> GetProductCount(string productTagId, string storeId);
     }
 }
