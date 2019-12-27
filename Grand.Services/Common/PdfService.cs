@@ -1293,7 +1293,7 @@ namespace Grand.Services.Common
                         var pp = await _pictureService.GetPictureById(pic.PictureId);
                         if (pp != null)
                         {
-                            var picBinary = pp.PictureBinary;
+                            var picBinary = await _pictureService.LoadPictureBinary(pp);
                             if (picBinary != null && picBinary.Length > 0)
                             {
                                 var pictureLocalPath = await _pictureService.GetThumbLocalPath(pp, 200, false);

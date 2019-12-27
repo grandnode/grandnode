@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Media
 {
@@ -362,24 +364,20 @@ namespace Grand.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            string url = string.Empty;
-            byte[] pictureBinary = null;
-            if (picture != null)
-                pictureBinary = await LoadPictureBinary(picture);
-
-            if (picture == null || pictureBinary == null || pictureBinary.Length == 0)
+            if (picture == null)
             {
-                if (showDefaultPicture)
-                {
-                    url = await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
-                }
-                return url;
+                return showDefaultPicture ? await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
             }
 
-            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string thumbFileName;
+            byte[] pictureBinary = null;
+
             if (picture.IsNew)
             {
+                if ((picture.PictureBinary?.Length ?? 0) == 0)
+                    pictureBinary = await LoadPictureBinary(picture);
+                else
+                    pictureBinary = picture.PictureBinary;
+
                 await DeletePictureThumbs(picture);
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
@@ -394,14 +392,19 @@ namespace Grand.Services.Media
             }
 
             string seoFileName = picture.SeoFilename;
+            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
+            string thumbFileName;
+
             if (targetSize == 0)
             {
-                thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
+                thumbFileName = !string.IsNullOrEmpty(seoFileName) ?
                     string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
                     string.Format("{0}.{1}", picture.Id, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
+                    pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
+
                     using (var mutex = new Mutex(false, thumbFileName))
                     {
                         mutex.WaitOne();
@@ -417,6 +420,9 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
+                {
+                    pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
+
                     using (var mutex = new Mutex(false, thumbFileName))
                     {
                         mutex.WaitOne();
@@ -427,9 +433,9 @@ namespace Grand.Services.Media
                         await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                         mutex.ReleaseMutex();
                     }
+                }
             }
-            url = GetThumbUrl(thumbFileName, storeLocation);
-            return url;
+            return GetThumbUrl(thumbFileName, storeLocation);
         }
 
         /// <summary>
@@ -459,7 +465,10 @@ namespace Grand.Services.Media
         /// <returns>Picture</returns>
         public virtual Task<Picture> GetPictureById(string pictureId)
         {
-            return _pictureRepository.GetByIdAsync(pictureId);
+            var query = _pictureRepository.Table
+                .Where(p => p.Id == pictureId)
+                .Select(p => new Picture { Id = p.Id, AltAttribute = p.AltAttribute, IsNew = p.IsNew, MimeType = p.MimeType, SeoFilename = p.SeoFilename, TitleAttribute = p.TitleAttribute });
+            return query.FirstOrDefaultAsync();
         }
 
         /// <summary>
