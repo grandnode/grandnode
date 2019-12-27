@@ -37,6 +37,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Helpers;
+using Grand.Services.Documents;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -76,6 +77,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDocumentService _documentService;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -117,6 +119,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper,
+            IDocumentService documentService,
             CurrencySettings currencySettings,
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -162,6 +165,7 @@ namespace Grand.Web.Areas.Admin.Controllers
              _shippingSettings = shippingSettings;
              _customerService = customerService;
              _mediaSettings = mediaSettings;
+            _documentService = documentService;
         }
 
         #region Shipments
@@ -633,6 +637,34 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("save-generic-attributes")]
+        public async Task<IActionResult> EditGenericAttributes(string id, ShipmentModel model)
+        {
+            var shipment = await _shipmentService.GetShipmentById(id);
+            if (shipment == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+
+            shipment.GenericAttributes = model.GenericAttributes;
+            await _shipmentService.UpdateShipment(shipment);
+            
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+            return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+        }
+
         public async Task<IActionResult> PdfPackagingSlip(string shipmentId)
         {
             var shipment = await _shipmentService.GetShipmentById(shipmentId);
@@ -834,6 +866,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             return Json(new { Result = true });
+        }
+
+        #endregion
+
+        #region Documents
+
+        [HttpPost]
+        public async Task<IActionResult> DocumentList(DataSourceRequest command, string shipmentId)
+        {
+            var documents = await _documentService.GetAll(objectId: shipmentId, reference: (int)Core.Domain.Documents.Reference.Shipment,
+                pageSize: command.PageSize, pageIndex: command.Page - 1);
+            var gridModel = new DataSourceResult {
+                Data = documents.ToList(),
+                Total = documents.TotalCount
+            };
+            return Json(gridModel);
         }
 
         #endregion

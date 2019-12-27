@@ -94,6 +94,7 @@ namespace Grand.Web.Areas.Admin.Services
                 DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 AdminComment = shipment.AdminComment,
+                GenericAttributes = shipment.GenericAttributes
             };
 
             if (prepareProducts)

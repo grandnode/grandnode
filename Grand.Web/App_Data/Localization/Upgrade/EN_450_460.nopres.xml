@@ -776,5 +776,17 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort.hint">
     <Value>Allow to set default sorting for this manufacturer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails.Info ">
+    <Value>Shipment info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Document">
+    <Value>Shipment document {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToShipment">
+    <Value>Go to shipment</Value>
+  </LocaleResource>
 </Language>
 

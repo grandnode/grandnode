@@ -12785,6 +12785,9 @@
   <LocaleResource Name="admin.documents.document.gotoproduct">
     <Value>Go to product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToShipment">
+    <Value>Go to shipment</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>
   </LocaleResource>
@@ -13913,6 +13916,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.DeliverySelected">
     <Value>Set as delivered (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ID">
     <Value>Shipment #</Value>
   </LocaleResource>
@@ -14083,6 +14089,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ViewDetails">
     <Value>View shipment details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails.Info ">
+    <Value>Shipment info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.ShippingInfo">
     <Value>Shipping info</Value>
@@ -20290,6 +20299,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Document">
+    <Value>Shipment document {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Cart</Value>

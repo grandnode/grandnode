@@ -4,6 +4,7 @@ using Grand.Services.Customers;
 using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
+using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Documents;
@@ -21,9 +22,10 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
+        private readonly IShipmentService _shipmentService;
 
         public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService,
-            IOrderService orderService, ILocalizationService localizationService, IProductService productService)
+            IOrderService orderService, ILocalizationService localizationService, IProductService productService, IShipmentService shipmentService)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
@@ -31,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Services
             _orderService = orderService;
             _localizationService = localizationService;
             _productService = productService;
+            _shipmentService = shipmentService;
         }
 
         public virtual async Task<(IEnumerable<DocumentModel> documetListModel, int totalCount)> PrepareDocumentListModel(DocumentListModel model, int pageIndex, int pageSize)
@@ -88,6 +91,24 @@ namespace Grand.Web.Areas.Admin.Services
                             model.Name = product.Name;
                             model.Number = product.Sku;
                             model.Quantity = 1;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(simpleModel.ShipmentId))
+                    {
+                        model.ObjectId = simpleModel.ShipmentId;
+                        model.ReferenceId = (int)Reference.Shipment;
+                        var shipment = await _shipmentService.GetShipmentById(simpleModel.ShipmentId);
+                        if (shipment != null)
+                        {
+                            model.DocDate = shipment.CreatedOnUtc;
+                            model.Number = shipment.ShipmentNumber.ToString();
+                            model.Name = string.Format(_localizationService.GetResource("Shipment.Document"), shipment.ShipmentNumber);
+                            var order = await _orderService.GetOrderById(shipment.OrderId);
+                            if (order != null)
+                            {
+                                model.CustomerId = order.CustomerId;
+                                model.CustomerEmail = (await _customerService.GetCustomerById(order.CustomerId))?.Email;
+                            }
                         }
                     }
 

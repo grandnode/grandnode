@@ -4,6 +4,7 @@
     {
         public string CustomerId { get; set; }
         public string OrderId { get; set; }
+        public string ShipmentId { get; set; }
         public string ProductId { get; set; }
     }
 }
