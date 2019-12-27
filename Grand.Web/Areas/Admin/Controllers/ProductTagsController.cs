@@ -38,21 +38,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var tags = (await _productTagService.GetAllProductTags())
+            var tagsTasks = (await _productTagService.GetAllProductTags())
                 //order by product count
                 .OrderByDescending(x => _productTagService.GetProductCount(x.Id, ""))
-                .Select(x => new ProductTagModel
-                {
+                .Select(async x => new ProductTagModel {
                     Id = x.Id,
                     Name = x.Name,
-                    ProductCount = _productTagService.GetProductCount(x.Id, "")
-                })
-                .ToList();
+                    ProductCount = await _productTagService.GetProductCount(x.Id, "")
+                });
+
+            var tags = await Task.WhenAll(tagsTasks);
 
             var gridModel = new DataSourceResult
             {
                 Data = tags.PagedForCommand(command),
-                Total = tags.Count
+                Total = tags.Count()
             };
 
             return Json(gridModel);
@@ -88,7 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Id = productTag.Id,
                 Name = productTag.Name,
-                ProductCount = _productTagService.GetProductCount(productTag.Id, "")
+                ProductCount = await _productTagService.GetProductCount(productTag.Id, "")
             };
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>
