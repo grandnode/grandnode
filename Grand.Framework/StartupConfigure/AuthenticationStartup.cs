@@ -49,9 +49,6 @@ namespace Grand.Framework.StartupConfigure
             //set workcontext
             application.UseMiddleware<WorkContextMiddleware>();
 
-            //set culture
-            application.UseMiddleware<CultureMiddleware>();
-
         }
 
         /// <summary>

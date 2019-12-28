@@ -31,7 +31,7 @@ namespace Grand.Framework.Middleware
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
         /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context, IWebHelper webHelper)
+        public async Task InvokeAsync(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
