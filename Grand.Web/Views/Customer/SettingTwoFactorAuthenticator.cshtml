@@ -10,16 +10,16 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
 }
 
-<dt>
-    Two factor Authenticator:
-</dt>
+    <dt>
+        @T("Customer.TwoFactorAuthenticator"):
+    </dt>
 <dd>
     @if (Model.Is2faEnabled)
     {
-        @Html.ActionLink("Disable", "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+        @Html.ActionLink(T("TwoFactorAuthenticator.Disable").Text, "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
     }
     else
     {
-        @Html.ActionLink("Enable", "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+        @Html.ActionLink(T("TwoFactorAuthenticator.Enable").Text, "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
     }
 </dd>

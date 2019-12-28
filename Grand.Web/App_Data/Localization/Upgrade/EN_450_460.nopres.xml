@@ -774,4 +774,13 @@
   <LocaleResource Name="SideBar.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Customer.TwoFactorAuthenticator">
+    <Value>Two factor Authenticator</Value>
+  </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.Enable">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.Disable">
+    <Value>Disable</Value>
+  </LocaleResource>
 </Language>
