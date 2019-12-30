@@ -8,8 +8,8 @@
 @using Grand.Web.Models.Catalog;
 <div class="page vendor-list-page">
     <h2 class="generalTitle">@T("Vendors.List")</h2>
-    <div class="vendor-grid">
-        <div class="row">
+    <div class="vendor-grid customGrid text-center">
+        <div class="flex-grid form-row">
             @foreach (var item in Model)
             {
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-2">
