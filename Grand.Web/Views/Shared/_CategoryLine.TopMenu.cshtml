@@ -1,7 +1,9 @@
 ﻿@model TopMenuModel.CategoryLineModel
-    <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
 
-        <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "aria-haspopup=true aria-expanded=false") href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+@if (Model.Category.IncludeInTopMenu) {
+        <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
+
+        <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")" @(Model.Category.SubCategories.Count() == 0 ? "" : "aria-haspopup=true aria-expanded=false") href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
             @if (!string.IsNullOrEmpty(Model.Category.Icon))
             {
                 <span class="category-icon @Model.Category.Icon"></span>
@@ -13,7 +15,7 @@
             }
             @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
             {
-                <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
+                <span class="badge @Model.Category.FlagStyle">@Model.Category.Flag</span>
             }
         </a>
 
@@ -104,5 +106,5 @@
             }
         }
     </li>
-
+}
 

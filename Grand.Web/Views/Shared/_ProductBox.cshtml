@@ -52,7 +52,7 @@
                         <source media="(max-width: 480px)" picture-id="@Model.SecondPictureModel.Id" picture-size="300" />
                         <source media="(max-width: 575px)" picture-id="@Model.SecondPictureModel.Id" picture-size="300" />
                         <source media="(max-width: 420px)" picture-id="@Model.SecondPictureModel.Id" picture-size="200" />
-                        <img class="img-fluid" src="@Model.SecondPictureModel.ImageUrl" />
+                        <img class="img-fluid" alt="@Model.SecondPictureModel.AlternateText" src="@Model.SecondPictureModel.ImageUrl" />
                     </picture>
                 </a>
                 <div class="additional-info">
@@ -255,7 +255,7 @@
                 }
                 @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                 {
-                    <button type="button" data-toggle="title" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
+                    <button type="button" data-tooltip="title" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
                         <span class="sr-only">AddToCompareList</span>
                         <span class="mdi mdi-repeat"></span>
                     </button>

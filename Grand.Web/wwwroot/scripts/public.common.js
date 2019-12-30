@@ -198,7 +198,7 @@ function productInfo() {
 // tooltips
 
 $(function () {
-    $('.product-box [data-toggle="title"]').tooltip();
+    $('.product-box [data-tooltip="title"]').tooltip();
 });
 
 $(document).ready(function () {
@@ -239,7 +239,7 @@ $(document).ready(function () {
                 $("#newsletter-result-block").html(data.Result);
                 if (data.Success) {
                     $('.newsletter-button-container, #newsletter-email, .newsletter-subscribe-unsubscribe').hide();
-                    $('#newsletter-result-block').show();
+                    $('#newsletter-result-block').addClass("d-block").show().css("bottom", "unset");
                     if (data.Showcategories) {
                         $('#action_modal_form').html(data.ResultCategory);
                         window.setTimeout(function () {
