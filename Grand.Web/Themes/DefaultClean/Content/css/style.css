@@ -822,6 +822,13 @@ ul.ui-autocomplete li img {
 .filtered-items ul li:before {
 	display: none;
 }
+
+/* captcha-box */
+
+.login-page .captcha-box div {
+	margin: 0 auto;
+}
+
 /*external modal*/
 
 .external-authentication {

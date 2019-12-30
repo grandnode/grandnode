@@ -7,7 +7,7 @@
 }
 <div class="page news-list-page pt-lg-0 pt-3">
     <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="mdi mdi-tune"></span><span class="ml-3">@T("News") @T("catalog.selectors.fiters")</span></a>
-        <h1 class="h2 generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h1>
+        <h2 class="generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h2>
         @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items"})
 
     <div class="news-items row">
