@@ -239,6 +239,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.SelectedTab > 0)
+                    TempData["Grand.selected-tab-index"] = model.SelectedTab;
+
                 await _genericAttributeService.SaveAttribute(model.ObjectType, model.Id, model.Key, model.Value, model.StoreId);
 
                 //TO DO - temporary solution
@@ -268,6 +271,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.SelectedTab > 0)
+                    TempData["Grand.selected-tab-index"] = model.SelectedTab;
+
                 await _genericAttributeService.SaveAttribute(model.ObjectType, model.Id, model.Key, string.Empty, model.StoreId);
                 //TO DO - temporary solution
                 //After delete attribute we need clear cache

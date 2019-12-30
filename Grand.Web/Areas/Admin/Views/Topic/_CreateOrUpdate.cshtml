@@ -35,7 +35,10 @@
         <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="4">
             <content>
                 <div>
-                    @{ViewData["ObjectType"] = "Topic";}
+                    @{
+                        ViewData["ObjectType"] = "Topic";
+                        ViewData["TabIndex"] = 4;
+                     }
                     <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
                 </div>
             </content>

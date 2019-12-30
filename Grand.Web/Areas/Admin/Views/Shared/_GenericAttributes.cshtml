@@ -43,6 +43,7 @@
                         StoreId: store,
                         Value: 'empty',
                         ObjectType: "@ViewData["ObjectType"]",
+                        SelectedTab: '@ViewData["TabIndex"]',
                         Id: '@Model.Id',
                     };
                     addAntiForgeryToken(postData);
@@ -52,8 +53,9 @@
                         url: "@(Url.Action("Delete", "GenericAttribute"))",
                         data: postData,
                         success: function (data) {
-                            if (data.success)
+                            if (data.success) {
                                 window.location.href = window.location.href;
+                            }
                             else
                                 alert(data.errors);
                         },
@@ -102,6 +104,7 @@
         </div>
         <script>
             $(document).ready(function () {
+
                 $('#addGenericAttr').click(function () {
                     var attrKey = $("#ga_key").val();
                     var attrValue = $("#ga_value").val();
@@ -120,6 +123,7 @@
                         Value: attrValue,
                         StoreId: attrStore,
                         ObjectType: "@ViewData["ObjectType"]",
+                        SelectedTab: '@ViewData["TabIndex"]',
                         Id: '@Model.Id',
                     };
                     addAntiForgeryToken(postData);
@@ -130,8 +134,9 @@
                         url: "@(Url.Action("Add", "GenericAttribute"))",
                         data: postData,
                         success: function (data) {
-                            if (data.success)
-                                window.location.href=window.location.href;
+                            if (data.success) {
+                                window.location.href = window.location.href;
+                            }
                             else
                                 alert(data.errors);
                         },
