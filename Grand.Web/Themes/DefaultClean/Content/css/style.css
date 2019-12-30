@@ -826,6 +826,13 @@ ul.ui-autocomplete li img {
 
 .external-authentication {
 	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+.external-authentication .title {
+	width: 100%;
+	margin: 0 0 15px 0;
+	text-align: center;
 }
 #action_modal_banner {
 	position: relative;
