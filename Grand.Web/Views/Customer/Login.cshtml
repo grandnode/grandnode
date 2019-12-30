@@ -83,6 +83,9 @@
                             </div>
                         </div>
                     </form>
+                    <div class="external-authentication">
+                        @await Component.InvokeAsync("ExternalMethods")
+                    </div>
                 </div>
             </div>
             @* want some register? *@
@@ -120,9 +123,6 @@
                 </div>
             }
         </div>
-    </div>
-    <div class="external-authentication">
-        @await Component.InvokeAsync("ExternalMethods")
     </div>
     <div class="row">
         <div class="col-12 mb-2">
