@@ -138,7 +138,12 @@
 
 @media screen and (max-width: 1200px) {
     #GrandCarousel .carousel-item .slide-content.grandslide {
-        font-size: 18px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: -0.5px;
+    }
+    #GrandCarousel .btn {
+        padding: 6px 18px;
     }
     #GrandCarousel .carousel-item .slide-title.grandslide h2 {
         font-size: 36px;
