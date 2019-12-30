@@ -8,7 +8,7 @@
         @if (Model.AllowProductSorting)
         {
             <div class="sort-container">
-                <label class="mb-0" for="products-orderby">@T("Catalog.OrderBy")</label>
+                <label class="mb-0">@T("Catalog.OrderBy")</label>
                 <div class="selectdiv ml-4">
                     @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { @class = "form-control custom-select", onchange = "setLocation(this.value);" })
                 </div>
@@ -24,7 +24,7 @@
         @if (Model.AllowCustomersToSelectPageSize)
         {
             <div class="sort-container">
-                <label class="mb-0" for="custom-select">@T("Catalog.PageSize")</label>
+                <label class="mb-0">@T("Catalog.PageSize")</label>
                 <div class="selectdiv ml-4">
                     @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "setLocation(this.value);" })
                 </div>
