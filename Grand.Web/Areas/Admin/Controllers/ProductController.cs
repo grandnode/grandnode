@@ -10,7 +10,6 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -50,7 +49,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
-        private readonly IDocumentService _documentService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
@@ -69,7 +67,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IProductReservationService productReservationService,
             IAuctionService auctionService, 
-            IDocumentService documentService,
             IDateTimeHelper dateTimeHelper)
         {
             _productViewModelService = productViewModelService;
@@ -83,7 +80,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _productReservationService = productReservationService;
             _auctionService = auctionService;
-            _documentService = documentService;
             _dateTimeHelper = dateTimeHelper;
         }
 
@@ -2564,22 +2560,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Bids.CantDeleteWithOrder") });
             }
             return Json(new DataSourceResult { Errors = "Bid not exists" });
-        }
-
-        #endregion
-
-        #region Documents
-
-        [HttpPost]
-        public async Task<IActionResult> DocumentList(DataSourceRequest command, string productId)
-        {
-            var documents = await _documentService.GetAll(objectId: productId, reference: (int)Core.Domain.Documents.Reference.Product,
-                pageSize: command.PageSize, pageIndex: command.Page - 1);
-            var gridModel = new DataSourceResult {
-                Data = documents.ToList(),
-                Total = documents.TotalCount
-            };
-            return Json(gridModel);
         }
 
         #endregion

@@ -6,7 +6,7 @@
         <div id="shipment-documents-grid"></div>
     </div>
     <div class="panel-footer">
-        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { ShipmentId = Model.Id })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
+        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { ObjectId = Model.Id, Reference = (int)Reference.Shipment })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
     </div>
     <vc:admin-widget widget-zone="shipment_details_documents_bottom" additional-data="Model" />
 </div>
@@ -17,7 +17,7 @@ $(document).ready(function () {
         dataSource: {
             transport: {
                 read: {
-                    url: "@Html.Raw(Url.Action("DocumentList", "Shipment", new { shipmentId = Model.Id }))",
+                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { reference = (int)Reference.Shipment, ObjectId = Model.Id }))",
                     type: "POST",
                     dataType: "json",
                     data: addAntiForgeryToken
@@ -37,6 +37,9 @@ $(document).ready(function () {
                 this.cancelChanges();
             },
             pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
         },
         pageable: {
             refresh: true,

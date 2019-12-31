@@ -1,4 +1,9 @@
 ﻿@model CategoryModel
+@inject Grand.Services.Security.IPermissionService permissionService
+@{
+    //has "Manage Documents" permission?
+    var canManageDocuments = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageDocuments);
+}
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
@@ -53,7 +58,17 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="7">
+        @if (canManageDocuments)
+        {
+            <tabstrip-item text="@T("Admin.Catalog.Category.Documents")" tab-index="7">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.Documents" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="8">
             <content>
                 <div>
                     @{

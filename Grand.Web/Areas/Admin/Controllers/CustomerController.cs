@@ -11,7 +11,6 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
-using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -53,7 +52,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDownloadService _downloadService;
-        private readonly IDocumentService _documentService;
+
         #endregion
 
         #region Constructors
@@ -74,8 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IWorkflowMessageService workflowMessageService,
-            IDownloadService downloadService,
-            IDocumentService documentService)
+            IDownloadService downloadService)
         {
             _customerService = customerService;
             _productService = productService;
@@ -94,7 +92,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _addressAttributeService = addressAttributeService;
             _workflowMessageService = workflowMessageService;
             _downloadService = downloadService;
-            _documentService = documentService;
         }
 
         #endregion
@@ -1006,21 +1003,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-
-        #endregion
-
-        #region Documents
-
-        [HttpPost]
-        public async Task<IActionResult> DocumentList(DataSourceRequest command, string customerId)
-        {
-            var documents = await _documentService.GetAll(customerId, pageSize: command.PageSize, pageIndex: command.Page - 1);
-            var gridModel = new DataSourceResult {
-                Data = documents.ToList(),
-                Total = documents.TotalCount                
-            };
-            return Json(gridModel);
-        }
 
         #endregion
 

@@ -37,7 +37,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Helpers;
-using Grand.Services.Documents;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -77,7 +76,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDocumentService _documentService;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -119,7 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper,
-            IDocumentService documentService,
             CurrencySettings currencySettings,
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -165,7 +162,6 @@ namespace Grand.Web.Areas.Admin.Controllers
              _shippingSettings = shippingSettings;
              _customerService = customerService;
              _mediaSettings = mediaSettings;
-            _documentService = documentService;
         }
 
         #region Shipments
@@ -866,22 +862,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             return Json(new { Result = true });
-        }
-
-        #endregion
-
-        #region Documents
-
-        [HttpPost]
-        public async Task<IActionResult> DocumentList(DataSourceRequest command, string shipmentId)
-        {
-            var documents = await _documentService.GetAll(objectId: shipmentId, reference: (int)Core.Domain.Documents.Reference.Shipment,
-                pageSize: command.PageSize, pageIndex: command.Page - 1);
-            var gridModel = new DataSourceResult {
-                Data = documents.ToList(),
-                Total = documents.TotalCount
-            };
-            return Json(gridModel);
         }
 
         #endregion
