@@ -788,5 +788,26 @@
   <LocaleResource Name="Admin.Documents.Document.GoToShipment">
     <Value>Go to shipment</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToCategory">
+    <Value>Go to category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToManufacturer">
+    <Value>Go to manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToVendor">
+    <Value>Go to vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
+    <Value>Go to return request</Value>
+  </LocaleResource>
 </Language>
 

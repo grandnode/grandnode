@@ -2370,6 +2370,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
@@ -2660,6 +2663,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
     <Value>Edit manufacturer details</Value>
@@ -12776,8 +12782,14 @@
   <LocaleResource Name="Admin.Documents.Document.Fields.Username.Hint">
     <Value>Enter the username of customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToCategory">
+    <Value>Go to category</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.gotocustomer">
     <Value>Go to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToManufacturer">
+    <Value>Go to manufacturer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documents.Document.GoToOrder">
     <Value>Go to order</Value>
@@ -12785,8 +12797,14 @@
   <LocaleResource Name="admin.documents.document.gotoproduct">
     <Value>Go to product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
+    <Value>Go to return request</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Documents.Document.GoToShipment">
     <Value>Go to shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToVendor">
+    <Value>Go to vendor</Value>
   </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>
@@ -16558,6 +16576,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.EditVendorDetails">
     <Value>Edit vendor details</Value>

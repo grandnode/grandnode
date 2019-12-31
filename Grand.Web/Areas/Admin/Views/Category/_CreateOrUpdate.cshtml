@@ -51,24 +51,17 @@
                 </div>
             </content>
         </tabstrip-item>
-        <tabstrip-item text="@T("Admin.Catalog.Categories.ActivityLog")" tab-index="6">
-            <content>
-                <div>
-                    <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
-                </div>
-            </content>
-        </tabstrip-item>
         @if (canManageDocuments)
         {
-            <tabstrip-item text="@T("Admin.Catalog.Category.Documents")" tab-index="7">
+            <tabstrip-item text="@T("Admin.Catalog.Categories.Documents")" tab-index="6">
                 <content>
                     <div>
-                        <partial name="_CreateOrUpdate.Documents" model="Model" />
+                        <partial name="_CreateOrUpdate.TabDocuments" model="Model" />
                     </div>
                 </content>
             </tabstrip-item>
         }
-        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="8">
+        <tabstrip-item text="@T("Admin.Common.GenericAttributes.Tab")" tab-index="7">
             <content>
                 <div>
                     @{
@@ -76,6 +69,13 @@
                         ViewData["TabIndex"] = 7;
                     }
                     <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.ActivityLog")" tab-index="8">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
                 </div>
             </content>
         </tabstrip-item>

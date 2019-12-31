@@ -5,6 +5,7 @@ using Grand.Services.Documents;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Shipping;
+using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Documents;
@@ -25,10 +26,11 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IShipmentService _shipmentService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IVendorService _vendorService;
 
         public DocumentViewModelService(IDocumentService documentService, IDocumentTypeService documentTypeService, ICustomerService customerService,
             IOrderService orderService, ILocalizationService localizationService, IProductService productService, IShipmentService shipmentService,
-            ICategoryService categoryService, IManufacturerService manufacturerService)
+            ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService)
         {
             _documentService = documentService;
             _documentTypeService = documentTypeService;
@@ -39,6 +41,7 @@ namespace Grand.Web.Areas.Admin.Services
             _shipmentService = shipmentService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
+            _vendorService = vendorService;
         }
 
         public virtual async Task<(IEnumerable<DocumentModel> documetListModel, int totalCount)> PrepareDocumentListModel(DocumentListModel model, int pageIndex, int pageSize)
@@ -110,6 +113,14 @@ namespace Grand.Web.Areas.Admin.Services
                                 if (manufacturer != null)
                                 {
                                     model.Name = manufacturer.Name;
+                                    model.Quantity = 1;
+                                }
+                                break;
+                            case (int)Reference.Vendor:
+                                var vendor = await _vendorService.GetVendorById(simpleModel.ObjectId);
+                                if (vendor != null)
+                                {
+                                    model.Name = vendor.Name;
                                     model.Quantity = 1;
                                 }
                                 break;
