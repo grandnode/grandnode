@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.104.9" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.110.5" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.104.11" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.110.7" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="Google.Apis" Version="1.42.0" />
     <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.42.0.1805" />
