@@ -87,7 +87,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (ModelState.IsValid)
             {
                 entity = await _manufacturerApiService.UpdateManufacturer(entity);
-                return Ok(model);
+                return Ok();
             }
             return BadRequest(ModelState);
         }
