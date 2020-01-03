@@ -38,6 +38,6 @@ namespace Grand.Core.Domain.Media
         public bool MultipleThumbDirectories { get; set; }
 
         public string AllowedFileTypes { get; set; }
-
+        public string StoreLocation { get; set; }
     }
 }

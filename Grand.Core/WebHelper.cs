@@ -247,7 +247,7 @@ namespace Grand.Core
             {
                 var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
                 if (currentStore != null)
-                    storeLocation = currentStore.Url;
+                    storeLocation = !currentStore.SslEnabled ? currentStore.Url : currentStore.SecureUrl;
                 else
                     throw new Exception("Current store cannot be loaded");
             }

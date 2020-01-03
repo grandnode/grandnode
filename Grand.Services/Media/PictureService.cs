@@ -168,9 +168,10 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            storeLocation = !String.IsNullOrEmpty(storeLocation)
+            storeLocation = !string.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
-                                    : _webHelper.GetStoreLocation();
+                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ? _webHelper.GetStoreLocation() : _mediaSettings.StoreLocation;
+
             var url = storeLocation + "content/images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
