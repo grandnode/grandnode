@@ -178,13 +178,7 @@ namespace Grand.Web.Controllers
                     case CustomerLoginResults.Successful:
                         {
                             var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(model.Username) : await _customerService.GetCustomerByEmail(model.Email);
-                            // 2fa
-                            if (customer.TwoFactorEnabled)
-                            {
-                                var authModel = new TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = customer.TwoFactorSecretKey };
-                                return RedirectToRoute("TwoFactorAuthorization", authModel);
-                            }
-
+                            
                             //migrate shopping cart
                             await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
@@ -203,6 +197,15 @@ namespace Grand.Web.Controllers
 
                             return Redirect(returnUrl);
                         }
+                    case CustomerLoginResults.RequiresTwoFactor:
+                    {
+                            var customer = _customerSettings.UsernamesEnabled 
+                                ? await _customerService.GetCustomerByUsername(model.Username) 
+                                : await _customerService.GetCustomerByEmail(model.Email);
+                            var authModel = new TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = customer.TwoFactorSecretKey };
+                          return RedirectToRoute("TwoFactorAuthorization", authModel);
+                    }
+                    
                     case CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
                         break;
@@ -1450,7 +1453,6 @@ namespace Grand.Web.Controllers
                         
             if (isValid)
             {
-                HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
                 //migrate shopping cart
                 await shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
@@ -1462,7 +1464,6 @@ namespace Grand.Web.Controllers
 
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
-
 
                 if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                     return RedirectToRoute("HomePage");
@@ -1483,8 +1484,8 @@ namespace Grand.Web.Controllers
         public IActionResult EnableTwoFactorAuthenticator()
         {
             var customer = _workContext.CurrentCustomer;
-             
-            var secretKey = _grandConfig.TwoFactorAuthKey;
+
+            var secretKey = _twoFactorAuthenticationService.GenerateSecurityCode();
             string userUniqueKey = customer.Email + secretKey;
             QrCodeSetup setupInfo = _twoFactorAuthenticationService.GenerateQrCodeSetup(userUniqueKey);
 
@@ -1522,7 +1523,6 @@ namespace Grand.Web.Controllers
             
             if (isValid)
             {
-                HttpContext.Session.SetString("IsValidTwoFactorAuthentication", "true");
                 var customer = _workContext.CurrentCustomer;
                 customer.TwoFactorEnabled = model.Is2faEnabled;
                 customer.TwoFactorSecretKey = userUniqueKey;
@@ -1530,7 +1530,7 @@ namespace Grand.Web.Controllers
                 _customerService.UpdateCustomerTwoFactorAuth(customer);
 
                 if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                    return RedirectToRoute("HomePage");
+                    return RedirectToRoute("SettingTwoFactorAuthenticator");
                 return Redirect(returnUrl);
             }
             return View(model);
@@ -1545,7 +1545,7 @@ namespace Grand.Web.Controllers
                 customer.TwoFactorSecretKey = null;
                 _customerService.UpdateCustomerTwoFactorAuth(customer);
 
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("SettingTwoFactorAuthenticator");
             }
             return View();
         }

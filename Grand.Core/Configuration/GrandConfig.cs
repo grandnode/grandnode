@@ -174,10 +174,5 @@ namespace Grand.Core.Configuration
         /// Gets or sets a value indicating whether ignore IgnoreUsePoweredByMiddleware
         /// </summary>
         public bool IgnoreUsePoweredByMiddleware { get; set; }
-
-        /// <summary>
-        /// Gets or set 2FA secret key
-        /// </summary>
-        public string TwoFactorAuthKey { get; set; }
     }
 }

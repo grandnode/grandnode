@@ -187,7 +187,7 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets the two factor auth code
         /// </summary>
         public string TwoFactorSecretKey { get; set; }
-
+        
         #region Navigation properties
 
         /// <summary>

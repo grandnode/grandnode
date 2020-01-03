@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Google.Authenticator;
 
 namespace Grand.Services.Authentication
@@ -26,6 +24,11 @@ namespace Grand.Services.Authentication
                 QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl, 
                 ManualEntryQrCode = setupInfo.ManualEntryKey
             }; 
+        }
+
+        public string GenerateSecurityCode()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 

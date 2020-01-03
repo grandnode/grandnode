@@ -147,6 +147,10 @@ namespace Grand.Services.Customers
                 return CustomerLoginResults.WrongPassword;
             }
 
+            //2fa required
+            if (customer.TwoFactorEnabled)
+                return CustomerLoginResults.RequiresTwoFactor;
+            
             //save last login date
             customer.FailedLoginAttempts = 0;
             customer.CannotLoginUntilDateUtc = null;
