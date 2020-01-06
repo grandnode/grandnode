@@ -11,6 +11,7 @@ namespace Grand.Core.Caching
     {
         private readonly IDatabase _distributedCache;
         private readonly IConnectionMultiplexer _connectionMultiplexer;
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };
 
         public DistributedRedisCache(string redisConnectionString)
         {
@@ -60,6 +61,7 @@ namespace Grand.Core.Caching
                 return (JsonConvert.DeserializeObject<T>(res), true);
             }
         }
+
         public (T Result, bool FromCache) TryGetValue<T>(string key)
         {
             var res = _distributedCache.StringGet(key);
@@ -73,7 +75,6 @@ namespace Grand.Core.Caching
             }
         }
 
-
         public virtual async Task RemoveAsync(string key)
         {
             await _distributedCache.KeyDeleteAsync(key, CommandFlags.PreferMaster);
@@ -85,7 +86,7 @@ namespace Grand.Core.Caching
                 return;
 
             //serialize item
-            var serializedItem = JsonConvert.SerializeObject(data);
+            var serializedItem = JsonConvert.SerializeObject(data, _jsonSettings);
 
             //and set it to cache
             await _distributedCache.StringSetAsync(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
@@ -97,11 +98,12 @@ namespace Grand.Core.Caching
                 return;
 
             //serialize item
-            var serializedItem = JsonConvert.SerializeObject(data);
+            var serializedItem = JsonConvert.SerializeObject(data, _jsonSettings);
 
             //and set it to cache
             _distributedCache.StringSet(key, serializedItem, TimeSpan.FromMinutes(cacheTime), When.Always, CommandFlags.FireAndForget);
         }
+
         public bool IsSet(string key)
         {
             return _distributedCache.KeyExists(key);
@@ -136,10 +138,5 @@ namespace Grand.Core.Caching
         {
             //nothing special
         }
-
-        
-
-        
-       
     }
 }
