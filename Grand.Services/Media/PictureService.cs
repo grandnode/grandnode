@@ -33,11 +33,11 @@ namespace Grand.Services.Media
 
         private readonly IRepository<Picture> _pictureRepository;
         private readonly ISettingService _settingService;
-        private readonly IWebHelper _webHelper;
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
-        private readonly MediaSettings _mediaSettings;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IStoreContext _storeContext;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -48,25 +48,26 @@ namespace Grand.Services.Media
         /// </summary>
         /// <param name="pictureRepository">Picture repository</param>
         /// <param name="settingService">Setting service</param>
-        /// <param name="webHelper">Web helper</param>
         /// <param name="logger">Logger</param>
         /// <param name="mediator">Mediator</param>
+        /// <param name="hostingEnvironment">hostingEnvironment</param>
+        /// <param name="storeContext">Current store</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
-            IWebHelper webHelper,
             ILogger logger,
             IMediator mediator,
-            MediaSettings mediaSettings,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            IStoreContext storeContext,
+            MediaSettings mediaSettings)
         {
             _pictureRepository = pictureRepository;
             _settingService = settingService;
-            _webHelper = webHelper;
             _logger = logger;
             _mediator = mediator;
-            _mediaSettings = mediaSettings;
             _hostingEnvironment = hostingEnvironment;
+            _storeContext = storeContext;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -170,7 +171,9 @@ namespace Grand.Services.Media
         {
             storeLocation = !string.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
-                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ? _webHelper.GetStoreLocation() : _mediaSettings.StoreLocation;
+                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ? 
+                                    _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl :  _storeContext.CurrentStore.Url : 
+                                    _mediaSettings.StoreLocation;
 
             var url = storeLocation + "content/images/thumbs/";
 
@@ -298,11 +301,12 @@ namespace Grand.Services.Media
             }
             if (targetSize == 0)
             {
-                string url = (!string.IsNullOrEmpty(storeLocation)
-                                 ? storeLocation
-                                 : _webHelper.GetStoreLocation())
-                                 + "content/images/" + defaultImageFileName;
-                return url;
+                return !string.IsNullOrEmpty(storeLocation)
+                        ? storeLocation
+                        : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ?
+                        _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url :
+                        _mediaSettings.StoreLocation
+                        + "content/images/" + defaultImageFileName;
             }
             else
             {

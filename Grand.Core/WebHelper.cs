@@ -1,6 +1,5 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;

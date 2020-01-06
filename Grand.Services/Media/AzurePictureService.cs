@@ -35,16 +35,17 @@ namespace Grand.Services.Media
             IWebHelper webHelper,
             ILogger logger,
             IMediator mediator,
-            MediaSettings mediaSettings,
             IWebHostEnvironment hostingEnvironment,
+            IStoreContext storeContext,
+            MediaSettings mediaSettings,
             GrandConfig config)
             : base(pictureRepository,
                 settingService,
-                webHelper,
                 logger,
                 mediator,
-                mediaSettings,
-                hostingEnvironment)
+                hostingEnvironment,
+                storeContext,
+                mediaSettings)
         {
             _config = config;
 
