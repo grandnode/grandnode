@@ -633,6 +633,34 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("save-generic-attributes")]
+        public async Task<IActionResult> EditGenericAttributes(string id, ShipmentModel model)
+        {
+            var shipment = await _shipmentService.GetShipmentById(id);
+            if (shipment == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null && !_workContext.CurrentCustomer.IsStaff())
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+
+            if (_workContext.CurrentCustomer.IsStaff() && shipment.StoreId != _workContext.CurrentCustomer.StaffStoreId)
+            {
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+
+            shipment.GenericAttributes = model.GenericAttributes;
+            await _shipmentService.UpdateShipment(shipment);
+            
+            //selected tab
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+            return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+        }
+
         public async Task<IActionResult> PdfPackagingSlip(string shipmentId)
         {
             var shipment = await _shipmentService.GetShipmentById(shipmentId);

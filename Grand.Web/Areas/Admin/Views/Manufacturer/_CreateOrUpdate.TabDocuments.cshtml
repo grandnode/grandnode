@@ -1,23 +1,23 @@
-﻿@model ProductModel
+﻿@model ManufacturerModel
 @inject AdminAreaSettings adminAreaSettings
 <div class="panel panel-default">
-    <vc:admin-widget widget-zone="product_details_documents_top" additional-data="Model" />
+    <vc:admin-widget widget-zone="manufacturer_details_documents_top" additional-data="Model" />
     <div class="panel-body">
-        <div id="product-documents-grid"></div>
+        <div id="manufacturer-documents-grid"></div>
     </div>
     <div class="panel-footer">
-        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document",  new { reference = (int)Reference.Product, ObjectId = Model.Id })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
+        <button type="button" class="k-button" onclick="location.href='@Url.Action("CreateDocument", "Document", new { ObjectId = Model.Id, Reference = (int)Reference.Manufacturer })'"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Customers.Document.Add")</button>
     </div>
-    <vc:admin-widget widget-zone="product_details_documents_bottom" additional-data="Model" />
+    <vc:admin-widget widget-zone="manufacturer_details_documents_bottom" additional-data="Model" />
 </div>
 
 <script>
 $(document).ready(function () {
-    $("#product-documents-grid").kendoGrid({
+    $("#manufacturer-documents-grid").kendoGrid({
         dataSource: {
             transport: {
                 read: {
-                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { reference = (int)Reference.Product, ObjectId = Model.Id }))",
+                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { reference = (int)Reference.Manufacturer, ObjectId = Model.Id }))",
                     type: "POST",
                     dataType: "json",
                     data: addAntiForgeryToken

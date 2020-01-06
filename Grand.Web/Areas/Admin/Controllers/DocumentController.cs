@@ -47,6 +47,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> ListDocuments(DataSourceRequest command, DocumentListModel model)
         {
+            if (!string.IsNullOrEmpty(model.CustomerId))
+                model.SearchEmail = (await _customerService.GetCustomerById(model.CustomerId))?.Email;
+
             var documents = await _documentViewModelService.PrepareDocumentListModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult {
                 Data = documents.documetListModel,

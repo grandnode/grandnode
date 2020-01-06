@@ -1239,21 +1239,21 @@ namespace Grand.Web.Services
         {
             var languageId = _workContext.WorkingLanguage.Id;
             var model = new PopularProductTagsModel();
-            model.Tags = (await _productTagService
+            var tagsTask = (await _productTagService
                 .GetAllProductTags())
                 .OrderBy(x => x.Name)
-                .Select(x =>
+                .Select(async x =>
                 {
-                    var ptModel = new ProductTagModel
-                    {
+                    var ptModel = new ProductTagModel {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name, languageId),
                         SeName = x.SeName,
-                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                        ProductCount = await _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                     };
                     return ptModel;
-                })
-                .ToList();
+                });
+
+            model.Tags = await Task.WhenAll(tagsTask);
             return model;
         }
 

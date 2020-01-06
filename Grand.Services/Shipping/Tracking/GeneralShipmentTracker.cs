@@ -5,6 +5,7 @@
 using Grand.Core.Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Shipping.Tracking
 {
@@ -47,9 +48,14 @@ namespace Grand.Services.Shipping.Tracking
                 .ToList();
         }
 
-        protected virtual IShipmentTracker GetTrackerByTrackingNumber(string trackingNumber)
+        protected virtual async Task<IShipmentTracker> GetTrackerByTrackingNumber(string trackingNumber)
         {
-            return GetAllTrackers().FirstOrDefault(c => c.IsMatch(trackingNumber));
+            foreach (var item in GetAllTrackers())
+            {
+                if (await item.IsMatch(trackingNumber))
+                    return item;
+            }
+            return null;
         }
         
         #endregion
@@ -61,11 +67,11 @@ namespace Grand.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>True if the tracker can track, otherwise false.</returns>
-        public virtual bool IsMatch(string trackingNumber)
+        public virtual async Task<bool> IsMatch(string trackingNumber)
         {
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
-                return tracker.IsMatch(trackingNumber);
+                return await tracker.IsMatch(trackingNumber);
             return false;
         }
 
@@ -74,11 +80,11 @@ namespace Grand.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>A url to a tracking page.</returns>
-        public virtual string GetUrl(string trackingNumber)
+        public virtual async Task<string> GetUrl(string trackingNumber)
         {
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
-                return tracker.GetUrl(trackingNumber);
+                return await tracker.GetUrl(trackingNumber);
             return null;
         }
 
@@ -87,14 +93,14 @@ namespace Grand.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
         /// <returns>List of Shipment Events.</returns>
-        public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
+        public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEvents(string trackingNumber)
         {
             if (string.IsNullOrEmpty(trackingNumber))
                 return new List<ShipmentStatusEvent>();
 
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
-                return tracker.GetShipmentEvents(trackingNumber);
+                return await tracker.GetShipmentEvents(trackingNumber);
             return new List<ShipmentStatusEvent>();
         }
 

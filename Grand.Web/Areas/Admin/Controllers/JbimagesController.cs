@@ -45,11 +45,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewData["result"] = "No access to this functionality";
                 return View();
             }
-
-            if (Request.Form.Files.Count == 0)
+            var form = await HttpContext.Request.ReadFormAsync();
+            if (form.Files.Count == 0)
                 throw new Exception("No file uploaded");
 
-            var uploadFile = Request.Form.Files.FirstOrDefault();
+            var uploadFile = form.Files.FirstOrDefault();
             if (uploadFile == null)
             {
                 ViewData["resultCode"] = "failed";

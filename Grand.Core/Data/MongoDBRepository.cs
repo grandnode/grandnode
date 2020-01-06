@@ -92,7 +92,7 @@ namespace Grand.Core.Data
         /// <returns>Entity</returns>
         public virtual T GetById(string id)
         {
-            return this._collection.Find(e => e.Id == id).FirstOrDefault();
+            return _collection.Find(e => e.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Grand.Core.Data
         /// <returns>Entity</returns>
         public virtual Task<T> GetByIdAsync(string id)
         {
-            return this._collection.Find(e => e.Id == id).FirstOrDefaultAsync();
+            return _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
         /// <summary>
         /// Insert entity
@@ -110,7 +110,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual T Insert(T entity)
         {
-            this._collection.InsertOne(entity);
+            _collection.InsertOne(entity);
             return entity;
         }
 
@@ -120,7 +120,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> InsertAsync(T entity)
         {
-            await this._collection.InsertOneAsync(entity);
+            await _collection.InsertOneAsync(entity);
             return entity;
         }
 
@@ -131,7 +131,7 @@ namespace Grand.Core.Data
         /// <param name="entities">Entities</param>
         public virtual void Insert(IEnumerable<T> entities)
         {
-            this._collection.InsertMany(entities);
+            _collection.InsertMany(entities);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Grand.Core.Data
         /// <param name="entities">Entities</param>
         public virtual async Task<IEnumerable<T>> InsertAsync(IEnumerable<T> entities)
         {
-            await this._collection.InsertManyAsync(entities);
+            await _collection.InsertManyAsync(entities);
             return entities;
         }
 
@@ -151,7 +151,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            this._collection.ReplaceOne(x=>x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
+            _collection.ReplaceOne(x=>x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
             return entity;
 
         }
@@ -162,7 +162,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> UpdateAsync(T entity)
         {
-            await this._collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
+            await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, new ReplaceOptions() { IsUpsert = false });
             return entity;
         }
 
@@ -198,7 +198,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            this._collection.FindOneAndDelete(e => e.Id == entity.Id); 
+            _collection.FindOneAndDelete(e => e.Id == entity.Id); 
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Grand.Core.Data
         /// <param name="entity">Entity</param>
         public virtual async Task<T> DeleteAsync(T entity)
         {
-            await this._collection.DeleteOneAsync(e=>e.Id == entity.Id);
+            await _collection.DeleteOneAsync(e=>e.Id == entity.Id);
             return entity;
         }
 
@@ -219,7 +219,7 @@ namespace Grand.Core.Data
         {
             foreach (T entity in entities)
             {
-                this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);
+                _collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);
             }
         }
 
@@ -248,7 +248,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual bool Any()
         {
-            return this._collection.AsQueryable().Any();
+            return _collection.AsQueryable().Any();
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual bool Any(Expression<Func<T, bool>> where)
         {
-            return this._collection.Find(where).Any();
+            return _collection.Find(where).Any();
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual async Task<bool> AnyAsync()
         {
-            return await this._collection.AsQueryable().AnyAsync();
+            return await _collection.AsQueryable().AnyAsync();
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> where)
         {
-            return await this._collection.Find(where).AnyAsync();
+            return await _collection.Find(where).AnyAsync();
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual long Count()
         {
-            return this._collection.CountDocuments(new BsonDocument());
+            return _collection.CountDocuments(new BsonDocument());
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual long Count(Expression<Func<T, bool>> where)
         {
-            return this._collection.CountDocuments(where);
+            return _collection.CountDocuments(where);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual async Task<long> CountAsync()
         {
-            return await this._collection.CountDocumentsAsync(new BsonDocument());
+            return await _collection.CountDocumentsAsync(new BsonDocument());
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual async Task<long> CountAsync(Expression<Func<T, bool>> where)
         {
-            return await this._collection.CountDocumentsAsync(where);
+            return await _collection.CountDocumentsAsync(where);
         }
 
 
@@ -328,7 +328,7 @@ namespace Grand.Core.Data
         /// </summary>
         public virtual IMongoQueryable<T> Table
         {
-            get { return this._collection.AsQueryable(); }
+            get { return _collection.AsQueryable(); }
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Grand.Core.Data
         /// <returns></returns>
         public virtual IList<T> FindByFilterDefinition(FilterDefinition<T> query)
         {
-            return this._collection.Find(query).ToList();
+            return _collection.Find(query).ToList();
         }
 
         #endregion

@@ -66,17 +66,18 @@ namespace Grand.Framework.Mvc.Filters
                 var isValid = false;
 
                 //get form values
-                var captchaChallengeValue = context.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
-                var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
+                var form = await context.HttpContext.Request.ReadFormAsync();
+                var captchaChallengeValue = form[CHALLENGE_FIELD_KEY];
+                var captchaResponseValue = form[RESPONSE_FIELD_KEY];
                 var gCaptchaResponseValue = string.Empty;
-                foreach (var item in context.HttpContext.Request.Form.Keys)
+                foreach (var item in form.Keys)
                 {
                     if (item.Contains(G_RESPONSE_FIELD_KEY_V3))
-                        gCaptchaResponseValue = context.HttpContext.Request.Form[item];
+                        gCaptchaResponseValue = form[item];
                 }
 
                 if(string.IsNullOrEmpty(gCaptchaResponseValue))
-                    gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY_V2];
+                    gCaptchaResponseValue = form[G_RESPONSE_FIELD_KEY_V2];
                 
                 if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !string.IsNullOrEmpty(gCaptchaResponseValue))
                 {

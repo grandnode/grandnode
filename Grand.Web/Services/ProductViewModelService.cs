@@ -953,7 +953,7 @@ namespace Grand.Web.Services
                             Id = tag.Id,
                             Name = tag.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                             SeName = tag.SeName,
-                            ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                            ProductCount = await _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                         });
                     }
                 }

@@ -150,7 +150,7 @@ namespace Grand.Services.Tax
             calculateTaxRequest.Product = product;
             calculateTaxRequest.Price = price;
 
-            if (!String.IsNullOrEmpty(taxCategoryId))
+            if (!string.IsNullOrEmpty(taxCategoryId))
             {
                 calculateTaxRequest.TaxCategoryId = taxCategoryId;
             }
@@ -220,15 +220,8 @@ namespace Grand.Services.Tax
             if (percent == decimal.Zero)
                 return price;
 
-            decimal result;
-            if (increase)
-            {
-                result = price * (1 + percent / 100);
-            }
-            else
-            {
-                result = price - (price) / (100 + percent) * percent;
-            }
+            var result = increase ? price * (1 + percent / 100) : price / (1 + percent / 100);
+
             if (result == decimal.Zero)
                 return 0;
 
@@ -461,11 +454,9 @@ namespace Grand.Services.Tax
             )
         {
 
-            string taxCategoryId = ""; //it seems to be strange, but this way was used above
             var productPrice = new TaxProductPrice();
 
-            //----------------------------------------------------------------------------------------------------
-            var taxrates = await GetTaxRate(product, taxCategoryId, customer, 0);
+            var taxrates = await GetTaxRate(product, product.TaxCategoryId, customer, 0);
             productPrice.taxRate = taxrates.taxRate;
             if (priceIncludesTax)
             {

@@ -79,7 +79,7 @@
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="d-inline-flex flex-wrap pl-0 mb-0">
+                <ul class="d-inline-flex align-items-center flex-wrap pl-0 mb-0">
 
                     @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                     {
