@@ -2,7 +2,7 @@
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HFRGJMMY9KF7C)   [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/grandnode/Lobby)   [![Build status](https://ci.appveyor.com/api/projects/status/ox0qebg3wv3dp30e/branch/develop?svg=true)](https://ci.appveyor.com/project/KrzysztofPajak/grandnode/branch/develop)   [![Build Status](https://travis-ci.org/grandnode/grandnode.svg?branch=develop)](https://travis-ci.org/grandnode/grandnode)   [![Codacy Badge](https://api.codacy.com/project/badge/Grade/acbd143050984c1983d7cb0bd10b3472)](https://www.codacy.com/app/grandnode/grandnode?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=grandnode/grandnode&amp;utm_campaign=Badge_Grade)   ![Github All Releases](https://img.shields.io/github/downloads/grandnode/grandnode/total.svg) [![Demo](https://img.shields.io/badge/DEMO-HERE-green.svg)](https://demo.grandnode.com/)
 
-Thank you for choosing GrandNode! It's an open source, free, cross-platform e-commerce software based on ASP.NET Core 2.2 and MongoDB - NoSQL database. You can run it on Linux, Windows and MacOS easily. GrandNode also supports Docker, so you are able to install it just in a seconds with Docker.
+Thank you for choosing GrandNode! It's an open source, free, cross-platform e-commerce software based on ASP.NET Core 3.1 and MongoDB - NoSQL database. You can run it on Linux, Windows and MacOS easily. GrandNode also supports Docker, so you are able to install it just in a seconds with Docker.
 
 It can be used for any kind of online store. GrandNode is a perfect choice for people who want to sell simple products. It's solution dedicated for the most demanding users. You can also create auctions, booking/reservation products or product kits. GrandNode became a mature solution especially for developers who want to develop a modern, functional and high performance e-commerce system.
 
@@ -38,6 +38,8 @@ Premium themes: [https://grandnode.com/grandnode-themes](https://grandnode.com/g
 Premium extensions: [https://grandnode.com/extensions](https://grandnode.com/extensions)
 
 ## Development status ##
+Beta version released! Become our contributor and test the incoming 4.60 version of GrandNode. 
+Beta version can be downloaded from [releases section.](https://github.com/grandnode/grandnode/releases/tag/4.60Beta)
 
 The latest stable version is 4.50
 Active development version: 4.60 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
