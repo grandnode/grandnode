@@ -48,7 +48,6 @@ namespace Grand.Web.Services
         private readonly IVendorService _vendorService;
         private readonly IProductTagService _productTagService;
         private readonly ICurrencyService _currencyService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISearchTermService _searchTermService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
@@ -80,7 +79,6 @@ namespace Grand.Web.Services
             IVendorService vendorService,
             IProductTagService productTagService,
             ICurrencyService currencyService,
-            IHttpContextAccessor httpContextAccessor,
             ISearchTermService searchTermService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -111,7 +109,6 @@ namespace Grand.Web.Services
             _vendorService = vendorService;
             _productTagService = productTagService;
             _currencyService = currencyService;
-            _httpContextAccessor = httpContextAccessor;
             _searchTermService = searchTermService;
             _aclService = aclService;
             _storeMappingService = storeMappingService;
@@ -1458,7 +1455,7 @@ namespace Grand.Web.Services
 
         }
 
-        public virtual async Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual async Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command, bool isSearchTermSpecified)
         {
             if (model == null)
                 model = new SearchModel();
@@ -1571,16 +1568,7 @@ namespace Grand.Web.Services
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-            var isSearchTermSpecified = false;
-            try
-            {
-                isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
-            }
-            catch
-            {
-                isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);
-            }
+
             if (isSearchTermSpecified)
             {
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)

@@ -57,7 +57,7 @@ namespace Grand.Web.Interfaces
 
         Task<SearchBoxModel> PrepareSearchBox();
 
-        Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command);
+        Task<SearchModel> PrepareSearch(SearchModel model, CatalogPagingFilteringModel command, bool isSearchTermSpecified);
 
 
     }

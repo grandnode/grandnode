@@ -410,9 +410,10 @@ namespace Grand.Web.Controllers
         {
             //'Continue shopping' URL
             await SaveLastContinueShoppingPage(_workContext.CurrentCustomer);
-            
+
             //Prepare model
-            var searchmodel = await _catalogViewModelService.PrepareSearch(model, command);
+            var isSearchTermSpecified = HttpContext?.Request?.Query.ContainsKey("q");
+            var searchmodel = await _catalogViewModelService.PrepareSearch(model, command, isSearchTermSpecified.HasValue ? isSearchTermSpecified.Value : false);
 
             return View(searchmodel);
         }

@@ -8,7 +8,6 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
-using Grand.Core.Http;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -69,7 +68,6 @@ namespace Grand.Web.Services
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IAuctionService _auctionService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDateTimeHelper _dateTimeHelper;
 
         private readonly MediaSettings _mediaSettings;
@@ -111,7 +109,6 @@ namespace Grand.Web.Services
             IPriceCalculationService priceCalculationService,
             IGenericAttributeService genericAttributeService,
             IAuctionService auctionService,
-            IHttpContextAccessor httpContextAccessor,
             IDateTimeHelper dateTimeHelper,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -151,7 +148,6 @@ namespace Grand.Web.Services
             _priceCalculationService = priceCalculationService;
             _genericAttributeService = genericAttributeService;
             _auctionService = auctionService;
-            _httpContextAccessor = httpContextAccessor;
             _dateTimeHelper = dateTimeHelper;
 
             _mediaSettings = mediaSettings;
@@ -615,12 +611,6 @@ namespace Grand.Web.Services
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                 model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
 
-                //custom values
-                var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
-                if (processPaymentRequest != null)
-                {
-                    model.OrderReviewData.CustomValues = processPaymentRequest.CustomValues;
-                }
             }
             #endregion
         }

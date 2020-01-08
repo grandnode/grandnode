@@ -4,7 +4,10 @@
 
 <div class="order-summary-content mt-3" id="ordersummarypagecart">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
-    <partial name="_OrderReviewData" model="Model.OrderReviewData" />
+    @if (Model.OrderReviewData.Display)
+    {
+        <partial name="_OrderReviewData" model="Model.OrderReviewData" />
+    }
     @if (Model.Items.Any())
     {
         if (Model.Warnings.Any())

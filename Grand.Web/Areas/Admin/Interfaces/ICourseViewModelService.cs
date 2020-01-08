@@ -18,7 +18,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Task<CourseLesson> UpdateCourseLessonModel(CourseLesson lesson, CourseLessonModel model);
         Task DeleteCourseLesson(CourseLesson lesson);
 
-        Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel(HttpContext httpContext);
+        Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel();
         Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(CourseModel.AssociateProductToCourseModel model, int pageIndex, int pageSize);
     }
 }

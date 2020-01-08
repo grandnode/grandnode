@@ -162,7 +162,6 @@ namespace Grand.Web.Models.ShoppingCart
                 BillingAddress = new AddressModel();
                 ShippingAddress = new AddressModel();
                 PickupAddress = new AddressModel();
-                CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 
@@ -177,7 +176,6 @@ namespace Grand.Web.Models.ShoppingCart
 
             public string PaymentMethod { get; set; }
 
-            public Dictionary<string, object> CustomValues { get; set; }
         }
 		#endregion
     }
