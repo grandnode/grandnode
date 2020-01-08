@@ -797,28 +797,7 @@ namespace Grand.Services.Customers
             return (int)customers.DeletedCount;
 
         }
-
-        /// <summary>
-        /// Update values two factor authorization for customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        public virtual async Task UpdateCustomerTwoFactorAuth(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.TwoFactorEnabled, customer.TwoFactorEnabled)
-                .Set(x => x.TwoFactorSecretKey, customer.TwoFactorSecretKey);
-
-            await _customerRepository.Collection.UpdateOneAsync(filter, update);
-
-            //event notification
-            await _mediator.EntityUpdated(customer);
-        }
-
+                
         #endregion
 
         #region Customer roles

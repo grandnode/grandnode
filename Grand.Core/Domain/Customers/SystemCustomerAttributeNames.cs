@@ -21,6 +21,7 @@ namespace Grand.Core.Domain.Customers
         public static string TimeZoneId { get { return "TimeZoneId"; } }
         public static string CustomCustomerAttributes { get { return "CustomCustomerAttributes"; } }
 
+
         //Other attributes
         public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
         public static string GiftCardCouponCodes { get { return "GiftCardCouponCodes"; } }
@@ -34,6 +35,9 @@ namespace Grand.Core.Domain.Customers
         public static string LastUrlReferrer { get { return "LastUrlReferrer"; } }
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
+        public static string TwoFactorEnabled { get { return "TwoFactorEnabled"; } }
+        public static string TwoFactorSecretKey { get { return "TwoFactorSecretKey"; } }
+
 
         //depends on store
         public static string CurrencyId { get { return "CurrencyId"; } }

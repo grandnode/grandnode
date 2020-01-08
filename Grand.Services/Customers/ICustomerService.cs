@@ -241,14 +241,7 @@ namespace Grand.Services.Customers
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
         Task<int> DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
-
-
-        /// <summary>
-        /// Update values two factor authorization for customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        Task UpdateCustomerTwoFactorAuth(Customer customer);
-
+        
         #endregion
 
         #region Password history

@@ -879,7 +879,7 @@ namespace Grand.Web.Services
             string manualCode)
         {
             var model = new TwoFactorAuthenticationModel {
-                Is2faEnabled = customer.TwoFactorEnabled,
+                Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled),
                 IsMachineRemembered = true,
                 RecoveryCodesLeft = 0,
                 HasAuthenticator = true,
