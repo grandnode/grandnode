@@ -2,6 +2,7 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Security.Authorization;
+using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Courses;
@@ -101,6 +102,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                     return false;
+            }
+            if (objType == EntityType.BlogPost)
+            {
+                return await PermissionForBlog(entityId);
             }
             return true;
         }
@@ -218,6 +223,29 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     return false;
+                }
+                return true;
+            }
+            return false;
+        }
+        protected async Task<bool> PermissionForBlog(string id)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return false;
+
+            var blogService = _serviceProvider.GetRequiredService<IBlogService>();
+            var blog = await blogService.GetBlogPostById(id);
+            if (blog != null)
+            {
+                if (_workContext.CurrentCustomer.IsStaff())
+                {
+                    if (!blog.LimitedToStores || (blog.LimitedToStores && blog.Stores.Contains(_workContext.CurrentCustomer.StaffStoreId) && blog.Stores.Count > 1))
+                        return false;
+                    else
+                    {
+                        if (!blog.AccessToEntityByStore(_workContext.CurrentCustomer.StaffStoreId))
+                            return false;
+                    }
                 }
                 return true;
             }

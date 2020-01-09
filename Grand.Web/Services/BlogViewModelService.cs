@@ -99,6 +99,7 @@ namespace Grand.Web.Services
                     item.Title = post.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id);
                     item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage) : description;
                     item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
+                    item.GenericAttributes = post.GenericAttributes;
 
                     //prepare picture model
                     if (!string.IsNullOrEmpty(post.PictureId))
@@ -219,6 +220,8 @@ namespace Grand.Web.Services
             model.Tags = blogPost.ParseTags().ToList();
             model.NumberOfComments = blogPost.CommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
+            model.GenericAttributes = blogPost.GenericAttributes;
+
             if (prepareComments)
             {
                 var blogComments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);

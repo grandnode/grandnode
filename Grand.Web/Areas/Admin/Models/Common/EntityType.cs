@@ -13,6 +13,7 @@
         Vendor = 8,
         Shipment = 9,
         ReturnRequest = 10,
-        Topic = 11
+        Topic = 11,
+        BlogPost = 12
     }
 }
