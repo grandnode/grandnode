@@ -1239,6 +1239,14 @@ nav .nav-item.list-inline {
     -webkit-animation-delay: 3.5s;
     animation-delay: 3.5s;
 }
+.delay-4-5s {
+	-webkit-animation-delay: .5s;
+	animation-delay: .5s;
+}
+.delay-5-5s {
+	-webkit-animation-delay: 1.5s;
+	animation-delay: 1.5s;
+}
 
 /*header*/
 
