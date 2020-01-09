@@ -10125,6 +10125,9 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.BackToList">
     <Value>back to news item list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Deleted">
     <Value>The news item has been deleted successfully.</Value>
   </LocaleResource>
@@ -10256,6 +10259,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
+    <Value>You need to save the news item.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Stores">
     <Value>Stores</Value>

@@ -809,12 +809,17 @@
   <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
     <Value>Go to return request</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Comments">
     <Value>Comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit">
     <Value>You need to save the blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
+    <Value>You need to save the news item.</Value>
   </LocaleResource>
 </Language>
 
