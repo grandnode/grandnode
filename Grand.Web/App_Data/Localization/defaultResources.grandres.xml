@@ -9387,6 +9387,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.BackToList">
     <Value>back to blog post list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Deleted">
     <Value>The blog post has been deleted successfully.</Value>
   </LocaleResource>
@@ -9509,6 +9512,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products.AddNew">
     <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit">
+    <Value>You need to save the blog post.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
     <Value>Stores</Value>
