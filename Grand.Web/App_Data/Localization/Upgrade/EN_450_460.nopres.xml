@@ -821,5 +821,11 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
     <Value>You need to save the news item.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
+    <Value>Please check this box, if topic should be visible publicly.</Value>
+  </LocaleResource>
 </Language>
 
