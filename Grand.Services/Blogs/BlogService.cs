@@ -253,11 +253,11 @@ namespace Grand.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
-        public virtual async Task<IList<BlogComment>> GetAllComments(string customerId)
+        public virtual async Task<IList<BlogComment>> GetAllComments(string customerId, string storeId)
         {
             var query = from c in _blogCommentRepository.Table
                         orderby c.CreatedOnUtc
-                        where (customerId == "" || c.CustomerId == customerId)
+                        where (customerId == "" || c.CustomerId == customerId) && (storeId == "" || c.StoreId == storeId)
                         select c;        
             
             return await query.ToListAsync();

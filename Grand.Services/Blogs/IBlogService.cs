@@ -83,8 +83,9 @@ namespace Grand.Services.Blogs
         /// Gets all comments
         /// </summary>
         /// <param name="customerId">Customer identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Comments</returns>
-        Task<IList<BlogComment>> GetAllComments(string customerId);
+        Task<IList<BlogComment>> GetAllComments(string customerId, string storeId);
 
         /// <summary>
         /// Gets a blog comment

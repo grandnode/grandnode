@@ -821,5 +821,11 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
     <Value>You need to save the news item.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Permisions">
+    <Value>You can't edit this blog post, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Permisions">
+    <Value>You can't edit this category blog, because it can be used in many stores.</Value>
+  </LocaleResource>
 </Language>
 
