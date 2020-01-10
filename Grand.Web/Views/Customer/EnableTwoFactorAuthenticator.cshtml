@@ -29,12 +29,12 @@
                                 <img src="@Model.QrCodeSetupImageUrl" />
                             </div>
                             <div>
-                                Manual Setup Code : @Model.ManualInputCode
+                                @T("TwoFactorAuthenticator.ManualSetupCode"): @Model.ManualInputCode
                             </div>
                         </div>
                         <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
-                            @Html.HiddenFor(m => m.Is2faEnabled);
-                            @Html.HiddenFor(m => m.UserUniqueKey);
+                            @Html.HiddenFor(m => m.Is2faEnabled)
+                            @Html.HiddenFor(m => m.UserUniqueKey)
 
                             <div class="card-body">
                                 <div class="row">

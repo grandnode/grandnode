@@ -1477,6 +1477,9 @@ namespace Grand.Web.Controllers
 
         public IActionResult SettingTwoFactorAuthenticator()
         {
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("CustomerInfo");
+
             var customer = _workContext.CurrentCustomer;
             var model = _customerViewModelService.PrepareTwoFactorAuthModel(customer, null, null, null);
             return View(model);
@@ -1484,6 +1487,9 @@ namespace Grand.Web.Controllers
 
         public IActionResult EnableTwoFactorAuthenticator()
         {
+            if (!_customerSettings.TwoFactorAuthenticationEnabled)
+                return RedirectToRoute("CustomerInfo");
+
             var customer = _workContext.CurrentCustomer;
 
             var secretKey = _twoFactorAuthenticationService.GenerateSecurityCode();

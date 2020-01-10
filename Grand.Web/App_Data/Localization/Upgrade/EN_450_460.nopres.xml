@@ -783,4 +783,7 @@
   <LocaleResource Name="TwoFactorAuthenticator.Disable">
     <Value>Disable</Value>
   </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.ManualSetupCode">
+    <Value>Manual Setup Code</Value>  
+  </LocaleResource>
 </Language>
