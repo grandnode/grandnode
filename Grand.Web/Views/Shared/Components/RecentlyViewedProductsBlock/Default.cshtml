@@ -11,7 +11,7 @@
                         <div class="d-flex flex-row">
                                 @if (!String.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
                                 {
-                                    <div class="d-none d-lg-block">
+                                    <div>
                                             <a class="product-picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
                                                 <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                                             </a>

@@ -10,7 +10,6 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
-using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -43,7 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
-        private readonly IDocumentService _documentService;
 
         #endregion
 
@@ -55,10 +53,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkContext workContext,
-            ICurrencyService currencyService,
             IPdfService pdfService,
-            IExportManager exportManager,
-            IDocumentService documentService)
+            IExportManager exportManager)
         {
             _orderViewModelService = orderViewModelService;
             _orderService = orderService;
@@ -67,7 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _pdfService = pdfService;
             _exportManager = exportManager;
-            _documentService = documentService;
         }
 
         #endregion
@@ -853,6 +848,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             order.OrderTax = model.TaxValue;
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
+            order.CurrencyRate = model.CurrencyRate;
             await _orderService.UpdateOrder(order);
 
             //add a note
@@ -900,7 +896,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -931,7 +927,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1019,7 +1015,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1061,7 +1057,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     ErrorNotification($"This order item is in associated with shipment {shipment.ShipmentNumber}. Please delete it first.", false);
                     //selected tab
-                    SaveSelectedTabIndex(persistForTheNextRequest: false);
+                    await SaveSelectedTabIndex(persistForTheNextRequest: false);
                     var model = new OrderModel();
                     await _orderViewModelService.PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -1080,7 +1076,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -1106,7 +1102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -1148,7 +1144,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1189,7 +1185,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             await _orderViewModelService.PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1557,20 +1553,5 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Documents
-
-        [HttpPost]
-        public async Task<IActionResult> DocumentList(DataSourceRequest command, string orderId)
-        {
-            var documents = await _documentService.GetAll(objectId: orderId, reference: (int)Core.Domain.Documents.Reference.Order, 
-                pageSize: command.PageSize, pageIndex: command.Page - 1);
-            var gridModel = new DataSourceResult {
-                Data = documents.ToList(),
-                Total = documents.TotalCount
-            };
-            return Json(gridModel);
-        }
-
-        #endregion
     }
 }

@@ -726,7 +726,7 @@
     <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
-    <Value>Save</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
@@ -785,5 +785,80 @@
   </LocaleResource>
   <LocaleResource Name="TwoFactorAuthenticator.ManualSetupCode">
     <Value>Manual Setup Code</Value>  
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails.Info ">
+    <Value>Shipment info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Document">
+    <Value>Shipment document {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToShipment">
+    <Value>Go to shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToCategory">
+    <Value>Go to category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToManufacturer">
+    <Value>Go to manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToVendor">
+    <Value>Go to vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
+    <Value>Go to return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit">
+    <Value>You need to save the blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
+    <Value>You need to save the news item.</Value>
   </LocaleResource>
 </Language>
+

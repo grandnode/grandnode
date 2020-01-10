@@ -69,7 +69,7 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                html = this.RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
+                html = await RenderPartialViewToString("_Poll", await _pollViewModelService.PreparePoll(poll, true)),
             });
         }
         

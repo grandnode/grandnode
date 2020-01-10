@@ -97,7 +97,8 @@
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
-<body >
+<body>
+    @Html.AntiForgeryToken()
     <script>
         if (document.readyState == "loading") {
             let value = localStorage.getItem("sideBarCookie");
@@ -108,7 +109,7 @@
                 if ($('body').hasClass('nav-sm')) {
                     $('#sidebar-menu').find('li.active').addClass('active-sm').removeClass('active');
                     $('#sidebar-menu').find('li.active-sm ul').hide();
-                }      
+                }
             }
             else {
                 $('body').removeClass('nav-sm');
@@ -267,10 +268,10 @@
                 <vc:admin-widget widget-zone="header_navbar_after" additional-data="null" />
             }
 
-                <div class="right_col" role="main">
-                    <partial name="Notifications" />
-                    @RenderBody()
-                </div>
+            <div class="right_col" role="main">
+                <partial name="Notifications" />
+                @RenderBody()
+            </div>
             <div class="throbber">
                 <div class="curtain">
                 </div>

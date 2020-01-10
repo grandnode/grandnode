@@ -202,11 +202,14 @@
         </div>
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="GiftCards_Deactivated_OrderStatusId" class="control-label" />
+                <admin-label asp-for="DeactivateGiftCardsAfterCancelOrder" class="control-label" />
             </div>
             <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="GiftCards_Deactivated_OrderStatusId" asp-items="Model.GiftCards_Deactivated_OrderStatuses" />
-                <span asp-validation-for="GiftCards_Deactivated_OrderStatusId"></span>
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="DeactivateGiftCardsAfterCancelOrder" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="DeactivateGiftCardsAfterCancelOrder"></span>
             </div>
         </div>
         <div class="form-group">

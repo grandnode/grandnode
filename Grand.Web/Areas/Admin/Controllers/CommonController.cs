@@ -5,6 +5,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Logging;
+using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
@@ -19,6 +20,7 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Infrastructure;
 using Grand.Services.Localization;
+using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Security;
@@ -33,6 +35,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Bindings;
 using MongoDB.Driver.Core.Operations;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -450,6 +453,29 @@ namespace Grand.Web.Areas.Admin.Controllers
             var _activityLogRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
             await _activityLogRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
             model.DeleteActivityLog = true;
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("convert-picture-webp")]
+        public async Task<IActionResult> MaintenanceConvertPicture([FromServices] IPictureService pictureService, [FromServices] MediaSettings mediaSettings)
+        {
+            var model = new MaintenanceModel();
+            model.ConvertedPictureModel.NumberOfConvertItems = 0;
+            if (pictureService.StoreInDb)
+            {
+                var pictures = pictureService.GetPictures();
+                foreach (var picture in pictures)
+                {
+                    if (!picture.MimeType.Contains("webp"))
+                    {
+                        using var image = SKBitmap.Decode(picture.PictureBinary);
+                        SKData d = SKImage.FromBitmap(image).Encode(SKEncodedImageFormat.Webp, mediaSettings.DefaultImageQuality);
+                        await pictureService.UpdatePicture(picture.Id, d.ToArray(), "image/webp", picture.SeoFilename, picture.AltAttribute, picture.TitleAttribute, true, false);
+                        model.ConvertedPictureModel.NumberOfConvertItems += 1;
+                    }
+                }
+            }
             return View(model);
         }
 

@@ -37,7 +37,7 @@ function toggleEnableColorSquaresRgb() {
 }
 </script>
 <vc:admin-widget widget-zone="specification_attribute_option_details_top" additional-data="null" />
-@(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
+@(await Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

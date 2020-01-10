@@ -11,6 +11,7 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,21 +39,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var tags = (await _productTagService.GetAllProductTags())
-                //order by product count
-                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, ""))
-                .Select(x => new ProductTagModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    ProductCount = _productTagService.GetProductCount(x.Id, "")
-                })
-                .ToList();
+            var tags = (await _productTagService.GetAllProductTags());
+            var productTags = new List<ProductTagModel>();
+            foreach (var item in tags)
+            {
+                var ptag = new ProductTagModel();
+                ptag.Id = item.Id;
+                ptag.Name = item.Name;
+                ptag.ProductCount = await _productTagService.GetProductCount(item.Id, "");
+                productTags.Add(ptag);
+            }
 
             var gridModel = new DataSourceResult
             {
-                Data = tags.PagedForCommand(command),
-                Total = tags.Count
+                Data = productTags.OrderByDescending(x=>x.ProductCount).PagedForCommand(command),
+                Total = tags.Count()
             };
 
             return Json(gridModel);
@@ -88,7 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Id = productTag.Id,
                 Name = productTag.Name,
-                ProductCount = _productTagService.GetProductCount(productTag.Id, "")
+                ProductCount = await _productTagService.GetProductCount(productTag.Id, "")
             };
             //locales
             await AddLocales(_languageService, model.Locales, (locale, languageId) =>

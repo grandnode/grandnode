@@ -252,7 +252,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("VendorReviews")]
         [FormValueRequired("add-review")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid, 
             [FromServices] IOrderService orderService, [FromServices] IMediator eventPublisher, [FromServices] CaptchaSettings captchaSettings)
@@ -410,9 +410,10 @@ namespace Grand.Web.Controllers
         {
             //'Continue shopping' URL
             await SaveLastContinueShoppingPage(_workContext.CurrentCustomer);
-            
+
             //Prepare model
-            var searchmodel = await _catalogViewModelService.PrepareSearch(model, command);
+            var isSearchTermSpecified = HttpContext?.Request?.Query.ContainsKey("q");
+            var searchmodel = await _catalogViewModelService.PrepareSearch(model, command, isSearchTermSpecified.HasValue ? isSearchTermSpecified.Value : false);
 
             return View(searchmodel);
         }

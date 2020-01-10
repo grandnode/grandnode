@@ -17,7 +17,7 @@ $(document).ready(function () {
         dataSource: {
             transport: {
                 read: {
-                    url: "@Html.Raw(Url.Action("DocumentList", "Customer", new { customerId = Model.Id }))",
+                    url: "@Html.Raw(Url.Action("ListDocuments", "Document", new { customerId = Model.Id }))",
                     type: "POST",
                     dataType: "json",
                     data: addAntiForgeryToken
@@ -26,10 +26,7 @@ $(document).ready(function () {
             schema: {
                 data: "Data",
                 total: "Total",
-                errors: "Errors",
-                model: {
-                    id: "Id"
-                }
+                errors: "Errors",                
             },
             error: function(e) {
                 display_kendoui_grid_error(e);
@@ -37,6 +34,9 @@ $(document).ready(function () {
                 this.cancelChanges();
             },
             pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
         },
         pageable: {
             refresh: true,

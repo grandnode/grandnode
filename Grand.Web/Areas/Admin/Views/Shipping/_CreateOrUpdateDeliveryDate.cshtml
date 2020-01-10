@@ -7,7 +7,7 @@
 <input asp-for="Id" type="hidden" />
 <vc:admin-widget widget-zone="delivery_date_details_top" additional-data="Model" />
 <input id="active-menu-item" type="hidden" value="/Admin/Shipping/DeliveryDates" />
-@(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
+@(await Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
 @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

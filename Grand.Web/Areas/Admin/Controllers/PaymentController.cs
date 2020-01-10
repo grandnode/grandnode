@@ -70,13 +70,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Methods() => View();
 
         [HttpPost]
-        public IActionResult Methods(DataSourceRequest command)
+        public async Task<IActionResult> Methods(DataSourceRequest command)
         {
             var paymentMethodsModel = new List<PaymentMethodModel>();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             foreach (var paymentMethod in paymentMethods)
             {
-                var tmp1 = paymentMethod.ToModel();
+                var tmp1 = await paymentMethod.ToModel();
                 tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
                 tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
                 tmp1.ConfigurationUrl = paymentMethod.GetConfigurationPageUrl();
@@ -124,14 +124,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public IActionResult ConfigureMethod(string systemName)
+        public async Task<IActionResult> ConfigureMethod(string systemName)
         {
             var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
             if (pm == null)
                 //No payment method found with the specified id
                 return RedirectToAction("Methods");
 
-            var model = pm.ToModel();
+            var model = await pm.ToModel();
             model.LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper);
             model.ConfigurationUrl = pm.GetConfigurationPageUrl();
 
@@ -148,7 +148,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             foreach (var pm in paymentMethods)
             {
-                model.AvailablePaymentMethods.Add(pm.ToModel());
+                model.AvailablePaymentMethods.Add(await pm.ToModel());
             }
             foreach (var c in countries)
             {
@@ -256,7 +256,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
             return RedirectToAction("MethodRestrictions");
         }
         #endregion

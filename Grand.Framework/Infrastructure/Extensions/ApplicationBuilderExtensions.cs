@@ -75,18 +75,18 @@ namespace Grand.Framework.Infrastructure.Extensions
             //log errors
             application.UseExceptionHandler(handler =>
             {
-                handler.Run(context =>
+                handler.Run(async context =>
                 {
                     var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
                     if (exception == null)
-                        return Task.CompletedTask;
+                        return;
 
                     string authHeader = context.Request.Headers["Authorization"];
                     var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
                     if (apirequest)
                     {
-                        context.Response.WriteAsync(exception.Message).Wait();
-                        return Task.CompletedTask;
+                        await context.Response.WriteAsync(exception.Message);
+                        return;
                     }
                     try
                     {

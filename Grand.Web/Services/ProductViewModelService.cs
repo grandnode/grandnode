@@ -953,7 +953,7 @@ namespace Grand.Web.Services
                             Id = tag.Id,
                             Name = tag.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                             SeName = tag.SeName,
-                            ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                            ProductCount = await _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                         });
                     }
                 }
@@ -1614,7 +1614,9 @@ namespace Grand.Web.Services
 
             string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
 
-            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? form["WarehouseId"].ToString() : _storeContext.CurrentStore.DefaultWarehouseId;
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
+                form["WarehouseId"].ToString() :
+                (!string.IsNullOrEmpty(product.WarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             //rental attributes
             DateTime? rentalStartDate = null;

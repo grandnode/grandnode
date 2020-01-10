@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +19,7 @@ namespace Grand.Framework.TagHelpers.Admin
 {
     internal static class DefaultDisplayTemplates
     {
-        public static IHtmlContent BooleanTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> BooleanTemplate(IHtmlHelper htmlHelper)
         {
             bool? value = null;
             if (htmlHelper.ViewData.Model != null)
@@ -27,11 +28,11 @@ namespace Grand.Framework.TagHelpers.Admin
             }
 
             return htmlHelper.ViewData.ModelMetadata.IsNullableValueType ?
-                BooleanTemplateDropDownList(value) :
-                BooleanTemplateCheckbox(value ?? false);
+                await BooleanTemplateDropDownList(value) :
+                await BooleanTemplateCheckbox(value ?? false);
         }
 
-        private static IHtmlContent BooleanTemplateCheckbox(bool value)
+        private static async Task<IHtmlContent> BooleanTemplateCheckbox(bool value)
         {
             var inputTag = new TagBuilder("input");
             inputTag.AddCssClass("check-box");
@@ -43,10 +44,10 @@ namespace Grand.Framework.TagHelpers.Admin
             }
 
             inputTag.TagRenderMode = TagRenderMode.SelfClosing;
-            return inputTag;
+            return await Task.FromResult(inputTag);
         }
 
-        private static IHtmlContent BooleanTemplateDropDownList(bool? value)
+        private static async Task<IHtmlContent> BooleanTemplateDropDownList(bool? value)
         {
             var selectTag = new TagBuilder("select");
             selectTag.AddCssClass("list-box");
@@ -58,7 +59,7 @@ namespace Grand.Framework.TagHelpers.Admin
                 selectTag.InnerHtml.AppendHtml(DefaultHtmlGenerator.GenerateOption(item, item.Text));
             }
 
-            return selectTag;
+            return await Task.FromResult(selectTag);
         }
 
         // Will soon need to be shared with the default editor templates implementations.
@@ -72,7 +73,7 @@ namespace Grand.Framework.TagHelpers.Admin
             };
         }
 
-        public static IHtmlContent CollectionTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> CollectionTemplate(IHtmlHelper htmlHelper)
         {
             var model = htmlHelper.ViewData.Model;
             if (model == null)
@@ -136,7 +137,7 @@ namespace Grand.Framework.TagHelpers.Admin
                         templateName: null,
                         readOnly: true,
                         additionalViewData: null);
-                    result.AppendHtml(templateBuilder.Build());
+                    result.AppendHtml(await templateBuilder.Build());
                 }
 
                 return result;
@@ -147,18 +148,17 @@ namespace Grand.Framework.TagHelpers.Admin
             }
         }
 
-        public static IHtmlContent DecimalTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> DecimalTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper.ViewData.TemplateInfo.FormattedModelValue == htmlHelper.ViewData.Model)
             {
                 htmlHelper.ViewData.TemplateInfo.FormattedModelValue =
                     string.Format(CultureInfo.CurrentCulture, "{0:0.00}", htmlHelper.ViewData.Model);
             }
-
-            return StringTemplate(htmlHelper);
+            return await StringTemplate(htmlHelper);
         }
 
-        public static IHtmlContent EmailAddressTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> EmailAddressTemplate(IHtmlHelper htmlHelper)
         {
             var uriString = "mailto:" + ((htmlHelper.ViewData.Model == null) ?
                 string.Empty :
@@ -167,25 +167,24 @@ namespace Grand.Framework.TagHelpers.Admin
                 string.Empty :
                 htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString();
 
-            return HyperlinkTemplate(uriString, linkedText);
+            return await Task.FromResult(HyperlinkTemplate(uriString, linkedText));
         }
 
-        public static IHtmlContent HiddenInputTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> HiddenInputTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper.ViewData.ModelMetadata.HideSurroundingHtml)
             {
                 return HtmlString.Empty;
             }
-
-            return StringTemplate(htmlHelper);
+            return await StringTemplate(htmlHelper);
         }
 
-        public static IHtmlContent HtmlTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> HtmlTemplate(IHtmlHelper htmlHelper)
         {
-            return new HtmlString(htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString());
+            return await Task.FromResult(new HtmlString(htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString()));
         }
 
-        public static IHtmlContent ObjectTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> ObjectTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var templateInfo = viewData.TemplateInfo;
@@ -231,7 +230,7 @@ namespace Grand.Framework.TagHelpers.Admin
                     readOnly: true,
                     additionalViewData: null);
 
-                var templateBuilderResult = templateBuilder.Build();
+                var templateBuilderResult = await templateBuilder.Build();
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
                     var label = propertyMetadata.GetDisplayName();
@@ -265,25 +264,24 @@ namespace Grand.Framework.TagHelpers.Admin
                 !templateInfo.Visited(modelExplorer);
         }
 
-        public static IHtmlContent StringTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> StringTemplate(IHtmlHelper htmlHelper)
         {
             var value = htmlHelper.ViewData.TemplateInfo.FormattedModelValue;
             if (value == null)
             {
                 return HtmlString.Empty;
             }
-
-            return new StringHtmlContent(value.ToString());
+            return await Task.FromResult(new StringHtmlContent(value.ToString()));
         }
 
-        public static IHtmlContent UrlTemplate(IHtmlHelper htmlHelper)
+        public static async Task<IHtmlContent> UrlTemplate(IHtmlHelper htmlHelper)
         {
             var uriString = (htmlHelper.ViewData.Model == null) ? string.Empty : htmlHelper.ViewData.Model.ToString();
             var linkedText = (htmlHelper.ViewData.TemplateInfo.FormattedModelValue == null) ?
                 string.Empty :
                 htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString();
 
-            return HyperlinkTemplate(uriString, linkedText);
+            return await Task.FromResult(HyperlinkTemplate(uriString, linkedText));
         }
 
         // Neither uriString nor linkedText need be encoded prior to calling this method.

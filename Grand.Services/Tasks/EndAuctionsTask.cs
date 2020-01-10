@@ -50,7 +50,7 @@ namespace Grand.Services.Tasks
                 }
 
                 var warnings = await _shoppingCartService.AddToCart(await _customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
-                    bid.StoreId, customerEnteredPrice: bid.Amount);
+                    bid.StoreId, bid.WarehouseId, customerEnteredPrice: bid.Amount);
 
                 if (!warnings.Any())
                 {

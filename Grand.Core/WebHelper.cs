@@ -1,6 +1,5 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -247,7 +246,7 @@ namespace Grand.Core
             {
                 var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
                 if (currentStore != null)
-                    storeLocation = currentStore.Url;
+                    storeLocation = !currentStore.SslEnabled ? currentStore.Url : currentStore.SecureUrl;
                 else
                     throw new Exception("Current store cannot be loaded");
             }

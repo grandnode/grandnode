@@ -101,7 +101,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -126,7 +126,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -152,7 +152,7 @@ namespace Grand.Web.Controllers
 
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -223,7 +223,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)

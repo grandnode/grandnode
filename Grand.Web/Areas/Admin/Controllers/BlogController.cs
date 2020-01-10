@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -129,7 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = blogPost.Id });
                 }
@@ -258,7 +259,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("CategoryEdit", new { id = blogCategory.Id });
                 }
@@ -305,9 +306,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (blogCategory == null)
                 return ErrorForKendoGridJson("blogCategory no exists");
 
+            var blogposts = new List<BlogCategoryPost>();
+            foreach (var item in blogCategory.BlogPosts)
+            {
+                var post = new BlogCategoryPost();
+                post.Id = item.Id;
+                post.BlogPostId = post.BlogPostId;
+                var _post = await _blogService.GetBlogPostById(item.BlogPostId);
+                if (_post != null)
+                    post.Name = _post.Title;
+
+                blogposts.Add(post);
+            }
             var gridModel = new DataSourceResult
             {
-                Data =  blogCategory.BlogPosts.Select(x => new { Id = x.Id, BlogPostId = x.BlogPostId, Name = _blogService.GetBlogPostById(x.BlogPostId).Result?.Title }),
+                Data = blogposts,
                 Total = blogCategory.BlogPosts.Count
             };
             return Json(gridModel);

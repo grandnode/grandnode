@@ -361,7 +361,9 @@ namespace Grand.Services.Orders
                 warnings.Add(_localizationService.GetResource("ShoppingCart.RequiredWarehouse"));
             }
 
-            var warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+            var warehouseId = !string.IsNullOrEmpty(shoppingCartItem.WarehouseId) ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+                            //_shoppingCartSettings.AllowToSelectWarehouse ? shoppingCartItem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+
             if (!string.IsNullOrEmpty(warehouseId))
             {
                 var warehouse = await _shippingService.GetWarehouseById(warehouseId);
@@ -1076,24 +1078,13 @@ namespace Grand.Services.Orders
                     bool giftCardInfoSame = true;
                     if (_product.IsGiftCard)
                     {
-                        string giftCardRecipientName1;
-                        string giftCardRecipientEmail1;
-                        string giftCardSenderName1;
-                        string giftCardSenderEmail1;
-                        string giftCardMessage1;
                         _productAttributeParser.GetGiftCardAttribute(attributesXml,
-                            out giftCardRecipientName1, out giftCardRecipientEmail1,
-                            out giftCardSenderName1, out giftCardSenderEmail1, out giftCardMessage1);
+                            out var giftCardRecipientName1, out var giftCardRecipientEmail1,
+                            out var giftCardSenderName1, out var giftCardSenderEmail1, out var giftCardMessage1);
 
-                        string giftCardRecipientName2;
-                        string giftCardRecipientEmail2;
-                        string giftCardSenderName2;
-                        string giftCardSenderEmail2;
-                        string giftCardMessage2;
                         _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml,
-                            out giftCardRecipientName2, out giftCardRecipientEmail2,
-                            out giftCardSenderName2, out giftCardSenderEmail2, out giftCardMessage2);
-
+                            out var giftCardRecipientName2, out var giftCardRecipientEmail2,
+                            out var giftCardSenderName2, out var giftCardSenderEmail2, out var giftCardMessage2);
 
                         if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
                             giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())

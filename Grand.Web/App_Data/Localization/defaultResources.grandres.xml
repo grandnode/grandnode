@@ -2388,6 +2388,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.EditCategoryDetails">
     <Value>Edit category details</Value>
   </LocaleResource>
@@ -2679,6 +2682,9 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
     <Value>Edit manufacturer details</Value>
   </LocaleResource>
@@ -2702,6 +2708,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.CreatedOn">
     <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort">
+    <Value>Default sorting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DefaultSort.hint">
+    <Value>Allow to set default sorting for this manufacturer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
@@ -4723,7 +4735,7 @@
     <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.AddNew.Button">
-    <Value>Save</Value>
+    <Value>Add new generic attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.GenericAttributes.Fields.Id.Required">
     <Value>Id is required.</Value>
@@ -8004,6 +8016,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered.Hint">
     <Value>Check if an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder">
+    <Value>Deactivate gift cards after canceled of an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterCancelOrder.Hint">
+    <Value>Check to deactivate related gift cards when an order is canceled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.DeactivateGiftCardsAfterDeletingOrder">
     <Value>Deactivate gift cards after deleting of an order</Value>
   </LocaleResource>
@@ -8029,15 +8047,6 @@
     <Value>Gift cards are activated when the order status is...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Activated.Pending">
-    <Value>Order status could not be set to Pending</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated">
-    <Value>Gift card deactivation order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Hint">
-    <Value>Gift cards are deactivated when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Order.GiftCards_Deactivated.Pending">
     <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
@@ -8348,9 +8357,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Hint">
     <Value>Points are canceled when the order status is...</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Canceled.Pending">
-    <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForRegistration">
     <Value>Points for registration</Value>
@@ -9405,6 +9411,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.BackToList">
     <Value>back to blog post list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Deleted">
     <Value>The blog post has been deleted successfully.</Value>
   </LocaleResource>
@@ -9527,6 +9536,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products.AddNew">
     <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit">
+    <Value>You need to save the blog post.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
     <Value>Stores</Value>
@@ -10137,6 +10149,9 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.BackToList">
     <Value>back to news item list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Deleted">
     <Value>The news item has been deleted successfully.</Value>
   </LocaleResource>
@@ -10268,6 +10283,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
+    <Value>You need to save the news item.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Stores">
     <Value>Stores</Value>
@@ -12800,14 +12818,29 @@
   <LocaleResource Name="Admin.Documents.Document.Fields.Username.Hint">
     <Value>Enter the username of customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToCategory">
+    <Value>Go to category</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.documents.document.gotocustomer">
     <Value>Go to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToManufacturer">
+    <Value>Go to manufacturer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documents.Document.GoToOrder">
     <Value>Go to order</Value>
   </LocaleResource>
   <LocaleResource Name="admin.documents.document.gotoproduct">
     <Value>Go to product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToReturnRequest">
+    <Value>Go to return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToShipment">
+    <Value>Go to shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Documents.Document.GoToVendor">
+    <Value>Go to vendor</Value>
   </LocaleResource>
   <LocaleResource Name="admin.documents.document.info">
     <Value>Document info</Value>
@@ -13246,6 +13279,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.CreatedOn.Hint">
     <Value>The date/time the order was placed/created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency">
+    <Value>Currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Currency.hint">
+    <Value>Order was placed in currency code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CurrencyRate">
+    <Value>Currency rate</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Customer">
     <Value>Customer</Value>
@@ -13928,6 +13970,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.DeliverySelected">
     <Value>Set as delivered (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Documents">
+    <Value>Documents</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ID">
     <Value>Shipment #</Value>
   </LocaleResource>
@@ -14098,6 +14143,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ViewDetails">
     <Value>View shipment details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails.Info ">
+    <Value>Shipment info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.ShippingInfo">
     <Value>Shipping info</Value>
@@ -15800,6 +15848,15 @@
   <LocaleResource Name="Admin.System.Maintenance">
     <Value>Maintenance</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
+    <Value>Convert picture to webp format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Button">
+    <Value>Convert</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ConvertPicture.Number">
+    <Value>Number of converted picture</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ClearMostViewed">
     <Value>Clear field Most Viewed on the product</Value>
   </LocaleResource>
@@ -16555,6 +16612,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Documents">
+    <Value>Documents</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.EditVendorDetails">
     <Value>Edit vendor details</Value>
@@ -20299,6 +20359,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipment.Document">
+    <Value>Shipment document {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Cart</Value>

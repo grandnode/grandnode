@@ -9,13 +9,13 @@
 {
     @await Component.InvokeAsync("AdminHeaderLinks")
     <li class="nav-item">
-        <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("CustomerInfo")">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("CustomerInfo")">
             <span class="mdi mdi-account-circle"></span>
             <span class="text text-uppercase ml-3">@T("Account.MyAccount")</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("CustomerOrders")">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("CustomerOrders")">
             <span class="mdi mdi-cart"></span>
             <span class="text text-uppercase ml-3">@T("Account.CustomerOrders")</span>
         </a>
@@ -23,7 +23,7 @@
     @if (Model.AllowPrivateMessages)
     {
         <li class="nav-item">
-            <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+            <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
                 <span class="mdi mdi-email"></span>
                 <span class="text text-uppercase ml-3">@T("PrivateMessages.Inbox")</span>
                 <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
@@ -31,7 +31,7 @@
         </li>
     }
     <li class="nav-item">
-        <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("Logout")">
+        <a class="d-flex align-items-center nav-link btn btn-outline-secondary" href="@Url.RouteUrl("Logout")">
             <span class="mdi mdi-lock"></span>
             <span class="text text-uppercase ml-3">@T("Account.Logout")</span>
         </a>
@@ -42,12 +42,11 @@ else
     <li class="nav-item sidebar-info d-inline-flex justify-content-center flex-wrap my-3">
         <h5 class="d-flex justify-content-center mb-3 w-100">@T("Account.Login.ReturningCustomer") / @T("SideBar.NewCustomer")</h5>
         <a class="d-flex align-items-center nav-link btn btn-secondary" href="@Url.RouteUrl("Login")">
-            <span class="mdi mdi-lock-open"></span>
+            <span class="mdi mdi-lock"></span>
             <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Login")</span>
         </a>
         <a class="d-flex align-items-center nav-link btn btn-outline-secondary ml-3" href="@registerUrl">
-            <span class="mdi mdi-account-plus-outline"></span>
-            <span class="text text-uppercase ml-sm-3 ml-2">@T("Account.Register")</span>
+            <span class="text text-uppercase">@T("Account.Register")</span>
         </a>
     </li>
     <li class="nav-item">

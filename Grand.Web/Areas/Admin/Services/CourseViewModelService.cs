@@ -214,7 +214,7 @@ namespace Grand.Web.Areas.Admin.Services
             await _customerActivityService.InsertActivity("DeleteCourseLesson", lesson.Id, _localizationService.GetResource("ActivityLog.DeleteCourseLesson"), lesson.Name);
         }
 
-        public virtual async Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel(HttpContext httpContext)
+        public virtual async Task<CourseModel.AssociateProductToCourseModel> PrepareAssociateProductToCourseModel()
         {
             var model = new CourseModel.AssociateProductToCourseModel();
             //a vendor should have access only to his products

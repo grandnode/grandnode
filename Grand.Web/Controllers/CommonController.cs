@@ -247,7 +247,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("ContactUs")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -301,7 +301,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ContactVendorSend(ContactVendorModel model, bool captchaValid, [FromServices] IVendorService vendorService)
         {
@@ -447,8 +447,8 @@ namespace Grand.Web.Controllers
                     downloadGuid = Guid.Empty,
                 });
             }
-
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var form = await HttpContext.Request.ReadFormAsync();
+            var httpPostedFile = form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -463,8 +463,8 @@ namespace Grand.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (String.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
+                fileName = form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
 

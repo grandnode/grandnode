@@ -1,0 +1,93 @@
+﻿@model BlogPostModel
+@inject AdminAreaSettings adminAreaSettings
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <vc:admin-widget widget-zone="blog_details_comments_top" additional-data="Model" />
+        <div class="panel-body">
+            <div id="comments-grid"></div>
+        </div>
+        <vc:admin-widget widget-zone="blog_details_comments_bottom" additional-data="Model" />
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#comments-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Url.Action("Comments", "Blog", new { filterByBlogPostId = Model.Id })",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("CommentDelete", "Blog"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            //do not implicitly specify all fields
+                            //we do it only for fields which implicitly require it
+                            //otherwise, they'll be formatted wrong way
+                            CreatedOn: {type: "date" }
+                        }
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "CustomerId",
+                title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
+                width: 200,
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:kendo.htmlEncode(CustomerInfo)#</a>'
+            }, {
+                field: "Comment",
+                title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",
+                encoded: false
+            }, {
+                field: "CreatedOn",
+                title: "@T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                title: "@T("Admin.Common.Delete")",
+                width: 100
+            }]
+        });
+    });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Blog.BlogPosts.SaveBeforeEdit")
+    </div>
+}

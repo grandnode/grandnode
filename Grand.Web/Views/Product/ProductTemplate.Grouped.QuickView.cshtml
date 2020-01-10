@@ -9,7 +9,7 @@
             <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
                 <span class="quick-close"></span>
             </button>
-            <div class="page product-details-page">
+            <div class="product-details-page">
                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
                     <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
                         <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
@@ -18,7 +18,7 @@
                                     @if (!string.IsNullOrEmpty(Model.Flag))
                                     {
                                         <div class="product-labels">
-                                            <span class="product-label bg-info text-white">@Model.Flag</span>
+                                            <span class="product-label badge bg-info text-white">@Model.Flag</span>
                                         </div>
                                     }
                                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
@@ -81,7 +81,7 @@
                                     @if (Model.ProductReviewOverview.AllowCustomerReviews)
                                     {
                                         <li class="nav-item">
-                                            <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><span class="mdi mdi-account-star d-md-none"></span></a>
+                                            <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><span class="mdi mdi-account-star d-md-none"></span></a>
                                         </li>
                                     }
                                     @if (Model.AskQuestionOnProduct)
@@ -173,15 +173,17 @@
                                                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                                                         <partial name="_ProductPrice" model="variant.ProductPrice" view-data="dataDictPrice" />
                                                                     }
-                                                                    <div class="btn-group mt-3">
-                                                                        @{
-                                                                            var dataDictAddToCart = new ViewDataDictionary(ViewData);
-                                                                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                                                            <partial name="_AddToCartGroup" model=" variant.AddToCart" view-data="dataDictAddToCart" />
-                                                                            var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
-                                                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                                                            <partial name="_AddToWishlistGroup" model=" variant.AddToCart" view-data="dataDictAddToWishlist" />
-                                                                        }
+                                                                    <div class="generalAdToCart">
+                                                                        <div class="btn-group product-simple-share my-3 d-inline-flex flex-wrap">
+                                                                            @{
+                                                                                var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                                                                dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                                                <partial name="_AddToCart" model=" variant.AddToCart" view-data="dataDictAddToCart" />
+                                                                                var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                                                                dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                                                <partial name="_AddToWishlist" model=" variant.AddToCart" view-data="dataDictAddToWishlist" />
+                                                                            }
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                         </div>

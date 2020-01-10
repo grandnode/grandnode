@@ -167,7 +167,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 campaign = await _campaignViewModelService.UpdateCampaignModel(campaign, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 //selected tab
-                SaveSelectedTabIndex();
+                await SaveSelectedTabIndex();
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }

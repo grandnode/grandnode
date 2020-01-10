@@ -11,5 +11,6 @@ namespace Grand.Web.Areas.Admin.Models.Common
         public string Key { get; set; }
         public string Value { get; set; }
         public string StoreId { get; set; }
+        public int SelectedTab { get; set; }
     }
 }

@@ -297,7 +297,6 @@ body {
 }
 
 .nav-sm .nav.side-menu li a i {
-    font-size: 25px !important;
     text-align: center;
     width: 100% !important;
     margin-bottom: 5px
@@ -2683,6 +2682,21 @@ button, .buttons, .btn, .modal-footer .btn+.btn {
 
 .input-group {
     margin-bottom: 10px
+}
+
+.custom-input-group.input-group {
+    display: inline-flex;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.custom-input-group.input-group .form-control {
+    margin-right: 5px;
+    padding: 6px 12px;
+}
+.custom-input-group.input-group .input-group-addon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ln_solid {

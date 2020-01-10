@@ -26,11 +26,11 @@ namespace Grand.Core.Tests
             */
 
             ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
-            await icacheManager.Set("key1001", 33, int.MaxValue);
-            await icacheManager.Set("key1202", 1244, int.MaxValue);
-            await icacheManager.Set("key1003", 512, int.MaxValue);
-            await icacheManager.Set("key1204", 55, int.MaxValue);
-            await icacheManager.Set("key1005", 32, int.MaxValue);
+            await icacheManager.SetAsync("key1001", 33, int.MaxValue);
+            await icacheManager.SetAsync("key1202", 1244, int.MaxValue);
+            await icacheManager.SetAsync("key1003", 512, int.MaxValue);
+            await icacheManager.SetAsync("key1204", 55, int.MaxValue);
+            await icacheManager.SetAsync("key1005", 32, int.MaxValue);
 
             string pattern = @"key100\d"; //"key100" and one digit
 
@@ -43,8 +43,8 @@ namespace Grand.Core.Tests
 
             await icacheManager.RemoveByPattern(pattern);
 
-            Assert.IsNotNull(icacheManager.Get<int>("key1202"));
-            Assert.IsNotNull(icacheManager.Get<int>("key1204"));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1202"));
+            Assert.IsNotNull(icacheManager.GetAsync<int>("key1204"));
         }
     }
 }

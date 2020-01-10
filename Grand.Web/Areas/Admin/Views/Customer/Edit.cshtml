@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
 }
 <form asp-controller="Customer" asp-action="Edit" method="post" id = "customer-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -49,7 +49,7 @@
 @*send email form*@
 <div id="sendemail-window" style="display:none;">
     <form asp-controller="Customer" asp-action="SendEmail" method="post" asp-route-id="Id">
-        <antiforgery-token />
+        
         <input type="hidden" asp-for="Id" id="sendemail_customerId" />
         <div class="form-horizontal">
             <div class="form-body">
@@ -112,7 +112,7 @@
 @*send PM form*@
 <div id="sendprivatemessage-window" style="display:none;">
     <form asp-controller="Customer" asp-action="SendPm" method="post" asp-route-id="Id" >
-        <antiforgery-token />
+        
         <input type="hidden" asp-for="Id" id="sendprivatemessage_customerId" />
         <div class="form-horizontal">
             <div class="form-body">

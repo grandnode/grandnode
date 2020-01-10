@@ -3,7 +3,7 @@
 <input asp-for="Id" type="hidden" />
 
 <input id="active-menu-item" type="hidden" value="/Admin/Setting/Order" />
-@(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
+@(await Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">

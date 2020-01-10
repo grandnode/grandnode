@@ -3,7 +3,44 @@
 */
 $(document).ready(function () {
     $('body').addClass('is-ready');
+    $(".categoryGrid .flex-grid, .manufacturerGrid .flex-grid, .customGrid .flex-grid").scrollLeft(30);
 });
+
+// meno scrolls up and down
+
+function MenuScroll() {
+    var body = document.body;
+    var scrollUp = "scroll-up";
+    var scrollDown = "scroll-down";
+    var onTop = "onTop";
+    let lastScroll = 0;
+
+    $(document).scroll(function () {
+        var currentScroll = window.pageYOffset;
+        if ($(this).scrollTop() <= 120) {
+            $(body).addClass(onTop);
+        } else {
+            $(body).removeClass(onTop);
+        }
+        if (currentScroll > lastScroll && !$(body).hasClass(scrollDown)) {
+            // down
+            $(body).removeClass(scrollUp);
+            if (lastScroll != 0) {
+                $(body).addClass(scrollDown);
+                return;
+            } else {
+                $(body).removeClass(scrollDown);
+            }
+        } else if (currentScroll < lastScroll && $(body).hasClass(scrollDown)) {
+            // up
+            $(body).removeClass(scrollDown);
+            $(body).addClass(scrollUp);
+        }
+        lastScroll = currentScroll;
+    });
+}
+
+// offcanvas
 
 $(function () {
     $(document).bind("beforecreate.offcanvas", function (e) {
@@ -39,6 +76,7 @@ $(function () {
     $(document).trigger("enhance");
 });
 
+// main menu system
 
 function mainMenuReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
@@ -57,21 +95,30 @@ function mainMenuReplace() {
                 $(this).parents(".dropdown-menu:first").removeClass("show");
             });
         });
-        $(".categoryGrid .flex-grid").scrollLeft(30);
     }
     else {
         $('#mobile_menu .navbar-collapse').prependTo('.mainNav');
         Popper.Defaults.modifiers.computeStyle.enabled = true;
     }
 }
+
+// search box
+
 function searchReplace() {
     if (window.matchMedia('(max-width: 991px)').matches) {
-        $('#small-search-box-form').prependTo('#searchModal');
+        if ($("#searchModal #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('#searchModal');
+        }
     }
     else {
-        $('#small-search-box-form').prependTo('.formSearch');
+        if ($(".formSearch #small-search-box-form").length < 1) {
+            $('#small-search-box-form').prependTo('.formSearch');
+        }
     }
 }
+
+// back to top
+
 function BackToTop() {
     if ($('#back-to-top').length) {
         var scrollTrigger = 100, // px
@@ -102,6 +149,8 @@ function edgeFix() {
         }
     }
 }
+
+// auctions
 
 function dataCountdown() {
     $('[data-countdown]').each(function () {
@@ -146,15 +195,21 @@ function productInfo() {
     });
 }
 
+// tooltips
+
+$(function () {
+    $('.product-box [data-tooltip="title"]').tooltip();
+});
+
 $(document).ready(function () {
 
+    MenuScroll();
     edgeFix();
     CartFix();
     mainMenuReplace();
     searchReplace();
     LeftSide();
     itemsStatistics();
-    //IpadMenuFix();
     dataCountdown();
     BackToTop();
     productInfo(); 
@@ -162,7 +217,6 @@ $(document).ready(function () {
     $(window).resize(function () {
         mainMenuReplace();
         searchReplace();
-        //IpadMenuFix();
         LeftSide();
         productInfo();
     });
@@ -185,7 +239,7 @@ $(document).ready(function () {
                 $("#newsletter-result-block").html(data.Result);
                 if (data.Success) {
                     $('.newsletter-button-container, #newsletter-email, .newsletter-subscribe-unsubscribe').hide();
-                    $('#newsletter-result-block').show();
+                    $('#newsletter-result-block').addClass("d-block").show().css("bottom", "unset");
                     if (data.Showcategories) {
                         $('#action_modal_form').html(data.ResultCategory);
                         window.setTimeout(function () {
@@ -304,7 +358,7 @@ function displayPopupNotification(message, messagetype, modal) {
     //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<div class="p-3"><h5 class="text-white text-center">' + message + '</h5></div>';
+        htmlcode = '<div class="p-3"><h5 class="text-center">' + message + '</h5></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
@@ -312,6 +366,11 @@ function displayPopupNotification(message, messagetype, modal) {
     }
     container.html(htmlcode);
     $('#generalModal').modal('show');
+}
+
+function closeOffcanvas() {
+    var dataOffcanvas = $('#right').data('offcanvas-component');
+    dataOffcanvas.close();
 }
 
 function displayPopupAddToCart(html) {
@@ -335,41 +394,40 @@ function displayBarNotification(message, messagetype, timeout) {
     //types: success, error
     var cssclass = 'success';
     if (messagetype == 'success') {
-        cssclass = 'card-success';
+        cssclass = 'success';
     }
     else if (messagetype == 'error') {
-        cssclass = 'card-danger';
+        cssclass = 'danger';
     }
     //remove previous CSS classes and notifications
     $('#bar-notification')
-        .removeClass('card-success')
-        .removeClass('card-danger');
-    $('#bar-notification .content').remove();
+        .removeClass('success')
+        .removeClass('danger');
+    $('#bar-notification .toast').remove();
 
     //add new notifications
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<p class="content">' + message + '</p>';
+        htmlcode = '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message + '</div></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
-            htmlcode = htmlcode + '<p class="content">' + message[i] + '</p>';
+            htmlcode = htmlcode + '<div class="toast show"><span class="close"><span class="mdi mdi-close" aria-hidden="true"></span></span><div class="content">' + message[i] + '</div></div>';
         }
     }
     $('#bar-notification').append(htmlcode)
         .addClass(cssclass)
-        .addClass('show')
         .mouseenter(function () {
             clearTimeout(barNotificationTimeout);
         });
 
-    $('#bar-notification .close').unbind('click').click(function () {
-        $('#bar-notification').removeClass('show');
+    $('#bar-notification .close').unbind('click touchstart').click(function () {
+        $(this).parents(".toast").remove();
     });
 
     //timeout (if set)
     if (timeout > 0) {
         barNotificationTimeout = setTimeout(function () {
-            $('#bar-notification').removeClass('show');
+            $('#bar-notification .toast').removeClass('show');
         }, timeout);
     }
 }
@@ -405,7 +463,7 @@ function sendcontactusform(urladd) {
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
             Id: $('#AskQuestionProductId').val(),
-            'g-recaptcha-response-value': $("input[id^='g-recaptcha-response']").val()
+            'g-recaptcha-response-value': $("textarea[id^='g-recaptcha-response']").val()
         };
         addAntiForgeryToken(contactData);
         $.ajax({

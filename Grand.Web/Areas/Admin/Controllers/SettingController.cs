@@ -784,8 +784,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var addressId = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope) ?
                     shippingSettings.ShippingOriginAddressId : "";
                 var originAddress = await _addressService.GetAddressByIdSettings(addressId) ??
-                    new Address
-                    {
+                    new Address {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
                 //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
@@ -952,8 +951,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var addressId = _settingService.SettingExists(taxSettings, x => x.DefaultTaxAddressId, storeScope) ?
                     taxSettings.DefaultTaxAddressId : "";
                 var originAddress = await _addressService.GetAddressByIdSettings(addressId) ??
-                    new Address
-                    {
+                    new Address {
                         CreatedOnUtc = DateTime.UtcNow,
                         Id = "",
                     };
@@ -1481,7 +1479,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Catalog");
         }
@@ -1496,16 +1494,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new List<SortOptionModel>();
             foreach (int option in Enum.GetValues(typeof(ProductSortingEnum)))
             {
-                model.Add(new SortOptionModel()
-                {
+                model.Add(new SortOptionModel() {
                     Id = option,
                     Name = ((ProductSortingEnum)option).GetLocalizedEnum(_localizationService, _workContext),
                     IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option),
                     DisplayOrder = catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(option, out int value) ? value : option
                 });
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = model.OrderBy(option => option.DisplayOrder),
                 Total = model.Count
             };
@@ -1669,11 +1665,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
-            //gift card activation/deactivation
-            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
+            //gift card activation
+            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false, new int[] { 10, 40 }).ToList();
             model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
-            model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(HttpContext, false).ToList();
-            model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
             //order ident
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
@@ -1800,7 +1794,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, "", false);
                 await _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, "", false);
-                await _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, "", false);
+                await _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterCancelOrder, "", false);
 
                 //now clear cache
                 await ClearCache();
@@ -1832,7 +1826,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Order");
         }
@@ -1981,19 +1975,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Return request reasons
 
-        public IActionResult ReturnRequestReasonList()
+        public async Task<IActionResult> ReturnRequestReasonList()
         {
             //select second tab
             const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            await SaveSelectedTabIndex(customerFormFieldIndex);
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
         public async Task<IActionResult> ReturnRequestReasonList(DataSourceRequest command)
         {
             var reasons = await _returnRequestService.GetAllReturnRequestReasons();
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = reasons.Select(x => x.ToModel()),
                 Total = reasons.Count
             };
@@ -2055,7 +2048,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("ReturnRequestReasonEdit", new { id = rrr.Id });
                 }
@@ -2080,19 +2073,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Return request actions
 
-        public IActionResult ReturnRequestActionList()
+        public async Task<IActionResult> ReturnRequestActionList()
         {
             //select second tab
             const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            await SaveSelectedTabIndex(customerFormFieldIndex);
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
         public async Task<IActionResult> ReturnRequestActionList(DataSourceRequest command)
         {
             var actions = await _returnRequestService.GetAllReturnRequestActions();
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = actions.Select(x => x.ToModel()),
                 Total = actions.Count
             };
@@ -2153,7 +2145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("ReturnRequestActionEdit", new { id = rra.Id });
                 }
@@ -2292,9 +2284,42 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
-        public async Task<IActionResult> ChangePictureStorage()
+        public async Task<IActionResult> ChangePictureStorage([FromServices] IRepository<Picture> pictureRepository)
         {
-            _pictureService.StoreInDb = !_pictureService.StoreInDb;
+            var storeIdDb = !_pictureService.StoreInDb;
+
+            //save the new setting value
+            await _settingService.SetSetting("Media.Images.StoreInDB", storeIdDb);
+
+            int pageIndex = 0;
+            const int pageSize = 400;
+            try
+            {
+                while (true)
+                {
+                    var pictures = _pictureService.GetPictures(pageIndex, pageSize);
+                    pageIndex++;
+                    if (!pictures.Any())
+                        break;
+
+                    foreach (var picture in pictures)
+                    {
+                        var pictureBinary = await _pictureService.LoadPictureBinary(picture, !storeIdDb);
+                        if (storeIdDb)
+                            _pictureService.DeletePictureOnFileSystem(picture);
+                        else
+                            //now on file system
+                            _pictureService.SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
+                        picture.PictureBinary = storeIdDb ? pictureBinary : new byte[0];
+                        picture.IsNew = true;
+                    }
+                    //save all at once
+                    pictureRepository.Update(pictures);
+                }
+            }
+            finally
+            {
+            }
 
             //activity log
             await _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -2312,8 +2337,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
             //merge settings
-            var model = new CustomerUserSettingsModel
-            {
+            var model = new CustomerUserSettingsModel {
                 CustomerSettings = customerSettings.ToModel(),
                 AddressSettings = addressSettings.ToModel()
             };
@@ -2322,8 +2346,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
             foreach (TimeZoneInfo timeZone in _dateTimeHelper.GetSystemTimeZones())
             {
-                model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem
-                {
+                model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem {
                     Text = timeZone.DisplayName,
                     Value = timeZone.Id,
                     Selected = timeZone.Id.Equals(_dateTimeHelper.DefaultStoreTimeZone.Id, StringComparison.OrdinalIgnoreCase)
@@ -2362,7 +2385,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("CustomerUser");
         }
@@ -2378,13 +2401,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
 
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
-            
+
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
                 .GetThemeConfigurations()
-                .Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel
-                {
+                .Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel {
                     ThemeTitle = x.ThemeTitle,
                     ThemeName = x.ThemeName,
                     PreviewImageUrl = x.PreviewImageUrl,
@@ -2951,7 +2973,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -3029,7 +3051,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -3065,7 +3087,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("GeneralCommon");
         }
@@ -3073,7 +3095,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AllSettings() => View();
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AllSettings(DataSourceRequest command, SettingFilterModel model)
         {
             var settings = new List<SettingModel>();
@@ -3089,8 +3111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     var store = await _storeService.GetStoreById(x.StoreId);
                     storeName = store != null ? store.Name : "Unknown";
                 }
-                var settingModel = new SettingModel
-                {
+                var settingModel = new SettingModel {
                     Id = x.Id,
                     Name = x.Name,
                     Value = x.Value,
@@ -3107,8 +3128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!string.IsNullOrEmpty(model.SettingFilterValue))
                     settings = settings.Where(x => x.Value.ToLowerInvariant().Contains(model.SettingFilterValue.ToLowerInvariant())).ToList();
             }
-            var gridModel = new DataSourceResult
-            {
+            var gridModel = new DataSourceResult {
                 Data = settings.PagedForCommand(command).ToList(),
                 Total = settings.Count()
             };
@@ -3121,8 +3141,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
 
-            var model = new ConfigurationModel
-            {
+            var model = new ConfigurationModel {
                 AllowGuestNotifications = settings.AllowGuestNotifications,
                 AuthDomain = settings.AuthDomain,
                 DatabaseUrl = settings.DatabaseUrl,
@@ -3138,7 +3157,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> PushNotifications(DataSourceRequest command, ConfigurationModel model)
         {
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -3208,8 +3227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
 
-            var model = new AdminSearchSettingsModel
-            {
+            var model = new AdminSearchSettingsModel {
                 SearchInBlogs = settings.SearchInBlogs,
                 SearchInCategories = settings.SearchInCategories,
                 SearchInCustomers = settings.SearchInCustomers,
@@ -3236,7 +3254,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AdminSearch(DataSourceRequest command, AdminSearchSettingsModel model)
         {
             var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -3269,7 +3287,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingUpdate(SettingModel model)
         {
             if (model.Name != null)
@@ -3311,7 +3329,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingAdd(SettingModel model)
         {
             if (model.Name != null)
@@ -3340,7 +3358,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> SettingDelete(string id)
         {
             var setting = _settingService.GetSettingById(id);

@@ -8,7 +8,7 @@
     var canManageGenericAttributes = await permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageGenericAttributes);
 }
 <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -94,7 +94,10 @@
                                                 <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveGenericAttributes" name="save-generic-attributes" class="k-button" />
                                             </div>
                                             <div class="form-horizontal">
-                                                @{ViewData["ObjectType"] = "Order";}
+                                                @{
+                                                    ViewData["ObjectType"] = "Order";
+                                                    ViewData["TabIndex"] = 5;
+                                                 }
                                                 <partial name="_GenericAttributes" model="Model" view-data="ViewData" />
                                             </div>
                                         </div>

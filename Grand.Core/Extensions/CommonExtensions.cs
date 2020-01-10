@@ -19,7 +19,7 @@ namespace Grand.Core.Extensions
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (var key in keys.Where(p => regex.IsMatch(p)))
-                await obj.Remove(key);
+                await obj.RemoveAsync(key);
         }       
 
     }

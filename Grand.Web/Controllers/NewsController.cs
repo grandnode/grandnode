@@ -127,7 +127,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("NewsItem")]
         [FormValueRequired("add-comment")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
         {

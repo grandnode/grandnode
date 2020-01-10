@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
 }
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
-    <antiforgery-token />
+    
     <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
@@ -102,7 +102,7 @@
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
     <form asp-controller="Plugin" asp-action="UploadTheme" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
+        
         <ul class="common-list">
             <li>
                 <strong>NOTE: It can take up to several minutes.</strong>

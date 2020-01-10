@@ -88,7 +88,7 @@ namespace Grand.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Context</param>
         /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -170,7 +170,7 @@ namespace Grand.Framework.TagHelpers.Admin
                 readOnly: false,
                 additionalViewData: new { htmlAttributes, postfix = this.Postfix });
 
-            var htmlOutput = templateBuilder.Build();
+            var htmlOutput = await templateBuilder.Build();
             output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
         }
 

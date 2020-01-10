@@ -770,7 +770,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
             //selected tab
-            SaveSelectedTabIndex();
+            await SaveSelectedTabIndex();
 
             return RedirectToAction("Restrictions");
         }

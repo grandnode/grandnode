@@ -280,7 +280,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableSortOptions, mo => mo.Ignore());
 
             CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
@@ -525,12 +526,12 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
                 .ForMember(dest => dest.RecurringPaymentType, mo => mo.MapFrom(src => src.RecurringPaymentType.ToString()))
+                .ForMember(dest => dest.SupportCapture, mo => mo.Ignore())
+                .ForMember(dest => dest.SupportPartiallyRefund, mo => mo.Ignore())
+                .ForMember(dest => dest.SupportRefund, mo => mo.Ignore())
+                .ForMember(dest => dest.SupportVoid, mo => mo.Ignore())
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
-                .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.SupportCapture, mo => mo.MapFrom(src => src.SupportCapture().GetAwaiter().GetResult()))
-                .ForMember(dest => dest.SupportPartiallyRefund, mo => mo.MapFrom(src => src.SupportPartiallyRefund().GetAwaiter().GetResult()))
-                .ForMember(dest => dest.SupportRefund, mo => mo.MapFrom(src => src.SupportRefund().GetAwaiter().GetResult()))
-                .ForMember(dest => dest.SupportVoid, mo => mo.MapFrom(src => src.SupportVoid().GetAwaiter().GetResult()));
+                .ForMember(dest => dest.LogoUrl, mo => mo.Ignore());
 
             //external authentication methods
             CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()

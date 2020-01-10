@@ -5,7 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -97,7 +97,7 @@
                 field: "Comments",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
                 width: 200,
-                template: '<a class="k-link" href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
+                template: '<a class="k-link" href="Edit/#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
             }, {
                 field: "StartDate",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",

@@ -4,7 +4,7 @@
     <div class="form-group col-12">
         @if (Model.EndTime.HasValue)
         {
-            <div class="countdown-box text-left p-sm-2 p-1 bg-light">
+            <div class="countdown-box text-left p-2 bg-light">
                 @if (Model.EndTime > DateTime.UtcNow)
                 {
                     <label class="d-inline-block mb-0">@T("AddToCart.Timeleft"): </label>
@@ -13,7 +13,7 @@
                 else
                 {
                     <div class="d-inline-flex flex-wrap justify-content-center">
-                        <label class="ended-label">@T("ShoppingCart.Auctionends"):</label>
+                        <label class="ended-label mb-0">@T("ShoppingCart.Auctionends"):</label>
                         <div class="count-date">@Model.EndTime.Value.ToLocalTime()</div>
                     </div>
                 }

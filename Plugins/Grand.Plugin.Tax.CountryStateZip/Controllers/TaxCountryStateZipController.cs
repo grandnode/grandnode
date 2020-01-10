@@ -78,7 +78,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RatesList(DataSourceRequest command)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -125,7 +125,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateUpdate(TaxRateModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -140,7 +140,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> RateDelete(string id)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -154,7 +154,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddTaxRate(TaxRateListModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))

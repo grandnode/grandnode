@@ -76,23 +76,19 @@
                     <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                     @if (Model.GenderEnabled)
                     {
-                        <div class="row">
-                            <div class="col-12">
-                                @T("Account.Fields.Gender"):
-                            </div>
-                        </div>
-                        <div class="gender">
+                        <label class="col-form-label">
+                            @T("Account.Fields.Gender"):
+                        </label>
+                        <div class="form-group gender">
                             <div class="flex-row">
-                                <label class="custom-control custom-radio male d-inline-block">
+                                <div class="custom-control custom-radio male custom-control-inline">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" class="custom-control-input" />
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
-                                </label>
-                                <label class="custom-control custom-radio female d-inline-block">
+                                    <label class="custom-control-label" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </div>
+                                <div class="custom-control custom-radio female custom-control-inline">
                                     <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
-                                </label>
+                                    <label class="custom-control-label" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </div>
                             </div>
                         </div>
                     }
@@ -133,7 +129,7 @@
                                                   selected-day="(Model.DateOfBirthDay.HasValue ? Model.DateOfBirthDay.Value : 0)"
                                                   selected-month="(Model.DateOfBirthMonth.HasValue ? Model.DateOfBirthMonth.Value : 0)"
                                                   selected-year="(Model.DateOfBirthYear.HasValue ? Model.DateOfBirthYear.Value : 0)"
-                                                  class="col-12 input-group" />
+                                                  class="col-12 input-group px-0" />
 
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
@@ -356,11 +352,11 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <label class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
                                     <span class="custom-control-label"></span>
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
-                                </label>
+                                </div>
                             </div>
                             <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
                         }

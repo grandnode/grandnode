@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace Grand.Framework
 {
@@ -20,7 +21,7 @@ namespace Grand.Framework
     {
         #region Admin area extensions
 
-        public static IHtmlContent LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
+        public static async Task<IHtmlContent> LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
@@ -33,7 +34,7 @@ namespace Grand.Framework
             if (ignoreIfSeveralStores)
             {
                 var storeService = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<IStoreService>();
-                if (storeService.GetAllStores().GetAwaiter().GetResult().Count >= 2)
+                if ((await storeService.GetAllStores()).Count >= 2)
                 {
                     localizationSupported = false;
                 }
@@ -53,7 +54,7 @@ namespace Grand.Framework
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = languageService.GetLanguageById(locale.LanguageId).GetAwaiter().GetResult();
+                    var language = await languageService.GetLanguageById(locale.LanguageId);
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);
@@ -63,8 +64,6 @@ namespace Grand.Framework
                     tabStrip.AppendLine("</li>");
                 }
                 tabStrip.AppendLine("</ul>");
-
-
 
                 //default tab
                 tabStrip.AppendLine("<div>");

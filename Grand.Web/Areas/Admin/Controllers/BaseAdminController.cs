@@ -1,16 +1,14 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Infrastructure;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
     [ValidateIpAddress]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     [Area("Admin")]
     [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
@@ -20,14 +18,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="index">Idnex to save; null to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
+        protected async Task SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
             //"GetSelectedTabIndex" method of \Grand.Framework\ViewEngines\Razor\WebViewPage.cs
             if (!index.HasValue)
             {
                 int tmp;
-                var tabindex = this.Request.Form["selected-tab-index"];
+                var form = await HttpContext.Request.ReadFormAsync();
+                var tabindex = form["selected-tab-index"];
                 if (tabindex.Count > 0)
                 {
                     if (int.TryParse(tabindex[0], out tmp))

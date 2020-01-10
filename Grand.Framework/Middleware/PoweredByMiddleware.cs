@@ -10,22 +10,20 @@ namespace Grand.Framework.Middleware
     public class PoweredByMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IPoweredByMiddlewareOptions _options;
 
-        public PoweredByMiddleware(RequestDelegate next, IPoweredByMiddlewareOptions options)
+        public PoweredByMiddleware(RequestDelegate next)
         {
             _next = next;
-            _options = options;
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext context, IPoweredByMiddlewareOptions options)
         {
-            if (_options.Enabled)
+            if (options.Enabled)
             {
-                httpContext.Response.Headers[_options.HeaderName] = _options.HeaderValue;
+                context.Response.Headers[options.HeaderName] = options.HeaderValue;
             }
 
-            return _next.Invoke(httpContext);
+            await _next.Invoke(context);
         }
     }
 

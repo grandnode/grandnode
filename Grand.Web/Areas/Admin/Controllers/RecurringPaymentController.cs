@@ -164,7 +164,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (continueEditing)
             {
                 //selected tab
-                SaveSelectedTabIndex();
+                await SaveSelectedTabIndex();
 
                 return RedirectToAction("Edit",  new {id = payment.Id});
             }
@@ -230,7 +230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -242,7 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc, false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -271,7 +271,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"), false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -283,7 +283,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc, false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                await SaveSelectedTabIndex(persistForTheNextRequest: false);
 
                 return View(model);
             }

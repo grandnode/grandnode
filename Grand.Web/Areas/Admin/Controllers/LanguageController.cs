@@ -142,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    await SaveSelectedTabIndex();
 
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
@@ -193,7 +193,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Resources(string languageId, DataSourceRequest command,
             LanguageResourceFilterModel model)
         {

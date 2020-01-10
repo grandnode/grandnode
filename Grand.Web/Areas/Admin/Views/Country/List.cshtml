@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
-<antiforgery-token />
+
 <div class="row">
     <div class="col-md-12">
         <div class="x_panel light form-fit">
@@ -253,7 +253,7 @@
 @*import states form*@
 <div id="importcsv-window" style="display:none;">
     <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
+        
         <table style="text-align:left;">
             <tr>
                 <td>

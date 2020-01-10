@@ -86,6 +86,15 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
+        public virtual void PrepareSortOptionsModel(ManufacturerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableSortOptions = ProductSortingEnum.Position.ToSelectList().ToList();
+            model.AvailableSortOptions.Insert(0, new SelectListItem { Text = "None", Value = "-1" });
+        }
+
         public virtual async Task PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)

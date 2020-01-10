@@ -5,7 +5,6 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -116,7 +115,7 @@ namespace Grand.Web.Controllers
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray(),
-                htmlordertotal = RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                htmlordertotal = await RenderPartialViewToString("Components/OrderTotals/Default", await _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
                 checkoutattributeinfo = await checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
@@ -134,7 +133,8 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            var form = await HttpContext.Request.ReadFormAsync();
+            var httpPostedFile = form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
                 return Json(new
@@ -149,8 +149,8 @@ namespace Grand.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
-                fileName = Request.Form[qqFileNameParameter].ToString();
+            if (string.IsNullOrEmpty(fileName) && form.ContainsKey(qqFileNameParameter))
+                fileName = form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
 
@@ -213,7 +213,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
@@ -363,7 +363,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode)
         {
@@ -447,7 +447,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> ApplyGiftCard(string giftcardcouponcode)
         {
@@ -495,7 +495,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -508,7 +508,7 @@ namespace Grand.Web.Controllers
             return PartialView("_EstimateShippingResult", model);
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveDiscountCoupon(string discountId)
         {
@@ -534,7 +534,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [HttpPost]
         public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
         {
@@ -671,7 +671,7 @@ namespace Grand.Web.Controllers
                 .Select(x => x)
                 .ToList()
                 : new List<string>();
-            foreach (var sci in pageCart)
+            foreach (var sci in pageCart.ToList())
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
@@ -740,7 +740,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, ActionName("EmailWishlist")]
         [FormValueRequired("send-email")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid,
             [FromServices] IWorkflowMessageService workflowMessageService,

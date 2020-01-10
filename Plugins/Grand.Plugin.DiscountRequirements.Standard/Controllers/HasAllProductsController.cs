@@ -91,7 +91,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(string discountId, string discountRequirementId, string productIds)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
@@ -167,7 +167,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> ProductAddPopupList(DataSourceRequest command, RequirementModel.AddProductModel model)
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -206,7 +206,7 @@ namespace Grand.Plugin.DiscountRequirements.HasAllProducts.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> LoadProductFriendlyNames(string productIds)
         {
             var result = "";

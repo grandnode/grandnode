@@ -35,13 +35,12 @@ namespace Grand.Api.Infrastructure
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = context =>
+                    OnAuthenticationFailed = async context =>
                     {
                         context.NoResult();
                         context.Response.StatusCode = 401;
                         context.Response.ContentType = "text/plain";
-                        context.Response.WriteAsync(context.Exception.Message).Wait();
-                        return Task.CompletedTask;
+                        await context.Response.WriteAsync(context.Exception.Message);
                     },
                     OnChallenge = context =>
                     {

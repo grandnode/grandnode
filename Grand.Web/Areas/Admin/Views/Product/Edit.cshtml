@@ -4,7 +4,7 @@
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
 }
 <form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">
@@ -44,7 +44,7 @@
     @*copy product form*@
     <div id="copyproduct-window" style="display:none;">
         <form asp-controller="Product" asp-action="CopyProduct" method="post">
-            <antiforgery-token />
+            
             <input asp-for="CopyProductModel.Id" type="hidden" />
             <div class="form-horizontal">
                 <div class="form-body">

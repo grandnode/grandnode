@@ -104,9 +104,9 @@ namespace Grand.Framework.Controllers
         /// Render partial view to string
         /// </summary>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString()
+        protected virtual async Task<string> RenderPartialViewToString()
         {
-            return RenderPartialViewToString(null, null);
+            return await RenderPartialViewToString(null, null);
         }
 
         /// <summary>
@@ -114,9 +114,9 @@ namespace Grand.Framework.Controllers
         /// </summary>
         /// <param name="viewName">View name</param>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(string viewName)
+        protected virtual async Task<string> RenderPartialViewToString(string viewName)
         {
-            return RenderPartialViewToString(viewName, null);
+            return await RenderPartialViewToString(viewName, null);
         }
 
         /// <summary>
@@ -124,9 +124,9 @@ namespace Grand.Framework.Controllers
         /// </summary>
         /// <param name="model">Model</param>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(object model)
+        protected virtual async Task<string> RenderPartialViewToString(object model)
         {
-            return RenderPartialViewToString(null, model);
+            return await RenderPartialViewToString(null, model);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Grand.Framework.Controllers
         /// <param name="viewName">View name</param>
         /// <param name="model">Model</param>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(string viewName, object model)
+        protected virtual async Task<string> RenderPartialViewToString(string viewName, object model)
         {
             //get Razor view engine
             var razorViewEngine = HttpContext.RequestServices.GetRequiredService<IRazorViewEngine>();
@@ -163,8 +163,7 @@ namespace Grand.Framework.Controllers
             {
                 var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
 
-                var t = viewResult.View.RenderAsync(viewContext);
-                t.Wait();
+                await viewResult.View.RenderAsync(viewContext);
                 return stringWriter.GetStringBuilder().ToString();
             }
         }

@@ -51,7 +51,7 @@
         else
         {<text>non-discounted-price col-12 d-flex align-items-center</text>}">
                 @*render price*@
-                <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="actual-price price-value-@(Model.ProductId)" </text> }>
+                <span class="price-value-@(Model.ProductId)">
                     @if (Model.IsAuction)
                     {
                         <strong class="actual-price">@T("Products.BuyNowPrice"):</strong>
@@ -91,9 +91,10 @@
             @*discounted price*@
             <div class="d-inline-flex align-items-center product-price discounted-price col-12">
                 <label class="mb-0 mr-2">@T("Products.Price.WithDiscount"):</label>
-                <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)">
+                <span class="your-price price-value-@(Model.ProductId)">
                     <strong>@Html.Raw(Model.PriceWithDiscount)</strong>
                 </span>
+                 <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)" />
             </div>
         }
         if (!String.IsNullOrEmpty(Model.BasePricePAngV))
@@ -114,6 +115,9 @@
         if (!String.IsNullOrEmpty(Model.CurrencyCode))
         {
             <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+        }
+        @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) {
+            <meta itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/> 
         }
     }
 </div>

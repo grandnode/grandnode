@@ -34,21 +34,6 @@ namespace Grand.Framework.StartupConfigure
             //add options feature
             services.AddOptions();
             
-            //add memory cache
-            services.AddMemoryCache();
-
-            //add distributed memory cache
-            services.AddDistributedMemoryCache();
-
-            //add distributed Redis cache
-            if (config.RedisCachingEnabled)
-            {
-                services.AddStackExchangeRedisCache(options =>
-                {
-                    options.Configuration = config.RedisCachingConnectionString;
-                });
-            }
-
             //add HTTP sesion state feature
             services.AddHttpSession(config);
 
@@ -104,6 +89,24 @@ namespace Grand.Framework.StartupConfigure
                 application.UseHtmlMinification();
             }
 
+            //use request localization
+            if (grandConfig.UseRequestLocalization)
+            {
+                var supportedCultures = new List<CultureInfo>();
+                foreach (var culture in grandConfig.SupportedCultures)
+                {
+                    supportedCultures.Add(new CultureInfo(culture));
+                }
+                application.UseRequestLocalization(new RequestLocalizationOptions {
+                    DefaultRequestCulture = new RequestCulture(grandConfig.DefaultRequestCulture),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
+            }
+            else
+                //use default request localization
+                application.UseRequestLocalization();
+
             //use static files feature
             application.UseGrandStaticFiles(grandConfig);
 
@@ -118,24 +121,6 @@ namespace Grand.Framework.StartupConfigure
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
 
-            //use request localization
-            if (grandConfig.UseRequestLocalization)
-            {
-                var supportedCultures = new List<CultureInfo>();
-                foreach (var culture in grandConfig.SupportedCultures)
-                {
-                    supportedCultures.Add(new CultureInfo(culture));
-                }
-                application.UseRequestLocalization(new RequestLocalizationOptions
-                {
-                    DefaultRequestCulture = new RequestCulture(grandConfig.DefaultRequestCulture),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
-                });
-            }
-            else
-                //use default request localization
-                application.UseRequestLocalization();
 
         }
 

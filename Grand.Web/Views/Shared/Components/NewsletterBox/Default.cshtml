@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-center justify-content-lg-start">
         <div class="newsletter-subscribe container w-100" id="newsletter-subscribe-block">
             <div class="d-flex flex-row row">
-                <div class="col-lg-7 col-12 px-0 d-flex flex-column align-items-start">
+                <div class="col-lg-7 col-12 px-0 d-flex flex-column align-items-lg-start align-items-center">
                     <div class="newsletter-title">
                         @T("Newsletter.Title")
                     </div>
@@ -21,14 +21,14 @@
                     {
                         <div class="custom-controls-stacked newsletter-subscribe-unsubscribe justify-content-center w-100 pt-1">
                             <fieldset>
-                                <label for="newsletter_subscribe" class="custom-control custom-radio float-left">
+                                <div class="custom-control custom-radio float-left mb-2">
                                     <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input" checked="checked">
-                                    <span class="custom-control-label text-white" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</span>
-                                </label>
-                                <label for="newsletter_unsubscribe" class="custom-control custom-radio float-left ml-3">
+                                    <label class="custom-control-label text-white" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
+                                </div>
+                                <div class="custom-control custom-radio float-left ml-3 mb-2">
                                     <input value="newsletter_unsubscribe" id="newsletter_unsubscribe" name="newsletter_block" type="radio" class="custom-control-input">
-                                    <span class="custom-control-label text-white" for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</span>
-                                </label>
+                                    <label class="custom-control-label text-white" for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
+                                </div>
                             </fieldset>
                         </div>
                     }

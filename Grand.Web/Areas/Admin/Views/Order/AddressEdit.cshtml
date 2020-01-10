@@ -6,7 +6,7 @@
 <form asp-controller="Order" asp-action="AddressEdit"
       asp-route-addressId="@Context.Request.Query["addressId"]"
       asp-route-orderId="@Context.Request.Query["orderId"]">
-    <antiforgery-token />
+    
     <div class="row">
         <div class="col-md-12">
             <div class="x_panel light form-fit">

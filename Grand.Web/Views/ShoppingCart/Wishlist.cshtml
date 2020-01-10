@@ -36,13 +36,13 @@
                 <div class="shopping-cart-container">
                     <table class="shopping-cart">
                         <colgroup>
-                            <col width="1">
-                            <col width="1">
-                            <col width="1">
+                            <col span="1">
+                            <col span="1">
+                            <col span="1">
                             <col>
-                            <col width="1">
-                            <col width="1">
-                            <col width="1">
+                            <col span="1">
+                            <col span="1">
+                            <col span="1">
                         </colgroup>
                         <thead>
                             <tr>
@@ -237,7 +237,7 @@
                     }
                     @if (Model.DisplayAddToCart)
                     {
-                        <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center">
+                        <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center align-items-center">
                             <span class="mdi mdi-cart-outline pr-2"></span>
                             <span class="d-sm-block d-none">@T("ShoppingCart.AddToCart")</span> 
                         </button>

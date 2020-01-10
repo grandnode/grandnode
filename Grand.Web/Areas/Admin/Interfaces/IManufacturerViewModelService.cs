@@ -7,6 +7,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IManufacturerViewModelService
     {
+        void PrepareSortOptionsModel(ManufacturerModel model);
         Task PrepareTemplatesModel(ManufacturerModel model);
         Task PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties);
         Task<Manufacturer> InsertManufacturerModel(ManufacturerModel model);

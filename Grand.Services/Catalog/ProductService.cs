@@ -398,7 +398,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.IsRecurring, product.IsRecurring)
                 .Set(x => x.IsShipEnabled, product.IsShipEnabled)
                 .Set(x => x.IsTaxExempt, product.IsTaxExempt)
-                .Set(x => x.IsTelecommunicationsOrBroadcastingOrElectronicServices, product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                .Set(x => x.IsTele, product.IsTele)
                 .Set(x => x.Length, product.Length)
                 .Set(x => x.LimitedToStores, product.LimitedToStores)
                 .Set(x => x.Locales, product.Locales)

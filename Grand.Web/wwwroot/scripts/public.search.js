@@ -119,7 +119,7 @@ var SearchAction = {
                 }
                 var pricereviewline = "";
                 if (item.SearchType === "Product") {
-                    pricereviewline = "<div class='d-flex justify-content-between w-100 ratings'><div class='price'></div>";
+                    pricereviewline = "<div class='d-flex justify-content-between w-100 ratings'><div class='price'>" + item.Price + "</div>";
                     if (item.AllowCustomerReviews)
                         pricereviewline += "<div class='rating-box'><div class='rating' style='width: " + item.Rating + "%'></div></div>";
                     pricereviewline += "</div>";
@@ -133,3 +133,22 @@ var SearchAction = {
 
     }
 }
+function closeSearchBox() {
+    if (window.matchMedia('(min-width: 992px)').matches) {
+        $(window).click(function () {
+            $('.advanced-search-results').removeClass("open");
+        });
+        $('.advanced-search-results').click(function (event) {
+            event.stopPropagation();
+        });
+    }
+}
+$(document).ready(function () {
+
+    closeSearchBox();
+
+    $(window).resize(function () {
+        closeSearchBox();
+    });
+
+});

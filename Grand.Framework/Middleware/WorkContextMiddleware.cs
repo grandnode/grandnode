@@ -1,5 +1,7 @@
 ﻿using Grand.Core;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Grand.Framework.Middleware
@@ -40,6 +42,24 @@ namespace Grand.Framework.Middleware
             var language = await workContext.SetWorkingLanguage(customer);
             var currency = await workContext.SetWorkingCurrency(customer);
             var taxtype = await workContext.SetTaxDisplayType(customer);
+
+            //set culture in admin area
+            if (context.Request.Path.Value.StartsWith("/admin", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var culture = new CultureInfo("en-US");
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
+            }
+            else
+            {
+                //set culture for customer
+                if (!string.IsNullOrEmpty(language?.LanguageCulture))
+                {
+                    var culture = new CultureInfo(language.LanguageCulture);
+                    CultureInfo.CurrentCulture = culture;
+                    CultureInfo.CurrentUICulture = culture;
+                }
+            }
 
             //call the next middleware in the request pipeline
             await _next(context);
