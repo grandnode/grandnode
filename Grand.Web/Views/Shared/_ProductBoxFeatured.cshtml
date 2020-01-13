@@ -33,6 +33,9 @@
     }
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
+
+@await Component.InvokeAsync("Widget", new { widgetZone = "productbox_featured_before_content", additionalData = Model })
+
 <div class="card product-box rowHelper col-12 p-0 mb-0 featured-product" data-productid="@Model.Id">
     <div class="prod-list">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
@@ -44,77 +47,77 @@
                      </text> } />
             </picture>
         </a>
-            <div class="labels">
-                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+        <div class="labels">
+            @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+            {
+                <span class="product-discount badge product-box-label">
+                    <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
+                </span>
+            }
+            @if (!string.IsNullOrEmpty(Model.Flag))
+            {
+                <span class="product-box-label badge bg-info text-white">@Model.Flag</span>
+            }
+        </div>
+        <div class="card-body px-2 text-left">
+            <h5 class="card-title mt-0">
+                <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
+                @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
                 {
-                    <span class="product-discount badge product-box-label">
-                        <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
-                    </span>
+                    <span class="d-block py-1">@Model.Sku</span>
                 }
-                @if (!string.IsNullOrEmpty(Model.Flag))
+            </h5>
+            @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+            {
+                int ratingPercent = 0;
+                if (Model.ReviewOverviewModel.TotalReviews != 0)
                 {
-                    <span class="product-box-label badge bg-info text-white">@Model.Flag</span>
+                    ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
                 }
-            </div>
-            <div class="card-body px-2 text-left">
-                <h5 class="card-title mt-0">
-                    <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
-                    @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
-                    {
-                        <span class="d-block py-1">@Model.Sku</span>
-                    }
-                </h5>
-                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
-                {
-                    int ratingPercent = 0;
-                    if (Model.ReviewOverviewModel.TotalReviews != 0)
-                    {
-                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
-                    }
-                    <div class="ratings justify-content-start">
-                        <div class="rating-box">
-                            <div class="rating" style="width: @(ratingPercent)%">
-                            </div>
+                <div class="ratings justify-content-start">
+                    <div class="rating-box">
+                        <div class="rating" style="width: @(ratingPercent)%">
                         </div>
                     </div>
-                }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="d-inline-flex align-items-center flex-wrap pl-0 mb-0">
+                </div>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
+            <ul class="d-inline-flex align-items-center flex-wrap pl-0 mb-0">
 
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
-                    {
-                        <li class="d-inline-flex">
-                            <span class="price old-price">@Model.ProductPrice.OldPrice</span>
-                        </li>
-                    }
-                    @if (Model.ProductType != ProductType.Auction)
-                    {
-                        <li class="price actual-price d-inline-flex">@Model.ProductPrice.Price</li>
-                    }
-                    else
-                    {
-                        <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
-                    }
-
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
-                    {
-                        <li class="base-price-pangv">
-                            @Model.ProductPrice.BasePricePAngV
-                        </li>
-                    }
-
-                </ul>
-                @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
-                    var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
-                    //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
-                    //of course, you can modify appropriate locales to include VAT info there
-                    <div class="tax-shipping-info">
-                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
-                    </div>
+                    <li class="d-inline-flex">
+                        <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                    </li>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
-            </div>
+                @if (Model.ProductType != ProductType.Auction)
+                {
+                    <li class="price actual-price d-inline-flex">@Model.ProductPrice.Price</li>
+                }
+                else
+                {
+                    <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                }
+
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                {
+                    <li class="base-price-pangv">
+                        @Model.ProductPrice.BasePricePAngV
+                    </li>
+                }
+
+            </ul>
+            @if (Model.ProductPrice.DisplayTaxShippingInfo)
+            {
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                //of course, you can modify appropriate locales to include VAT info there
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo", Context) }))
+                </div>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
+        </div>
     </div>
 </div>

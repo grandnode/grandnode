@@ -1,4 +1,7 @@
 ﻿@model MiniShoppingCartModel
+
+@await Component.InvokeAsync("Widget", new { widgetZone = "flyout_shopping_cart_before_content", additionalData = Model })
+
 <aside class="js-offcanvas flycart-container" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":false}' id="right">
     <div class="flyout-cart">
         <div class="flyout-cart-header">

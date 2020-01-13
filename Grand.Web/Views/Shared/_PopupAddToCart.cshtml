@@ -14,6 +14,7 @@
         text = string.Format(T("Addtocart.Auctions.Ongoing").Text, Model.TotalItems);
     }
 }
+@await Component.InvokeAsync("Widget", new { widgetZone = "popup_add_to_cart_content_before", additionalData = Model })
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content rounded-0 p-2 p-xl-3">
         <div class="modal-header bg-info rounded-0">
