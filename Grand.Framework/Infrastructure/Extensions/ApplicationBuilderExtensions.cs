@@ -274,6 +274,21 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Save log application started
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void LogApplicationStarted(this IApplicationBuilder application)
+        {
+            //whether database is already installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            var serviceProvider = application.ApplicationServices;
+            var logger = serviceProvider.GetRequiredService<ILogger>();
+            logger.Information("Application started", null, null);
+        }
+
+        /// <summary>
         /// Configure UseForwardedHeaders
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>

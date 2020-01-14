@@ -57,6 +57,9 @@ namespace Grand.Framework.StartupConfigure
 
             //MVC routing
             application.UseGrandMvc();
+
+            //save log application started
+            application.LogApplicationStarted();
         }
 
         /// <summary>
