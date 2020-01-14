@@ -14,7 +14,7 @@
                 $("body.modal-open").removeAttr("style");
                 $(".navUp").removeAttr("style");
             });
-            var checkstatusButton = $.get('@Url.RouteUrl("BackInStockSubscribeButton", new { productId = Model.Id })');
+            var checkstatusButton = $.get('@Url.RouteUrl("BackInStockSubscribeButton", new { productId = Model.Id, warehouseId = "" })');
             checkstatusButton.done(function (result) {
                 $('.subscribe-button').val(result);
             });
