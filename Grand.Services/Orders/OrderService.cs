@@ -23,7 +23,6 @@ namespace Grand.Services.Orders
     {
         #region Fields
 
-        private static readonly Object _locker = new object();
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
@@ -272,13 +271,9 @@ namespace Grand.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            lock (_locker)
-            {
-                int orderExists = _orderRepository.Table.OrderByDescending(x => x.OrderNumber).Select(x => x.OrderNumber).FirstOrDefault();
-                var orderNumber = orderExists != 0 ? orderExists + 1 : 1;
-                order.OrderNumber = orderNumber;
-            }
-
+            var orderExists = _orderRepository.Table.OrderByDescending(x => x.OrderNumber).Select(x => x.OrderNumber).FirstOrDefault();
+            order.OrderNumber = orderExists != 0 ? orderExists + 1 : 1;
+            
             await _orderRepository.InsertAsync(order);
 
             //event notification
