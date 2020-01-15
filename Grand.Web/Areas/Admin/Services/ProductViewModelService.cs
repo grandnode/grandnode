@@ -2459,7 +2459,7 @@ namespace Grand.Web.Areas.Admin.Services
                     ColorSquaresRgb = x.ColorSquaresRgb,
                     ImageSquaresPictureId = x.ImageSquaresPictureId,
                     PriceAdjustment = x.PriceAdjustment,
-                    PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
+                    PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
                     WeightAdjustment = x.WeightAdjustment,
                     WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                     Cost = x.Cost,

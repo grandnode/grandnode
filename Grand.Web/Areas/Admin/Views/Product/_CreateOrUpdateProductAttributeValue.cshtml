@@ -31,13 +31,11 @@
         if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
             $('#group-associated-product').hide();
             $('#group-quantity').hide();
-            $('#group-price-adjustment').show();
             $('#group-weight-adjustment').show();
             $('#group-cost').show();
         } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
             $('#group-associated-product').show();
             $('#group-quantity').show();
-            $('#group-price-adjustment').hide();
             $('#group-weight-adjustment').hide();
             $('#group-cost').hide();
         }
