@@ -437,7 +437,8 @@ namespace Grand.Web.Controllers
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
                 form["WarehouseId"].ToString() :
-                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : product.WarehouseId;
+                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (updatecartitem == null)
             {
