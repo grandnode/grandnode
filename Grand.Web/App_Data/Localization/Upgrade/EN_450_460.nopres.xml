@@ -305,6 +305,9 @@
   <LocaleResource Name="PageTitle.Documents">
     <Value>Documents</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.TwoFactorAuth">
+    <Value>Two-factor authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerDocuments">
     <Value>Documents</Value>
   </LocaleResource>
@@ -325,6 +328,12 @@
   </LocaleResource>
   <LocaleResource Name="Account.Documents.NoExists">
     <Value>Documents not exists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.TwoFactorAuth">
+    <Value>Two-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DigitCode">
+    <Value>Digital code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Documents">
     <Value>Documents</Value>
@@ -686,6 +695,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideCoursesTab.hint">
     <Value>Check to hide 'My courses' tab on 'My account' page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled">
+    <Value>Two factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled.Hint">
+    <Value>Enable two factor authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.Courses">
     <Value>My courses</Value>
   </LocaleResource>
@@ -700,6 +715,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Courses.Course.Fields.ShortDescription.Hint">
     <Value>The short description of the course. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.WrongCredentials.WrongSecurityCode">
+    <Value>Security code is wrong</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Permisions">
     <Value>You can't edit this discount, because it can be used in many stores.</Value>
@@ -740,12 +758,33 @@
   <LocaleResource Name="admin.common.genericattributes.fields.store">
     <Value>Select store</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.EnableTwoFactorAuth">
+    <Value>Enable Two-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.SendCode">
+    <Value>Send code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.FormSendCode">
+    <Value>Please, send verification code</Value>
+  </LocaleResource>
+  
   <LocaleResource Name="Account.Login.NewCustomer">
     <Value>Don't have an account? Create one for free</Value>
   </LocaleResource>
   <LocaleResource Name="SideBar.NewCustomer">
     <Value>New Customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Customer.TwoFactorAuthenticator">
+    <Value>Two factor Authenticator</Value>
+  </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.Enable">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.Disable">
+    <Value>Disable</Value>
+  </LocaleResource>
+  <LocaleResource Name="TwoFactorAuthenticator.ManualSetupCode">
+    <Value>Manual Setup Code</Value>  
   <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
     <Value>Convert picture to webp format</Value>
   </LocaleResource>

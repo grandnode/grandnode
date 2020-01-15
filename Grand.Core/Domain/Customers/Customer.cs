@@ -177,7 +177,7 @@ namespace Grand.Core.Domain.Customers
         /// Last date to change password
         /// </summary>
         public DateTime? PasswordChangeDateUtc { get; set; }
-
+           
         #region Navigation properties
 
         /// <summary>

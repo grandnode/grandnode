@@ -301,6 +301,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CourseSubjectService>().As<ICourseSubjectService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            builder.RegisterType<TwoFactorAuthenticationService>().As<ITwoFactorAuthenticationService>().InstancePerLifetimeScope();
 
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)

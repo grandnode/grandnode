@@ -797,7 +797,7 @@ namespace Grand.Services.Customers
             return (int)customers.DeletedCount;
 
         }
-
+                
         #endregion
 
         #region Customer roles

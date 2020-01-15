@@ -241,7 +241,7 @@ namespace Grand.Services.Customers
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
         Task<int> DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
-
+        
         #endregion
 
         #region Password history

@@ -498,6 +498,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
                 new { controller = "Vendor", action = "Info" });
 
+            // customer setting two factor authorization
+            routeBuilder.MapLocalizedRoute("CustomerTwoFactorAuth", "customer/twofactorauth",
+                new { controller = "Customer", action = "TwoFactorAuth"});
 
             //vendor reviews
             routeBuilder.MapLocalizedRoute("VendorReviews", "vendoreviews/{vendorId}",
@@ -675,6 +678,18 @@ namespace Grand.Web.Infrastructure
             //lets encrypt
             routeBuilder.MapRoute("well-known", ".well-known/acme-challenge/{fileName}", 
                 new { controller = "LetsEncrypt", action = "Index" });
+
+            // two factor authorization digit code page
+            routeBuilder.MapRoute("TwoFactorAuthorization", "two-facto-authorization",
+                new { controller = "Customer", action = "TwoFactorAuthenticate" });
+
+            // enable or disable two factor auth
+            routeBuilder.MapRoute("SettingTwoFactorAuthenticator", "setting-auth",
+                new { controller = "Customer", action = "SettingTwoFactorAuthenticator" });
+
+            // two factor authorization digit code page
+            routeBuilder.MapRoute("EnableTwoFactorAuthorization", "enable-two-facto-authorization",
+                new { controller = "Customer", action = "EnableTwoFactorAuthenticator" });
         }
 
         public int Priority

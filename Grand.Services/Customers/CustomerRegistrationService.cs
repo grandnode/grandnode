@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Services.Common;
 using Grand.Services.Events.Web;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -147,6 +148,11 @@ namespace Grand.Services.Customers
                 return CustomerLoginResults.WrongPassword;
             }
 
+            bool twofaEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
+            //2fa required
+            if (twofaEnabled)
+                return CustomerLoginResults.RequiresTwoFactor;
+            
             //save last login date
             customer.FailedLoginAttempts = 0;
             customer.CannotLoginUntilDateUtc = null;
