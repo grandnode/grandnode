@@ -53,8 +53,7 @@
                         value = 'An error occurred while retrieving token. ' + err;
                     })
                     .finally(function () {
-                        console.log(success + " " + value);
-
+                        
                         var postData = {
                             success: success,
                             value: value,
