@@ -16189,7 +16189,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.ScheduleTaskName.hint">
     <Value>Task Name</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.ScheduleTasks.Seconds">
     <Value>Seconds (run period)</Value>
   </LocaleResource>
@@ -16213,6 +16213,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Type.hint">
     <Value>SheduledTask Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Updated">
+    <Value>The scheduled task has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames">
     <Value>Search engine friendly page names</Value>

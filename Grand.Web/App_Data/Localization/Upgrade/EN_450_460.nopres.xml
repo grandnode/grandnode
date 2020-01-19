@@ -833,5 +833,8 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
     <Value>Please check this box, if topic should be visible publicly.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Updated">
+    <Value>The scheduled task has been updated successfully.</Value>
+  </LocaleResource>
 </Language>
 

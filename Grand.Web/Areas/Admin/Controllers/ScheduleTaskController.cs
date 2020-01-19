@@ -108,10 +108,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 scheduleTask.StopOnError = model.StopOnError;
                 scheduleTask.TimeInterval = model.TimeInterval;
                 await _scheduleTaskService.UpdateTask(scheduleTask);
+                SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.Updated"));
                 return await EditScheduler(model.Id);
             }
             model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
             model.Type = scheduleTask.Type;
+
+            ErrorNotification(ModelState);
 
             return View(model);
         }
