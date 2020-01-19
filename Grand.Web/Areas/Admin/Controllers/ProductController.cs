@@ -2032,7 +2032,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var pr = await _productService.GetProductById(productId);
                 pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                await _productService.UpdateStockProduct(pr);
+                await _productService.UpdateStockProduct(pr, false);
             }
 
             return new NullJsonResult();
@@ -2132,7 +2132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     product.StockQuantity = 0;
-                    await _productService.UpdateStockProduct(product);
+                    await _productService.UpdateStockProduct(product, false);
                 }
                 return Json(new { Success = true });
             }

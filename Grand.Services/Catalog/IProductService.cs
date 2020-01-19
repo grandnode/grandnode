@@ -97,7 +97,8 @@ namespace Grand.Services.Catalog
         /// Updates stock the product
         /// </summary>
         /// <param name="product">Product</param>
-        Task UpdateStockProduct(Product product);
+        /// <param name="mediator">Notification</param>
+        Task UpdateStockProduct(Product product, bool mediator = true);
 
         /// <summary>
         /// Updates most view on the product
