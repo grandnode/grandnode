@@ -6,7 +6,6 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -93,8 +92,7 @@ namespace Grand.Web.Controllers
             var model = new KnowledgebaseHomePageModel();
             var articles = await _knowledgebaseService.GetPublicKnowledgebaseArticlesByCategory(categoryId);
             var allCategories = _knowledgebaseService.GetPublicKnowledgebaseCategories();
-            articles.ForEach(x => model.Items.Add(new KnowledgebaseItemModel
-            {
+            articles.ForEach(x => model.Items.Add(new KnowledgebaseItemModel {
                 Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                 Id = x.Id,
                 SeName = x.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
@@ -114,8 +112,7 @@ namespace Grand.Web.Controllers
             string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id);
             model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                 (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
-                .Select(catBr => new KnowledgebaseCategoryModel
-                {
+                .Select(catBr => new KnowledgebaseCategoryModel {
                     Id = catBr.Id,
                     Name = catBr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                     SeName = catBr.GetSeName(_workContext.WorkingLanguage.Id)
@@ -137,8 +134,7 @@ namespace Grand.Web.Controllers
             {
                 var categories = await _knowledgebaseService.GetPublicKnowledgebaseCategoriesByKeyword(keyword);
                 var allCategories = await _knowledgebaseService.GetPublicKnowledgebaseCategories();
-                categories.ForEach(x => model.Items.Add(new KnowledgebaseItemModel
-                {
+                categories.ForEach(x => model.Items.Add(new KnowledgebaseItemModel {
                     Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                     Id = x.Id,
                     SeName = x.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
@@ -149,8 +145,7 @@ namespace Grand.Web.Controllers
                 var articles = await _knowledgebaseService.GetPublicKnowledgebaseArticlesByKeyword(keyword);
                 foreach (var item in articles)
                 {
-                    var kbm = new KnowledgebaseItemModel
-                    {
+                    var kbm = new KnowledgebaseItemModel {
                         Name = item.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                         Id = item.Id,
                         SeName = item.GetLocalized(y => y.SeName, _workContext.WorkingLanguage.Id),
@@ -204,8 +199,7 @@ namespace Grand.Web.Controllers
             foreach (var ac in articleComments)
             {
                 var customer = await customerService.GetCustomerById(ac.CustomerId);
-                var commentModel = new KnowledgebaseArticleCommentModel
-                {
+                var commentModel = new KnowledgebaseArticleCommentModel {
                     Id = ac.Id,
                     CustomerId = ac.CustomerId,
                     CustomerName = customer.FormatUserName(_customerSettings.CustomerNameFormat),
@@ -229,8 +223,7 @@ namespace Grand.Web.Controllers
             {
                 var a = await _knowledgebaseService.GetPublicKnowledgebaseArticle(id);
                 if (a != null)
-                    model.RelatedArticles.Add(new KnowledgebaseArticleModel
-                    {
+                    model.RelatedArticles.Add(new KnowledgebaseArticleModel {
                         SeName = a.SeName,
                         Id = a.Id,
                         Name = a.Name
@@ -247,8 +240,7 @@ namespace Grand.Web.Controllers
                 _workContext.WorkingLanguage.Id);
                 model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
                     (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
-                    .Select(catBr => new KnowledgebaseCategoryModel
-                    {
+                    .Select(catBr => new KnowledgebaseCategoryModel {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
                         SeName = catBr.GetSeName(_workContext.WorkingLanguage.Id)
@@ -286,8 +278,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 var customer = _workContext.CurrentCustomer;
-                var comment = new KnowledgebaseArticleComment
-                {
+                var comment = new KnowledgebaseArticleComment {
                     ArticleId = article.Id,
                     CustomerId = customer.Id,
                     CommentText = model.AddNewComment.CommentText,
