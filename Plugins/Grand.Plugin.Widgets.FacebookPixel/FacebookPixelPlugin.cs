@@ -86,7 +86,6 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.AddToCartScript.Hint", "Paste the event add to cart pixel code. {PRODUCTID}, {QTY}, {AMOUNT}, {CURRENCY} will be dynamically replaced.");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.DetailsOrderScript", "Facebook Event - Purchase");
             await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint", "Paste the event purchase pixel code. {AMOUNT} and {CURRENCY} will be dynamically replaced.");
-            await this.AddOrUpdatePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.AdditionDescription", "");
             
             await base.Install();
         }
@@ -108,7 +107,6 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.AddToCartScript.Hint");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.DetailsOrderScript");
             await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.DetailsOrderScript.Hint");
-            await this.DeletePluginLocaleResource(_serviceProvider, "Plugins.Widgets.FacebookPixel.AdditionDescription");
 
             await base.Uninstall();
         }
