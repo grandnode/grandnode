@@ -40,7 +40,7 @@
         }
         else
         {
-            <a href="@url" class="nav-link">
+            <a href="@url" class="nav-link" @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
                 @if (!String.IsNullOrEmpty(Model.IconClass))
                 {
                     <i class="@Model.IconClass"></i>
