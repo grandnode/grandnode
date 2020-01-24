@@ -184,6 +184,7 @@ namespace Grand.Web.Services
                     ShowSku = showSku,
                     TaxDisplayType = taxDisplay,
                     EndTime = product.AvailableEndDateTimeUtc,
+                    EndTimeLocalTime = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?(),
                     ShowQty = showQty,
                     GenericAttributes = product.GenericAttributes,
                     MarkAsNew = product.MarkAsNew &&
