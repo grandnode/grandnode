@@ -112,7 +112,7 @@ namespace Grand.Core.Infrastructure
             var config = new GrandConfig();
             configuration.GetSection("Grand").Bind(config);
 
-            CommonHelper.HostingEnvironment = hostingEnvironment;
+            CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
 
             //register mongo mappings
             MongoDBMapperConfiguration.RegisterMongoDBMappings();
