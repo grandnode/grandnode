@@ -248,6 +248,8 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
                 options.EnableEndpointRouting = false;
+                //add custom display metadata provider
+                options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider());
             });
 
             mvcBuilder.AddRazorRuntimeCompilation();
@@ -283,9 +285,6 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
-
-            //add custom display metadata provider
-            mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
 
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>
