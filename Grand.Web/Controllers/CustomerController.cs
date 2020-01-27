@@ -204,6 +204,7 @@ namespace Grand.Web.Controllers
                                 : await _customerService.GetCustomerByEmail(model.Email);
                             string userUniqueKeyGenAttr = await _genericAttributeService.GetAttributesForEntity<string>(customer, SystemCustomerAttributeNames.TwoFactorSecretKey);
                             var authModel = new CustomerInfoModel.TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = userUniqueKeyGenAttr };
+
                           return RedirectToRoute("TwoFactorAuthorization", authModel);
                     }
                     

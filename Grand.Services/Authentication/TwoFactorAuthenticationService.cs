@@ -19,6 +19,7 @@ namespace Grand.Services.Authentication
         public QrCodeSetup GenerateQrCodeSetup(string userUniqueKey)
         {
             var setupInfo = _twoFactorAuthentication.GenerateSetupCode("GrandNode", "GrandNode", userUniqueKey, false, 3);
+
             return new QrCodeSetup 
             { 
                 QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl, 

@@ -661,7 +661,7 @@ namespace Grand.Web.Services
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
-            //model.HideTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
+            
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;

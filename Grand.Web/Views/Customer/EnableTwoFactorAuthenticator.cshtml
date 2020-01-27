@@ -1,4 +1,4 @@
-﻿@model CustomerInfoModel.TwoFactorAuthenticationModel
+@model CustomerInfoModel.TwoFactorAuthenticationModel
 @using Grand.Web.Models.Customer;
 @using System.Net
 @inject IWebHelper webHelper
@@ -37,7 +37,6 @@
                             @Html.HiddenFor(m => m.UserUniqueKey)
                             @Html.HiddenFor(m => m.QrCodeSetupImageUrl)
                             @Html.HiddenFor(m => m.ManualInputCode)
-
                             <div class="card-body">
                                 <div class="row">
                                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
