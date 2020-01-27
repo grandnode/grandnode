@@ -2,7 +2,6 @@
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
-using Grand.Framework.Security;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Extensions;
@@ -147,7 +146,7 @@ namespace Grand.Web.Controllers
             }
 
             var result = await _returnRequestViewModelService.ReturnRequestSubmit(model, order, address, pickupDate, form);
-            if(result.rr.ReturnNumber > 0)
+            if (result.rr.ReturnNumber > 0)
                 model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), result.rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = result.rr.Id }));
 
             return View(result.model);
@@ -164,7 +163,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             var model = await _returnRequestViewModelService.PrepareReturnRequestDetails(rr, order);
-            
+
             return View(model);
         }
 

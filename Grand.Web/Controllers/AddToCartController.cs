@@ -134,10 +134,14 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
+            string warehouseId = 
+               product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
+               (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
+
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, cartType);
-            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product.Id);
+            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product.Id, warehouseId);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = await _shoppingCartService
@@ -145,6 +149,7 @@ namespace Grand.Web.Controllers
                     ShoppingCartType = cartType,
                     StoreId = _storeContext.CurrentStore.Id,
                     CustomerEnteredPrice = decimal.Zero,
+                    WarehouseId = warehouseId,
                     Quantity = quantityToValidate
                 },
                 product, false);
@@ -162,6 +167,7 @@ namespace Grand.Web.Controllers
                 productId: productId,
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
+                warehouseId: warehouseId,
                 quantity: quantity);
             if (addToCartWarnings.Any())
             {
@@ -435,9 +441,10 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ? 
-                form["WarehouseId"].ToString() : 
-                (!string.IsNullOrEmpty(product.WarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
+            string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
+                form["WarehouseId"].ToString() :
+                product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : 
+                (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             if (updatecartitem == null)
             {

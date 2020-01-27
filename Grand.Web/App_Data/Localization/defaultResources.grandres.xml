@@ -9375,6 +9375,9 @@
   <LocaleResource Name="admin.contentmanagement.blog.blogcategory.info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Permisions">
+    <Value>You can't edit this category blog, because it can be used in many stores.</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.contentmanagement.blog.blogcategory.posts">
     <Value>Blog posts</Value>
   </LocaleResource>
@@ -9530,6 +9533,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
     <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Permisions">
+    <Value>You can't edit this blog post, because it can be used in many stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Products">
     <Value>Products</Value>
@@ -16207,7 +16213,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.ScheduleTaskName.hint">
     <Value>Task Name</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.System.ScheduleTasks.Seconds">
     <Value>Seconds (run period)</Value>
   </LocaleResource>
@@ -16231,6 +16237,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Type.hint">
     <Value>SheduledTask Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Updated">
+    <Value>The scheduled task has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames">
     <Value>Search engine friendly page names</Value>

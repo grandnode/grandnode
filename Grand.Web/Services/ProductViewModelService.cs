@@ -184,6 +184,7 @@ namespace Grand.Web.Services
                     ShowSku = showSku,
                     TaxDisplayType = taxDisplay,
                     EndTime = product.AvailableEndDateTimeUtc,
+                    EndTimeLocalTime = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?(),
                     ShowQty = showQty,
                     GenericAttributes = product.GenericAttributes,
                     MarkAsNew = product.MarkAsNew &&
@@ -619,6 +620,8 @@ namespace Grand.Web.Services
 
             #region Standard properties
 
+            var warehouseId = updatecartitem != null ? updatecartitem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId;
+
             var model = new ProductDetailsModel {
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
@@ -636,7 +639,7 @@ namespace Grand.Web.Services
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage("", updatecartitem != null ? updatecartitem.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId, _localizationService, _productAttributeParser),
+                StockAvailability = product.FormatStockMessage(warehouseId, "", _localizationService, _productAttributeParser),
                 GenericAttributes = product.GenericAttributes,
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage =
@@ -735,13 +738,14 @@ namespace Grand.Web.Services
 
             #region Back in stock subscriptions
 
-            if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
+            if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
+                || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
                 product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
             {
                 //out of stock
-                model.DisplayBackInStockSubscription = true;
+                model.DisplayBackInStockSubscription = true;                
             }
 
             #endregion
@@ -1403,7 +1407,7 @@ namespace Grand.Web.Services
                 model.Add(tier);
             }
             return model;
-        }        
+        }
         public virtual async Task PrepareProductReservation(ProductDetailsModel model, Product product)
         {
             if (product.ProductType == ProductType.Reservation)
@@ -1615,8 +1619,9 @@ namespace Grand.Web.Services
             string attributeXml = await shoppingCartViewModelService.ParseProductAttributes(product, form);
 
             string warehouseId = _shoppingCartSettings.AllowToSelectWarehouse ?
-                form["WarehouseId"].ToString() :
-                (!string.IsNullOrEmpty(product.WarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
+               form["WarehouseId"].ToString() :
+               product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId :
+               (string.IsNullOrEmpty(_storeContext.CurrentStore.DefaultWarehouseId) ? product.WarehouseId : _storeContext.CurrentStore.DefaultWarehouseId);
 
             //rental attributes
             DateTime? rentalStartDate = null;

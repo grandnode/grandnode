@@ -765,6 +765,8 @@ namespace Grand.Web.Services
         {
             var model = new CustomerAuctionsModel();
             var priceFormatter = _serviceProvider.GetRequiredService<IPriceFormatter>();
+            var currencyService = _serviceProvider.GetRequiredService<ICurrencyService>();
+            var primaryCurrency = await currencyService.GetPrimaryStoreCurrency();
 
             var customerBids = (await _auctionService.GetBidsByCustomerId(customer.Id)).GroupBy(x => x.ProductId);
             foreach (var item in customerBids)
@@ -776,14 +778,14 @@ namespace Grand.Web.Services
                     bid.Ended = product.AuctionEnded;
                     bid.OrderId = item.Where(x => x.Win && x.CustomerId == customer.Id).FirstOrDefault()?.OrderId;
                     var amount = product.HighestBid;
-                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount);
+                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount, true, primaryCurrency);
                     bid.CurrentBidAmountValue = amount;
                     bid.HighestBidder = product.HighestBidder == customer.Id;
                     bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : DateTime.MaxValue;
                     bid.ProductName = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
                     bid.ProductSeName = product.GetSeName(_workContext.WorkingLanguage.Id);
                     bid.BidAmountValue = item.Max(x => x.Amount);
-                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue);
+                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue, true, primaryCurrency);
                     model.ProductBidList.Add(bid);
                 }
             }

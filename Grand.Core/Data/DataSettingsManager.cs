@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Grand.Core.Data
 {
@@ -12,6 +15,19 @@ namespace Grand.Core.Data
     {
         protected const char separator = ':';
         protected const string filename = "Settings.txt";
+
+        protected string RemoveSpecialCharacters(string str)
+        {
+            var sb = new StringBuilder();
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Parse settings
@@ -39,8 +55,10 @@ namespace Grand.Core.Data
                 {
                     continue;
                 }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
+                var key = setting.Substring(0, separatorIndex).Trim();
+                var value = setting.Substring(separatorIndex + 1).Trim();
+                if (!string.IsNullOrEmpty(key))
+                    key = RemoveSpecialCharacters(key);
 
                 switch (key)
                 {

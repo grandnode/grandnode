@@ -131,8 +131,6 @@
                                 dataDictAuction.TemplateInfo.HtmlFieldPrefix = string.Format("auction_{0}", Model.Id);
                                 <partial name="_AuctionInfo" model="Model" view-data="dataDictAuction" />
                             }
-
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
                             @{
                                 var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                 dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
@@ -151,7 +149,6 @@
                             </div>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
                     <div class="col-12 product-share px-0">
                         <partial name="_ShareButton" model="Model" />
                     </div>
@@ -212,9 +209,7 @@
                     }
                 </div>
             </div>
-
             <!--wishlist, compare, email a friend-->
-            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
             @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
             @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
             @await Component.InvokeAsync("SimilarProducts", new { productId = Model.Id })

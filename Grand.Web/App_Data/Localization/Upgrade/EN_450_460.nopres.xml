@@ -860,5 +860,20 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.SaveBeforeEdit">
     <Value>You need to save the news item.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Permisions">
+    <Value>You can't edit this blog post, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogCategory.Permisions">
+    <Value>You can't edit this category blog, because it can be used in many stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
+    <Value>Please check this box, if topic should be visible publicly.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Updated">
+    <Value>The scheduled task has been updated successfully.</Value>
+  </LocaleResource>
 </Language>
 

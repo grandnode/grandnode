@@ -3,10 +3,10 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
+using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -16,14 +16,13 @@ using Grand.Services.Messages;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
-using Grand.Web.Models.Vendors;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.Vendors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Grand.Core.Domain.Seo;
 
 namespace Grand.Web.Controllers
 {
@@ -172,8 +171,7 @@ namespace Grand.Web.Controllers
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 var address = new Address();
                 //disabled by default
-                var vendor = new Vendor
-                {
+                var vendor = new Vendor {
                     Name = model.Name,
                     Email = model.Email,
                     Description = description,
@@ -186,7 +184,7 @@ namespace Grand.Web.Controllers
                 model.Address.ToEntity(vendor.Address, true);
                 await _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)
-                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(), 
+                var seName = await vendor.ValidateSeName(vendor.Name, vendor.Name, true, _serviceProvider.GetRequiredService<SeoSettings>(),
                     _serviceProvider.GetRequiredService<IUrlRecordService>(), _serviceProvider.GetRequiredService<ILanguageService>());
                 await _urlRecordService.SaveSlug(vendor, seName, "");
 

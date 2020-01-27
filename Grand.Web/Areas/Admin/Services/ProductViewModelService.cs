@@ -726,6 +726,9 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
             }
+            product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+            await _productService.UpdateStockProduct(product, false);
+
         }
         public virtual async Task PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewText)
@@ -2459,7 +2462,7 @@ namespace Grand.Web.Areas.Admin.Services
                     ColorSquaresRgb = x.ColorSquaresRgb,
                     ImageSquaresPictureId = x.ImageSquaresPictureId,
                     PriceAdjustment = x.PriceAdjustment,
-                    PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
+                    PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
                     WeightAdjustment = x.WeightAdjustment,
                     WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                     Cost = x.Cost,
@@ -2851,7 +2854,7 @@ namespace Grand.Web.Areas.Admin.Services
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                     {
                         product.StockQuantity = product.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                        await _productService.UpdateStockProduct(product);
+                        await _productService.UpdateStockProduct(product, false);
                     }
                 }
             }
@@ -2885,7 +2888,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     var pr = await _productService.GetProductById(model.ProductId);
                     pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                    await _productService.UpdateStockProduct(pr);
+                    await _productService.UpdateStockProduct(pr, false);
                 }
             }
             return warnings;
@@ -2929,7 +2932,7 @@ namespace Grand.Web.Areas.Admin.Services
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 product.StockQuantity = product.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                await _productService.UpdateStockProduct(product);
+                await _productService.UpdateStockProduct(product, false);
             }
         }
         public virtual async Task<IList<ProductModel.ProductAttributeCombinationTierPricesModel>> PrepareProductAttributeCombinationTierPricesModel(Product product, string productAttributeCombinationId)

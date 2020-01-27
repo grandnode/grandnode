@@ -67,12 +67,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             engine.Initialize(services, configuration);
             engine.ConfigureServices(services, configuration);
 
-            //if (DataSettingsHelper.DatabaseIsInstalled())
-            //{
-            //    //log application start
-            //    var logger = serviceProvider.GetRequiredService<ILogger>();
-            //    logger.Information("Application started", null, null);
-            //}
         }
 
         /// <summary>

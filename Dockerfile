@@ -23,6 +23,7 @@ COPY Plugins/Grand.Plugin.Shipping.ShippingPoint/Grand.Plugin.Shipping.ShippingP
 COPY Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.csproj Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.csproj
 COPY Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj
 COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj
+COPY Plugins/Grand.Plugin.Widgets.FacebookPixel/Grand.Plugin.Widgets.FacebookPixel.csproj Plugins/Grand.Plugin.Widgets.FacebookPixel/Grand.Plugin.Widgets.FacebookPixel.csproj
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
 
 # Copy everything else and build
@@ -44,6 +45,7 @@ RUN dotnet build Plugins/Grand.Plugin.Shipping.ShippingPoint
 RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
 RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
+RUN dotnet build Plugins/Grand.Plugin.Widgets.FacebookPixel
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 # Build runtime image

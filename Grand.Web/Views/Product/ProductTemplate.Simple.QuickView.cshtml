@@ -5,7 +5,7 @@
     <script src="~/scripts/public.reservation.js"></script>
     <link href="~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css" rel="stylesheet" type="text/css" />
 }
-@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
+@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_after_breadcrumb", additionalData = Model.Id })
 <resources asp-type="ScriptHeader" />
     <div class="modal-dialog product-quickview" role="document">
         <div class="modal-content rounded-0">
@@ -13,7 +13,7 @@
                 <span class="quick-close"></span>
             </button>
             <div class="product-details-page">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_top", additionalData = Model.Id })
                 <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
                     <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                         <div class="item-container col d-md-inline-flex d-md-flex px-0">
@@ -23,10 +23,10 @@
                                     <span class="product-label badge bg-info text-white">@Model.Flag</span>
                                 </div>
                             }
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_before_pictures", additionalData = Model.Id })
                             <!--product pictures-->
                             <partial name="_ProductDetailsPictures" model="Model" />
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_after_pictures", additionalData = Model.Id })
                             <div class="overview col-12 col-md-6">
                                 <partial name="_Discontinued" model="Model" />
                                 <h2 class="generalTitle" itemprop="name">
@@ -38,7 +38,7 @@
                                         @Html.Raw(Model.ShortDescription)
                                     </div>
                                 }
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_overview_top", additionalData = Model.Id })
                                 <!--product reviews-->
                                 <div class="quickview-reviews">
                                     <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
@@ -103,7 +103,6 @@
                                                 <partial name="_AuctionInfo" model="Model" view-data="dataDictAuction" />
                                             }
 
-                                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
                                             @{
                                                 var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                                 dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
@@ -121,8 +120,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_overview_bottom", additionalData = Model.Id })
                             </div>
                         </div>
                         <div class="col-12 mt-2 mb-2 px-0">
@@ -178,12 +176,11 @@
                             </div>
                         </div>
                         <!--wishlist, compare, email a friend-->
-                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
                         @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
                         @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
                     </div>
                 </form>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_quickview_bottom", additionalData = Model.Id })
             </div>
         </div>
     </div>

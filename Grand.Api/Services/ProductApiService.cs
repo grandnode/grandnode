@@ -172,7 +172,7 @@ namespace Grand.Api.Services
                 if (string.IsNullOrEmpty(warehouseId))
                 {
                     product.StockQuantity = stock;
-                    await _productService.UpdateProduct(product);
+                    await _productService.UpdateStockProduct(product, false);
                 }
                 else
                 {
@@ -196,6 +196,9 @@ namespace Grand.Api.Services
                             };
                             await _productService.InsertProductWarehouseInventory(newPwI);
                         }
+
+                        product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+                        await _productService.UpdateStockProduct(product, false);
                     }
                     else
                     {

@@ -10,6 +10,7 @@ using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Customers;
 using Grand.Services.Events;
+using Grand.Services.Events.Web;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
@@ -502,7 +503,7 @@ namespace Grand.Services.Catalog
             await _mediator.EntityUpdated(product);
         }
 
-        public virtual async Task UpdateStockProduct(Product product)
+        public virtual async Task UpdateStockProduct(Product product, bool mediator = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -519,7 +520,8 @@ namespace Grand.Services.Catalog
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
-            await _mediator.EntityUpdated(product);
+            if (mediator)
+                await _mediator.Publish(new UpdateStockEvent(product));
         }
 
         public virtual async Task UpdateMostView(string productId, int qty)
@@ -1241,6 +1243,9 @@ namespace Grand.Services.Catalog
                         await ReserveInventory(product, quantityToChange, warehouseId);
                     else
                         await UnblockReservedInventory(product, quantityToChange, warehouseId);
+
+                    product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+                    await UpdateStockProduct(product);
                 }
                 else
                 {
@@ -1679,6 +1684,10 @@ namespace Grand.Services.Catalog
                         .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
                         .CurrentDate("UpdatedOnUtc");
                 await _productRepository.Collection.UpdateOneAsync(filter, update);
+
+                product.StockQuantity = product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+                await UpdateStockProduct(product);
+
             }
             //manage stock by attributes
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
@@ -1695,7 +1704,6 @@ namespace Grand.Services.Catalog
                 pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
                 pwi.StockQuantity += quantity;
 
-
                 combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
 
                 var builder = Builders<Product>.Filter;
@@ -1707,6 +1715,9 @@ namespace Grand.Services.Catalog
                     .CurrentDate("UpdatedOnUtc");
 
                 await _productRepository.Collection.UpdateManyAsync(filter, update);
+
+                product.StockQuantity = product.ProductAttributeCombinations.Sum(x => x.StockQuantity);
+                await UpdateStockProduct(product);
 
             }
             //manage stock by bundle products
@@ -1724,6 +1735,7 @@ namespace Grand.Services.Catalog
 
             //cache
             await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
             //event notification
             await _mediator.EntityUpdated(product);
 

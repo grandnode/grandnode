@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Blogs;
+﻿using Grand.Core;
+using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
@@ -38,12 +39,13 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IVendorService _vendorService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
+        private readonly IWorkContext _workContext;
         private readonly SeoSettings _seoSettings;
 
         public BlogViewModelService(IBlogService blogService, IDateTimeHelper dateTimeHelper, IStoreService storeService, IUrlRecordService urlRecordService,
             IPictureService pictureService, ICustomerService customerService, ILocalizationService localizationService, IProductService productService, 
             ICategoryService categoryService, IManufacturerService manufacturerService, IVendorService vendorService,
-            ILanguageService languageService, SeoSettings seoSettings)
+            ILanguageService languageService, IWorkContext workContext, SeoSettings seoSettings)
         {
             _blogService = blogService;
             _dateTimeHelper = dateTimeHelper;
@@ -57,12 +59,13 @@ namespace Grand.Web.Areas.Admin.Services
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
             _languageService = languageService;
+            _workContext = workContext;
             _seoSettings = seoSettings;
         }
 
         public virtual async Task<(IEnumerable<BlogPostModel> blogPosts, int totalCount)> PrepareBlogPostsModel(int pageIndex, int pageSize)
         {
-            var blogPosts = await _blogService.GetAllBlogPosts("", null, null, pageIndex - 1, pageSize, true);
+            var blogPosts = await _blogService.GetAllBlogPosts(_workContext.CurrentCustomer.StaffStoreId, null, null, pageIndex - 1, pageSize, true);
             return (blogPosts.Select(x =>
                 {
                     var m = x.ToModel(_dateTimeHelper);
@@ -80,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new BlogPostModel();
             //Stores
-            await model.PrepareStoresMappingModel(null, _storeService, false);
+            await model.PrepareStoresMappingModel(null, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             //default values
             model.AllowComments = true;
             //locales
@@ -89,13 +92,13 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel)
         {
-            await blogPostmodel.PrepareStoresMappingModel(null, _storeService, true);
+            await blogPostmodel.PrepareStoresMappingModel(null, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
             return blogPostmodel;
         }
         public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel blogPostmodel, BlogPost blogPost)
         {
             //Store
-            await blogPostmodel.PrepareStoresMappingModel(blogPost, _storeService, true);
+            await blogPostmodel.PrepareStoresMappingModel(blogPost, _storeService, true, _workContext.CurrentCustomer.StaffStoreId);
             return blogPostmodel;
         }
 
@@ -103,7 +106,7 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = blogPost.ToModel(_dateTimeHelper);
             //Store
-            await model.PrepareStoresMappingModel(blogPost, _storeService, false);
+            await model.PrepareStoresMappingModel(blogPost, _storeService, false, _workContext.CurrentCustomer.StaffStoreId);
             return model;
         }
 
@@ -155,7 +158,8 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<(IEnumerable<BlogCommentModel> blogComments, int totalCount)> PrepareBlogPostCommentsModel(string filterByBlogPostId, int pageIndex, int pageSize)
         {
             IList<BlogComment> comments;
-            if (!String.IsNullOrEmpty(filterByBlogPostId))
+            var storeId = string.IsNullOrEmpty(_workContext.CurrentCustomer.StaffStoreId) ? "" : _workContext.CurrentCustomer.StaffStoreId;
+            if (!string.IsNullOrEmpty(filterByBlogPostId))
             {
                 //filter comments by blog
                 var blogPost = await _blogService.GetBlogPostById(filterByBlogPostId);
@@ -164,7 +168,7 @@ namespace Grand.Web.Areas.Admin.Services
             else
             {
                 //load all blog comments
-                comments = await _blogService.GetAllComments("");
+                comments = await _blogService.GetAllComments("", storeId);
             }
             var commentsList = new List<BlogCommentModel>();
             foreach (var blogComment in comments.Skip((pageIndex - 1) * pageSize).Take(pageSize))
@@ -217,8 +221,9 @@ namespace Grand.Web.Areas.Admin.Services
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
+            var storeId = _workContext.CurrentCustomer.StaffStoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in await _storeService.GetAllStores())
+            foreach (var s in (await _storeService.GetAllStores()).Where(x => x.Id == storeId || string.IsNullOrWhiteSpace(storeId)))
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
@@ -235,6 +240,10 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual async Task<(IList<ProductModel> products, int totalCount)> PrepareProductModel(BlogProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
+            if (_workContext.CurrentCustomer.IsStaff())
+            {
+                model.SearchStoreId = _workContext.CurrentCustomer.StaffStoreId;
+            }
             var products = await _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel(_dateTimeHelper)).ToList(), products.TotalCount);
         }

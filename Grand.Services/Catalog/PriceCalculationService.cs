@@ -757,7 +757,7 @@ namespace Grand.Services.Catalog
                         var associatedProduct = await _productService.GetProductById(value.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, includeDiscounts: true)).finalPrice * value.Quantity;
+                            adjustment = (await GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, additionalCharge: value.PriceAdjustment, includeDiscounts: true)).finalPrice * value.Quantity;
                         }
                     }
                     break;

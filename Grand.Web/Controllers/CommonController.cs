@@ -9,7 +9,6 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Services.Common;
