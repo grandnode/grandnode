@@ -461,7 +461,20 @@
             </div>
         }
 
-
+        @if (!Model.HideTabTwoFactorAuth)
+        {
+    <div class="card mb-3">
+        <h3 class="card-header">@T("customer.twofactorauthenticator")</h3>
+        @if (Model.TwoFactorAuthentication.Is2faEnabled)
+        {
+            @Html.ActionLink(T("TwoFactorAuthenticator.Disable").Text, "DisableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+        }
+        else
+        {
+            @Html.ActionLink(T("TwoFactorAuthenticator.Enable").Text, "EnableTwoFactorAuthenticator", "Customer", new object { }, new { @class = "btn btn-info login-button" })
+        }
+    </div>
+        }
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>

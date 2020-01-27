@@ -203,7 +203,7 @@ namespace Grand.Web.Controllers
                                 ? await _customerService.GetCustomerByUsername(model.Username) 
                                 : await _customerService.GetCustomerByEmail(model.Email);
                             string userUniqueKeyGenAttr = await _genericAttributeService.GetAttributesForEntity<string>(customer, SystemCustomerAttributeNames.TwoFactorSecretKey);
-                            var authModel = new TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = userUniqueKeyGenAttr };
+                            var authModel = new CustomerInfoModel.TwoFactorAuthenticationModel { UserName = model.Username, Email = model.Email, UserUniqueKey = userUniqueKeyGenAttr };
                           return RedirectToRoute("TwoFactorAuthorization", authModel);
                     }
                     
@@ -1431,14 +1431,13 @@ namespace Grand.Web.Controllers
 
         #region My account / TwoFactorAuth
 
-        public IActionResult TwoFactorAuthenticate(TwoFactorAuthenticationModel model)
+        public IActionResult TwoFactorAuthenticate(CustomerInfoModel.TwoFactorAuthenticationModel model)
         {
-            model.UserUniqueKey = model.UserUniqueKey;
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> TwoFactorAuthenticate(TwoFactorAuthenticationModel model, string returnUrl,
+        public async Task<IActionResult> TwoFactorAuthenticate(CustomerInfoModel.TwoFactorAuthenticationModel model, string returnUrl,
              [FromServices] IShoppingCartService shoppingCartService)
         {
             var token = model.Code;
@@ -1474,17 +1473,7 @@ namespace Grand.Web.Controllers
             ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
             return View(model);
         }
-
-        public IActionResult SettingTwoFactorAuthenticator()
-        {
-            if (!_customerSettings.TwoFactorAuthenticationEnabled)
-                return RedirectToRoute("CustomerInfo");
-
-            var customer = _workContext.CurrentCustomer;
-            var model = _customerViewModelService.PrepareTwoFactorAuthModel(customer, null, null, null);
-            return View(model);
-        }
-
+        
         public IActionResult EnableTwoFactorAuthenticator()
         {
             if (!_customerSettings.TwoFactorAuthenticationEnabled)
@@ -1499,11 +1488,9 @@ namespace Grand.Web.Controllers
             string barcodeImageUrl = setupInfo.QrCodeImageUrl;
             string manualCode = setupInfo.ManualEntryQrCode;
 
-            var model = new TwoFactorAuthenticationModel 
+            var customertwoauthModelModel =  new CustomerInfoModel.TwoFactorAuthenticationModel 
             {
                 Is2faEnabled = true,
-                IsMachineRemembered = true,
-                RecoveryCodesLeft = 0,
                 HasAuthenticator = true,
                 StatusMessage = "Test message 2fa",
                 UserUniqueKey = userUniqueKey,
@@ -1511,11 +1498,11 @@ namespace Grand.Web.Controllers
                 QrCodeSetupImageUrl = barcodeImageUrl
             };
             
-            return View(model);
+            return View(customertwoauthModelModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnableTwoFactorAuthenticator(TwoFactorAuthenticationModel model, string returnUrl)
+        public async Task<IActionResult> EnableTwoFactorAuthenticator(CustomerInfoModel.TwoFactorAuthenticationModel model, string returnUrl)
         {
             var token = model.Code;
             
@@ -1535,9 +1522,10 @@ namespace Grand.Web.Controllers
                 await _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TwoFactorSecretKey, model.UserUniqueKey);
                 
                 if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                    return RedirectToRoute("SettingTwoFactorAuthenticator");
+                    return RedirectToRoute("CustomerInfo");
                 return Redirect(returnUrl);
             }
+            ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
             return View(model);
         }
 
@@ -1549,7 +1537,7 @@ namespace Grand.Web.Controllers
                 await _genericAttributeService.SaveAttribute<bool>(customer, SystemCustomerAttributeNames.TwoFactorEnabled, false);
                 await _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.TwoFactorSecretKey, null);
                
-                return RedirectToRoute("SettingTwoFactorAuthenticator");
+                return RedirectToRoute("CustomerInfo");
             }
             return View();
         }

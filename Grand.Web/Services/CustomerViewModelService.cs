@@ -35,6 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Services
@@ -406,6 +407,11 @@ namespace Grand.Web.Services
                 });
             }
 
+            model.HideTabTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
+            var TwoFAModel = PrepareTwoFactorAuthModel(customer);
+            PropertyInfo TwoFactorAuthProperty = model.GetType().GetProperty("TwoFactorAuthentication");
+            TwoFactorAuthProperty.SetValue(model, TwoFAModel);
+            
             //custom customer attributes
             var customAttributes = await PrepareCustomAttributes(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
@@ -655,7 +661,7 @@ namespace Grand.Web.Services
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
-            model.HideTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
+            //model.HideTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -872,16 +878,14 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(
-            Customer customer, 
-            string securityKey, 
-            string barcodeImageUrl, 
-            string manualCode)
+        public CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(
+            Customer customer,
+            string securityKey = null, 
+            string barcodeImageUrl = null, 
+            string manualCode = null)
         {
-            var model = new TwoFactorAuthenticationModel {
+            var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
                 Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled),
-                IsMachineRemembered = true,
-                RecoveryCodesLeft = 0,
                 HasAuthenticator = true,
                 StatusMessage = "Test message 2fa",
                 UserUniqueKey = securityKey,

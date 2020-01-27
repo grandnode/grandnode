@@ -1,4 +1,4 @@
-﻿@model TwoFactorAuthenticationModel
+﻿@model CustomerInfoModel.TwoFactorAuthenticationModel
 @using Grand.Web.Models.Customer;
 @using System.Net
 @inject IWebHelper webHelper
@@ -35,6 +35,8 @@
                         <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                             @Html.HiddenFor(m => m.Is2faEnabled)
                             @Html.HiddenFor(m => m.UserUniqueKey)
+                            @Html.HiddenFor(m => m.QrCodeSetupImageUrl)
+                            @Html.HiddenFor(m => m.ManualInputCode)
 
                             <div class="card-body">
                                 <div class="row">
