@@ -38,6 +38,16 @@ namespace Grand.Services.Topics
         /// {0} : topic ID
         /// </remarks>
         private const string TOPICS_BY_ID_KEY = "Grand.topics.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic systemname
+        /// {1} : store id
+        /// </remarks>
+        private const string TOPICS_BY_SYSTEMNAME = "Grand.topics.systemname-{0}-{1}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -113,18 +123,23 @@ namespace Grand.Services.Topics
         /// <returns>Topic</returns>
         public virtual async Task<Topic> GetTopicBySystemName(string systemName, string storeId = "")
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            var query = _topicRepository.Table;
-            query = query.Where(t => t.SystemName.ToLower() == systemName.ToLower());
-            query = query.OrderBy(t => t.Id);
-            var topics = await query.ToListAsync();
-            if (!String.IsNullOrEmpty(storeId))
+            string key = string.Format(TOPICS_BY_SYSTEMNAME, systemName, storeId);
+            return await _cacheManager.GetAsync(key, async () =>
             {
-                topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
-            }
-            return topics.FirstOrDefault();
+
+                var query = _topicRepository.Table;
+                query = query.Where(t => t.SystemName.ToLower() == systemName.ToLower());
+                query = query.OrderBy(t => t.Id);
+                var topics = await query.ToListAsync();
+                if (!String.IsNullOrEmpty(storeId))
+                {
+                    topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+                }
+                return topics.FirstOrDefault();
+            });
         }
 
         /// <summary>
