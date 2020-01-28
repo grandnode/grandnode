@@ -30,13 +30,38 @@ namespace Grand.Services.Directory
         /// {1} : show hidden records?
         /// </remarks>
         private const string COUNTRIES_ALL_KEY = "Grand.country.all-{0}-{1}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : country ID
+        /// </remarks>
+        private static string COUNTRIES_BY_KEY = "Grand.country.id-{0}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : twoletter
+        /// </remarks>
+        private static string COUNTRIES_BY_TWOLETTER = "Grand.country.twoletter-{0}";
+
+        /// <summary>
+        /// key for caching by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : threeletter
+        /// </remarks>
+        private static string COUNTRIES_BY_THREELETTER = "Grand.country.threeletter-{0}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string COUNTRIES_PATTERN_KEY = "Grand.country.";
 
         #endregion
-        
+
         #region Fields
 
         private readonly IRepository<Country> _countryRepository;
@@ -115,7 +140,7 @@ namespace Grand.Services.Directory
                     var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
                     filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
-                var countries = await _countryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x=>x.Name).ToListAsync();
+                var countries = await _countryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name).ToListAsync();
                 if (!string.IsNullOrEmpty(languageId))
                 {
                     //we should sort countries by localized names when they have the same display order
@@ -159,7 +184,11 @@ namespace Grand.Services.Directory
         /// <returns>Country</returns>
         public virtual Task<Country> GetCountryById(string countryId)
         {
-            return _countryRepository.GetByIdAsync(countryId);
+            if (string.IsNullOrEmpty(countryId))
+                return null;
+
+            var key = string.Format(COUNTRIES_BY_KEY, countryId);
+            return _cacheManager.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
         }
 
         /// <summary>
@@ -194,8 +223,12 @@ namespace Grand.Services.Directory
         /// <returns>Country</returns>
         public virtual Task<Country> GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
-            return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            var key = string.Format(COUNTRIES_BY_TWOLETTER, twoLetterIsoCode);
+            return _cacheManager.GetAsync(key, () =>
+            {
+                var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
+                return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
@@ -205,8 +238,12 @@ namespace Grand.Services.Directory
         /// <returns>Country</returns>
         public virtual Task<Country> GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
-            return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            var key = string.Format(COUNTRIES_BY_THREELETTER, threeLetterIsoCode);
+            return _cacheManager.GetAsync(key, () =>
+            {
+                var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
+                return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
