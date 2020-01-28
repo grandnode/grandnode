@@ -32,6 +32,13 @@ namespace Grand.Services.Directory
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : currency code
+        /// </remarks>
+        private const string CURRENCIES_BY_CODE = "Grand.currency.code-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : show hidden records?
         /// </remarks>
         private const string CURRENCIES_ALL_KEY = "Grand.currency.all-{0}";
@@ -157,10 +164,14 @@ namespace Grand.Services.Directory
         /// <returns>Currency</returns>
         public virtual async Task<Currency> GetCurrencyByCode(string currencyCode)
         {
-            if (String.IsNullOrEmpty(currencyCode))
-                return null;
-            var currencies = await GetAllCurrencies(true);
-            return currencies.FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+            var key = string.Format(CURRENCIES_BY_CODE, currencyCode);
+            return await _cacheManager.GetAsync(key, () =>
+            {
+                var query = from q in _currencyRepository.Table
+                            where q.CurrencyCode.ToLowerInvariant() == currencyCode.ToLower()
+                            select q;
+                return query.FirstOrDefaultAsync();
+            });
         }
 
         /// <summary>
