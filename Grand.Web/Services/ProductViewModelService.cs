@@ -1473,7 +1473,8 @@ namespace Grand.Web.Services
                         Sku = p1.Sku,
                         Mpn = p1.ManufacturerPartNumber,
                         Gtin = p1.Gtin,
-                        Quantity = bundle.Quantity
+                        Quantity = bundle.Quantity,
+                        GenericAttributes = p1.GenericAttributes
                     };
                     var displayPrices = await _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
                     if (displayPrices)
