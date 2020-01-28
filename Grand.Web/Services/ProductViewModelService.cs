@@ -445,11 +445,9 @@ namespace Grand.Web.Services
                 if (preparePictureModel)
                 {
                     #region Prepare product picture
-                    //prepare picture model
-                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                    model.DefaultPictureModel = await _cacheManager.GetAsync(defaultProductPictureCacheKey, async () =>
+
+                    async Task<PictureModel> PreparePictureModel(ProductPicture picture)
                     {
-                        var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
@@ -468,34 +466,15 @@ namespace Grand.Web.Services
                             string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
 
                         return pictureModel;
-                    });
+                    };
+
+                    //prepare picture model
+                    model.DefaultPictureModel = await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault());
 
                     //prepare second picture model
                     if (_catalogSettings.SecondPictureOnCatalogPages)
                     {
-                        var secondProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
-                        model.SecondPictureModel = await _cacheManager.GetAsync(secondProductPictureCacheKey, async () =>
-                        {
-                            var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault();
-                            if (picture == null)
-                                return new PictureModel();
-
-                            var pictureModel = new PictureModel {
-                                Id = picture.PictureId,
-                                ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
-                            };
-                            //"title" attribute
-                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
-                                    picture.TitleAttribute :
-                                    string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
-                            //"alt" attribute
-                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
-                                    picture.AltAttribute :
-                                    string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
-
-                            return pictureModel;
-                        });
+                        model.SecondPictureModel = await PreparePictureModel(product.ProductPictures.OrderBy(x => x.DisplayOrder).Skip(1).Take(1).FirstOrDefault());
                     }
 
                     #endregion
@@ -745,7 +724,7 @@ namespace Grand.Web.Services
                 product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
             {
                 //out of stock
-                model.DisplayBackInStockSubscription = true;                
+                model.DisplayBackInStockSubscription = true;
             }
 
             #endregion
@@ -1259,47 +1238,35 @@ namespace Grand.Web.Services
                         }
 
                         //"image square" picture (with with "image squares" attribute type only)
-                        if (!String.IsNullOrEmpty(attributeValue.ImageSquaresPictureId))
+                        if (!string.IsNullOrEmpty(attributeValue.ImageSquaresPictureId))
                         {
-                            var productAttributeImageSquarePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY,
-                            attributeValue.ImageSquaresPictureId,
-                            _webHelper.IsCurrentConnectionSecured(),
-                            _storeContext.CurrentStore.Id);
-                            valueModel.ImageSquaresPictureModel = await _cacheManager.GetAsync(productAttributeImageSquarePictureCacheKey, async () =>
+                            var pm = new PictureModel();
+                            var imageSquaresPicture = await _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
+                            if (imageSquaresPicture != null)
                             {
-                                var imageSquaresPicture = await _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
-                                if (imageSquaresPicture != null)
-                                {
-                                    return new PictureModel {
-                                        Id = imageSquaresPicture?.Id,
-                                        FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
-                                        ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
-                                    };
-                                }
-                                return new PictureModel();
-                            });
+                                pm = new PictureModel {
+                                    Id = imageSquaresPicture?.Id,
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
+                                    ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
+                                };
+                            }
+                            valueModel.ImageSquaresPictureModel = pm;
                         }
 
                         //picture of a product attribute value
-                        if (!String.IsNullOrEmpty(attributeValue.PictureId))
+                        if (!string.IsNullOrEmpty(attributeValue.PictureId))
                         {
-                            var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                                attributeValue.PictureId,
-                                _webHelper.IsCurrentConnectionSecured(),
-                                _storeContext.CurrentStore.Id);
-                            valueModel.PictureModel = await _cacheManager.GetAsync(productAttributePictureCacheKey, async () =>
+                            var pm = new PictureModel();
+                            var valuePicture = await _pictureService.GetPictureById(attributeValue.PictureId);
+                            if (valuePicture != null)
                             {
-                                var valuePicture = await _pictureService.GetPictureById(attributeValue.PictureId);
-                                if (valuePicture != null)
-                                {
-                                    return new PictureModel {
-                                        Id = attributeValue.PictureId,
-                                        FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
-                                        ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
-                                    };
-                                }
-                                return new PictureModel();
-                            });
+                                pm = new PictureModel {
+                                    Id = attributeValue.PictureId,
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
+                                    ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
+                                };
+                            }
+                            valueModel.PictureModel = pm;
                         }
                     }
                 }
@@ -1712,17 +1679,12 @@ namespace Grand.Web.Services
 
                 if (!string.IsNullOrEmpty(pictureId))
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
-                        pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                    var pictureModel = await _cacheManager.GetAsync(productAttributePictureCacheKey, async () =>
-                    {
-                        var picture = await _pictureService.GetPictureById(pictureId);
-                        return picture == null ? new PictureModel() : new PictureModel {
-                            Id = pictureId,
-                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                            ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
-                        };
-                    });
+                    var picture = await _pictureService.GetPictureById(pictureId);
+                    var pictureModel = picture == null ? new PictureModel() : new PictureModel {
+                        Id = pictureId,
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                    };
                     model.PictureFullSizeUrl = pictureModel.FullSizeImageUrl;
                     model.PictureDefaultSizeUrl = pictureModel.ImageUrl;
                 }
