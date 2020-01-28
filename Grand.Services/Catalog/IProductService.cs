@@ -50,15 +50,9 @@ namespace Grand.Services.Catalog
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="fromDB">get data from db (not from cache)</param>
         /// <returns>Product</returns>
-        Task<Product> GetProductById(string productId);
-
-        /// <summary>
-        /// Gets product from db 
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <returns>Product</returns>
-        Task<Product> GetDbProductById(string productId);
+        Task<Product> GetProductById(string productId, bool fromDB = false);
 
         /// <summary>
         /// Gets product from product or product deleted

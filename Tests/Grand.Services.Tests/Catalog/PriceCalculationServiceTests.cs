@@ -292,7 +292,7 @@ namespace Grand.Services.Catalog.Tests
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            tempProductService.Setup(x => x.GetProductById("242422")).ReturnsAsync(product001);
+            tempProductService.Setup(x => x.GetProductById("242422", false)).ReturnsAsync(product001);
 
             var shoppingCartItem = new ShoppingCartItem
             {
@@ -320,7 +320,7 @@ namespace Grand.Services.Catalog.Tests
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            tempProductService.Setup(x => x.GetProductById("242422")).ReturnsAsync(product001);
+            tempProductService.Setup(x => x.GetProductById("242422", false)).ReturnsAsync(product001);
 
             var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);

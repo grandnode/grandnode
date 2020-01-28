@@ -53,7 +53,7 @@ namespace Grand.Services.Catalog
             await _bidRepository.DeleteAsync(bid);
             await _mediator.EntityDeleted(bid);
 
-            var productToUpdate = await _productService.GetProductById(bid.ProductId);
+            var productToUpdate = await _productService.GetProductById(bid.ProductId, true);
             var _bid = await GetBidsByProductId(bid.ProductId);
             var highestBid = _bid.OrderByDescending(x => x.Amount).FirstOrDefault();
             if (productToUpdate != null)
