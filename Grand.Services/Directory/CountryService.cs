@@ -182,13 +182,13 @@ namespace Grand.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public virtual Task<Country> GetCountryById(string countryId)
+        public virtual async Task<Country> GetCountryById(string countryId)
         {
             if (string.IsNullOrEmpty(countryId))
                 return null;
 
             var key = string.Format(COUNTRIES_BY_KEY, countryId);
-            return _cacheManager.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
+            return await _cacheManager.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
         }
 
         /// <summary>
