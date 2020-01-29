@@ -190,8 +190,8 @@ namespace Grand.Services.Media
         {
             storeLocation = !string.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
-                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ? 
-                                    _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl :  _storeContext.CurrentStore.Url : 
+                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ?
+                                    _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url :
                                     _mediaSettings.StoreLocation;
 
             var url = storeLocation + "content/images/thumbs/";
@@ -774,8 +774,9 @@ namespace Grand.Services.Media
             if (mimetype.Contains("gif"))
                 return SKEncodedImageFormat.Gif;
 
+            //if mime type is BMP format then happens error with convert picture
             if (mimetype.Contains("bmp"))
-                return SKEncodedImageFormat.Bmp;
+                return SKEncodedImageFormat.Png;
 
             if (mimetype.Contains("ico"))
                 return SKEncodedImageFormat.Ico;
@@ -811,13 +812,22 @@ namespace Grand.Services.Media
                 width = image.Width;
                 height = image.Height;
             }
-            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Low))
+            try
             {
-                using (var resimage = SKImage.FromBitmap(resized))
+                using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium))
                 {
-                    return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
+                    using (var resimage = SKImage.FromBitmap(resized))
+                    {
+                        return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error with convert picture", ex.Message);
+                return await Task.FromResult(image.Bytes);
+            }
+
         }
 
         #endregion
