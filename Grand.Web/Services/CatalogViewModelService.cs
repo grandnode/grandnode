@@ -1046,7 +1046,6 @@ namespace Grand.Web.Services
             excludeProperties: false,
             vendorSettings: _vendorSettings);
 
-
             //prepare picture model
             int pictureSize = _mediaSettings.VendorThumbPictureSize;
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
@@ -1112,23 +1111,17 @@ namespace Grand.Web.Services
                 address: vendor.Address,
                 excludeProperties: false,
                 vendorSettings: _vendorSettings);
-
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
-                var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                vendorModel.PictureModel = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-                {
-                    var picture = await _pictureService.GetPictureById(vendor.PictureId);
-                    var pictureModel = new PictureModel
-                    {
-                        Id = vendor.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
-                    };
-                    return pictureModel;
-                });
+                var picture = await _pictureService.GetPictureById(vendor.PictureId);
+                var pictureModel = new PictureModel {
+                    Id = vendor.PictureId,
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
+                    Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
+                };
+                vendorModel.PictureModel = pictureModel;
                 model.Add(vendorModel);
             }
 

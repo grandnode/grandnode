@@ -214,10 +214,10 @@ namespace Grand.Web.Services
             model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
-                var logoPictureId = _storeInformationSettings.LogoPictureId;
-                if (!String.IsNullOrEmpty(logoPictureId))
+                var picture = await _pictureService.GetPictureById(_storeInformationSettings.LogoPictureId);
+                if (picture != null)
                 {
-                    logo = await _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                    logo = await _pictureService.GetPictureUrl(picture, showDefaultPicture: false);
                 }
                 if (String.IsNullOrEmpty(logo))
                 {
