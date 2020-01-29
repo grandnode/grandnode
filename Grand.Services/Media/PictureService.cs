@@ -149,7 +149,11 @@ namespace Grand.Services.Media
             foreach (string currentFileName in currentFiles)
             {
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
-                File.Delete(thumbFilePath);
+                try
+                {
+                    File.Delete(thumbFilePath);
+                }
+                catch { }
             }
             return Task.CompletedTask;
         }
