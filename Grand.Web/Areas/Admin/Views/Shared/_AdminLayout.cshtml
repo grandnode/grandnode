@@ -241,11 +241,14 @@
                                     </a>
 
                                     <ul class="dropdown-menu dropdown-menu-default">
-                                        <li>
-                                            <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
-                                                <i class="icon-user"></i> @T("Admin.Header.Profile")
-                                            </a>
-                                        </li>
+                                        @if (currentCustomer.IsAdmin())
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                                    <i class="icon-user"></i> @T("Admin.Header.Profile")
+                                                </a>
+                                            </li>
+                                        }
                                         <li>
                                             <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
                                                 <i class="icon-logout"></i> @T("Admin.Header.Logout")
