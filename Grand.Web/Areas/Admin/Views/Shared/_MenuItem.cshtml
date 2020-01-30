@@ -8,17 +8,11 @@
     if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
     {
         url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
-
-        string test = webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant();
     }
     else if (!string.IsNullOrEmpty(Model.Url))
     {
         url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
-
-        string test = webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant();
-
     }
-
     <li>
         @{
             var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
