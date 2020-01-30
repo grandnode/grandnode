@@ -666,7 +666,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
