@@ -705,7 +705,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// <summary>
         /// {0} : current store ID
         /// {1} : current theme
-        /// {2} : is connection SSL secured (included in a picture URL)
+        /// {2} : machine name
         /// </summary>
         public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";

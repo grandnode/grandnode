@@ -210,7 +210,7 @@ namespace Grand.Web.Services
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.GetMachineName());
             model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
