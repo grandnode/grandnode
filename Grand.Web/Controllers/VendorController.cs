@@ -231,9 +231,7 @@ namespace Grand.Web.Controllers
             model.Email = vendor.Email;
             model.Name = vendor.Name;
 
-            var picture = await _pictureService.GetPictureById(vendor.PictureId);
-            var pictureSize = _mediaSettings.AvatarPictureSize;
-            model.PictureUrl = picture != null ? await _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+            model.PictureUrl = await _pictureService.GetPictureUrl(vendor.PictureId, _mediaSettings.AvatarPictureSize, false);
             var countries = await _countryService.GetAllCountries(_workContext.WorkingLanguage.Id);
             await _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
                 address: vendor.Address,
