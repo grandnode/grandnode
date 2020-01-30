@@ -31,7 +31,8 @@ namespace Grand.Core
         private readonly HostingConfig _hostingConfig;
         private readonly IHostApplicationLifetime _applicationLifetime;
         private readonly IMachineNameProvider _machineNameProvider;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IStoreContext _storeContext;
+
         #endregion
 
         #region Constructor
@@ -40,14 +41,14 @@ namespace Grand.Core
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider,
+        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IHostApplicationLifetime applicationLifetime, IStoreContext storeContext,
             IMachineNameProvider machineNameProvider
             )
         {
             _hostingConfig = hostingConfig;
             _httpContextAccessor = httpContextAccessor;
             _applicationLifetime = applicationLifetime;
-            _serviceProvider = serviceProvider;
+            _storeContext = storeContext;
             _machineNameProvider = machineNameProvider;
         }
 
@@ -249,7 +250,7 @@ namespace Grand.Core
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
             if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
             {
-                var currentStore = _serviceProvider.GetRequiredService<IStoreContext>().CurrentStore;
+                var currentStore = _storeContext.CurrentStore;
                 if (currentStore != null)
                     storeLocation = !currentStore.SslEnabled ? currentStore.Url : currentStore.SecureUrl;
                 else
