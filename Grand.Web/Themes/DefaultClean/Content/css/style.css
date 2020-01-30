@@ -1454,10 +1454,6 @@ pagination .pagination a:not([href]) {
     padding-top: 100%;
 }
 
-/*.featured-product-container:nth-child(2n+ 1):not(:first-child),
-.featured-product-container:nth-child(2n):not(:nth-child(2)) {
-    margin-top: 15px;
-}*/
 .featured-product:hover {
 	box-shadow: unset !important;
 }
