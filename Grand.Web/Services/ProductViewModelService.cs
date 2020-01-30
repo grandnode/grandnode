@@ -945,7 +945,8 @@ namespace Grand.Web.Services
         }
         public virtual async Task<(PictureModel defaultPictureModel, List<PictureModel> pictureModels)> PrepareProductPictureModel(Product product, int defaultPictureSize, bool isAssociatedProduct, string name)
         {
-            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, 
+                isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
                 var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
@@ -1459,7 +1460,7 @@ namespace Grand.Web.Services
                     //prepare picture model
                     var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
                         p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
-                        _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                        _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
 
                     bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
                     {
