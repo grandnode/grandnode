@@ -30,7 +30,6 @@ using Grand.Services.Documents;
 using Grand.Services.ExportImport;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;
-using Grand.Services.Infrastructure;
 using Grand.Services.Installation;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
