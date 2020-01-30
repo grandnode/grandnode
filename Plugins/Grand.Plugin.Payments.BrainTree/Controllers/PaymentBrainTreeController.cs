@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Payments.BrainTree.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -11,26 +12,25 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public class PaymentBrainTreeController : BasePaymentController
     {
         #region Fields
 
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly BrainTreePaymentSettings _brainTreePaymentSettings;
+
         #endregion
 
         #region Ctor
 
         public PaymentBrainTreeController(ISettingService settingService,
             ILocalizationService localizationService, 
-            IPermissionService permissionService,
             BrainTreePaymentSettings brainTreePaymentSettings)
         {
             _settingService = settingService;
             _localizationService = localizationService;
-            _permissionService = permissionService;
             _brainTreePaymentSettings = brainTreePaymentSettings;
         }
 
@@ -38,11 +38,8 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
 
         #region Methods
 
-        public async Task<IActionResult> Configure()
+        public IActionResult Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var model = new ConfigurationModel
             {
                 Use3DS = _brainTreePaymentSettings.Use3DS,
@@ -60,11 +57,8 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
         [HttpPost]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
-                return await Configure();
+                return Configure();
 
             //save settings
             _brainTreePaymentSettings.Use3DS = model.Use3DS;
@@ -79,7 +73,7 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return await Configure();
+            return Configure();
         }
 
         #endregion
