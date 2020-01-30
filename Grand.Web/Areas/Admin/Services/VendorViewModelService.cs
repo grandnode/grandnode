@@ -121,19 +121,20 @@ namespace Grand.Web.Areas.Admin.Services
             model.Address.LastNameRequired = false;
             model.Address.EmailEnabled = false;
             model.Address.EmailRequired = false;
-            model.Address.CompanyEnabled = true;
-            model.Address.CountryEnabled = true;
-            model.Address.StateProvinceEnabled = true;
-            model.Address.CityEnabled = true;
-            model.Address.CityRequired = true;
-            model.Address.StreetAddressEnabled = true;
-            model.Address.StreetAddressRequired = true;
-            model.Address.StreetAddress2Enabled = true;
-            model.Address.ZipPostalCodeEnabled = true;
-            model.Address.ZipPostalCodeRequired = true;
-            model.Address.PhoneEnabled = true;
-            model.Address.PhoneRequired = true;
-            model.Address.FaxEnabled = true;
+            model.Address.CompanyEnabled = _vendorSettings.AddressSettings.CompanyEnabled;
+            model.Address.CountryEnabled = _vendorSettings.AddressSettings.CountryEnabled;
+            model.Address.StateProvinceEnabled = _vendorSettings.AddressSettings.StateProvinceEnabled;
+            model.Address.CityEnabled = _vendorSettings.AddressSettings.CityEnabled;
+            model.Address.CityRequired = _vendorSettings.AddressSettings.CityRequired;
+            model.Address.StreetAddressEnabled = _vendorSettings.AddressSettings.StreetAddressEnabled;
+            model.Address.StreetAddressRequired = _vendorSettings.AddressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Enabled = _vendorSettings.AddressSettings.StreetAddress2Enabled;
+            model.Address.ZipPostalCodeEnabled = _vendorSettings.AddressSettings.ZipPostalCodeEnabled;
+            model.Address.ZipPostalCodeRequired = _vendorSettings.AddressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneEnabled = _vendorSettings.AddressSettings.PhoneEnabled;
+            model.Address.PhoneRequired = _vendorSettings.AddressSettings.PhoneRequired;
+            model.Address.FaxEnabled = _vendorSettings.AddressSettings.FaxEnabled;
+            model.Address.FaxRequired = _vendorSettings.AddressSettings.FaxRequired;
 
             //address
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
