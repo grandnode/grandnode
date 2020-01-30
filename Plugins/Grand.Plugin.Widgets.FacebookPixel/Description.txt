@@ -1,7 +1,7 @@
 ﻿Group: Widgets
 FriendlyName: Facebook Pixel
 SystemName: Widgets.FacebookPixel
-Version: 1.00
+Version: 1.01
 SupportedVersions: 4.60
 Author: grandnode team
 DisplayOrder: 1
