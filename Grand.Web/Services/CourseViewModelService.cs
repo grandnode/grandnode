@@ -103,10 +103,7 @@ namespace Grand.Web.Services
             var model = course.ToModel(_workContext.WorkingLanguage);
             model.Level = (await _courseLevelService.GetById(course.LevelId))?.Name;
 
-            var pictureSize = _mediaSettings.CourseThumbPictureSize;
-            var picture = await _pictureService.GetPictureById(course.PictureId);
-            model.PictureUrl = await _pictureService.GetPictureUrl(picture, pictureSize);
-
+            model.PictureUrl = await _pictureService.GetPictureUrl(course.PictureId, _mediaSettings.CourseThumbPictureSize);
             var subjects = await _courseSubjectService.GetByCourseId(course.Id);
             foreach (var item in subjects)
             {
@@ -117,12 +114,10 @@ namespace Grand.Web.Services
                 });
             }
 
-            var lessonPictureSize = _mediaSettings.LessonThumbPictureSize;
             var lessons = await _courseLessonService.GetByCourseId(course.Id);
             foreach (var item in lessons.Where(x => x.Published))
             {
-                var lessonPicture = await _pictureService.GetPictureById(item.PictureId);
-                var pictureUrl = await _pictureService.GetPictureUrl(lessonPicture, lessonPictureSize);
+                var pictureUrl = await _pictureService.GetPictureUrl(item.PictureId, _mediaSettings.LessonThumbPictureSize);
                 var approved = await _courseActionService.CustomerLessonCompleted(_workContext.CurrentCustomer.Id, item.Id);
 
                 model.Lessons.Add(new CourseModel.Lesson() {
