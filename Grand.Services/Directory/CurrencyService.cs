@@ -164,6 +164,9 @@ namespace Grand.Services.Directory
         /// <returns>Currency</returns>
         public virtual async Task<Currency> GetCurrencyByCode(string currencyCode)
         {
+            if (string.IsNullOrEmpty(currencyCode))
+                return null;
+
             var key = string.Format(CURRENCIES_BY_CODE, currencyCode);
             return await _cacheManager.GetAsync(key, () =>
             {
