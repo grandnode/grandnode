@@ -151,7 +151,6 @@ namespace Grand.Web.Services
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguage = _workContext.WorkingLanguage;
             int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
-            var connectionSecured = _webHelper.IsCurrentConnectionSecured();
             var showSku = _catalogSettings.ShowSkuOnCatalogPages;
             var taxDisplay = _workContext.TaxDisplayType;
             bool priceIncludesTax = taxDisplay == TaxDisplayType.IncludingTax;

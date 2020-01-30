@@ -194,9 +194,20 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// {1} : language ID
+        /// {2} : machine name
         /// </remarks>
-        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
-        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}";
+        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Key for caching of manufacturer displayed on home page
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role
+        /// {1} : store ID
+        /// {2} : language ID
+        /// {3} : machine name
+        /// </remarks>
+        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}-{3}";
 
 
         /// <summary>
@@ -291,7 +302,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// {3} : language ID
-        /// {4} : is connection SSL secured (included in a category picture URL)
+        /// {4} : machine name
         /// </remarks>
         public const string CATEGORY_SUBCATEGORIES_KEY = "Grand.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
         public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Grand.pres.category.subcategories";
@@ -303,7 +314,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : roles of the current user
         /// {1} : current store ID
         /// {2} : language ID
-        /// {3} : is connection SSL secured (included in a category picture URL)
+        /// {3} : machine name
         /// </remarks>
         public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
         public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
@@ -543,35 +554,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
-        
-        /// <summary>
-        /// Key for category picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string CATEGORY_PICTURE_MODEL_KEY = "Grand.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string CATEGORY_PICTURE_PATTERN_KEY = "Grand.pres.category.picture";
-
-        /// <summary>
-        /// Key for manufacturer picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized manufacturer name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string MANUFACTURER_PICTURE_MODEL_KEY = "Grand.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Grand.pres.manufacturer.picture";
-
+                
         /// <summary>
         /// Key for vendor picture caching
         /// </summary>
@@ -580,7 +563,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string VENDOR_PICTURE_MODEL_KEY = "Grand.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
