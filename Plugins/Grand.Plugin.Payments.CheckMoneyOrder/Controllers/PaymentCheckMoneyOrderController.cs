@@ -1,9 +1,11 @@
 ﻿using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Payments.CheckMoneyOrder.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
+using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public class PaymentCheckMoneyOrderController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
