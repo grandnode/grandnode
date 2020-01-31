@@ -24,7 +24,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user"></i></div>
                 <div class="count">@customersOnline</div>
-                <h3> @T("Admin.Dashboard.OnlineCustomers")</h3>
+                <h3> 
+                    <a href="@Url.Action("List", "OnlineCustomer")">
+                        @T("Admin.Dashboard.OnlineCustomers")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes)</p>
             </div>
         </div>
@@ -32,7 +36,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-shopping-cart"></i></div>
                 <div class="count">@customersShoppingCart</div>
-                <h3> @T("Admin.Dashboard.ActiveShoppingCarts")</h3>
+                <h3>
+                    <a href="@Url.Action("CurrentCarts", "ShoppingCart")">
+                        @T("Admin.Dashboard.ActiveShoppingCarts")
+                    </a>
+                </h3>
                 <p>@T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes)</p>
             </div>
         </div>
@@ -40,7 +48,11 @@
             <div class="tile-stats">
                 <div class="icon"><i class="fa fa-money"></i></div>
                 <div class="count"> @ordersAmount / @ordersToday.Count</div>
-                <h3>  @T("Admin.Dashboard.TodayOrders")</h3>
+                <h3>
+                    <a href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToUniversalTime() })">
+                        @T("Admin.Dashboard.TodayOrders")
+                    </a>
+                </h3>
                 <p> @T("Admin.Dashboard.TodayOrders.AmountCount")</p>
             </div>
         </div>
