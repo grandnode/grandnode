@@ -5,11 +5,14 @@ using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Services.Localization;
 using System.Threading.Tasks;
+using Grand.Framework.Security.Authorization;
+using Grand.Services.Security;
 
 namespace Grand.Plugin.Payments.PayInStore.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public class PaymentPayInStoreController : BasePaymentController
     {
         private readonly ISettingService _settingService;

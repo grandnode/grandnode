@@ -234,19 +234,11 @@ namespace Grand.Web.Extensions
         {
             var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
             var storeContext = httpContext.RequestServices.GetRequiredService<IStoreContext>();
-
-            //static cache manager
-            var cacheManager = httpContext.RequestServices.GetRequiredService<ICacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
-            var cachedSeName = await cacheManager.GetAsync(cacheKey, async () =>
-            {
-                var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
-                var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
-                if (topic == null)
-                    return "";
-                return topic.GetSeName(workContext.WorkingLanguage.Id);
-            });
-            return cachedSeName;
+            var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
+            var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
+            if (topic == null)
+                return "";
+            return topic.GetSeName(workContext.WorkingLanguage.Id);
         }
 
     }

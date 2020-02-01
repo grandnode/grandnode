@@ -720,7 +720,7 @@ namespace Grand.Services.Installation
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
 
-            await orderRepository.Collection.UpdateOneAsync(new BsonDocument(), updateOrder);
+            await orderRepository.Collection.UpdateManyAsync(new BsonDocument(), updateOrder);
 
             #endregion
 

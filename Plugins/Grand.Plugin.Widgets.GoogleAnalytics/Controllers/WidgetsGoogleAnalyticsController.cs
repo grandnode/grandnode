@@ -1,10 +1,12 @@
 ﻿using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Widgets.GoogleAnalytics.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +16,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     [Area("Admin")]
     [AuthorizeAdmin]
+    [PermissionAuthorize(PermissionSystemName.Widgets)]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         private readonly IWorkContext _workContext;

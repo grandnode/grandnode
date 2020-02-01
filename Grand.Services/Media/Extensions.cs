@@ -66,9 +66,9 @@ namespace Grand.Services.Media
             {
 
                 var comb = product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).FirstOrDefault();
-                if(comb!=null)
+                if (comb != null)
                 {
-                    if(!string.IsNullOrEmpty(comb.PictureId))
+                    if (!string.IsNullOrEmpty(comb.PictureId))
                     {
                         var combPicture = await pictureService.GetPictureById(comb.PictureId);
                         if (combPicture != null)
@@ -94,17 +94,17 @@ namespace Grand.Services.Media
             //now let's load the default product picture
             if (picture == null)
             {
-                var pp = product.ProductPictures.FirstOrDefault();
+                var pp = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                 if (pp != null)
                     picture = await pictureService.GetPictureById(pp.PictureId);
             }
 
             //let's check whether this product has some parent "grouped" product
-            if (picture == null && !product.VisibleIndividually && !String.IsNullOrEmpty(product.ParentGroupedProductId))
+            if (picture == null && !product.VisibleIndividually && !string.IsNullOrEmpty(product.ParentGroupedProductId))
             {
                 var parentProduct = await productService.GetProductById(product.ParentGroupedProductId);
-                if(parentProduct!=null)
-                    if(parentProduct.ProductPictures.Any())
+                if (parentProduct != null)
+                    if (parentProduct.ProductPictures.Any())
                     {
                         picture = await pictureService.GetPictureById(parentProduct.ProductPictures.FirstOrDefault().PictureId);
 

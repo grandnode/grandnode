@@ -15,18 +15,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using Grand.Framework.Security.Authorization;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 {
     [AuthorizeAdmin]
     [Area("Admin")]
+    [PermissionAuthorize(PermissionSystemName.ShippingSettings)]
     public class ShippingPointController : BaseShippingController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IShippingPointService _shippingPointService;
         private readonly ICountryService _countryService;
         private readonly IStoreService _storeService;
@@ -37,7 +38,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             IStoreContext storeContext,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IShippingPointService ShippingPointService,
             ICountryService countryService,
             IStoreService storeService,
@@ -48,7 +48,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             _storeContext = storeContext;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
-            _permissionService = permissionService;
             _shippingPointService = ShippingPointService;
             _countryService = countryService;
             _storeService = storeService;
@@ -63,9 +62,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             var shippingPoints = await _shippingPointService.GetAllStoreShippingPoint(storeId: "", pageIndex: command.Page - 1, pageSize: command.PageSize);
             var viewModel = new List<ShippingPointModel>();
 

@@ -1,5 +1,5 @@
 ﻿//Contribution: Orchard project (http://www.orchardproject.net/)
-namespace Grand.Services.Infrastructure
+namespace Grand.Core.Infrastructure
 {
     /// <summary>
     /// Describes a service which the name of the machine (instance) running the application.

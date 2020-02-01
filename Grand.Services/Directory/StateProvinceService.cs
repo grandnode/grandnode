@@ -20,6 +20,10 @@ namespace Grand.Services.Directory
     {
         #region Constants
 
+        /// {0} : state ID
+        /// </remarks>
+        private const string STATEPROVINCES_BY_KEY = "Grand.stateprovince.{0}";
+
         /// {0} : country ID
         /// {1} : language ID
         /// {2} : show hidden records?
@@ -84,10 +88,12 @@ namespace Grand.Services.Directory
         /// <returns>State/province</returns>
         public virtual async Task<StateProvince> GetStateProvinceById(string stateProvinceId)
         {
-            if (String.IsNullOrEmpty(stateProvinceId))
+            if (string.IsNullOrEmpty(stateProvinceId))
                 return null;
 
-            return await _stateProvinceRepository.GetByIdAsync(stateProvinceId);
+            var key = string.Format(STATEPROVINCES_BY_KEY, stateProvinceId);
+            return await _cacheManager.GetAsync(key, () => _stateProvinceRepository.GetByIdAsync(stateProvinceId));
+
         }
 
         /// <summary>
