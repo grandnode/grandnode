@@ -95,7 +95,6 @@ namespace Grand.Framework.Infrastructure.Extensions
                         {
                             //get current customer
                             var currentCustomer = serviceProvider.GetRequiredService<IWorkContext>().CurrentCustomer;
-
                             //log error
                             serviceProvider.GetRequiredService<ILogger>().Error(exception.Message, exception, currentCustomer);
                         }
@@ -115,7 +114,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UsePageNotFound(this IApplicationBuilder application)
         {
-            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(async context =>
             {
                 string authHeader = context.HttpContext.Request.Headers["Authorization"];
@@ -124,7 +122,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //handle 404 Not Found
                 if (!apirequest && context.HttpContext.Response.StatusCode == 404)
                 {
-                    var webHelper = serviceProvider.GetRequiredService<IWebHelper>();
+                    var webHelper = context.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
                     if (!webHelper.IsStaticResource())
                     {
                         //get original path and query
@@ -132,8 +130,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
                         //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
-                        {
+                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature() {
                             OriginalPathBase = context.HttpContext.Request.PathBase.Value,
                             OriginalPath = originalPath.Value,
                             OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
@@ -172,11 +169,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
-                    var logger = serviceProvider.GetRequiredService<ILogger>();
-                    var workContext = serviceProvider.GetRequiredService<IWorkContext>();
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+                    var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
-
                 return Task.CompletedTask;
             });
 
@@ -221,18 +217,18 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseGrandStaticFiles(this IApplicationBuilder application, GrandConfig grandConfig)
         {
             //static files
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
+
                 OnPrepareResponse = ctx =>
                 {
                     if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
                 }
+
             });
 
             //themes
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Themes")),
                 RequestPath = new PathString("/Themes"),
                 OnPrepareResponse = ctx =>
@@ -242,8 +238,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 }
             });
             //plugins
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Plugins")),
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
@@ -294,8 +289,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandForwardedHeaders(this IApplicationBuilder application)
         {
-            application.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
+            application.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
         }
@@ -323,7 +317,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 .AddContentSecurityPolicy(builder =>
                 {
                     builder.AddUpgradeInsecureRequests();
-                    builder.AddDefaultSrc().Self(); 
+                    builder.AddDefaultSrc().Self();
                     builder.AddConnectSrc().From("*");
                     builder.AddFontSrc().From("*");
                     builder.AddFrameAncestors().From("*");

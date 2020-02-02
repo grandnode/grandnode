@@ -121,7 +121,6 @@ namespace Grand.Framework.StartupConfigure
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
 
-
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
@@ -268,10 +269,18 @@ namespace Grand.Framework
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
-                var crawler = _httpContextAccessor?.HttpContext?.Request.Crawler();
+                var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
                 if (crawler != null)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                else
+                {
+                    //check whether request is static resource - assign this customer when resource is not exists (404)
+                    var contentTypeProvider = new FileExtensionContentTypeProvider();
+                    var content = contentTypeProvider.TryGetContentType(_httpContextAccessor.HttpContext.Request?.Path, out string _);
+                    if (content)
+                        customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                }
             }
 
             if (customer == null || customer.Deleted || !customer.Active)
