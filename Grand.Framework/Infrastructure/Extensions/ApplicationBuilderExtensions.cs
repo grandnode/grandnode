@@ -93,10 +93,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                         //check whether database is installed
                         if (DataSettingsHelper.DatabaseIsInstalled())
                         {
+                            var logger = context.RequestServices.GetRequiredService<ILogger>();
                             //get current customer
-                            var currentCustomer = serviceProvider.GetRequiredService<IWorkContext>().CurrentCustomer;
+                            var workContext = context.RequestServices.GetRequiredService<IWorkContext>();
                             //log error
-                            serviceProvider.GetRequiredService<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            logger.Error(exception.Message, exception, workContext.CurrentCustomer);
                         }
                     }
                     finally
@@ -125,35 +126,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                     var webHelper = context.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
                     if (!webHelper.IsStaticResource())
                     {
-                        //get original path and query
-                        var originalPath = context.HttpContext.Request.Path;
-                        var originalQueryString = context.HttpContext.Request.QueryString;
-
-                        //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature() {
-                            OriginalPathBase = context.HttpContext.Request.PathBase.Value,
-                            OriginalPath = originalPath.Value,
-                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
-                        });
-
-                        //get new path
-                        context.HttpContext.Request.Path = "/page-not-found";
-                        context.HttpContext.Request.QueryString = QueryString.Empty;
-
-                        try
-                        {
-                            //re-execute request with new path
-                            await context.Next(context.HttpContext);
-                        }
-                        finally
-                        {
-                            //return original path to request
-                            context.HttpContext.Request.QueryString = originalQueryString;
-                            context.HttpContext.Request.Path = originalPath;
-                            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
-                        }
+                        var location = "/page-not-found";
+                        context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + location);
                     }
                 }
+                await Task.CompletedTask;
             });
         }
 
@@ -163,7 +140,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(context =>
             {
                 //handle 404 (Bad request)
