@@ -89,13 +89,11 @@ namespace Grand.Web.Controllers
         {
             if (_commonSettings.Log404Errors)
             {
-                var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
-                logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath),
+                logger.Error($"Error 404. The requested page ({HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}) was not found",
                     customer: _workContext.CurrentCustomer);
             }
-
-            this.Response.StatusCode = 404;
-            this.Response.ContentType = "text/html";
+            Response.StatusCode = 404;
+            Response.ContentType = "text/html";
 
             return View();
         }
