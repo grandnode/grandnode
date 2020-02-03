@@ -272,17 +272,6 @@ namespace Grand.Framework
                 //check whether request is made by a search engine, in this case return built-in customer record for search engines
                 if (crawler != null)
                     customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-                //
-                /*
-                else
-                {
-                    //check whether request is static resource - assign this customer when resource is not exists (404)
-                    var contentTypeProvider = new FileExtensionContentTypeProvider();
-                    var content = contentTypeProvider.TryGetContentType(_httpContextAccessor.HttpContext.Request?.Path, out string _);
-                    if (content)
-                        customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-                }
-                */
             }
 
             if (customer == null || customer.Deleted || !customer.Active)

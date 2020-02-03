@@ -3,6 +3,7 @@ using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain;
+using Grand.Core.Domain.Common;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Middleware;
 using Grand.Framework.Mvc.Routing;
@@ -113,17 +114,29 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             application.UseStatusCodePages(async context =>
             {
-                string authHeader = context.HttpContext.Request.Headers["Authorization"];
-                var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
-
                 //handle 404 Not Found
-                if (!apirequest && context.HttpContext.Response.StatusCode == 404)
+                if (context.HttpContext.Response.StatusCode == 404)
                 {
+                    string authHeader = context.HttpContext.Request.Headers["Authorization"];
+                    var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+
                     var webHelper = context.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
-                    if (!webHelper.IsStaticResource())
+                    if (!apirequest && !webHelper.IsStaticResource())
                     {
                         var location = "/page-not-found";
                         context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + location);
+                    }
+                    else
+                    {
+                        var commonSettings = context.HttpContext.RequestServices.GetRequiredService<CommonSettings>();
+                        if (commonSettings.Log404Errors)
+                        {
+                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+                            //get current customer
+                            var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
+                            logger.Error($"Error 404. The requested page ({context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host}{context.HttpContext.Request.Path}) was not found",
+                                customer: workContext.CurrentCustomer);
+                        }
                     }
                 }
                 await Task.CompletedTask;
@@ -147,16 +160,6 @@ namespace Grand.Framework.Infrastructure.Extensions
                 }
                 return Task.CompletedTask;
             });
-
-        }
-
-        /// <summary>
-        /// Configure middleware checking whether database is installed
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseInstallUrl(this IApplicationBuilder application)
-        {
-            application.UseMiddleware<InstallUrlMiddleware>();
         }
 
         /// <summary>
@@ -312,6 +315,15 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseHtmlMinification(this IApplicationBuilder application)
         {
             application.UseWebMarkupMin();
+        }
+
+        /// <summary>
+        /// Configure middleware checking whether database is installed
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseInstallUrl(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<InstallUrlMiddleware>();
         }
 
         /// <summary>
