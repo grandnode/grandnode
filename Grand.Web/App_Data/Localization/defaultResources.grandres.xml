@@ -7644,12 +7644,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm.Hint">
     <Value>Check to use your system email as "From" field when sending emails from contact us page. Otherwise, customer email will be used (please note that some email services do not allow it).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement">
-    <Value>WWW prefix requirement</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement.Hint">
-    <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically redirected to http://www.yourStore.com/.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink">
     <Value>YouTube channel URL</Value>
   </LocaleResource>
@@ -17986,16 +17980,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Seo.PageTitleSeoAdjustment.StorenameAfterPagename">
     <Value>Store name comes after page name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Seo.WwwRequirement.NoMatter">
-    <Value>Doesn't matter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Seo.WwwRequirement.WithoutWww">
-    <Value>Pages should not have WWW prefix</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Seo.WwwRequirement.WithWww">
-    <Value>Pages should have WWW prefix</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Enums.Grand.Core.Domain.Shipping.ShippingStatus.Delivered">
     <Value>Delivered</Value>
   </LocaleResource>

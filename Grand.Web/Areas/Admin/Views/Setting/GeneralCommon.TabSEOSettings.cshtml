@@ -93,16 +93,6 @@
         </div>
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="SeoSettings.WwwRequirement" class="control-label" />
-            </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <admin-select asp-for="SeoSettings.WwwRequirement" asp-items="Model.SeoSettings.WwwRequirementValues" />
-                <span asp-validation-for="SeoSettings.WwwRequirement"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.EnableJsBundling" class="control-label" />
             </div>

@@ -4847,7 +4847,6 @@ namespace Grand.Services.Installation
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
-                WwwRequirement = WwwRequirement.NoMatter,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
                 EnableCssBundling = false,
