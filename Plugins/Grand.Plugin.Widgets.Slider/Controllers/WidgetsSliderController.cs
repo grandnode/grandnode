@@ -90,11 +90,11 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 });
             }
         }
-
-        public async Task<IActionResult> Configure()
+        public IActionResult Configure()
         {
             return View("~/Plugins/Widgets.Slider/Views/List.cshtml");
         }
+
         [HttpPost]
         public async Task<IActionResult> List(DataSourceRequest command)
         {
