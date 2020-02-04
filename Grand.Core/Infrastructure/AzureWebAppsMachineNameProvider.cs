@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Grand.Services.Infrastructure
+namespace Grand.Core.Infrastructure
 {
     /// <summary>
     /// Azure websites machine name provider
@@ -16,10 +16,9 @@ namespace Grand.Services.Infrastructure
         {
             //use the code below if run on Windows Azure cloud services (web roles)
             //return Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.CurrentRoleInstance.Id;
-
-            var name = System.Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID");
-            if (String.IsNullOrEmpty(name))
-                name = System.Environment.MachineName;
+            var name = Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID");
+            if (string.IsNullOrEmpty(name))
+                name = Environment.MachineName;
 
             //you can also use ARR affinity cookie in order to detect instance name
 

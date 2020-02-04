@@ -1,7 +1,7 @@
 ﻿Group: Tax providers
 FriendlyName: Fixed tax rate provider
 SystemName: Tax.FixedRate
-Version: 1.14
+Version: 1.15
 SupportedVersions: 4.60
 Author: grandnode team
 DisplayOrder: 1

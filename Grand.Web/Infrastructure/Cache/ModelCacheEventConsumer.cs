@@ -94,8 +94,6 @@ namespace Grand.Web.Infrastructure.Cache
         //Product attributes
         INotificationHandler<EntityInserted<ProductAttributeMapping>>,
         INotificationHandler<EntityDeleted<ProductAttributeMapping>>,
-        //Product attribute values
-        INotificationHandler<EntityUpdated<ProductAttributeValue>>,
         //Topics
         INotificationHandler<EntityInserted<Topic>>,
         INotificationHandler<EntityUpdated<Topic>>,
@@ -105,7 +103,6 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityUpdated<Order>>,
         INotificationHandler<EntityDeleted<Order>>,
         //Picture
-        INotificationHandler<EntityInserted<Picture>>,
         INotificationHandler<EntityUpdated<Picture>>,
         INotificationHandler<EntityDeleted<Picture>>,
         //Product picture mapping
@@ -197,9 +194,20 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// {1} : language ID
+        /// {2} : machine name
         /// </remarks>
-        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
-        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}";
+        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Key for caching of manufacturer displayed on home page
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role
+        /// {1} : store ID
+        /// {2} : language ID
+        /// {3} : machine name
+        /// </remarks>
+        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}-{2}-{3}";
 
 
         /// <summary>
@@ -217,6 +225,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY = "Grand.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
+        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY = "Grand.pres.manufacturer.hasfeaturedproducts-{0}";
         public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Grand.pres.manufacturer.hasfeaturedproducts";
 
         /// <summary>
@@ -259,7 +268,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public const string CATEGORY_HAS_FEATURED_PRODUCTS_KEY = "Grand.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
-        public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Grand.pres.category.hasfeaturedproducts";
+        public const string CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY = "Grand.pres.category.hasfeaturedproducts-{0}";
 
         /// <summary>
         /// Key for caching of category breadcrumb
@@ -293,7 +302,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// {3} : language ID
-        /// {4} : is connection SSL secured (included in a category picture URL)
+        /// {4} : machine name
         /// </remarks>
         public const string CATEGORY_SUBCATEGORIES_KEY = "Grand.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
         public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Grand.pres.category.subcategories";
@@ -305,7 +314,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : roles of the current user
         /// {1} : current store ID
         /// {2} : language ID
-        /// {3} : is connection SSL secured (included in a category picture URL)
+        /// {3} : machine name
         /// </remarks>
         public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
         public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
@@ -375,6 +384,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {3} : current store ID
         /// </remarks>
         public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Grand.pres.product.manufacturers-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY = "Grand.pres.product.manufacturers-{0}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Grand.pres.product.manufacturers";
 
         /// <summary>
@@ -520,20 +530,7 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCTS_SIMILAR_IDS_KEY = "Grand.pres.similar-{0}-{1}";
         public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar";
 
-        /// <summary>
-        /// Key for default product picture caching (all pictures)
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : picture size
-        /// {2} : isAssociatedProduct?
-        /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Grand.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string PRODUCT_SECOND_DEFAULTPICTURE_MODEL_KEY = "Grand.pres.product.detailspictures-second-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Grand.pres.product.detailspictures";
+       
 
         /// <summary>
         /// Key for product picture caching on the product details page
@@ -543,11 +540,11 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Grand.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string PRODUCT_DETAILS_TPICTURES_PATTERN_KEY = "Grand.pres.product.picture";
+        public const string PRODUCT_DETAILS_PICTURES_PATTERN_KEY = "Grand.pres.product.picture-{0}";
 
 
         /// Key for product reviews caching
@@ -557,56 +554,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
-        /// <summary>
-        /// Key for product attribute picture caching on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : picture id
-        /// {1} : is connection SSL secured?
-        /// {2} : current store ID
-        /// </remarks>
-        public const string PRODUCTATTRIBUTE_PICTURE_MODEL_KEY = "Grand.pres.productattribute.picture-{0}-{1}-{2}";
-        public const string PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY = "Grand.pres.productattribute.picture";
-
-        /// <summary>
-        /// Key for product attribute picture caching on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : picture id
-        /// {1} : is connection SSL secured?
-        /// {2} : current store ID
-        /// </remarks>
-        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY = "Grand.pres.productattribute.imagesquare.picture-{0}-{1}-{2}";
-        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY = "Grand.pres.productattribute.imagesquare.picture";
-
-        /// <summary>
-        /// Key for category picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string CATEGORY_PICTURE_MODEL_KEY = "Grand.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string CATEGORY_PICTURE_PATTERN_KEY = "Grand.pres.category.picture";
-
-        /// <summary>
-        /// Key for manufacturer picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized manufacturer name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string MANUFACTURER_PICTURE_MODEL_KEY = "Grand.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Grand.pres.manufacturer.picture";
-
+                
         /// <summary>
         /// Key for vendor picture caching
         /// </summary>
@@ -615,7 +563,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string VENDOR_PICTURE_MODEL_KEY = "Grand.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
@@ -629,11 +577,20 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture";
+        public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture-{0}";
+
+
+        /// <summary>
+        /// Key for picture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : picture Id
+        /// </remarks>
+        public const string PICTURE_PATTERN_KEY = "Grand.picture-{0}";
 
         /// <summary>
         /// Key for home page polls
@@ -667,25 +624,12 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// {1} : current store ID
+        /// {2} : machine name
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Grand.pres.blog.months-{0}-{1}";
-        public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}";
+        public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}-{2}";
         public const string BLOG_CATEGORY_MODEL_KEY = "Grand.pres.blog.category-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Grand.pres.blog";
-
-        /// <summary>
-        /// Key for blog picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : blog id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
-        /// {5} : current store ID
-        /// </remarks>
-        public const string BLOG_PICTURE_MODEL_KEY = "Grand.pres.blog.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-
 
         /// <summary>
         /// Key for home page news
@@ -705,7 +649,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : is connection SSL secured?
+        /// {4} : machine name
         /// {5} : current store ID
         /// </remarks>
         public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
@@ -744,7 +688,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// <summary>
         /// {0} : current store ID
         /// {1} : current theme
-        /// {2} : is connection SSL secured (included in a picture URL)
+        /// {2} : machine name
         /// </summary>
         public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
@@ -825,48 +769,18 @@ namespace Grand.Web.Infrastructure.Cache
         //languages
         public async Task Handle(EntityInserted<Language> eventMessage, CancellationToken cancellationToken)
         {
-            //clear all localizable models
-            await _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            //cache should be cleared
+            await _cacheManager.Clear();
         }
         public async Task Handle(EntityUpdated<Language> eventMessage, CancellationToken cancellationToken)
         {
-            //clear all localizable models
-            await _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            //cache should be cleared
+            await _cacheManager.Clear();
         }
         public async Task Handle(EntityDeleted<Language> eventMessage, CancellationToken cancellationToken)
         {
-            //clear all localizable models
-            await _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+            //cache should be cleared
+            await _cacheManager.Clear();
         }
 
         //currencies
@@ -897,24 +811,11 @@ namespace Grand.Web.Infrastructure.Cache
             await _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
         }
 
-
         //settings
         public async Task Handle(EntityUpdated<Setting> eventMessage, CancellationToken cancellationToken)
         {
-            //clear models which depend on settings
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY); //depends on CatalogSettings.NumberOfProductTags
-            await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
-            await _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY); //depends on VendorSettings.VendorBlockItemsToDisplay
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
-            await _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
-            await _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
-            await _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
-            await _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
-            await _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
-            await _cacheManager.RemoveByPattern(WIDGET_PATTERN_KEY); //depends on WidgetSettings and certain settings of widgets
-            await _cacheManager.RemoveByPattern(STORE_LOGO_PATH_PATTERN_KEY); //depends on StoreInformationSettings.LogoPictureId
+            //cache should be cleared
+            await _cacheManager.Clear();
         }
 
         //vendors
@@ -935,13 +836,11 @@ namespace Grand.Web.Infrastructure.Cache
         public async Task Handle(EntityInserted<Manufacturer> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             await _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<Manufacturer> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
@@ -949,31 +848,29 @@ namespace Grand.Web.Infrastructure.Cache
         {
             await _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_MODEL_KEY);
             await _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
         //product manufacturers
         public async Task Handle(EntityInserted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
         public async Task Handle(EntityUpdated<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
         public async Task Handle(EntityDeleted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
 
         //categories
         public async Task Handle(EntityInserted<Category> eventMessage, CancellationToken cancellationToken)
         {
-
             await _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             await _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
@@ -1016,24 +913,20 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
         //product categories
-
         public async Task Handle(EntityInserted<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
         public async Task Handle(EntityUpdated<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
         public async Task Handle(EntityDeleted<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
 
         //products
@@ -1176,12 +1069,6 @@ namespace Grand.Web.Infrastructure.Cache
         {
             await _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
-        //Product attributes
-        public async Task Handle(EntityUpdated<ProductAttributeValue> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
-        }
 
         //Topics
         public async Task Handle(EntityInserted<Topic> eventMessage, CancellationToken cancellationToken)
@@ -1217,65 +1104,31 @@ namespace Grand.Web.Infrastructure.Cache
             await _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
-        //Pictures
-        public async Task Handle(EntityInserted<Picture> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
-        }
+        //picture
         public async Task Handle(EntityUpdated<Picture> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PICTURE_PATTERN_KEY, eventMessage.Entity.Id));
         }
         public async Task Handle(EntityDeleted<Picture> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PICTURE_PATTERN_KEY, eventMessage.Entity.Id));
         }
 
         //Product picture mappings
         public async Task Handle(EntityInserted<ProductPicture> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
         }
         public async Task Handle(EntityUpdated<ProductPicture> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
         }
         public async Task Handle(EntityDeleted<ProductPicture> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
+            await _cacheManager.RemoveByPattern(string.Format(CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
         }
 
         //Polls
@@ -1441,7 +1294,7 @@ namespace Grand.Web.Infrastructure.Cache
         //shopping cart items        
         public async Task Handle(EntityUpdated<ShoppingCartItem> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+            await _cacheManager.RemoveByPattern(string.Format(CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
         }
 
     }

@@ -62,7 +62,7 @@ namespace Grand.Services.Customers
             ICustomerService customerService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
-            ICacheManager cacheManager,
+            IEnumerable<ICacheManager> cacheManager,
             IPopupService popupService,
             IStoreContext storeContext,
             ILocalizationService localizationService)
@@ -81,7 +81,7 @@ namespace Grand.Services.Customers
             _customerService = customerService;
             _customerAttributeParser = customerAttributeParser;
             _customerTagService = customerTagService;
-            _cacheManager = cacheManager;
+            _cacheManager = cacheManager.FirstOrDefault(o => o.GetType() == typeof(MemoryCacheManager));
             _popupService = popupService;
             _storeContext = storeContext;
             _localizationService = localizationService;
@@ -90,6 +90,7 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Utilities
+        
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
             return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>

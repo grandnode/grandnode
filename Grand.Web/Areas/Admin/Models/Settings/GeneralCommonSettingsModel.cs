@@ -156,11 +156,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool CanonicalUrlsEnabled { get; set; }
             public bool CanonicalUrlsEnabled_OverrideForStore { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.WwwRequirement")]
-            public int WwwRequirement { get; set; }
-            public bool WwwRequirement_OverrideForStore { get; set; }
-            public SelectList WwwRequirementValues { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableJsBundling")]
             public bool EnableJsBundling { get; set; }
             public bool EnableJsBundling_OverrideForStore { get; set; }

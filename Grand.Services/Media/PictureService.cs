@@ -15,6 +15,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Grand.Core.Caching;
+using System.Collections.Generic;
 
 namespace Grand.Services.Media
 {
@@ -23,6 +25,19 @@ namespace Grand.Services.Media
     /// </summary>
     public partial class PictureService : IPictureService
     {
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : picture ID
+        /// {1} : store ID
+        /// {2} : target size
+        /// {3} : showDefaultPicture
+        /// {4} : storeLocation
+        /// {5} : pictureType
+        /// </remarks>
+        private const string PICTURE_BY_KEY = "Grand.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+
         #region Const
 
         private const int MULTIPLE_THUMB_DIRECTORIES_LENGTH = 3;
@@ -37,6 +52,7 @@ namespace Grand.Services.Media
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IStoreContext _storeContext;
+        private readonly ICacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
 
         #endregion
@@ -52,6 +68,7 @@ namespace Grand.Services.Media
         /// <param name="mediator">Mediator</param>
         /// <param name="hostingEnvironment">hostingEnvironment</param>
         /// <param name="storeContext">Current store</param>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
@@ -59,6 +76,7 @@ namespace Grand.Services.Media
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
+            IEnumerable<ICacheManager> cacheManager,
             MediaSettings mediaSettings)
         {
             _pictureRepository = pictureRepository;
@@ -67,6 +85,7 @@ namespace Grand.Services.Media
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _storeContext = storeContext;
+            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
             _mediaSettings = mediaSettings;
         }
 
@@ -130,7 +149,11 @@ namespace Grand.Services.Media
             foreach (string currentFileName in currentFiles)
             {
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
-                File.Delete(thumbFilePath);
+                try
+                {
+                    File.Delete(thumbFilePath);
+                }
+                catch { }
             }
             return Task.CompletedTask;
         }
@@ -171,8 +194,8 @@ namespace Grand.Services.Media
         {
             storeLocation = !string.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
-                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ? 
-                                    _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl :  _storeContext.CurrentStore.Url : 
+                                    : string.IsNullOrEmpty(_mediaSettings.StoreLocation) ?
+                                    _storeContext.CurrentStore.SslEnabled ? _storeContext.CurrentStore.SecureUrl : _storeContext.CurrentStore.Url :
                                     _mediaSettings.StoreLocation;
 
             var url = storeLocation + "content/images/thumbs/";
@@ -350,8 +373,12 @@ namespace Grand.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            var picture = await GetPictureById(pictureId);
-            return await GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            var pictureKey = string.Format(PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            return await _cacheManager.GetAsync(pictureKey, async () =>
+            {
+                var picture = await GetPictureById(pictureId);
+                return await GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            });
         }
 
         /// <summary>
@@ -751,8 +778,9 @@ namespace Grand.Services.Media
             if (mimetype.Contains("gif"))
                 return SKEncodedImageFormat.Gif;
 
+            //if mime type is BMP format then happens error with convert picture
             if (mimetype.Contains("bmp"))
-                return SKEncodedImageFormat.Bmp;
+                return SKEncodedImageFormat.Png;
 
             if (mimetype.Contains("ico"))
                 return SKEncodedImageFormat.Ico;
@@ -788,13 +816,22 @@ namespace Grand.Services.Media
                 width = image.Width;
                 height = image.Height;
             }
-            using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Low))
+            try
             {
-                using (var resimage = SKImage.FromBitmap(resized))
+                using (var resized = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium))
                 {
-                    return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
+                    using (var resimage = SKImage.FromBitmap(resized))
+                    {
+                        return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error with convert picture", ex.Message);
+                return await Task.FromResult(image.Bytes);
+            }
+
         }
 
         #endregion

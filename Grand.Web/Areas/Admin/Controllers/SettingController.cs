@@ -2462,8 +2462,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SeoSettings.GenerateProductMetaDescription = seoSettings.GenerateProductMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
             model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
-            model.SeoSettings.WwwRequirement = (int)seoSettings.WwwRequirement;
-            model.SeoSettings.WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(HttpContext);
             model.SeoSettings.EnableJsBundling = seoSettings.EnableJsBundling;
             model.SeoSettings.EnableCssBundling = seoSettings.EnableCssBundling;
             model.SeoSettings.TwitterMetaTags = seoSettings.TwitterMetaTags;
@@ -2479,7 +2477,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeoSettings.GenerateProductMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.GenerateProductMetaDescription, storeScope);
                 model.SeoSettings.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeScope);
                 model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
-                model.SeoSettings.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeScope);
                 model.SeoSettings.EnableJsBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableJsBundling, storeScope);
                 model.SeoSettings.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeScope);
                 model.SeoSettings.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeScope);
@@ -2705,7 +2702,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             seoSettings.GenerateProductMetaDescription = model.SeoSettings.GenerateProductMetaDescription;
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
-            seoSettings.WwwRequirement = (WwwRequirement)model.SeoSettings.WwwRequirement;
             seoSettings.EnableJsBundling = model.SeoSettings.EnableJsBundling;
             seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
             seoSettings.TwitterMetaTags = model.SeoSettings.TwitterMetaTags;
@@ -2753,11 +2749,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
-
-            if (model.SeoSettings.WwwRequirement_OverrideForStore || storeScope == "")
-                await _settingService.SaveSetting(seoSettings, x => x.WwwRequirement, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                await _settingService.DeleteSetting(seoSettings, x => x.WwwRequirement, storeScope);
 
             if (model.SeoSettings.EnableJsBundling_OverrideForStore || storeScope == "")
                 await _settingService.SaveSetting(seoSettings, x => x.EnableJsBundling, storeScope, false);

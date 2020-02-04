@@ -210,14 +210,14 @@ namespace Grand.Web.Services
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.GetMachineName());
             model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
-                var logoPictureId = _storeInformationSettings.LogoPictureId;
-                if (!String.IsNullOrEmpty(logoPictureId))
+                var picture = await _pictureService.GetPictureById(_storeInformationSettings.LogoPictureId);
+                if (picture != null)
                 {
-                    logo = await _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                    logo = await _pictureService.GetPictureUrl(picture, showDefaultPicture: false);
                 }
                 if (String.IsNullOrEmpty(logo))
                 {

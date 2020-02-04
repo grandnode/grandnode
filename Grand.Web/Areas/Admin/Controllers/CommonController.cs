@@ -18,7 +18,6 @@ using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
-using Grand.Services.Infrastructure;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;

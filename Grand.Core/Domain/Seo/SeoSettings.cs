@@ -48,11 +48,7 @@ namespace Grand.Core.Domain.Seo
         /// <summary>
         /// A value indicating whether canonical URL tags should be used
         /// </summary>
-        public bool CanonicalUrlsEnabled { get; set; }
-        /// <summary>
-        /// WWW requires (with or without WWW)
-        /// </summary>
-        public WwwRequirement WwwRequirement { get; set; }
+        public bool CanonicalUrlsEnabled { get; set; }        
         /// <summary>
         /// A value indicating whether JS file bundling and minification is enabled
         /// </summary>

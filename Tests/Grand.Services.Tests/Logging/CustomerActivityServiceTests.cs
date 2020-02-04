@@ -25,6 +25,8 @@ namespace Grand.Services.Logging.Tests
         [TestInitialize()]
         public void TestInitialize() {
 
+            //TODO
+            /*
             _activityType1 = new ActivityLogType {
                 Id = "1",
                 SystemKeyword = "TestKeyword1",
@@ -77,6 +79,7 @@ namespace Grand.Services.Logging.Tests
                 _cacheManager, _activityLogRepository,
                 _activityLogTypeRepository, _workContext, 
                 null, null);
+                */
         }
 
         [TestMethod()]

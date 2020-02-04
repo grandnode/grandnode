@@ -422,7 +422,6 @@ namespace Grand.Web.Services
             var storeId = _storeContext.CurrentStore.Id;
             var languageId = _workContext.WorkingLanguage.Id;
             var currency = _workContext.WorkingCurrency;
-            var connectionSecured = _webHelper.IsCurrentConnectionSecured();
 
             if (command != null && command.OrderBy == null && category.DefaultSort >= 0)
                 command.OrderBy = category.DefaultSort;
@@ -481,7 +480,7 @@ namespace Grand.Web.Services
                 string.Join(",", customer.GetCustomerRoleIds()),
                 storeId,
                 languageId,
-                connectionSecured);
+                _webHelper.GetMachineName());
             model.SubCategories = await _cacheManager.GetAsync(subCategoriesCacheKey, async () =>
             {
                 var subCategories = new List<CategoryModel.SubCategoryModel>();
@@ -590,7 +589,7 @@ namespace Grand.Web.Services
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
-                _webHelper.IsCurrentConnectionSecured());
+                _webHelper.GetMachineName());
 
             var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
             {
@@ -621,7 +620,7 @@ namespace Grand.Web.Services
         {
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
-                _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+                _workContext.WorkingLanguage.Id, _webHelper.GetMachineName());
 
             var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
             {
@@ -802,7 +801,8 @@ namespace Grand.Web.Services
         {
             string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HOMEPAGE_KEY,
                 _storeContext.CurrentStore.Id,
-                _workContext.WorkingLanguage.Id);
+                _workContext.WorkingLanguage.Id,
+                _webHelper.GetMachineName());
 
             List<ManufacturerModel> model = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
             {
@@ -864,7 +864,7 @@ namespace Grand.Web.Services
         {
             string manufCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
-                _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+                _workContext.WorkingLanguage.Id, _webHelper.GetMachineName());
 
             var model = await _cacheManager.GetAsync(manufCacheKey, async () =>
             {
@@ -1046,10 +1046,9 @@ namespace Grand.Web.Services
             excludeProperties: false,
             vendorSettings: _vendorSettings);
 
-
             //prepare picture model
             int pictureSize = _mediaSettings.VendorThumbPictureSize;
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             model.PictureModel = await _cacheManager.GetAsync(pictureCacheKey, async () =>
             {
                 var picture = await _pictureService.GetPictureById(vendor.PictureId);
@@ -1112,23 +1111,17 @@ namespace Grand.Web.Services
                 address: vendor.Address,
                 excludeProperties: false,
                 vendorSettings: _vendorSettings);
-
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
-                var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                vendorModel.PictureModel = await _cacheManager.GetAsync(pictureCacheKey, async () =>
-                {
-                    var picture = await _pictureService.GetPictureById(vendor.PictureId);
-                    var pictureModel = new PictureModel
-                    {
-                        Id = vendor.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
-                    };
-                    return pictureModel;
-                });
+                var picture = await _pictureService.GetPictureById(vendor.PictureId);
+                var pictureModel = new PictureModel {
+                    Id = vendor.PictureId,
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
+                    ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
+                    Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
+                };
+                vendorModel.PictureModel = pictureModel;
                 model.Add(vendorModel);
             }
 

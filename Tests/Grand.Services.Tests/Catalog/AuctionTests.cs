@@ -241,7 +241,7 @@ namespace Grand.Services.Tests.Catalog
             _productRepository.Insert(cancelProductBid);
 
             var productService = new Mock<IProductService>();
-            productService.Setup(x => x.GetProductById(cancelProductBid.Id)).ReturnsAsync(cancelProductBid);
+            productService.Setup(x => x.GetProductById(cancelProductBid.Id, false)).ReturnsAsync(cancelProductBid);
             var _cancelproductService = productService.Object;
             var _cancelauctionService = new AuctionService(_bidRepository, _eventPublisher, _cancelproductService, _productRepository, _cacheManager, _serviceProvider);
 

@@ -83,7 +83,7 @@ namespace Grand.Web.Services
 
         public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, _webHelper.GetMachineName());
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();
@@ -104,20 +104,14 @@ namespace Grand.Web.Services
                     //prepare picture model
                     if (!string.IsNullOrEmpty(post.PictureId))
                     {
-                        int pictureSize = _mediaSettings.BlogThumbPictureSize;
-                        var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, post.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                        item.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
-                        {
-                            var picture = await _pictureService.GetPictureById(post.PictureId);
-                            var pictureModel = new PictureModel {
-                                Id = post.PictureId,
-                                FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                                ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                                Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), post.Title),
-                                AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), post.Title)
-                            };
-                            return pictureModel;
-                        });
+                        var pictureModel = new PictureModel {
+                            Id = post.PictureId,
+                            FullSizeImageUrl = await _pictureService.GetPictureUrl(post.PictureId),
+                            ImageUrl = await _pictureService.GetPictureUrl(post.PictureId, _mediaSettings.BlogThumbPictureSize),
+                            Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), post.Title),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), post.Title)
+                        };
+                        item.PictureModel = pictureModel;
                     }
                     model.Items.Add(item);
                 }
@@ -231,24 +225,18 @@ namespace Grand.Web.Services
                     model.Comments.Add(commentModel);
                 }
             }
-
             //prepare picture model
             if (!string.IsNullOrEmpty(blogPost.PictureId))
             {
-                int pictureSize = _mediaSettings.BlogThumbPictureSize;
-                var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, blogPost.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
-                {
-                    var picture = await _pictureService.GetPictureById(blogPost.PictureId);
-                    var pictureModel = new PictureModel {
-                        Id = blogPost.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), blogPost.Title),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), blogPost.Title)
-                    };
-                    return pictureModel;
-                });
+                var pictureModel = new PictureModel {
+                    Id = blogPost.PictureId,
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(blogPost.PictureId),
+                    ImageUrl = await _pictureService.GetPictureUrl(blogPost.PictureId, _mediaSettings.BlogThumbPictureSize),
+                    Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), blogPost.Title),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), blogPost.Title)
+                };
+
+                model.PictureModel = pictureModel;
             }
 
         }

@@ -241,26 +241,18 @@ namespace Grand.Services.Catalog
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="fromDB">get data from db (not from cache)</param>
         /// <returns>Product</returns>
-        public virtual async Task<Product> GetProductById(string productId)
+        public virtual async Task<Product> GetProductById(string productId, bool fromDB = false)
         {
-            if (String.IsNullOrEmpty(productId))
+            if (string.IsNullOrEmpty(productId))
                 return null;
-            string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
+
+            if (fromDB)
+                return await _productRepository.GetByIdAsync(productId);
+
+            var key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return await _cacheManager.GetAsync(key, () => _productRepository.GetByIdAsync(productId));
-        }
-
-        /// <summary>
-        /// Gets product from db 
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <returns>Product</returns>
-        public virtual async Task<Product> GetDbProductById(string productId)
-        {
-            if (String.IsNullOrEmpty(productId))
-                return null;
-
-            return await _productRepository.GetByIdAsync(productId);
         }
 
         /// <summary>

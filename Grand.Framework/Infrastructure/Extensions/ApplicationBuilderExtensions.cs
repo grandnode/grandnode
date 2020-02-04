@@ -1,21 +1,18 @@
 ﻿using Autofac;
-using AutoMapper.Configuration;
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain;
-using Grand.Core.Http;
+using Grand.Core.Domain.Common;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Middleware;
 using Grand.Framework.Mvc.Routing;
-using Grand.Services.Authentication;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -93,11 +90,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                         //check whether database is installed
                         if (DataSettingsHelper.DatabaseIsInstalled())
                         {
+                            var logger = context.RequestServices.GetRequiredService<ILogger>();
                             //get current customer
-                            var currentCustomer = serviceProvider.GetRequiredService<IWorkContext>().CurrentCustomer;
-
+                            var workContext = context.RequestServices.GetRequiredService<IWorkContext>();
                             //log error
-                            serviceProvider.GetRequiredService<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            logger.Error(exception.Message, exception, workContext.CurrentCustomer);
                         }
                     }
                     finally
@@ -115,48 +112,34 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UsePageNotFound(this IApplicationBuilder application)
         {
-            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(async context =>
             {
-                string authHeader = context.HttpContext.Request.Headers["Authorization"];
-                var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
-
                 //handle 404 Not Found
-                if (!apirequest && context.HttpContext.Response.StatusCode == 404)
+                if (context.HttpContext.Response.StatusCode == 404)
                 {
-                    var webHelper = serviceProvider.GetRequiredService<IWebHelper>();
-                    if (!webHelper.IsStaticResource())
+                    string authHeader = context.HttpContext.Request.Headers["Authorization"];
+                    var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+
+                    var webHelper = context.HttpContext.RequestServices.GetRequiredService<IWebHelper>();
+                    if (!apirequest && !webHelper.IsStaticResource())
                     {
-                        //get original path and query
-                        var originalPath = context.HttpContext.Request.Path;
-                        var originalQueryString = context.HttpContext.Request.QueryString;
-
-                        //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
+                        var location = "/page-not-found";
+                        context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + location);
+                    }
+                    else
+                    {
+                        var commonSettings = context.HttpContext.RequestServices.GetRequiredService<CommonSettings>();
+                        if (commonSettings.Log404Errors)
                         {
-                            OriginalPathBase = context.HttpContext.Request.PathBase.Value,
-                            OriginalPath = originalPath.Value,
-                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
-                        });
-
-                        //get new path
-                        context.HttpContext.Request.Path = "/page-not-found";
-                        context.HttpContext.Request.QueryString = QueryString.Empty;
-
-                        try
-                        {
-                            //re-execute request with new path
-                            await context.Next(context.HttpContext);
-                        }
-                        finally
-                        {
-                            //return original path to request
-                            context.HttpContext.Request.QueryString = originalQueryString;
-                            context.HttpContext.Request.Path = originalPath;
-                            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
+                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+                            //get current customer
+                            var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
+                            logger.Error($"Error 404. The requested page ({context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host}{context.HttpContext.Request.Path}) was not found",
+                                customer: workContext.CurrentCustomer);
                         }
                     }
                 }
+                await Task.CompletedTask;
             });
         }
 
@@ -166,29 +149,17 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            var serviceProvider = application.ApplicationServices;
             application.UseStatusCodePages(context =>
             {
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
-                    var logger = serviceProvider.GetRequiredService<ILogger>();
-                    var workContext = serviceProvider.GetRequiredService<IWorkContext>();
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+                    var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
-
                 return Task.CompletedTask;
             });
-
-        }
-
-        /// <summary>
-        /// Configure middleware checking whether database is installed
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseInstallUrl(this IApplicationBuilder application)
-        {
-            application.UseMiddleware<InstallUrlMiddleware>();
         }
 
         /// <summary>
@@ -221,18 +192,18 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseGrandStaticFiles(this IApplicationBuilder application, GrandConfig grandConfig)
         {
             //static files
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
+
                 OnPrepareResponse = ctx =>
                 {
                     if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
                 }
+
             });
 
             //themes
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Themes")),
                 RequestPath = new PathString("/Themes"),
                 OnPrepareResponse = ctx =>
@@ -242,8 +213,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 }
             });
             //plugins
-            application.UseStaticFiles(new StaticFileOptions
-            {
+            application.UseStaticFiles(new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Plugins")),
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
@@ -294,8 +264,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandForwardedHeaders(this IApplicationBuilder application)
         {
-            application.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
+            application.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
         }
@@ -323,7 +292,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 .AddContentSecurityPolicy(builder =>
                 {
                     builder.AddUpgradeInsecureRequests();
-                    builder.AddDefaultSrc().Self(); 
+                    builder.AddDefaultSrc().Self();
                     builder.AddConnectSrc().From("*");
                     builder.AddFontSrc().From("*");
                     builder.AddFrameAncestors().From("*");
@@ -346,6 +315,15 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseHtmlMinification(this IApplicationBuilder application)
         {
             application.UseWebMarkupMin();
+        }
+
+        /// <summary>
+        /// Configure middleware checking whether database is installed
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseInstallUrl(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<InstallUrlMiddleware>();
         }
 
         /// <summary>

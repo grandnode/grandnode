@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Controllers
 {
-    [WwwRequirement]
     [CheckAccessPublicStore]
     [CheckAccessClosedStore]
     [CheckLanguageSeoCode]

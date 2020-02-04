@@ -80,6 +80,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
         {
             var trackingScript = _facebookPixelSettings.AddToCartScript + "\n";
             trackingScript = trackingScript.Replace("{PRODUCTID}", model.ProductId);
+            trackingScript = trackingScript.Replace("{PRODUCTNAME}", model.ProductName);
             trackingScript = trackingScript.Replace("{QTY}", model.Quantity.ToString("N0"));
             trackingScript = trackingScript.Replace("{AMOUNT}", model.DecimalPrice.ToString("F2", CultureInfo.InvariantCulture));
             trackingScript = trackingScript.Replace("{CURRENCY}", _workContext.WorkingCurrency.CurrencyCode);

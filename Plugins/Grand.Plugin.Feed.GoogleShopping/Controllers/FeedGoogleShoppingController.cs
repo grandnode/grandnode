@@ -5,7 +5,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Plugin.Feed.GoogleShopping.Domain;
 using Grand.Plugin.Feed.GoogleShopping.Models;
 using Grand.Plugin.Feed.GoogleShopping.Services;
@@ -26,6 +26,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
 {
     [Area("Admin")]
     [AuthorizeAdmin]
+    [PermissionAuthorize(PermissionSystemName.Plugins)]
     public class FeedGoogleShoppingController : BasePluginController
     {
         private readonly IGoogleService _googleService;

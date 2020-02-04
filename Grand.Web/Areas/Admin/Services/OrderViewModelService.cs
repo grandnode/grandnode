@@ -324,6 +324,8 @@ namespace Grand.Web.Areas.Admin.Services
                 if (x.CustomerCurrencyCode != x.PrimaryCurrencyCode)
                 {
                     var primaryCurrency = await _currencyService.GetCurrencyByCode(x.PrimaryCurrencyCode);
+                    if (primaryCurrency == null)
+                        primaryCurrency = await _currencyService.GetPrimaryStoreCurrency();
                     orderTotal = $"{_priceFormatter.FormatPrice(x.OrderTotal, true, primaryCurrency)} ({orderTotal})";
                 }
 

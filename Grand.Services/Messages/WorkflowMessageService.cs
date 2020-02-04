@@ -1179,7 +1179,7 @@ namespace Grand.Services.Messages
                     CreatedOnUtc = DateTime.UtcNow,
                     CustomerId = customer.Id,
                     StoreId = _storeContext.CurrentStore.Id,
-                    VendorId = "",
+                    VendorId = product.VendorId,
                     Email = customerEmail,
                     FullName = fullName,
                     Subject = subjectReplaced,
@@ -1193,6 +1193,17 @@ namespace Grand.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = "";
+
+            if(!string.IsNullOrEmpty(product?.VendorId))
+            {
+                var vendorService = _serviceProvider.GetRequiredService<IVendorService>();
+                var vendor = await vendorService.GetVendorById(product.VendorId);
+                if(vendor!=null)
+                {
+                    toEmail = vendor.Email;
+                    toName = vendor.Name;
+                }
+            }
             return await SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);

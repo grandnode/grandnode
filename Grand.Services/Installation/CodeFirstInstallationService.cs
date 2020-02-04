@@ -4833,7 +4833,8 @@ namespace Grand.Services.Installation
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = true,
                 DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
+                MultipleThumbDirectories = false,
+                StoreLocation = "/"
             });
 
             await _settingService.SaveSetting(new SeoSettings {
@@ -4846,7 +4847,6 @@ namespace Grand.Services.Installation
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
-                WwwRequirement = WwwRequirement.NoMatter,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
                 EnableCssBundling = false,

@@ -9,6 +9,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
+using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
+        private readonly IPermissionService _permissionService;
         private readonly PaymentSettings _paymentSettings;
 
         public PaymentPayPalStandardController(IWorkContext workContext,
@@ -47,6 +49,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             IStoreContext storeContext,
             ILogger logger,
             IWebHelper webHelper,
+            IPermissionService permissionService,
             PaymentSettings paymentSettings)
         {
             _workContext = workContext;
@@ -59,6 +62,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             _storeContext = storeContext;
             _logger = logger;
             _webHelper = webHelper;
+            _permissionService = permissionService;
             _paymentSettings = paymentSettings;
         }
 
@@ -66,6 +70,9 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         [Area("Admin")]
         public async Task<IActionResult> Configure()
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
@@ -99,6 +106,9 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         [Area("Admin")]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return await Configure();
 
