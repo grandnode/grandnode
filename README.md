@@ -23,15 +23,15 @@ Please note that if you use grandnode/develop, Docker will pull the newest image
 
 GrandNode Site: [https://grandnode.com](https://grandnode.com)
 
-GrandNode demo store: [https://www.demo.grandnode.com/](https://www.demo.grandnode.com/)
+GrandNode demo store: [https://demo.grandnode.com/](https://demo.grandnode.com/)
 
-Complete feature list: [https://www.grandnode.com/benefits](https://www.grandnode.com/features)
+Complete feature list: [https://grandnode.com/benefits](https://grandnode.com/benefits)
 
-System Requirements: [https://grandnode.com/system-requirements](https://grandnode.com/system-requirements)
+System Requirements: [https://docs.grandnode.com/system-requirements](https://docs.grandnode.com/system-requirements)
 
-Documentation: [http://www.docs.grandnode.com](http://www.docs.grandnode.com)
+Documentation: [https://docs.grandnode.com](https://docs.grandnode.com)
 
-Forums: [https://www.grandnode.com/boards/](https://www.grandnode.com/boards/)
+Forums: [https://grandnode.com/boards/](https://grandnode.com/boards/)
 
 Premium themes: [https://grandnode.com/grandnode-themes](https://grandnode.com/grandnode-themes)
 
@@ -68,7 +68,7 @@ To start with us, you should do this few steps:
 
 And that's all, you are GrandNode official contributor!
 
-[Coding standards and guides](http://docs.grandnode.com/developer-guides)
+[Coding standards and guides](https://docs.grandnode.com/developer-guides)
 
 ## How to report issues ##
 
