@@ -143,7 +143,14 @@
             </div>
             <div class="modal-footer pt-xl-3 pt-2 px-0 pb-0">
                 <div class="btn-group offset-md-5 col-md-7 col-12 px-0">
-                    <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                    @if (Model.CartType == ShoppingCartType.Auctions)
+                    {
+                        <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" onclick="javascript:window.location.reload()" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                    }
                     @if (Model.CartType == ShoppingCartType.ShoppingCart)
                     {
                         <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("AddToCart.ViewCart")</button>
