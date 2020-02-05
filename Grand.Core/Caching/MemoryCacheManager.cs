@@ -254,26 +254,7 @@ namespace Grand.Core.Caching
         {
             return RemoveByPrefix(prefix);
         }
-
-        /// <summary>
-        /// Removes items by key pattern
-        /// </summary>
-        /// <param name="prefix">String prefix</param>
-        //public virtual async Task RemoveByPrefix(string prefix)
-        //{
-        //    //await this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
-
-        //}
-
-        ///// <summary>
-        ///// Removes items by key pattern
-        ///// </summary>
-        ///// <param name="prefix">String prefix</param>
-        //public Task RemoveByPrefixAsync(string prefix)
-        //{
-        //    //return this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
-        //}
-
+        
         /// <summary>
         /// Clear all cache data
         /// </summary>
