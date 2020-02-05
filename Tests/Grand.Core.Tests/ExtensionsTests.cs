@@ -41,7 +41,7 @@ namespace Grand.Core.Tests
             keys.Add("key1204");
             keys.Add("key1005");
 
-            await icacheManager.RemoveByPattern(pattern);
+            await icacheManager.RemoveByPrefix(pattern);
 
             Assert.IsNotNull(icacheManager.GetAsync<int>("key1202"));
             Assert.IsNotNull(icacheManager.GetAsync<int>("key1204"));

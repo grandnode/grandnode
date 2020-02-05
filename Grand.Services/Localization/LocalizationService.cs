@@ -99,7 +99,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.DeleteAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(localeStringResource);
@@ -160,7 +160,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(localeStringResource);
@@ -179,7 +179,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.UpdateAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(localeStringResource);
@@ -375,7 +375,7 @@ namespace Grand.Services.Localization
             }
 
             //clear cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Grand.Services.Localization
             }
 
             //clear cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         #endregion

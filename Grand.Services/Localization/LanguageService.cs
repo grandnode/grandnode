@@ -109,7 +109,7 @@ namespace Grand.Services.Localization
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(language);
@@ -167,7 +167,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(language);
@@ -186,7 +186,7 @@ namespace Grand.Services.Localization
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(language);

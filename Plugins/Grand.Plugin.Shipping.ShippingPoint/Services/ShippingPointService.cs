@@ -94,7 +94,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.InsertAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.UpdateAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.DeleteAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
         #endregion
     }

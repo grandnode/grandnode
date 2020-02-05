@@ -116,7 +116,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.DeleteAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(currency);
@@ -215,7 +215,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.InsertAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(currency);
@@ -232,7 +232,7 @@ namespace Grand.Services.Directory
 
             await _currencyRepository.UpdateAsync(currency);
 
-            await _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CURRENCIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(currency);

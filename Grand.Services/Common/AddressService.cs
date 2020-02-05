@@ -136,7 +136,7 @@ namespace Grand.Services.Common
             await _addressRepository.InsertAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(address);
@@ -154,7 +154,7 @@ namespace Grand.Services.Common
             await _addressRepository.UpdateAsync(address);
 
             //cache
-            await _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ADDRESSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(address);

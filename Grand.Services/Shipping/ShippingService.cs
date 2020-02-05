@@ -202,7 +202,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(shippingMethod);
@@ -259,7 +259,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(shippingMethod);
@@ -277,7 +277,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);
@@ -303,7 +303,7 @@ namespace Grand.Services.Shipping
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(deliveryDate);
@@ -387,8 +387,8 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.DeleteAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(warehouse);
@@ -429,7 +429,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.InsertAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(warehouse);
@@ -447,7 +447,7 @@ namespace Grand.Services.Shipping
             await _warehouseRepository.UpdateAsync(warehouse);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(warehouse);
@@ -507,7 +507,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(pickupPoint);
@@ -525,7 +525,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(pickupPoint);
@@ -541,7 +541,7 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("pickupPoint");
 
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
-            await _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(pickupPoint);

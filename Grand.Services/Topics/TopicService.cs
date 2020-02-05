@@ -99,7 +99,7 @@ namespace Grand.Services.Topics
             await _topicRepository.DeleteAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
             //event notification
             await _mediator.EntityDeleted(topic);
         }
@@ -192,7 +192,7 @@ namespace Grand.Services.Topics
             await _topicRepository.InsertAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
             //event notification
             await _mediator.EntityInserted(topic);
         }
@@ -209,7 +209,7 @@ namespace Grand.Services.Topics
             await _topicRepository.UpdateAsync(topic);
 
             //cache
-            await _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TOPICS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(topic);

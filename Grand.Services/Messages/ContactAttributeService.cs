@@ -95,8 +95,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.DeleteAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(contactAttribute);
@@ -160,8 +160,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.InsertAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(contactAttribute);
@@ -178,8 +178,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.UpdateAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(contactAttribute);

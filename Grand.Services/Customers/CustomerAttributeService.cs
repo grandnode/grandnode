@@ -81,8 +81,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.DeleteAsync(customerAttribute);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerAttribute);
@@ -126,8 +126,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.InsertAsync(customerAttribute);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerAttribute);
@@ -144,8 +144,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.UpdateAsync(customerAttribute);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerAttribute);
@@ -164,8 +164,8 @@ namespace Grand.Services.Customers
             var update = updatebuilder.Pull(p => p.CustomerAttributeValues, customerAttributeValue);
             await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerAttributeValue);
@@ -184,8 +184,8 @@ namespace Grand.Services.Customers
             var update = updatebuilder.AddToSet(p => p.CustomerAttributeValues, customerAttributeValue);
             await _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerAttributeValue);
@@ -211,8 +211,8 @@ namespace Grand.Services.Customers
 
             await _customerAttributeRepository.Collection.UpdateManyAsync(filter, update);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerAttributeValue);

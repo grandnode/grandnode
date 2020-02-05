@@ -133,8 +133,8 @@ namespace Grand.Services.Catalog
             var updatefilter = builder.PullFilter(x => x.ProductManufacturers, y => y.ManufacturerId == manufacturer.Id);
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
 
             await _manufacturerRepository.DeleteAsync(manufacturer);
 
@@ -232,8 +232,8 @@ namespace Grand.Services.Catalog
             await _manufacturerRepository.InsertAsync(manufacturer);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(manufacturer);
@@ -251,8 +251,8 @@ namespace Grand.Services.Catalog
             await _manufacturerRepository.UpdateAsync(manufacturer);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(manufacturer);
@@ -272,9 +272,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productManufacturer);
@@ -366,9 +366,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productManufacturer);
@@ -394,9 +394,9 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
+            await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTMANUFACTURERS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_BY_ID_KEY, productManufacturer.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productManufacturer);

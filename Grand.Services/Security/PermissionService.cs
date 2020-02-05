@@ -109,7 +109,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            await _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>

@@ -231,23 +231,48 @@ namespace Grand.Core.Caching
             return Task.CompletedTask;
         }
 
+
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual async Task RemoveByPattern(string pattern)
+        /// <param name="prefix">String prefix</param>
+        public virtual Task RemoveByPrefix(string prefix)
         {
-            await this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
+            var keysToRemove = _allKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var key in keysToRemove)
+            {
+                RemoveAsync(key);
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Removes items by key prefix
+        /// </summary>
+        /// <param name="prefix">String prefix</param>
+        public Task RemoveByPrefixAsync(string prefix)
+        {
+            return RemoveByPrefix(prefix);
         }
 
         /// <summary>
         /// Removes items by key pattern
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public Task RemoveByPatternAsync(string pattern)
-        {
-            return this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
-        }
+        /// <param name="prefix">String prefix</param>
+        //public virtual async Task RemoveByPrefix(string prefix)
+        //{
+        //    //await this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
+
+        //}
+
+        ///// <summary>
+        ///// Removes items by key pattern
+        ///// </summary>
+        ///// <param name="prefix">String prefix</param>
+        //public Task RemoveByPrefixAsync(string prefix)
+        //{
+        //    //return this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
+        //}
 
         /// <summary>
         /// Clear all cache data

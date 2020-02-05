@@ -109,20 +109,20 @@ namespace Grand.Core.Caching
             return _distributedCache.KeyExists(key);
         }
 
-        public async Task RemoveByPatternAsync(string pattern)
+        public async Task RemoveByPrefixAsync(string prefix)
         {
             var keys = new List<RedisKey>();
             foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
             {
                 var server = _connectionMultiplexer.GetServer(endPoint);
-                keys.AddRange(server.Keys(_distributedCache.Database, $"*{pattern}*"));
+                keys.AddRange(server.Keys(_distributedCache.Database, $"{prefix}*"));
             }
             await _distributedCache.KeyDeleteAsync(keys.Distinct().ToArray());
         }
 
-        public Task RemoveByPattern(string pattern)
+        public Task RemoveByPrefix(string prefix)
         {
-            return RemoveByPatternAsync(pattern);
+            return RemoveByPrefixAsync(prefix);
         }
 
         public virtual async Task Clear()

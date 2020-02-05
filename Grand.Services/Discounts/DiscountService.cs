@@ -157,7 +157,7 @@ namespace Grand.Services.Discounts
                 var builderproduct = Builders<Product>.Update;
                 var updatefilter = builderproduct.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -165,7 +165,7 @@ namespace Grand.Services.Discounts
                 var buildercategory = Builders<Category>.Update;
                 var updatefilter = buildercategory.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
@@ -173,14 +173,14 @@ namespace Grand.Services.Discounts
                 var buildermanufacturer = Builders<Manufacturer>.Update;
                 var updatefilter = buildermanufacturer.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(MANUFACTURERS_PATTERN_KEY);
             }
             if (discount.DiscountType == DiscountType.AssignedToVendors)
             {
                 var buildervendor = Builders<Vendor>.Update;
                 var updatefilter = buildervendor.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
+                await _cacheManager.RemoveByPrefix(VENDORS_PATTERN_KEY);
             }
 
             //remove coupon codes
@@ -190,7 +190,7 @@ namespace Grand.Services.Discounts
             await _discountCouponRepository.Collection.DeleteManyAsync(filterCrp);
             await _discountRepository.DeleteAsync(discount);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discount);
@@ -277,7 +277,7 @@ namespace Grand.Services.Discounts
 
             await _discountRepository.InsertAsync(discount);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(discount);
@@ -299,7 +299,7 @@ namespace Grand.Services.Discounts
 
             await _discountRepository.UpdateAsync(discount);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(discount);
@@ -324,7 +324,7 @@ namespace Grand.Services.Discounts
             discount.DiscountRequirements.Remove(req);
             await UpdateDiscount(discount);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discountRequirement);
@@ -762,7 +762,7 @@ namespace Grand.Services.Discounts
             //Support for couponcode
             await DiscountCouponSetAsUsed(discountUsageHistory.CouponCode, true);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(discountUsageHistory);
@@ -780,7 +780,7 @@ namespace Grand.Services.Discounts
 
             await _discountUsageHistoryRepository.UpdateAsync(discountUsageHistory);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(discountUsageHistory);
@@ -797,7 +797,7 @@ namespace Grand.Services.Discounts
 
             await _discountUsageHistoryRepository.DeleteAsync(discountUsageHistory);
 
-            await _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(discountUsageHistory);
