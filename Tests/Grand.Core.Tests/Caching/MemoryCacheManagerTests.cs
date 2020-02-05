@@ -57,7 +57,7 @@ namespace Grand.Core.Caching.Tests
         }
 
         [TestMethod()]
-        public async Task RemoveByPatternTest()
+        public async Task RemoveByPrefixTest()
         {
             MemoryCacheManager memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
             await memoryCacheManager.SetAsync("exampleKey025", 5, int.MaxValue);
@@ -66,7 +66,7 @@ namespace Grand.Core.Caching.Tests
 
             await memoryCacheManager.SetAsync("exampleKey127", 5, int.MaxValue);
 
-            string pattern = @"exampleKey0\d\d";
+            string pattern = @"exampleKey0";
             await memoryCacheManager.RemoveByPrefix(pattern);
 
             Assert.IsFalse(memoryCacheManager.IsSet("exampleKey025"));
