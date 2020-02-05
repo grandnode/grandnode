@@ -832,7 +832,7 @@ namespace Grand.Services.Media
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return image.Bytes;
             }
