@@ -126,17 +126,14 @@ namespace Grand.Framework.Infrastructure.Extensions
                         var location = "/page-not-found";
                         context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + location);
                     }
-                    else
+                    var commonSettings = context.HttpContext.RequestServices.GetRequiredService<CommonSettings>();
+                    if (commonSettings.Log404Errors)
                     {
-                        var commonSettings = context.HttpContext.RequestServices.GetRequiredService<CommonSettings>();
-                        if (commonSettings.Log404Errors)
-                        {
-                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
-                            //get current customer
-                            var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
-                            logger.Error($"Error 404. The requested page ({context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host}{context.HttpContext.Request.Path}) was not found",
-                                customer: workContext.CurrentCustomer);
-                        }
+                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+                        //get current customer
+                        var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
+                        logger.Error($"Error 404. The requested page ({context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host}{context.HttpContext.Request.Path}) was not found",
+                            customer: workContext.CurrentCustomer);
                     }
                 }
                 await Task.CompletedTask;

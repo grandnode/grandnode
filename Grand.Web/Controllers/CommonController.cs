@@ -21,7 +21,6 @@ using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,10 +41,8 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IPopupService _popupService;
         private readonly IContactAttributeService _contactAttributeService;
-        private readonly CommonSettings _commonSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -59,10 +56,8 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             ICustomerActivityService customerActivityService,
-            ICustomerActionEventService customerActionEventService,
             IPopupService popupService,
             IContactAttributeService contactAttributeService,
-            CommonSettings commonSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings
             )
@@ -72,10 +67,8 @@ namespace Grand.Web.Controllers
             _workContext = workContext;
             _storeContext = storeContext;
             _customerActivityService = customerActivityService;
-            _customerActionEventService = customerActionEventService;
             _popupService = popupService;
             _contactAttributeService = contactAttributeService;
-            _commonSettings = commonSettings;
             _captchaSettings = captchaSettings;
             _vendorSettings = vendorSettings;
         }
@@ -85,16 +78,10 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //page not found
-        public virtual IActionResult PageNotFound([FromServices] ILogger logger)
+        public virtual IActionResult PageNotFound()
         {
-            if (_commonSettings.Log404Errors)
-            {
-                logger.Error($"Error 404. The requested page ({HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}) was not found",
-                    customer: _workContext.CurrentCustomer);
-            }
             Response.StatusCode = 404;
             Response.ContentType = "text/html";
-
             return View();
         }
 
@@ -328,9 +315,9 @@ namespace Grand.Web.Controllers
         }
 
         //sitemap page
-        public virtual async Task<IActionResult> Sitemap()
+        public virtual async Task<IActionResult> Sitemap(CommonSettings commonSettings)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
             var model = await _commonViewModelService.PrepareSitemap();
@@ -339,11 +326,11 @@ namespace Grand.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> SitemapXml(int? id)
+        public virtual async Task<IActionResult> SitemapXml(int? id, CommonSettings commonSettings)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
-            var siteMap = await _commonViewModelService.SitemapXml(id, this.Url);
+            var siteMap = await _commonViewModelService.SitemapXml(id, Url);
 
             return Content(siteMap, "text/xml");
         }
@@ -541,13 +528,10 @@ namespace Grand.Web.Controllers
 
 
         [HttpGet]
-        public virtual async Task<IActionResult> CustomerActionEventUrl(string curl, string purl)
+        public virtual async Task<IActionResult> CustomerActionEventUrl(string curl, string purl, [FromServices] ICustomerActionEventService customerActionEventService)
         {
-            await _customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
-            return Json
-                (
-                    new { empty = "" }
-                );
+            await customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
+            return Json( new { empty = "" });
         }
 
         [HttpPost, ActionName("PopupInteractiveForm")]
