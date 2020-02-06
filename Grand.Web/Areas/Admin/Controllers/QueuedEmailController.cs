@@ -107,6 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.PriorityName = email.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             model.EmailAccountName = (await _emailAccountService.GetEmailAccountById(email.EmailAccountId)).DisplayName;
+            //model.ReplyTo = 
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
             if (email.DontSendBeforeDateUtc.HasValue)

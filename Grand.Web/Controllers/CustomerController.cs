@@ -1438,8 +1438,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TwoFactorAuthenticate(CustomerInfoModel.TwoFactorAuthenticationModel model, string returnUrl,
-             [FromServices] IShoppingCartService shoppingCartService)
+        public async Task<IActionResult> TwoFactorAuthenticate(CustomerInfoModel.TwoFactorAuthenticationModel model, [FromServices] IShoppingCartService shoppingCartService)
         {
             var token = model.Code;
             if (token == null)
@@ -1466,10 +1465,7 @@ namespace Grand.Web.Controllers
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
-                if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                    return RedirectToRoute("HomePage");
-                return Redirect(returnUrl);
-
+                return RedirectToRoute("HomePage");
             }
             ModelState.AddModelError("", _localizationService.GetResource("Account.WrongCredentials.WrongSecurityCode"));
             return View(model);

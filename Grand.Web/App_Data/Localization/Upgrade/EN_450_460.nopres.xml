@@ -784,7 +784,8 @@
     <Value>Disable</Value>
   </LocaleResource>
   <LocaleResource Name="TwoFactorAuthenticator.ManualSetupCode">
-    <Value>Manual Setup Code</Value>  
+    <Value>Manual Setup Code</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.ConvertPicture">
     <Value>Convert picture to webp format</Value>
   </LocaleResource>
