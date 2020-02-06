@@ -336,6 +336,7 @@ namespace Grand.Services.Messages
                 //shipping, payment method fee
                 _cusTaxTotal = string.Empty;
                 _cusDiscount = string.Empty;
+
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -413,8 +414,11 @@ namespace Grand.Services.Messages
                 liquidOrder.DisplaySubTotalDiscount = _displaySubTotalDiscount;
                 liquidOrder.SubTotalDiscount = _cusSubTotalDiscount;
                 liquidOrder.Shipping = _cusShipTotal;
+                liquidOrder.Discount = _cusDiscount;
+                liquidOrder.PaymentMethodAdditionalFee = _cusPaymentMethodAdditionalFee;
                 liquidOrder.Tax = _cusTaxTotal;
                 liquidOrder.Total = _cusTotal;
+                liquidOrder.DisplayTax = _displayTax;
                 liquidOrder.DisplayDiscount = _displayDiscount;
                 liquidOrder.DisplayTaxRates = _displayTaxRates;
 
