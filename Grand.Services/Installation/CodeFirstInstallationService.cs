@@ -9393,7 +9393,7 @@ namespace Grand.Services.Installation
                                             UsePercentage = true,
                                             DiscountPercentage = 20,
                                             StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
+                                            EndDateUtc = new DateTime(2030,1,1),
                                             RequiresCouponCode = true,
                                             IsEnabled = true
                                         },
