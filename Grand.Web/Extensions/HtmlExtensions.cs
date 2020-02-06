@@ -232,12 +232,13 @@ namespace Grand.Web.Extensions
         ///// <returns>Topic SEO Name</returns>
         public static async Task<string> GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName, HttpContext httpContext)
         {
-            var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
             var storeContext = httpContext.RequestServices.GetRequiredService<IStoreContext>();
             var topicService = httpContext.RequestServices.GetRequiredService<ITopicService>();
             var topic = await topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
             if (topic == null)
                 return "";
+
+            var workContext = httpContext.RequestServices.GetRequiredService<IWorkContext>();
             return topic.GetSeName(workContext.WorkingLanguage.Id);
         }
 
