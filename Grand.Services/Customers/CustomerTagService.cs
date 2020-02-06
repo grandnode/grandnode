@@ -261,7 +261,7 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.InsertAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
             await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
@@ -280,7 +280,7 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.UpdateAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
             await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
@@ -299,7 +299,7 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.DeleteAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
             await _cacheManager.RemoveByPrefix(PRODUCTS_CUSTOMER_TAG);
             //event notification
             await _mediator.EntityDeleted(customerTagProduct);
