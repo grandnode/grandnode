@@ -552,20 +552,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
                 
-        /// <summary>
-        /// Key for vendor picture caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : vendor id
-        /// {1} : picture size
-        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
-        /// {3} : language ID ("alt" and "title" can depend on localized category name)
-        /// {4} : machine name
-        /// {5} : current store ID
-        /// </remarks>
-        public const string VENDOR_PICTURE_MODEL_KEY = "Grand.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string VENDOR_PICTURE_PATTERN_KEY = "Grand.pres.vendor.picture";
-
+        
         /// <summary>
         /// Key for cart picture caching
         /// </summary>
