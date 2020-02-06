@@ -153,8 +153,7 @@ namespace Grand.Web.Services
             model.CourseLevel = (await _courseLevelService.GetById(course.LevelId))?.Name;
 
             //prepare picture
-            var picture = await _pictureService.GetPictureById(lesson.PictureId);
-            model.PictureUrl = await _pictureService.GetPictureUrl(picture);
+            model.PictureUrl = await _pictureService.GetPictureUrl(lesson.PictureId);
 
             model.Approved = await _courseActionService.CustomerLessonCompleted(_workContext.CurrentCustomer.Id, lesson.Id);
             if (!string.IsNullOrEmpty(lesson.AttachmentId))
