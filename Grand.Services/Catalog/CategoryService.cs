@@ -54,16 +54,7 @@ namespace Grand.Services.Catalog
         /// {5} : store ID
         /// </remarks>
         private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Grand.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : product ID
-        /// {2} : current customer ID
-        /// {3} : store ID
-        /// </remarks>
-        private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Grand.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
