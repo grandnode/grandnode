@@ -5,7 +5,6 @@ using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Polls;
@@ -71,10 +70,6 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityInserted<SimilarProduct>>,
         INotificationHandler<EntityUpdated<SimilarProduct>>,
         INotificationHandler<EntityDeleted<SimilarProduct>>,
-        //bundle product
-        INotificationHandler<EntityInserted<BundleProduct>>,
-        INotificationHandler<EntityUpdated<BundleProduct>>,
-        INotificationHandler<EntityDeleted<BundleProduct>>,
         //product tags
         INotificationHandler<EntityInserted<ProductTag>>,
         INotificationHandler<EntityUpdated<ProductTag>>,
@@ -89,11 +84,6 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityInserted<ProductSpecificationAttribute>>,
         INotificationHandler<EntityUpdated<ProductSpecificationAttribute>>,
         INotificationHandler<EntityDeleted<ProductSpecificationAttribute>>,
-        //Product attributes
-        INotificationHandler<EntityDeleted<ProductAttribute>>,
-        //Product attributes
-        INotificationHandler<EntityInserted<ProductAttributeMapping>>,
-        INotificationHandler<EntityDeleted<ProductAttributeMapping>>,
         //Topics
         INotificationHandler<EntityInserted<Topic>>,
         INotificationHandler<EntityUpdated<Topic>>,
@@ -392,16 +382,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : language id
         /// </remarks>
         public const string PRODUCT_SPECS_MODEL_KEY = "Grand.pres.product.specs-{0}-{1}";
-        public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs";
-
-        /// <summary>
-        /// Key for caching of a value indicating whether a product has product attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// </remarks>
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Grand.pres.product.hasproductattributes-{0}";
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY = "Grand.pres.product.hasproductattributes";
+        public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs-{0}";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -515,7 +496,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCTS_RELATED_IDS_KEY = "Grand.pres.related-{0}-{1}";
-        public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Grand.pres.related";
+        public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Grand.pres.related-{0}";
 
         /// <summary>
         /// Key for "similar" product identifiers displayed on the product details page
@@ -525,7 +506,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCTS_SIMILAR_IDS_KEY = "Grand.pres.similar-{0}-{1}";
-        public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar";
+        public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar-{0}";
 
        
 
@@ -922,17 +903,19 @@ namespace Grand.Web.Infrastructure.Cache
         {
             await _cacheManager.RemoveByPrefix(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(SITEMAP_PATTERN_KEY);
+
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
         }
         public async Task Handle(EntityDeleted<Product> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(SITEMAP_PATTERN_KEY);
+
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
         }
 
         //product tags
@@ -956,44 +939,33 @@ namespace Grand.Web.Infrastructure.Cache
 
         public async Task Handle(EntityInserted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
+
         }
         public async Task Handle(EntityUpdated<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
         }
         public async Task Handle(EntityDeleted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
         }
 
         //similar products
         public async Task Handle(EntityInserted<SimilarProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
         public async Task Handle(EntityUpdated<SimilarProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
         public async Task Handle(EntityDeleted<SimilarProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_SIMILAR_IDS_PATTERN_KEY);
-        }
-
-        //bundle products
-
-        public async Task Handle(EntityInserted<BundleProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<BundleProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<BundleProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheManager.RemoveAsync(string.Format(PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
 
         //specification attributes
@@ -1024,34 +996,18 @@ namespace Grand.Web.Infrastructure.Cache
         //Product specification attribute
         public async Task Handle(EntityInserted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
-        }
-
-        //Product attributes
-        public async Task Handle(EntityDeleted<ProductAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
-        }
-
-        //Product attributes
-        public async Task Handle(EntityInserted<ProductAttributeMapping> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ProductAttributeMapping> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
 
         //Topics
