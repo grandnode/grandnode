@@ -62,8 +62,14 @@ namespace Grand.Services.Shipping.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _serviceProvider = new Mock<IServiceProvider>().Object;
+            
+            var tempEventPublisher = new Mock<IMediator>();
+            {
+                //tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+                _eventPublisher = tempEventPublisher.Object;
+            }
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
             var pluginFinder = new PluginFinder(_serviceProvider);
             _countryService = new Mock<ICountryService>().Object;
@@ -71,11 +77,7 @@ namespace Grand.Services.Shipping.Tests
             _currencyService = new Mock<ICurrencyService>().Object;
             _productService = new Mock<IProductService>().Object;
 
-            var tempEventPublisher = new Mock<IMediator>();
-            {
-                //tempEventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-                _eventPublisher = tempEventPublisher.Object;
-            }
+            
 
             _localizationService = new Mock<ILocalizationService>().Object;
             _addressService = new Mock<IAddressService>().Object;

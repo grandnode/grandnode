@@ -1,6 +1,8 @@
 ﻿using Grand.Core.Caching;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,8 +26,9 @@ namespace Grand.Core.Tests
                 2. ICacheManager object with several keys 
                 3. List<string> with several keys
             */
+            var eventPublisher = new Mock<IMediator>();
 
-            ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }));
+            ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
             await icacheManager.SetAsync("key1001", 33, int.MaxValue);
             await icacheManager.SetAsync("key1202", 1244, int.MaxValue);
             await icacheManager.SetAsync("key1003", 512, int.MaxValue);

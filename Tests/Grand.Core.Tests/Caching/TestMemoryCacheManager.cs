@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Caching;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Grand.Core.Tests.Caching
             return Task.CompletedTask;
         }
 
-        public TestMemoryCacheManager(IMemoryCache cache) : base(cache)
+        public TestMemoryCacheManager(IMemoryCache cache, IMediator mediator) : base(cache, mediator)
         {
         }
     }

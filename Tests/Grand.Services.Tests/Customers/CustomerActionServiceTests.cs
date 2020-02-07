@@ -29,7 +29,6 @@ namespace Grand.Services.Customers.Tests
         public void TestInitialize()
         {
             var eventPublisher = new Mock<IMediator>();
-            //eventPublisher.Setup(x => x.PublishAsync(new object()));
             _eventPublisher = eventPublisher.Object;
 
             _customerActionRepository = new MongoDBRepositoryTest<CustomerAction>();
@@ -94,7 +93,7 @@ namespace Grand.Services.Customers.Tests
             };
             _customerActionRepository.Insert(customerActions);
             _customerActionService = new CustomerActionService(_customerActionRepository, _customerActionTypeRepository,
-            _customerActionHistoryRepository, _eventPublisher, new List<TestMemoryCacheManager> { new TestMemoryCacheManager(new Mock<IMemoryCache>().Object) });
+            _customerActionHistoryRepository, _eventPublisher, new List<TestMemoryCacheManager> { new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher) });
 
         }
 

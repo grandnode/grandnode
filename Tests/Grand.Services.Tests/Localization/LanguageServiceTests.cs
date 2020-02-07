@@ -57,7 +57,7 @@ namespace Grand.Services.Localization.Tests
             }
             _localizationSettings = new LocalizationSettings();
 
-            _languageService = new LanguageService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _languageRepo, _storeMappingService,
+            _languageService = new LanguageService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher), _languageRepo, _storeMappingService,
                 _settingService, _localizationSettings, _eventPublisher);
         }
 

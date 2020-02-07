@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Tests.Caching;
 using Grand.Services.Configuration;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -21,7 +22,8 @@ namespace Grand.Services.Tests.Configuration
         [TestInitialize()]
         public void TestInitialize()
         {
-            var cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var eventPublisher = new Mock<IMediator>();
+            var cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object, eventPublisher.Object);
             config = new ConfigFileSettingService(new List<ICacheManager> { cacheManager }, null, null, null);
         }
 

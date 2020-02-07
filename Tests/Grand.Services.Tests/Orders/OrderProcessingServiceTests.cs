@@ -114,7 +114,12 @@ namespace Grand.Services.Orders.Tests
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var tempEventPublisher = new Mock<IMediator>();
+            {
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                _eventPublisher = tempEventPublisher.Object;
+            }
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
             _productService = new Mock<IProductService>().Object;
 
@@ -135,11 +140,7 @@ namespace Grand.Services.Orders.Tests
                 _productAttributeParser, _productService, _customerService,
                 cacheManager, _vendorService, _currencyService, _shoppingCartSettings, _catalogSettings);
 
-            var tempEventPublisher = new Mock<IMediator>();
-            {
-                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
-                _eventPublisher = tempEventPublisher.Object;
-            }
+            
 
             _localizationService = new Mock<ILocalizationService>().Object;
 
