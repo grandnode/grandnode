@@ -485,8 +485,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : current product id
         /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Grand.pres.alsopuchased-{0}-{1}";
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Grand.pres.alsopuchased";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Grand.pres.alsopurchased-{0}-{1}";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Grand.pres.alsopurchased";
 
         /// <summary>
         /// Key for "related" product identifiers displayed on the product details page
