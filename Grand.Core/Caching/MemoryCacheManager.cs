@@ -1,4 +1,5 @@
-using Grand.Core.Extensions;
+using Grand.Core.Events;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -17,6 +18,7 @@ namespace Grand.Core.Caching
         #region Fields
 
         private readonly IMemoryCache _cache;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Cancellation token for clear cache
@@ -38,9 +40,10 @@ namespace Grand.Core.Caching
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
-        public MemoryCacheManager(IMemoryCache cache)
+        public MemoryCacheManager(IMemoryCache cache, IMediator mediator)
         {
             _cache = cache;
+            _mediator = mediator;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -228,6 +231,7 @@ namespace Grand.Core.Caching
         public virtual Task RemoveAsync(string key)
         {
             _cache.Remove(RemoveKey(key));
+            _mediator.Publish(new EntityCacheEvent(key, CacheEvent.RemoveKey));
             return Task.CompletedTask;
         }
 
@@ -241,8 +245,9 @@ namespace Grand.Core.Caching
             var keysToRemove = _allKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
             foreach (var key in keysToRemove)
             {
-                RemoveAsync(key);
+                _cache.Remove(RemoveKey(key));
             }
+            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
             return Task.CompletedTask;
         }
 
@@ -252,6 +257,7 @@ namespace Grand.Core.Caching
         /// <param name="prefix">String prefix</param>
         public Task RemoveByPrefixAsync(string prefix)
         {
+            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
             return RemoveByPrefix(prefix);
         }
         
