@@ -19,7 +19,7 @@
             <div class="col-lg-6 col-12">
                 <div class="card">
                     <form asp-route="TwoFactorAuthenticate" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
-                        @Html.HiddenFor(m => m.UserUniqueKey);
+                        @Html.HiddenFor(m => m.UserUniqueKey)
                         <div class="card-body">
                             <div class="row">
                                 <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
