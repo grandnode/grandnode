@@ -27,7 +27,7 @@ namespace Grand.Services.Authentication
             }; 
         }
 
-        public string GenerateSecurityCode()
+        public string GenerateSecretKey()
         {
             return Guid.NewGuid().ToString();
         }

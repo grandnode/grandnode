@@ -10,7 +10,6 @@ namespace Grand.Services.Authentication
         bool AuthenticateTwoFactor(string userUniqueKey, string token);
 
         QrCodeSetup GenerateQrCodeSetup(string userUniqueKey);
-
-        string GenerateSecurityCode();
+        string GenerateSecretKey();
     }
 }

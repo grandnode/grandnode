@@ -65,7 +65,12 @@ namespace Grand.Web.Tests.Controllers
             localizationService.Setup(p => p.GetResource("Account.WrongCredentials.WrongSecurityCode"))
                 .Returns("Error");
             _localizationService = localizationService.Object;
-            _workContext = new Mock<IWorkContext>().Object;
+
+            var workContext = new Mock<IWorkContext>();
+            workContext.Setup(p => p.CurrentCustomer)
+                .Returns(new Customer { Email = "test@email.com"});
+            _workContext = workContext.Object;
+            
             _storeContext = new Mock<IStoreContext>().Object;
             _customerService = new Mock<ICustomerService>().Object;
             _customerAttributeParser = new Mock<ICustomerAttributeParser>().Object;
@@ -84,9 +89,15 @@ namespace Grand.Web.Tests.Controllers
             _localizationSettings = new Mock<LocalizationSettings>().Object;
             _captchaSettings = new Mock<CaptchaSettings>().Object;
             _grandConfig = new Mock<GrandConfig>().Object;
+            
             var twoFactorAuthenticationService = new Mock<ITwoFactorAuthenticationService>();
             twoFactorAuthenticationService.Setup(p => p.AuthenticateTwoFactor("PJWUMZKAUUFQKJBAMD6VGJ6RULFVW4ZH", "234333"))
                 .Returns(true);
+            var secretKey = Guid.NewGuid().ToString();
+            twoFactorAuthenticationService.Setup(p => p.GenerateQrCodeSetup(It.IsAny<string>()))
+                .Returns(new QrCodeSetup { QrCodeImageUrl = "image_url", ManualEntryQrCode = "123456" });
+            twoFactorAuthenticationService.Setup(p => p.GenerateSecretKey())
+                .Returns("123456");
             _twoFactorAuthenticationService = twoFactorAuthenticationService.Object;
 
             _customerController = new CustomerController(
@@ -118,7 +129,7 @@ namespace Grand.Web.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task SuccessTwoFactorAuthCorrectRedirect()
+        public async Task Post_TwoFactorAuth_Success_CorrectRedirect()
         {
             //assert
             var shoppingCartService = new Mock<IShoppingCartService>().Object;
@@ -156,6 +167,36 @@ namespace Grand.Web.Tests.Controllers
             //result
             Assert.That.IsType<ViewResult>(okObjectResult);
             Assert.AreEqual(model, okObjectResult.Model);
+        }
+
+        [TestMethod]
+        public void Get_EnableTwoFactorAuthenticator_Return_CorrectModel()
+        {
+            //assert
+            _customerSettings.TwoFactorAuthenticationEnabled = true;
+            
+            //action
+            var result = _customerController.EnableTwoFactorAuthenticator();
+            var okObjectResult = result as ViewResult;
+            
+            //result
+            Assert.That.IsType<ViewResult>(okObjectResult);
+            Assert.That.IsType<CustomerInfoModel.TwoFactorAuthenticationModel>(okObjectResult.Model);
+        }
+
+        [TestMethod]
+        public void Get_EnableTwoFactorAuthenticator_If_DisableTFA_Correct_RedirectTo()
+        {
+            //assert
+            _customerSettings.TwoFactorAuthenticationEnabled = false;
+            
+            //action
+            var result = _customerController.EnableTwoFactorAuthenticator();
+            var okObjectResult = result as RedirectToRouteResult;
+            
+            //result
+            Assert.That.IsType<RedirectToRouteResult>(okObjectResult);
+            Assert.AreEqual("CustomerInfo", okObjectResult.RouteName);
         }
     }
 }

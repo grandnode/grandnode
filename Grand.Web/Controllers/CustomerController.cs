@@ -10,7 +10,6 @@ using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Tax;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
@@ -31,7 +30,6 @@ using Grand.Web.Models.Customer;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1478,14 +1476,14 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var secretKey = _twoFactorAuthenticationService.GenerateSecurityCode();
+            var secretKey = _twoFactorAuthenticationService.GenerateSecretKey();
             string userUniqueKey = customer.Email + secretKey;
-            QrCodeSetup setupInfo = _twoFactorAuthenticationService.GenerateQrCodeSetup(userUniqueKey);
+            var setupInfo = _twoFactorAuthenticationService.GenerateQrCodeSetup(userUniqueKey);
 
             string barcodeImageUrl = setupInfo.QrCodeImageUrl;
             string manualCode = setupInfo.ManualEntryQrCode;
 
-            var customertwoauthModelModel =  new CustomerInfoModel.TwoFactorAuthenticationModel 
+            var customertwoauthModel =  new CustomerInfoModel.TwoFactorAuthenticationModel 
             {
                 Is2faEnabled = true,
                 HasAuthenticator = true,
@@ -1495,7 +1493,7 @@ namespace Grand.Web.Controllers
                 QrCodeSetupImageUrl = barcodeImageUrl
             };
             
-            return View(customertwoauthModelModel);
+            return View(customertwoauthModel);
         }
 
         [HttpPost]
