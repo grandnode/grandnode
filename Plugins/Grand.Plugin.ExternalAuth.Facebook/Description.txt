@@ -2,7 +2,7 @@
 FriendlyName: Facebook authentication
 SystemName: ExternalAuth.Facebook
 Version: 1.45
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 5
 FileName: Grand.Plugin.ExternalAuth.Facebook.dll

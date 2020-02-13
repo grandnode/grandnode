@@ -2,7 +2,7 @@
 FriendlyName: Money converter exchange rate provider (from EUR: ECB, from PLN: NBP)
 SystemName: CurrencyExchange.MoneyConverter
 Version: 1.09
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.ExchangeRate.McExchange.dll

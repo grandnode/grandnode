@@ -2,7 +2,7 @@
 FriendlyName: Google authentication
 SystemName: ExternalAuth.Google
 Version: 1.02
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 5
 FileName: Grand.Plugin.ExternalAuth.Google.dll

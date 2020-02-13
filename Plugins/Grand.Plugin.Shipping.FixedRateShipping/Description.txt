@@ -2,7 +2,7 @@
 FriendlyName: Fixed Rate Shipping
 SystemName: Shipping.FixedRate
 Version: 2.1
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Shipping.FixedRateShipping.dll

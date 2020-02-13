@@ -2,7 +2,7 @@
 FriendlyName: Check / Money Order
 SystemName: Payments.CheckMoneyOrder
 Version: 1.18
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Payments.CheckMoneyOrder.dll

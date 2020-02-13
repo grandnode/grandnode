@@ -2,7 +2,7 @@
 FriendlyName: Facebook Pixel
 SystemName: Widgets.FacebookPixel
 Version: 1.01
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Widgets.FacebookPixel.dll
