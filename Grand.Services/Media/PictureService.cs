@@ -76,7 +76,7 @@ namespace Grand.Services.Media
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings)
         {
             _pictureRepository = pictureRepository;
@@ -85,7 +85,7 @@ namespace Grand.Services.Media
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _storeContext = storeContext;
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _mediaSettings = mediaSettings;
         }
 

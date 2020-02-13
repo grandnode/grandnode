@@ -61,14 +61,14 @@ namespace Grand.Services.Security
             IWorkContext workContext,
             ILocalizationService localizationService,
             ILanguageService languageService,
-            IEnumerable<ICacheManager> cacheManager)
+            ICacheManager cacheManager)
         {
             _permissionRecordRepository = permissionRecordRepository;
             _customerService = customerService;
             _workContext = workContext;
             _localizationService = localizationService;
             _languageService = languageService;
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
         }
 
         #endregion

@@ -54,10 +54,10 @@ namespace Grand.Services.Configuration
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="mediator">Mediator</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(IEnumerable<ICacheManager> cacheManager, IMediator mediator,
+        public SettingService(ICacheManager cacheManager, IMediator mediator,
             IRepository<Setting> settingRepository, IServiceProvider serviceProvider)
         {
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _mediator = mediator;
             _settingRepository = settingRepository;
             _serviceProvider = serviceProvider;

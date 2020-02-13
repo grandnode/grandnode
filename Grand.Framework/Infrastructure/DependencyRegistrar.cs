@@ -106,11 +106,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
 
-            if (config.RedisCachingEnabled)
-            {
-                builder.Register(r => new DistributedRedisCache(config.RedisCachingConnectionString)).As<ICacheManager>().SingleInstance();
-            }
-
             if (config.RunOnAzureWebApps)
             {
                 builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();

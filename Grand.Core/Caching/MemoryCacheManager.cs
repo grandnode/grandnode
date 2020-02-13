@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Grand.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching between HTTP requests (long term caching)
+    /// Represents a manager for memory caching (long term caching)
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {

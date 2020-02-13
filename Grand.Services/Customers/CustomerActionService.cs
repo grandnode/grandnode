@@ -33,13 +33,13 @@ namespace Grand.Services.Customers
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
             IMediator mediator,
-            IEnumerable<ICacheManager> cacheManager)
+            ICacheManager cacheManager)
         {
             _customerActionRepository = customerActionRepository;
             _customerActionTypeRepository = customerActionTypeRepository;
             _customerActionHistoryRepository = customerActionHistoryRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager.FirstOrDefault(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
         }
 
         #endregion

@@ -34,12 +34,11 @@ namespace Grand.Services.Media
 
         public AzurePictureService(IRepository<Picture> pictureRepository,
             ISettingService settingService,
-            IWebHelper webHelper,
             ILogger logger,
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings,
             GrandConfig config)
             : base(pictureRepository,

@@ -62,7 +62,7 @@ namespace Grand.Services.Customers
             ICustomerService customerService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             IPopupService popupService,
             IStoreContext storeContext,
             ILocalizationService localizationService)
@@ -81,7 +81,7 @@ namespace Grand.Services.Customers
             _customerService = customerService;
             _customerAttributeParser = customerAttributeParser;
             _customerTagService = customerTagService;
-            _cacheManager = cacheManager.FirstOrDefault(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _popupService = popupService;
             _storeContext = storeContext;
             _localizationService = localizationService;

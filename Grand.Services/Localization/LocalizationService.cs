@@ -70,12 +70,12 @@ namespace Grand.Services.Localization
         /// <param name="lsrRepository">Locale string resource repository</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="mediator">Mediator</param>
-        public LocalizationService(IEnumerable<ICacheManager> cacheManager,
+        public LocalizationService(ICacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _logger = logger;
             _workContext = workContext;
             _lsrRepository = lsrRepository;

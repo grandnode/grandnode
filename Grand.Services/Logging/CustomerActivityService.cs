@@ -54,14 +54,14 @@ namespace Grand.Services.Logging
         /// <param name="webHelper">Web helper</param>
         /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
         public CustomerActivityService(
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
             IWebHelper webHelper,
             IActivityKeywordsProvider activityKeywordsProvider)
         {
-            _cacheManager = cacheManager.FirstOrDefault(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _workContext = workContext;
