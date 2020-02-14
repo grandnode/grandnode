@@ -24,7 +24,6 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Infrastructure.Cache;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Orders;
@@ -469,19 +468,15 @@ namespace Grand.Web.Areas.Admin.Services
                 }
 
                 //specification attributes
-                model.AddSpecificationAttributeModel.AvailableAttributes = await _cacheManager
-                    .GetAsync(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, async () =>
-                    {
-                        var availableSpecificationAttributes = new List<SelectListItem>();
-                        foreach (var sa in await _specificationAttributeService.GetSpecificationAttributes())
-                        {
-                            availableSpecificationAttributes.Add(new SelectListItem {
-                                Text = sa.Name,
-                                Value = sa.Id.ToString()
-                            });
-                        }
-                        return availableSpecificationAttributes;
+                var availableSpecificationAttributes = new List<SelectListItem>();
+                foreach (var sa in await _specificationAttributeService.GetSpecificationAttributes())
+                {
+                    availableSpecificationAttributes.Add(new SelectListItem {
+                        Text = sa.Name,
+                        Value = sa.Id.ToString()
                     });
+                }
+                model.AddSpecificationAttributeModel.AvailableAttributes = availableSpecificationAttributes;
 
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
