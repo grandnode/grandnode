@@ -255,7 +255,7 @@ namespace Grand.Core.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefix">String prefix</param>
-        public Task RemoveByPrefixAsync(string prefix)
+        public virtual Task RemoveByPrefixAsync(string prefix)
         {
             _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
             return RemoveByPrefix(prefix);
