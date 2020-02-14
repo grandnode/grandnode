@@ -290,7 +290,15 @@ namespace Grand.Services.Tax
             {
                 foreach (var error in calculateTaxResult.Errors)
                 {
-                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    if (activeTaxProvider.PluginDescriptor == null)
+                    {
+                        _logger.Error(string.Format("{0} - {1}", "PluginDescriptor is NULL!!", error), null, customer);
+                    }
+                    else
+                    {
+                        _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    }
+
                 }
             }
             return (taxRate, isTaxable);
@@ -322,7 +330,7 @@ namespace Grand.Services.Tax
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
             if (descriptor != null)
-                return _serviceProvider.GetRequiredService(descriptor.PluginType) as ITaxProvider;
+                return descriptor.Instance<ITaxProvider>(_pluginFinder.ServiceProvider);
 
             return null;
         }
