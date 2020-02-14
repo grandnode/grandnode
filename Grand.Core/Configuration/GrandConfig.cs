@@ -103,6 +103,11 @@ namespace Grand.Core.Configuration
         public bool UseRoslynScripts { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating for default cache time in minutes
+        /// </summary>
+        public int DefaultCacheTimeMinutes { get; set; }
+
+        /// <summary>
         /// Enable minimal Progressive Web App.
         /// </summary>
         public bool EnableProgressiveWebApp { get; set; }
