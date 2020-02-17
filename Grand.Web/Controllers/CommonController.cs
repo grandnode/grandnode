@@ -12,7 +12,6 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -41,7 +40,6 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPopupService _popupService;
         private readonly IContactAttributeService _contactAttributeService;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
@@ -56,7 +54,6 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             ICustomerActivityService customerActivityService,
-            IPopupService popupService,
             IContactAttributeService contactAttributeService,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings
@@ -67,7 +64,6 @@ namespace Grand.Web.Controllers
             _workContext = workContext;
             _storeContext = storeContext;
             _customerActivityService = customerActivityService;
-            _popupService = popupService;
             _contactAttributeService = contactAttributeService;
             _captchaSettings = captchaSettings;
             _vendorSettings = vendorSettings;
@@ -498,40 +494,6 @@ namespace Grand.Web.Controllers
                 downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             });
-        }
-
-        //Get banner for customer
-        [HttpGet]
-        public virtual async Task<IActionResult> GetActivePopup()
-        {
-            var result = await _popupService.GetActivePopupByCustomerId(_workContext.CurrentCustomer.Id);
-            if (result != null)
-            {
-                return Json
-                (
-                    new { Id = result.Id, Body = result.Body, PopupTypeId = result.PopupTypeId }
-                );
-            }
-            else
-                return Json
-                    (
-                        new { empty = "" }
-                    );
-        }
-
-        [HttpPost]
-        public virtual async Task<IActionResult> RemovePopup(string Id)
-        {
-            await _popupService.MovepopupToArchive(Id, _workContext.CurrentCustomer.Id);
-            return Json("");
-        }
-
-
-        [HttpGet]
-        public virtual async Task<IActionResult> CustomerActionEventUrl(string curl, string purl, [FromServices] ICustomerActionEventService customerActionEventService)
-        {
-            await customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
-            return Json( new { empty = "" });
         }
 
         [HttpPost, ActionName("PopupInteractiveForm")]
