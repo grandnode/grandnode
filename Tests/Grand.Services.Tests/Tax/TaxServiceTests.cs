@@ -47,7 +47,7 @@ namespace Grand.Services.Tax.Tests
             _addressSettings = new AddressSettings();
             _logger = new NullLogger();
             var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
+            serviceProvider.Setup(x => x.GetRequiredService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
             _serviceProvider = serviceProvider.Object;
             
 
