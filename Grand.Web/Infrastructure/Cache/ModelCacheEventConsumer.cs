@@ -383,6 +383,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_SPECS_MODEL_KEY = "Grand.pres.product.specs-{0}-{1}";
         public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs-{0}";
+        public const string PRODUCT_SPECS_PATTERN = "Grand.pres.product.specs";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -508,7 +509,7 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCTS_SIMILAR_IDS_KEY = "Grand.pres.similar-{0}-{1}";
         public const string PRODUCTS_SIMILAR_IDS_PATTERN_KEY = "Grand.pres.similar-{0}";
 
-       
+
 
         /// <summary>
         /// Key for product picture caching on the product details page
@@ -532,8 +533,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
-                
-        
+
+
         /// <summary>
         /// Key for cart picture caching
         /// </summary>
@@ -971,12 +972,12 @@ namespace Grand.Web.Infrastructure.Cache
         //specification attributes
         public async Task Handle(EntityUpdated<SpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN);
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<SpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN);
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
 
@@ -984,29 +985,29 @@ namespace Grand.Web.Infrastructure.Cache
 
         public async Task Handle(EntityUpdated<SpecificationAttributeOption> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN);
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<SpecificationAttributeOption> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCT_SPECS_PATTERN);
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
 
         //Product specification attribute
         public async Task Handle(EntityInserted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveAsync(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.Id));
+            await _cacheManager.RemoveByPrefix(string.Format(PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
             await _cacheManager.RemoveByPrefix(SPECS_FILTER_PATTERN_KEY);
         }
 
