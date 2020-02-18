@@ -193,9 +193,12 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
-            if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                details.AffiliateId = affiliate.Id;
+            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
+            {
+                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    details.AffiliateId = affiliate.Id;
+            }
 
             // Recurring orders.Load initial order
             details.InitialOrder = await _orderService.GetOrderById(processPaymentRequest.InitialOrderId);
@@ -449,10 +452,12 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
-            if (affiliate != null && affiliate.Active && !affiliate.Deleted)
-                details.AffiliateId = affiliate.Id;
-
+            if (!string.IsNullOrEmpty(details.Customer.AffiliateId))
+            {
+                var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    details.AffiliateId = affiliate.Id;
+            }
             //customer currency
             var currencyTmp = await _currencyService.GetCurrencyById(await details.Customer.GetAttribute<string>(_genericAttributeService, SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
             var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
