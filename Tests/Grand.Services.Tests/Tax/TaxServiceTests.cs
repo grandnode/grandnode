@@ -34,8 +34,11 @@ namespace Grand.Services.Tax.Tests
         public void TestInitialize()
         {
             //plugin initialization
-            new Grand.Services.Tests.ServiceTest().PluginInitializator();
-
+            new Services.Tests.ServiceTest().PluginInitializator();
+            var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.Setup(x => x.GetRequiredService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
+            _serviceProvider = serviceProvider.Object;
+            
             _pluginFinder = new PluginFinder(_serviceProvider);
             _taxSettings = new TaxSettings();
             _taxSettings.ActiveTaxProviderSystemName = "FixedTaxRateTest";
@@ -46,11 +49,7 @@ namespace Grand.Services.Tax.Tests
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
             _logger = new NullLogger();
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
-            _serviceProvider = serviceProvider.Object;
             
-
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
                 _pluginFinder, _geoLookupService, _countryService, _serviceProvider, _logger,
                 _customerSettings, _addressSettings);
