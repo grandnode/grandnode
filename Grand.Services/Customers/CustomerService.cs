@@ -42,8 +42,16 @@ namespace Grand.Services.Customers
 
         /// <summary>
         /// Key pattern to clear cache
+        /// {0} customer id
         /// </summary>
         private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
+
+        /// <summary>
+        /// Key for cache 
+        /// {0} - customer id
+        /// {1} - product id
+        /// </summary>
+        private const string CUSTOMER_PRODUCT_PRICE_KEY_ID = "Grand.product.price-{0}-{1}";
 
         /// <summary>
         /// Key for caching
@@ -1257,7 +1265,14 @@ namespace Grand.Services.Customers
         /// <returns>Customer product price</returns>
         public virtual async Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId)
         {
-            var productprice = await _customerProductPriceRepository.Table.Where(x=>x.CustomerId == customerId && x.ProductId == productId).FirstOrDefaultAsync();
+            var key = string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerId, productId);
+            var productprice = await _cacheManager.GetAsync(key, async () =>
+            {
+                return await _customerProductPriceRepository.Table
+                .Where(x => x.CustomerId == customerId && x.ProductId == productId)
+                .FirstOrDefaultAsync();
+            });
+
             if (productprice == null)
                 return null;
             else
@@ -1275,6 +1290,9 @@ namespace Grand.Services.Customers
 
             await _customerProductPriceRepository.InsertAsync(customerProductPrice);
 
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
+
             //event notification
             await _mediator.EntityInserted(customerProductPrice);
         }
@@ -1290,6 +1308,9 @@ namespace Grand.Services.Customers
 
             await _customerProductPriceRepository.UpdateAsync(customerProductPrice);
 
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
+
             //event notification
             await _mediator.EntityUpdated(customerProductPrice);
         }
@@ -1304,6 +1325,9 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerProductPrice");
 
             await _customerProductPriceRepository.DeleteAsync(customerProductPrice);
+
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(customerProductPrice);
@@ -1326,13 +1350,9 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Customer product</returns>
-        public virtual Task<CustomerProduct> GetCustomerProduct(string id)
+        public virtual async Task<CustomerProduct> GetCustomerProduct(string id)
         {
-            var query = from pp in _customerProductRepository.Table
-                        where pp.Id == id
-                        select pp;
-
-            return query.FirstOrDefaultAsync();
+            return await _customerProductRepository.GetByIdAsync(id);
         }
 
         /// <summary>
