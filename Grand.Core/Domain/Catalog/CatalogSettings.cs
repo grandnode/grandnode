@@ -373,6 +373,11 @@ namespace Grand.Core.Domain.Catalog
         public bool CacheProductPrices { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.
+        /// </summary>
+        public bool CustomerProductPrice { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to ignore load Filterable Specification Attribute Option (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreFilterableSpecAttributeOption { get; set; }
