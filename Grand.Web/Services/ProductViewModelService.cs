@@ -876,14 +876,17 @@ namespace Grand.Web.Services
 
         public virtual async Task<VendorBriefInfoModel> PrepareVendorBriefInfoModel(Product product)
         {
-            var vendor = await _vendorService.GetVendorById(product.VendorId);
-            if (vendor != null && !vendor.Deleted && vendor.Active)
+            if (product.VendorId != null)
             {
-                return new VendorBriefInfoModel {
-                    Id = vendor.Id,
-                    Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                    SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
-                };
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                {
+                    return new VendorBriefInfoModel {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
+                    };
+                }
             }
             return null;
         }
