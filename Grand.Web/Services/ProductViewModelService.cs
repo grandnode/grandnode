@@ -876,7 +876,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<VendorBriefInfoModel> PrepareVendorBriefInfoModel(Product product)
         {
-            if (product.VendorId != null)
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
                 var vendor = await _vendorService.GetVendorById(product.VendorId);
                 if (vendor != null && !vendor.Deleted && vendor.Active)
