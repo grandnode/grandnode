@@ -123,8 +123,8 @@ namespace Grand.Services.Catalog
             await _productTagRepository.DeleteAsync(productTag);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(productTag);
@@ -189,7 +189,7 @@ namespace Grand.Services.Catalog
             await _productTagRepository.InsertAsync(productTag);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(productTag);
@@ -218,7 +218,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(productTag);

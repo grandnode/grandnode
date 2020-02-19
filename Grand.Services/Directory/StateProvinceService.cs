@@ -75,7 +75,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.DeleteAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(stateProvince);
@@ -152,7 +152,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.InsertAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(stateProvince);
@@ -169,7 +169,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.UpdateAsync(stateProvince);
 
-            await _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(stateProvince);

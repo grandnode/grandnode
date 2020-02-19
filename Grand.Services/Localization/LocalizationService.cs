@@ -70,12 +70,12 @@ namespace Grand.Services.Localization
         /// <param name="lsrRepository">Locale string resource repository</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="mediator">Mediator</param>
-        public LocalizationService(IEnumerable<ICacheManager> cacheManager,
+        public LocalizationService(ICacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _logger = logger;
             _workContext = workContext;
             _lsrRepository = lsrRepository;
@@ -99,7 +99,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.DeleteAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(localeStringResource);
@@ -160,7 +160,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(localeStringResource);
@@ -179,7 +179,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.UpdateAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(localeStringResource);
@@ -375,7 +375,7 @@ namespace Grand.Services.Localization
             }
 
             //clear cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Grand.Services.Localization
             }
 
             //clear cache
-            await _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         #endregion

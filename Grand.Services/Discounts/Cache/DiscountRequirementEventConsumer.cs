@@ -36,12 +36,12 @@ namespace Grand.Services.Discounts.Cache
 
         public async Task Handle(EntityUpdated<Discount> notification, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
         public async Task Handle(EntityDeleted<Discount> notification, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
     }

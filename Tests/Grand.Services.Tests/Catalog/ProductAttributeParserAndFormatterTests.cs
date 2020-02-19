@@ -135,7 +135,7 @@ namespace Grand.Services.Catalog.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
             _productAttributeRepo = new Mock<IRepository<ProductAttribute>>().Object;
 
             _productAttributeService = new ProductAttributeService(cacheManager,

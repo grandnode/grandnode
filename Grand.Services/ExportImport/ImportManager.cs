@@ -134,7 +134,7 @@ namespace Grand.Services.ExportImport
 
                 var existingBinary = await _pictureService.LoadPictureBinary(existingPicture);
                 //picture binary after validation (like in database)
-                var validatedPictureBinary = await _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
                 if (existingBinary.SequenceEqual(validatedPictureBinary) ||
                     existingBinary.SequenceEqual(newPictureBinary))
                 {
@@ -626,7 +626,7 @@ namespace Grand.Services.ExportImport
                                     var pp = await _pictureService.GetPictureById(existingPicture.PictureId);
                                     var existingBinary = await _pictureService.LoadPictureBinary(pp);
                                     //picture binary after validation (like in database)
-                                    var validatedPictureBinary = await _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                                    var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
                                     if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
                                     {
                                         //the same picture content

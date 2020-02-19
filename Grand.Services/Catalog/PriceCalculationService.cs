@@ -8,7 +8,6 @@ using Grand.Services.Catalog.Cache;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
-using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using System;
 using System.Collections.Generic;
@@ -417,9 +416,12 @@ namespace Grand.Services.Catalog
                 }
 
                 //customer product price
-                var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
-                if (customerPrice.HasValue && customerPrice.Value < price)
-                    price = customerPrice.Value;
+                if (_catalogSettings.CustomerProductPrice)
+                {
+                    var customerPrice = await _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
+                    if (customerPrice.HasValue && customerPrice.Value < price)
+                        price = customerPrice.Value;
+                }
 
                 //additional charge
                 price = price + additionalCharge;

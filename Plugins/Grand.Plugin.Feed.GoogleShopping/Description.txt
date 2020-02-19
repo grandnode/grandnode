@@ -2,7 +2,7 @@
 FriendlyName: Google Shopping - Google Product Search
 SystemName: PromotionFeed.GoogleShopping
 Version: 1.77
-SupportedVersions: 4.60
+SupportedVersions: 4.70
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Feed.GoogleShopping.dll

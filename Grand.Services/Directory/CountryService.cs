@@ -110,7 +110,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.DeleteAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(country);
@@ -257,7 +257,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.InsertAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(country);
@@ -274,7 +274,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.UpdateAsync(country);
 
-            await _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(country);

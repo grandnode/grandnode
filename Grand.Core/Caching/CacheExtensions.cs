@@ -7,12 +7,7 @@ namespace Grand.Core.Caching
     /// Extensions
     /// </summary>
     public static class CacheExtensions
-    {
-        /// <summary>
-        /// Get default cache time in minutes
-        /// </summary>
-        private static int DefaultCacheTimeMinutes { get { return 60; } }
-
+    {        
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
@@ -23,7 +18,7 @@ namespace Grand.Core.Caching
         /// <returns>Cached item</returns>
         public static Task<T> GetAsync<T>(this ICacheManager cacheManager, string key, Func<Task<T>> acquire)
         {
-            return GetAsync(cacheManager, key, DefaultCacheTimeMinutes, acquire);
+            return GetAsync(cacheManager, key, CommonHelper.CacheTimeMinutes, acquire);
         }
 
         /// <summary>
@@ -80,7 +75,7 @@ namespace Grand.Core.Caching
         /// <returns>Cached item</returns>
         public static T Get<T>(this ICacheManager cacheManager, string key, Func<T> acquire)
         {
-            return Get(cacheManager, key, DefaultCacheTimeMinutes, acquire);
+            return Get(cacheManager, key, CommonHelper.CacheTimeMinutes, acquire);
         }
     }
 }

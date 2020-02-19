@@ -113,6 +113,7 @@ namespace Grand.Core.Infrastructure
             configuration.GetSection("Grand").Bind(config);
 
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
+            CommonHelper.CacheTimeMinutes = config.DefaultCacheTimeMinutes;
 
             //register mongo mappings
             MongoDBMapperConfiguration.RegisterMongoDBMappings();

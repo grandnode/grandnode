@@ -208,15 +208,7 @@
                                                     @T("Admin.Header.ClearCacheMemory")
                                                 </a>
                                             </li>
-                                            @if (grandConfig.RedisCachingEnabled)
-                                            {
-                                                <li>
-                                                    <a href="@Url.Action("ClearCache", "Common", new { memory = false, returnurl = webHelper.GetRawUrl(this.Context.Request) })">
-                                                        <i class="icon-refresh"></i>
-                                                        @T("Admin.Header.ClearCacheRedis")
-                                                    </a>
-                                                </li>
-                                            }
+                                            
                                             <li>
                                                 <a href="@Url.Action("RestartApplication", "Common", new { returnurl = webHelper.GetRawUrl(this.Context.Request) })" id="restart-application">
                                                     <i class="icon-reload"></i>

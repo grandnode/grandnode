@@ -12,7 +12,6 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -21,7 +20,6 @@ using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,10 +40,7 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerActionEventService _customerActionEventService;
-        private readonly IPopupService _popupService;
         private readonly IContactAttributeService _contactAttributeService;
-        private readonly CommonSettings _commonSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -59,10 +54,7 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             ICustomerActivityService customerActivityService,
-            ICustomerActionEventService customerActionEventService,
-            IPopupService popupService,
             IContactAttributeService contactAttributeService,
-            CommonSettings commonSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings
             )
@@ -72,10 +64,7 @@ namespace Grand.Web.Controllers
             _workContext = workContext;
             _storeContext = storeContext;
             _customerActivityService = customerActivityService;
-            _customerActionEventService = customerActionEventService;
-            _popupService = popupService;
             _contactAttributeService = contactAttributeService;
-            _commonSettings = commonSettings;
             _captchaSettings = captchaSettings;
             _vendorSettings = vendorSettings;
         }
@@ -85,18 +74,10 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //page not found
-        public virtual IActionResult PageNotFound([FromServices] ILogger logger)
+        public virtual IActionResult PageNotFound()
         {
-            if (_commonSettings.Log404Errors)
-            {
-                var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
-                logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath),
-                    customer: _workContext.CurrentCustomer);
-            }
-
-            this.Response.StatusCode = 404;
-            this.Response.ContentType = "text/html";
-
+            Response.StatusCode = 404;
+            Response.ContentType = "text/html";
             return View();
         }
 
@@ -330,9 +311,9 @@ namespace Grand.Web.Controllers
         }
 
         //sitemap page
-        public virtual async Task<IActionResult> Sitemap()
+        public virtual async Task<IActionResult> Sitemap([FromServices] CommonSettings commonSettings)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
             var model = await _commonViewModelService.PrepareSitemap();
@@ -341,11 +322,11 @@ namespace Grand.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> SitemapXml(int? id)
+        public virtual async Task<IActionResult> SitemapXml(int? id, [FromServices] CommonSettings commonSettings)
         {
-            if (!_commonSettings.SitemapEnabled)
+            if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
-            var siteMap = await _commonViewModelService.SitemapXml(id, this.Url);
+            var siteMap = await _commonViewModelService.SitemapXml(id, Url);
 
             return Content(siteMap, "text/xml");
         }
@@ -513,43 +494,6 @@ namespace Grand.Web.Controllers
                 downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             });
-        }
-
-        //Get banner for customer
-        [HttpGet]
-        public virtual async Task<IActionResult> GetActivePopup()
-        {
-            var result = await _popupService.GetActivePopupByCustomerId(_workContext.CurrentCustomer.Id);
-            if (result != null)
-            {
-                return Json
-                (
-                    new { Id = result.Id, Body = result.Body, PopupTypeId = result.PopupTypeId }
-                );
-            }
-            else
-                return Json
-                    (
-                        new { empty = "" }
-                    );
-        }
-
-        [HttpPost]
-        public virtual async Task<IActionResult> RemovePopup(string Id)
-        {
-            await _popupService.MovepopupToArchive(Id, _workContext.CurrentCustomer.Id);
-            return Json("");
-        }
-
-
-        [HttpGet]
-        public virtual async Task<IActionResult> CustomerActionEventUrl(string curl, string purl)
-        {
-            await _customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
-            return Json
-                (
-                    new { empty = "" }
-                );
         }
 
         [HttpPost, ActionName("PopupInteractiveForm")]

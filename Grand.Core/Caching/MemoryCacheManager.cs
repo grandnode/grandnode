@@ -1,4 +1,5 @@
-using Grand.Core.Extensions;
+using Grand.Core.Events;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -10,13 +11,14 @@ using System.Threading.Tasks;
 namespace Grand.Core.Caching
 {
     /// <summary>
-    /// Represents a manager for caching between HTTP requests (long term caching)
+    /// Represents a manager for memory caching (long term caching)
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {
         #region Fields
 
         private readonly IMemoryCache _cache;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Cancellation token for clear cache
@@ -38,9 +40,10 @@ namespace Grand.Core.Caching
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
-        public MemoryCacheManager(IMemoryCache cache)
+        public MemoryCacheManager(IMemoryCache cache, IMediator mediator)
         {
             _cache = cache;
+            _mediator = mediator;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
@@ -228,27 +231,36 @@ namespace Grand.Core.Caching
         public virtual Task RemoveAsync(string key)
         {
             _cache.Remove(RemoveKey(key));
+            _mediator.Publish(new EntityCacheEvent(key, CacheEvent.RemoveKey));
+            return Task.CompletedTask;
+        }
+
+
+        /// <summary>
+        /// Removes items by key prefix
+        /// </summary>
+        /// <param name="prefix">String prefix</param>
+        public virtual Task RemoveByPrefix(string prefix)
+        {
+            var keysToRemove = _allKeys.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var key in keysToRemove)
+            {
+                _cache.Remove(RemoveKey(key));
+            }
+            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
             return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual async Task RemoveByPattern(string pattern)
+        /// <param name="prefix">String prefix</param>
+        public virtual Task RemoveByPrefixAsync(string prefix)
         {
-            await this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
+            _mediator.Publish(new EntityCacheEvent(prefix, CacheEvent.RemovePrefix));
+            return RemoveByPrefix(prefix);
         }
-
-        /// <summary>
-        /// Removes items by key pattern
-        /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public Task RemoveByPatternAsync(string pattern)
-        {
-            return this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
-        }
-
+        
         /// <summary>
         /// Clear all cache data
         /// </summary>

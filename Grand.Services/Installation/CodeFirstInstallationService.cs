@@ -4847,7 +4847,6 @@ namespace Grand.Services.Installation
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
-                WwwRequirement = WwwRequirement.NoMatter,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
                 EnableCssBundling = false,
@@ -9394,7 +9393,7 @@ namespace Grand.Services.Installation
                                             UsePercentage = true,
                                             DiscountPercentage = 20,
                                             StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
+                                            EndDateUtc = new DateTime(2030,1,1),
                                             RequiresCouponCode = true,
                                             IsEnabled = true
                                         },
@@ -10562,13 +10561,8 @@ namespace Grand.Services.Installation
 
         private async Task CreateIndexes()
         {
-            var indexOptionId = new CreateIndexOptions {
-                Name = "db",
-                Unique = true
-            };
-            var grandNodeVersionIndex = new CreateIndexModel<GrandNodeVersion>((Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.DataBaseVersion)), indexOptionId);
-
-            await _versionRepository.Collection.Indexes.CreateOneAsync(grandNodeVersionIndex);
+            //version
+            await _versionRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<GrandNodeVersion>((Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.DataBaseVersion)), new CreateIndexOptions() { Name = "DataBaseVersion", Unique = true }));
 
             //Store
             await _storeRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Store>((Builders<Store>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder" }));
@@ -10763,9 +10757,8 @@ namespace Grand.Services.Installation
                 var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
                 foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Core.Domain")))
                 {
-                    if (item.BaseType != null)
-                        if (item.IsClass && item.BaseType == typeof(BaseEntity))
-                            await mongoDBContext.Database().CreateCollectionAsync(item.Name, options);
+                    if (item.BaseType != null && item.IsClass && item.BaseType == typeof(BaseEntity))
+                        await mongoDBContext.Database().CreateCollectionAsync(item.Name, options);
                 }
             }
             catch (Exception ex)

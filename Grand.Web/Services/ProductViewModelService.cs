@@ -657,11 +657,14 @@ namespace Grand.Web.Services
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
-                if (deliveryDate != null)
+                if (!string.IsNullOrEmpty(product.DeliveryDateId))
                 {
-                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
-                    model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                    if (deliveryDate != null)
+                    {
+                        model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
+                        model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    }
                 }
             }
             //additional shipping charge
@@ -873,14 +876,17 @@ namespace Grand.Web.Services
 
         public virtual async Task<VendorBriefInfoModel> PrepareVendorBriefInfoModel(Product product)
         {
-            var vendor = await _vendorService.GetVendorById(product.VendorId);
-            if (vendor != null && !vendor.Deleted && vendor.Active)
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
-                return new VendorBriefInfoModel {
-                    Id = vendor.Id,
-                    Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                    SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
-                };
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                {
+                    return new VendorBriefInfoModel {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
+                    };
+                }
             }
             return null;
         }
@@ -903,7 +909,7 @@ namespace Grand.Web.Services
                 var productCategories = product.ProductCategories;
                 if (productCategories.Any())
                 {
-                    var category = await _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
+                    var category = await _categoryService.GetCategoryById(productCategories.OrderBy(x => x.DisplayOrder).FirstOrDefault().CategoryId);
                     if (category != null)
                     {
                         foreach (var catBr in await category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
@@ -944,7 +950,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<(PictureModel defaultPictureModel, List<PictureModel> pictureModels)> PrepareProductPictureModel(Product product, int defaultPictureSize, bool isAssociatedProduct, string name)
         {
-            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, 
+            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize,
                 isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
@@ -952,11 +958,10 @@ namespace Grand.Web.Services
                 if (defaultPicture == null)
                     defaultPicture = new ProductPicture();
 
-                var dpicture = await _pictureService.GetPictureById(defaultPicture.PictureId);
                 var defaultPictureModel = new PictureModel {
                     Id = defaultPicture.PictureId,
-                    ImageUrl = await _pictureService.GetPictureUrl(dpicture, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = await _pictureService.GetPictureUrl(dpicture, 0, !isAssociatedProduct),
+                    ImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
+                    FullSizeImageUrl = await _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
@@ -969,25 +974,24 @@ namespace Grand.Web.Services
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                foreach (var productpicture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
+                foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
                 {
-                    var pic = await _pictureService.GetPictureById(productpicture.PictureId);
                     var pictureModel = new PictureModel {
-                        Id = productpicture.PictureId,
-                        ThumbImageUrl = await _pictureService.GetPictureUrl(pic, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        ImageUrl = await _pictureService.GetPictureUrl(pic, _mediaSettings.ProductDetailsPictureSize),
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(pic),
+                        Id = picture.PictureId,
+                        ThumbImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name),
                     };
                     //"title" attribute
-                    pictureModel.Title = !string.IsNullOrEmpty(productpicture.TitleAttribute) ?
-                        productpicture.TitleAttribute :
+                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
+                        picture.TitleAttribute :
                         string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), name);
                     //"alt" attribute
-                    pictureModel.AlternateText = !string.IsNullOrEmpty(productpicture.AltAttribute) ?
-                        productpicture.AltAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
+                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
+                       picture.AltAttribute :
+                       string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), name);
 
                     pictureModels.Add(pictureModel);
                 }
@@ -1243,13 +1247,12 @@ namespace Grand.Web.Services
                         if (!string.IsNullOrEmpty(attributeValue.ImageSquaresPictureId))
                         {
                             var pm = new PictureModel();
-                            var imageSquaresPicture = await _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
-                            if (imageSquaresPicture != null)
+                            if (attributeValue.ImageSquaresPictureId != null)
                             {
                                 pm = new PictureModel {
-                                    Id = imageSquaresPicture?.Id,
-                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture),
-                                    ImageUrl = await _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
+                                    Id = attributeValue.ImageSquaresPictureId,
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(attributeValue.ImageSquaresPictureId),
+                                    ImageUrl = await _pictureService.GetPictureUrl(attributeValue.ImageSquaresPictureId, _mediaSettings.ImageSquarePictureSize)
                                 };
                             }
                             valueModel.ImageSquaresPictureModel = pm;
@@ -1259,13 +1262,12 @@ namespace Grand.Web.Services
                         if (!string.IsNullOrEmpty(attributeValue.PictureId))
                         {
                             var pm = new PictureModel();
-                            var valuePicture = await _pictureService.GetPictureById(attributeValue.PictureId);
-                            if (valuePicture != null)
+                            if (attributeValue.PictureId != null)
                             {
                                 pm = new PictureModel {
                                     Id = attributeValue.PictureId,
-                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(valuePicture),
-                                    ImageUrl = await _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
+                                    FullSizeImageUrl = await _pictureService.GetPictureUrl(attributeValue.PictureId),
+                                    ImageUrl = await _pictureService.GetPictureUrl(attributeValue.PictureId, defaultPictureSize)
                                 };
                             }
                             valueModel.PictureModel = pm;
@@ -1463,20 +1465,18 @@ namespace Grand.Web.Services
 
                     bundleProduct.DefaultPictureModel = await _cacheManager.GetAsync(productbundlePicturesCacheKey, async () =>
                     {
-                        var productPicture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                        if (productPicture == null)
-                            productPicture = new ProductPicture();
-
-                        var picture = await _pictureService.GetPictureById(productPicture.PictureId);
+                        var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                        if (picture == null)
+                            picture = new ProductPicture();
 
                         var pictureModel = new PictureModel {
-                            Id = productPicture.PictureId,
-                            ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductBundlePictureSize),
-                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture)
+                            Id = picture.PictureId,
+                            ImageUrl = await _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
+                            FullSizeImageUrl = await _pictureService.GetPictureUrl(picture.PictureId)
                         };
                         //"title" attribute
-                        pictureModel.Title = (productPicture != null && !string.IsNullOrEmpty(productPicture.TitleAttribute)) ?
-                            productPicture.TitleAttribute :
+                        pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                            picture.TitleAttribute :
                             string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
                         //"alt" attribute
                         pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
@@ -1683,11 +1683,10 @@ namespace Grand.Web.Services
 
                 if (!string.IsNullOrEmpty(pictureId))
                 {
-                    var picture = await _pictureService.GetPictureById(pictureId);
-                    var pictureModel = picture == null ? new PictureModel() : new PictureModel {
+                    var pictureModel = new PictureModel {
                         Id = pictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(pictureId),
+                        ImageUrl = await _pictureService.GetPictureUrl(pictureId, _mediaSettings.ProductDetailsPictureSize)
                     };
                     model.PictureFullSizeUrl = pictureModel.FullSizeImageUrl;
                     model.PictureDefaultSizeUrl = pictureModel.ImageUrl;

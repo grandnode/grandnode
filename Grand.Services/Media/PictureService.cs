@@ -76,7 +76,7 @@ namespace Grand.Services.Media
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings)
         {
             _pictureRepository = pictureRepository;
@@ -85,7 +85,7 @@ namespace Grand.Services.Media
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _storeContext = storeContext;
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _mediaSettings = mediaSettings;
         }
 
@@ -340,6 +340,7 @@ namespace Grand.Services.Media
                     fileExtension);
 
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
+
                 if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
                     return GetThumbUrl(thumbFileName, storeLocation);
 
@@ -348,7 +349,7 @@ namespace Grand.Services.Media
                     mutex.WaitOne();
                     using (var image = SKBitmap.Decode(filePath))
                     {
-                        var pictureBinary = await ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
+                        var pictureBinary = ApplyResize(image, EncodedImageFormat(fileExtension), targetSize);
                         await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
                     }
                     mutex.ReleaseMutex();
@@ -433,16 +434,19 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
                     string.Format("{0}.{1}", picture.Id, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
-                {
-                    pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
 
-                    using (var mutex = new Mutex(false, thumbFileName))
-                    {
-                        mutex.WaitOne();
-                        await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                        mutex.ReleaseMutex();
-                    }
+                if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    return GetThumbUrl(thumbFileName, storeLocation);
+
+                pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
+
+                using (var mutex = new Mutex(false, thumbFileName))
+                {
+                    mutex.WaitOne();
+
+                    await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+
+                    mutex.ReleaseMutex();
                 }
             }
             else
@@ -451,20 +455,22 @@ namespace Grand.Services.Media
                     string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
                     string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
-                {
-                    pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
 
-                    using (var mutex = new Mutex(false, thumbFileName))
+                if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    return GetThumbUrl(thumbFileName, storeLocation);
+
+                pictureBinary = pictureBinary ?? await LoadPictureBinary(picture);
+
+                using (var mutex = new Mutex(false, thumbFileName))
+                {
+                    mutex.WaitOne();
+                    using (var image = SKBitmap.Decode(pictureBinary))
                     {
-                        mutex.WaitOne();
-                        using (var image = SKBitmap.Decode(pictureBinary))
-                        {
-                            pictureBinary = await ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
-                        }
-                        await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
-                        mutex.ReleaseMutex();
+                        pictureBinary = ApplyResize(image, EncodedImageFormat(picture.MimeType), targetSize);
                     }
+                    await SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+
+                    mutex.ReleaseMutex();
                 }
             }
             return GetThumbUrl(thumbFileName, storeLocation);
@@ -607,7 +613,7 @@ namespace Grand.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = await ValidatePicture(pictureBinary, mimeType);
+                pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var picture = new Picture {
                 PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
@@ -650,7 +656,7 @@ namespace Grand.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = await ValidatePicture(pictureBinary, mimeType);
+                pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var picture = await GetPictureById(pictureId);
             if (picture == null)
@@ -725,7 +731,7 @@ namespace Grand.Services.Media
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        public virtual async Task<byte[]> ValidatePicture(byte[] byteArray, string mimeType)
+        public virtual byte[] ValidatePicture(byte[] byteArray, string mimeType)
         {
             try
             {
@@ -738,13 +744,13 @@ namespace Grand.Services.Media
                         {
                             //horizontal rectangle or square
                             if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
-                                byteArray = await ApplyResize(image, format, _mediaSettings.MaximumImageSize);
+                                byteArray = ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
                         else if (image.Width < image.Height)
                         {
                             //vertical rectangle
                             if (image.Width > _mediaSettings.MaximumImageSize)
-                                byteArray = await ApplyResize(image, format, _mediaSettings.MaximumImageSize);
+                                byteArray = ApplyResize(image, format, _mediaSettings.MaximumImageSize);
                         }
                         return byteArray;
                     }
@@ -788,7 +794,7 @@ namespace Grand.Services.Media
             return defaultFormat;
 
         }
-        protected async Task<byte[]> ApplyResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
+        protected byte[] ApplyResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
         {
             if (image == null)
                 throw new ArgumentNullException("image");
@@ -822,14 +828,13 @@ namespace Grand.Services.Media
                 {
                     using (var resimage = SKImage.FromBitmap(resized))
                     {
-                        return await Task.FromResult(resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray());
+                        return resimage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray();
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error with convert picture", ex.Message);
-                return await Task.FromResult(image.Bytes);
+                return image.Bytes;
             }
 
         }

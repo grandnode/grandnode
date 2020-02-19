@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Extensions;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -155,25 +156,30 @@ namespace Grand.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public virtual async Task RemoveByPattern(string pattern)
+        /// <param name="prefix">String prefix</param>
+        public virtual Task RemoveByPrefix(string prefix)
         {
             var items = GetItems();
             if (items == null)
-                return;
+                return Task.CompletedTask;
 
-            await this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
+            var keysToRemove = items.Keys.Where(x => x.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var key in keysToRemove)
+            {
+                items.Remove(key);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        public Task RemoveByPatternAsync(string pattern)
+        /// <param name="prefix">String prefix</param>
+        public Task RemoveByPrefixAsync(string prefix)
         {
-            return RemoveByPattern(pattern);
+            return RemoveByPrefix(prefix);
         }
 
         /// <summary>

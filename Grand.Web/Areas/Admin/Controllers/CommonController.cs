@@ -450,7 +450,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> MaintenanceDeleteActivitylog(MaintenanceModel model)
         {
             var _activityLogRepository = _serviceProvider.GetRequiredService<IRepository<ActivityLog>>();
-            await _activityLogRepository.Collection.DeleteManyAsync(new MongoDB.Bson.BsonDocument());
+            await _activityLogRepository.Collection.DeleteManyAsync(new BsonDocument());
             model.DeleteActivityLog = true;
             return View(model);
         }
@@ -478,24 +478,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> ClearCache(bool memory, string returnUrl = "")
+        public async Task<IActionResult> ClearCache(string returnUrl, [FromServices] ICacheManager cacheManager)
         {
-            var cacheManagers = _serviceProvider.GetRequiredService<IEnumerable<ICacheManager>>();
-            foreach (var cacheManager in cacheManagers)
-            {
-                if (memory)
-                {
-                    if (cacheManager is MemoryCacheManager)
-                        await cacheManager.Clear();
-                }
-                else
-                {
-                    if (!(cacheManager is MemoryCacheManager))
-                        await cacheManager.Clear();
-                }
-            }
+            await cacheManager.Clear();
+
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))

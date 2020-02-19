@@ -34,14 +34,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         public WidgetController(IWidgetService widgetService,
             ISettingService settingService,
             IPluginFinder pluginFinder,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             IServiceProvider serviceProvider,
             WidgetSettings widgetSettings)
 		{
             _widgetService = widgetService;
             _widgetSettings = widgetSettings;
             _pluginFinder = pluginFinder;
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _serviceProvider = serviceProvider;
             _settingService = settingService;
         }

@@ -42,8 +42,16 @@ namespace Grand.Services.Customers
 
         /// <summary>
         /// Key pattern to clear cache
+        /// {0} customer id
         /// </summary>
         private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
+
+        /// <summary>
+        /// Key for cache 
+        /// {0} - customer id
+        /// {1} - product id
+        /// </summary>
+        private const string CUSTOMER_PRODUCT_PRICE_KEY_ID = "Grand.product.price-{0}-{1}";
 
         /// <summary>
         /// Key for caching
@@ -820,7 +828,7 @@ namespace Grand.Services.Customers
             var updatefilter = builder.PullFilter(x => x.CustomerRoles, y => y.Id == customerRole.Id);
             await _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRole);
@@ -880,7 +888,7 @@ namespace Grand.Services.Customers
 
             await _customerRoleRepository.InsertAsync(customerRole);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRole);
@@ -904,7 +912,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
 
-            await _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRole);
@@ -952,8 +960,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.DeleteAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRoleProduct);
@@ -972,8 +980,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.InsertAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRoleProduct);
@@ -995,8 +1003,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.Collection.UpdateOneAsync(filter, update);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheManager.RemoveByPrefix(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRoleProduct);
@@ -1257,11 +1265,22 @@ namespace Grand.Services.Customers
         /// <returns>Customer product price</returns>
         public virtual async Task<decimal?> GetPriceByCustomerProduct(string customerId, string productId)
         {
-            var productprice = await _customerProductPriceRepository.Table.Where(x=>x.CustomerId == customerId && x.ProductId == productId).FirstOrDefaultAsync();
-            if (productprice == null)
+            var key = string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerId, productId);
+            var productprice = await _cacheManager.GetAsync(key, async () =>
+            {
+                var pp = await _customerProductPriceRepository.Table
+                .Where(x => x.CustomerId == customerId && x.ProductId == productId)
+                .FirstOrDefaultAsync();
+                if (pp == null)
+                    return (null, false);
+                else
+                    return (pp, true);
+            });
+
+            if (!productprice.Item2)
                 return null;
             else
-                return productprice.Price;
+                return productprice.pp.Price;
         }
 
         /// <summary>
@@ -1274,6 +1293,9 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerProductPrice");
 
             await _customerProductPriceRepository.InsertAsync(customerProductPrice);
+
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
 
             //event notification
             await _mediator.EntityInserted(customerProductPrice);
@@ -1290,6 +1312,9 @@ namespace Grand.Services.Customers
 
             await _customerProductPriceRepository.UpdateAsync(customerProductPrice);
 
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
+
             //event notification
             await _mediator.EntityUpdated(customerProductPrice);
         }
@@ -1304,6 +1329,9 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerProductPrice");
 
             await _customerProductPriceRepository.DeleteAsync(customerProductPrice);
+
+            //clear cache
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerProductPrice.CustomerId, customerProductPrice.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(customerProductPrice);
@@ -1326,13 +1354,9 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Customer product</returns>
-        public virtual Task<CustomerProduct> GetCustomerProduct(string id)
+        public virtual async Task<CustomerProduct> GetCustomerProduct(string id)
         {
-            var query = from pp in _customerProductRepository.Table
-                        where pp.Id == id
-                        select pp;
-
-            return query.FirstOrDefaultAsync();
+            return await _customerProductRepository.GetByIdAsync(id);
         }
 
         /// <summary>
@@ -1362,7 +1386,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.InsertAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityInserted(customerProduct);
@@ -1380,7 +1404,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.UpdateAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityUpdated(customerProduct);
@@ -1398,7 +1422,7 @@ namespace Grand.Services.Customers
             await _customerProductRepository.DeleteAsync(customerProduct);
 
             //clear cache
-            await _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+            await _cacheManager.RemoveAsync(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
 
             //event notification
             await _mediator.EntityDeleted(customerProduct);

@@ -18,11 +18,11 @@ namespace Grand.Web.Services
         private readonly ICacheManager _cacheManager;
         private readonly IWidgetService _widgetService;
         private readonly IThemeContext _themeContext;
-        public WidgetViewModelService(IStoreContext storeContext, IEnumerable<ICacheManager> cacheManager,
+        public WidgetViewModelService(IStoreContext storeContext, ICacheManager cacheManager,
             IWidgetService widgetService, IThemeContext themeContext)
         {
             _storeContext = storeContext;
-            _cacheManager = cacheManager.First(o => o.GetType() == typeof(MemoryCacheManager));
+            _cacheManager = cacheManager;
             _widgetService = widgetService;
             _themeContext = themeContext;
         }

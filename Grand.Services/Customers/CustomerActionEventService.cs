@@ -90,6 +90,7 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Utilities
+        
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
             return await _cacheManager.GetAsync(CUSTOMER_ACTION_TYPE, () =>
@@ -805,7 +806,7 @@ namespace Grand.Services.Customers
             if (!customer.IsSystemAccount)
             {
                 var actiontypes = await GetAllCustomerActionType();
-                var actionType = actiontypes.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                var actionType = actiontypes.FirstOrDefault(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString());
                 if (actionType?.Enabled == true)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;

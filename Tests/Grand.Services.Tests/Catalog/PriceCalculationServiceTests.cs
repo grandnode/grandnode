@@ -10,6 +10,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Vendors;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -39,6 +40,8 @@ namespace Grand.Services.Catalog.Tests
         private IVendorService _vendorService;
         private ICustomerService _customerService;
         private ICurrencyService _currencyService;
+        private IMediator _eventPublisher;
+
         [TestInitialize()]
         public void TestInitialize()
         {
@@ -69,7 +72,11 @@ namespace Grand.Services.Catalog.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+
+            var eventPublisher = new Mock<IMediator>();
+            _eventPublisher = eventPublisher.Object;
+
+            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,

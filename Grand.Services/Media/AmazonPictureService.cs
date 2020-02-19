@@ -41,7 +41,7 @@ namespace Grand.Services.Media
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings,
             GrandConfig config)
             : base(pictureRepository,

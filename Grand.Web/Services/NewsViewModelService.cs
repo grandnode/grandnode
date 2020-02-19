@@ -122,12 +122,11 @@ namespace Grand.Web.Services
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
                 model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
-                    var picture = await _pictureService.GetPictureById(newsItem.PictureId);
                     var pictureModel = new PictureModel
                     {
                         Id = newsItem.PictureId,
-                        FullSizeImageUrl = await _pictureService.GetPictureUrl(picture),
-                        ImageUrl = await _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = await _pictureService.GetPictureUrl(newsItem.PictureId),
+                        ImageUrl = await _pictureService.GetPictureUrl(newsItem.PictureId, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.News.ImageLinkTitleFormat"), newsItem.Title),
                         AlternateText = string.Format(_localizationService.GetResource("Media.News.ImageAlternateTextFormat"), newsItem.Title)
                     };

@@ -10,7 +10,7 @@ It can be used for any kind of online store. GrandNode is a perfect choice for p
 
 You can install GrandNode in two different ways.
 
-1. Download the GrandNode package from our GitHub and install it: [Installation Guide](http://docs.grandnode.com/how-to-install-grandnode)
+1. Download the GrandNode package from our GitHub and install it: [Installation Guide](https://grandnode.com/how-to-install-grandnode-on-linux-ubuntu-1604)
 2. Second way is to install GrandNode with Docker: [Docker installation guide](https://grandnode.com/weekly-tips-4-build-and-run-the-grandnode-with-docker-for-linux-containers)
 
 All GrandNode releases, which support Docker are available here: https://hub.docker.com/u/grandnode/
@@ -23,30 +23,27 @@ Please note that if you use grandnode/develop, Docker will pull the newest image
 
 GrandNode Site: [https://grandnode.com](https://grandnode.com)
 
-GrandNode demo store: [https://www.demo.grandnode.com/](https://www.demo.grandnode.com/)
+GrandNode demo store: [https://demo.grandnode.com/](https://demo.grandnode.com/)
 
-Complete feature list: [https://www.grandnode.com/benefits](https://www.grandnode.com/features)
+Complete feature list: [https://grandnode.com/benefits](https://grandnode.com/benefits)
 
-System Requirements: [https://grandnode.com/system-requirements](https://grandnode.com/system-requirements)
+System Requirements: [https://docs.grandnode.com/system-requirements](https://docs.grandnode.com/system-requirements)
 
-Documentation: [http://www.docs.grandnode.com](http://www.docs.grandnode.com)
+Documentation: [https://docs.grandnode.com](https://docs.grandnode.com)
 
-Forums: [https://www.grandnode.com/boards/](https://www.grandnode.com/boards/)
+Forums: [https://grandnode.com/boards/](https://grandnode.com/boards/)
 
 Premium themes: [https://grandnode.com/grandnode-themes](https://grandnode.com/grandnode-themes)
 
 Premium extensions: [https://grandnode.com/extensions](https://grandnode.com/extensions)
 
 ## Development status ##
-Beta version released! Become our contributor and test the incoming 4.60 version of GrandNode. 
-Beta version can be downloaded from [releases section.](https://github.com/grandnode/grandnode/releases/tag/4.60Beta)
+The latest stable version is 4.60
+Active development version: 4.70 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
-The latest stable version is 4.50
-Active development version: 4.60 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+[Roadmap for 4.70](https://github.com/grandnode/grandnode/projects/5)
 
-[Roadmap for 4.60](https://github.com/grandnode/grandnode/projects/4)
-
-[Tickets linked to 4.60](https://github.com/grandnode/grandnode/issues)
+[Tickets linked to 4.70](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
 
@@ -68,7 +65,7 @@ To start with us, you should do this few steps:
 
 And that's all, you are GrandNode official contributor!
 
-[Coding standards and guides](http://docs.grandnode.com/developer-guides)
+[Coding standards and guides](https://docs.grandnode.com/developer-guides)
 
 ## How to report issues ##
 
@@ -82,13 +79,13 @@ And that's all, you are GrandNode official contributor!
 
 [https://demo.grandnode.com/](https://demo.grandnode.com/)
 
-[![ScreenShot](http://grandnode.com/content/images/uploaded/grandnode_homepage.JPG)](https://demo.grandnode.com/)
+[![ScreenShot](http://grandnode.com/content/images/uploaded/showcase/frontend.JPG)](https://demo.grandnode.com/)
 
 ### Backend ###
 
 [https://demo.grandnode.com/admin](https://demo.grandnode.com/admin)
 
-[![ScreenShot](https://grandnode.com/content/images/uploaded/grandnode_backend.JPG)](https://demo.grandnode.com/admin)
+[![ScreenShot](https://grandnode.com/content/images/uploaded/showcase/backend.JPG)](https://demo.grandnode.com/admin)
 
 Demo is restoring every hour to the original state.
 

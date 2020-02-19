@@ -95,7 +95,11 @@ namespace Grand.Services.Orders.Tests
                 DisplayOrder = 3,
             };
 
-
+            var tempEventPublisher = new Mock<IMediator>();
+            {
+                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
+                _eventPublisher = tempEventPublisher.Object;
+            }
 
             var tempCheckoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
             {
@@ -110,15 +114,7 @@ namespace Grand.Services.Orders.Tests
                 _checkoutAttributeRepo = tempCheckoutAttributeRepo.Object;
             }
 
-            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
-
-
-            var tempEventPublisher = new Mock<IMediator>();
-            {
-                //tempEventPublisher.Setup(x => x.PublishAsync(It.IsAny<object>()));
-                _eventPublisher = tempEventPublisher.Object;
-            }
-
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _checkoutAttributeRepo,
                _eventPublisher, null, null);

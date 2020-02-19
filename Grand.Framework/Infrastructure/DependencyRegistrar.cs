@@ -2,9 +2,10 @@ using Autofac;
 using FluentValidation;
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Caching.Message;
+using Grand.Core.Caching.Redis;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Http;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
@@ -51,6 +52,7 @@ using Grand.Services.Topics;
 using Grand.Services.Vendors;
 using Microsoft.AspNetCore.StaticFiles;
 using MongoDB.Driver;
+using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -105,12 +107,13 @@ namespace Grand.Framework.Infrastructure
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
-
-            if (config.RedisCachingEnabled)
+            if (config.RedisPubSubEnabled)
             {
-                builder.Register(r => new DistributedRedisCache(config.RedisCachingConnectionString)).As<ICacheManager>().SingleInstance();
+                var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);
+                builder.Register(c => redis.GetSubscriber()).As<ISubscriber>().SingleInstance();
+                builder.RegisterType<RedisMessageBus>().As<IMessageBus>().SingleInstance();
+                builder.RegisterType<RedisMessageCacheManager>().As<ICacheManager>().SingleInstance();
             }
-
             if (config.RunOnAzureWebApps)
             {
                 builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();

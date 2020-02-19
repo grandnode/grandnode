@@ -92,8 +92,8 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.DeleteAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxCategory);
@@ -137,7 +137,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.InsertAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxCategory);
@@ -154,7 +154,7 @@ namespace Grand.Services.Tax
 
             await _taxCategoryRepository.UpdateAsync(taxCategory);
 
-            await _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(TAXCATEGORIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxCategory);

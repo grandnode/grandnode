@@ -166,7 +166,7 @@ namespace Grand.Services.Media
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        Task<byte[]> ValidatePicture(byte[] pictureBinary, string mimeType);
+        byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
 
         /// <summary>
         /// Gets a value indicating whether the images should be stored in data base.

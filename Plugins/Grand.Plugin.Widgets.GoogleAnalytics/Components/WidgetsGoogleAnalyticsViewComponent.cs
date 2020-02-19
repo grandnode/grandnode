@@ -120,9 +120,9 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                     string analyticsEcommerceDetailScript = GoogleAnalyticsEcommerceSettings.EcommerceDetailScript;
                     //get category
                     string category = "";
-                    if (product.ProductCategories.FirstOrDefault() != null)
+                    if (product.ProductCategories.Any())
                     {
-                        var defaultProductCategory = await categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
+                        var defaultProductCategory = await categoryService.GetCategoryById(product.ProductCategories.OrderBy(x => x.DisplayOrder).FirstOrDefault().CategoryId);
                         if (defaultProductCategory != null)
                             category = defaultProductCategory.Name;
                     }

@@ -143,8 +143,8 @@ namespace Grand.Services.Knowledgebase
                 await UpdateKnowledgebaseCategory(child);
             }
 
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
 
             await _mediator.EntityDeleted(kc);
         }
@@ -157,8 +157,8 @@ namespace Grand.Services.Knowledgebase
         {
             kc.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseCategoryRepository.UpdateAsync(kc);
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             await _mediator.EntityUpdated(kc);
         }
 
@@ -215,8 +215,8 @@ namespace Grand.Services.Knowledgebase
             kc.CreatedOnUtc = DateTime.UtcNow;
             kc.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseCategoryRepository.InsertAsync(kc);
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             await _mediator.EntityInserted(kc);
         }
 
@@ -258,8 +258,8 @@ namespace Grand.Services.Knowledgebase
             ka.CreatedOnUtc = DateTime.UtcNow;
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.InsertAsync(ka);
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             await _mediator.EntityInserted(ka);
         }
 
@@ -271,8 +271,8 @@ namespace Grand.Services.Knowledgebase
         {
             ka.UpdatedOnUtc = DateTime.UtcNow;
             await _knowledgebaseArticleRepository.UpdateAsync(ka);
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             await _mediator.EntityUpdated(ka);
         }
 
@@ -283,8 +283,8 @@ namespace Grand.Services.Knowledgebase
         public virtual async Task DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             await _knowledgebaseArticleRepository.DeleteAsync(ka);
-            await _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
-            await _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(ARTICLES_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(CATEGORIES_PATTERN_KEY);
             await _mediator.EntityDeleted(ka);
         }
 
