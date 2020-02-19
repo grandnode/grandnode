@@ -36,7 +36,7 @@ namespace Grand.Services.Tax.Tests
             //plugin initialization
             new Services.Tests.ServiceTest().PluginInitializator();
             var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(x => x.GetRequiredService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
+            serviceProvider.Setup(x => x.GetService(typeof(FixedRateTestTaxProvider))).Returns(new FixedRateTestTaxProvider());
             _serviceProvider = serviceProvider.Object;
             
             _pluginFinder = new PluginFinder(_serviceProvider);
