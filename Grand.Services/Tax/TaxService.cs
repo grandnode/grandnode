@@ -330,7 +330,7 @@ namespace Grand.Services.Tax
         {
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
             if (descriptor != null)
-                return descriptor.Instance<ITaxProvider>(_pluginFinder.ServiceProvider);
+                return _serviceProvider.GetRequiredService(descriptor.PluginType) as ITaxProvider;
 
             return null;
         }
