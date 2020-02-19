@@ -657,11 +657,14 @@ namespace Grand.Web.Services
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
-                if (deliveryDate != null)
+                if (!string.IsNullOrEmpty(product.DeliveryDateId))
                 {
-                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
-                    model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                    if (deliveryDate != null)
+                    {
+                        model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
+                        model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    }
                 }
             }
             //additional shipping charge

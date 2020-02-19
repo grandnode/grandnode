@@ -56,6 +56,21 @@ namespace Grand.Services.Shipping
         private const string PICKUPPOINTS_PATTERN_KEY = "Grand.pickuppoint.";
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : delivery date ID
+        /// </remarks>
+        private const string DELIVERYDATE_BY_ID_KEY = "Grand.deliverydate.id-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        private const string DELIVERYDATE_PATTERN_KEY = "Grand.deliverydate.";
+
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
@@ -303,7 +318,10 @@ namespace Grand.Services.Shipping
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
+
+            //clear cache
             await _cacheManager.RemoveByPrefix(PRODUCTS_PATTERN_KEY);
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(deliveryDate);
@@ -316,7 +334,8 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery date</returns>
         public virtual Task<DeliveryDate> GetDeliveryDateById(string deliveryDateId)
         {
-            return _deliveryDateRepository.GetByIdAsync(deliveryDateId);
+            string key = string.Format(DELIVERYDATE_BY_ID_KEY, deliveryDateId);
+            return _cacheManager.GetAsync(key, () => _deliveryDateRepository.GetByIdAsync(deliveryDateId));
         }
 
         /// <summary>
@@ -356,6 +375,9 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("deliveryDate");
 
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
+
+            //clear cache
+            await _cacheManager.RemoveByPrefix(DELIVERYDATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(deliveryDate);
