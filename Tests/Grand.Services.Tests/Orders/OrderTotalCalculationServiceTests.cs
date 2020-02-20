@@ -112,7 +112,7 @@ namespace Grand.Services.Orders.Tests
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _currencyService,
+                _vendorService, _currencyService,
                 _shoppingCartSettings, _catalogSettings);
 
            

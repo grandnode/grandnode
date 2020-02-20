@@ -35,7 +35,6 @@ namespace Grand.Services.Catalog.Tests
         private IProductService _productService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private ICacheManager _cacheManager;
         private IPriceCalculationService _priceCalcService;
         private IVendorService _vendorService;
         private ICustomerService _customerService;
@@ -76,7 +75,6 @@ namespace Grand.Services.Catalog.Tests
             var eventPublisher = new Mock<IMediator>();
             _eventPublisher = eventPublisher.Object;
 
-            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,
@@ -86,7 +84,6 @@ namespace Grand.Services.Catalog.Tests
                 _productAttributeParser,
                 _productService,
                 _customerService,
-                _cacheManager,
                 _vendorService,
                 _currencyService,
                 _shoppingCartSettings,

@@ -4982,7 +4982,6 @@ namespace Grand.Services.Installation
                 IgnoreStoreLimitations = true,
                 IgnoreFilterableSpecAttributeOption = true,
                 IgnoreFilterableAvailableStartEndDateTime = true,
-                CacheProductPrices = false,
                 CustomerProductPrice = false,
                 ProductsByTagAllowCustomersToSelectPageSize = true,
                 ProductsByTagPageSizeOptions = "6, 3, 9, 18",
