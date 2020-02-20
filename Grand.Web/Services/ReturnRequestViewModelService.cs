@@ -94,7 +94,7 @@ namespace Grand.Web.Services
             model.OrderId = order.Id;
             model.OrderNumber = (await _orderService.GetOrderById(order.Id)).OrderNumber;
             //return reasons
-            model.AvailableReturnReasons = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnReasons = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
@@ -107,7 +107,7 @@ namespace Grand.Web.Services
                 });
 
             //return actions
-            model.AvailableReturnActions = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            model.AvailableReturnActions = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();

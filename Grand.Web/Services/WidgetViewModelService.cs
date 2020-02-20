@@ -29,7 +29,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidget(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
+            var cacheKey = string.Format(ModelCacheEventConst.WIDGET_MODEL_KEY,
                 _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
             //add widget zone to view component arguments

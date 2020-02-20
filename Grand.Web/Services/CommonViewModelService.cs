@@ -210,7 +210,7 @@ namespace Grand.Web.Services
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
             };
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.GetMachineName());
+            var cacheKey = string.Format(ModelCacheEventConst.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.GetMachineName());
             model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
@@ -231,7 +231,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelector()
         {
-            var availableLanguages = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
+            var availableLanguages = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
             {
                 var result = (await _languageService
                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
@@ -255,7 +255,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
+            var availableCurrencies = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
                 async () =>
             {
                 var result = (await _currencyService
@@ -318,7 +318,7 @@ namespace Grand.Web.Services
             if (!_commonSettings.AllowToSelectStore)
                 return null;
 
-            var availableStores = await _cacheManager.GetAsync(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, async () =>
+            var availableStores = await _cacheManager.GetAsync(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY, async () =>
             {
                 var storeService = _serviceProvider.GetRequiredService<IStoreService>();
                 var result = (await storeService.GetAllStores())
@@ -390,7 +390,7 @@ namespace Grand.Web.Services
         public virtual async Task<FooterModel> PrepareFooter()
         {
             //footer topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
+            string topicCacheKey = string.Format(ModelCacheEventConst.TOPIC_FOOTER_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -814,7 +814,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<SitemapModel> PrepareSitemap()
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_PAGE_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -874,7 +874,7 @@ namespace Grand.Web.Services
         public virtual async Task<string> SitemapXml(int? id, IUrlHelper url)
         {
             var sitemapGenerator = _serviceProvider.GetRequiredService<ISitemapGenerator>();
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
+            string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);

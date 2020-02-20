@@ -34,7 +34,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<StateProvinceModel>> PrepareModel(string countryId, bool addSelectStateItem)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
+            string cacheKey = string.Format(ModelCacheEventConst.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var country = await _countryService.GetCountryById(countryId);

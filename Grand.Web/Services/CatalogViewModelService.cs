@@ -288,7 +288,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<string>> GetChildCategoryIds(string parentCategoryId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -308,7 +308,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels()
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_ALL_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -343,7 +343,7 @@ namespace Grand.Web.Services
                 //product number for each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                    string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id,
                         category.Id);
@@ -396,7 +396,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<string> PrepareCategoryTemplateViewPath(string templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(ModelCacheEventConst.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
             var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _categoryTemplateService.GetCategoryTemplateById(templateId);
@@ -451,7 +451,7 @@ namespace Grand.Web.Services
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
+                string breadcrumbCacheKey = string.Format(ModelCacheEventConst.CATEGORY_BREADCRUMB_KEY,
                     category.Id,
                     string.Join(",", customer.GetCustomerRoleIds()),
                     storeId,
@@ -469,7 +469,7 @@ namespace Grand.Web.Services
             }
 
             //subcategories
-            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+            string subCategoriesCacheKey = string.Format(ModelCacheEventConst.CATEGORY_SUBCATEGORIES_KEY,
                 category.Id,
                 string.Join(",", customer.GetCustomerRoleIds()),
                 storeId,
@@ -507,7 +507,7 @@ namespace Grand.Web.Services
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
+                string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
                     string.Join(",", customer.GetCustomerRoleIds()), storeId);
                 var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
@@ -575,7 +575,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<CategoryModel>> PrepareHomepageCategory()
         {
-            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
+            string categoriesCacheKey = string.Format(ModelCacheEventConst.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
@@ -605,7 +605,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<CategoryModel>> PrepareCategoryFeaturedProducts()
         {
-            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY,
+            string categoriesCacheKey = string.Format(ModelCacheEventConst.CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.GetMachineName());
 
@@ -633,7 +633,7 @@ namespace Grand.Web.Services
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, item.Id,
+                string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, item.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
@@ -679,7 +679,7 @@ namespace Grand.Web.Services
             //categories
             var cachedCategoriesModel = PrepareCategorySimpleModels();
             //top menu topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY,
+            string topicCacheKey = string.Format(ModelCacheEventConst.TOPIC_TOP_MENU_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -694,7 +694,7 @@ namespace Grand.Web.Services
                 .ToList()
             );
 
-            string manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
+            string manufacturerCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_NAVIGATION_MENU,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedManufacturerModel = await _cacheManager.GetAsync(manufacturerCacheKey, async () =>
@@ -741,7 +741,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<string> PrepareManufacturerTemplateViewPath(string templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
             var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _manufacturerTemplateService.GetManufacturerTemplateById(templateId);
@@ -777,7 +777,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<List<ManufacturerModel>> PrepareHomepageManufacturers()
         {
-            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HOMEPAGE_KEY,
+            string manufacturersCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_HOMEPAGE_KEY,
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
                 _webHelper.GetMachineName());
@@ -807,7 +807,7 @@ namespace Grand.Web.Services
         {
             var languageId = _workContext.WorkingLanguage.Id;
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_NAVIGATION_MODEL_KEY,
                 currentManufacturerId, languageId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
@@ -835,7 +835,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<List<ManufacturerModel>> PrepareManufacturerFeaturedProducts()
         {
-            string manufCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY,
+            string manufCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, _webHelper.GetMachineName());
 
@@ -864,7 +864,7 @@ namespace Grand.Web.Services
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
 
-                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
+                string cacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
                     item.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
@@ -941,7 +941,7 @@ namespace Grand.Web.Services
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
+                string cacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
                     manufacturer.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
@@ -1088,7 +1088,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<VendorNavigationModel> PrepareVendorNavigation()
         {
-            string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
+            string cacheKey = ModelCacheEventConst.VENDOR_NAVIGATION_MODEL_KEY;
             var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var vendors = await _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
@@ -1150,7 +1150,7 @@ namespace Grand.Web.Services
         public virtual async Task<PopularProductTagsModel> PreparePopularProductTags()
         {
             var languageId = _workContext.WorkingLanguage.Id;
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, languageId, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.PRODUCTTAG_POPULAR_MODEL_KEY, languageId, _storeContext.CurrentStore.Id);
             var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new PopularProductTagsModel();
@@ -1366,7 +1366,7 @@ namespace Grand.Web.Services
 
         public virtual async Task<SearchBoxModel> PrepareSearchBox()
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_SEARCHBOX,
+            string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_ALL_SEARCHBOX,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
 
@@ -1424,7 +1424,7 @@ namespace Grand.Web.Services
                 _catalogSettings.SearchPageProductsPerPage);
 
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConst.SEARCH_CATEGORIES_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
