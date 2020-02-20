@@ -26,7 +26,6 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 using Grand.Framework.Security.Authorization;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
@@ -43,7 +42,6 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.PushNotifications;
 using Grand.Web.Areas.Admin.Models.Settings;
@@ -113,28 +111,28 @@ namespace Grand.Web.Areas.Admin.Controllers
             IEnumerable<ICacheManager> cacheManager,
             IServiceProvider serviceProvider)
         {
-            this._settingService = settingService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressService = addressService;
-            this._taxCategoryService = taxCategoryService;
-            this._currencyService = currencyService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._orderService = orderService;
-            this._encryptionService = encryptionService;
-            this._themeProvider = themeProvider;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._productRepository = productRepository;
-            this._returnRequestService = returnRequestService;
-            this._languageService = languageService;
-            this._cacheManager = cacheManager;
-            this._serviceProvider = serviceProvider;
+            _settingService = settingService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressService = addressService;
+            _taxCategoryService = taxCategoryService;
+            _currencyService = currencyService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _orderService = orderService;
+            _encryptionService = encryptionService;
+            _themeProvider = themeProvider;
+            _customerService = customerService;
+            _customerActivityService = customerActivityService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _productRepository = productRepository;
+            _returnRequestService = returnRequestService;
+            _languageService = languageService;
+            _cacheManager = cacheManager;
+            _serviceProvider = serviceProvider;
         }
 
         #endregion
@@ -177,7 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Blog()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             var model = blogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -200,7 +198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Blog(BlogSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             blogSettings = model.ToEntity(blogSettings);
 
@@ -265,7 +263,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Vendor()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             var model = vendorSettings.ToModel();
             model.AddressSettings.CityEnabled = vendorSettings.CityEnabled;
@@ -312,7 +310,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Vendor(VendorSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             vendorSettings = model.ToEntity(vendorSettings);
             vendorSettings.CityEnabled = model.AddressSettings.CityEnabled;
@@ -413,7 +411,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Forum()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
             var model = forumSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -451,7 +449,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Forum(ForumSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
             forumSettings = model.ToEntity(forumSettings);
 
@@ -587,7 +585,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> News()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
             var model = newsSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -607,7 +605,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> News(NewsSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
             newsSettings = model.ToEntity(newsSettings);
 
@@ -661,7 +659,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Shipping()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             var model = shippingSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -716,7 +714,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Shipping(ShippingSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             shippingSettings = model.ToEntity(shippingSettings);
 
@@ -813,7 +811,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Tax()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
             var model = taxSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -893,7 +891,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Tax(TaxSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
             taxSettings = model.ToEntity(taxSettings);
 
@@ -1046,7 +1044,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Catalog()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = catalogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1111,6 +1109,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.IgnoreFilterableSpecAttributeOption_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFilterableSpecAttributeOption, storeScope);
                 model.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFilterableAvailableStartEndDateTime, storeScope);
                 model.CacheProductPrices_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CacheProductPrices, storeScope);
+                model.CustomerProductPrice_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CustomerProductPrice, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
                 model.DisplayTaxShippingInfoFooter_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
                 model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeScope);
@@ -1126,7 +1125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Catalog(CatalogSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             catalogSettings = model.ToEntity(catalogSettings);
 
@@ -1430,6 +1429,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(catalogSettings, x => x.CacheProductPrices, storeScope);
 
+            if (model.CustomerProductPrice_OverrideForStore || storeScope == "")
+                await _settingService.SaveSetting(catalogSettings, x => x.CustomerProductPrice, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(catalogSettings, x => x.CustomerProductPrice, storeScope);
+
             if (model.ManufacturersBlockItemsToDisplay_OverrideForStore || storeScope == "")
                 await _settingService.SaveSetting(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1489,7 +1493,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SortOptionsList(DataSourceRequest command)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = new List<SortOptionModel>();
             foreach (int option in Enum.GetValues(typeof(ProductSortingEnum)))
@@ -1511,7 +1515,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SortOptionUpdate(SortOptionModel model)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
 
             catalogSettings.ProductSortingEnumDisplayOrder[model.Id] = model.DisplayOrder;
@@ -1533,7 +1537,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RewardPoints()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
             var model = rewardPointsSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1561,7 +1565,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
-                var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
                 var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
                 rewardPointsSettings = model.ToEntity(rewardPointsSettings);
 
@@ -1636,7 +1640,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Order()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
             var model = orderSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1684,7 +1688,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
-                var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
                 var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
                 orderSettings = model.ToEntity(orderSettings);
 
@@ -1834,7 +1838,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ShoppingCart()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
             var model = shoppingCartSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1865,7 +1869,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ShoppingCart(ShoppingCartSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
             shoppingCartSettings = model.ToEntity(shoppingCartSettings);
 
@@ -2169,7 +2173,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Media()
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
             var model = mediaSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -2198,7 +2202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Media(MediaSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
             mediaSettings = model.ToEntity(mediaSettings);
 
@@ -2330,7 +2334,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> CustomerUser()
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
@@ -2360,7 +2364,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CustomerUser(CustomerUserSettingsModel model)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
@@ -2392,7 +2396,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> GeneralCommon()
         {
             var model = new GeneralCommonSettingsModel();
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             model.ActiveStoreScopeConfiguration = storeScope;
             //store information
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
@@ -2592,7 +2596,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> GeneralCommon(GeneralCommonSettingsModel model)
         {
             //load settings for a chosen store scope
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
 
             //store information settings
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
@@ -2850,7 +2854,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
                 //clear cached values of routes
-                this.RouteData.Routers.ClearSeoFriendlyUrlsCachedValueForRoutes();
+                RouteData.Routers.ClearSeoFriendlyUrlsCachedValueForRoutes();
             }
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
@@ -2972,7 +2976,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("changeencryptionkey")]
         public async Task<IActionResult> ChangeEncryptionKey(GeneralCommonSettingsModel model)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
 
             try
@@ -3051,7 +3055,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ToggleFullText(GeneralCommonSettingsModel model)
         {
             //https://docs.mongodb.com/manual/reference/text-search-languages/#text-search-languages
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             try
             {
@@ -3129,7 +3133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> PushNotifications()
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
 
             var model = new ConfigurationModel {
@@ -3151,7 +3155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> PushNotifications(DataSourceRequest command, ConfigurationModel model)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
             settings.AllowGuestNotifications = model.AllowGuestNotifications;
             settings.AuthDomain = model.AuthDomain;
@@ -3215,7 +3219,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> AdminSearch()
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
 
             var model = new AdminSearchSettingsModel {
@@ -3248,7 +3252,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AdminSearch(DataSourceRequest command, AdminSearchSettingsModel model)
         {
-            var storeScope = await this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = await GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
             settings.SearchInBlogs = model.SearchInBlogs;
             settings.SearchInCategories = model.SearchInCategories;

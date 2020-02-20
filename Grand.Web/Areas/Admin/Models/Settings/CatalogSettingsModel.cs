@@ -251,6 +251,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool CacheProductPrices { get; set; }
         public bool CacheProductPrices_OverrideForStore { get; set; }
 
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.CustomerProductPrice")]
+        public bool CustomerProductPrice { get; set; }
+        public bool CustomerProductPrice_OverrideForStore { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
         public int ManufacturersBlockItemsToDisplay { get; set; }
         public bool ManufacturersBlockItemsToDisplay_OverrideForStore { get; set; }

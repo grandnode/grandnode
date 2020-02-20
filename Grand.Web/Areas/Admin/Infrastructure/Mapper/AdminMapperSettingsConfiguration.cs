@@ -205,6 +205,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.IgnoreAcl_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreStoreLimitations_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CacheProductPrices_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerProductPrice_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ManufacturersBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTaxShippingInfoFooter_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, mo => mo.Ignore())

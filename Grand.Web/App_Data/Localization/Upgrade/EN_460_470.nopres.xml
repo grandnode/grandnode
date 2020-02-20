@@ -1,3 +1,9 @@
 <Language>
+  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice">
+    <Value>Customer Product Price</Value>
+  </Localeresource>
+  <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
+    <Value>Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.</Value>
+  </Localeresource>
 </Language>
 

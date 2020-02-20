@@ -4983,6 +4983,7 @@ namespace Grand.Services.Installation
                 IgnoreFilterableSpecAttributeOption = true,
                 IgnoreFilterableAvailableStartEndDateTime = true,
                 CacheProductPrices = false,
+                CustomerProductPrice = false,
                 ProductsByTagAllowCustomersToSelectPageSize = true,
                 ProductsByTagPageSizeOptions = "6, 3, 9, 18",
                 MaximumBackInStockSubscriptions = 200,
