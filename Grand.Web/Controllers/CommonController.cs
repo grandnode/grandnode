@@ -311,7 +311,7 @@ namespace Grand.Web.Controllers
         }
 
         //sitemap page
-        public virtual async Task<IActionResult> Sitemap(CommonSettings commonSettings)
+        public virtual async Task<IActionResult> Sitemap([FromServices] CommonSettings commonSettings)
         {
             if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -322,7 +322,7 @@ namespace Grand.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> SitemapXml(int? id, CommonSettings commonSettings)
+        public virtual async Task<IActionResult> SitemapXml(int? id, [FromServices] CommonSettings commonSettings)
         {
             if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");

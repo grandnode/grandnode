@@ -521,7 +521,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -647,7 +647,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -880,7 +880,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
@@ -957,7 +957,7 @@ namespace Grand.Web.Services
                        visibleIndividuallyOnly: true,
                        featuredProducts: true)).products;
                     hasFeaturedProductsCache = featuredProducts.Any();
-                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, 60);
+                    await _cacheManager.SetAsync(cacheKey, hasFeaturedProductsCache, CommonHelper.CacheTimeMinutes);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {

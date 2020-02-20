@@ -1268,15 +1268,19 @@ namespace Grand.Services.Customers
             var key = string.Format(CUSTOMER_PRODUCT_PRICE_KEY_ID, customerId, productId);
             var productprice = await _cacheManager.GetAsync(key, async () =>
             {
-                return await _customerProductPriceRepository.Table
+                var pp = await _customerProductPriceRepository.Table
                 .Where(x => x.CustomerId == customerId && x.ProductId == productId)
                 .FirstOrDefaultAsync();
+                if (pp == null)
+                    return (null, false);
+                else
+                    return (pp, true);
             });
 
-            if (productprice == null)
+            if (!productprice.Item2)
                 return null;
             else
-                return productprice.Price;
+                return productprice.pp.Price;
         }
 
         /// <summary>

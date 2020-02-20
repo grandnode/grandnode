@@ -657,11 +657,14 @@ namespace Grand.Web.Services
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
-                if (deliveryDate != null)
+                if (!string.IsNullOrEmpty(product.DeliveryDateId))
                 {
-                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
-                    model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    var deliveryDate = await _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                    if (deliveryDate != null)
+                    {
+                        model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name, _workContext.WorkingLanguage.Id);
+                        model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                    }
                 }
             }
             //additional shipping charge
@@ -873,14 +876,17 @@ namespace Grand.Web.Services
 
         public virtual async Task<VendorBriefInfoModel> PrepareVendorBriefInfoModel(Product product)
         {
-            var vendor = await _vendorService.GetVendorById(product.VendorId);
-            if (vendor != null && !vendor.Deleted && vendor.Active)
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
-                return new VendorBriefInfoModel {
-                    Id = vendor.Id,
-                    Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                    SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
-                };
+                var vendor = await _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                {
+                    return new VendorBriefInfoModel {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                        SeName = vendor.GetSeName(_workContext.WorkingLanguage.Id),
+                    };
+                }
             }
             return null;
         }
