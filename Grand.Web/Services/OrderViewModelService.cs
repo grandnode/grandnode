@@ -17,6 +17,7 @@ using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
+using Grand.Web.Models.Media;
 using Grand.Web.Models.Order;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -111,6 +112,18 @@ namespace Grand.Web.Services
             _rewardPointsSettings = rewardPointsSettings;
         }
 
+        protected virtual async Task<PictureModel> PrepareOrderItemPicture(Product product, string attributesXml, string productName)
+        {
+            var pictureService = _serviceProvider.GetRequiredService<IPictureService>();
+            var sciPicture = await product.GetProductPicture(attributesXml, _productService, pictureService, _productAttributeParser);
+            return new PictureModel {
+                Id = sciPicture?.Id,
+                ImageUrl = await pictureService.GetPictureUrl(sciPicture, 80),
+                Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
+                AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
+            };
+        }
+
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderList()
         {
             var model = new CustomerOrderListModel();
@@ -118,8 +131,7 @@ namespace Grand.Web.Services
                 customerId: _workContext.CurrentCustomer.Id);
             foreach (var order in orders)
             {
-                var orderModel = new CustomerOrderListModel.OrderDetailsModel
-                {
+                var orderModel = new CustomerOrderListModel.OrderDetailsModel {
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
@@ -139,8 +151,7 @@ namespace Grand.Web.Services
                 _workContext.CurrentCustomer.Id);
             foreach (var recurringPayment in recurringPayments)
             {
-                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel
-                {
+                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel {
                     Id = recurringPayment.Id,
                     StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
                     CycleInfo = string.Format("{0} {1}", recurringPayment.CycleLength, recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext)),
@@ -191,8 +202,7 @@ namespace Grand.Web.Services
                         if (order.PickupPoint.Address != null)
                         {
                             var country = await _countryService.GetCountryById(order.PickupPoint.Address.CountryId);
-                            model.PickupAddress = new AddressModel
-                            {
+                            model.PickupAddress = new AddressModel {
                                 Address1 = order.PickupPoint.Address.Address1,
                                 City = order.PickupPoint.Address.City,
                                 CountryName = country != null ? country.Name : string.Empty,
@@ -207,8 +217,7 @@ namespace Grand.Web.Services
                 var shipments = (await _shipmentService.GetShipmentsByOrder(order.Id)).Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
-                    var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
-                    {
+                    var shipmentModel = new OrderDetailsModel.ShipmentBriefModel {
                         Id = shipment.Id,
                         ShipmentNumber = shipment.ShipmentNumber,
                         TrackingNumber = shipment.TrackingNumber,
@@ -315,8 +324,7 @@ namespace Grand.Web.Services
 
                     foreach (var tr in order.TaxRatesDictionary)
                     {
-                        model.TaxRates.Add(new OrderDetailsModel.TaxRate
-                        {
+                        model.TaxRates.Add(new OrderDetailsModel.TaxRate {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
                             //TODO pass languageId to _priceFormatter.FormatPrice
                             Value = await _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
@@ -339,8 +347,7 @@ namespace Grand.Web.Services
             foreach (var gcuh in await _giftCardService.GetAllGiftCardUsageHistory(order.Id))
             {
                 var giftCard = await _giftCardService.GetGiftCardById(gcuh.GiftCardId);
-                model.GiftCards.Add(new OrderDetailsModel.GiftCard
-                {
+                model.GiftCards.Add(new OrderDetailsModel.GiftCard {
                     CouponCode = giftCard.GiftCardCouponCode,
                     Amount = await _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
                 });
@@ -366,8 +373,7 @@ namespace Grand.Web.Services
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList())
             {
-                model.OrderNotes.Add(new OrderDetailsModel.OrderNote
-                {
+                model.OrderNotes.Add(new OrderDetailsModel.OrderNote {
                     Id = orderNote.Id,
                     OrderId = orderNote.OrderId,
                     HasDownload = !String.IsNullOrEmpty(orderNote.DownloadId),
@@ -389,8 +395,7 @@ namespace Grand.Web.Services
             foreach (var orderItem in order.OrderItems)
             {
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                var orderItemModel = new OrderDetailsModel.OrderItemModel
-                {
+                var orderItemModel = new OrderDetailsModel.OrderItemModel {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
@@ -400,6 +405,8 @@ namespace Grand.Web.Services
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
                 };
+                //prepare picture
+                orderItemModel.Picture = await PrepareOrderItemPicture(product, orderItem.AttributesXml, orderItemModel.ProductName);
 
                 model.Items.Add(orderItemModel);
 
@@ -514,8 +521,7 @@ namespace Grand.Web.Services
                 if (orderItem == null)
                     continue;
                 var product = await _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
-                {
+                var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel {
                     Id = shipmentItem.Id,
                     Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     ProductId = orderItem.ProductId,
@@ -541,8 +547,7 @@ namespace Grand.Web.Services
             var model = new CustomerRewardPointsModel();
             foreach (var rph in await _rewardPointsService.GetRewardPointsHistory(customer.Id))
             {
-                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
-                {
+                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel {
                     Points = rph.Points,
                     PointsBalance = rph.PointsBalance,
                     Message = rph.Message,
@@ -566,8 +571,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task InsertOrderNote(AddOrderNoteModel model)
         {
-            var orderNote = new OrderNote
-            {
+            var orderNote = new OrderNote {
                 CreatedOnUtc = DateTime.UtcNow,
                 DisplayToCustomer = true,
                 Note = model.Note,

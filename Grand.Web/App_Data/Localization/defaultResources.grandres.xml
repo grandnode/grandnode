@@ -18602,6 +18602,9 @@
   <LocaleResource Name="Messages.Order.Product(s).Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Product(s).Picture">
+    <Value>Image</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).License">
     <Value>Download license</Value>
   </LocaleResource>
