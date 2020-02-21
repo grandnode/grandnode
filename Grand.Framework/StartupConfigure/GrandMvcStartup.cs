@@ -49,9 +49,7 @@ namespace Grand.Framework.StartupConfigure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //add HealthChecks
-            application.UseGrandHealthChecks();
-
+            
             //add MiniProfiler
             application.UseProfiler();
 

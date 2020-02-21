@@ -83,7 +83,7 @@ namespace Grand.Web.Services
 
         public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, _webHelper.GetMachineName());
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, _webHelper.GetMachineName());
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();
@@ -243,7 +243,7 @@ namespace Grand.Web.Services
 
         public async Task<BlogPostTagListModel> PrepareBlogPostTagListModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new BlogPostTagListModel();
@@ -268,7 +268,7 @@ namespace Grand.Web.Services
 
         public async Task<List<BlogPostYearModel>> PrepareBlogPostYearModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
@@ -324,7 +324,7 @@ namespace Grand.Web.Services
 
         public async Task<List<BlogPostCategoryModel>> PrepareBlogPostCategoryModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostCategoryModel>();

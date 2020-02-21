@@ -1,17 +1,14 @@
 using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
-using Grand.Services.Catalog.Cache;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Vendors;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,7 +29,6 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
-        private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -50,7 +46,6 @@ namespace Grand.Services.Catalog
             IProductAttributeParser productAttributeParser,
             IProductService productService,
             ICustomerService customerService,
-            ICacheManager cacheManager,
             IVendorService vendorService,
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
@@ -64,7 +59,6 @@ namespace Grand.Services.Catalog
             _productAttributeParser = productAttributeParser;
             _productService = productService;
             _customerService = customerService;
-            _cacheManager = cacheManager;
             _vendorService = vendorService;
             _currencyService = currencyService;
             _shoppingCartSettings = shoppingCartSettings;
@@ -387,19 +381,6 @@ namespace Grand.Services.Catalog
             var discountAmount = decimal.Zero;
             var appliedDiscounts = new List<AppliedDiscount>();
 
-            var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
-                product.Id,
-                additionalCharge.ToString(CultureInfo.InvariantCulture),
-                includeDiscounts,
-                quantity,
-                string.Join(",", customer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
-            //we do not cache price for reservation products
-            //otherwise, it can cause memory leaks (to store all possible date period combinations)
-            if (product.ProductType == ProductType.Reservation)
-                cacheTime = 0;
-
             async Task<ProductPriceForCaching> PrepareModel()
             {
                 var result = new ProductPriceForCaching();
@@ -472,18 +453,18 @@ namespace Grand.Services.Catalog
                 return result;
             }
 
-            var cachedPrice = cacheTime > 0 ? await _cacheManager.GetAsync(cacheKey, cacheTime, async () => { return await PrepareModel(); }) : await PrepareModel();
+            var modelprice = await PrepareModel();
 
             if (includeDiscounts)
             {
-                appliedDiscounts = cachedPrice.AppliedDiscounts.ToList();
+                appliedDiscounts = modelprice.AppliedDiscounts.ToList();
                 if (appliedDiscounts.Any())
                 {
-                    discountAmount = cachedPrice.AppliedDiscountAmount;
+                    discountAmount = modelprice.AppliedDiscountAmount;
                 }
             }
 
-            return (cachedPrice.Price, discountAmount, appliedDiscounts, cachedPrice.PreferredTierPrice);
+            return (modelprice.Price, discountAmount, appliedDiscounts, modelprice.PreferredTierPrice);
         }
 
 

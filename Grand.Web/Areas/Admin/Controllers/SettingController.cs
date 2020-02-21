@@ -1108,7 +1108,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.IgnoreStoreLimitations_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreStoreLimitations, storeScope);
                 model.IgnoreFilterableSpecAttributeOption_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFilterableSpecAttributeOption, storeScope);
                 model.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFilterableAvailableStartEndDateTime, storeScope);
-                model.CacheProductPrices_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CacheProductPrices, storeScope);
                 model.CustomerProductPrice_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CustomerProductPrice, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
                 model.DisplayTaxShippingInfoFooter_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
@@ -1422,12 +1421,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(catalogSettings, x => x.IgnoreFilterableSpecAttributeOption, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(catalogSettings, x => x.IgnoreFilterableSpecAttributeOption, storeScope);
-
-
-            if (model.CacheProductPrices_OverrideForStore || storeScope == "")
-                await _settingService.SaveSetting(catalogSettings, x => x.CacheProductPrices, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                await _settingService.DeleteSetting(catalogSettings, x => x.CacheProductPrices, storeScope);
 
             if (model.CustomerProductPrice_OverrideForStore || storeScope == "")
                 await _settingService.SaveSetting(catalogSettings, x => x.CustomerProductPrice, storeScope, false);

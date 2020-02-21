@@ -163,7 +163,7 @@ namespace Grand.Web.Services
         public virtual async Task<PictureModel> PrepareCartItemPicture(Product product, string attributesXml,
             int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+            var pictureCacheKey = string.Format(ModelCacheEventConst.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             var model = await _cacheManager.GetAsync(pictureCacheKey, async () =>
                 {
                     var sciPicture = await product.GetProductPicture(attributesXml, _productService, _pictureService, _productAttributeParser);
@@ -820,7 +820,7 @@ namespace Grand.Web.Services
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
-                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
+                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConst.CHECKOUTATTRIBUTES_EXIST_KEY,
                         storeId, requiresShipping);
                     var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey,
                         async () =>

@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
+using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 
@@ -83,11 +84,16 @@ namespace Grand.Web.Models.Order
 
         public partial class OrderItemModel : BaseGrandEntityModel
         {
+            public OrderItemModel()
+            {
+                Picture = new PictureModel();
+            }
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
             public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
+            public PictureModel Picture { get; set; }
             public string UnitPrice { get; set; }
             public decimal UnitPriceValue { get; set; }
             public string UnitPriceWithoutDiscount { get; set; }

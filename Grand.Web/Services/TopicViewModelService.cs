@@ -68,7 +68,7 @@ namespace Grand.Web.Services
         public virtual async Task<TopicModel> TopicDetails(string topicId)
         {
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
+            var cacheKey = string.Format(ModelCacheEventConst.TOPIC_MODEL_BY_ID_KEY,
                 topicId,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -94,7 +94,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<TopicModel> TopicDetailsPopup(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
+            var cacheKey = string.Format(ModelCacheEventConst.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
                 systemName,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
@@ -115,7 +115,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<TopicModel> TopicBlock(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
+            var cacheKey = string.Format(ModelCacheEventConst.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
                 systemName,
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -138,7 +138,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<string> PrepareTopicTemplateViewPath(string templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(ModelCacheEventConst.TOPIC_TEMPLATE_MODEL_KEY, templateId);
             var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _topicTemplateService.GetTopicTemplateById(templateId);

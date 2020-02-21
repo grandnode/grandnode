@@ -119,7 +119,7 @@ namespace Grand.Web.Services
             if (!string.IsNullOrEmpty(newsItem.PictureId))
             {
                 int pictureSize = prepareComments ? _mediaSettings.NewsThumbPictureSize : _mediaSettings.NewsListThumbPictureSize;
-                var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
+                var categoryPictureCacheKey = string.Format(ModelCacheEventConst.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
                 model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var pictureModel = new PictureModel
@@ -137,7 +137,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<HomePageNewsItemsModel> PrepareHomePageNewsItems()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConst.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var newsItems = await _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);

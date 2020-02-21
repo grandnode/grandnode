@@ -6111,12 +6111,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct.Hint">
     <Value>Check to allow customers to use the 'Ask question on the product page' option in your store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
-    <Value>Cache product prices</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint">
-    <Value>Check to cache product prices. It can significantly improve performance. But you not should enable it if you use some complex discounts, discount requirement rules, or coupon codes.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled">
     <Value>Category breadcrumb enabled</Value>
   </LocaleResource>
@@ -18610,6 +18604,9 @@
   </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).Download">
     <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Product(s).Picture">
+    <Value>Image</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).License">
     <Value>Download license</Value>

@@ -499,7 +499,7 @@ namespace Grand.Web.Services
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
+            string cacheKey = string.Format(ModelCacheEventConst.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var spa = new List<ProductSpecificationModel>();
@@ -545,7 +545,7 @@ namespace Grand.Web.Services
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_REVIEWS_MODEL_KEY, product.Id, _storeContext.CurrentStore.Id);
+                string cacheKey = string.Format(ModelCacheEventConst.PRODUCT_REVIEWS_MODEL_KEY, product.Id, _storeContext.CurrentStore.Id);
 
                 productReview = await _cacheManager.GetAsync(cacheKey, async () =>
                 {
@@ -575,7 +575,7 @@ namespace Grand.Web.Services
             if (String.IsNullOrEmpty(productTemplateId))
                 throw new ArgumentNullException("product");
 
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_TEMPLATE_MODEL_KEY, productTemplateId);
+            var templateCacheKey = string.Format(ModelCacheEventConst.PRODUCT_TEMPLATE_MODEL_KEY, productTemplateId);
             var productTemplateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _productTemplateService.GetProductTemplateById(productTemplateId);
@@ -812,7 +812,7 @@ namespace Grand.Web.Services
 
             #region Manufacturers
 
-            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
+            string manufacturersCacheKey = string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_KEY,
                 product.Id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -892,7 +892,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<ProductDetailsModel.ProductBreadcrumbModel> PrepareProductBreadcrumbModel(Product product)
         {
-            var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
+            var breadcrumbCacheKey = string.Format(ModelCacheEventConst.PRODUCT_BREADCRUMB_MODEL_KEY,
                 product.Id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -928,7 +928,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<List<ProductTagModel>> PrepareProductTagModel(Product product)
         {
-            var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var productTagsCacheKey = string.Format(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(productTagsCacheKey, async () =>
             {
                 var tags = new List<ProductTagModel>();
@@ -950,7 +950,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<(PictureModel defaultPictureModel, List<PictureModel> pictureModels)> PrepareProductPictureModel(Product product, int defaultPictureSize, bool isAssociatedProduct, string name)
         {
-            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize,
+            var productPicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize,
                 isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
             return await _cacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
@@ -1459,7 +1459,7 @@ namespace Grand.Web.Services
                     }
 
                     //prepare picture model
-                    var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
+                    var productbundlePicturesCacheKey = string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
                         p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
                         _webHelper.GetMachineName(), _storeContext.CurrentStore.Id);
 
@@ -1761,7 +1761,7 @@ namespace Grand.Web.Services
             //load and cache report
             var orderReportService = _serviceProvider.GetRequiredService<IOrderReportService>();
             var fromdate = DateTime.UtcNow.AddMonths(_catalogSettings.PeriodBestsellers > 0 ? -_catalogSettings.PeriodBestsellers : -12);
-            var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
+            var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
                 async () => await orderReportService.BestSellersReport(
                         createdFromUtc: fromdate,
                         ps: Core.Domain.Payments.PaymentStatus.Paid,
@@ -1852,7 +1852,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsRelated(string productId, int? productThumbPictureSize)
         {
-            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                async () =>
                    (await _productService.GetProductById(productId)).RelatedProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );
@@ -1871,7 +1871,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<IList<ProductOverviewModel>> PrepareProductsSimilar(string productId, int? productThumbPictureSize)
         {
-            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConsumer.PRODUCTS_SIMILAR_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                async () =>
                    (await _productService.GetProductById(productId)).SimilarProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );

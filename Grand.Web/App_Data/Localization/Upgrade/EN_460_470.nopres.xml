@@ -5,6 +5,9 @@
   <Localeresource Name="Admin.Configuration.Settings.Catalog.CustomerProductPrice.Hint">
     <Value>Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.</Value>
   </Localeresource>
+  <LocaleResource Name="Order.Product(s).Picture">
+    <Value>Image</Value>
+  </LocaleResource>
   <LocaleResource Name="course.downloadlesson">
     <Value>Download resources</Value>
   </LocaleResource>

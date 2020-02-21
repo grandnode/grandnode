@@ -368,11 +368,6 @@ namespace Grand.Core.Domain.Catalog
         public bool IgnoreStoreLimitations { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to cache product prices. It can significantly improve performance when enabled.
-        /// </summary>
-        public bool CacheProductPrices { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to use customer product prices. It can significantly improve performance when disable.
         /// </summary>
         public bool CustomerProductPrice { get; set; }

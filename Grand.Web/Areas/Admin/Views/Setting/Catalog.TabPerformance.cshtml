@@ -82,19 +82,6 @@
         </div>
         <div class="form-group">
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="CacheProductPrices" class="control-label" />
-            </div>
-            <div class="col-xs-4 col-md-8 col-sm-8">
-                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
-                    <admin-input asp-for="CacheProductPrices" />
-                    <div class="control__indicator"></div>
-                </label>
-                <span asp-validation-for="CacheProductPrices"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.CustomerProductPrice_OverrideForStore, model => model.CustomerProductPrice, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="CustomerProductPrice" class="control-label" />
             </div>
