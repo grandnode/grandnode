@@ -1,6 +1,8 @@
-﻿using Grand.Framework.Mvc.Routing;
+﻿using Grand.Core.Domain.Localization;
+using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Web.Infrastructure
 {
@@ -8,88 +10,91 @@ namespace Grand.Web.Infrastructure
     {
         public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
+            var pattern = "";
+            var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
+            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                pattern = "{language:lang=en}/";
+
             //areas
-            //routeBuilder.MapControllerRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             routeBuilder.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-
             //home page
-            routeBuilder.MapControllerRoute("HomePage", "", new { controller = "Home", action = "Index" });
+            routeBuilder.MapControllerRoute("HomePage", pattern, new { controller = "Home", action = "Index" });
 
             //widgets
             //we have this route for performance optimization because named routeBuilder are MUCH faster than usual Html.Action(...)
             //and this route is highly used
             routeBuilder.MapControllerRoute("WidgetsByZone",
-                            "widgetsbyzone/",
+                            $"{pattern}widgetsbyzone/",
                             new { controller = "Widget", action = "WidgetsByZone" });
 
             //login
             routeBuilder.MapControllerRoute("Login",
-                            "login/",
+                            $"{pattern}login/",
                             new { controller = "Customer", action = "Login" });
             //register
             routeBuilder.MapControllerRoute("Register",
-                            "register/",
+                            $"{pattern}register/",
                             new { controller = "Customer", action = "Register" });
             //logout
             routeBuilder.MapControllerRoute("Logout",
-                            "logout/",
+                            $"{pattern}logout/",
                             new { controller = "Customer", action = "Logout" });
 
             //shopping cart
             routeBuilder.MapControllerRoute("ShoppingCart",
-                            "cart/",
+                            $"{pattern}cart/",
                             new { controller = "ShoppingCart", action = "Cart" });
 
             //Continue shopping
             routeBuilder.MapControllerRoute("ContinueShopping",
-                "cart/continueshopping/",
+                $"{pattern}cart/continueshopping/",
                 new { controller = "ShoppingCart", action = "ContinueShopping" });
 
             //clear cart
             routeBuilder.MapControllerRoute("ClearCart",
-                "cart/clear/",
+                $"{pattern}cart/clear/",
                 new { controller = "ShoppingCart", action = "ClearCart" });
 
             //start checkout
             routeBuilder.MapControllerRoute("StartCheckout",
-                "cart/checkout/",
+                $"{pattern}cart/checkout/",
                 new { controller = "ShoppingCart", action = "StartCheckout" });
 
             routeBuilder.MapControllerRoute("ApplyDiscountCoupon",
-                            "applydiscountcoupon/",
+                            $"{pattern}applydiscountcoupon/",
                             new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
 
             routeBuilder.MapControllerRoute("RemoveDiscountCoupon",
-                            "removediscountcoupon/",
+                            $"{pattern}removediscountcoupon/",
                             new { controller = "ShoppingCart", action = "RemoveDiscountCoupon" });
 
             routeBuilder.MapControllerRoute("ApplyGiftCard",
-                            "applygiftcard/",
+                            $"{pattern}applygiftcard/",
                             new { controller = "ShoppingCart", action = "ApplyGiftCard" });
 
             routeBuilder.MapControllerRoute("RemoveGiftCardCode",
-                "removegiftcardcode/",
+                $"{pattern}removegiftcardcode/",
                 new { controller = "ShoppingCart", action = "RemoveGiftCardCode" });
 
             routeBuilder.MapControllerRoute("UpdateCart",
-                "updatecart/",
+                $"{pattern}updatecart/",
                 new { controller = "ShoppingCart", action = "UpdateCart" });
 
             //get state list by country ID  (AJAX link)
             routeBuilder.MapControllerRoute("DeleteCartItem",
-                            "deletecartitem/{id}",
+                            pattern + "deletecartitem/{id}",
                             new { controller = "ShoppingCart", action = "DeleteCartItem" });
 
             //estimate shipping
             routeBuilder.MapControllerRoute("EstimateShipping",
-                            "cart/estimateshipping",
+                            $"{pattern}cart/estimateshipping",
                             new { controller = "ShoppingCart", action = "GetEstimateShipping" });
 
             //wishlist
-            routeBuilder.MapControllerRoute("Wishlist", "wishlist/{customerGuid?}",
+            routeBuilder.MapControllerRoute("Wishlist", pattern + "wishlist/{customerGuid?}",
                             new { controller = "ShoppingCart", action = "Wishlist" });
 
             //customer account links
@@ -674,15 +679,13 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Common", action = "PageNotFound" });
 
             //lets encrypt
-            routeBuilder.MapControllerRoute("well-known", ".well-known/acme-challenge/{fileName}", 
+            routeBuilder.MapControllerRoute("well-known", ".well-known/acme-challenge/{fileName}",
                 new { controller = "LetsEncrypt", action = "Index" });
-            
+
         }
 
-        public int Priority
-        {
-            get
-            {
+        public int Priority {
+            get {
                 return 0;
             }
         }

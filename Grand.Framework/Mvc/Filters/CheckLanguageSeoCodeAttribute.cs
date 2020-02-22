@@ -4,8 +4,10 @@ using Grand.Core.Domain.Localization;
 using Grand.Framework.Localization;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -89,14 +91,25 @@ namespace Grand.Framework.Mvc.Filters
 
 
                 //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData == null
-                    || context.RouteData.Routers == null
-                    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
-                {
-                    await next();
-                    return;
-                }
+                //if (context.RouteData == null
+                //    || context.RouteData.Routers == null
+                //    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
+                //{
+                //    await next();
+                //    return;
+                //}
+                var endpointFeature = context.HttpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
+                var endpoint = endpointFeature?.Endpoint;
 
+                //note: endpoint will be null, if there was no resolved route
+                if (endpoint != null)
+                {
+                    var routePattern = (endpoint as RouteEndpoint)?.RoutePattern
+                                                                  ?.RawText;
+                    //Console.WriteLine("Name: " + endpoint.DisplayName);
+                    //Console.WriteLine($"Route Pattern: {routePattern}");
+                    //Console.WriteLine("Metadata Types: " + string.Join(", ", endpoint.Metadata));
+                }
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 if (await (pageUrl.IsLocalizedUrlAsync(_languageService, context.HttpContext.Request.PathBase, true)))

@@ -15,7 +15,7 @@ namespace Grand.Web.Infrastructure
             var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
 
             if(localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                pattern = "{language}/{SeName}";
+                pattern = "{language:lang=en}/{SeName}";
 
             routeBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
 
@@ -23,7 +23,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute(
                 name: "Default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
             ////generic URLs
             routeBuilder.MapControllerRoute(

@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,7 @@ namespace Grand.Framework.StartupConfigure
 
             //add custom redirect result executor
             services.AddGrandRedirectResultExecutor();
+
         }
 
         /// <summary>
