@@ -1,4 +1,5 @@
-﻿using Grand.Services.Seo;
+﻿using Grand.Core.Domain.Localization;
+using Grand.Services.Seo;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -9,27 +10,26 @@ namespace Grand.Framework.Mvc.Routing
     public class SlugRouteTransformer : DynamicRouteValueTransformer
     {
         private readonly IUrlRecordService _urlRecordService;
+        private readonly LocalizationSettings _localizationSettings;
 
-        public SlugRouteTransformer(IUrlRecordService urlRecordService)
+        public SlugRouteTransformer(IUrlRecordService urlRecordService,
+            LocalizationSettings localizationSettings)
         {
             _urlRecordService = urlRecordService;
+            _localizationSettings = localizationSettings;
         }
 
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext context, RouteValueDictionary values)
         {
-            var requestPath = context.Request.Path.Value;
-            if (!string.IsNullOrEmpty(requestPath) && requestPath[0] == '/')
-            {
-                // Trim the leading slash
-                requestPath = requestPath.Substring(1);
-            }
+            var slug = values["SeName"];
+            if (slug == null)
+                return values;
 
-            //performance optimization, we load a cached verion here. It reduces number of SQL requests for each page load
-            var urlRecord = await _urlRecordService.GetBySlugCached(requestPath);
+            var urlRecord = await _urlRecordService.GetBySlugCached(slug.ToString());
 
             //no URL record found
             if (urlRecord == null)
-                return null;
+                return values;
 
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
