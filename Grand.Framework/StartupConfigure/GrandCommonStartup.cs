@@ -124,6 +124,9 @@ namespace Grand.Framework.StartupConfigure
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
 
+            //use routing
+            application.UseRouting();
+
         }
 
         /// <summary>
