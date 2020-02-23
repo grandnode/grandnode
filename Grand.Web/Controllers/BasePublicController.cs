@@ -6,7 +6,7 @@ namespace Grand.Web.Controllers
 {
     [CheckAccessPublicStore]
     [CheckAccessClosedStore]
-    //[CheckLanguageSeoCode]
+    [CheckLanguageSeoCode]
     [CheckAffiliate]
     public abstract partial class BasePublicController : BaseController
     {

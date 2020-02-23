@@ -1,26 +1,40 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Core;
+using Grand.Core.Domain.Localization;
+using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Routing
 {
     public class SlugRouteTransformer : DynamicRouteValueTransformer
     {
+        private readonly IWorkContext _workContext;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly ILanguageService _languageService;
         private readonly LocalizationSettings _localizationSettings;
 
-        public SlugRouteTransformer(IUrlRecordService urlRecordService,
+        public SlugRouteTransformer(
+            IWorkContext workContext,
+            IUrlRecordService urlRecordService,
+            ILanguageService languageService,
             LocalizationSettings localizationSettings)
         {
+            _workContext = workContext;
             _urlRecordService = urlRecordService;
+            _languageService = languageService;
             _localizationSettings = localizationSettings;
         }
 
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext context, RouteValueDictionary values)
         {
+            if (values == null)
+                return null;
+
             var slug = values["SeName"];
             if (slug == null)
                 return values;
@@ -29,7 +43,7 @@ namespace Grand.Framework.Mvc.Routing
 
             //no URL record found
             if (urlRecord == null)
-                return values;
+                return null;
 
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
@@ -48,26 +62,32 @@ namespace Grand.Framework.Mvc.Routing
 
             //ensure that the slug is the same for the current language, 
             //otherwise it can cause some issues when customers choose a new language but a slug stays the same
-            //var workContext = context.HttpContext.RequestServices.GetRequiredService<IWorkContext>();
-            //var slugForCurrentLanguage = await SeoExtensions.GetSeName(urlRecordService, context.HttpContext, urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
-            //if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.OrdinalIgnoreCase))
-            //{
-            //    //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                var urllanguage = values["language"];
+                if (urllanguage != null && !string.IsNullOrEmpty(urllanguage.ToString()))
+                {
+                    var language = (await _languageService.GetAllLanguages()).FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant());
+                    if (urlRecord.LanguageId != language.Id)
+                    {
+                        var activeSlug = await _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+                        if (string.IsNullOrEmpty(activeSlug))
+                            return null;
 
-            //    //redirect to the page for current language
-            //    var redirectionRouteData = new RouteData(context.RouteData);
-            //    redirectionRouteData.Values["controller"] = "Common";
-            //    redirectionRouteData.Values["action"] = "InternalRedirect";
-            //    redirectionRouteData.Values["url"] = $"{pathBase}/{slugForCurrentLanguage}{context.HttpContext.Request.QueryString}";
-            //    redirectionRouteData.Values["permanentRedirect"] = false;
-            //    context.HttpContext.Items["grand.RedirectFromGenericPathRoute"] = true;
-            //    context.RouteData = redirectionRouteData;
-            //    await _target.RouteAsync(context);
-            //    return;
-            //}
+                        values["controller"] = "Common";
+                        values["action"] = "InternalRedirect";
+                        values["url"] = $"{context.Request.PathBase}/{activeSlug}{context.Request.QueryString}";
+                        values["permanentRedirect"] = false;
+                        context.Items["grand.RedirectFromGenericPathRoute"] = true;
+                        return values;
+                    }
+                }
+            }
+            else
+            {
+                //TODO - redirect when current lang is not the same as slug lang
+            }
 
-            //since we are here, all is ok with the slug, so process URL
-            //var currentRouteData = new RouteData(context.RouteData);
             switch (urlRecord.EntityName.ToLowerInvariant())
             {
                 case "product":
