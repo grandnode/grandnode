@@ -8,7 +8,6 @@ COPY GrandNode.sln .
 
 COPY . ./
 
-RUN dotnet build Plugins/Grand.Plugin.Widgets.FacebookPixel
 RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard 
 RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
 RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
@@ -25,6 +24,7 @@ RUN dotnet build Plugins/Grand.Plugin.Shipping.ShippingPoint
 RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
 RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
+RUN dotnet build Plugins/Grand.Plugin.Widgets.FacebookPixel
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 # publish project
