@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Polls;
@@ -18,8 +17,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        //settings
-        INotificationHandler<EntityUpdated<Setting>>,
         //manufacturers
         INotificationHandler<EntityInserted<Manufacturer>>,
         INotificationHandler<EntityUpdated<Manufacturer>>,
@@ -128,15 +125,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-
-
-        //settings
-        public async Task Handle(EntityUpdated<Setting> eventMessage, CancellationToken cancellationToken)
-        {
-            //cache should be cleared
-            await _cacheManager.Clear();
         }
 
         //vendors

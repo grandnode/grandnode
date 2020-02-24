@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
-        private readonly IEnumerable<ICacheManager> _cacheManager;
+        private readonly ICacheManager _cacheManager;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -108,7 +108,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
             _settingService = settingService;
@@ -141,10 +141,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         protected async Task ClearCache()
         {
-            foreach (var cacheManager in _cacheManager)
-            {
-                await cacheManager.Clear();
-            }
+            await _cacheManager.Clear();
         }
 
         public async Task<IActionResult> ChangeStoreScopeConfiguration(string storeid, string returnUrl = "")
