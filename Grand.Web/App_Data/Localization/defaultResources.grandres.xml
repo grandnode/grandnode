@@ -17570,6 +17570,9 @@
   <LocaleResource Name="Course.ApproveLesson">
     <Value>Approve lesson</Value>
   </LocaleResource>
+  <LocaleResource Name="course.downloadlesson">
+    <Value>Download resources</Value>
+  </LocaleResource>
   <LocaleResource Name="Course.GoBack">
     <Value>Go back to the course</Value>
   </LocaleResource>

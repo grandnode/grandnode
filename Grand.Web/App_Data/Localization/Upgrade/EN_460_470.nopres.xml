@@ -8,5 +8,8 @@
   <LocaleResource Name="Order.Product(s).Picture">
     <Value>Image</Value>
   </LocaleResource>
+  <LocaleResource Name="course.downloadlesson">
+    <Value>Download resources</Value>
+  </LocaleResource>
 </Language>
 
