@@ -226,36 +226,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCT_SPECS_PATTERN = "Grand.pres.product.specs";
 
         /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Grand.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic id
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_MODEL_BY_ID_KEY = "Grand.pres.topic.details.byid-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// </remarks>
-        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Grand.pres.topic.sename.bysystemname-{0}-{1}-{2}";
-        
-        /// <summary>
         /// Key for CategoryTemplate caching
         /// </summary>
         /// <remarks>
