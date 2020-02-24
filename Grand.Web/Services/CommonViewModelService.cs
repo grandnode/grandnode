@@ -250,31 +250,24 @@ namespace Grand.Web.Services
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
-                async () =>
-            {
-                var result = (await _currencyService
-                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id))
-                    .Select(x =>
-                    {
-                        //currency char
-                        var currencySymbol = "";
-                        if (!string.IsNullOrEmpty(x.DisplayLocale))
-                            currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
-                        else
-                            currencySymbol = x.CurrencyCode;
+            var availableCurrencies = (await _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id))
+                .Select(x =>
+                {
+                    //currency char
+                    var currencySymbol = "";
+                    if (!string.IsNullOrEmpty(x.DisplayLocale))
+                        currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
+                    else
+                        currencySymbol = x.CurrencyCode;
                         //model
                         var currencyModel = new CurrencyModel {
-                            Id = x.Id,
-                            Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
-                            CurrencyCode = x.CurrencyCode,
-                            CurrencySymbol = currencySymbol
-                        };
-                        return currencyModel;
-                    })
-                    .ToList();
-                return result;
-            });
+                        Id = x.Id,
+                        Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
+                        CurrencyCode = x.CurrencyCode,
+                        CurrencySymbol = currencySymbol
+                    };
+                    return currencyModel;
+                }).ToList();
 
             var model = new CurrencySelectorModel {
                 CurrentCurrencyId = _workContext.WorkingCurrency.Id,

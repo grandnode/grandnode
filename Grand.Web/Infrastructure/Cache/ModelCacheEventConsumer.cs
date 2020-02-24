@@ -20,10 +20,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        //currencies
-        INotificationHandler<EntityInserted<Currency>>,
-        INotificationHandler<EntityUpdated<Currency>>,
-        INotificationHandler<EntityDeleted<Currency>>,
         //store
         INotificationHandler<EntityInserted<Store>>,
         INotificationHandler<EntityUpdated<Store>>,
@@ -142,20 +138,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-        //currencies
-        public async Task Handle(EntityInserted<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
 
         //stores

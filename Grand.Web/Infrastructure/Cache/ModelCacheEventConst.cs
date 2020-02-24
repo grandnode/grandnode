@@ -525,16 +525,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string AVAILABLE_STORES_MODEL_KEY = "Grand.pres.stores.all";
 
         /// <summary>
-        /// Key for available currencies
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {0} : current store ID
-        /// </remarks>
-        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Grand.pres.currencies.all-{0}-{1}";
-        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Grand.pres.currencies";
-
-        /// <summary>
         /// Key for caching of a value indicating whether we have checkout attributes
         /// </summary>
         /// <remarks>
