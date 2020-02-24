@@ -335,7 +335,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Checkout", action = "Confirm" });
 
             routeBuilder.MapControllerRoute("CheckoutCompleted",
-                            pattern + "checkout/completed/{orderId}",
+                            pattern + "checkout/completed/{orderId?}",
                             new { controller = "Checkout", action = "Completed" });
 
             //subscribe newsletters
@@ -397,7 +397,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Blog", action = "BlogByCategory" });
 
             routeBuilder.MapControllerRoute("BlogByKeyword",
-                            pattern + "blog/keyword/{searchKeyword}",
+                            pattern + "blog/keyword/{searchKeyword?}",
                             new { controller = "Blog", action = "BlogByKeyword" });
 
             //blog RSS
