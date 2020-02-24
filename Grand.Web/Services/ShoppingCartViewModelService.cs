@@ -822,12 +822,11 @@ namespace Grand.Web.Services
                     //3. we have at least one checkout attribute
                     var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConst.CHECKOUTATTRIBUTES_EXIST_KEY,
                         storeId, requiresShipping);
-                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey,
-                        async () =>
-                        {
-                            var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
-                            return checkoutAttributes.Any();
-                        });
+                    var checkoutAttributesExist = await _cacheManager.GetAsync(checkoutAttributesExistCacheKey, async () =>
+                    {
+                        var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
+                        return checkoutAttributes.Any();
+                    });
 
                     bool minOrderSubtotalAmountOk = await _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
                     model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
@@ -915,9 +914,7 @@ namespace Grand.Web.Services
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 var shoppingCartSubTotal = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax);
                 decimal orderSubTotalDiscountAmountBase = shoppingCartSubTotal.discountAmount;
-                List<AppliedDiscount> orderSubTotalAppliedDiscounts = shoppingCartSubTotal.appliedDiscounts;
                 decimal subTotalWithoutDiscountBase = shoppingCartSubTotal.subTotalWithoutDiscount;
-                decimal subTotalWithDiscountBase = shoppingCartSubTotal.subTotalWithDiscount;
                 decimal subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = await _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -999,7 +996,6 @@ namespace Grand.Web.Services
                 var carttotal = await _orderTotalCalculationService.GetShoppingCartTotal(cart);
                 decimal? shoppingCartTotalBase = carttotal.shoppingCartTotal;
                 decimal orderTotalDiscountAmountBase = carttotal.discountAmount;
-                List<AppliedDiscount> orderTotalAppliedDiscounts = carttotal.appliedDiscounts;
                 List<AppliedGiftCard> appliedGiftCards = carttotal.appliedGiftCards;
                 int redeemedRewardPoints = carttotal.redeemedRewardPoints;
                 decimal redeemedRewardPointsAmount = carttotal.redeemedRewardPointsAmount;
