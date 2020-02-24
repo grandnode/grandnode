@@ -364,17 +364,14 @@ namespace Grand.Web.Infrastructure.Cache
         //Topics
         public async Task Handle(EntityInserted<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
 

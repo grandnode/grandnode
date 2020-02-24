@@ -283,16 +283,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : comma separated list of customer roles
         /// </remarks>
         public const string TOPIC_TOP_MENU_MODEL_KEY = "Grand.pres.topic.topmenu-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_FOOTER_MODEL_KEY = "Grand.pres.topic.footer-{0}-{1}-{2}";
-        public const string TOPIC_PATTERN_KEY = "Grand.pres.topic";
+       
 
         /// <summary>
         /// Key for CategoryTemplate caching

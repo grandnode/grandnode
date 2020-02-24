@@ -372,13 +372,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<FooterModel> PrepareFooter()
         {
-            //footer topics
-            string topicCacheKey = string.Format(ModelCacheEventConst.TOPIC_FOOTER_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
-                (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
+            var topicModel = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published)
                 .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
@@ -387,9 +381,7 @@ namespace Grand.Web.Services
                     IncludeInFooterRow1 = t.IncludeInFooterRow1,
                     IncludeInFooterRow2 = t.IncludeInFooterRow2,
                     IncludeInFooterRow3 = t.IncludeInFooterRow3
-                })
-                .ToList()
-            );
+                }).ToList();
 
             //model
             var currentstore = _storeContext.CurrentStore;
@@ -421,7 +413,7 @@ namespace Grand.Web.Services
                 InclTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
                 HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-                Topics = cachedTopicModel
+                Topics = topicModel
             };
 
             return model;
