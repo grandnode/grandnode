@@ -846,7 +846,7 @@ namespace Grand.Web.Services
             });
             return cachedModel;
         }
-        public virtual async Task<string> SitemapXml(int? id, IUrlHelper url)
+        public virtual async Task<string> SitemapXml(int? id, [FromServices] IUrlHelper url)
         {
             var sitemapGenerator = _serviceProvider.GetRequiredService<ISitemapGenerator>();
             string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_SEO_MODEL_KEY, id,
