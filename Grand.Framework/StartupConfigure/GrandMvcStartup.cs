@@ -51,7 +51,6 @@ namespace Grand.Framework.StartupConfigure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            
             //add MiniProfiler
             application.UseProfiler();
 

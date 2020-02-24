@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Core.Data;
+using Grand.Core.Domain.Localization;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Builder;
@@ -13,14 +14,16 @@ namespace Grand.Web.Infrastructure
         public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var pattern = "{SeName}";
-            var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
-            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var langservice = routeBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                var languages = langservice.GetAllLanguages().GetAwaiter().GetResult();
-                pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/{SeName}";
+                var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
+                if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                {
+                    var langservice = routeBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
+                    var languages = langservice.GetAllLanguages().GetAwaiter().GetResult();
+                    pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/{SeName}";
+                }
             }
-
             routeBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
 
             //and default one

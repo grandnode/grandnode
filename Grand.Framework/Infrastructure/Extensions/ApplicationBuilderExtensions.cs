@@ -170,40 +170,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure MVC routing
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseGrandMvc(this IApplicationBuilder application)
-        {
-            application.UseMvc(routeBuilder =>
-            {
-                //register all routes
-                //routeBuilder.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(routeBuilder);
-            });
-        }
-
-        /// <summary>
         /// Configure MVC endpoint
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandEndpoints(this IApplicationBuilder application)
         {
-            //application.UseMvc(routeBuilder =>
-            //{
-            //register all routes
-            //routeBuilder.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(routeBuilder);
-            //});
             application.UseEndpoints(endpoints =>
             {
                 endpoints.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(endpoints);
-
-                //endpoints.MapDynamicControllerRoute<SlugRouteValueTransformer>("/{**slug}");
-                //endpoints.MapControllerRoute(
-                //    name: "areas",
-                //    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
 

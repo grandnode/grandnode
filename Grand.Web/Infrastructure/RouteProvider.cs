@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Core.Data;
+using Grand.Core.Domain.Localization;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Localization;
 using Microsoft.AspNetCore.Builder;
@@ -13,13 +14,17 @@ namespace Grand.Web.Infrastructure
         public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var pattern = "";
-            var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
-            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var langservice = routeBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                var languages = langservice.GetAllLanguages().GetAwaiter().GetResult();
-                pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/";
+                var localizationSettings = routeBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
+                if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                {
+                    var langservice = routeBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
+                    var languages = langservice.GetAllLanguages().GetAwaiter().GetResult();
+                    pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/";
+                }
             }
+
             //areas
             routeBuilder.MapControllerRoute(
                 name: "areas",
@@ -136,7 +141,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ProductSearch",
                             pattern + "search/",
                             new { controller = "Catalog", action = "Search" });
-            
+
             routeBuilder.MapControllerRoute("ProductSearchAutoComplete",
                             pattern + "catalog/searchtermautocomplete",
                             new { controller = "Catalog", action = "SearchTermAutoComplete" });
@@ -217,7 +222,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "AddToCart", action = "AddProductToCart_Catalog" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
-            
+
             //add product to cart (with attributes and options). used on the product details pages.
             routeBuilder.MapControllerRoute("AddProductToCart-Details",
                             pattern + "addproducttocart/details/{productId}/{shoppingCartTypeId}",
@@ -304,31 +309,31 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("CheckoutSelectShippingAddress",
                             pattern + "checkout/selectshippingaddress",
                             new { controller = "Checkout", action = "SelectShippingAddress" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutBillingAddress",
                             pattern + "checkout/billingaddress",
                             new { controller = "Checkout", action = "BillingAddress" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutSelectBillingAddress",
                             pattern + "checkout/selectbillingaddress",
                             new { controller = "Checkout", action = "SelectBillingAddress" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutShippingMethod",
                             pattern + "checkout/shippingmethod",
                             new { controller = "Checkout", action = "ShippingMethod" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutPaymentMethod",
                             pattern + "checkout/paymentmethod",
                             new { controller = "Checkout", action = "PaymentMethod" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutPaymentInfo",
                             pattern + "checkout/paymentinfo",
                             new { controller = "Checkout", action = "PaymentInfo" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutConfirm",
                             pattern + "checkout/confirm",
                             new { controller = "Checkout", action = "Confirm" });
-            
+
             routeBuilder.MapControllerRoute("CheckoutCompleted",
                             pattern + "checkout/completed/{orderId}",
                             new { controller = "Checkout", action = "Completed" });
@@ -367,7 +372,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("PasswordRecovery",
                             pattern + "passwordrecovery",
                             new { controller = "Customer", action = "PasswordRecovery" });
-            
+
             //password recovery confirmation
             routeBuilder.MapControllerRoute("PasswordRecoveryConfirm",
                             pattern + "passwordrecovery/confirm",
@@ -382,15 +387,15 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("BlogByTag",
                             pattern + "blog/tag/{tag}",
                             new { controller = "Blog", action = "BlogByTag" });
-            
+
             routeBuilder.MapControllerRoute("BlogByMonth",
                             pattern + "blog/month/{month}",
                             new { controller = "Blog", action = "BlogByMonth" });
-            
+
             routeBuilder.MapControllerRoute("BlogByCategory",
                             pattern + "blog/category/{categoryid}",
                             new { controller = "Blog", action = "BlogByCategory" });
-            
+
             routeBuilder.MapControllerRoute("BlogByKeyword",
                             pattern + "blog/keyword/{searchKeyword}",
                             new { controller = "Blog", action = "BlogByKeyword" });
@@ -414,75 +419,75 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("CustomerReturnRequests",
                             pattern + "returnrequest/history",
                             new { controller = "ReturnRequest", action = "CustomerReturnRequests" });
-            
+
             routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
                             pattern + "customer/downloadableproducts",
                             new { controller = "Customer", action = "DownloadableProducts" });
-            
+
             routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptions",
                             pattern + "backinstocksubscriptions/manage",
                             new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-            
+
             routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptionsPaged",
                             pattern + "backinstocksubscriptions/manage/{pageNumber}",
                             new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-            
+
             routeBuilder.MapControllerRoute("CustomerRewardPoints",
                             pattern + "rewardpoints/history",
                             new { controller = "Order", action = "CustomerRewardPoints" });
-            
+
             routeBuilder.MapControllerRoute("CustomerChangePassword",
                             pattern + "customer/changepassword",
                             new { controller = "Customer", action = "ChangePassword" });
-            
+
             routeBuilder.MapControllerRoute("CustomerDeleteAccount",
                             pattern + "customer/deleteaccount",
                             new { controller = "Customer", action = "DeleteAccount" });
-            
+
             routeBuilder.MapControllerRoute("CustomerAvatar",
                             pattern + "customer/avatar",
                             new { controller = "Customer", action = "Avatar" });
-            
+
             routeBuilder.MapControllerRoute("CustomerAuctions",
                             pattern + "customer/auctions",
                             new { controller = "Customer", action = "Auctions" });
-            
+
             routeBuilder.MapControllerRoute("CustomerNotes",
                             pattern + "customer/notes",
                             new { controller = "Customer", action = "Notes" });
-            
+
             routeBuilder.MapControllerRoute("CustomerDocuments",
                             pattern + "customer/documents",
                             new { controller = "Customer", action = "Documents" });
-            
+
             routeBuilder.MapControllerRoute("CustomerCourses",
                             pattern + "customer/courses",
                             new { controller = "Customer", action = "Courses" });
-            
+
             routeBuilder.MapControllerRoute("AccountActivation",
                             pattern + "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" });
-            
+
             routeBuilder.MapControllerRoute("CustomerReviews",
                             pattern + "customer/reviews",
                             new { controller = "Customer", action = "Reviews" });
-            
+
             routeBuilder.MapControllerRoute("CustomerForumSubscriptions",
                             pattern + "boards/forumsubscriptions",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" });
-            
+
             routeBuilder.MapControllerRoute("CustomerForumSubscriptionsPaged",
                             pattern + "boards/forumsubscriptions/{pageNumber}",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" });
-            
+
             routeBuilder.MapControllerRoute("CustomerAddressEdit",
                             pattern + "customer/addressedit/{addressId}",
                             new { controller = "Customer", action = "AddressEdit" });
-            
+
             routeBuilder.MapControllerRoute("CustomerAddressAdd",
                             pattern + "customer/addressadd",
                             new { controller = "Customer", action = "AddressAdd" });
-            
+
             //customer profile page
             routeBuilder.MapControllerRoute("CustomerProfile",
                             pattern + "profile/{id}",
@@ -496,35 +501,35 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("OrderDetails",
                             pattern + "orderdetails/{orderId}",
                             new { controller = "Order", action = "Details" });
-            
+
             routeBuilder.MapControllerRoute("ShipmentDetails",
                             pattern + "orderdetails/shipment/{shipmentId}",
                             new { controller = "Order", action = "ShipmentDetails" });
-            
+
             routeBuilder.MapControllerRoute("ReturnRequest",
                             pattern + "returnrequest/{orderId}",
                             new { controller = "ReturnRequest", action = "ReturnRequest" });
-            
+
             routeBuilder.MapControllerRoute("ReturnRequestDetails",
                             pattern + "returnrequestdetails/{returnRequestId}",
                             new { controller = "ReturnRequest", action = "ReturnRequestDetails" });
-            
+
             routeBuilder.MapControllerRoute("ReOrder",
                             pattern + "reorder/{orderId}",
                             new { controller = "Order", action = "ReOrder" });
-            
+
             routeBuilder.MapControllerRoute("GetOrderPdfInvoice",
                             pattern + "orderdetails/pdf/{orderId}",
                             new { controller = "Order", action = "GetPdfInvoice" });
-            
+
             routeBuilder.MapControllerRoute("PrintOrderDetails",
                             pattern + "orderdetails/print/{orderId}",
                             new { controller = "Order", action = "PrintOrderDetails" });
-            
+
             routeBuilder.MapControllerRoute("CancelOrder",
                             pattern + "orderdetails/cancel/{orderId}",
                             new { controller = "Order", action = "CancelOrder" });
-            
+
             routeBuilder.MapControllerRoute("AddOrderNote",
                             pattern + "orderdetails/ordernote/{orderId}",
                             new { controller = "Order", action = "AddOrderNote" });
@@ -537,19 +542,19 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("GetLicense",
                             pattern + "download/getlicense/{orderItemId}/",
                             new { controller = "Download", action = "GetLicense" });
-            
+
             routeBuilder.MapControllerRoute("DownloadUserAgreement",
                             pattern + "customer/useragreement/{orderItemId}",
                             new { controller = "Customer", action = "UserAgreement" });
-            
+
             routeBuilder.MapControllerRoute("GetOrderNoteFile",
                             pattern + "download/ordernotefile/{ordernoteid}",
                             new { controller = "Download", action = "GetOrderNoteFile" });
-            
+
             routeBuilder.MapControllerRoute("GetCustomerNoteFile",
                             pattern + "download/customernotefile/{customernoteid}",
                             new { controller = "Download", action = "GetCustomerNoteFile" });
-            
+
             routeBuilder.MapControllerRoute("GetDocumentFile",
                             pattern + "download/documentfile/{documentid}",
                             new { controller = "Download", action = "GetDocumentFile" });
@@ -588,7 +593,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("RemoveProductFromCompareList",
                             pattern + "compareproducts/remove/{productId}",
                             new { controller = "Product", action = "RemoveProductFromCompareList" });
-            
+
             routeBuilder.MapControllerRoute("ClearCompareList",
                             pattern + "clearcomparelist/",
                             new { controller = "Product", action = "ClearCompareList" });
@@ -617,7 +622,7 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("UploadFileProductAttribute",
                             pattern + "uploadfileproductattribute/{attributeId}",
                             new { controller = "Product", action = "UploadFileProductAttribute" });
-            
+
             //checkout attributes with "upload file" type
             routeBuilder.MapControllerRoute("UploadFileCheckoutAttribute",
                             pattern + "uploadfilecheckoutattribute/{attributeId}",
@@ -632,79 +637,79 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ActiveDiscussions",
                             pattern + "boards/activediscussions",
                             new { controller = "Boards", action = "ActiveDiscussions" });
-            
+
             routeBuilder.MapControllerRoute("ActiveDiscussionsPaged",
                             pattern + "boards/activediscussions/page/{pageNumber}",
                             new { controller = "Boards", action = "ActiveDiscussions" });
-            
+
             routeBuilder.MapControllerRoute("ActiveDiscussionsRSS",
                             pattern + "boards/activediscussionsrss",
                             new { controller = "Boards", action = "ActiveDiscussionsRSS" });
-            
+
             routeBuilder.MapControllerRoute("PostEdit",
                             pattern + "boards/postedit/{id}",
                             new { controller = "Boards", action = "PostEdit" });
-            
+
             routeBuilder.MapControllerRoute("PostDelete",
                             pattern + "boards/postdelete/{id}",
                             new { controller = "Boards", action = "PostDelete" });
-            
+
             routeBuilder.MapControllerRoute("PostCreate",
                             pattern + "boards/postcreate/{id}",
                             new { controller = "Boards", action = "PostCreate" });
-            
+
             routeBuilder.MapControllerRoute("PostCreateQuote",
                             pattern + "boards/postcreate/{id}/{quote}",
                             new { controller = "Boards", action = "PostCreate" });
-            
+
             routeBuilder.MapControllerRoute("TopicEdit",
                             pattern + "boards/topicedit/{id}",
                             new { controller = "Boards", action = "TopicEdit" });
-            
+
             routeBuilder.MapControllerRoute("TopicDelete",
                             pattern + "boards/topicdelete/{id}",
                             new { controller = "Boards", action = "TopicDelete" });
-            
+
             routeBuilder.MapControllerRoute("TopicCreate",
                             pattern + "boards/topiccreate/{id}",
                             new { controller = "Boards", action = "TopicCreate" });
-            
+
             routeBuilder.MapControllerRoute("TopicMove",
                             pattern + "boards/topicmove/{id}",
                             new { controller = "Boards", action = "TopicMove" });
-            
+
             routeBuilder.MapControllerRoute("TopicWatch",
                             pattern + "boards/topicwatch/{id}",
                             new { controller = "Boards", action = "TopicWatch" });
-            
+
             routeBuilder.MapControllerRoute("TopicSlug",
                             pattern + "boards/topic/{id}/{slug}",
                             new { controller = "Boards", action = "Topic" });
-            
+
             routeBuilder.MapControllerRoute("TopicSlugPaged",
                             pattern + "boards/topic/{id}/{slug}/page/{pageNumber}",
                             new { controller = "Boards", action = "Topic" });
-            
+
             routeBuilder.MapControllerRoute("ForumWatch",
                             pattern + "boards/forumwatch/{id}",
                             new { controller = "Boards", action = "ForumWatch" });
-            
+
             routeBuilder.MapControllerRoute("ForumRSS",
                             pattern + "boards/forumrss/{id}",
                             new { controller = "Boards", action = "ForumRSS" });
-            
+
             routeBuilder.MapControllerRoute("ForumSlug",
                             pattern + "boards/forum/{id}/{slug}",
                             new { controller = "Boards", action = "Forum" });
-            
+
             routeBuilder.MapControllerRoute("ForumSlugPaged",
                             pattern + "boards/forum/{id}/{slug}/page/{pageNumber}",
                             new { controller = "Boards", action = "Forum" });
-            
+
             routeBuilder.MapControllerRoute("ForumGroupSlug",
                             pattern + "boards/forumgroup/{id}/{slug}",
                             new { controller = "Boards", action = "ForumGroup" });
-            
+
             routeBuilder.MapControllerRoute("Search",
                             pattern + "boards/search",
                             new { controller = "Boards", action = "Search" });
@@ -713,31 +718,31 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("PrivateMessages",
                             pattern + "privatemessages/{tab?}",
                             new { controller = "PrivateMessages", action = "Index" });
-            
+
             routeBuilder.MapControllerRoute("PrivateMessagesPaged",
                             pattern + "privatemessages/{tab}/page/{pageNumber}",
                             new { controller = "PrivateMessages", action = "Index" });
-            
+
             routeBuilder.MapControllerRoute("PrivateMessagesInbox",
                             pattern + "inboxupdate",
                             new { controller = "PrivateMessages", action = "InboxUpdate" });
-            
+
             routeBuilder.MapControllerRoute("PrivateMessagesSent",
                             pattern + "sentupdate",
                             new { controller = "PrivateMessages", action = "SentUpdate" });
-            
+
             routeBuilder.MapControllerRoute("SendPM",
                             pattern + "sendpm/{toCustomerId}",
                             new { controller = "PrivateMessages", action = "SendPM" });
-            
+
             routeBuilder.MapControllerRoute("SendPMReply",
                             pattern + "sendpm/{toCustomerId}/{replyToMessageId}",
                             new { controller = "PrivateMessages", action = "SendPM" });
-            
+
             routeBuilder.MapControllerRoute("ViewPM",
                             pattern + "viewpm/{privateMessageId}",
                             new { controller = "PrivateMessages", action = "ViewPM" });
-            
+
             routeBuilder.MapControllerRoute("DeletePM",
                             pattern + "deletepm/{privateMessageId}",
                             new { controller = "PrivateMessages", action = "DeletePM" });
@@ -748,7 +753,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Newsletter", action = "SubscriptionActivation" });
 
             //robots.txt
-            routeBuilder.MapControllerRoute("robots.txt", 
+            routeBuilder.MapControllerRoute("robots.txt",
                             "robots.txt",
                             new { controller = "Common", action = "RobotsTextFile" });
 
@@ -775,7 +780,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Common", action = "PageNotFound" });
 
             //lets encrypt
-            routeBuilder.MapControllerRoute("well-known", 
+            routeBuilder.MapControllerRoute("well-known",
                             ".well-known/acme-challenge/{fileName}",
                             new { controller = "LetsEncrypt", action = "Index" });
 
