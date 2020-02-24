@@ -518,15 +518,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </summary>
         public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
-        /// <summary>
-        /// Key for available languages
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// </remarks>
-        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Grand.pres.languages.all-{0}";
-        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Grand.pres.languages";
-
+        
         /// <summary>
         /// Key for available stores
         /// </summary>

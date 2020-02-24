@@ -231,18 +231,13 @@ namespace Grand.Web.Services
 
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelector()
         {
-            var availableLanguages = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
-            {
-                var result = (await _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
-                    .Select(x => new LanguageModel {
-                        Id = x.Id,
-                        Name = x.Name,
-                        FlagImageFileName = x.FlagImageFileName,
-                    })
-                    .ToList();
-                return result;
-            });
+            var availableLanguages = (await _languageService
+                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                     .Select(x => new LanguageModel {
+                         Id = x.Id,
+                         Name = x.Name,
+                         FlagImageFileName = x.FlagImageFileName,
+                     }).ToList();
 
             var model = new LanguageSelectorModel {
                 CurrentLanguageId = _workContext.WorkingLanguage.Id,
