@@ -246,8 +246,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add basic MVC feature
             var mvcBuilder = services.AddMvc(options =>
             {
-                // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
-                options.EnableEndpointRouting = false;
                 //add custom display metadata provider
                 options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider());
             });
@@ -298,7 +296,6 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //implicit/automatic validation of child properties
                 configuration.ImplicitlyValidateChildProperties = true;
             });
-            //mvcBuilder.AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining(typeof(GrandValidatorFactory)));
 
             //register controllers as services, it'll allow to override them
             mvcBuilder.AddControllersAsServices();

@@ -17,7 +17,7 @@ namespace Grand.Api.Infrastructure
     {
         public int Priority => 10;
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var apiConfig = routeBuilder.ServiceProvider.GetRequiredService<ApiConfig>();
             if (apiConfig.Enabled)
@@ -26,8 +26,9 @@ namespace Grand.Api.Infrastructure
                 var serviceProvider = routeBuilder.ServiceProvider;
                 IEdmModel model = GetEdmModel(serviceProvider, apiConfig);
                 routeBuilder.Count().Filter().OrderBy().MaxTop(Configurations.MaxLimit);
-                routeBuilder.MapODataServiceRoute(Configurations.ODataRouteName, Configurations.ODataRoutePrefix, model);
+                routeBuilder.MapODataRoute(Configurations.ODataRouteName, Configurations.ODataRoutePrefix, model);
                 routeBuilder.EnableDependencyInjection();
+
             }
         }
 
@@ -56,5 +57,7 @@ namespace Grand.Api.Infrastructure
                 dependencyRegistrar.Register(builder, apiConfig);
 
         }
+
+
     }
 }
