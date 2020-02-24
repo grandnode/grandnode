@@ -59,6 +59,9 @@ namespace Grand.Framework.StartupConfigure
             var serviceProvider = application.ApplicationServices;
             var grandConfig = serviceProvider.GetRequiredService<GrandConfig>();
 
+            //add HealthChecks
+            application.UseGrandHealthChecks();
+
             //default security headers
             if (grandConfig.UseDefaultSecurityHeaders)
             {
