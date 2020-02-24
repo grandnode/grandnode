@@ -14,7 +14,7 @@ jobs:
       with:
         dotnet-version: 3.1.100
     - name: Restore
-      run: dotnet restore ./GrandNode.sln --configfile ./Nuget.config
+      run: dotnet restore ./GrandNode.sln --configfile ./NuGet.config
     - name: Build with dotnet
       run: dotnet build ./GrandNode.sln --configuration Release
     - name: Start Docker for Mongodb
