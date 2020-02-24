@@ -13,21 +13,34 @@ namespace Grand.Framework.Mvc.Routing
 {
     public class SlugRouteTransformer : DynamicRouteValueTransformer
     {
-        private readonly IWorkContext _workContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly ILanguageService _languageService;
         private readonly LocalizationSettings _localizationSettings;
 
         public SlugRouteTransformer(
-            IWorkContext workContext,
             IUrlRecordService urlRecordService,
             ILanguageService languageService,
             LocalizationSettings localizationSettings)
         {
-            _workContext = workContext;
             _urlRecordService = urlRecordService;
             _languageService = languageService;
             _localizationSettings = localizationSettings;
+        }
+
+        protected async ValueTask<string> GetSeName(string entityId, string entityName, string languageId)
+        {
+            string result = string.Empty;
+            if (!string.IsNullOrEmpty(languageId))
+            {
+                result = await _urlRecordService.GetActiveSlug(entityId, entityName, languageId);
+            }
+            //set default value if required
+            if (string.IsNullOrEmpty(result))
+            {
+                result = await _urlRecordService.GetActiveSlug(entityId, entityName, "");
+            }
+
+            return result;
         }
 
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext context, RouteValueDictionary values)
@@ -68,15 +81,15 @@ namespace Grand.Framework.Mvc.Routing
                 if (urllanguage != null && !string.IsNullOrEmpty(urllanguage.ToString()))
                 {
                     var language = (await _languageService.GetAllLanguages()).FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant());
-                    if (urlRecord.LanguageId != language.Id)
-                    {
-                        var activeSlug = await _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, language.Id);
-                        if (string.IsNullOrEmpty(activeSlug))
-                            return null;
+                    if (language == null)
+                        language = (await _languageService.GetAllLanguages()).FirstOrDefault();
 
+                    var slugForCurrentLanguage = await GetSeName(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+                    if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug.ToString(), StringComparison.OrdinalIgnoreCase))
+                    {
                         values["controller"] = "Common";
                         values["action"] = "InternalRedirect";
-                        values["url"] = $"{context.Request.PathBase}/{activeSlug}{context.Request.QueryString}";
+                        values["url"] = $"{context.Request.PathBase}/{slugForCurrentLanguage}{context.Request.QueryString}";
                         values["permanentRedirect"] = false;
                         context.Items["grand.RedirectFromGenericPathRoute"] = true;
                         return values;

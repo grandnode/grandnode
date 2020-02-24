@@ -3,10 +3,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
-using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +20,7 @@ namespace Grand.Services.Seo
         private static readonly object s_lock = new object();
 
         #endregion
-        
+
         #region Product tag
 
         /// <summary>
@@ -112,12 +109,12 @@ namespace Grand.Services.Seo
                 throw new ArgumentNullException("entity");
 
             string seName = string.Empty;
-            if(!String.IsNullOrEmpty(languageId))
+            if (!String.IsNullOrEmpty(languageId))
             {
                 var value = entity.Locales.Where(x => x.LanguageId == languageId && x.LocaleKey == "SeName").FirstOrDefault();
                 if (value != null)
-                    if(!String.IsNullOrEmpty(value.LocaleValue))
-                    seName = value.LocaleValue;
+                    if (!String.IsNullOrEmpty(value.LocaleValue))
+                        seName = value.LocaleValue;
             }
 
             //set default value if required
@@ -130,44 +127,6 @@ namespace Grand.Services.Seo
         }
 
         /// <summary>
-        /// Get search engine friendly name (slug)
-        /// </summary>
-        /// <param name="entityId">Entity identifier</param>
-        /// <param name="entityName">Entity name</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
-        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
-        /// <returns>Search engine  name (slug)</returns>
-        public static async Task<string> GetSeName(IUrlRecordService urlRecordService, HttpContext httpContext, string entityId, string entityName, string languageId, bool returnDefaultValue = true,
-            bool ensureTwoPublishedLanguages = true)
-        {
-            string result = string.Empty;
-            if (!string.IsNullOrEmpty(languageId))
-            {
-                //ensure that we have at least two published languages
-                bool loadLocalizedValue = true;
-                if (ensureTwoPublishedLanguages)
-                {
-                    var lService = httpContext.RequestServices.GetRequiredService<ILanguageService>();
-                    var totalPublishedLanguages = (await lService.GetAllLanguages()).Count;
-                    loadLocalizedValue = totalPublishedLanguages >= 2;
-                }
-                //localized value
-                if (loadLocalizedValue)
-                {
-                    result = await urlRecordService.GetActiveSlug(entityId, entityName, languageId);
-                }
-            }
-            //set default value if required
-            if (String.IsNullOrEmpty(result) && returnDefaultValue)
-            {
-                result = await urlRecordService.GetActiveSlug(entityId, entityName, "");
-            }
-
-            return result;
-        }
-        
-        /// <summary>
         /// Validate search engine name
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -175,7 +134,7 @@ namespace Grand.Services.Seo
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensreu that sename is not empty</param>
         /// <returns>Valid sename</returns>
-        public static async Task<string> ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty, 
+        public static async Task<string> ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty,
             SeoSettings seoSettings, IUrlRecordService urlRecordService, ILanguageService languageService)
              where T : BaseEntity, ISlugSupported
         {
@@ -185,7 +144,7 @@ namespace Grand.Services.Seo
             //use name if sename is not specified
             if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
                 seName = name;
-            
+
             //validation
             seName = GetSeName(seName, seoSettings);
 
