@@ -96,16 +96,7 @@ namespace Grand.Web.Infrastructure.Cache
 
         public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.";
 
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : comma separated list of customer roles
-        /// {1} : current store ID
-        /// {2} : category ID
-        /// </remarks>
-        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Grand.pres.category.numberofproducts-{0}-{1}-{2}";
-
+        
         /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
         /// </summary>
@@ -141,17 +132,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY = "Grand.knowledgebase.category.breadcrumb-{0}-{1}-{2}-{3}";
         public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY = "Grand.knowledgebase.category.breadcrumb";
 
-        /// <summary>
-        /// Key for caching of subcategories of certain category
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// {3} : language ID
-        /// {4} : machine name
-        /// </remarks>
-        public const string CATEGORY_SUBCATEGORIES_KEY = "Grand.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
         public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Grand.pres.category.subcategories";
 
         /// <summary>
@@ -274,17 +254,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : store id
         /// </remarks>
         public const string TOPIC_SENAME_BY_SYSTEMNAME = "Grand.pres.topic.sename.bysystemname-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_TOP_MENU_MODEL_KEY = "Grand.pres.topic.topmenu-{0}-{1}-{2}";
-       
-
+        
         /// <summary>
         /// Key for CategoryTemplate caching
         /// </summary>
