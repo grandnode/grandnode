@@ -186,6 +186,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "knowledgebase",
                             new { controller = "Knowledgebase", action = "List" });
 
+            routeBuilder.MapControllerRoute("KnowledgebaseSearch",
+                pattern + "knowledgebase/itemsbykeyword/{keyword?}",
+                new { controller = "Knowledgebase", action = "ItemsByKeyword" });
+
             //news
             routeBuilder.MapControllerRoute("NewsArchive",
                             pattern + "news",
