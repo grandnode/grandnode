@@ -259,8 +259,8 @@ namespace Grand.Web.Services
                         currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
                     else
                         currencySymbol = x.CurrencyCode;
-                        //model
-                        var currencyModel = new CurrencyModel {
+                    //model
+                    var currencyModel = new CurrencyModel {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
                         CurrencyCode = x.CurrencyCode,
@@ -306,17 +306,12 @@ namespace Grand.Web.Services
             if (!_commonSettings.AllowToSelectStore)
                 return null;
 
-            var availableStores = await _cacheManager.GetAsync(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY, async () =>
-            {
-                var storeService = _serviceProvider.GetRequiredService<IStoreService>();
-                var result = (await storeService.GetAllStores())
-                    .Select(x => new StoreModel {
-                        Id = x.Id,
-                        Name = x.Name,
-                    })
-                    .ToList();
-                return result;
-            });
+            var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+            var availableStores = (await storeService.GetAllStores())
+                .Select(x => new StoreModel {
+                    Id = x.Id,
+                    Name = x.Name,
+                }).ToList();
 
             var model = new StoreSelectorModel {
                 CurrentStoreId = _storeContext.CurrentStore.Id,

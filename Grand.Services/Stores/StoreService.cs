@@ -31,9 +31,9 @@ namespace Grand.Services.Stores
         private const string STORES_BY_ID_KEY = "Grand.stores.id-{0}";
 
         #endregion
-        
+
         #region Fields
-        
+
         private readonly IRepository<Store> _storeRepository;
         private readonly IMediator _mediator;
         private readonly ICacheManager _cacheManager;
@@ -93,9 +93,7 @@ namespace Grand.Services.Stores
         {
             if (_allStores == null)
             {
-                string key = STORES_ALL_KEY;
-                _allStores = await _cacheManager.GetAsync(key, () =>
-                {
+                _allStores = await _cacheManager.GetAsync(STORES_ALL_KEY, () => {
                     return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToListAsync();
                 });
             }
@@ -112,7 +110,7 @@ namespace Grand.Services.Stores
             string key = string.Format(STORES_BY_ID_KEY, storeId);
             return _cacheManager.GetAsync(key, () => _storeRepository.GetByIdAsync(storeId));
         }
-        
+
         /// <summary>
         /// Inserts a store
         /// </summary>
