@@ -471,18 +471,6 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
 
-
-        /// <summary>
-        /// Key for states by country id
-        /// </summary>
-        /// <remarks>
-        /// {0} : country ID
-        /// {1} : "empty" or "select" item
-        /// {2} : language ID
-        /// </remarks>
-        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Grand.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public const string STATEPROVINCES_PATTERN_KEY = "Grand.pres.stateprovinces";
-
         /// <summary>
         /// Key for return request reasons
         /// </summary>

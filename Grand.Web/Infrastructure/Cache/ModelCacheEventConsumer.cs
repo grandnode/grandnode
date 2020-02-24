@@ -2,11 +2,9 @@
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Configuration;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Polls;
-using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
@@ -96,10 +94,6 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityInserted<NewsItem>>,
         INotificationHandler<EntityUpdated<NewsItem>>,
         INotificationHandler<EntityDeleted<NewsItem>>,
-        //states/province
-        INotificationHandler<EntityInserted<StateProvince>>,
-        INotificationHandler<EntityUpdated<StateProvince>>,
-        INotificationHandler<EntityDeleted<StateProvince>>,
         //return requests
         INotificationHandler<EntityInserted<ReturnRequestAction>>,
         INotificationHandler<EntityUpdated<ReturnRequestAction>>,
@@ -136,7 +130,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-       
+
 
         //settings
         public async Task Handle(EntityUpdated<Setting> eventMessage, CancellationToken cancellationToken)
@@ -463,20 +457,6 @@ namespace Grand.Web.Infrastructure.Cache
         public async Task Handle(EntityDeleted<NewsItem> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
-        }
-
-        //State/province
-        public async Task Handle(EntityInserted<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
         }
 
         //retunr requests
