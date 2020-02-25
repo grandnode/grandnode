@@ -1,6 +1,4 @@
 ﻿using Grand.Core.Caching;
-using Grand.Core.Infrastructure;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Tasks
@@ -10,9 +8,9 @@ namespace Grand.Services.Tasks
     /// </summary>
     public partial class ClearCacheScheduleTask : IScheduleTask
     {
-        private readonly IEnumerable<ICacheManager> _cacheManager;
+        private readonly ICacheManager _cacheManager;
 
-        public ClearCacheScheduleTask(IEnumerable<ICacheManager> cacheManager)
+        public ClearCacheScheduleTask(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
         }
@@ -21,11 +19,7 @@ namespace Grand.Services.Tasks
         /// </summary>
         public async Task Execute()
         {
-            foreach (var cacheManager in _cacheManager)
-            {
-                await cacheManager.Clear();
-            }
-            await Task.CompletedTask;
+            await _cacheManager.Clear();
         }
     }
 }
