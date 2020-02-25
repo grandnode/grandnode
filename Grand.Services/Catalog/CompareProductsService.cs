@@ -1,3 +1,4 @@
+using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -43,10 +44,9 @@ namespace Grand.Services.Catalog
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
 
             //create cookie options 
-            var cookieExpires = 24 * 10; //TODO make configurable
             var cookieOptions = new CookieOptions
             {
-                Expires = DateTime.Now.AddHours(cookieExpires),
+                Expires = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires),
                 HttpOnly = true
             };
 

@@ -114,6 +114,7 @@ namespace Grand.Core.Infrastructure
 
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
             CommonHelper.CacheTimeMinutes = config.DefaultCacheTimeMinutes;
+            CommonHelper.CookieAuthExpires = config.CookieAuthExpires > 0 ? config.CookieAuthExpires : 24 * 365;
 
             //register mongo mappings
             MongoDBMapperConfiguration.RegisterMongoDBMappings();

@@ -115,12 +115,11 @@ namespace Grand.Framework
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
 
             //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
-            var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
+            var cookieExpiresDate = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires);
 
             //if passed guid is empty set cookie as expired
             if (customerGuid == Guid.Empty)
-                cookieExpiresDate = DateTime.Now.AddMonths(-1);
+                cookieExpiresDate = DateTime.UtcNow.AddMonths(-1);
 
             //set new cookie value
             var options = new CookieOptions {

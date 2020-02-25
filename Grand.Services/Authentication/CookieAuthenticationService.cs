@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Core;
+using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -71,7 +72,8 @@ namespace Grand.Services.Authentication
             var authenticationProperties = new AuthenticationProperties
             {
                 IsPersistent = isPersistent,
-                IssuedUtc = DateTime.UtcNow
+                IssuedUtc = DateTime.UtcNow,
+                ExpiresUtc = DateTime.UtcNow.AddHours(CommonHelper.CookieAuthExpires)
             };
 
             //sign in

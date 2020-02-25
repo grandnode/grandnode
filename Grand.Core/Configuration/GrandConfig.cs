@@ -108,6 +108,11 @@ namespace Grand.Core.Configuration
         public int DefaultCacheTimeMinutes { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating for cookie expires in hours - default 24 * 365 = 8760
+        /// </summary>
+        public int CookieAuthExpires { get; set; }
+
+        /// <summary>
         /// Enable minimal Progressive Web App.
         /// </summary>
         public bool EnableProgressiveWebApp { get; set; }
