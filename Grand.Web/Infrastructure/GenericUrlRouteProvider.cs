@@ -31,13 +31,13 @@ namespace Grand.Web.Infrastructure
                 name: "Default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            ////generic URLs
+            //generic URLs
             routeBuilder.MapControllerRoute(
                 name: "GenericUrl",
                 pattern: "{GenericSeName}",
                 new { controller = "Common", action = "GenericUrl" });
 
-            ////define this routes to use in UI views (in case if you want to customize some of them later)
+            //define this routes to use in UI views (in case if you want to customize some of them later)
             routeBuilder.MapControllerRoute(
                 name: "Product",
                 pattern: pattern,
