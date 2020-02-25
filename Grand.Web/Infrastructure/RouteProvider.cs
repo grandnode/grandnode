@@ -326,6 +326,10 @@ namespace Grand.Web.Infrastructure
                             pattern + "checkout/shippingmethod",
                             new { controller = "Checkout", action = "ShippingMethod" });
 
+            routeBuilder.MapControllerRoute("CheckoutShippingFormPartial",
+                pattern + "checkout/getshippingformpartialview/{shippingOption?}",
+                new { controller = "Checkout", action = "GetShippingFormPartialView" });
+
             routeBuilder.MapControllerRoute("CheckoutPaymentMethod",
                             pattern + "checkout/paymentmethod",
                             new { controller = "Checkout", action = "PaymentMethod" });
