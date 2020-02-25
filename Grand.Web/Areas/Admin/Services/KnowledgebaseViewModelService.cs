@@ -171,6 +171,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual async Task<KnowledgebaseCategoryModel> PrepareKnowledgebaseCategoryModel()
         {
             var model = new KnowledgebaseCategoryModel();
+            model.Published = true;
             await PrepareCategory(model);
             return model;
         }

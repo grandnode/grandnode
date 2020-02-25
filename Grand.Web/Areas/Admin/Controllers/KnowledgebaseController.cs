@@ -34,12 +34,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IKnowledgebaseService knowledgebaseService, ILanguageService languageService, 
             ICustomerService customerService, IStoreService storeService)
         {
-            this._knowledgebaseViewModelService = knowledgebaseViewModelService;
-            this._localizationService = localizationService;
-            this._knowledgebaseService = knowledgebaseService;
-            this._languageService = languageService;
-            this._customerService = customerService;
-            this._storeService = storeService;
+            _knowledgebaseViewModelService = knowledgebaseViewModelService;
+            _localizationService = localizationService;
+            _knowledgebaseService = knowledgebaseService;
+            _languageService = languageService;
+            _customerService = customerService;
+            _storeService = storeService;
         }
 
         public IActionResult Index() => RedirectToAction("List");
