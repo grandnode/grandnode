@@ -539,7 +539,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Order", action = "CancelOrder" });
 
             routeBuilder.MapControllerRoute("AddOrderNote",
-                            pattern + "orderdetails/ordernote/{orderId}",
+                            "orderdetails/ordernote/{orderId}",
                             new { controller = "Order", action = "AddOrderNote" });
 
             //order downloads
