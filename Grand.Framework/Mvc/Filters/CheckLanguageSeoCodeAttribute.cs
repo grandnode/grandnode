@@ -86,6 +86,13 @@ namespace Grand.Framework.Mvc.Filters
                     return;
                 }
 
+                var lang = context.RouteData.Values["language"];
+                if (lang == null)
+                {
+                    await next();
+                    return;
+                }
+
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 if (await (pageUrl.IsLocalizedUrlAsync(_languageService, context.HttpContext.Request.PathBase, true)))
