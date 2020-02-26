@@ -26,5 +26,6 @@ namespace Grand.Web.Models.Customer
         public bool RememberMe { get; set; }
 
         public bool DisplayCaptcha { get; set; }
+
     }
 }

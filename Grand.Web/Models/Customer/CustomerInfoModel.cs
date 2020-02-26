@@ -140,6 +140,9 @@ namespace Grand.Web.Models.Customer
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
         public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }
+        public bool HideTabTwoFactorAuth { get; set; }
+        
+        public TwoFactorAuthenticationModel TwoFactorAuthentication { get; set; }
 
         #region Nested classes
 
@@ -151,7 +154,27 @@ namespace Grand.Web.Models.Customer
 
             public string AuthMethodName { get; set; }
         }
-        
+
+        public class TwoFactorAuthenticationModel : BaseGrandModel
+        {
+            public bool HasAuthenticator { get; set; }
+
+            public bool Is2faEnabled { get; set; }
+
+            public string SecretKey { get; set; }
+            public string Code { get; set; }
+
+            public string QrCodeSetupImageUrl { get; set; }
+
+            public string ManualInputCode { get; set; }
+        }
+        public class TwoFactorAuthorizationModel : BaseGrandModel
+        {
+            public string Code { get; set; }
+
+            public string UserName { get; set; }
+        }
+
         #endregion
     }
 }

@@ -5065,6 +5065,7 @@ namespace Grand.Services.Installation
                 AllowUsersToExportData = false,
                 HideReviewsTab = false,
                 HideCoursesTab = true,
+                TwoFactorAuthenticationEnabled = false,
             });
 
             await _settingService.SaveSetting(new AddressSettings {

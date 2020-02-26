@@ -1,0 +1,62 @@
+@model CustomerInfoModel.TwoFactorAuthenticationModel
+@using Grand.Web.Models.Customer;
+@using System.Net
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.TwoFactorAuth").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Courses })
+}
+
+    <div class="page login-page">
+        <h2 class="generalTitle">@T("Account.EnableTwoFactorAuth")</h2>
+        <h3>@T("Account.TwoFactorAuth.FirstLine")</h3>
+        <p>@T("Account.TwoFactorAuth.SecondLine")</p>
+        <h3>@T("Account.TwoFactorAuth.ThirdLine")</h3>
+        <p>@T("Account.TwoFactorAuth.FourthLine")</p>
+        <div class="mb-2">
+            <div class="row flex-md-row mt-3 mb-3">
+                @* login main block *@
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="col-12 form-group mb-0">
+                            <div>
+                                <img src="@Model.QrCodeSetupImageUrl" />
+                            </div>
+                            <div>
+                                @T("Account.TwoFactorAuth.ManualSetupCode"): @Model.ManualInputCode
+                            </div>
+                        </div>
+                        <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                            <input asp-for="SecretKey" type="hidden" />
+                            <div class="card-body">
+                                <div class="row">
+                                    <div asp-validation-summary="ModelOnly" class="message-error"/>
+                                    <div class="col-12 form-group mb-0">
+                                        <div class="form-group row">
+                                            <div class="col-lg-3 col-12">
+                                                <label asp-for="Code" class="col-form-label">@T("Account.TwoFactorAuth.DigitCode")</label>
+                                            </div>
+                                            <div class="col-lg-9 col-12">
+                                                <input asp-for="Code" name="Code" type="text" autofocus />
+                                                <span asp-validation-for="Code"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="buttons">
+                                    <input class="btn btn-info login-button" type="submit" value="@T("Account.TwoFactorAuth.SendCode")" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
