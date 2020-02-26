@@ -3,7 +3,6 @@ using Grand.Core.Configuration;
 using Grand.Framework.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Areas.Api.Models.Common;
 using System.Collections.Generic;
 
@@ -13,7 +12,7 @@ namespace Grand.Web.Areas.Api.Validators.Common
     {
         public LoginValidator(
             IEnumerable<IValidatorConsumer<LoginModel>> validators,
-            ApiConfig apiConfig, ICustomerService customerService, IStoreService storeService, IUserApiService userApiService, IEncryptionService encryptionService)
+            ApiConfig apiConfig, ICustomerService customerService, IUserApiService userApiService, IEncryptionService encryptionService)
             : base(validators)
         {
             if (!apiConfig.Enabled)
