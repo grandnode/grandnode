@@ -28,21 +28,23 @@
                                 <img src="@Model.QrCodeSetupImageUrl" />
                             </div>
                             <div>
-                                @T("Account.TwoFactorAuth.ManualSetupCode"): @Model.ManualInputCode
+                                @T("Account.TwoFactorAuth.ManualSetupCode") @Model.ManualInputCode
                             </div>
                         </div>
                         <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                             <input asp-for="SecretKey" type="hidden" />
+                            <input asp-for="ManualInputCode" type="hidden" />
+                            <input asp-for="QrCodeSetupImageUrl" type="hidden" />
                             <div class="card-body">
                                 <div class="row">
-                                    <div asp-validation-summary="ModelOnly" class="message-error"/>
+                                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                                     <div class="col-12 form-group mb-0">
                                         <div class="form-group row">
                                             <div class="col-lg-3 col-12">
                                                 <label asp-for="Code" class="col-form-label">@T("Account.TwoFactorAuth.DigitCode")</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
-                                                <input asp-for="Code" name="Code" type="text" autofocus />
+                                                <input asp-for="Code" name="Code" type="text" class="form-control" autofocus />
                                                 <span asp-validation-for="Code"></span>
                                             </div>
                                         </div>

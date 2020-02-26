@@ -1,36 +1,33 @@
 ﻿using Google.Authenticator;
+using Grand.Core;
 
 namespace Grand.Services.Authentication
 {
     public class TwoFactorAuthenticationService : ITwoFactorAuthenticationService
     {
+        private readonly IStoreContext _storeContext;
+
         private TwoFactorAuthenticator _twoFactorAuthentication;
-        public TwoFactorAuthenticationService()
+        
+        public TwoFactorAuthenticationService(IStoreContext storeContext)
         {
             _twoFactorAuthentication = new TwoFactorAuthenticator();
+            _storeContext = storeContext;
         }
         
-        public bool AuthenticateTwoFactor(string secretKey, string token)
+        public virtual bool AuthenticateTwoFactor(string secretKey, string token)
         {
             return  _twoFactorAuthentication.ValidateTwoFactorPIN(secretKey, token);
         }
 
-        public QrCodeSetup GenerateQrCodeSetup(string secretKey)
+        public virtual TwoFactorQrCodeSetup GenerateQrCodeSetup(string secretKey, string email)
         {
-            var setupInfo = _twoFactorAuthentication.GenerateSetupCode("GrandNode", "GrandNode", secretKey, false, 3);
-
-            return new QrCodeSetup 
+            var setupInfo = _twoFactorAuthentication.GenerateSetupCode(_storeContext.CurrentStore.CompanyName, email, secretKey, false, 3);
+            return new TwoFactorQrCodeSetup 
             { 
                 QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl, 
                 ManualEntryQrCode = setupInfo.ManualEntryKey
             }; 
         }
-        
-    }
-
-    public class QrCodeSetup
-    {
-        public string QrCodeImageUrl { get; set; }
-        public string ManualEntryQrCode { get; set; }
     }
 }

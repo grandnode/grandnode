@@ -33,9 +33,7 @@ namespace Grand.Web.Interfaces
         Task<DocumentsModel> PrepareDocuments(Customer customer);
         Task<CustomerProductReviewsModel> PrepareReviews(Customer customer);
         Task<CoursesModel> PrepareCourses(Customer customer, Store store);
-        CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(Customer currentCustomer,
-                                                                string barcodeImageUrl,
-                                                                string manualCode
-                                                                );
+        CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthenticationModel();
+        bool CheckTwoFactorAuthentication(CustomerInfoModel.TwoFactorAuthenticationModel model);
     }
 }

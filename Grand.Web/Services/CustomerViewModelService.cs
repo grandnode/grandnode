@@ -12,6 +12,7 @@ using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -389,7 +390,7 @@ namespace Grand.Web.Services
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
-
+            model.Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
             //external authentication
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                            .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
@@ -406,11 +407,6 @@ namespace Grand.Web.Services
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
-
-            model.HideTabTwoFactorAuth = !_customerSettings.TwoFactorAuthenticationEnabled;
-            var TwoFAModel = PrepareTwoFactorAuthModel(customer);
-            PropertyInfo TwoFactorAuthProperty = model.GetType().GetProperty("TwoFactorAuthentication");
-            TwoFactorAuthProperty.SetValue(model, TwoFAModel);
             
             //custom customer attributes
             var customAttributes = await PrepareCustomAttributes(customer, overrideCustomCustomerAttributesXml);
@@ -880,20 +876,27 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthModel(
-            Customer customer,
-            string barcodeImageUrl = null, 
-            string manualCode = null)
+        public virtual CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthenticationModel()
         {
-            var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
-                Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled),
-                HasAuthenticator = true,
-                ManualInputCode = manualCode,
-                QrCodeSetupImageUrl = barcodeImageUrl
-            };
+            var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
 
+            var secretkey = Guid.NewGuid().ToString();
+            var setupInfo = twoFactorAuthenticationService.GenerateQrCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
+
+            var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
+                ManualInputCode = setupInfo.ManualEntryQrCode,
+                QrCodeSetupImageUrl = setupInfo.QrCodeImageUrl,
+                SecretKey = secretkey
+            };
             return model;
         }
+
+        public virtual bool CheckTwoFactorAuthentication(CustomerInfoModel.TwoFactorAuthenticationModel model)
+        {
+            var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
+            return twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code);
+        }
+
 
     }
 }
