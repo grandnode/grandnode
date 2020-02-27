@@ -20,14 +20,13 @@ namespace Grand.Services.Authentication
             return  _twoFactorAuthentication.ValidateTwoFactorPIN(secretKey, token);
         }
 
-        public virtual TwoFactorQrCodeSetup GenerateQrCodeSetup(string secretKey, string email)
+        public virtual TwoFactorCodeSetup GenerateQrCodeSetup(string secretKey, string email)
         {
             var setupInfo = _twoFactorAuthentication.GenerateSetupCode(_storeContext.CurrentStore.CompanyName, email, secretKey, false, 3);
-            return new TwoFactorQrCodeSetup 
-            { 
-                QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl, 
-                ManualEntryQrCode = setupInfo.ManualEntryKey
-            }; 
+            var model = new TwoFactorCodeSetup();
+            model.CustomValues.Add("QrCodeImageUrl", setupInfo.QrCodeSetupImageUrl);
+            model.CustomValues.Add("ManualEntryQrCode", setupInfo.ManualEntryKey);
+            return model;
         }
     }
 }

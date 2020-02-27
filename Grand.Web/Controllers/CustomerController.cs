@@ -228,13 +228,14 @@ namespace Grand.Web.Controllers
             if (!customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled))
                 return RedirectToRoute("HomePage");
 
-            var model = new CustomerInfoModel.TwoFactorAuthorizationModel();
-            model.UserName = username;
-            return View(model);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> TwoFactorAuthorization(CustomerInfoModel.TwoFactorAuthorizationModel model, [FromServices] IShoppingCartService shoppingCartService)
+        public async Task<IActionResult> TwoFactorAuthorization(string token, 
+            [FromServices] IShoppingCartService shoppingCartService,
+            [FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService
+            )
         {
             if (!_customerSettings.TwoFactorAuthenticationEnabled)
                 return RedirectToRoute("Login");
@@ -247,21 +248,14 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("Login");
 
-            if (string.IsNullOrEmpty(model.Code))
+            if (string.IsNullOrEmpty(token))
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.SecurityCodeIsRequired"));
             }
             else
             {
                 var secretKey = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.TwoFactorSecretKey);
-
-                var isValid = _customerViewModelService
-                    .CheckTwoFactorAuthentication(new CustomerInfoModel.TwoFactorAuthenticationModel() {
-                        Code = model.Code,
-                        SecretKey = secretKey
-                    });
-
-                if (isValid)
+                if (twoFactorAuthenticationService.AuthenticateTwoFactor(secretKey, token))
                 {
                     //remove session
                     HttpContext.Session.Remove("RequiresTwoFactor");
@@ -273,7 +267,7 @@ namespace Grand.Web.Controllers
 
             ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.WrongSecurityCode"));
 
-            return View(model);
+            return View();
         }
 
         protected async Task<IActionResult> SignInAction(IShoppingCartService shoppingCartService, Customer customer, string returnUrl = null)
@@ -1251,7 +1245,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-
         #region My account / Delete account
 
         public virtual IActionResult DeleteAccount()
@@ -1505,7 +1498,8 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnableTwoFactorAuthenticator(CustomerInfoModel.TwoFactorAuthenticationModel model)
+        public async Task<IActionResult> EnableTwoFactorAuthenticator(CustomerInfoModel.TwoFactorAuthenticationModel model, 
+            [FromServices] ITwoFactorAuthenticationService twoFactorAuthenticationService)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -1522,7 +1516,7 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                if (_customerViewModelService.CheckTwoFactorAuthentication(model))
+                if (twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code))
                 {
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorEnabled, true);
                     await _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.TwoFactorSecretKey, model.SecretKey);
@@ -1537,6 +1531,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
+        
         public async Task<IActionResult> DisableTwoFactorAuthenticator()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())

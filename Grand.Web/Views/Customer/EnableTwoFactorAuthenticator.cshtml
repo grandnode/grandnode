@@ -6,6 +6,9 @@
     Layout = "_ColumnsTwo";
     //title
     Html.AddTitleParts(T("PageTitle.TwoFactorAuth").Text);
+    var code = "ManualEntryQrCode";
+    var imageUrl = "QrCodeImageUrl";
+
 }
 @section left
 {
@@ -25,16 +28,16 @@
                     <div class="card">
                         <div class="col-12 form-group mb-0">
                             <div>
-                                <img src="@Model.QrCodeSetupImageUrl" />
+                                <img src="@(Model.CustomValues[imageUrl])" />
                             </div>
                             <div>
-                                @T("Account.TwoFactorAuth.ManualSetupCode") @Model.ManualInputCode
+                                @T("Account.TwoFactorAuth.ManualSetupCode") @(Model.CustomValues[code])
                             </div>
                         </div>
                         <form asp-route="EnableTwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                             <input asp-for="SecretKey" type="hidden" />
-                            <input asp-for="ManualInputCode" type="hidden" />
-                            <input asp-for="QrCodeSetupImageUrl" type="hidden" />
+                            <input asp-for="@Model.CustomValues[code]" type="hidden" />
+                            <input asp-for="@Model.CustomValues[imageUrl]" type="hidden" />
                             <div class="card-body">
                                 <div class="row">
                                     <div asp-validation-summary="ModelOnly" class="message-error"></div>

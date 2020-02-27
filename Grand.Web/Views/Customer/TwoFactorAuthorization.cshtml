@@ -1,5 +1,3 @@
-@model CustomerInfoModel.TwoFactorAuthorizationModel
-
 @{
     Layout = "_ColumnsOne";
 
@@ -17,18 +15,16 @@
             <div class="col-sm-8 col-12">
                 <div class="card p-3 bg-light">
                     <form asp-route="TwoFactorAuthorization" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
-                        <input asp-for="UserName" type="hidden" />
                         <div class="card-body">
                             <div class="row">
                                 <div asp-validation-summary="ModelOnly" class="col-12 justify-content-around text-danger"></div>
                                 <div class="col-12 form-group mb-0 d-flex justify-content-around">
                                     <div class="form-group row">
                                         <div class="col-lg-3 col-12">
-                                            <label asp-for="Code" class="col-form-label">@T("Account.TwoFactorAuth.DigitCode")</label>
+                                            <label name="token" class="col-form-label">@T("Account.TwoFactorAuth.DigitCode")</label>
                                         </div>
                                         <div class="col-lg-9 col-12">
-                                            <input asp-for="Code" name="Code" type="text" class="form-control" autofocus />
-                                            <span asp-validation-for="Code"></span>
+                                            <input name="token" type="text" class="form-control" autofocus />
                                         </div>
                                     </div>
                                 </div>

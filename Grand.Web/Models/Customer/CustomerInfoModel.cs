@@ -156,10 +156,13 @@ namespace Grand.Web.Models.Customer
 
         public class TwoFactorAuthenticationModel : BaseGrandModel
         {
+            public TwoFactorAuthenticationModel()
+            {
+                CustomValues = new Dictionary<string, string>();
+            }
             public string SecretKey { get; set; }
             public string Code { get; set; }
-            public string QrCodeSetupImageUrl { get; set; }
-            public string ManualInputCode { get; set; }
+            public IDictionary<string, string> CustomValues { get; set; }
         }
 
         public class TwoFactorAuthorizationModel : BaseGrandModel

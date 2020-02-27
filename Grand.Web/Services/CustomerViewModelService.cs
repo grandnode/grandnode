@@ -884,19 +884,10 @@ namespace Grand.Web.Services
             var setupInfo = twoFactorAuthenticationService.GenerateQrCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
 
             var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
-                ManualInputCode = setupInfo.ManualEntryQrCode,
-                QrCodeSetupImageUrl = setupInfo.QrCodeImageUrl,
+                CustomValues = setupInfo.CustomValues,
                 SecretKey = secretkey
             };
             return model;
         }
-
-        public virtual bool CheckTwoFactorAuthentication(CustomerInfoModel.TwoFactorAuthenticationModel model)
-        {
-            var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
-            return twoFactorAuthenticationService.AuthenticateTwoFactor(model.SecretKey, model.Code);
-        }
-
-
     }
 }
