@@ -11,9 +11,9 @@
   <LocaleResource Name="course.downloadlesson">
     <Value>Download resources</Value>
   </LocaleResource>
-  <LocalResource Name="Account.EnableTwoFactorAuth">
-    <value>Enable Two Factor Authentication</value>
-  </LocalResource>
+  <LocaleResource Name="account.twofactorauth">
+    <Value>Two Factor Authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.TwoFactorAuth.FirstLine">
     <Value>1. Add our store to authenticator application</Value>
   </LocaleResource>
@@ -35,12 +35,38 @@
   <LocaleResource Name="Account.TwoFactorAuth.SendCode">
     <Value>Send code</Value>
   </LocaleResource>
-
   <LocaleResource Name="Account.TwoFactorAuth.Disable">
     <Value>Disable Two Factor Authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="account.twofactorauth.disabled">
+    <Value>Two factor authentication disabled</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.TwoFactorAuth.Enable">
     <Value>Enable Two Factor Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.twofactorauth.enabled">
+    <Value>Two factor authentication enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.twofactorauth.wrongsecuritycode">
+    <Value>Security code is wrong</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.twofactorauth.securitycodeisrequired">
+    <Value>Security code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled">
+    <Value>Two factor authentication enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.TwoFactorAuthenticationEnabled.Hint">
+    <Value>Check this box if you want to have two factor authentication enabled in your store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Login.TwoFactorAuth.DigitCode">
+    <Value>Code:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Login.TwoFactorAuth.EnterCode">
+    <Value>Please enter the security code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Login.TwoFactorAuth.SendCode">
+    <Value>Send code</Value>
   </LocaleResource>
 </Language>
 
