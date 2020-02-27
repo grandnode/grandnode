@@ -881,7 +881,7 @@ namespace Grand.Web.Services
             var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
 
             var secretkey = Guid.NewGuid().ToString();
-            var setupInfo = twoFactorAuthenticationService.GenerateQrCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
+            var setupInfo = twoFactorAuthenticationService.GenerateCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
 
             var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
                 CustomValues = setupInfo.CustomValues,

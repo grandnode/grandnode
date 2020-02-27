@@ -9,7 +9,5 @@ namespace Grand.Services.Authentication
             CustomValues = new Dictionary<string, string>();
         }
         public IDictionary<string, string> CustomValues { get; set; }
-        //public string QrCodeImageUrl { get; set; }
-        //public string ManualEntryQrCode { get; set; }
     }
 }

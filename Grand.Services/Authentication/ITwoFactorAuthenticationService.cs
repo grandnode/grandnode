@@ -4,7 +4,7 @@
     {
         bool AuthenticateTwoFactor(string secretKey, string token);
 
-        TwoFactorCodeSetup GenerateQrCodeSetup(string secretKey, string email);
+        TwoFactorCodeSetup GenerateCodeSetup(string secretKey, string email);
         
     }
 }

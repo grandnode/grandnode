@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Core.Configuration;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -263,9 +262,8 @@ namespace Grand.Web.Controllers
                     //sign in
                     return await SignInAction(shoppingCartService, customer);
                 }
+                ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.WrongSecurityCode"));
             }
-
-            ModelState.AddModelError("", _localizationService.GetResource("Account.TwoFactorAuth.WrongSecurityCode"));
 
             return View();
         }

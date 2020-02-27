@@ -20,7 +20,7 @@ namespace Grand.Services.Authentication
             return  _twoFactorAuthentication.ValidateTwoFactorPIN(secretKey, token);
         }
 
-        public virtual TwoFactorCodeSetup GenerateQrCodeSetup(string secretKey, string email)
+        public virtual TwoFactorCodeSetup GenerateCodeSetup(string secretKey, string email)
         {
             var setupInfo = _twoFactorAuthentication.GenerateSetupCode(_storeContext.CurrentStore.CompanyName, email, secretKey, false, 3);
             var model = new TwoFactorCodeSetup();
