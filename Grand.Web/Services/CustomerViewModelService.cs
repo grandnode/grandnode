@@ -11,6 +11,7 @@ using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -110,7 +111,7 @@ namespace Grand.Web.Services
                     OrderSettings orderSettings,
                     MediaSettings mediaSettings,
                     VendorSettings vendorSettings
-            )
+                 )
         {
             _externalAuthenticationService = externalAuthenticationService;
             _customerAttributeParser = customerAttributeParser;
@@ -387,7 +388,7 @@ namespace Grand.Web.Services
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
-
+            model.Is2faEnabled = customer.GetAttributeFromEntity<bool>(SystemCustomerAttributeNames.TwoFactorEnabled);
             //external authentication
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                            .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
@@ -654,6 +655,7 @@ namespace Grand.Web.Services
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
+
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -872,5 +874,18 @@ namespace Grand.Web.Services
             return model;
         }
 
+        public virtual CustomerInfoModel.TwoFactorAuthenticationModel PrepareTwoFactorAuthenticationModel()
+        {
+            var twoFactorAuthenticationService = _serviceProvider.GetRequiredService<ITwoFactorAuthenticationService>();
+
+            var secretkey = Guid.NewGuid().ToString();
+            var setupInfo = twoFactorAuthenticationService.GenerateCodeSetup(secretkey, _workContext.CurrentCustomer.Email);
+
+            var model = new CustomerInfoModel.TwoFactorAuthenticationModel {
+                CustomValues = setupInfo.CustomValues,
+                SecretKey = secretkey
+            };
+            return model;
+        }
     }
 }

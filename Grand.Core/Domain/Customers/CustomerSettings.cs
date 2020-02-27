@@ -204,6 +204,11 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public bool HideCoursesTab { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Two factor authentication'  is enabled
+        /// </summary>
+        public bool TwoFactorAuthenticationEnabled { get; set; }
+
         #region Form fields
 
         /// <summary>

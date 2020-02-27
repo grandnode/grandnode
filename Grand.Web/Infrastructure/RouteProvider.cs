@@ -42,6 +42,12 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("Login",
                             $"{pattern}login/",
                             new { controller = "Customer", action = "Login" });
+
+            // two factor authorization digit code page
+            routeBuilder.MapControllerRoute("TwoFactorAuthorization",
+                            "two-factor-authorization",
+                            new { controller = "Customer", action = "TwoFactorAuthorization" });
+
             //register
             routeBuilder.MapControllerRoute("Register",
                             $"{pattern}register/",
@@ -110,6 +116,11 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("CustomerInfo",
                             pattern + "customer/info",
                             new { controller = "Customer", action = "Info" });
+
+            // enable two factor authorization digit code page
+            routeBuilder.MapControllerRoute("EnableTwoFactorAuthorization",
+                           "customer/enable-two-factor-authorization",
+                           new { controller = "Customer", action = "EnableTwoFactorAuthenticator" });
 
             routeBuilder.MapControllerRoute("CustomerAddresses",
                             pattern + "customer/addresses",
