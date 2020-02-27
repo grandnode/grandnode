@@ -1,12 +1,9 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Configuration;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Polls;
-using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
@@ -20,16 +17,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        //currencies
-        INotificationHandler<EntityInserted<Currency>>,
-        INotificationHandler<EntityUpdated<Currency>>,
-        INotificationHandler<EntityDeleted<Currency>>,
-        //store
-        INotificationHandler<EntityInserted<Store>>,
-        INotificationHandler<EntityUpdated<Store>>,
-        INotificationHandler<EntityDeleted<Store>>,
-        //settings
-        INotificationHandler<EntityUpdated<Setting>>,
         //manufacturers
         INotificationHandler<EntityInserted<Manufacturer>>,
         INotificationHandler<EntityUpdated<Manufacturer>>,
@@ -104,10 +91,6 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityInserted<NewsItem>>,
         INotificationHandler<EntityUpdated<NewsItem>>,
         INotificationHandler<EntityDeleted<NewsItem>>,
-        //states/province
-        INotificationHandler<EntityInserted<StateProvince>>,
-        INotificationHandler<EntityUpdated<StateProvince>>,
-        INotificationHandler<EntityDeleted<StateProvince>>,
         //return requests
         INotificationHandler<EntityInserted<ReturnRequestAction>>,
         INotificationHandler<EntityUpdated<ReturnRequestAction>>,
@@ -142,41 +125,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-        //currencies
-        public async Task Handle(EntityInserted<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Currency> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_CURRENCIES_PATTERN_KEY);
-        }
-
-        //stores
-        public async Task Handle(EntityInserted<Store> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY);
-        }
-        public async Task Handle(EntityUpdated<Store> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY);
-        }
-        public async Task Handle(EntityDeleted<Store> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY);
-        }
-
-        //settings
-        public async Task Handle(EntityUpdated<Setting> eventMessage, CancellationToken cancellationToken)
-        {
-            //cache should be cleared
-            await _cacheManager.Clear();
         }
 
         //vendors
@@ -398,17 +346,14 @@ namespace Grand.Web.Infrastructure.Cache
         //Topics
         public async Task Handle(EntityInserted<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<Topic> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_PATTERN_KEY);
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
 
@@ -500,20 +445,6 @@ namespace Grand.Web.Infrastructure.Cache
         public async Task Handle(EntityDeleted<NewsItem> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
-        }
-
-        //State/province
-        public async Task Handle(EntityInserted<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<StateProvince> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.STATEPROVINCES_PATTERN_KEY);
         }
 
         //retunr requests

@@ -7,78 +7,79 @@
 
     Html.AddTitleParts(Model.Subject);
 }
-<div class="page forum-topic-page">
-    @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    <partial name="_ForumHeader" />
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
-    <h2 class="generalTitle text--center">@Model.Subject</h2>
-    <div class="topic-actions upper">
-        <div class="btn-group btn-group-sm" role="group">
-            @if (Model.IsCustomerAllowedToEditTopic)
-            {
-                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-topic-button" })
+    <div class="page forum-topic-page">
+        @Html.AntiForgeryToken()
+        @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+        <partial name="_ForumHeader" />
+        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
+        <h2 class="generalTitle text--center">@Model.Subject</h2>
+        <div class="topic-actions upper">
+            <div class="btn-group btn-group-sm" role="group">
+                @if (Model.IsCustomerAllowedToEditTopic)
+                {
+                    @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-topic-button" })
+                }
+                @if (Model.IsCustomerAllowedToDeleteTopic)
+                {
+                    <a href="#" class="btn btn-secondary delete-topic-button" onclick="deletetopic('@(Model.Id)')">
+                        <span class="d-none d-md-block">@T("Forum.DeleteTopic").Text</span>
+                        <span class="mdi mdi-delete d-md-none" aria-hidden="true"></span>
+                    </a>
+                }
+                @if (Model.IsCustomerAllowedToMoveTopic)
+                {
+                    @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "btn btn-secondary move-topic-button" })
+                }
+                @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button" })
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-top">
+                        <span class="d-none d-md-block">@Model.WatchTopicText</span>
+                        <span class="mdi mdi-cancel d-md-none" aria-hidden="true"></span>
+                    </a>
+                }
+            </div>
+            @{
+                var pager = Html.Pager(localizationService, new PagerModel(localizationService)
+                {
+                    PageSize = Model.PostsPageSize,
+                    TotalRecords = Model.PostsTotalRecords,
+                    PageIndex = Model.PostsPageIndex,
+                    ShowTotalSummary = false,
+                    RouteActionName = "TopicSlugPaged",
+                    UseRouteLinks = true,
+                    RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                });
             }
-            @if (Model.IsCustomerAllowedToDeleteTopic)
+            @if (pager != null)
             {
-                <a href="#" class="btn btn-secondary delete-topic-button" onclick="deletetopic('@(Model.Id)')">
-                    <span class="d-none d-md-block">@T("Forum.DeleteTopic").Text</span>
-                    <span class="mdi mdi-delete d-md-none" aria-hidden="true"></span>
-                </a>
-            }
-            @if (Model.IsCustomerAllowedToMoveTopic)
-            {
-                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "btn btn-secondary move-topic-button" })
-            }
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button" })
-            @if (Model.IsCustomerAllowedToSubscribe)
-            {
-                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-top">
-                    <span class="d-none d-md-block">@Model.WatchTopicText</span>
-                    <span class="mdi mdi-cancel d-md-none" aria-hidden="true"></span>
-                </a>
+                <div class="pager upper my-3">
+                    @pager
+                </div>
             }
         </div>
-        @{
-            var pager = Html.Pager(localizationService, new PagerModel(localizationService)
+        <div class="topic-posts">
+            @foreach (var post in @Model.ForumPostModels)
             {
-                PageSize = Model.PostsPageSize,
-                TotalRecords = Model.PostsTotalRecords,
-                PageIndex = Model.PostsPageIndex,
-                ShowTotalSummary = false,
-                RouteActionName = "TopicSlugPaged",
-                UseRouteLinks = true,
-                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
-            });
-        }
-        @if (pager != null)
-        {
-            <div class="pager upper my-3">
-                @pager
-            </div>
-        }
-    </div>
-    <div class="topic-posts">
-        @foreach (var post in @Model.ForumPostModels)
-        {
-            await Html.RenderPartialAsync("_ForumPost", post);
-        }
-    </div>
-    <div class="topic-actions">
-        <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button mt-1 mb-1" })
-            @if (Model.IsCustomerAllowedToSubscribe)
-            {
-                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+                await Html.RenderPartialAsync("_ForumPost", post);
             }
         </div>
-        @if (pager != null)
-        {
-            <div class="pager lower">
-                @pager
+        <div class="topic-actions">
+            <div class="actions">
+                @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button mt-1 mb-1" })
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+                }
             </div>
-        }
+            @if (pager != null)
+            {
+                <div class="pager lower">
+                    @pager
+                </div>
+            }
+        </div>
     </div>
-</div>
 
 <script asp-location="Footer">
     function deletepost(postId) {

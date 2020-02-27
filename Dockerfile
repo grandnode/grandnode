@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 
 WORKDIR /app
 
+COPY NuGet.config /root/.config/NuGet/
+
 COPY GrandNode.sln .
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
 COPY Grand.Framework/Grand.Framework.csproj Grand.Framework/Grand.Framework.csproj

@@ -96,16 +96,7 @@ namespace Grand.Web.Infrastructure.Cache
 
         public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.";
 
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : comma separated list of customer roles
-        /// {1} : current store ID
-        /// {2} : category ID
-        /// </remarks>
-        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Grand.pres.category.numberofproducts-{0}-{1}-{2}";
-
+        
         /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
         /// </summary>
@@ -141,17 +132,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY = "Grand.knowledgebase.category.breadcrumb-{0}-{1}-{2}-{3}";
         public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY = "Grand.knowledgebase.category.breadcrumb";
 
-        /// <summary>
-        /// Key for caching of subcategories of certain category
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// {3} : language ID
-        /// {4} : machine name
-        /// </remarks>
-        public const string CATEGORY_SUBCATEGORIES_KEY = "Grand.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
         public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Grand.pres.category.subcategories";
 
         /// <summary>
@@ -244,55 +224,6 @@ namespace Grand.Web.Infrastructure.Cache
         public const string PRODUCT_SPECS_MODEL_KEY = "Grand.pres.product.specs-{0}-{1}";
         public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs-{0}";
         public const string PRODUCT_SPECS_PATTERN = "Grand.pres.product.specs";
-
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Grand.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic id
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_MODEL_BY_ID_KEY = "Grand.pres.topic.details.byid-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// </remarks>
-        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Grand.pres.topic.sename.bysystemname-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_TOP_MENU_MODEL_KEY = "Grand.pres.topic.topmenu-{0}-{1}-{2}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
-        /// </remarks>
-        public const string TOPIC_FOOTER_MODEL_KEY = "Grand.pres.topic.footer-{0}-{1}-{2}";
-        public const string TOPIC_PATTERN_KEY = "Grand.pres.topic";
 
         /// <summary>
         /// Key for CategoryTemplate caching
@@ -480,18 +411,6 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
 
-
-        /// <summary>
-        /// Key for states by country id
-        /// </summary>
-        /// <remarks>
-        /// {0} : country ID
-        /// {1} : "empty" or "select" item
-        /// {2} : language ID
-        /// </remarks>
-        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Grand.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public const string STATEPROVINCES_PATTERN_KEY = "Grand.pres.stateprovinces";
-
         /// <summary>
         /// Key for return request reasons
         /// </summary>
@@ -518,29 +437,11 @@ namespace Grand.Web.Infrastructure.Cache
         /// </summary>
         public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
         public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
-        /// <summary>
-        /// Key for available languages
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// </remarks>
-        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Grand.pres.languages.all-{0}";
-        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Grand.pres.languages";
-
+        
         /// <summary>
         /// Key for available stores
         /// </summary>
         public const string AVAILABLE_STORES_MODEL_KEY = "Grand.pres.stores.all";
-
-        /// <summary>
-        /// Key for available currencies
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {0} : current store ID
-        /// </remarks>
-        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Grand.pres.currencies.all-{0}-{1}";
-        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Grand.pres.currencies";
 
         /// <summary>
         /// Key for caching of a value indicating whether we have checkout attributes

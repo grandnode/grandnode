@@ -1,10 +1,15 @@
 ﻿using Grand.Api.Constants;
+using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Edm;
+using System;
+using System.Linq;
 
 namespace Grand.Api.Infrastructure
 {
@@ -41,5 +46,7 @@ namespace Grand.Api.Infrastructure
             }
         }
         public int Order => 505;
+
+        
     }
 }

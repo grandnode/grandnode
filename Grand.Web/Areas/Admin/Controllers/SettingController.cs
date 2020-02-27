@@ -23,7 +23,6 @@ using Grand.Core.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
-using Grand.Framework.Localization;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Authorization;
@@ -81,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
-        private readonly IEnumerable<ICacheManager> _cacheManager;
+        private readonly ICacheManager _cacheManager;
         private readonly IServiceProvider _serviceProvider;
 
         #endregion
@@ -108,7 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            IEnumerable<ICacheManager> cacheManager,
+            ICacheManager cacheManager,
             IServiceProvider serviceProvider)
         {
             _settingService = settingService;
@@ -141,10 +140,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         protected async Task ClearCache()
         {
-            foreach (var cacheManager in _cacheManager)
-            {
-                await cacheManager.Clear();
-            }
+            await _cacheManager.Clear();
         }
 
         public async Task<IActionResult> ChangeStoreScopeConfiguration(string storeid, string returnUrl = "")
@@ -2846,8 +2842,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-                //clear cached values of routes
-                RouteData.Routers.ClearSeoFriendlyUrlsCachedValueForRoutes();
             }
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;

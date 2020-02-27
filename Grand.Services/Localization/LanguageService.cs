@@ -135,7 +135,7 @@ namespace Grand.Services.Localization
             });
 
             //store mapping
-            if (!String.IsNullOrWhiteSpace(storeId))
+            if (!string.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
                     .Where(l => _storeMappingService.Authorize(l, storeId))

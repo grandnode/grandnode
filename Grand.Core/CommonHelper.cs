@@ -247,6 +247,11 @@ namespace Grand.Core
         public static int CacheTimeMinutes { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating for cookie expires in hours
+        /// </summary>
+        public static int CookieAuthExpires { get; set; }
+
+        /// <summary>
         ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
         /// </summary>
         /// <param name="path">Directory path</param>

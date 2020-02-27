@@ -305,6 +305,8 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
+            builder.RegisterType<SlugRouteTransformer>().InstancePerLifetimeScope();
+
             var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
             foreach (var validator in validators)
             {

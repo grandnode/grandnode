@@ -1,8 +1,10 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -48,6 +50,12 @@ namespace Grand.Framework.StartupConfigure
 
             //add WebEncoderOptions
             services.AddWebEncoder();
+
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap["lang"] = typeof(LanguageParameterTransformer);
+            });
+
         }
 
         /// <summary>
@@ -123,6 +131,9 @@ namespace Grand.Framework.StartupConfigure
             //use powered by
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
+
+            //use routing
+            application.UseRouting();
 
         }
 

@@ -197,7 +197,7 @@ namespace Grand.Services.Directory
             });
 
             //store mapping
-            if (!String.IsNullOrEmpty(storeId))
+            if (!string.IsNullOrEmpty(storeId))
             {
                 currencies = currencies.Where(c => _storeMappingService.Authorize(c, storeId)).ToList();
             }

@@ -212,7 +212,7 @@ namespace Grand.Web.Controllers
             await _orderViewModelService.InsertOrderNote(model);
 
             AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
-            return RedirectToRoute("OrderDetails", model.OrderId);
+            return RedirectToRoute("OrderDetails", new { orderId = model.OrderId });
         }
 
         //My account / Order details page / re-order

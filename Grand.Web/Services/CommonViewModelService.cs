@@ -231,18 +231,13 @@ namespace Grand.Web.Services
 
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelector()
         {
-            var availableLanguages = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), async () =>
-            {
-                var result = (await _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
-                    .Select(x => new LanguageModel {
-                        Id = x.Id,
-                        Name = x.Name,
-                        FlagImageFileName = x.FlagImageFileName,
-                    })
-                    .ToList();
-                return result;
-            });
+            var availableLanguages = (await _languageService
+                     .GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                     .Select(x => new LanguageModel {
+                         Id = x.Id,
+                         Name = x.Name,
+                         FlagImageFileName = x.FlagImageFileName,
+                     }).ToList();
 
             var model = new LanguageSelectorModel {
                 CurrentLanguageId = _workContext.WorkingLanguage.Id,
@@ -255,31 +250,24 @@ namespace Grand.Web.Services
 
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelector()
         {
-            var availableCurrencies = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id),
-                async () =>
-            {
-                var result = (await _currencyService
-                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id))
-                    .Select(x =>
-                    {
-                        //currency char
-                        var currencySymbol = "";
-                        if (!string.IsNullOrEmpty(x.DisplayLocale))
-                            currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
-                        else
-                            currencySymbol = x.CurrencyCode;
-                        //model
-                        var currencyModel = new CurrencyModel {
-                            Id = x.Id,
-                            Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
-                            CurrencyCode = x.CurrencyCode,
-                            CurrencySymbol = currencySymbol
-                        };
-                        return currencyModel;
-                    })
-                    .ToList();
-                return result;
-            });
+            var availableCurrencies = (await _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id))
+                .Select(x =>
+                {
+                    //currency char
+                    var currencySymbol = "";
+                    if (!string.IsNullOrEmpty(x.DisplayLocale))
+                        currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
+                    else
+                        currencySymbol = x.CurrencyCode;
+                    //model
+                    var currencyModel = new CurrencyModel {
+                        Id = x.Id,
+                        Name = x.GetLocalized(y => y.Name, _workContext.WorkingLanguage.Id),
+                        CurrencyCode = x.CurrencyCode,
+                        CurrencySymbol = currencySymbol
+                    };
+                    return currencyModel;
+                }).ToList();
 
             var model = new CurrencySelectorModel {
                 CurrentCurrencyId = _workContext.WorkingCurrency.Id,
@@ -318,17 +306,12 @@ namespace Grand.Web.Services
             if (!_commonSettings.AllowToSelectStore)
                 return null;
 
-            var availableStores = await _cacheManager.GetAsync(ModelCacheEventConst.AVAILABLE_STORES_MODEL_KEY, async () =>
-            {
-                var storeService = _serviceProvider.GetRequiredService<IStoreService>();
-                var result = (await storeService.GetAllStores())
-                    .Select(x => new StoreModel {
-                        Id = x.Id,
-                        Name = x.Name,
-                    })
-                    .ToList();
-                return result;
-            });
+            var storeService = _serviceProvider.GetRequiredService<IStoreService>();
+            var availableStores = (await storeService.GetAllStores())
+                .Select(x => new StoreModel {
+                    Id = x.Id,
+                    Name = x.Name,
+                }).ToList();
 
             var model = new StoreSelectorModel {
                 CurrentStoreId = _storeContext.CurrentStore.Id,
@@ -389,13 +372,7 @@ namespace Grand.Web.Services
         }
         public virtual async Task<FooterModel> PrepareFooter()
         {
-            //footer topics
-            string topicCacheKey = string.Format(ModelCacheEventConst.TOPIC_FOOTER_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
-            var cachedTopicModel = await _cacheManager.GetAsync(topicCacheKey, async () =>
-                (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
+            var topicModel = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
                 .Where(t => (t.IncludeInFooterRow1 || t.IncludeInFooterRow2 || t.IncludeInFooterRow3) && t.Published)
                 .Select(t => new FooterModel.FooterTopicModel {
                     Id = t.Id,
@@ -404,9 +381,7 @@ namespace Grand.Web.Services
                     IncludeInFooterRow1 = t.IncludeInFooterRow1,
                     IncludeInFooterRow2 = t.IncludeInFooterRow2,
                     IncludeInFooterRow3 = t.IncludeInFooterRow3
-                })
-                .ToList()
-            );
+                }).ToList();
 
             //model
             var currentstore = _storeContext.CurrentStore;
@@ -438,7 +413,7 @@ namespace Grand.Web.Services
                 InclTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
                 HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
-                Topics = cachedTopicModel
+                Topics = topicModel
             };
 
             return model;
@@ -871,7 +846,7 @@ namespace Grand.Web.Services
             });
             return cachedModel;
         }
-        public virtual async Task<string> SitemapXml(int? id, IUrlHelper url)
+        public virtual async Task<string> SitemapXml(int? id, [FromServices] IUrlHelper url)
         {
             var sitemapGenerator = _serviceProvider.GetRequiredService<ISitemapGenerator>();
             string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_SEO_MODEL_KEY, id,

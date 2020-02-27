@@ -170,15 +170,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure MVC routing
+        /// Configure MVC endpoint
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseGrandMvc(this IApplicationBuilder application)
+        public static void UseGrandEndpoints(this IApplicationBuilder application)
         {
-            application.UseMvc(routeBuilder =>
+            application.UseEndpoints(endpoints =>
             {
-                //register all routes
-                routeBuilder.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                endpoints.ServiceProvider.GetRequiredService<IRoutePublisher>().RegisterRoutes(endpoints);
             });
         }
 

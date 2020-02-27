@@ -8,7 +8,7 @@ services:
  - mongodb
 
 script:
- - dotnet restore GrandNode.sln
+ - dotnet restore GrandNode.sln --configfile ./NuGet.config
  - dotnet test ./Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
  - dotnet test ./Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
  - dotnet test ./Tests/Grand.Plugin.Tests/Grand.Plugin.Tests.csproj

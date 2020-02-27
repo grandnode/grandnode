@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,7 @@ namespace Grand.Framework.StartupConfigure
 
             //add custom redirect result executor
             services.AddGrandRedirectResultExecutor();
+
         }
 
         /// <summary>
@@ -49,12 +51,11 @@ namespace Grand.Framework.StartupConfigure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            
             //add MiniProfiler
             application.UseProfiler();
 
-            //MVC routing
-            application.UseGrandMvc();
+            //MVC endpoint routing
+            application.UseGrandEndpoints();
 
             //save log application started
             application.LogApplicationStarted();

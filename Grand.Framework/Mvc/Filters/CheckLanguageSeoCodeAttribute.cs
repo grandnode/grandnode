@@ -6,7 +6,6 @@ using Grand.Services.Localization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Framework.Mvc.Filters
@@ -87,11 +86,8 @@ namespace Grand.Framework.Mvc.Filters
                     return;
                 }
 
-
-                //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData == null
-                    || context.RouteData.Routers == null
-                    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
+                var lang = context.RouteData.Values["language"];
+                if (lang == null)
                 {
                     await next();
                     return;
