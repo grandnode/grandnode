@@ -498,10 +498,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
                 new { controller = "Vendor", action = "Info" });
 
-            // customer setting two factor authorization
-            routeBuilder.MapLocalizedRoute("CustomerTwoFactorAuth", "customer/twofactorauth",
-                new { controller = "Customer", action = "TwoFactorAuth"});
-
             //vendor reviews
             routeBuilder.MapLocalizedRoute("VendorReviews", "vendoreviews/{vendorId}",
                 new { controller = "Catalog", action = "VendorReviews" });

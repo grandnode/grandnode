@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Core.Configuration;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
@@ -36,7 +35,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Services
@@ -78,7 +76,7 @@ namespace Grand.Web.Services
         private readonly OrderSettings _orderSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
-        
+
         public CustomerViewModelService(
                     IExternalAuthenticationService externalAuthenticationService,
                     ICustomerAttributeParser customerAttributeParser,
@@ -407,7 +405,7 @@ namespace Grand.Web.Services
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
-            
+
             //custom customer attributes
             var customAttributes = await PrepareCustomAttributes(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
@@ -657,7 +655,7 @@ namespace Grand.Web.Services
             model.HideDocuments = _customerSettings.HideDocumentsTab;
             model.HideReviews = _customerSettings.HideReviewsTab;
             model.HideCourses = _customerSettings.HideCoursesTab;
-            
+
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
