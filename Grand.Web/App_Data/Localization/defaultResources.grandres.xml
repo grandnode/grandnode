@@ -19223,6 +19223,9 @@
   <LocaleResource Name="PageTitle.StoreClosed">
     <Value>Store closed</Value>
   </LocaleResource>
+  <LocaleResource Name="pagetitle.twofactorauth">
+    <Value>Enable Two Factor Authentication</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.VendorInfo">
     <Value>Vendor info</Value>
   </LocaleResource>
