@@ -71,5 +71,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Note">
     <Value>NOTE: If you want to use SEO friendly URLs with multiple languages prefixes, don't forget to restart application to apply changes.</Value>
   </LocaleResource>
+  <LocaleResource Name="pagetitle.twofactorauth">
+    <Value>Enable Two Factor Authentication</Value>
+  </LocaleResource>
 </Language>
 
