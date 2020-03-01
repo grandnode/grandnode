@@ -65,55 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            CreateMap<Address, AddressModel>()
-               .ForMember(dest => dest.AddressHtml, mo => mo.Ignore())
-               .ForMember(dest => dest.CustomAddressAttributes, mo => mo.Ignore())
-               .ForMember(dest => dest.FormattedCustomAddressAttributes, mo => mo.Ignore())
-               .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
-               .ForMember(dest => dest.AvailableStates, mo => mo.Ignore())
-               .ForMember(dest => dest.FirstNameEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.FirstNameRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.LastNameEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.LastNameRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.EmailEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.EmailRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.CompanyEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.CompanyRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.CountryEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.StateProvinceEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.CityEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.CityRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.StreetAddressEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.StreetAddressRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.StreetAddress2Enabled, mo => mo.Ignore())
-               .ForMember(dest => dest.StreetAddress2Required, mo => mo.Ignore())
-               .ForMember(dest => dest.ZipPostalCodeEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.ZipPostalCodeRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.PhoneEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.PhoneRequired, mo => mo.Ignore())
-               .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
-               .ForMember(dest => dest.FaxRequired, mo => mo.Ignore());
-
-
-            //address
-            CreateMap<AddressModel, Address>()
-                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore());
-
-            //countries
-            CreateMap<CountryModel, Country>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
-                .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
-                .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore());
-            CreateMap<Country, CountryModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.NumberOfStates, mo => mo.MapFrom(src => src.StateProvinces != null ? src.StateProvinces.Count : 0))
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
 
             //state/provinces
             CreateMap<StateProvince, StateProvinceModel>()
