@@ -5,9 +5,9 @@ using Grand.Web.Areas.Admin.Models.Customers;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CustomerActionTypeModelProfile : Profile, IMapperProfile
+    public class CustomerActionTypeProfile : Profile, IMapperProfile
     {
-        public CustomerActionTypeModelProfile()
+        public CustomerActionTypeProfile()
         {
             CreateMap<CustomerActionTypeModel, CustomerActionType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())

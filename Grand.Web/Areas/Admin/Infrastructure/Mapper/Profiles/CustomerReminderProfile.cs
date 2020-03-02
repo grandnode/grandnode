@@ -5,9 +5,9 @@ using Grand.Web.Areas.Admin.Models.Customers;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CustomerReminderModelProfile : Profile, IMapperProfile
+    public class CustomerReminderProfile : Profile, IMapperProfile
     {
-        public CustomerReminderModelProfile()
+        public CustomerReminderProfile()
         {
             CreateMap<CustomerReminderModel, CustomerReminder>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());

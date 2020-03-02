@@ -5,9 +5,9 @@ using Grand.Web.Areas.Admin.Models.Logging;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ActivityLogTypeModelProfile : Profile, IMapperProfile
+    public class ActivityLogTypeProfile : Profile, IMapperProfile
     {
-        public ActivityLogTypeModelProfile()
+        public ActivityLogTypeProfile()
         {
             CreateMap<ActivityLogTypeModel, ActivityLogType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
