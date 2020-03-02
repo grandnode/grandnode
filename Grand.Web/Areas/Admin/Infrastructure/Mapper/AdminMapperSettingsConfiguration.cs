@@ -20,20 +20,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperSettingsConfiguration()
         {
 
-            CreateMap<VendorSettings, VendorSettingsModel>()
-                .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
-                .ForMember(dest => dest.VendorsBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.ShowVendorOnProductDetailsPage_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowCustomersToContactVendors_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowCustomersToApplyForVendorAccount_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowSearchByVendor_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowVendorsToEditInfo_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.TermsOfServiceEnabled_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AddressSettings, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
-            CreateMap<VendorSettingsModel, VendorSettings>()
-                .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
             CreateMap<ShippingSettings, ShippingSettingsModel>()
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
