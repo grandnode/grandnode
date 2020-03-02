@@ -65,16 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //stores
-            CreateMap<Store, StoreModel>()
-                .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<StoreModel, Store>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //return request reasons
             CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
