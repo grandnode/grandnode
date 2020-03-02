@@ -17,10 +17,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        //manufacturers
-        INotificationHandler<EntityInserted<Manufacturer>>,
-        INotificationHandler<EntityUpdated<Manufacturer>>,
-        INotificationHandler<EntityDeleted<Manufacturer>>,
         //vendors
         INotificationHandler<EntityInserted<Vendor>>,
         INotificationHandler<EntityUpdated<Vendor>>,
@@ -139,25 +135,6 @@ namespace Grand.Web.Infrastructure.Cache
         public async Task Handle(EntityDeleted<Vendor> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.VENDOR_NAVIGATION_PATTERN_KEY);
-        }
-
-        //manufacturers
-        public async Task Handle(EntityInserted<Manufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Manufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Manufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_NAVIGATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
 
         //product manufacturers
