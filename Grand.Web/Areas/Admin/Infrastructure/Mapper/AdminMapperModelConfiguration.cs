@@ -66,16 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
 
-            //email account
-            CreateMap<EmailAccount, EmailAccountModel>()
-                .ForMember(dest => dest.Password, mo => mo.Ignore())
-                .ForMember(dest => dest.IsDefaultEmailAccount, mo => mo.Ignore())
-                .ForMember(dest => dest.SendTestEmailTo, mo => mo.Ignore());
-
-            CreateMap<EmailAccountModel, EmailAccount>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Password, mo => mo.Ignore());
-
             //message template
             CreateMap<MessageTemplate, MessageTemplateModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
