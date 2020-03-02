@@ -2454,6 +2454,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SeoSettings.DefaultMetaDescription = seoSettings.DefaultMetaDescription;
             model.SeoSettings.GenerateProductMetaDescription = seoSettings.GenerateProductMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
+            model.SeoSettings.SeoCharConversion = seoSettings.SeoCharConversion;
             model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
             model.SeoSettings.EnableJsBundling = seoSettings.EnableJsBundling;
             model.SeoSettings.EnableCssBundling = seoSettings.EnableCssBundling;
@@ -2469,6 +2470,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeoSettings.DefaultMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaDescription, storeScope);
                 model.SeoSettings.GenerateProductMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.GenerateProductMetaDescription, storeScope);
                 model.SeoSettings.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeScope);
+                model.SeoSettings.SeoCharConversion_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.SeoCharConversion, storeScope);
                 model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
                 model.SeoSettings.EnableJsBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableJsBundling, storeScope);
                 model.SeoSettings.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeScope);
@@ -2694,6 +2696,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
             seoSettings.GenerateProductMetaDescription = model.SeoSettings.GenerateProductMetaDescription;
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
+            seoSettings.SeoCharConversion = model.SeoSettings.SeoCharConversion;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
             seoSettings.EnableJsBundling = model.SeoSettings.EnableJsBundling;
             seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
@@ -2737,6 +2740,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _settingService.SaveSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 await _settingService.DeleteSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope);
+
+            if (model.SeoSettings.SeoCharConversion_OverrideForStore || storeScope == "")
+                await _settingService.SaveSetting(seoSettings, x => x.SeoCharConversion, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                await _settingService.DeleteSetting(seoSettings, x => x.SeoCharConversion, storeScope);
 
             if (model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore || storeScope == "")
                 await _settingService.SaveSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope, false);

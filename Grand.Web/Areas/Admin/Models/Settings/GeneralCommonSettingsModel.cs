@@ -152,6 +152,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool ConvertNonWesternChars { get; set; }
             public bool ConvertNonWesternChars_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SeoCharConversion")]
+            public string SeoCharConversion { get; set; }
+            public bool SeoCharConversion_OverrideForStore { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled")]
             public bool CanonicalUrlsEnabled { get; set; }
             public bool CanonicalUrlsEnabled_OverrideForStore { get; set; }
