@@ -65,12 +65,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //return request reasons
-            CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<ReturnRequestReasonModel, ReturnRequestReason>()
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
+            
             //return request actions
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
