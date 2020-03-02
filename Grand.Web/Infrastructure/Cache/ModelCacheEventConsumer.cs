@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //Topics
-        INotificationHandler<EntityInserted<Topic>>,
-        INotificationHandler<EntityUpdated<Topic>>,
-        INotificationHandler<EntityDeleted<Topic>>,
         //Orders
         INotificationHandler<EntityInserted<Order>>,
         INotificationHandler<EntityUpdated<Order>>,
@@ -80,21 +76,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-
-        //Topics
-        public async Task Handle(EntityInserted<Topic> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Topic> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Topic> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
         }
 
         //Orders
