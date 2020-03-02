@@ -14,9 +14,6 @@ using System.Threading.Tasks;
 namespace Grand.Web.Infrastructure.Cache
 {
     public partial class ModelCacheEventConsumer :
-        INotificationHandler<EntityInserted<ManufacturerTemplate>>,
-        INotificationHandler<EntityUpdated<ManufacturerTemplate>>,
-        INotificationHandler<EntityDeleted<ManufacturerTemplate>>,
         INotificationHandler<EntityInserted<ProductTemplate>>,
         INotificationHandler<EntityUpdated<ProductTemplate>>,
         INotificationHandler<EntityDeleted<ProductTemplate>>,
@@ -31,18 +28,7 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-        public async Task Handle(EntityInserted<ManufacturerTemplate> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_TEMPLATE_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<ManufacturerTemplate> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_TEMPLATE_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ManufacturerTemplate> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.MANUFACTURER_TEMPLATE_PATTERN_KEY);
-        }
+        
         public async Task Handle(EntityInserted<ProductTemplate> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_TEMPLATE_PATTERN_KEY);
