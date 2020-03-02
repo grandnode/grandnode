@@ -65,17 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //plugins
-            CreateMap<PluginDescriptor, PluginModel>()
-                .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.CanChangeEnabled, mo => mo.Ignore())
-                .ForMember(dest => dest.IsEnabled, mo => mo.Ignore())
-                .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-
             //newsLetter subscriptions
             CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
                 .ForMember(dest => dest.StoreName, mo => mo.Ignore())
