@@ -65,20 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //customer action
-            CreateMap<CustomerAction, CustomerActionModel>()
-                .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
-                .ForMember(dest => dest.Banners, mo => mo.Ignore());
-
-            CreateMap<CustomerActionModel, CustomerAction>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
-            CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
-                .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
-            CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
-
             //Customer action type
             CreateMap<CustomerActionTypeModel, CustomerActionType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
