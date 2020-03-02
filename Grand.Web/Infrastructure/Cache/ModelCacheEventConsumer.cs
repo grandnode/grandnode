@@ -17,10 +17,7 @@ namespace Grand.Web.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        //vendors
-        INotificationHandler<EntityInserted<Vendor>>,
-        INotificationHandler<EntityUpdated<Vendor>>,
-        INotificationHandler<EntityDeleted<Vendor>>,
+        
         //product manufacturers
         INotificationHandler<EntityInserted<ProductManufacturer>>,
         INotificationHandler<EntityUpdated<ProductManufacturer>>,
@@ -121,20 +118,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-        //vendors
-        public async Task Handle(EntityInserted<Vendor> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.VENDOR_NAVIGATION_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Vendor> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.VENDOR_NAVIGATION_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Vendor> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.VENDOR_NAVIGATION_PATTERN_KEY);
         }
 
         //product manufacturers
