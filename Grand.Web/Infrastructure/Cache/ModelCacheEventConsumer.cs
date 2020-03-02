@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //product manufacturers
-        INotificationHandler<EntityInserted<ProductManufacturer>>,
-        INotificationHandler<EntityUpdated<ProductManufacturer>>,
-        INotificationHandler<EntityDeleted<ProductManufacturer>>,
         //categories
         INotificationHandler<EntityInserted<Category>>,
         INotificationHandler<EntityUpdated<Category>>,
@@ -118,23 +114,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-        //product manufacturers
-        public async Task Handle(EntityInserted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
-        }
-        public async Task Handle(EntityUpdated<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
-        }
-        public async Task Handle(EntityDeleted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
 
         //categories
