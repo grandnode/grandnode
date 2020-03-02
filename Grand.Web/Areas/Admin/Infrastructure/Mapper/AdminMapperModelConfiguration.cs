@@ -66,14 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //banner
-            CreateMap<Banner, BannerModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-
-            CreateMap<BannerModel, Banner>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //InteractiveForm
             CreateMap<InteractiveForm, InteractiveFormModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
