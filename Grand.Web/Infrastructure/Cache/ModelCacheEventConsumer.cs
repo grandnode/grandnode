@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //product tags
-        INotificationHandler<EntityInserted<ProductTag>>,
-        INotificationHandler<EntityUpdated<ProductTag>>,
-        INotificationHandler<EntityDeleted<ProductTag>>,
         //specification attributes
         INotificationHandler<EntityUpdated<SpecificationAttribute>>,
         INotificationHandler<EntityDeleted<SpecificationAttribute>>,
@@ -94,24 +90,6 @@ namespace Grand.Web.Infrastructure.Cache
         public ModelCacheEventConsumer(ICacheManager cacheManager)
         {
             _cacheManager = cacheManager;
-        }
-
-
-        //product tags
-        public async Task Handle(EntityInserted<ProductTag> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_POPULAR_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<ProductTag> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_POPULAR_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ProductTag> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_POPULAR_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
 
 
