@@ -65,15 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //newsLetter categories
-            CreateMap<NewsletterCategory, NewsletterCategoryModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-
-            CreateMap<NewsletterCategoryModel, NewsletterCategory>()
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //forums
             CreateMap<ForumGroup, ForumGroupModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
