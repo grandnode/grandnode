@@ -18,10 +18,7 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //blog post category
-        INotificationHandler<EntityInserted<BlogCategory>>,
-        INotificationHandler<EntityUpdated<BlogCategory>>,
-        INotificationHandler<EntityDeleted<BlogCategory>>,
+        
         //news items
         INotificationHandler<EntityInserted<NewsItem>>,
         INotificationHandler<EntityUpdated<NewsItem>>,
@@ -63,20 +60,6 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
 
-
-        //Blog post category
-        public async Task Handle(EntityInserted<BlogCategory> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<BlogCategory> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<BlogCategory> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
-        }
 
         //News items
         public async Task Handle(EntityInserted<NewsItem> eventMessage, CancellationToken cancellationToken)
