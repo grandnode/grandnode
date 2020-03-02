@@ -7641,6 +7641,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion">
+    <Value>SEO char conversion</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Hint">
+    <Value>Provide the characters which should be converted when Convert non-western chars setting is enabled. Example: ą:a;ę:e;ó:o;ć:c;ł:l;ś:s;ź:z;ż:z</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
   </LocaleResource>
