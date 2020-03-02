@@ -65,16 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //product attribute value
-            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.PriceAdjustmentStr, mo => mo.MapFrom(x => x.PriceAdjustment.ToString("N2")))
-                .ForMember(dest => dest.WeightAdjustmentStr, mo => mo.MapFrom(x => x.WeightAdjustment.ToString("N2")));
-
-            CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //specification attributes
             CreateMap<SpecificationAttribute, SpecificationAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
