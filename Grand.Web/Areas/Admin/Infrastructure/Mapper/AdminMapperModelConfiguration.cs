@@ -66,23 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //topcis
-            CreateMap<Topic, TopicModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableTopicTemplates, mo => mo.Ignore())
-                .ForMember(dest => dest.Url, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore());
-
-            CreateMap<TopicModel, Topic>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
-                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
-
             //category
             CreateMap<Category, CategoryModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
