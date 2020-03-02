@@ -18,11 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        
-        //related product
-        INotificationHandler<EntityInserted<RelatedProduct>>,
-        INotificationHandler<EntityUpdated<RelatedProduct>>,
-        INotificationHandler<EntityDeleted<RelatedProduct>>,
         //similar product
         INotificationHandler<EntityInserted<SimilarProduct>>,
         INotificationHandler<EntityUpdated<SimilarProduct>>,
@@ -123,21 +118,6 @@ namespace Grand.Web.Infrastructure.Cache
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
 
-        //related products
-
-        public async Task Handle(EntityInserted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
-
-        }
-        public async Task Handle(EntityUpdated<RelatedProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
-        }
-        public async Task Handle(EntityDeleted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.Id));
-        }
 
         //similar products
         public async Task Handle(EntityInserted<SimilarProduct> eventMessage, CancellationToken cancellationToken)
