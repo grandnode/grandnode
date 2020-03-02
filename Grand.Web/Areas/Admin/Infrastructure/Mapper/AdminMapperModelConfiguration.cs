@@ -65,10 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //category template
-            CreateMap<CategoryTemplate, CategoryTemplateModel>();
-            CreateMap<CategoryTemplateModel, CategoryTemplate>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
             //manufacturer template
             CreateMap<ManufacturerTemplate, ManufacturerTemplateModel>();
             CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>()
