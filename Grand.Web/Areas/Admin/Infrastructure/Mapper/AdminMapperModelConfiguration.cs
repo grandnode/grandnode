@@ -66,16 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //logs
-            CreateMap<Log, LogModel>()
-                .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
-
-            CreateMap<LogModel, Log>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.LogLevelId, mo => mo.Ignore());
-
             //ActivityLogType
             CreateMap<ActivityLogTypeModel, ActivityLogType>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
