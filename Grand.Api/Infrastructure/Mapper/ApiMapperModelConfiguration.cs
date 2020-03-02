@@ -32,18 +32,6 @@ namespace Grand.Api.Infrastructure.Mapper
 
             #endregion
 
-            #region Customer
-
-            
-
-            CreateMap<AddressDto, Address>()
-                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
-
-            CreateMap<Address, AddressDto>();
-
-            #endregion
-
             #region Picture
 
             CreateMap<PictureDto, Picture>()
