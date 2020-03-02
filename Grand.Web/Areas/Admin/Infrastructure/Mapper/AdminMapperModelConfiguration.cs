@@ -65,20 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //specification attributes
-            CreateMap<SpecificationAttribute, SpecificationAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<SpecificationAttributeModel, SpecificationAttribute>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.SpecificationAttributeOptions, mo => mo.Ignore());
-            CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore());
-            CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //checkout attributes
             CreateMap<CheckoutAttribute, CheckoutAttributeModel>()
                 .ForMember(dest => dest.AvailableTaxCategories, mo => mo.Ignore())
