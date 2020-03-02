@@ -65,17 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //newsLetter subscriptions
-            CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
-                .ForMember(dest => dest.StoreName, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
-
-            CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.StoreId, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.NewsLetterSubscriptionGuid, mo => mo.Ignore());
-
             //newsLetter categories
             CreateMap<NewsletterCategory, NewsletterCategoryModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
