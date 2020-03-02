@@ -65,11 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //course level
-            CreateMap<CourseLevel, CourseLevelModel>();
-            CreateMap<CourseLevelModel, CourseLevel>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //course subject
             CreateMap<CourseSubject, CourseSubjectModel>();
             CreateMap<CourseSubjectModel, CourseSubject>()
