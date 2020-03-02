@@ -43,8 +43,7 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityInserted<CheckoutAttribute>>,
         INotificationHandler<EntityUpdated<CheckoutAttribute>>,
         INotificationHandler<EntityDeleted<CheckoutAttribute>>,
-        //shopping cart items
-        INotificationHandler<EntityUpdated<ShoppingCartItem>>
+        
     {
 
 
@@ -144,12 +143,6 @@ namespace Grand.Web.Infrastructure.Cache
         public async Task Handle(EntityDeleted<CheckoutAttribute> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CHECKOUTATTRIBUTES_PATTERN_KEY);
-        }
-
-        //shopping cart items        
-        public async Task Handle(EntityUpdated<ShoppingCartItem> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
         }
 
     }
