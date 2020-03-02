@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //similar product
-        INotificationHandler<EntityInserted<SimilarProduct>>,
-        INotificationHandler<EntityUpdated<SimilarProduct>>,
-        INotificationHandler<EntityDeleted<SimilarProduct>>,
         //product tags
         INotificationHandler<EntityInserted<ProductTag>>,
         INotificationHandler<EntityUpdated<ProductTag>>,
@@ -118,23 +114,6 @@ namespace Grand.Web.Infrastructure.Cache
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
 
-
-        //similar products
-        public async Task Handle(EntityInserted<SimilarProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
-        }
-        public async Task Handle(EntityUpdated<SimilarProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
-        }
-        public async Task Handle(EntityDeleted<SimilarProduct> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveAsync(string.Format(ModelCacheEventConst.PRODUCTS_SIMILAR_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
-        }
 
         //specification attributes
         public async Task Handle(EntityUpdated<SpecificationAttribute> eventMessage, CancellationToken cancellationToken)
