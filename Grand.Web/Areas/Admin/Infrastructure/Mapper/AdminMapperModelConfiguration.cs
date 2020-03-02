@@ -66,21 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //vendors
-            CreateMap<Vendor, VendorModel>()
-                .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
-                .ForMember(dest => dest.AddVendorNoteMessage, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)));
-
-            CreateMap<VendorModel, Vendor>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.Deleted, mo => mo.Ignore());
-
             //products
             CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
