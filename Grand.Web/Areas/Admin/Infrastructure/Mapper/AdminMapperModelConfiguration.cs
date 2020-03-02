@@ -65,11 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //customer tags
-            CreateMap<CustomerTag, CustomerTagModel>();
-            CreateMap<CustomerTagModel, CustomerTag>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //customer action
             CreateMap<CustomerAction, CustomerActionModel>()
                 .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
