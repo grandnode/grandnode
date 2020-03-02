@@ -65,13 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //measure dimensions
-            CreateMap<MeasureDimension, MeasureDimensionModel>()
-                .ForMember(dest => dest.IsPrimaryDimension, mo => mo.Ignore());
-
-            CreateMap<MeasureDimensionModel, MeasureDimension>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //tax providers
             CreateMap<ITaxProvider, TaxProviderModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
