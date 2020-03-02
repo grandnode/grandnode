@@ -20,9 +20,7 @@ namespace Grand.Web.Infrastructure.Cache
         
         
         //return requests
-        INotificationHandler<EntityInserted<ReturnRequestAction>>,
-        INotificationHandler<EntityUpdated<ReturnRequestAction>>,
-        INotificationHandler<EntityDeleted<ReturnRequestAction>>,
+        
         INotificationHandler<EntityInserted<ReturnRequestReason>>,
         INotificationHandler<EntityUpdated<ReturnRequestReason>>,
         INotificationHandler<EntityDeleted<ReturnRequestReason>>,
@@ -53,18 +51,7 @@ namespace Grand.Web.Infrastructure.Cache
 
 
         //retunr requests
-        public async Task Handle(EntityInserted<ReturnRequestAction> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTACTIONS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<ReturnRequestAction> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTACTIONS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ReturnRequestAction> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTACTIONS_PATTERN_KEY);
-        }
+        
         public async Task Handle(EntityInserted<ReturnRequestReason> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTREASONS_PATTERN_KEY);
