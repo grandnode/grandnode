@@ -66,13 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //product attributes mapping
-            CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>();
-
-            CreateMap<ProductModel.ProductAttributeMappingModel, ProductAttributeMapping>()
-                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //Tier prices
             CreateMap<TierPrice, ProductModel.TierPriceModel>()
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
