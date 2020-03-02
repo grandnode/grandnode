@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //Orders
-        INotificationHandler<EntityInserted<Order>>,
-        INotificationHandler<EntityUpdated<Order>>,
-        INotificationHandler<EntityDeleted<Order>>,
         //Product picture mapping
         INotificationHandler<EntityInserted<ProductPicture>>,
         INotificationHandler<EntityUpdated<ProductPicture>>,
@@ -78,22 +74,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-        //Orders
-        public async Task Handle(EntityInserted<Order> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Order> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<Order> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
 
         //Product picture mappings
         public async Task Handle(EntityInserted<ProductPicture> eventMessage, CancellationToken cancellationToken)
