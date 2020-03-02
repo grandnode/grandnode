@@ -20,20 +20,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperSettingsConfiguration()
         {
 
-            
-
-            CreateMap<NewsSettings, NewsSettingsModel>()
-                .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
-                .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.NotifyAboutNewNewsComments_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.ShowNewsOnMainPage_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.MainPageNewsCount_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.NewsArchivePageSize_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
-            CreateMap<NewsSettingsModel, NewsSettings>();
-
             CreateMap<ForumSettings, ForumSettingsModel>()
                 .ForMember(dest => dest.ForumEditorValues, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
