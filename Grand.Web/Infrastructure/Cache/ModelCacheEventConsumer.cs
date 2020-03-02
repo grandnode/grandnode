@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //Product specification attribute
-        INotificationHandler<EntityInserted<ProductSpecificationAttribute>>,
-        INotificationHandler<EntityUpdated<ProductSpecificationAttribute>>,
-        INotificationHandler<EntityDeleted<ProductSpecificationAttribute>>,
         //Topics
         INotificationHandler<EntityInserted<Topic>>,
         INotificationHandler<EntityUpdated<Topic>>,
@@ -86,23 +82,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-
-        //Product specification attribute
-        public async Task Handle(EntityInserted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SPECS_FILTER_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SPECS_FILTER_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_SPECS_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SPECS_FILTER_PATTERN_KEY);
-        }
 
         //Topics
         public async Task Handle(EntityInserted<Topic> eventMessage, CancellationToken cancellationToken)
