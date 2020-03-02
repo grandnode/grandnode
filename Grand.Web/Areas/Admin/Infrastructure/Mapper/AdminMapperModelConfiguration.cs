@@ -66,19 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //ActivityLogType
-            CreateMap<ActivityLogTypeModel, ActivityLogType>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
-
-            CreateMap<ActivityLogType, ActivityLogTypeModel>();
-
-            CreateMap<ActivityLog, ActivityLogModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
-
-            CreateMap<ActivityStats, ActivityStatsModel>()
-                .ForMember(dest => dest.ActivityLogTypeName, mo => mo.Ignore());
-
             //currencies
             CreateMap<Currency, CurrencyModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
