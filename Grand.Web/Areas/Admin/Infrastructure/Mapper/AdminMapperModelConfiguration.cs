@@ -65,13 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //product attributes
-            CreateMap<ProductAttribute, ProductAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<ProductAttributeModel, ProductAttribute>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //product review
             CreateMap<ProductReviewModel, ProductReview>()
                 .ForMember(dest => dest.HelpfulYesTotal, mo => mo.Ignore())
