@@ -66,17 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //campaign
-            CreateMap<Campaign, CampaignModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.TestEmail, mo => mo.Ignore());
-
-            CreateMap<CampaignModel, Campaign>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
-
             //topcis
             CreateMap<Topic, TopicModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
