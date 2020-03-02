@@ -65,12 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            
-            //measure units
-            CreateMap<MeasureUnit, MeasureUnitModel>();
-            CreateMap<MeasureUnitModel, MeasureUnit>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //measure dimensions
             CreateMap<MeasureDimension, MeasureDimensionModel>()
                 .ForMember(dest => dest.IsPrimaryDimension, mo => mo.Ignore());
