@@ -65,14 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //warehouse
-            CreateMap<PickupPoint, PickupPointModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore());
-
-            CreateMap<PickupPointModel, PickupPoint>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
-
             //shipping rate computation methods
             CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
