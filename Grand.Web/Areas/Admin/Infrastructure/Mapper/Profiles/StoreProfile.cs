@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Infrastructure.Mapper;
-using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Stores;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
