@@ -4845,6 +4845,7 @@ namespace Grand.Services.Installation
                 DefaultMetaDescription = "",
                 GenerateProductMetaDescription = true,
                 ConvertNonWesternChars = false,
+                SeoCharConversion = "ą:a;ę:e;ó:o;ć:c;ł:l;ś:s;ź:z;ż:z",
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
                 //we disable bundling out of the box because it requires a lot of server resources

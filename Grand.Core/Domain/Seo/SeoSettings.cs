@@ -41,6 +41,12 @@ namespace Grand.Core.Domain.Seo
         /// A value indicating whether we should conver non-wetern chars to western ones
         /// </summary>
         public bool ConvertNonWesternChars { get; set; }
+
+        /// <summary>
+        /// A value indicating to conver non-wetern chars to western ones
+        /// </summary>
+        public string SeoCharConversion { get; set; }
+
         /// <summary>
         /// A value indicating whether unicode chars are allowed
         /// </summary>
