@@ -66,13 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //measure weights
-            CreateMap<MeasureWeight, MeasureWeightModel>()
-                .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore());
-
-            CreateMap<MeasureWeightModel, MeasureWeight>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //measure units
             CreateMap<MeasureUnit, MeasureUnitModel>();
             CreateMap<MeasureUnitModel, MeasureUnit>()
