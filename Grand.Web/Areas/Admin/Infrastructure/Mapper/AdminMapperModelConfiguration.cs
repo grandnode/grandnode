@@ -65,13 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //address attributes value
-            CreateMap<AddressAttributeValue, AddressAttributeValueModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //discounts
             CreateMap<Discount, DiscountModel>()
                 .ForMember(dest => dest.DiscountTypeName, mo => mo.Ignore())
