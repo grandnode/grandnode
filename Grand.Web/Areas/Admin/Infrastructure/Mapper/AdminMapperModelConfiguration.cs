@@ -65,10 +65,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //contact form
-            CreateMap<ContactUs, ContactFormModel>()
-                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
-
+            
             //banner
             CreateMap<Banner, BannerModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
