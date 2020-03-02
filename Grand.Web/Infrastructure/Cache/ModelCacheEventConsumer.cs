@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //categories
-        INotificationHandler<EntityInserted<Category>>,
-        INotificationHandler<EntityUpdated<Category>>,
-        INotificationHandler<EntityDeleted<Category>>,
         //product categories
         INotificationHandler<EntityInserted<ProductCategory>>,
         INotificationHandler<EntityUpdated<ProductCategory>>,
@@ -116,38 +112,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-        //categories
-        public async Task Handle(EntityInserted<Category> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<Category> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
-
-        public async Task Handle(EntityDeleted<Category> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SEARCH_CATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_ALL_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CATEGORY_HOMEPAGE_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SITEMAP_PATTERN_KEY);
-        }
 
         //product categories
         public async Task Handle(EntityInserted<ProductCategory> eventMessage, CancellationToken cancellationToken)
