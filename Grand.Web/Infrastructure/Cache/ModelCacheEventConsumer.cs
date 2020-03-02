@@ -18,10 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //Product picture mapping
-        INotificationHandler<EntityInserted<ProductPicture>>,
-        INotificationHandler<EntityUpdated<ProductPicture>>,
-        INotificationHandler<EntityDeleted<ProductPicture>>,
         //polls
         INotificationHandler<EntityInserted<Poll>>,
         INotificationHandler<EntityUpdated<Poll>>,
@@ -74,23 +70,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-
-        //Product picture mappings
-        public async Task Handle(EntityInserted<ProductPicture> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
-        }
-        public async Task Handle(EntityUpdated<ProductPicture> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
-        }
-        public async Task Handle(EntityDeleted<ProductPicture> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_DETAILS_PICTURES_PATTERN_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CART_PICTURE_PATTERN_KEY, eventMessage.Entity.ProductId));
-        }
 
         //Polls
         public async Task Handle(EntityInserted<Poll> eventMessage, CancellationToken cancellationToken)
