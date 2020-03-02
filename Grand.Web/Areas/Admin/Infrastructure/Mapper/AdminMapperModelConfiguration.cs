@@ -65,11 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //document type
-            CreateMap<DocumentType, DocumentTypeModel>();
-            CreateMap<DocumentTypeModel, DocumentType>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //documents
             CreateMap<Document, DocumentModel>()
                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
