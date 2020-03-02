@@ -65,12 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //Customer action type
-            CreateMap<CustomerActionTypeModel, CustomerActionType>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
-            CreateMap<CustomerActionType, CustomerActionTypeModel>();
-
             //Customer reminder
             CreateMap<CustomerReminderModel, CustomerReminder>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
