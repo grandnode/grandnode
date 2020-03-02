@@ -19,10 +19,6 @@ namespace Grand.Web.Infrastructure.Cache
     public partial class ModelCacheEventConsumer :
         
         
-        //news items
-        INotificationHandler<EntityInserted<NewsItem>>,
-        INotificationHandler<EntityUpdated<NewsItem>>,
-        INotificationHandler<EntityDeleted<NewsItem>>,
         //return requests
         INotificationHandler<EntityInserted<ReturnRequestAction>>,
         INotificationHandler<EntityUpdated<ReturnRequestAction>>,
@@ -59,21 +55,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-
-
-        //News items
-        public async Task Handle(EntityInserted<NewsItem> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<NewsItem> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<NewsItem> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
-        }
 
         //retunr requests
         public async Task Handle(EntityInserted<ReturnRequestAction> eventMessage, CancellationToken cancellationToken)
