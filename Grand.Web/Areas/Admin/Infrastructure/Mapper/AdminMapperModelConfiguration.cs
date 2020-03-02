@@ -65,13 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //external authentication methods
-            CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
-                .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
-                .ForMember(dest => dest.IsActive, mo => mo.Ignore());
-
             //widgets
             CreateMap<IWidgetPlugin, WidgetModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
