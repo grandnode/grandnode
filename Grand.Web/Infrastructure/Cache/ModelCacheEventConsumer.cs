@@ -18,9 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        //specification attribute options
-        INotificationHandler<EntityUpdated<SpecificationAttributeOption>>,
-        INotificationHandler<EntityDeleted<SpecificationAttributeOption>>,
         //Product specification attribute
         INotificationHandler<EntityInserted<ProductSpecificationAttribute>>,
         INotificationHandler<EntityUpdated<ProductSpecificationAttribute>>,
@@ -89,19 +86,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager = cacheManager;
         }
 
-
-        //specification attribute options
-
-        public async Task Handle(EntityUpdated<SpecificationAttributeOption> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_SPECS_PATTERN);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SPECS_FILTER_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<SpecificationAttributeOption> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_SPECS_PATTERN);
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.SPECS_FILTER_PATTERN_KEY);
-        }
 
         //Product specification attribute
         public async Task Handle(EntityInserted<ProductSpecificationAttribute> eventMessage, CancellationToken cancellationToken)
