@@ -65,12 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //tax providers
-            CreateMap<ITaxProvider, TaxProviderModel>()
-                .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.IsPrimaryTaxProvider, mo => mo.Ignore());
-
             //tax categories
             CreateMap<TaxCategory, TaxCategoryModel>();
             CreateMap<TaxCategoryModel, TaxCategory>()
