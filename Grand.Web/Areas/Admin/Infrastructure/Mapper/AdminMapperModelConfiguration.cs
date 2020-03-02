@@ -66,19 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //product attributes combination
-            CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
-                .ForMember(dest => dest.UseMultipleWarehouses, mo => mo.Ignore())
-                .ForMember(dest => dest.WarehouseInventoryModels, mo => mo.Ignore());
-            CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
-                .ForMember(dest => dest.WarehouseInventory, mo => mo.Ignore())
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
-            CreateMap<PredefinedProductAttributeValue, ProductAttributeValue>()
-               .ForMember(dest => dest.AttributeValueType, mo => mo.MapFrom(x => AttributeValueType.Simple))
-               .ForMember(dest => dest.ProductAttributeMappingId, mo => mo.MapFrom(x => x.Id))
-               .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //product attributes mapping
             CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>();
 
