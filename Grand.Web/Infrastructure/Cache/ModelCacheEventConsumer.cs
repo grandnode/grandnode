@@ -38,11 +38,8 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<ProductTemplate>>,
         INotificationHandler<EntityInserted<TopicTemplate>>,
         INotificationHandler<EntityUpdated<TopicTemplate>>,
-        INotificationHandler<EntityDeleted<TopicTemplate>>,
-        //checkout attributes
-        INotificationHandler<EntityInserted<CheckoutAttribute>>,
-        INotificationHandler<EntityUpdated<CheckoutAttribute>>,
-        INotificationHandler<EntityDeleted<CheckoutAttribute>>,
+        INotificationHandler<EntityDeleted<TopicTemplate>>
+        
         
     {
 
@@ -131,19 +128,6 @@ namespace Grand.Web.Infrastructure.Cache
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
         }
 
-        //checkout attributes
-        public async Task Handle(EntityInserted<CheckoutAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CHECKOUTATTRIBUTES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<CheckoutAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CHECKOUTATTRIBUTES_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<CheckoutAttribute> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.CHECKOUTATTRIBUTES_PATTERN_KEY);
-        }
 
     }
 }
