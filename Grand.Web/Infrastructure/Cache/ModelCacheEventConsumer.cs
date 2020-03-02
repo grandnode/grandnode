@@ -18,12 +18,6 @@ namespace Grand.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         
-        
-        //return requests
-        
-        INotificationHandler<EntityInserted<ReturnRequestReason>>,
-        INotificationHandler<EntityUpdated<ReturnRequestReason>>,
-        INotificationHandler<EntityDeleted<ReturnRequestReason>>,
         //templates
         INotificationHandler<EntityInserted<CategoryTemplate>>,
         INotificationHandler<EntityUpdated<CategoryTemplate>>,
@@ -50,20 +44,6 @@ namespace Grand.Web.Infrastructure.Cache
         }
 
 
-        //retunr requests
-        
-        public async Task Handle(EntityInserted<ReturnRequestReason> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTREASONS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityUpdated<ReturnRequestReason> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTREASONS_PATTERN_KEY);
-        }
-        public async Task Handle(EntityDeleted<ReturnRequestReason> eventMessage, CancellationToken cancellationToken)
-        {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.RETURNREQUESTREASONS_PATTERN_KEY);
-        }
 
         //templates
         public async Task Handle(EntityInserted<CategoryTemplate> eventMessage, CancellationToken cancellationToken)
