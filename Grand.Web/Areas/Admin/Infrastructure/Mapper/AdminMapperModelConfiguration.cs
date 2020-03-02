@@ -65,25 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //discounts
-            CreateMap<Discount, DiscountModel>()
-                .ForMember(dest => dest.DiscountTypeName, mo => mo.Ignore())
-                .ForMember(dest => dest.TimesUsed, mo => mo.Ignore())
-                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
-                .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableDiscountAmountProviders, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore());
-
-            CreateMap<DiscountModel, Discount>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
-                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
-
             //gift cards
             CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())
