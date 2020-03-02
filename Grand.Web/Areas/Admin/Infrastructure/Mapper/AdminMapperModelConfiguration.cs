@@ -66,14 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             
-            //Tier prices
-            CreateMap<TierPrice, ProductModel.TierPriceModel>()
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
-
-            CreateMap<ProductModel.TierPriceModel, TierPrice>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //logs
             CreateMap<Log, LogModel>()
                 .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
