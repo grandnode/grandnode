@@ -66,17 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
 
-            //language
-            CreateMap<Language, LanguageModel>()
-                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
-                .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore());
-
-            CreateMap<LanguageModel, Language>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
-
             //email account
             CreateMap<EmailAccount, EmailAccountModel>()
                 .ForMember(dest => dest.Password, mo => mo.Ignore())
