@@ -65,11 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //tax categories
-            CreateMap<TaxCategory, TaxCategoryModel>();
-            CreateMap<TaxCategoryModel, TaxCategory>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
             //shipping methods
             CreateMap<ShippingMethod, ShippingMethodModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
