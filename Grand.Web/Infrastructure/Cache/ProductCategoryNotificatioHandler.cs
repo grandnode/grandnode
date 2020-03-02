@@ -15,6 +15,11 @@ namespace Grand.Web.Infrastructure.Cache
 
         private readonly ICacheManager _cacheManager;
 
+        public ProductCategoryNotificatioHandler(ICacheManager cacheManager)
+        {
+            _cacheManager = cacheManager;
+        }
+
         public async Task Handle(EntityInserted<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
             await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
