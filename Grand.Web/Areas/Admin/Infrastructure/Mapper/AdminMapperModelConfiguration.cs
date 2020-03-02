@@ -65,15 +65,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
     {
         public AdminMapperModelConfiguration()
         {
-            //address attributes
-            CreateMap<AddressAttribute, AddressAttributeModel>()
-                .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<AddressAttributeModel, AddressAttribute>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
-                .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
             //address attributes value
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
