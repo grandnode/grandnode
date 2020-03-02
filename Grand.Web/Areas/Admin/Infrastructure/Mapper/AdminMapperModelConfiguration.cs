@@ -66,13 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
             //warehouse
-            CreateMap<Warehouse, WarehouseModel>()
-                .ForMember(dest => dest.Address, mo => mo.Ignore());
-
-            CreateMap<WarehouseModel, Warehouse>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
-            //warehouse
             CreateMap<PickupPoint, PickupPointModel>()
                 .ForMember(dest => dest.Address, mo => mo.Ignore());
 
