@@ -66,13 +66,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperModelConfiguration()
         {
 
-            //state/provinces
-            CreateMap<StateProvince, StateProvinceModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-            CreateMap<StateProvinceModel, StateProvince>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()));
-
             //language
             CreateMap<Language, LanguageModel>()
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
