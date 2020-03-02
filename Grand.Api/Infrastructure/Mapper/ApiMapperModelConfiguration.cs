@@ -18,15 +18,6 @@ namespace Grand.Api.Infrastructure.Mapper
         public ApiMapperModelConfiguration()
         {
             
-            #region CustomerRole
-
-            CreateMap<CustomerRoleDto, CustomerRole>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
-
-            CreateMap<CustomerRole, CustomerRoleDto>();
-
-            #endregion
-
             #region Product attribute 
 
             CreateMap<ProductAttributeDto, ProductAttribute>()
