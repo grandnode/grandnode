@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static NewsSettingsModel ToModel(this NewsSettings entity)
-        {
-            return entity.MapTo<NewsSettings, NewsSettingsModel>();
-        }
-        public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static CatalogSettingsModel ToModel(this CatalogSettings entity)
         {
             return entity.MapTo<CatalogSettings, CatalogSettingsModel>();
