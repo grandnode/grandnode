@@ -73,15 +73,6 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
-        
-        #region Plugins
-
-        public static PluginModel ToModel(this PluginDescriptor entity)
-        {
-            return entity.MapTo<PluginDescriptor, PluginModel>();
-        }
-
-        #endregion
 
         #region Stores
 
