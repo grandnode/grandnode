@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static TaxSettingsModel ToModel(this TaxSettings entity)
-        {
-            return entity.MapTo<TaxSettings, TaxSettingsModel>();
-        }
-        public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static ShippingSettingsModel ToModel(this ShippingSettings entity)
         {
             return entity.MapTo<ShippingSettings, ShippingSettingsModel>();
