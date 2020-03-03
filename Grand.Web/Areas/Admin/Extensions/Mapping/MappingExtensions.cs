@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Shipping methods
-
-        public static ShippingMethodModel ToModel(this ShippingMethod entity)
-        {
-            return entity.MapTo<ShippingMethod, ShippingMethodModel>();
-        }
-
-        public static ShippingMethod ToEntity(this ShippingMethodModel model)
-        {
-            return model.MapTo<ShippingMethodModel, ShippingMethod>();
-        }
-
-        public static ShippingMethod ToEntity(this ShippingMethodModel model, ShippingMethod destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Delivery dates
 
         public static DeliveryDateModel ToModel(this DeliveryDate entity)
