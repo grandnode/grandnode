@@ -36,8 +36,10 @@ namespace Grand.Services.Queries.Handlers.Orders
                 shippingStatusId = (int)request.Ss.Value;
 
             var query = _orderRepository.Table;
-            if (!string.IsNullOrEmpty(request.StoreId))
+            if (!string.IsNullOrEmpty(request.OrderId))
+                query = query.Where(o => o.Id == request.OrderId);
 
+            if (!string.IsNullOrEmpty(request.StoreId))
                 query = query.Where(o => o.StoreId == request.StoreId);
 
             if (!string.IsNullOrEmpty(request.VendorId))

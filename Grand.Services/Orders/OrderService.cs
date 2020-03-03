@@ -152,9 +152,12 @@ namespace Grand.Services.Orders
 
             var filters = Builders<ProductAlsoPurchased>.Filter;
             var filter = filters.Where(x => x.OrderId == order.Id);
-            await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
             order.Deleted = true;
             await UpdateOrder(order);
+
+            //delete product also purchased
+            await _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
+
         }
 
         /// <summary>
@@ -276,15 +279,16 @@ namespace Grand.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public virtual Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
+        public virtual Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod
+            (string authorizationTransactionId,
             string paymentMethodSystemName)
         {
             var query = _orderRepository.Table;
 
-            if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
+            if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
 
-            if (!String.IsNullOrWhiteSpace(paymentMethodSystemName))
+            if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             query = query.OrderByDescending(o => o.CreatedOnUtc);
@@ -330,62 +334,38 @@ namespace Grand.Services.Orders
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
-            var builder = Builders<Order>.Filter;
-
-            var filter = builder.Where(x => !x.Deleted);
-
-            if (!String.IsNullOrEmpty(orderId))
-                filter = filter & builder.Where(o => o.Id == orderId);
-
-            if (!String.IsNullOrEmpty(customerId))
-                filter = filter & builder.Where(o => o.CustomerId == customerId);
-
-            if (orderStatusId.HasValue)
-                filter = filter & builder.Where(o => o.OrderStatusId == orderStatusId.Value);
-
-            if (paymentStatusId.HasValue)
-                filter = filter & builder.Where(o => o.PaymentStatusId == paymentStatusId.Value);
-
-            if (shippingStatusId.HasValue)
-                filter = filter & builder.Where(o => o.ShippingStatusId == shippingStatusId.Value);
-
-            if (createdFromUtc.HasValue)
-                filter = filter & builder.Where(o => o.CreatedOnUtc >= createdFromUtc.Value);
-
-            if (createdToUtc.HasValue)
-                filter = filter & builder.Where(o => o.CreatedOnUtc <= createdToUtc.Value);
-
-            var query = await _orderRepository.Collection.Aggregate().Match(filter).Unwind<Order, UnwindOrderItem>(x => x.OrderItems).ToListAsync();
+            var querymodel = new GetOrderQueryModel() {
+                CreatedFromUtc = createdFromUtc,
+                CreatedToUtc = createdToUtc,
+                CustomerId = customerId,
+                Os = os,
+                OrderId = orderId,
+                Ps = ps,
+                Ss = ss,
+            };
+            var query = await _mediator.Send(querymodel);
             var items = new List<OrderItem>();
-            foreach (var item in query)
+            foreach (var order in await query.ToListAsync())
             {
-                if (loadDownloableProductsOnly)
+                foreach (var orderitem in order.OrderItems)
                 {
-                    var product = await _productRepository.GetByIdAsync(item.OrderItems.ProductId);
-                    if (product == null)
-                        product = await _productDeletedRepository.GetByIdAsync(item.OrderItems.ProductId) as Product;
-                    if (product != null)
+                    if (loadDownloableProductsOnly)
                     {
-                        if (product.IsDownload)
+                        var product = await _productRepository.GetByIdAsync(orderitem.ProductId);
+                        if (product == null)
+                            product = await _productDeletedRepository.GetByIdAsync(orderitem.ProductId) as Product;
+                        if (product != null)
                         {
-                            items.Add(item.OrderItems);
+                            if (product.IsDownload)
+                            {
+                                items.Add(orderitem);
+                            }
                         }
                     }
+                    else
+                        items.Add(orderitem);
                 }
-                else
-                    items.Add(item.OrderItems);
+
             }
             return items;
         }
@@ -562,16 +542,6 @@ namespace Grand.Services.Orders
 
         #endregion
 
-        #endregion
-
-        #region UnwindOrderItem
-
-        public class UnwindOrderItem
-        {
-            public OrderItem OrderItems { get; set; }
-        }
-
-        #endregion
-
+        #endregion      
     }
 }

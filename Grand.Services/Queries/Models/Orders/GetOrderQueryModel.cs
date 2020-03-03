@@ -9,6 +9,7 @@ namespace Grand.Services.Queries.Models.Orders
 {
     public class GetOrderQueryModel : IRequest<IMongoQueryable<Order>>
     {
+        public string OrderId { get; set; } = "";
         public string StoreId { get; set; } = "";
         public string VendorId { get; set; } = "";
         public string CustomerId { get; set; } = "";
