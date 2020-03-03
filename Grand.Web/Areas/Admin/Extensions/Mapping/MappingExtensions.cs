@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Customer Action Type
-
-        public static CustomerActionTypeModel ToModel(this CustomerActionType entity)
-        {
-            return entity.MapTo<CustomerActionType, CustomerActionTypeModel>();
-        }
-
-        #endregion
-
         #region Customer Reminder
 
         //customer action
