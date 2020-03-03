@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Shipping rate computation method
-
-        public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
-        {
-            return entity.MapTo<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
-        }
-
-        #endregion
-
         #region Shipping methods
 
         public static ShippingMethodModel ToModel(this ShippingMethod entity)
