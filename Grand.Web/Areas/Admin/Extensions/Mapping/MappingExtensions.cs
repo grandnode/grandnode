@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Queued email
-
-        public static QueuedEmailModel ToModel(this QueuedEmail entity)
-        {
-            return entity.MapTo<QueuedEmail, QueuedEmailModel>();
-        }
-
-        public static QueuedEmail ToEntity(this QueuedEmailModel model)
-        {
-            return model.MapTo<QueuedEmailModel, QueuedEmail>();
-        }
-
-        public static QueuedEmail ToEntity(this QueuedEmailModel model, QueuedEmail destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Banner
 
         public static BannerModel ToModel(this Banner entity)
