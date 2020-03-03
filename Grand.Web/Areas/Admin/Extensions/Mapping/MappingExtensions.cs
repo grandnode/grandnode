@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Stores
-
-        public static StoreModel ToModel(this Store entity)
-        {
-            return entity.MapTo<Store, StoreModel>();
-        }
-
-        public static Store ToEntity(this StoreModel model)
-        {
-            return model.MapTo<StoreModel, Store>();
-        }
-
-        public static Store ToEntity(this StoreModel model, Store destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Templates
 
         public static CategoryTemplateModel ToModel(this CategoryTemplate entity)
