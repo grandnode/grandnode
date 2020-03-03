@@ -73,7 +73,7 @@ namespace Grand.Web.Controllers
 
             var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
             var product = await _productService.GetProductById(orderItem.ProductId);
-            if (!await _downloadService.IsDownloadAllowed(orderItem))
+            if (!await _downloadService.IsDownloadAllowed(order, orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -178,7 +178,7 @@ namespace Grand.Web.Controllers
 
             var order = await _orderService.GetOrderByOrderItemId(orderItem.Id);
             var product = await _productService.GetProductById(orderItem.ProductId);
-            if (!await _downloadService.IsLicenseDownloadAllowed(orderItem))
+            if (!await _downloadService.IsLicenseDownloadAllowed(order, orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)

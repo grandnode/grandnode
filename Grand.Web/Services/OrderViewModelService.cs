@@ -451,9 +451,9 @@ namespace Grand.Web.Services
                 }
 
                 //downloadable products
-                if (await _downloadService.IsDownloadAllowed(orderItem))
+                if (await _downloadService.IsDownloadAllowed(order, orderItem))
                     orderItemModel.DownloadId = product.DownloadId;
-                if (await _downloadService.IsLicenseDownloadAllowed(orderItem))
+                if (await _downloadService.IsLicenseDownloadAllowed(order, orderItem))
                     orderItemModel.LicenseId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "";
             }
 
