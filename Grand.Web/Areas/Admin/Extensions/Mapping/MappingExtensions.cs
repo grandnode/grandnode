@@ -74,36 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Datetime
-        public static DateTime? ConvertToUserTime(this DateTime? datetime, IDateTimeHelper dateTimeHelper)
-        {
-            if (datetime.HasValue)
-            {
-                datetime = dateTimeHelper.ConvertToUserTime(datetime.Value, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
-            }
-            return datetime;
-        }
-
-        public static DateTime? ConvertToUtcTime(this DateTime? datetime, IDateTimeHelper dateTimeHelper)
-        {
-            if (datetime.HasValue)
-            {
-                datetime = dateTimeHelper.ConvertToUtcTime(datetime.Value, dateTimeHelper.DefaultStoreTimeZone);
-            }
-            return datetime;
-        }
-        public static DateTime ConvertToUserTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
-        {
-            return dateTimeHelper.ConvertToUserTime(datetime, TimeZoneInfo.Utc, dateTimeHelper.DefaultStoreTimeZone);
-        }
-
-        public static DateTime ConvertToUtcTime(this DateTime datetime, IDateTimeHelper dateTimeHelper)
-        {
-            return dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
-        }
-
-        #endregion
-
         #region Course level
 
         public static CourseLevelModel ToModel(this CourseLevel entity)
