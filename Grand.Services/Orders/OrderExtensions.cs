@@ -114,13 +114,12 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of already shipped items</returns>
-        public static async Task<int> GetTotalNumberOfShippedItems(this OrderItem orderItem, IOrderService orderService, IShipmentService shipmentService)
+        public static async Task<int> GetTotalNumberOfShippedItems(this OrderItem orderItem, Order order, IShipmentService shipmentService)
         {
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
 
             var result = 0;
-            var order = await orderService.GetOrderByOrderItemId(orderItem.Id);
             var shipments = await shipmentService.GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
@@ -145,13 +144,12 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order  item</param>
         /// <returns>Total number of already delivered items</returns>
-        public static async Task<int> GetTotalNumberOfDeliveredItems(this OrderItem orderItem, IOrderService orderService, IShipmentService shipmentService)
+        public static async Task<int> GetTotalNumberOfDeliveredItems(this OrderItem orderItem, Order order, IShipmentService shipmentService)
         {
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
 
             var result = 0;
-            var order = await orderService.GetOrderByOrderItemId(orderItem.Id);
             var shipments = await shipmentService.GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
@@ -230,7 +228,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether an order has items to deliver</returns>
-        public static async Task<bool> HasItemsToDeliver(this Order order, IOrderService orderService, IShipmentService shipmentService, IProductService productService)
+        public static async Task<bool> HasItemsToDeliver(this Order order, IShipmentService shipmentService, IProductService productService)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -242,8 +240,8 @@ namespace Grand.Services.Orders
                 if (!product.IsShipEnabled)
                     continue;
 
-                var totalNumberOfShippedItems = await orderItem.GetTotalNumberOfShippedItems(orderService, shipmentService);
-                var totalNumberOfDeliveredItems = await orderItem.GetTotalNumberOfDeliveredItems(orderService, shipmentService);
+                var totalNumberOfShippedItems = await orderItem.GetTotalNumberOfShippedItems(order, shipmentService);
+                var totalNumberOfDeliveredItems = await orderItem.GetTotalNumberOfDeliveredItems(order, shipmentService);
                 if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
                     continue;
 
