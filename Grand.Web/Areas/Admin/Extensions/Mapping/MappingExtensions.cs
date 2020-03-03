@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Message templates
-
-        public static MessageTemplateModel ToModel(this MessageTemplate entity)
-        {
-            return entity.MapTo<MessageTemplate, MessageTemplateModel>();
-        }
-
-        public static MessageTemplate ToEntity(this MessageTemplateModel model)
-        {
-            return model.MapTo<MessageTemplateModel, MessageTemplate>();
-        }
-
-        public static MessageTemplate ToEntity(this MessageTemplateModel model, MessageTemplate destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Contact form
 
         public static ContactFormModel ToModel(this ContactUs entity)
