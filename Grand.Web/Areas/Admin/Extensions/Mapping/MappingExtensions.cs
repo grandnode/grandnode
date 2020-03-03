@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Course level
-
-        public static CourseLevelModel ToModel(this CourseLevel entity)
-        {
-            return entity.MapTo<CourseLevel, CourseLevelModel>();
-        }
-
-        public static CourseLevel ToEntity(this CourseLevelModel model)
-        {
-            return model.MapTo<CourseLevelModel, CourseLevel>();
-        }
-
-        public static CourseLevel ToEntity(this CourseLevelModel model, CourseLevel destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Course
 
         public static CourseModel ToModel(this Course entity)
