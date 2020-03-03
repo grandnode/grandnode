@@ -74,26 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        
-
-        #region Manufacturer
-
-        public static ManufacturerModel ToModel(this Manufacturer entity)
-        {
-            return entity.MapTo<Manufacturer, ManufacturerModel>();
-        }
-
-        public static Manufacturer ToEntity(this ManufacturerModel model)
-        {
-            return model.MapTo<ManufacturerModel, Manufacturer>();
-        }
-
-        public static Manufacturer ToEntity(this ManufacturerModel model, Manufacturer destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
 
         #region Vendor
 
