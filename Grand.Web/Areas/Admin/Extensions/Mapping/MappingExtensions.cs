@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Return request action
-
-        public static ReturnRequestActionModel ToModel(this ReturnRequestAction entity)
-        {
-            return entity.MapTo<ReturnRequestAction, ReturnRequestActionModel>();
-        }
-
-        public static ReturnRequestAction ToEntity(this ReturnRequestActionModel model)
-        {
-            return model.MapTo<ReturnRequestActionModel, ReturnRequestAction>();
-        }
-
-        public static ReturnRequestAction ToEntity(this ReturnRequestActionModel model, ReturnRequestAction destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Datetime
         public static DateTime? ConvertToUserTime(this DateTime? datetime, IDateTimeHelper dateTimeHelper)
         {
