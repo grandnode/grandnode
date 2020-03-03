@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Tax categories
-
-        public static TaxCategoryModel ToModel(this TaxCategory entity)
-        {
-            return entity.MapTo<TaxCategory, TaxCategoryModel>();
-        }
-
-        public static TaxCategory ToEntity(this TaxCategoryModel model)
-        {
-            return model.MapTo<TaxCategoryModel, TaxCategory>();
-        }
-
-        public static TaxCategory ToEntity(this TaxCategoryModel model, TaxCategory destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Shipping rate computation method
 
         public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
