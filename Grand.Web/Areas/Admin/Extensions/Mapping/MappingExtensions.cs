@@ -75,25 +75,6 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
 
-        #region Vendor
-
-        public static VendorModel ToModel(this Vendor entity)
-        {
-            return entity.MapTo<Vendor, VendorModel>();
-        }
-
-        public static Vendor ToEntity(this VendorModel model)
-        {
-            return model.MapTo<VendorModel, Vendor>();
-        }
-
-        public static Vendor ToEntity(this VendorModel model, Vendor destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Products
 
         public static ProductModel ToModel(this Product entity, IDateTimeHelper dateTimeHelper)
