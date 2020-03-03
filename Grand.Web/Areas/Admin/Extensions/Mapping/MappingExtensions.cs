@@ -74,26 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Customer roles
-
-        //customer roles
-        public static CustomerRoleModel ToModel(this CustomerRole entity)
-        {
-            return entity.MapTo<CustomerRole, CustomerRoleModel>();
-        }
-
-        public static CustomerRole ToEntity(this CustomerRoleModel model)
-        {
-            return model.MapTo<CustomerRoleModel, CustomerRole>();
-        }
-
-        public static CustomerRole ToEntity(this CustomerRoleModel model, CustomerRole destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Customer Tag
 
         //customer tags
