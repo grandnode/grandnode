@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Widgets
-
-        public static WidgetModel ToModel(this IWidgetPlugin entity)
-        {
-            return entity.MapTo<IWidgetPlugin, WidgetModel>();
-        }
-
-        #endregion
-
         #region Address
 
         public static async Task<AddressModel> ToModel(this Address entity, ICountryService countryService = null, IStateProvinceService stateProvinceService = null)
