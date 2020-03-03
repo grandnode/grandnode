@@ -76,23 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Templates
 
-
-        public static ManufacturerTemplateModel ToModel(this ManufacturerTemplate entity)
-        {
-            return entity.MapTo<ManufacturerTemplate, ManufacturerTemplateModel>();
-        }
-
-        public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model)
-        {
-            return model.MapTo<ManufacturerTemplateModel, ManufacturerTemplate>();
-        }
-
-        public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model, ManufacturerTemplate destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static ProductTemplateModel ToModel(this ProductTemplate entity)
         {
             return entity.MapTo<ProductTemplate, ProductTemplateModel>();
