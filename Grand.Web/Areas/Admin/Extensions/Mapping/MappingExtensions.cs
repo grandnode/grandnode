@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region NewsLetter subscriptions
-
-        public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
-        {
-            return entity.MapTo<NewsLetterSubscription, NewsLetterSubscriptionModel>();
-        }
-
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model)
-        {
-            return model.MapTo<NewsLetterSubscriptionModel, NewsLetterSubscription>();
-        }
-
-        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region NewsletterCategory
 
         public static NewsletterCategoryModel ToModel(this NewsletterCategory entity)
