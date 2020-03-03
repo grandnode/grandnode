@@ -74,26 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Pickup points
-
-        public static PickupPointModel ToModel(this PickupPoint entity)
-        {
-            return entity.MapTo<PickupPoint, PickupPointModel>();
-        }
-
-        public static PickupPoint ToEntity(this PickupPointModel model)
-        {
-            return model.MapTo<PickupPointModel, PickupPoint>();
-        }
-
-        public static PickupPoint ToEntity(this PickupPointModel model, PickupPoint destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
-
         #region Payment methods
 
         public static async Task<PaymentMethodModel> ToModel(this IPaymentMethod entity)
