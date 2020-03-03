@@ -74,34 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Discounts
-
-        public static DiscountModel ToModel(this Discount entity, IDateTimeHelper dateTimeHelper)
-        {
-            var discount = entity.MapTo<Discount, DiscountModel>();
-            discount.StartDate = entity.StartDateUtc.ConvertToUserTime(dateTimeHelper);
-            discount.EndDate = entity.EndDateUtc.ConvertToUserTime(dateTimeHelper);
-            return discount;
-        }
-
-        public static Discount ToEntity(this DiscountModel model, IDateTimeHelper dateTimeHelper)
-        {
-            var discount = model.MapTo<DiscountModel, Discount>();
-            discount.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
-            discount.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
-            return discount;
-        }
-
-        public static Discount ToEntity(this DiscountModel model, Discount destination, IDateTimeHelper dateTimeHelper)
-        {
-            var discount = model.MapTo(destination);
-            discount.StartDateUtc = model.StartDate.ConvertToUtcTime(dateTimeHelper);
-            discount.EndDateUtc = model.EndDate.ConvertToUtcTime(dateTimeHelper);
-            return discount;
-        }
-
-        #endregion
-
         #region Forums
 
         //forum groups
