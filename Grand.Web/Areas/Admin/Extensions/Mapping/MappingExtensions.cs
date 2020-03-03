@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region NewsletterCategory
-
-        public static NewsletterCategoryModel ToModel(this NewsletterCategory entity)
-        {
-            return entity.MapTo<NewsletterCategory, NewsletterCategoryModel>();
-        }
-
-        public static NewsletterCategory ToEntity(this NewsletterCategoryModel model)
-        {
-            return model.MapTo<NewsletterCategoryModel, NewsletterCategory>();
-        }
-
-        public static NewsletterCategory ToEntity(this NewsletterCategoryModel model, NewsletterCategory destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Discounts
 
         public static DiscountModel ToModel(this Discount entity, IDateTimeHelper dateTimeHelper)
