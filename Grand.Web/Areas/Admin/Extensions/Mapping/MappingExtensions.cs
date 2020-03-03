@@ -76,15 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static MediaSettingsModel ToModel(this MediaSettings entity)
-        {
-            return entity.MapTo<MediaSettings, MediaSettingsModel>();
-        }
-        public static MediaSettings ToEntity(this MediaSettingsModel model, MediaSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
         //customer/user settings
         public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
         {
