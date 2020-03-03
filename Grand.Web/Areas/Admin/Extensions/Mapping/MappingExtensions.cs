@@ -74,22 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Payment methods
-
-        public static async Task<PaymentMethodModel> ToModel(this IPaymentMethod entity)
-        {
-            var paymentmethod = entity.MapTo<IPaymentMethod, PaymentMethodModel>();
-
-            paymentmethod.SupportCapture = await entity.SupportCapture();
-            paymentmethod.SupportPartiallyRefund = await entity.SupportPartiallyRefund();
-            paymentmethod.SupportRefund = await entity.SupportRefund();
-            paymentmethod.SupportVoid = await entity.SupportVoid();
-
-            return paymentmethod;
-        }
-
-        #endregion
-
         #region External authentication methods
 
         public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
