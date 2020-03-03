@@ -74,41 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Specification attributes
-
-        //attributes
-        public static SpecificationAttributeModel ToModel(this SpecificationAttribute entity)
-        {
-            return entity.MapTo<SpecificationAttribute, SpecificationAttributeModel>();
-        }
-
-        public static SpecificationAttribute ToEntity(this SpecificationAttributeModel model)
-        {
-            return model.MapTo<SpecificationAttributeModel, SpecificationAttribute>();
-        }
-
-        public static SpecificationAttribute ToEntity(this SpecificationAttributeModel model, SpecificationAttribute destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        //attribute options
-        public static SpecificationAttributeOptionModel ToModel(this SpecificationAttributeOption entity)
-        {
-            return entity.MapTo<SpecificationAttributeOption, SpecificationAttributeOptionModel>();
-        }
-
-        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model)
-        {
-            return model.MapTo<SpecificationAttributeOptionModel, SpecificationAttributeOption>();
-        }
-
-        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model, SpecificationAttributeOption destination)
-        {
-            return model.MapTo(destination);
-        }
-        #endregion
-
         #region TierPrices
         //attributes
         public static ProductModel.TierPriceModel ToModel(this TierPrice entity, IDateTimeHelper dateTimeHelper)
