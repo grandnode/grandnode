@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Campaigns
-
-        public static CampaignModel ToModel(this Campaign entity)
-        {
-            return entity.MapTo<Campaign, CampaignModel>();
-        }
-
-        public static Campaign ToEntity(this CampaignModel model)
-        {
-            return model.MapTo<CampaignModel, Campaign>();
-        }
-
-        public static Campaign ToEntity(this CampaignModel model, Campaign destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Topics
 
         public static TopicModel ToModel(this Topic entity)
