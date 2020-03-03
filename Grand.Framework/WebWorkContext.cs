@@ -183,6 +183,46 @@ namespace Grand.Framework
             return requestLanguage;
         }
 
+
+        private async Task GetImpersonatedUser(Customer customer)
+        {
+            var impersonatedCustomerId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+            if (!string.IsNullOrEmpty(impersonatedCustomerId))
+            {
+                var impersonatedCustomer = await _customerService.GetCustomerById(impersonatedCustomerId);
+                if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
+                {
+                    //set impersonated customer
+                    _originalCustomerIfImpersonated = customer;
+                    customer = impersonatedCustomer;
+                }
+            }
+        }
+
+        private async Task GetGuestCustomer(Customer customer)
+        {
+            var customerCookie = GetCustomerCookie();
+            if (!string.IsNullOrEmpty(customerCookie))
+            {
+                if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                {
+                    //get customer from cookie (should not be registered)
+                    var customerByCookie = await _customerService.GetCustomerByGuid(customerGuid);
+                    if (customerByCookie != null && !customerByCookie.IsRegistered())
+                        customer = customerByCookie;
+                }
+            }
+        }
+
+        private async Task GetCrawlerCustomer(Customer customer)
+        {
+            var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
+            //check whether request is made by a search engine, in this case return built-in customer record for search engines
+            if (crawler != null)
+                customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+
+        }
+
         #endregion
 
         #region Properties
@@ -236,41 +276,18 @@ namespace Grand.Framework
             if (customer != null && !customer.Deleted && customer.Active)
             {
                 //get impersonate user if required
-                var impersonatedCustomerId = customer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
-                if (!string.IsNullOrEmpty(impersonatedCustomerId))
-                {
-                    var impersonatedCustomer = await _customerService.GetCustomerById(impersonatedCustomerId);
-                    if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
-                    {
-                        //set impersonated customer
-                        _originalCustomerIfImpersonated = customer;
-                        customer = impersonatedCustomer;
-                    }
-                }
+                await GetImpersonatedUser(customer);
             }
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
                 //get guest customer
-                var customerCookie = GetCustomerCookie();
-                if (!string.IsNullOrEmpty(customerCookie))
-                {
-                    if (Guid.TryParse(customerCookie, out Guid customerGuid))
-                    {
-                        //get customer from cookie (should not be registered)
-                        var customerByCookie = await _customerService.GetCustomerByGuid(customerGuid);
-                        if (customerByCookie != null && !customerByCookie.IsRegistered())
-                            customer = customerByCookie;
-                    }
-                }
+                await GetGuestCustomer(customer);
             }
 
             if (customer == null || customer.Deleted || !customer.Active)
             {
-                var crawler = _httpContextAccessor.HttpContext.Request?.Crawler();
-                //check whether request is made by a search engine, in this case return built-in customer record for search engines
-                if (crawler != null)
-                    customer = await _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                await GetCrawlerCustomer(customer);
             }
 
             if (customer == null || customer.Deleted || !customer.Active)
@@ -288,6 +305,7 @@ namespace Grand.Framework
             //cache the found customer
             return _cachedCustomer = customer ?? throw new Exception("No customer could be loaded");
         }
+
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
