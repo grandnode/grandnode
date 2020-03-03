@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Banner
-
-        public static BannerModel ToModel(this Banner entity)
-        {
-            return entity.MapTo<Banner, BannerModel>();
-        }
-
-        public static Banner ToEntity(this BannerModel model)
-        {
-            return model.MapTo<BannerModel, Banner>();
-        }
-
-        public static Banner ToEntity(this BannerModel model, Banner destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Interactive form
 
         public static InteractiveFormModel ToModel(this InteractiveForm entity)
