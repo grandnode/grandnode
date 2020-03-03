@@ -96,7 +96,8 @@ namespace Grand.Services.Queries.Handlers.Orders
 
             if (!string.IsNullOrEmpty(request.OrderGuid))
             {
-                query = query.Where(o => o.OrderGuid == new Guid(request.OrderGuid));
+                if(Guid.TryParse(request.OrderGuid, out Guid orderguid))
+                    query = query.Where(o => o.OrderGuid == orderguid); 
             }
 
             query = query.Where(o => !o.Deleted);
