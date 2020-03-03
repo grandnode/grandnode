@@ -33,11 +33,55 @@ namespace Grand.Web.Infrastructure
             //home page
             routeBuilder.MapControllerRoute("HomePage", pattern, new { controller = "Home", action = "Index" });
 
-            //widgets
-            routeBuilder.MapControllerRoute("WidgetsByZone",
-                            $"{pattern}widgetsbyzone/",
-                            new { controller = "Widget", action = "WidgetsByZone" });
 
+            RegisterCustomerRoute(routeBuilder, pattern);
+
+            RegisterVendorRoute(routeBuilder, pattern);
+
+            RegisterCartRoute(routeBuilder, pattern);
+
+            RegisterOrderRoute(routeBuilder, pattern);
+
+            RegisterReturnRequestRoute(routeBuilder, pattern);
+
+            RegisterCommonRoute(routeBuilder, pattern);
+
+            RegisterCatalogRoute(routeBuilder, pattern);
+
+            RegisterProductRoute(routeBuilder, pattern);
+
+            RegisterCmsRoute(routeBuilder, pattern);
+
+            RegisterBoardsRoute(routeBuilder, pattern);
+
+            RegisterPrivateMessagesRoute(routeBuilder, pattern);
+
+            RegisterBlogRoute(routeBuilder, pattern);
+
+            RegisterNewsletterRoute(routeBuilder, pattern);
+
+            RegisterAddToCartRoute(routeBuilder, pattern);
+
+            RegisterBackInStockSubscriptionRoute(routeBuilder, pattern);
+
+            RegisterCheckoutRoute(routeBuilder, pattern);
+
+            RegisterDownloadRoute(routeBuilder, pattern);
+
+            RegisterTopicRoute(routeBuilder, pattern);
+
+            RegisterInstallRoute(routeBuilder, pattern);
+
+        }
+
+        public int Priority {
+            get {
+                return 0;
+            }
+        }
+
+        private void RegisterCustomerRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
             //login
             routeBuilder.MapControllerRoute("Login",
                             $"{pattern}login/",
@@ -57,61 +101,6 @@ namespace Grand.Web.Infrastructure
                             $"{pattern}logout/",
                             new { controller = "Customer", action = "Logout" });
 
-            //shopping cart
-            routeBuilder.MapControllerRoute("ShoppingCart",
-                            $"{pattern}cart/",
-                            new { controller = "ShoppingCart", action = "Cart" });
-
-            //Continue shopping
-            routeBuilder.MapControllerRoute("ContinueShopping",
-                            $"{pattern}cart/continueshopping/",
-                            new { controller = "ShoppingCart", action = "ContinueShopping" });
-
-            //clear cart
-            routeBuilder.MapControllerRoute("ClearCart",
-                            $"{pattern}cart/clear/",
-                            new { controller = "ShoppingCart", action = "ClearCart" });
-
-            //start checkout
-            routeBuilder.MapControllerRoute("StartCheckout",
-                            $"{pattern}cart/checkout/",
-                            new { controller = "ShoppingCart", action = "StartCheckout" });
-
-            routeBuilder.MapControllerRoute("ApplyDiscountCoupon",
-                            $"{pattern}applydiscountcoupon/",
-                            new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
-
-            routeBuilder.MapControllerRoute("RemoveDiscountCoupon",
-                            $"{pattern}removediscountcoupon/",
-                            new { controller = "ShoppingCart", action = "RemoveDiscountCoupon" });
-
-            routeBuilder.MapControllerRoute("ApplyGiftCard",
-                            $"{pattern}applygiftcard/",
-                            new { controller = "ShoppingCart", action = "ApplyGiftCard" });
-
-            routeBuilder.MapControllerRoute("RemoveGiftCardCode",
-                            $"{pattern}removegiftcardcode/",
-                            new { controller = "ShoppingCart", action = "RemoveGiftCardCode" });
-
-            routeBuilder.MapControllerRoute("UpdateCart",
-                            $"{pattern}updatecart/",
-                            new { controller = "ShoppingCart", action = "UpdateCart" });
-
-            //get state list by country ID  (AJAX link)
-            routeBuilder.MapControllerRoute("DeleteCartItem",
-                            pattern + "deletecartitem/{id}",
-                            new { controller = "ShoppingCart", action = "DeleteCartItem" });
-
-            //estimate shipping
-            routeBuilder.MapControllerRoute("EstimateShipping",
-                            $"{pattern}cart/estimateshipping",
-                            new { controller = "ShoppingCart", action = "GetEstimateShipping" });
-
-            //wishlist
-            routeBuilder.MapControllerRoute("Wishlist",
-                            pattern + "wishlist/{customerGuid?}",
-                            new { controller = "ShoppingCart", action = "Wishlist" });
-
             //customer account links
             routeBuilder.MapControllerRoute("CustomerInfo",
                             pattern + "customer/info",
@@ -126,28 +115,100 @@ namespace Grand.Web.Infrastructure
                             pattern + "customer/addresses",
                             new { controller = "Customer", action = "Addresses" });
 
-            routeBuilder.MapControllerRoute("CustomerOrders",
-                            pattern + "order/history",
-                            new { controller = "Order", action = "CustomerOrders" });
+            //login page for checkout as guest
+            routeBuilder.MapControllerRoute("LoginCheckoutAsGuest",
+                            pattern + "login/checkoutasguest",
+                            new { controller = "Customer", action = "Login", checkoutAsGuest = true });
 
-            //contact us
-            routeBuilder.MapControllerRoute("ContactUs",
-                            pattern + "contactus",
-                            new { controller = "Common", action = "ContactUs" });
-            //sitemap
-            routeBuilder.MapControllerRoute("Sitemap",
-                            pattern + "sitemap",
-                            new { controller = "Common", action = "Sitemap" });
+            //register result page
+            routeBuilder.MapControllerRoute("RegisterResult",
+                            pattern + "registerresult/{resultId}",
+                            new { controller = "Customer", action = "RegisterResult" });
 
-            routeBuilder.MapControllerRoute("sitemap-indexed.xml",
-                            pattern + "sitemap-{Id:min(0)}.xml",
-                            new { controller = "Common", action = "SitemapXml" });
+            //check username availability
+            routeBuilder.MapControllerRoute("CheckUsernameAvailability",
+                            pattern + "customer/checkusernameavailability",
+                            new { controller = "Customer", action = "CheckUsernameAvailability" });
 
-            //interactive form
-            routeBuilder.MapControllerRoute("PopupInteractiveForm",
-                            pattern + "popupinteractiveform",
-                            new { controller = "Common", action = "PopupInteractiveForm" });
+            //passwordrecovery
+            routeBuilder.MapControllerRoute("PasswordRecovery",
+                            pattern + "passwordrecovery",
+                            new { controller = "Customer", action = "PasswordRecovery" });
 
+            //password recovery confirmation
+            routeBuilder.MapControllerRoute("PasswordRecoveryConfirm",
+                            pattern + "passwordrecovery/confirm",
+                            new { controller = "Customer", action = "PasswordRecoveryConfirm" });
+
+            routeBuilder.MapControllerRoute("CustomerAuctions",
+                            pattern + "customer/auctions",
+                            new { controller = "Customer", action = "Auctions" });
+
+            routeBuilder.MapControllerRoute("CustomerNotes",
+                            pattern + "customer/notes",
+                            new { controller = "Customer", action = "Notes" });
+
+            routeBuilder.MapControllerRoute("CustomerDocuments",
+                            pattern + "customer/documents",
+                            new { controller = "Customer", action = "Documents" });
+
+            routeBuilder.MapControllerRoute("CustomerCourses",
+                            pattern + "customer/courses",
+                            new { controller = "Customer", action = "Courses" });
+
+            routeBuilder.MapControllerRoute("AccountActivation",
+                            pattern + "customer/activation",
+                            new { controller = "Customer", action = "AccountActivation" });
+
+            routeBuilder.MapControllerRoute("CustomerReviews",
+                            pattern + "customer/reviews",
+                            new { controller = "Customer", action = "Reviews" });
+
+            routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
+                            pattern + "customer/downloadableproducts",
+                            new { controller = "Customer", action = "DownloadableProducts" });
+
+            routeBuilder.MapControllerRoute("CustomerChangePassword",
+                            pattern + "customer/changepassword",
+                            new { controller = "Customer", action = "ChangePassword" });
+
+            routeBuilder.MapControllerRoute("CustomerDeleteAccount",
+                            pattern + "customer/deleteaccount",
+                            new { controller = "Customer", action = "DeleteAccount" });
+
+            routeBuilder.MapControllerRoute("CustomerAvatar",
+                            pattern + "customer/avatar",
+                            new { controller = "Customer", action = "Avatar" });
+
+            routeBuilder.MapControllerRoute("CustomerAddressEdit",
+                            pattern + "customer/addressedit/{addressId}",
+                            new { controller = "Customer", action = "AddressEdit" });
+
+            routeBuilder.MapControllerRoute("CustomerAddressAdd",
+                            pattern + "customer/addressadd",
+                            new { controller = "Customer", action = "AddressAdd" });
+
+            routeBuilder.MapControllerRoute("DownloadUserAgreement",
+                            pattern + "customer/useragreement/{orderItemId}",
+                            new { controller = "Customer", action = "UserAgreement" });
+
+            
+        }
+        private void RegisterVendorRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //vendor info
+            routeBuilder.MapControllerRoute("CustomerVendorInfo",
+                            pattern + "customer/vendorinfo",
+                            new { controller = "Vendor", action = "Info" });
+
+            //apply for vendor account
+            routeBuilder.MapControllerRoute("ApplyVendorAccount",
+                            pattern + "vendor/apply",
+                            new { controller = "Vendor", action = "ApplyVendor" });
+        }
+
+        private void RegisterCatalogRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
             //product search
             routeBuilder.MapControllerRoute("ProductSearch",
                             pattern + "search/",
@@ -156,65 +217,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("ProductSearchAutoComplete",
                             pattern + "catalog/searchtermautocomplete",
                             new { controller = "Catalog", action = "SearchTermAutoComplete" });
-
-            //change currency (AJAX link)
-            routeBuilder.MapControllerRoute("ChangeCurrency",
-                            pattern + "changecurrency/{customercurrency}",
-                            new { controller = "Common", action = "SetCurrency" });
-
-            //change language (AJAX link)
-            routeBuilder.MapControllerRoute("ChangeLanguage",
-                            pattern + "changelanguage/{langid}",
-                            new { controller = "Common", action = "SetLanguage" });
-
-            //change tax (AJAX link)
-            routeBuilder.MapControllerRoute("ChangeTaxType",
-                            pattern + "changetaxtype/{customertaxtype}",
-                            new { controller = "Common", action = "SetTaxType" });
-
-            //change store (AJAX link)
-            routeBuilder.MapControllerRoute("ChangeStore",
-                            pattern + "changestore/{store}",
-                            new { controller = "Common", action = "SetStore" });
-
-            //recently viewed products
-            routeBuilder.MapControllerRoute("RecentlyViewedProducts",
-                            pattern + "recentlyviewedproducts/",
-                            new { controller = "Product", action = "RecentlyViewedProducts" });
-
-            //new products
-            routeBuilder.MapControllerRoute("NewProducts",
-                            pattern + "newproducts/",
-                            new { controller = "Product", action = "NewProducts" });
-
-            //blog
-            routeBuilder.MapControllerRoute("Blog",
-                            pattern + "blog",
-                            new { controller = "Blog", action = "List" });
-
-            //knowledgebase
-            routeBuilder.MapControllerRoute("Knowledgebase",
-                            pattern + "knowledgebase",
-                            new { controller = "Knowledgebase", action = "List" });
-
-            routeBuilder.MapControllerRoute("KnowledgebaseSearch",
-                pattern + "knowledgebase/itemsbykeyword/{keyword?}",
-                new { controller = "Knowledgebase", action = "ItemsByKeyword" });
-
-            //news
-            routeBuilder.MapControllerRoute("NewsArchive",
-                            pattern + "news",
-                            new { controller = "News", action = "List" });
-
-            //forum
-            routeBuilder.MapControllerRoute("Boards",
-                            pattern + "boards",
-                            new { controller = "Boards", action = "Index" });
-
-            //compare products
-            routeBuilder.MapControllerRoute("CompareProducts",
-                            pattern + "compareproducts/",
-                            new { controller = "Product", action = "CompareProducts" });
 
             //product tags
             routeBuilder.MapControllerRoute("ProductTagsAll",
@@ -231,34 +233,6 @@ namespace Grand.Web.Infrastructure
                             pattern + "vendor/all/",
                             new { controller = "Catalog", action = "VendorAll" });
 
-            //add product to cart (without any attributes and options). used on catalog pages.
-            routeBuilder.MapControllerRoute("AddProductToCart-Catalog",
-                            pattern + "addproducttocart/catalog/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddProductToCart_Catalog" },
-                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
-                            new[] { "Grand.Web.Controllers" });
-
-            //add product to cart (with attributes and options). used on the product details pages.
-            routeBuilder.MapControllerRoute("AddProductToCart-Details",
-                            pattern + "addproducttocart/details/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddProductToCart_Details" },
-                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
-                            new[] { "Grand.Web.Controllers" });
-
-            //add product to bid, use on the product details page
-            routeBuilder.MapControllerRoute("AddBid",
-                            pattern + "addbid/AddBid/{productId}/{shoppingCartTypeId}",
-                            new { controller = "AddToCart", action = "AddBid" },
-                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
-                            new[] { "Grand.Web.Controllers" });
-
-            //quick view product
-            routeBuilder.MapControllerRoute("QuickView-Product",
-                            pattern + "quickview/product/{productId}",
-                            new { controller = "Product", action = "QuickView" },
-                            new { productId = @"\w+" },
-                            new[] { "Grand.Web.Controllers" });
-
             //product tags
             routeBuilder.MapControllerRoute("ProductsByTag",
                             pattern + "producttag/{productTagId}/{SeName}",
@@ -268,10 +242,41 @@ namespace Grand.Web.Infrastructure
                             pattern + "producttag/{SeName}",
                             new { controller = "Catalog", action = "ProductsByTagName" });
 
-            //comparing products
-            routeBuilder.MapControllerRoute("AddProductToCompare",
-                            pattern + "compareproducts/add/{productId}",
-                            new { controller = "Product", action = "AddProductToCompareList" });
+            //vendor reviews
+            routeBuilder.MapControllerRoute("VendorReviews",
+                            pattern + "vendoreviews/{vendorId}",
+                            new { controller = "Catalog", action = "VendorReviews" });
+
+            //set review helpfulness (AJAX link)
+            routeBuilder.MapControllerRoute("SetVendorReviewHelpfulness",
+                            pattern + "setvendorreviewhelpfulness",
+                            new { controller = "Catalog", action = "SetVendorReviewHelpfulness" });
+
+        }
+
+        private void RegisterProductRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //recently viewed products
+            routeBuilder.MapControllerRoute("RecentlyViewedProducts",
+                            pattern + "recentlyviewedproducts/",
+                            new { controller = "Product", action = "RecentlyViewedProducts" });
+
+            //new products
+            routeBuilder.MapControllerRoute("NewProducts",
+                            pattern + "newproducts/",
+                            new { controller = "Product", action = "NewProducts" });
+
+            //compare products
+            routeBuilder.MapControllerRoute("CompareProducts",
+                            pattern + "compareproducts/",
+                            new { controller = "Product", action = "CompareProducts" });
+
+            //quick view product
+            routeBuilder.MapControllerRoute("QuickView-Product",
+                            pattern + "quickview/product/{productId}",
+                            new { controller = "Product", action = "QuickView" },
+                            new { productId = @"\w+" },
+                            new[] { "Grand.Web.Controllers" });
 
             //product email a friend
             routeBuilder.MapControllerRoute("ProductEmailAFriend",
@@ -293,21 +298,126 @@ namespace Grand.Web.Infrastructure
                             pattern + "productreviews/{productId}",
                             new { controller = "Product", action = "ProductReviews" });
 
-            //back in stock notifications
-            routeBuilder.MapControllerRoute("BackInStockSubscribePopup",
-                            pattern + "backinstocksubscribe/{productId}",
-                            new { controller = "BackInStockSubscription", action = "SubscribePopup" });
+            //comparing products
+            routeBuilder.MapControllerRoute("AddProductToCompare",
+                            pattern + "compareproducts/add/{productId}",
+                            new { controller = "Product", action = "AddProductToCompareList" });
 
-            //back in stock notifications button text
-            routeBuilder.MapControllerRoute("BackInStockSubscribeButton",
-                            pattern + "backinstocksubscribebutton/{productId}",
-                            new { controller = "BackInStockSubscription", action = "SubscribeButton" });
+            //set review helpfulness (AJAX link)
+            routeBuilder.MapControllerRoute("SetProductReviewHelpfulness",
+                            pattern + "setproductreviewhelpfulness",
+                            new { controller = "Product", action = "SetProductReviewHelpfulness" });
 
-            //downloads
-            routeBuilder.MapControllerRoute("GetSampleDownload",
-                            pattern + "download/sample/{productid}",
-                            new { controller = "Download", action = "Sample" });
+            //comparing products
+            routeBuilder.MapControllerRoute("RemoveProductFromCompareList",
+                            pattern + "compareproducts/remove/{productId}",
+                            new { controller = "Product", action = "RemoveProductFromCompareList" });
 
+            routeBuilder.MapControllerRoute("ClearCompareList",
+                            pattern + "clearcomparelist/",
+                            new { controller = "Product", action = "ClearCompareList" });
+
+            //new RSS
+            routeBuilder.MapControllerRoute("NewProductsRSS",
+                            pattern + "newproducts/rss",
+                            new { controller = "Product", action = "NewProductsRss" });
+
+            //product attributes with "upload file" type
+            routeBuilder.MapControllerRoute("UploadFileProductAttribute",
+                            pattern + "uploadfileproductattribute/{attributeId}",
+                            new { controller = "Product", action = "UploadFileProductAttribute" });
+        }
+
+        private void RegisterCommonRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+
+            //contact us
+            routeBuilder.MapControllerRoute("ContactUs",
+                            pattern + "contactus",
+                            new { controller = "Common", action = "ContactUs" });
+            //sitemap
+            routeBuilder.MapControllerRoute("Sitemap",
+                            pattern + "sitemap",
+                            new { controller = "Common", action = "Sitemap" });
+
+            routeBuilder.MapControllerRoute("sitemap-indexed.xml",
+                            pattern + "sitemap-{Id:min(0)}.xml",
+                            new { controller = "Common", action = "SitemapXml" });
+
+            //interactive form
+            routeBuilder.MapControllerRoute("PopupInteractiveForm",
+                            pattern + "popupinteractiveform",
+                            new { controller = "Common", action = "PopupInteractiveForm" });
+
+            //change currency (AJAX link)
+            routeBuilder.MapControllerRoute("ChangeCurrency",
+                            pattern + "changecurrency/{customercurrency}",
+                            new { controller = "Common", action = "SetCurrency" });
+
+            //change language (AJAX link)
+            routeBuilder.MapControllerRoute("ChangeLanguage",
+                            pattern + "changelanguage/{langid}",
+                            new { controller = "Common", action = "SetLanguage" });
+
+            //change tax (AJAX link)
+            routeBuilder.MapControllerRoute("ChangeTaxType",
+                            pattern + "changetaxtype/{customertaxtype}",
+                            new { controller = "Common", action = "SetTaxType" });
+
+            //change store (AJAX link)
+            routeBuilder.MapControllerRoute("ChangeStore",
+                            pattern + "changestore/{store}",
+                            new { controller = "Common", action = "SetStore" });
+
+            //contact vendor
+            routeBuilder.MapControllerRoute("ContactVendor",
+                            pattern + "contactvendor/{vendorId}",
+                            new { controller = "Common", action = "ContactVendor" });
+
+            //get state list by country ID  (AJAX link)
+            routeBuilder.MapControllerRoute("GetStatesByCountryId",
+                            pattern + "country/getstatesbycountryid/",
+                            new { controller = "Country", action = "GetStatesByCountryId" });
+
+            //EU Cookie law accept button handler (AJAX link)
+            routeBuilder.MapControllerRoute("EuCookieLawAccept",
+                            pattern + "eucookielawaccept",
+                            new { controller = "Common", action = "EuCookieLawAccept" });
+
+            // contact attributes with "upload file" type
+            routeBuilder.MapControllerRoute("UploadFileContactAttribute",
+                            pattern + "uploadfilecontactattribute/{attributeId}",
+                            new { controller = "Common", action = "UploadFileContactAttribute" });
+
+            //robots.txt
+            routeBuilder.MapControllerRoute("robots.txt",
+                            "robots.txt",
+                            new { controller = "Common", action = "RobotsTextFile" });
+
+            //sitemap (XML)
+            routeBuilder.MapControllerRoute("sitemap.xml",
+                            pattern + "sitemap.xml",
+                            new { controller = "Common", action = "SitemapXml" });
+
+            //store closed
+            routeBuilder.MapControllerRoute("StoreClosed",
+                            pattern + "storeclosed",
+                            new { controller = "Common", action = "StoreClosed" });
+
+            //page not found
+            routeBuilder.MapControllerRoute("PageNotFound",
+                            pattern + "page-not-found",
+                            new { controller = "Common", action = "PageNotFound" });
+
+            //lets encrypt
+            routeBuilder.MapControllerRoute("well-known",
+                            ".well-known/acme-challenge/{fileName}",
+                            new { controller = "LetsEncrypt", action = "Index" });
+
+
+        }
+        private void RegisterCheckoutRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
             //checkout pages
             routeBuilder.MapControllerRoute("Checkout",
                             pattern + "checkout/",
@@ -338,8 +448,8 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Checkout", action = "ShippingMethod" });
 
             routeBuilder.MapControllerRoute("CheckoutShippingFormPartial",
-                pattern + "checkout/getshippingformpartialview/{shippingOption?}",
-                new { controller = "Checkout", action = "GetShippingFormPartialView" });
+                            pattern + "checkout/getshippingformpartialview/{shippingOption?}",
+                            new { controller = "Checkout", action = "GetShippingFormPartialView" });
 
             routeBuilder.MapControllerRoute("CheckoutPaymentMethod",
                             pattern + "checkout/paymentmethod",
@@ -356,301 +466,119 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapControllerRoute("CheckoutCompleted",
                             pattern + "checkout/completed/{orderId?}",
                             new { controller = "Checkout", action = "Completed" });
+        }
 
-            //subscribe newsletters
-            routeBuilder.MapControllerRoute("SubscribeNewsletter",
-                            pattern + "subscribenewsletter",
-                            new { controller = "Newsletter", action = "SubscribeNewsletter" });
+        private void RegisterAddToCartRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
 
-            //assign newsletters to categories
-            routeBuilder.MapControllerRoute("SubscribeNewsletterCategory",
-                            pattern + "newsletter/savecategories",
-                            new { controller = "Newsletter", action = "SaveCategories" });
+            //add product to cart (without any attributes and options). used on catalog pages.
+            routeBuilder.MapControllerRoute("AddProductToCart-Catalog",
+                            pattern + "addproducttocart/catalog/{productId}/{shoppingCartTypeId}",
+                            new { controller = "AddToCart", action = "AddProductToCart_Catalog" },
+                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Grand.Web.Controllers" });
 
-            //email wishlist
-            routeBuilder.MapControllerRoute("EmailWishlist",
-                            pattern + "emailwishlist",
-                            new { controller = "ShoppingCart", action = "EmailWishlist" });
+            //add product to cart (with attributes and options). used on the product details pages.
+            routeBuilder.MapControllerRoute("AddProductToCart-Details",
+                            pattern + "addproducttocart/details/{productId}/{shoppingCartTypeId}",
+                            new { controller = "AddToCart", action = "AddProductToCart_Details" },
+                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Grand.Web.Controllers" });
 
-            //login page for checkout as guest
-            routeBuilder.MapControllerRoute("LoginCheckoutAsGuest",
-                            pattern + "login/checkoutasguest",
-                            new { controller = "Customer", action = "Login", checkoutAsGuest = true });
+            //add product to bid, use on the product details page
+            routeBuilder.MapControllerRoute("AddBid",
+                            pattern + "addbid/AddBid/{productId}/{shoppingCartTypeId}",
+                            new { controller = "AddToCart", action = "AddBid" },
+                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Grand.Web.Controllers" });
 
-            //register result page
-            routeBuilder.MapControllerRoute("RegisterResult",
-                            pattern + "registerresult/{resultId}",
-                            new { controller = "Customer", action = "RegisterResult" });
+        }
 
-            //check username availability
-            routeBuilder.MapControllerRoute("CheckUsernameAvailability",
-                            pattern + "customer/checkusernameavailability",
-                            new { controller = "Customer", action = "CheckUsernameAvailability" });
+        private void RegisterCmsRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
 
-            //passwordrecovery
-            routeBuilder.MapControllerRoute("PasswordRecovery",
-                            pattern + "passwordrecovery",
-                            new { controller = "Customer", action = "PasswordRecovery" });
+            //widgets
+            routeBuilder.MapControllerRoute("WidgetsByZone",
+                            $"{pattern}widgetsbyzone/",
+                            new { controller = "Widget", action = "WidgetsByZone" });
 
-            //password recovery confirmation
-            routeBuilder.MapControllerRoute("PasswordRecoveryConfirm",
-                            pattern + "passwordrecovery/confirm",
-                            new { controller = "Customer", action = "PasswordRecoveryConfirm" });
+            //knowledgebase
+            routeBuilder.MapControllerRoute("Knowledgebase",
+                            pattern + "knowledgebase",
+                            new { controller = "Knowledgebase", action = "List" });
 
-            //topics
-            routeBuilder.MapControllerRoute("TopicPopup",
-                            pattern + "t-popup/{SystemName}",
-                            new { controller = "Topic", action = "TopicDetailsPopup" });
+            routeBuilder.MapControllerRoute("KnowledgebaseSearch",
+                            pattern + "knowledgebase/itemsbykeyword/{keyword?}",
+                            new { controller = "Knowledgebase", action = "ItemsByKeyword" });
 
-            //blog
-            routeBuilder.MapControllerRoute("BlogByTag",
-                            pattern + "blog/tag/{tag}",
-                            new { controller = "Blog", action = "BlogByTag" });
-
-            routeBuilder.MapControllerRoute("BlogByMonth",
-                            pattern + "blog/month/{month}",
-                            new { controller = "Blog", action = "BlogByMonth" });
-
-            routeBuilder.MapControllerRoute("BlogByCategory",
-                            pattern + "blog/category/{categoryid}",
-                            new { controller = "Blog", action = "BlogByCategory" });
-
-            routeBuilder.MapControllerRoute("BlogByKeyword",
-                            pattern + "blog/keyword/{searchKeyword?}",
-                            new { controller = "Blog", action = "BlogByKeyword" });
-
-            //blog RSS
-            routeBuilder.MapControllerRoute("BlogRSS",
-                            pattern + "blog/rss/{languageId}",
-                            new { controller = "Blog", action = "ListRss" });
+            //news
+            routeBuilder.MapControllerRoute("NewsArchive",
+                            pattern + "news",
+                            new { controller = "News", action = "List" });
 
             //news RSS
             routeBuilder.MapControllerRoute("NewsRSS",
                             pattern + "news/rss/{languageId}",
                             new { controller = "News", action = "ListRss" });
 
-            //set review helpfulness (AJAX link)
-            routeBuilder.MapControllerRoute("SetProductReviewHelpfulness",
-                            pattern + "setproductreviewhelpfulness",
-                            new { controller = "Product", action = "SetProductReviewHelpfulness" });
-
-            //customer account links
-            routeBuilder.MapControllerRoute("CustomerReturnRequests",
-                            pattern + "returnrequest/history",
-                            new { controller = "ReturnRequest", action = "CustomerReturnRequests" });
-
-            routeBuilder.MapControllerRoute("CustomerDownloadableProducts",
-                            pattern + "customer/downloadableproducts",
-                            new { controller = "Customer", action = "DownloadableProducts" });
-
-            routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptions",
-                            pattern + "backinstocksubscriptions/manage",
-                            new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-
-            routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptionsPaged",
-                            pattern + "backinstocksubscriptions/manage/{pageNumber}",
-                            new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-
-            routeBuilder.MapControllerRoute("CustomerRewardPoints",
-                            pattern + "rewardpoints/history",
-                            new { controller = "Order", action = "CustomerRewardPoints" });
-
-            routeBuilder.MapControllerRoute("CustomerChangePassword",
-                            pattern + "customer/changepassword",
-                            new { controller = "Customer", action = "ChangePassword" });
-
-            routeBuilder.MapControllerRoute("CustomerDeleteAccount",
-                            pattern + "customer/deleteaccount",
-                            new { controller = "Customer", action = "DeleteAccount" });
-
-            routeBuilder.MapControllerRoute("CustomerAvatar",
-                            pattern + "customer/avatar",
-                            new { controller = "Customer", action = "Avatar" });
-
-            routeBuilder.MapControllerRoute("CustomerAuctions",
-                            pattern + "customer/auctions",
-                            new { controller = "Customer", action = "Auctions" });
-
-            routeBuilder.MapControllerRoute("CustomerNotes",
-                            pattern + "customer/notes",
-                            new { controller = "Customer", action = "Notes" });
-
-            routeBuilder.MapControllerRoute("CustomerDocuments",
-                            pattern + "customer/documents",
-                            new { controller = "Customer", action = "Documents" });
-
-            routeBuilder.MapControllerRoute("CustomerCourses",
-                            pattern + "customer/courses",
-                            new { controller = "Customer", action = "Courses" });
-
-            routeBuilder.MapControllerRoute("AccountActivation",
-                            pattern + "customer/activation",
-                            new { controller = "Customer", action = "AccountActivation" });
-
-            routeBuilder.MapControllerRoute("CustomerReviews",
-                            pattern + "customer/reviews",
-                            new { controller = "Customer", action = "Reviews" });
-
-            routeBuilder.MapControllerRoute("CustomerForumSubscriptions",
-                            pattern + "boards/forumsubscriptions",
-                            new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            routeBuilder.MapControllerRoute("CustomerForumSubscriptionsPaged",
-                            pattern + "boards/forumsubscriptions/{pageNumber}",
-                            new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            routeBuilder.MapControllerRoute("CustomerAddressEdit",
-                            pattern + "customer/addressedit/{addressId}",
-                            new { controller = "Customer", action = "AddressEdit" });
-
-            routeBuilder.MapControllerRoute("CustomerAddressAdd",
-                            pattern + "customer/addressadd",
-                            new { controller = "Customer", action = "AddressAdd" });
-
-            //customer profile page
-            routeBuilder.MapControllerRoute("CustomerProfile",
-                            pattern + "profile/{id}",
-                            new { controller = "Profile", action = "Index" });
-
-            routeBuilder.MapControllerRoute("CustomerProfilePaged",
-                            pattern + "profile/{id}/page/{pageNumber}",
-                            new { controller = "Profile", action = "Index" });
-
-            //orders
-            routeBuilder.MapControllerRoute("OrderDetails",
-                            pattern + "orderdetails/{orderId}",
-                            new { controller = "Order", action = "Details" });
-
-            routeBuilder.MapControllerRoute("ShipmentDetails",
-                            pattern + "orderdetails/shipment/{shipmentId}",
-                            new { controller = "Order", action = "ShipmentDetails" });
-
-            routeBuilder.MapControllerRoute("ReturnRequest",
-                            pattern + "returnrequest/{orderId}",
-                            new { controller = "ReturnRequest", action = "ReturnRequest" });
-
-            routeBuilder.MapControllerRoute("ReturnRequestDetails",
-                            pattern + "returnrequestdetails/{returnRequestId}",
-                            new { controller = "ReturnRequest", action = "ReturnRequestDetails" });
-
-            routeBuilder.MapControllerRoute("ReOrder",
-                            pattern + "reorder/{orderId}",
-                            new { controller = "Order", action = "ReOrder" });
-
-            routeBuilder.MapControllerRoute("GetOrderPdfInvoice",
-                            pattern + "orderdetails/pdf/{orderId}",
-                            new { controller = "Order", action = "GetPdfInvoice" });
-
-            routeBuilder.MapControllerRoute("PrintOrderDetails",
-                            pattern + "orderdetails/print/{orderId}",
-                            new { controller = "Order", action = "PrintOrderDetails" });
-
-            routeBuilder.MapControllerRoute("CancelOrder",
-                            pattern + "orderdetails/cancel/{orderId}",
-                            new { controller = "Order", action = "CancelOrder" });
-
-            routeBuilder.MapControllerRoute("AddOrderNote",
-                            "orderdetails/ordernote/{orderId}",
-                            new { controller = "Order", action = "AddOrderNote" });
-
-            //order downloads
-            routeBuilder.MapControllerRoute("GetDownload",
-                            pattern + "download/getdownload/{orderItemId}/{agree?}",
-                            new { controller = "Download", action = "GetDownload" });
-
-            routeBuilder.MapControllerRoute("GetLicense",
-                            pattern + "download/getlicense/{orderItemId}/",
-                            new { controller = "Download", action = "GetLicense" });
-
-            routeBuilder.MapControllerRoute("DownloadUserAgreement",
-                            pattern + "customer/useragreement/{orderItemId}",
-                            new { controller = "Customer", action = "UserAgreement" });
-
-            routeBuilder.MapControllerRoute("GetOrderNoteFile",
-                            pattern + "download/ordernotefile/{ordernoteid}",
-                            new { controller = "Download", action = "GetOrderNoteFile" });
-
-            routeBuilder.MapControllerRoute("GetCustomerNoteFile",
-                            pattern + "download/customernotefile/{customernoteid}",
-                            new { controller = "Download", action = "GetCustomerNoteFile" });
-
-            routeBuilder.MapControllerRoute("GetDocumentFile",
-                            pattern + "download/documentfile/{documentid}",
-                            new { controller = "Download", action = "GetDocumentFile" });
-
-            //contact vendor
-            routeBuilder.MapControllerRoute("ContactVendor",
-                            pattern + "contactvendor/{vendorId}",
-                            new { controller = "Common", action = "ContactVendor" });
-
-            //apply for vendor account
-            routeBuilder.MapControllerRoute("ApplyVendorAccount",
-                            pattern + "vendor/apply",
-                            new { controller = "Vendor", action = "ApplyVendor" });
-
-            //vendor info
-            routeBuilder.MapControllerRoute("CustomerVendorInfo",
-                            pattern + "customer/vendorinfo",
-                            new { controller = "Vendor", action = "Info" });
-
-            //vendor reviews
-            routeBuilder.MapControllerRoute("VendorReviews",
-                            pattern + "vendoreviews/{vendorId}",
-                            new { controller = "Catalog", action = "VendorReviews" });
-
-            //set review helpfulness (AJAX link)
-            routeBuilder.MapControllerRoute("SetVendorReviewHelpfulness",
-                            pattern + "setvendorreviewhelpfulness",
-                            new { controller = "Catalog", action = "SetVendorReviewHelpfulness" });
-
             //poll vote AJAX link
             routeBuilder.MapControllerRoute("PollVote",
                             pattern + "poll/vote",
                             new { controller = "Poll", action = "Vote" });
 
-            //comparing products
-            routeBuilder.MapControllerRoute("RemoveProductFromCompareList",
-                            pattern + "compareproducts/remove/{productId}",
-                            new { controller = "Product", action = "RemoveProductFromCompareList" });
+        }
 
-            routeBuilder.MapControllerRoute("ClearCompareList",
-                            pattern + "clearcomparelist/",
-                            new { controller = "Product", action = "ClearCompareList" });
+        private void RegisterPrivateMessagesRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
 
-            //new RSS
-            routeBuilder.MapControllerRoute("NewProductsRSS",
-                            pattern + "newproducts/rss",
-                            new { controller = "Product", action = "NewProductsRss" });
+            //private messages
+            routeBuilder.MapControllerRoute("PrivateMessages",
+                            pattern + "privatemessages/{tab?}",
+                            new { controller = "PrivateMessages", action = "Index" });
 
-            //get state list by country ID  (AJAX link)
-            routeBuilder.MapControllerRoute("GetStatesByCountryId",
-                            pattern + "country/getstatesbycountryid/",
-                            new { controller = "Country", action = "GetStatesByCountryId" });
+            routeBuilder.MapControllerRoute("PrivateMessagesPaged",
+                            pattern + "privatemessages/{tab}/page/{pageNumber}",
+                            new { controller = "PrivateMessages", action = "Index" });
 
-            //EU Cookie law accept button handler (AJAX link)
-            routeBuilder.MapControllerRoute("EuCookieLawAccept",
-                            pattern + "eucookielawaccept",
-                            new { controller = "Common", action = "EuCookieLawAccept" });
+            routeBuilder.MapControllerRoute("PrivateMessagesInbox",
+                            pattern + "inboxupdate",
+                            new { controller = "PrivateMessages", action = "InboxUpdate" });
 
-            //authenticate topic AJAX link
-            routeBuilder.MapControllerRoute("TopicAuthenticate",
-                            pattern + "topic/authenticate",
-                            new { controller = "Topic", action = "Authenticate" });
+            routeBuilder.MapControllerRoute("PrivateMessagesSent",
+                            pattern + "sentupdate",
+                            new { controller = "PrivateMessages", action = "SentUpdate" });
 
-            //product attributes with "upload file" type
-            routeBuilder.MapControllerRoute("UploadFileProductAttribute",
-                            pattern + "uploadfileproductattribute/{attributeId}",
-                            new { controller = "Product", action = "UploadFileProductAttribute" });
+            routeBuilder.MapControllerRoute("SendPM",
+                            pattern + "sendpm/{toCustomerId}",
+                            new { controller = "PrivateMessages", action = "SendPM" });
 
-            //checkout attributes with "upload file" type
-            routeBuilder.MapControllerRoute("UploadFileCheckoutAttribute",
-                            pattern + "uploadfilecheckoutattribute/{attributeId}",
-                            new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
+            routeBuilder.MapControllerRoute("SendPMReply",
+                            pattern + "sendpm/{toCustomerId}/{replyToMessageId}",
+                            new { controller = "PrivateMessages", action = "SendPM" });
 
-            // contact attributes with "upload file" type
-            routeBuilder.MapControllerRoute("UploadFileContactAttribute",
-                            pattern + "uploadfilecontactattribute/{attributeId}",
-                            new { controller = "Common", action = "UploadFileContactAttribute" });
+            routeBuilder.MapControllerRoute("ViewPM",
+                            pattern + "viewpm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "ViewPM" });
+
+            routeBuilder.MapControllerRoute("DeletePM",
+                            pattern + "deletepm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "DeletePM" });
+        }
+        
+        private void RegisterBoardsRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //forum
+            routeBuilder.MapControllerRoute("Boards",
+                            pattern + "boards",
+                            new { controller = "Boards", action = "Index" });
+
+            routeBuilder.MapControllerRoute("CustomerForumSubscriptions",
+                           pattern + "boards/forumsubscriptions",
+                           new { controller = "Boards", action = "CustomerForumSubscriptions" });
+
+            routeBuilder.MapControllerRoute("CustomerForumSubscriptionsPaged",
+                            pattern + "boards/forumsubscriptions/{pageNumber}",
+                            new { controller = "Boards", action = "CustomerForumSubscriptions" });
 
             //forums
             routeBuilder.MapControllerRoute("ActiveDiscussions",
@@ -733,82 +661,261 @@ namespace Grand.Web.Infrastructure
                             pattern + "boards/search",
                             new { controller = "Boards", action = "Search" });
 
-            //private messages
-            routeBuilder.MapControllerRoute("PrivateMessages",
-                            pattern + "privatemessages/{tab?}",
-                            new { controller = "PrivateMessages", action = "Index" });
+            //customer profile page
+            routeBuilder.MapControllerRoute("CustomerProfile",
+                            pattern + "profile/{id}",
+                            new { controller = "Profile", action = "Index" });
 
-            routeBuilder.MapControllerRoute("PrivateMessagesPaged",
-                            pattern + "privatemessages/{tab}/page/{pageNumber}",
-                            new { controller = "PrivateMessages", action = "Index" });
+            routeBuilder.MapControllerRoute("CustomerProfilePaged",
+                            pattern + "profile/{id}/page/{pageNumber}",
+                            new { controller = "Profile", action = "Index" });
+        }
 
-            routeBuilder.MapControllerRoute("PrivateMessagesInbox",
-                            pattern + "inboxupdate",
-                            new { controller = "PrivateMessages", action = "InboxUpdate" });
+        private void RegisterBlogRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //blog
+            routeBuilder.MapControllerRoute("Blog",
+                            pattern + "blog",
+                            new { controller = "Blog", action = "List" });
 
-            routeBuilder.MapControllerRoute("PrivateMessagesSent",
-                            pattern + "sentupdate",
-                            new { controller = "PrivateMessages", action = "SentUpdate" });
+            //blog
+            routeBuilder.MapControllerRoute("BlogByTag",
+                            pattern + "blog/tag/{tag}",
+                            new { controller = "Blog", action = "BlogByTag" });
 
-            routeBuilder.MapControllerRoute("SendPM",
-                            pattern + "sendpm/{toCustomerId}",
-                            new { controller = "PrivateMessages", action = "SendPM" });
+            routeBuilder.MapControllerRoute("BlogByMonth",
+                            pattern + "blog/month/{month}",
+                            new { controller = "Blog", action = "BlogByMonth" });
 
-            routeBuilder.MapControllerRoute("SendPMReply",
-                            pattern + "sendpm/{toCustomerId}/{replyToMessageId}",
-                            new { controller = "PrivateMessages", action = "SendPM" });
+            routeBuilder.MapControllerRoute("BlogByCategory",
+                            pattern + "blog/category/{categoryid}",
+                            new { controller = "Blog", action = "BlogByCategory" });
 
-            routeBuilder.MapControllerRoute("ViewPM",
-                            pattern + "viewpm/{privateMessageId}",
-                            new { controller = "PrivateMessages", action = "ViewPM" });
+            routeBuilder.MapControllerRoute("BlogByKeyword",
+                            pattern + "blog/keyword/{searchKeyword?}",
+                            new { controller = "Blog", action = "BlogByKeyword" });
 
-            routeBuilder.MapControllerRoute("DeletePM",
-                            pattern + "deletepm/{privateMessageId}",
-                            new { controller = "PrivateMessages", action = "DeletePM" });
+            //blog RSS
+            routeBuilder.MapControllerRoute("BlogRSS",
+                            pattern + "blog/rss/{languageId}",
+                            new { controller = "Blog", action = "ListRss" });
+        }
+        private void RegisterNewsletterRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //assign newsletters to categories
+            routeBuilder.MapControllerRoute("SubscribeNewsletterCategory",
+                            pattern + "newsletter/savecategories",
+                            new { controller = "Newsletter", action = "SaveCategories" });
+
+            //subscribe newsletters
+            routeBuilder.MapControllerRoute("SubscribeNewsletter",
+                            pattern + "subscribenewsletter",
+                            new { controller = "Newsletter", action = "SubscribeNewsletter" });
 
             //activate newsletters
             routeBuilder.MapControllerRoute("NewsletterActivation",
                             pattern + "newsletter/subscriptionactivation/{token:guid}/{active}",
                             new { controller = "Newsletter", action = "SubscriptionActivation" });
 
-            //robots.txt
-            routeBuilder.MapControllerRoute("robots.txt",
-                            "robots.txt",
-                            new { controller = "Common", action = "RobotsTextFile" });
+        }
+        private void RegisterCartRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //shopping cart
+            routeBuilder.MapControllerRoute("ShoppingCart",
+                            $"{pattern}cart/",
+                            new { controller = "ShoppingCart", action = "Cart" });
 
-            //sitemap (XML)
-            routeBuilder.MapControllerRoute("sitemap.xml",
-                            pattern + "sitemap.xml",
-                            new { controller = "Common", action = "SitemapXml" });
+            //Continue shopping
+            routeBuilder.MapControllerRoute("ContinueShopping",
+                            $"{pattern}cart/continueshopping/",
+                            new { controller = "ShoppingCart", action = "ContinueShopping" });
 
-            //store closed
-            routeBuilder.MapControllerRoute("StoreClosed",
-                            pattern + "storeclosed",
-                            new { controller = "Common", action = "StoreClosed" });
+            //clear cart
+            routeBuilder.MapControllerRoute("ClearCart",
+                            $"{pattern}cart/clear/",
+                            new { controller = "ShoppingCart", action = "ClearCart" });
 
+            //start checkout
+            routeBuilder.MapControllerRoute("StartCheckout",
+                            $"{pattern}cart/checkout/",
+                            new { controller = "ShoppingCart", action = "StartCheckout" });
+
+            routeBuilder.MapControllerRoute("ApplyDiscountCoupon",
+                            $"{pattern}applydiscountcoupon/",
+                            new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
+
+            routeBuilder.MapControllerRoute("RemoveDiscountCoupon",
+                            $"{pattern}removediscountcoupon/",
+                            new { controller = "ShoppingCart", action = "RemoveDiscountCoupon" });
+
+            routeBuilder.MapControllerRoute("ApplyGiftCard",
+                            $"{pattern}applygiftcard/",
+                            new { controller = "ShoppingCart", action = "ApplyGiftCard" });
+
+            routeBuilder.MapControllerRoute("RemoveGiftCardCode",
+                            $"{pattern}removegiftcardcode/",
+                            new { controller = "ShoppingCart", action = "RemoveGiftCardCode" });
+
+            routeBuilder.MapControllerRoute("UpdateCart",
+                            $"{pattern}updatecart/",
+                            new { controller = "ShoppingCart", action = "UpdateCart" });
+
+            //get state list by country ID  (AJAX link)
+            routeBuilder.MapControllerRoute("DeleteCartItem",
+                            pattern + "deletecartitem/{id}",
+                            new { controller = "ShoppingCart", action = "DeleteCartItem" });
+
+            //estimate shipping
+            routeBuilder.MapControllerRoute("EstimateShipping",
+                            $"{pattern}cart/estimateshipping",
+                            new { controller = "ShoppingCart", action = "GetEstimateShipping" });
+
+            //wishlist
+            routeBuilder.MapControllerRoute("Wishlist",
+                            pattern + "wishlist/{customerGuid?}",
+                            new { controller = "ShoppingCart", action = "Wishlist" });
+
+            //email wishlist
+            routeBuilder.MapControllerRoute("EmailWishlist",
+                            pattern + "emailwishlist",
+                            new { controller = "ShoppingCart", action = "EmailWishlist" });
+
+            //checkout attributes with "upload file" type
+            routeBuilder.MapControllerRoute("UploadFileCheckoutAttribute",
+                            pattern + "uploadfilecheckoutattribute/{attributeId}",
+                            new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
+        }
+
+        private void RegisterOrderRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            routeBuilder.MapControllerRoute("CustomerOrders",
+                            pattern + "order/history",
+                            new { controller = "Order", action = "CustomerOrders" });
+
+            routeBuilder.MapControllerRoute("CustomerRewardPoints",
+                            pattern + "rewardpoints/history",
+                            new { controller = "Order", action = "CustomerRewardPoints" });
+
+            //orders
+            routeBuilder.MapControllerRoute("OrderDetails",
+                            pattern + "orderdetails/{orderId}",
+                            new { controller = "Order", action = "Details" });
+
+            routeBuilder.MapControllerRoute("ShipmentDetails",
+                            pattern + "orderdetails/shipment/{shipmentId}",
+                            new { controller = "Order", action = "ShipmentDetails" });
+
+            routeBuilder.MapControllerRoute("ReOrder",
+                           pattern + "reorder/{orderId}",
+                           new { controller = "Order", action = "ReOrder" });
+
+            routeBuilder.MapControllerRoute("GetOrderPdfInvoice",
+                            pattern + "orderdetails/pdf/{orderId}",
+                            new { controller = "Order", action = "GetPdfInvoice" });
+
+            routeBuilder.MapControllerRoute("PrintOrderDetails",
+                            pattern + "orderdetails/print/{orderId}",
+                            new { controller = "Order", action = "PrintOrderDetails" });
+
+            routeBuilder.MapControllerRoute("CancelOrder",
+                            pattern + "orderdetails/cancel/{orderId}",
+                            new { controller = "Order", action = "CancelOrder" });
+
+            routeBuilder.MapControllerRoute("AddOrderNote",
+                            "orderdetails/ordernote/{orderId}",
+                            new { controller = "Order", action = "AddOrderNote" });
+
+        }
+
+        private void RegisterBackInStockSubscriptionRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //back in stock notifications
+            routeBuilder.MapControllerRoute("BackInStockSubscribePopup",
+                            pattern + "backinstocksubscribe/{productId}",
+                            new { controller = "BackInStockSubscription", action = "SubscribePopup" });
+
+            //back in stock notifications button text
+            routeBuilder.MapControllerRoute("BackInStockSubscribeButton",
+                            pattern + "backinstocksubscribebutton/{productId}",
+                            new { controller = "BackInStockSubscription", action = "SubscribeButton" });
+
+            routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptions",
+                           pattern + "backinstocksubscriptions/manage",
+                           new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
+
+            routeBuilder.MapControllerRoute("CustomerBackInStockSubscriptionsPaged",
+                            pattern + "backinstocksubscriptions/manage/{pageNumber}",
+                            new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
+        }
+
+        private void RegisterReturnRequestRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //customer account links
+            routeBuilder.MapControllerRoute("CustomerReturnRequests",
+                            pattern + "returnrequest/history",
+                            new { controller = "ReturnRequest", action = "CustomerReturnRequests" });
+
+            routeBuilder.MapControllerRoute("ReturnRequest",
+                            pattern + "returnrequest/{orderId}",
+                            new { controller = "ReturnRequest", action = "ReturnRequest" });
+
+            routeBuilder.MapControllerRoute("ReturnRequestDetails",
+                            pattern + "returnrequestdetails/{returnRequestId}",
+                            new { controller = "ReturnRequest", action = "ReturnRequestDetails" });
+        }
+
+        private void RegisterDownloadRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //downloads
+            routeBuilder.MapControllerRoute("GetSampleDownload",
+                            pattern + "download/sample/{productid}",
+                            new { controller = "Download", action = "Sample" });
+
+            //order downloads
+            routeBuilder.MapControllerRoute("GetDownload",
+                            pattern + "download/getdownload/{orderItemId}/{agree?}",
+                            new { controller = "Download", action = "GetDownload" });
+
+            routeBuilder.MapControllerRoute("GetLicense",
+                            pattern + "download/getlicense/{orderItemId}/",
+                            new { controller = "Download", action = "GetLicense" });
+
+
+
+            routeBuilder.MapControllerRoute("GetOrderNoteFile",
+                            pattern + "download/ordernotefile/{ordernoteid}",
+                            new { controller = "Download", action = "GetOrderNoteFile" });
+
+            routeBuilder.MapControllerRoute("GetCustomerNoteFile",
+                            pattern + "download/customernotefile/{customernoteid}",
+                            new { controller = "Download", action = "GetCustomerNoteFile" });
+
+            routeBuilder.MapControllerRoute("GetDocumentFile",
+                            pattern + "download/documentfile/{documentid}",
+                            new { controller = "Download", action = "GetDocumentFile" });
+
+        }
+        private void RegisterTopicRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
+            //topics
+            routeBuilder.MapControllerRoute("TopicPopup",
+                            pattern + "t-popup/{SystemName}",
+                            new { controller = "Topic", action = "TopicDetailsPopup" });
+
+            //authenticate topic AJAX link
+            routeBuilder.MapControllerRoute("TopicAuthenticate",
+                            pattern + "topic/authenticate",
+                            new { controller = "Topic", action = "Authenticate" });
+        }
+
+        private void RegisterInstallRoute(IEndpointRouteBuilder routeBuilder, string pattern)
+        {
             //install
             routeBuilder.MapControllerRoute("Installation", "install",
                             new { controller = "Install", action = "Index" });
             //upgrade
             routeBuilder.MapControllerRoute("Upgrade", "upgrade",
                             new { controller = "Upgrade", action = "Index" });
-
-            //page not found
-            routeBuilder.MapControllerRoute("PageNotFound",
-                            pattern + "page-not-found",
-                            new { controller = "Common", action = "PageNotFound" });
-
-            //lets encrypt
-            routeBuilder.MapControllerRoute("well-known",
-                            ".well-known/acme-challenge/{fileName}",
-                            new { controller = "LetsEncrypt", action = "Index" });
-
-        }
-
-        public int Priority {
-            get {
-                return 0;
-            }
         }
     }
 }

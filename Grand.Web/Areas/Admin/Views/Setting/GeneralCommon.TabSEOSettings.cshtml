@@ -94,6 +94,9 @@
             </div>
         </div>
         <div class="form-group" id="SeoCharConversion">
+            <div class="note note-warning">
+                <span>@T("Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Note")</span>
+            </div>
             <div class="col-xs-8 col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.SeoCharConversion_OverrideForStore, model => model.SeoSettings.SeoCharConversion, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="SeoSettings.SeoCharConversion" class="control-label" />
