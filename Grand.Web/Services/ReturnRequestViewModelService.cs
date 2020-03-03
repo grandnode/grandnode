@@ -92,7 +92,7 @@ namespace Grand.Web.Services
                 throw new ArgumentNullException("model");
 
             model.OrderId = order.Id;
-            model.OrderNumber = (await _orderService.GetOrderById(order.Id)).OrderNumber;
+            model.OrderNumber = order.OrderNumber;
             //return reasons
             model.AvailableReturnReasons = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
@@ -122,8 +122,7 @@ namespace Grand.Web.Services
             var shipments = await _serviceProvider.GetRequiredService<Grand.Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
 
             //products
-            var orderItems = await _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
-            foreach (var orderItem in orderItems)
+            foreach (var orderItem in order.OrderItems)
             {
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == orderItem.Id).Sum(x => x.Quantity);
                 var returnRequests = await _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: orderItem.Id);
