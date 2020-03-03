@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Return request reason
-
-        public static ReturnRequestReasonModel ToModel(this ReturnRequestReason entity)
-        {
-            return entity.MapTo<ReturnRequestReason, ReturnRequestReasonModel>();
-        }
-
-        public static ReturnRequestReason ToEntity(this ReturnRequestReasonModel model)
-        {
-            return model.MapTo<ReturnRequestReasonModel, ReturnRequestReason>();
-        }
-
-        public static ReturnRequestReason ToEntity(this ReturnRequestReasonModel model, ReturnRequestReason destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Return request action
 
         public static ReturnRequestActionModel ToModel(this ReturnRequestAction entity)
