@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Tax providers
-
-        public static TaxProviderModel ToModel(this ITaxProvider entity)
-        {
-            return entity.MapTo<ITaxProvider, TaxProviderModel>();
-        }
-
-        #endregion
-
         #region Tax categories
 
         public static TaxCategoryModel ToModel(this TaxCategory entity)
