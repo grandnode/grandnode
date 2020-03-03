@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Email account
-
-        public static EmailAccountModel ToModel(this EmailAccount entity)
-        {
-            return entity.MapTo<EmailAccount, EmailAccountModel>();
-        }
-
-        public static EmailAccount ToEntity(this EmailAccountModel model)
-        {
-            return model.MapTo<EmailAccountModel, EmailAccount>();
-        }
-
-        public static EmailAccount ToEntity(this EmailAccountModel model, EmailAccount destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Message templates
 
         public static MessageTemplateModel ToModel(this MessageTemplate entity)
