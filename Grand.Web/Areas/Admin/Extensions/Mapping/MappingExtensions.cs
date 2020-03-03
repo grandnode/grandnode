@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Languages
-
-        public static LanguageModel ToModel(this Language entity)
-        {
-            return entity.MapTo<Language, LanguageModel>();
-        }
-
-        public static Language ToEntity(this LanguageModel model)
-        {
-            return model.MapTo<LanguageModel, Language>();
-        }
-
-        public static Language ToEntity(this LanguageModel model, Language destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Email account
 
         public static EmailAccountModel ToModel(this EmailAccount entity)
