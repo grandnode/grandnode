@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static ShippingSettingsModel ToModel(this ShippingSettings entity)
-        {
-            return entity.MapTo<ShippingSettings, ShippingSettingsModel>();
-        }
-        public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static ForumSettingsModel ToModel(this ForumSettings entity)
         {
             return entity.MapTo<ForumSettings, ForumSettingsModel>();
