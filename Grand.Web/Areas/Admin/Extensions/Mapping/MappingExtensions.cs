@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static OrderSettingsModel ToModel(this OrderSettings entity)
-        {
-            return entity.MapTo<OrderSettings, OrderSettingsModel>();
-        }
-        public static OrderSettings ToEntity(this OrderSettingsModel model, OrderSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static ShoppingCartSettingsModel ToModel(this ShoppingCartSettings entity)
         {
             return entity.MapTo<ShoppingCartSettings, ShoppingCartSettingsModel>();
