@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Product Review
-
-        public static ProductReview ToEntity(this ProductReviewModel model, ProductReview destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Product attributes combinations
 
         public static ProductAttributeCombinationModel ToModel(this ProductAttributeCombination entity)
