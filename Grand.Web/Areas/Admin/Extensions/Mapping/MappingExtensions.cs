@@ -76,15 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        //customer/user settings
-        public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
-        {
-            return entity.MapTo<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
-        }
-        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
-        {
-            return model.MapTo(destination);
-        }
         public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
         {
             return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
