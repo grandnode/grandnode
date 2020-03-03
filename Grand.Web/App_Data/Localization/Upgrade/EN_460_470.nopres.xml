@@ -80,5 +80,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Hint">
     <Value>Provide the characters which should be converted when Convert non-western chars setting is enabled. Example: ą:a;ę:e;ó:o;ć:c;ł:l;ś:s;ź:z;ż:z</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoCharConversion.Note">
+    <Value>NOTE: If you want to use SEO Char Conversion, don't forget to restart application to apply changes.</Value>
+  </LocaleResource>
 </Language>
 
