@@ -3,7 +3,7 @@ using Grand.Web.Areas.Admin.Models.Catalog;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
-    public static class CategoryMapping
+    public static class CategoryMappingExtensions
     {
         public static CategoryModel ToModel(this Category entity)
         {
