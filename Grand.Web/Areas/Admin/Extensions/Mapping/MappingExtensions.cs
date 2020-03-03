@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Warehouse
-
-        public static WarehouseModel ToModel(this Warehouse entity)
-        {
-            return entity.MapTo<Warehouse, WarehouseModel>();
-        }
-
-        public static Warehouse ToEntity(this WarehouseModel model)
-        {
-            return model.MapTo<WarehouseModel, Warehouse>();
-        }
-
-        public static Warehouse ToEntity(this WarehouseModel model, Warehouse destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Pickup points
 
         public static PickupPointModel ToModel(this PickupPoint entity)
