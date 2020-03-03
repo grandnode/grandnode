@@ -18,20 +18,6 @@ namespace Grand.Api.Infrastructure.Mapper
         public ApiMapperModelConfiguration()
         {
             
-            #region Specification attribute 
-
-            CreateMap<SpecificationAttributeDto, SpecificationAttribute>()
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
-
-            CreateMap<SpecificationAttribute, SpecificationAttributeDto>();
-
-            CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionDto>();
-
-            CreateMap<SpecificationAttributeOptionDto, SpecificationAttributeOption>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-
-            #endregion
-
             #region Picture
 
             CreateMap<PictureDto, Picture>()
