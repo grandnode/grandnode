@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static CatalogSettingsModel ToModel(this CatalogSettings entity)
-        {
-            return entity.MapTo<CatalogSettings, CatalogSettingsModel>();
-        }
-        public static CatalogSettings ToEntity(this CatalogSettingsModel model, CatalogSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static RewardPointsSettingsModel ToModel(this RewardPointsSettings entity)
         {
             return entity.MapTo<RewardPointsSettings, RewardPointsSettingsModel>();
