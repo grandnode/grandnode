@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Gift Cards
-
-        public static GiftCardModel ToModel(this GiftCard entity)
-        {
-            return entity.MapTo<GiftCard, GiftCardModel>();
-        }
-
-        public static GiftCard ToEntity(this GiftCardModel model)
-        {
-            return model.MapTo<GiftCardModel, GiftCard>();
-        }
-
-        public static GiftCard ToEntity(this GiftCardModel model, GiftCard destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Countries / states
 
         public static CountryModel ToModel(this Country entity)
