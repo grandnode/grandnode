@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static BlogSettingsModel ToModel(this BlogSettings entity)
-        {
-            return entity.MapTo<BlogSettings, BlogSettingsModel>();
-        }
-        public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static VendorSettingsModel ToModel(this VendorSettings entity)
         {
             return entity.MapTo<VendorSettings, VendorSettingsModel>();
