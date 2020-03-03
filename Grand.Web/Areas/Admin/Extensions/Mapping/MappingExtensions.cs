@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Product attributes combinations
-
-        public static ProductAttributeCombinationModel ToModel(this ProductAttributeCombination entity)
-        {
-            return entity.MapTo<ProductAttributeCombination, ProductAttributeCombinationModel>();
-        }
-
-        public static ProductAttributeCombination ToEntity(this ProductAttributeCombinationModel model)
-        {
-            return model.MapTo<ProductAttributeCombinationModel, ProductAttributeCombination>();
-        }
-
-        public static ProductAttributeCombination ToEntity(this ProductAttributeCombinationModel model, ProductAttributeCombination destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Specification attributes
 
         //attributes
