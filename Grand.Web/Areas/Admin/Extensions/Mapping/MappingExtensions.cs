@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Topics
-
-        public static TopicModel ToModel(this Topic entity)
-        {
-            return entity.MapTo<Topic, TopicModel>();
-        }
-
-        public static Topic ToEntity(this TopicModel model)
-        {
-            return model.MapTo<TopicModel, Topic>();
-        }
-
-        public static Topic ToEntity(this TopicModel model, Topic destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Log
 
         public static LogModel ToModel(this Log entity)
