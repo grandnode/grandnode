@@ -74,24 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Currencies
-
-        public static CurrencyModel ToModel(this Currency entity)
-        {
-            return entity.MapTo<Currency, CurrencyModel>();
-        }
-
-        public static Currency ToEntity(this CurrencyModel model)
-        {
-            return model.MapTo<CurrencyModel, Currency>();
-        }
-
-        public static Currency ToEntity(this CurrencyModel model, Currency destination)
-        {
-            return model.MapTo(destination);
-        }
-        #endregion
-
         #region Measure weights
 
         public static MeasureWeightModel ToModel(this MeasureWeight entity)
