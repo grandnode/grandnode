@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Measure weights
-
-        public static MeasureWeightModel ToModel(this MeasureWeight entity)
-        {
-            return entity.MapTo<MeasureWeight, MeasureWeightModel>();
-        }
-
-        public static MeasureWeight ToEntity(this MeasureWeightModel model)
-        {
-            return model.MapTo<MeasureWeightModel, MeasureWeight>();
-        }
-
-        public static MeasureWeight ToEntity(this MeasureWeightModel model, MeasureWeight destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Measure dimension
 
         public static MeasureDimensionModel ToModel(this MeasureDimension entity)
