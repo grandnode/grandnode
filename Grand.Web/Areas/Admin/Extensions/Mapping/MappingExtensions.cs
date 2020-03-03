@@ -73,19 +73,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
-
-        #region Settings
-
-        public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
-        {
-            return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
-        }
-        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-        #endregion
-
+        
         #region Plugins
 
         public static PluginModel ToModel(this PluginDescriptor entity)
