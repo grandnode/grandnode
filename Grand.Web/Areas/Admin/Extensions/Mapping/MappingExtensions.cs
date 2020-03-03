@@ -74,15 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region External authentication methods
-
-        public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
-        {
-            return entity.MapTo<IExternalAuthenticationMethod, AuthenticationMethodModel>();
-        }
-
-        #endregion
-
         #region Widgets
 
         public static WidgetModel ToModel(this IWidgetPlugin entity)
