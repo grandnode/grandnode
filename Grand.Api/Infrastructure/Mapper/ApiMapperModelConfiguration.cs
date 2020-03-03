@@ -17,17 +17,6 @@ namespace Grand.Api.Infrastructure.Mapper
     {
         public ApiMapperModelConfiguration()
         {
-            
-            #region Picture
-
-            CreateMap<PictureDto, Picture>()
-                .ForMember(dest => dest.GenericAttributes, mo=> mo.Ignore());
-
-            CreateMap<Picture, PictureDto>()
-                .ForMember(dest => dest.PictureBinary, mo => mo.Ignore());
-
-            #endregion
-
             #region Tier prices
 
             CreateMap<ProductTierPriceDto, TierPrice>();
