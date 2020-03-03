@@ -74,25 +74,6 @@ namespace Grand.Web.Areas.Admin.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        #region Delivery dates
-
-        public static DeliveryDateModel ToModel(this DeliveryDate entity)
-        {
-            return entity.MapTo<DeliveryDate, DeliveryDateModel>();
-        }
-
-        public static DeliveryDate ToEntity(this DeliveryDateModel model)
-        {
-            return model.MapTo<DeliveryDateModel, DeliveryDate>();
-        }
-
-        public static DeliveryDate ToEntity(this DeliveryDateModel model, DeliveryDate destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Warehouse
 
         public static WarehouseModel ToModel(this Warehouse entity)
