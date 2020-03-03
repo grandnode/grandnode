@@ -76,16 +76,6 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #region Settings
 
-        public static RewardPointsSettingsModel ToModel(this RewardPointsSettings entity)
-        {
-            return entity.MapTo<RewardPointsSettings, RewardPointsSettingsModel>();
-        }
-        public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model, RewardPointsSettings destination)
-        {
-            return model.MapTo(destination);
-        }
-
-
         public static OrderSettingsModel ToModel(this OrderSettings entity)
         {
             return entity.MapTo<OrderSettings, OrderSettingsModel>();
