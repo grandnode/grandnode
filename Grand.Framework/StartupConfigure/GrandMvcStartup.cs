@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
-using Grand.Framework.Mvc.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,7 @@ namespace Grand.Framework.StartupConfigure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-        {            
+        {
             //add healthChecks
             services.AddGrandHealthChecks();
 
@@ -64,8 +63,7 @@ namespace Grand.Framework.StartupConfigure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             //MVC should be loaded last
             get { return 1000; }
         }
