@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.2" />
   </ItemGroup>
 
   <Target Name="CopyFile" AfterTargets="AfterBuild">
