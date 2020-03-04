@@ -5,7 +5,7 @@ using Grand.Core.Events;
 using Grand.Services.Seo;
 using MediatR;
 
-namespace Grand.Services.EventHandlers
+namespace Grand.Services.Events
 {
     public class BlogPostDeletedEventHandler : INotificationHandler<EntityDeleted<BlogPost>>
     {
