@@ -2,14 +2,14 @@
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;
-using Grand.Web.Queries.Models;
+using Grand.Web.Features.Models.Common;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Queries.Handlers
+namespace Grand.Web.Features.Handlers.Common
 {
     public class GetStatesProvinceHandler : IRequestHandler<GetStatesProvince, IList<StateProvinceModel>>
     {

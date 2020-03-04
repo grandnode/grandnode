@@ -1,7 +1,7 @@
 ﻿using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Web.Models.Common;
-using Grand.Web.Queries.Models;
+using Grand.Web.Features.Models.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

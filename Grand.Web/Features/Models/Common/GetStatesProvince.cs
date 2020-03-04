@@ -2,7 +2,7 @@
 using MediatR;
 using System.Collections.Generic;
 
-namespace Grand.Web.Queries.Models
+namespace Grand.Web.Features.Models.Common
 {
     public class GetStatesProvince : IRequest<IList<StateProvinceModel>>
     {
