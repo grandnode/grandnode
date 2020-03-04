@@ -6,6 +6,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
+using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Discounts;
@@ -13,9 +14,11 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
+using Grand.Services.Queries.Models.Orders;
 using Grand.Services.Security;
-using Grand.Web.Models.ShoppingCart;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.ShoppingCart;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,12 +39,12 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;
-        private readonly IGiftCardService _giftCardService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IMediator _mediator;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly OrderSettings _orderSettings;
 
@@ -56,12 +59,12 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IDiscountService discountService,
             ICustomerService customerService,
-            IGiftCardService giftCardService,
             ICheckoutAttributeService checkoutAttributeService,
             IPermissionService permissionService,
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
             IGenericAttributeService genericAttributeService,
+            IMediator mediator,
             ShoppingCartSettings shoppingCartSettings,
             OrderSettings orderSettings)
         {
@@ -71,12 +74,12 @@ namespace Grand.Web.Controllers
             _localizationService = localizationService;
             _discountService = discountService;
             _customerService = customerService;
-            _giftCardService = giftCardService;
             _checkoutAttributeService = checkoutAttributeService;
             _permissionService = permissionService;
             _downloadService = downloadService;
             _shoppingCartViewModelService = shoppingCartViewModelService;
             _genericAttributeService = genericAttributeService;
+            _mediator = mediator;
             _shoppingCartSettings = shoppingCartSettings;
             _orderSettings = orderSettings;
         }
@@ -177,8 +180,7 @@ namespace Grand.Web.Controllers
                 }
             }
 
-            var download = new Download
-            {
+            var download = new Download {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",
@@ -460,13 +462,16 @@ namespace Grand.Web.Controllers
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
             {
-                if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
+                if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    var giftCard = (await _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode)).FirstOrDefault();
+                    var giftCard = (await _mediator.Send(new GetGiftCardQueryModel() { GiftCardCouponCode = giftcardcouponcode, IsGiftCardActivated = true })).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
-                        await _workContext.CurrentCustomer.ApplyGiftCardCouponCode(_genericAttributeService, giftcardcouponcode);
+                        await _mediator.Send(new ApplyGiftCardCommandModel() {
+                            Customer = _workContext.CurrentCustomer,
+                            GiftCardCouponCode = giftcardcouponcode
+                        });
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }
@@ -491,7 +496,7 @@ namespace Grand.Web.Controllers
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
 
@@ -530,7 +535,7 @@ namespace Grand.Web.Controllers
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
 
@@ -539,20 +544,16 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> RemoveGiftCardCode(string giftCardId)
         {
             var model = new ShoppingCartModel();
-
-            //get gift card identifier
-            var gc = await _giftCardService.GetGiftCardById(giftCardId);
-            if (gc != null)
+            if (!string.IsNullOrEmpty(giftCardId))
             {
-                await _workContext.CurrentCustomer.RemoveGiftCardCouponCode(_genericAttributeService, gc.GiftCardCouponCode);
+                await _mediator.Send(new RemoveGiftCardCommandModel() { Customer = _workContext.CurrentCustomer, GiftCardId = giftCardId });
             }
-
             var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
             await _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
 
             return Json(new
             {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+                cart = RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
 
         }
@@ -730,8 +731,7 @@ namespace Grand.Web.Controllers
             if (!cart.Any())
                 return RedirectToRoute("HomePage");
 
-            var model = new WishlistEmailAFriendModel
-            {
+            var model = new WishlistEmailAFriendModel {
                 YourEmailAddress = _workContext.CurrentCustomer.Email,
                 DisplayCaptcha = captchaSettings.Enabled && captchaSettings.ShowOnEmailWishlistToFriendPage
             };

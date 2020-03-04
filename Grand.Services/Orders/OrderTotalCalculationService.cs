@@ -885,7 +885,7 @@ namespace Grand.Services.Orders
             if (!cart.IsRecurring())
             {
                 //we don't apply gift cards for recurring products
-                var giftCards = await customer.GetActiveGiftCardsAppliedByCustomer(_giftCardService, _genericAttributeService);
+                var giftCards = await customer.GetActiveGiftCardsAppliedByCustomer(_giftCardService);
                 if (giftCards != null)
                     foreach (var gc in giftCards)
                         if (resultTemp > decimal.Zero)
