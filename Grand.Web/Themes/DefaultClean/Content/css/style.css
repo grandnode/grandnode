@@ -857,6 +857,14 @@ ul.ui-autocomplete li img {
 	max-width: 650px;
 	margin: 20px auto;
 }
+#nc_modal_form {
+	position: relative;
+	background: #FFF;
+	padding: 20px;
+	width: auto;
+	max-width: 650px;
+	margin: 20px auto;
+}
 .my-mfp-zoom-in .zoom-anim-dialog {
 	opacity: 0;
 	-webkit-transition: all 0.2s ease-in-out;
