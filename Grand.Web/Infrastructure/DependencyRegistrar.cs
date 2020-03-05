@@ -15,9 +15,6 @@ namespace Grand.Web.Infrastructure
             //installation localization service
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
-            //blog service
-            builder.RegisterType<BlogViewModelService>().As<IBlogViewModelService>().InstancePerLifetimeScope();
-
             //address service
             builder.RegisterType<AddressViewModelService>().As<IAddressViewModelService>().InstancePerLifetimeScope();
 
