@@ -21,8 +21,9 @@ namespace Grand.Services.Shipping
         #region Fields
 
         private readonly IRepository<Shipment> _shipmentRepository;
+        private readonly IRepository<ShipmentNote> _shipmentNoteRepository;
         private readonly IMediator _mediator;
-        
+
         #endregion
 
         #region Ctor
@@ -31,11 +32,13 @@ namespace Grand.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
+        /// <param name="shipmentNoteRepository">Order note repository</param>
         /// <param name="mediator">Mediator</param>
-        public ShipmentService(IRepository<Shipment> shipmentRepository,
+        public ShipmentService(IRepository<Shipment> shipmentRepository,IRepository<ShipmentNote> shipmentNoteRepository,
             IMediator mediator)
         {
             _shipmentRepository = shipmentRepository;
+            _shipmentNoteRepository = shipmentNoteRepository;
             _mediator = mediator;
         }
 
@@ -223,7 +226,60 @@ namespace Grand.Services.Shipping
             return result;
         }
 
+        #region Shipment notes
 
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="shipmentNote">The order note</param>
+        public virtual async Task DeleteShipmentNote(ShipmentNote shipmentNote)
+        {
+            if (shipmentNote == null)
+                throw new ArgumentNullException("shipmentNote");
+
+            await _shipmentNoteRepository.DeleteAsync(shipmentNote);
+
+            //event notification
+            await _mediator.EntityDeleted(shipmentNote);
+        }
+
+        /// <summary>
+        /// Deletes an shipment note
+        /// </summary>
+        /// <param name="shipmentNote">The shipment note</param>
+        public virtual async Task InsertShipmentNote(ShipmentNote shipmentNote)
+        {
+            if (shipmentNote == null)
+                throw new ArgumentNullException("shipmentNote");
+
+            await _shipmentNoteRepository.InsertAsync(shipmentNote);
+
+            //event notification
+            await _mediator.EntityInserted(shipmentNote);
+        }
+
+        public virtual async Task<IList<ShipmentNote>> GetShipmentNotes(string shipmentId)
+        {
+            var query = from shipmentNote in _shipmentNoteRepository.Table
+                        where shipmentNote.ShipmentId == shipmentId
+                        orderby shipmentNote.CreatedOnUtc descending
+                        select shipmentNote;
+
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Get shipmentnote by id
+        /// </summary>
+        /// <param name="shipmentnoteId">Shipment note identifier</param>
+        /// <returns>shipmentNote</returns>
+        public virtual Task<ShipmentNote> GetShipmentNote(string shipmentnoteId)
+        {
+            return _shipmentNoteRepository.Table.Where(x => x.Id == shipmentnoteId).FirstOrDefaultAsync();
+        }
+
+
+        #endregion
         #endregion
     }
 }

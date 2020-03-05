@@ -1,0 +1,199 @@
+﻿@model ShipmentModel
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="shipment_details_notes_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="shipmentnotes-grid"></div>
+    </div>
+    <vc:admin-widget widget-zone="shipment_details_notes_bottom" additional-data="Model" />
+</div>
+<script>
+        $(document).ready(function () {
+            $("#shipmentnotes-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ShipmentNotesSelect", "Shipment", new { shipmentId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ShipmentNoteDelete", "Shipment", new { shipmentId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: {type: "date" }
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CreatedOn",
+                    title: "@T("Admin.Orders.Shipments.ShipmentNotes.CreatedOn")",
+                    width: 180,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "Note",
+                    title: "@T("Admin.Orders.Shipments.ShipmentNotes.Note")",
+                    width: 350,
+                    encoded: false
+                }, {
+                    field: "DownloadId",
+                    title: "@T("Admin.Orders.Shipments.ShipmentNotes.Download")",
+                    width: 100,
+                    template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                }, {
+                    field: "CreatedByCustomer",
+                    title: "@T("Admin.Orders.Shipments.ShipmentNotes.CreatedByCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(CreatedByCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "DisplayToCustomer",
+                    title: "@T("Admin.Orders.Shipments.ShipmentNotes.Fields.DisplayToCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(DisplayToCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+</script>
+<p>
+    <strong>
+        @T("Admin.Orders.Shipments.ShipmentNotes.AddTitle")
+    </strong>
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AddShipmentNoteHasDownload)").change(toggleAddShipmentNoteHasDownload);
+        toggleAddShipmentNoteHasDownload();
+    });
+    function toggleAddShipmentNoteHasDownload() {
+        if ($('#@Html.FieldIdFor(model => model.AddShipmentNoteHasDownload)').is(':checked')) {
+            $('#pnlAddShipmentNoteDownloadId').show();
+        }
+        else {
+            $('#pnlAddShipmentNoteDownloadId').hide();
+        }
+    }
+
+</script>
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="AddShipmentNoteMessage" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="AddShipmentNoteMessage"></admin-textarea>
+                <span asp-validation-for="AddShipmentNoteMessage"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddShipmentNoteDownloadId" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="AddShipmentNoteHasDownload" />  @T("Admin.Orders.Shipments.ShipmentNotes.Fields.Download.HasDownload")
+                    <div class="control__indicator"></div>
+                </label>
+                <div id="pnlAddShipmentNoteDownloadId">
+                    <admin-input asp-for="AddShipmentNoteDownloadId" />
+                    <span asp-validation-for="AddShipmentNoteDownloadId"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddShipmentNoteDisplayToCustomer" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline control control-checkbox">
+                    <admin-input asp-for="AddShipmentNoteDisplayToCustomer" />
+                    <div class="control__indicator"></div>
+                </label>
+                <span asp-validation-for="AddShipmentNoteDisplayToCustomer"></span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-md-9 col-sm-9">
+                <button type="button" id="addShipmentNote" class="k-button"><i class="fa fa-plus"></i>&nbsp;@T("Admin.Orders.Shipments.ShipmentNotes.AddButton")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addShipmentNote').click(function () {
+            var shipmentNoteMessage = $("#@Html.FieldIdFor(model => model.AddShipmentNoteMessage)").val();
+            if (shipmentNoteMessage.length == 0) {
+                alert('Message text is required');
+                return;
+            }
+            var shipmentNoteDownloadId = '';
+            if ($('#@Html.FieldIdFor(model => model.AddShipmentNoteHasDownload)').is(':checked')) {
+                shipmentNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddShipmentNoteDownloadId)").val();
+            }
+            var shipmentNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddShipmentNoteDisplayToCustomer)").is(':checked');
+            $('#addShipmentNote').attr('disabled', true);
+            var postData = {
+                DisplayToCustomer: shipmentNoteDisplayToCustomer,
+                message: shipmentNoteMessage,
+                downloadId: shipmentNoteDownloadId,
+                shipmentId: '@Model.Id'
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("ShipmentNoteAdd", "Shipment"))",
+                data: postData,
+                success: function (data) {
+                    var grid = $("#shipmentnotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    $('#addShipmentNote').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add shipment note.');
+                    $('#addShipmentNote').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>

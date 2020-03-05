@@ -14129,6 +14129,48 @@
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
     <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes">
+    <Value>Shipment notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.addbutton">
+    <Value>Add shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.addtitle">
+    <Value>Add shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.createdbycustomer">
+    <Value>Created by customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.createdon">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.fields.displaytocustomer">
+    <Value>Display to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.DisplayToCustomer.Hint">
+    <Value>Mark this box if you want to display this note to customer on public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.download">
+    <Value>Attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.fields.download.hasdownload">
+    <Value>(check to upload file)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Download.Hint">
+    <Value>Check this box if you want to add download to this shipment note.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentNotes.Fields.Note.Hint">
+    <Value>Provide the shipment note</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.orders.shipments.shipmentnotes.note">
+    <Value>Note</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
     <Value>Shipment status events</Value>
   </LocaleResource>

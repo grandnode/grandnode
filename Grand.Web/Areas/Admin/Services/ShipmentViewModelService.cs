@@ -9,6 +9,8 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Media;
+using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Extensions;
@@ -36,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IDownloadService _downloadService;
 
         private readonly MeasureSettings _measureSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -52,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Services
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
+            IDownloadService downloadService,
             MeasureSettings measureSettings,
             ShippingSettings shippingSettings)
         {
@@ -66,6 +70,7 @@ namespace Grand.Web.Areas.Admin.Services
             _countryService = countryService;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
+            _downloadService = downloadService;
             _measureSettings = measureSettings;
             _shippingSettings = shippingSettings;
         }
@@ -234,6 +239,54 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return _qty.Count > 0 ? _qty.Min() : 0;
         }
+
+        public virtual async Task<IList<ShipmentModel.ShipmentNote>> PrepareShipmentNotes(Shipment shipment)
+        {
+            //shipment notes
+            var shipmentNoteModels = new List<ShipmentModel.ShipmentNote>();
+            foreach (var shipmentNote in (await _shipmentService.GetShipmentNotes(shipment.Id))
+                .OrderByDescending(on => on.CreatedOnUtc))
+            {
+                var download = await _downloadService.GetDownloadById(shipmentNote.DownloadId);
+                shipmentNoteModels.Add(new ShipmentModel.ShipmentNote {
+                    Id = shipmentNote.Id,
+                    ShipmentId = shipment.Id,
+                    DownloadId = String.IsNullOrEmpty(shipmentNote.DownloadId) ? "" : shipmentNote.DownloadId,
+                    DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
+                    DisplayToCustomer = shipmentNote.DisplayToCustomer,
+                    Note = shipmentNote.Note,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(shipmentNote.CreatedOnUtc, DateTimeKind.Utc),
+                    CreatedByCustomer = shipmentNote.CreatedByCustomer
+                });
+            }
+            return shipmentNoteModels;
+        }
+
+        public virtual async Task InsertShipmentNote(Shipment shipment, string downloadId, bool displayToCustomer, string message)
+        {
+            var shipmentNote = new ShipmentNote {
+                DisplayToCustomer = displayToCustomer,
+                Note = message,
+                DownloadId = downloadId,
+                ShipmentId = shipment.Id,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            await _shipmentService.InsertShipmentNote(shipmentNote);
+
+            //new shipment note notification
+            // TODO
+        }
+
+        public virtual async Task DeleteShipmentNote(Shipment shipment, string id)
+        {
+            var shipmentNote = (await _shipmentService.GetShipmentNotes(shipment.Id)).FirstOrDefault(on => on.Id == id);
+            if (shipmentNote == null)
+                throw new ArgumentException("No shipment note found with the specified id");
+
+            shipmentNote.ShipmentId = shipment.Id;
+            await _shipmentService.DeleteShipmentNote(shipmentNote);
+        }
+
         public virtual async Task LogShipment(string shipmentId, string message)
         {
             await _customerActivityService.InsertActivity("EditShipment", shipmentId, message);
