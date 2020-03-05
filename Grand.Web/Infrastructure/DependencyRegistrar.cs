@@ -60,9 +60,6 @@ namespace Grand.Web.Infrastructure
             //ReturnRequest service
             builder.RegisterType<ReturnRequestViewModelService>().As<IReturnRequestViewModelService>().InstancePerLifetimeScope();
 
-            //vendor service
-            builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
-
             //course service
             builder.RegisterType<CourseViewModelService>().As<ICourseViewModelService>().InstancePerLifetimeScope();
 
