@@ -36,10 +36,5 @@ namespace Grand.Core.Domain.Shipping
         /// Gets or sets value indicating whether this shipment note was create by customer
         /// </summary>
         public bool CreatedByCustomer { get; set; }
-
-        public static implicit operator string(ShipmentNote v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
