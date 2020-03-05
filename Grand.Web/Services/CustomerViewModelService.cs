@@ -719,11 +719,11 @@ namespace Grand.Web.Services
                 };
                 model.Items.Add(itemModel);
 
-                if (await _downloadService.IsDownloadAllowed(item))
+                if (await _downloadService.IsDownloadAllowed(order, item))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (await _downloadService.IsLicenseDownloadAllowed(item))
-                    itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
+                if (await _downloadService.IsLicenseDownloadAllowed(order, item))
+                    itemModel.LicenseId = !string.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
             }
             return model;
         }

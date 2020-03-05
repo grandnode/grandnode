@@ -1443,9 +1443,10 @@ namespace Grand.Services.Orders
                     await toCustomer.ApplyDiscountCouponCode(_genericAttributeService, code);
 
                 //gift card
-                foreach (var code in await fromCustomer.ParseAppliedGiftCardCouponCodes(_genericAttributeService))
-                    await toCustomer.ApplyGiftCardCouponCode(_genericAttributeService, code);
-
+                var giftCardCouponCodes = GiftCardExtensions.ApplyCouponCodes(
+                    fromCustomer.GetAttributeFromEntity<string>(SystemCustomerAttributeNames.GiftCardCouponCodes), 
+                    toCustomer.ParseAppliedGiftCardCouponCodes());
+                await _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.GiftCardCouponCodes, giftCardCouponCodes);
             }
 
             //copy url referer

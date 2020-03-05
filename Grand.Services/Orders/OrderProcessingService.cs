@@ -1985,8 +1985,6 @@ namespace Grand.Services.Orders
             return true;
         }
 
-
-
         /// <summary>
         /// Send a shipment
         /// </summary>
@@ -2016,7 +2014,8 @@ namespace Grand.Services.Orders
             }
 
             //check whether we have more items to ship
-            if (await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) || await order.HasItemsToShip(_orderService, _shipmentService, _productService))
+            if (await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) || 
+                await order.HasItemsToShip(_orderService, _shipmentService, _productService))
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatusId = (int)ShippingStatus.Shipped;
@@ -2076,7 +2075,9 @@ namespace Grand.Services.Orders
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             await _shipmentService.UpdateShipment(shipment);
 
-            if (!await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) && !await order.HasItemsToShip(_orderService, _shipmentService, _productService) && !await order.HasItemsToDeliver(_orderService, _shipmentService, _productService))
+            if (!await order.HasItemsToAddToShipment(_orderService, _shipmentService, _productService) 
+                && !await order.HasItemsToShip(_orderService, _shipmentService, _productService) 
+                && !await order.HasItemsToDeliver(_shipmentService, _productService))
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
 
             await _orderService.UpdateOrder(order);
@@ -2110,7 +2111,6 @@ namespace Grand.Services.Orders
             //check order status
             await CheckOrderStatus(order);
         }
-
 
 
         /// <summary>
@@ -3091,13 +3091,8 @@ namespace Grand.Services.Orders
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
-                var (discountAmount, appliedDiscounts, subTotalWithoutDiscount, subTotalWithDiscount, taxRates) = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false);
-                decimal orderSubTotalDiscountAmountBase = discountAmount;
-                List<AppliedDiscount> orderSubTotalAppliedDiscounts = appliedDiscounts;
-                decimal subTotalWithoutDiscountBase = subTotalWithoutDiscount;
-                decimal subTotalWithDiscountBase = subTotalWithDiscount;
-
-                if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
+                var (_, _, subTotalWithoutDiscount, _, _) = await _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false);
+                if (subTotalWithoutDiscount < _orderSettings.MinOrderSubtotalAmount)
                     return false;
             }
 

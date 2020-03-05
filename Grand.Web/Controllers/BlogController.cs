@@ -11,8 +11,10 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
+using Grand.Web.Commands.Models;
+using Grand.Web.Features.Models.Blogs;
 using Grand.Web.Models.Blogs;
-using Grand.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IBlogViewModelService _blogViewModelService;
+        private readonly IMediator _mediator;
         private readonly IBlogService _blogService;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -37,8 +39,9 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public BlogController(IBlogViewModelService blogViewModelService,
-            IBlogService blogService, 
+        public BlogController(
+            IMediator mediator,
+            IBlogService blogService,
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IWebHelper webHelper,
@@ -46,7 +49,7 @@ namespace Grand.Web.Controllers
             BlogSettings blogSettings,
             CaptchaSettings captchaSettings)
         {
-            _blogViewModelService = blogViewModelService;
+            _mediator = mediator;
             _blogService = blogService;
             _storeContext = storeContext;
             _localizationService = localizationService;
@@ -56,7 +59,7 @@ namespace Grand.Web.Controllers
             _workContext = workContext;
         }
 
-		#endregion
+        #endregion
 
         #region Methods
 
@@ -64,8 +67,8 @@ namespace Grand.Web.Controllers
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
-            
-            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
+
+            var model = await _mediator.Send(new GetBlogPostList() { Command = command });
             return View("List", model);
         }
         public virtual async Task<IActionResult> BlogByTag(BlogPagingFilteringModel command)
@@ -73,7 +76,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _mediator.Send(new GetBlogPostList() { Command = command });
             return View("List", model);
         }
         public virtual async Task<IActionResult> BlogByMonth(BlogPagingFilteringModel command)
@@ -81,7 +84,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _mediator.Send(new GetBlogPostList() { Command = command });
             return View("List", model);
         }
         public virtual async Task<IActionResult> BlogByCategory(BlogPagingFilteringModel command)
@@ -89,7 +92,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _mediator.Send(new GetBlogPostList() { Command = command });
             return View("List", model);
         }
         public virtual async Task<IActionResult> BlogByKeyword(BlogPagingFilteringModel command)
@@ -97,7 +100,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _blogViewModelService.PrepareBlogPostListModel(command);
+            var model = await _mediator.Send(new GetBlogPostList() { Command = command });
             return View("List", model);
         }
         public virtual async Task<IActionResult> ListRss(string languageId)
@@ -138,9 +141,8 @@ namespace Grand.Web.Controllers
             //Store mapping
             if (!storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
-            
-            var model = new BlogPostModel();
-            await _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
+
+            var model = await _mediator.Send(new GetBlogPost() { BlogPost = blogPost });
 
             //display "edit" (manage) link
             if (await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await permissionService.Authorize(StandardPermissionProvider.ManageBlog))
@@ -176,7 +178,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _blogViewModelService.InsertBlogComment(model, blogPost);
+                await _mediator.Send(new InsertBlogCommentCommandModel() { Model = model, BlogPost = blogPost });
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
@@ -184,7 +186,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            await _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
+            model = await _mediator.Send(new GetBlogPost() { BlogPost = blogPost });
             return View(model);
         }
         #endregion
