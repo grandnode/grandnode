@@ -51,7 +51,7 @@
 
   <Target Name="CopyFile" AfterTargets="AfterBuild">
     <ItemGroup>
-      <CopyFiles Include="$(NuGetPackageRoot)\microsoft.aspnetcore.authentication.google\3.1.1\lib\netcoreapp3.1\*.dll" />
+      <CopyFiles Include="$(NuGetPackageRoot)\microsoft.aspnetcore.authentication.google\3.1.2\lib\netcoreapp3.1\*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyFiles)" DestinationFolder="..\..\Grand.Web\Plugins\ExternalAuth.Google\" />
   </Target>
