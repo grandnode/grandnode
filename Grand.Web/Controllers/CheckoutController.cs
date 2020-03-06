@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Common;
 
 namespace Grand.Web.Controllers
 {
@@ -47,6 +48,8 @@ namespace Grand.Web.Controllers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly AddressSettings _addressSettings;
+
         #endregion
 
         #region Constructors
@@ -68,7 +71,8 @@ namespace Grand.Web.Controllers
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            AddressSettings addressSettings)
         {
             _checkoutViewModelService = checkoutViewModelService;
             _workContext = workContext;
@@ -88,6 +92,7 @@ namespace Grand.Web.Controllers
             _rewardPointsSettings = rewardPointsSettings;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -952,7 +957,7 @@ namespace Grand.Web.Controllers
             {
                 //filter by country
                 string filterByCountryId = "";
-                if (_addressViewModelService.AddressSettings().CountryEnabled &&
+                if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
@@ -1678,7 +1683,7 @@ namespace Grand.Web.Controllers
         private async Task<CheckoutPaymentMethodModel> GetCheckoutPaymentMethodModel(IList<ShoppingCartItem> cart)
         {
             var filterByCountryId = "";
-            if (_addressViewModelService.AddressSettings().CountryEnabled &&
+            if (_addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 !string.IsNullOrWhiteSpace(_workContext.CurrentCustomer.BillingAddress.CountryId))
             {

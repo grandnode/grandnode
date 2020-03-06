@@ -245,7 +245,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-
         #region Vendor reviews
 
         public virtual async Task<IActionResult> VendorReviews(string vendorId)
