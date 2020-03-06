@@ -6,7 +6,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Vendors;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security.Captcha;
@@ -17,7 +16,6 @@ using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Stores;
-using Grand.Services.Vendors;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Http;
@@ -42,7 +40,6 @@ namespace Grand.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IContactAttributeService _contactAttributeService;
         private readonly CaptchaSettings _captchaSettings;
-        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -55,9 +52,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ICustomerActivityService customerActivityService,
             IContactAttributeService contactAttributeService,
-            CaptchaSettings captchaSettings,
-            VendorSettings vendorSettings
-            )
+            CaptchaSettings captchaSettings)
         {
             _commonViewModelService = commonViewModelService;
             _localizationService = localizationService;
@@ -66,7 +61,6 @@ namespace Grand.Web.Controllers
             _customerActivityService = customerActivityService;
             _contactAttributeService = contactAttributeService;
             _captchaSettings = captchaSettings;
-            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -266,49 +260,7 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
-        //contact vendor page
-        public virtual async Task<IActionResult> ContactVendor(string vendorId, [FromServices] IVendorService vendorService)
-        {
-            if (!_vendorSettings.AllowCustomersToContactVendors)
-                return RedirectToRoute("HomePage");
-
-            var vendor = await vendorService.GetVendorById(vendorId);
-            if (vendor == null || !vendor.Active || vendor.Deleted)
-                return RedirectToRoute("HomePage");
-
-            var model = await _commonViewModelService.PrepareContactVendor(vendor);
-
-            return View(model);
-        }
-        [HttpPost, ActionName("ContactVendor")]
-        [AutoValidateAntiforgeryToken]
-        [ValidateCaptcha]
-        public virtual async Task<IActionResult> ContactVendorSend(ContactVendorModel model, bool captchaValid, [FromServices] IVendorService vendorService)
-        {
-            if (!_vendorSettings.AllowCustomersToContactVendors)
-                return RedirectToRoute("HomePage");
-
-            var vendor = await vendorService.GetVendorById(model.VendorId);
-            if (vendor == null || !vendor.Active || vendor.Deleted)
-                return RedirectToRoute("HomePage");
-
-            //validate CAPTCHA
-            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
-            {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
-            }
-
-            model.VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
-
-            if (ModelState.IsValid)
-            {
-                model = await _commonViewModelService.SendContactVendor(model, vendor);
-                return View(model);
-            }
-
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
-            return View(model);
-        }
+       
 
         //sitemap page
         public virtual async Task<IActionResult> Sitemap([FromServices] CommonSettings commonSettings)

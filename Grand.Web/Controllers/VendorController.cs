@@ -15,9 +15,12 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
+using Grand.Web.Commands.Models;
 using Grand.Web.Extensions;
 using Grand.Web.Interfaces;
+using Grand.Web.Models.Common;
 using Grand.Web.Models.Vendors;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +43,7 @@ namespace Grand.Web.Controllers
         private readonly IAddressViewModelService _addressViewModelService;
         private readonly ICountryService _countryService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IMediator _mediator;
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
@@ -59,6 +63,7 @@ namespace Grand.Web.Controllers
             IAddressViewModelService addressViewModelService,
             ICountryService countryService,
             IServiceProvider serviceProvider,
+            IMediator mediator,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings,
@@ -75,6 +80,7 @@ namespace Grand.Web.Controllers
             _addressViewModelService = addressViewModelService;
             _countryService = countryService;
             _serviceProvider = serviceProvider;
+            _mediator = mediator;
             _localizationSettings = localizationSettings;
             _vendorSettings = vendorSettings;
             _captchaSettings = captchaSettings;
@@ -337,6 +343,57 @@ namespace Grand.Web.Controllers
             return RedirectToAction("Info");
         }
 
+        //contact vendor page
+        public virtual async Task<IActionResult> ContactVendor(string vendorId)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = await _vendorService.GetVendorById(vendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            var model = new ContactVendorModel {
+                Email = _workContext.CurrentCustomer.Email,
+                FullName = _workContext.CurrentCustomer.GetFullName(),
+                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
+                VendorId = vendor.Id,
+                VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("ContactVendor")]
+        [AutoValidateAntiforgeryToken]
+        [ValidateCaptcha]
+        public virtual async Task<IActionResult> ContactVendor(ContactVendorModel model, bool captchaValid)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = await _vendorService.GetVendorById(model.VendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
+            model.VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id);
+
+            if (ModelState.IsValid)
+            {
+                model = await _mediator.Send(new SendContactVendorCommandModel() { Model = model, Vendor = vendor });;
+                return View(model);
+            }
+
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            return View(model);
+        }
         #endregion
     }
 }

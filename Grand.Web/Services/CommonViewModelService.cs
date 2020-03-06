@@ -762,31 +762,7 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual async Task<ContactVendorModel> PrepareContactVendor(Vendor vendor)
-        {
-            var model = new ContactVendorModel {
-                Email = _workContext.CurrentCustomer.Email,
-                FullName = _workContext.CurrentCustomer.GetFullName(),
-                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
-                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
-                VendorId = vendor.Id,
-                VendorName = vendor.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)
-            };
-            return await Task.FromResult(model);
-        }
-
-        public virtual async Task<ContactVendorModel> SendContactVendor(ContactVendorModel model, Vendor vendor)
-        {
-            string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-            string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
-
-            await _workflowMessageService.SendContactVendorMessage(_workContext.CurrentCustomer, vendor, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body);
-
-            model.SuccessfullySent = true;
-            model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
-            return model;
-        }
-
+       
         public virtual async Task<SitemapModel> PrepareSitemap()
         {
             string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_PAGE_MODEL_KEY,

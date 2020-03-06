@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +24,6 @@ namespace Grand.Web.Interfaces
         Task<FooterModel> PrepareFooter();
         Task<ContactUsModel> PrepareContactUs();
         Task<ContactUsModel> SendContactUs(ContactUsModel model);
-        Task<ContactVendorModel> PrepareContactVendor(Vendor vendor);
-        Task<ContactVendorModel> SendContactVendor(ContactVendorModel model, Vendor vendor);
         Task<SitemapModel> PrepareSitemap();
         Task<string> SitemapXml(int? id, IUrlHelper url);
         StoreThemeSelectorModel PrepareStoreThemeSelector();
