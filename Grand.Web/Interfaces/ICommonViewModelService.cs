@@ -1,8 +1,5 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Web.Models.Common;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
@@ -22,8 +19,6 @@ namespace Grand.Web.Interfaces
         Task<ShoppingCartLinksModel> PrepareShoppingCartLinks(Customer customer);
         Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer);
         Task<FooterModel> PrepareFooter();
-        Task<SitemapModel> PrepareSitemap();
-        Task<string> SitemapXml(int? id, IUrlHelper url);
         StoreThemeSelectorModel PrepareStoreThemeSelector();
         FaviconModel PrepareFavicon();
         Task<string> PrepareRobotsTextFile();

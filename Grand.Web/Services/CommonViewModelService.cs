@@ -14,9 +14,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
-using Grand.Services.Catalog;
 using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Forums;
 using Grand.Services.Localization;
@@ -26,14 +24,10 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
-using Grand.Web.Extensions;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
-using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
-using Grand.Web.Models.Topics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -58,9 +52,6 @@ namespace Grand.Web.Services
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ITopicService _topicService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IServiceProvider _serviceProvider;
 
@@ -89,9 +80,6 @@ namespace Grand.Web.Services
             IPageHeadBuilder pageHeadBuilder,
             ITopicService topicService,
             ILocalizationService localizationService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IProductService productService,
             IWebHostEnvironment hostingEnvironment,
             IServiceProvider serviceProvider,
             StoreInformationSettings storeInformationSettings,
@@ -119,9 +107,6 @@ namespace Grand.Web.Services
             _pageHeadBuilder = pageHeadBuilder;
             _topicService = topicService;
             _localizationService = localizationService;
-            _categoryService = categoryService;
-            _manufacturerService = manufacturerService;
-            _productService = productService;
             _hostingEnvironment = hostingEnvironment;
             _serviceProvider = serviceProvider;
             _storeInformationSettings = storeInformationSettings;
@@ -404,76 +389,7 @@ namespace Grand.Web.Services
 
             return model;
         }
-       
-        public virtual async Task<SitemapModel> PrepareSitemap()
-        {
-            string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_PAGE_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
-            {
-                var model = new SitemapModel {
-                    BlogEnabled = _blogSettings.Enabled,
-                    ForumEnabled = _forumSettings.ForumsEnabled,
-                    NewsEnabled = _newsSettings.Enabled,
-                    KnowledgebaseEnabled = _knowledgebaseSettings.Enabled
-                };
-                //categories
-                if (_commonSettings.SitemapIncludeCategories)
-                {
-                    var categories = await _categoryService.GetAllCategories();
-                    model.Categories = categories.Select(x => x.ToModel(_workContext.WorkingLanguage)).ToList();
-                }
-                //manufacturers
-                if (_commonSettings.SitemapIncludeManufacturers)
-                {
-                    var manufacturers = await _manufacturerService.GetAllManufacturers();
-                    model.Manufacturers = manufacturers.Select(x => x.ToModel(_workContext.WorkingLanguage)).ToList();
-                }
-                //products
-                if (_commonSettings.SitemapIncludeProducts)
-                {
-                    //limit product to 200 until paging is supported on this page
-                    var products = (await _productService.SearchProducts(
-                        storeId: _storeContext.CurrentStore.Id,
-                        visibleIndividuallyOnly: true,
-                        pageSize: 200)).products;
-                    model.Products = products.Select(product => new ProductOverviewModel {
-                        Id = product.Id,
-                        Name = product.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                        ShortDescription = product.GetLocalized(x => x.ShortDescription, _workContext.WorkingLanguage.Id),
-                        FullDescription = product.GetLocalized(x => x.FullDescription, _workContext.WorkingLanguage.Id),
-                        SeName = product.GetSeName(_workContext.WorkingLanguage.Id),
-                    }).ToList();
-                }
 
-                //topics
-                var topics = (await _topicService.GetAllTopics(_storeContext.CurrentStore.Id))
-                    .Where(t => t.IncludeInSitemap)
-                    .ToList();
-                model.Topics = topics.Select(topic => new TopicModel {
-                    Id = topic.Id,
-                    SystemName = topic.SystemName,
-                    IncludeInSitemap = topic.IncludeInSitemap,
-                    IsPasswordProtected = topic.IsPasswordProtected,
-                    Title = topic.GetLocalized(x => x.Title, _workContext.WorkingLanguage.Id),
-                })
-                .ToList();
-                return model;
-            });
-            return cachedModel;
-        }
-        public virtual async Task<string> SitemapXml(int? id, [FromServices] IUrlHelper url)
-        {
-            var sitemapGenerator = _serviceProvider.GetRequiredService<ISitemapGenerator>();
-            string cacheKey = string.Format(ModelCacheEventConst.SITEMAP_SEO_MODEL_KEY, id,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            var siteMap = await _cacheManager.GetAsync(cacheKey, () => sitemapGenerator.Generate(url, id, _workContext.WorkingLanguage.Id));
-            return siteMap;
-        }
         public virtual StoreThemeSelectorModel PrepareStoreThemeSelector()
         {
             var model = new StoreThemeSelectorModel();
@@ -511,6 +427,7 @@ namespace Grand.Web.Services
             model.FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName;
             return model;
         }
+        
         public virtual async Task<string> PrepareRobotsTextFile()
         {
             var sb = new StringBuilder();

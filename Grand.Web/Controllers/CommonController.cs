@@ -17,6 +17,7 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Web.Commands.Models;
+using Grand.Web.Features.Models.Common;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using MediatR;
@@ -272,7 +273,11 @@ namespace Grand.Web.Controllers
             if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _commonViewModelService.PrepareSitemap();
+            var model = await _mediator.Send(new GetSitemap() { 
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -282,7 +287,14 @@ namespace Grand.Web.Controllers
         {
             if (!commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
-            var siteMap = await _commonViewModelService.SitemapXml(id, Url);
+
+            var siteMap = await _mediator.Send(new GetSitemapXml() { 
+                Id = id,
+                Customer = _workContext.CurrentCustomer,
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore,
+                UrlHelper = Url,
+            });
 
             return Content(siteMap, "text/xml");
         }
