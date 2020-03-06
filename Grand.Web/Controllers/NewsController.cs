@@ -12,8 +12,12 @@ using Grand.Services.News;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
+using Grand.Web.Commands.Models;
+using Grand.Web.Features.Handlers.News;
+using Grand.Web.Features.Models.News;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.News;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -25,7 +29,6 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly INewsViewModelService _newsViewModelService;
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -34,7 +37,7 @@ namespace Grand.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-
+        private readonly IMediator _mediator;
         private readonly NewsSettings _newsSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -42,16 +45,18 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public NewsController(INewsViewModelService newsViewModelService, INewsService newsService,
-            IWorkContext workContext, IStoreContext storeContext,
+        public NewsController(INewsService newsService,
+            IWorkContext workContext, 
+            IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper, ICustomerActivityService customerActivityService,
+            IWebHelper webHelper, 
+            ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
+            IMediator mediator,
             NewsSettings newsSettings,
             CaptchaSettings captchaSettings)
         {
-            _newsViewModelService = newsViewModelService;
             _newsService = newsService;
             _workContext = workContext;
             _storeContext = storeContext;
@@ -60,6 +65,7 @@ namespace Grand.Web.Controllers
             _customerActivityService = customerActivityService;
             _storeMappingService = storeMappingService;
             _permissionService = permissionService;
+            _mediator = mediator;
             _newsSettings = newsSettings;
             _captchaSettings = captchaSettings;
         }
@@ -73,8 +79,7 @@ namespace Grand.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = await _newsViewModelService.PrepareNewsItemList(command);
-
+            var model = await _mediator.Send(new GetNewsItemList() { Command = command });
             return View(model);
         }
 
@@ -114,8 +119,7 @@ namespace Grand.Web.Controllers
                 !_storeMappingService.Authorize(newsItem))
                 return RedirectToRoute("HomePage");
 
-            var model = new NewsItemModel();
-            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            var model = await _mediator.Send(new GetNewsItem() {  NewsItem = newsItem });
 
             //display "edit" (manage) link
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageNews))
@@ -150,7 +154,8 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _newsViewModelService.InsertNewsComment(newsItem, model);
+                await _mediator.Send(new InsertNewsCommentCommandModel() { NewsItem = newsItem, Model = model });
+
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
@@ -161,7 +166,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            await _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
+            model = await _mediator.Send(new GetNewsItem() { NewsItem = newsItem });
             return View(model);
         }
         #endregion

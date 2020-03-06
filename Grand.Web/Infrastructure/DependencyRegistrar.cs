@@ -24,9 +24,6 @@ namespace Grand.Web.Infrastructure
             //product service
             builder.RegisterType<ProductViewModelService>().As<IProductViewModelService>().InstancePerLifetimeScope();
 
-            //news service
-            builder.RegisterType<NewsViewModelService>().As<INewsViewModelService>().InstancePerLifetimeScope();
-
             //topic service
             builder.RegisterType<TopicViewModelService>().As<ITopicViewModelService>().InstancePerLifetimeScope();
 
