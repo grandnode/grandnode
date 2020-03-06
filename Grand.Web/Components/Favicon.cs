@@ -1,8 +1,6 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
