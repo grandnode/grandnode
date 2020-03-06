@@ -3,7 +3,7 @@ using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 
-namespace Grand.Web.Models.Order
+namespace Grand.Web.Models.Orders
 {
     public partial class ShipmentDetailsModel : BaseGrandEntityModel
     {

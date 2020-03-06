@@ -1,7 +1,7 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Stores;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using MediatR;
 
 namespace Grand.Web.Features.Models.Orders

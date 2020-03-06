@@ -4,7 +4,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Features.Models.Orders;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using MediatR;
 using System;
 using System.Threading;

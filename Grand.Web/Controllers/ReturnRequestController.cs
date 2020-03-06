@@ -6,7 +6,7 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Extensions;
 using Grand.Web.Interfaces;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

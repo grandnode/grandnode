@@ -9,7 +9,7 @@ using Grand.Services.Shipping;
 using Grand.Web.Features.Models.Orders;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using MediatR;
 using System;
 using System.Linq;

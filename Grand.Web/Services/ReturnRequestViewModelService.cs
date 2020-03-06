@@ -15,7 +15,7 @@ using Grand.Services.Stores;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
