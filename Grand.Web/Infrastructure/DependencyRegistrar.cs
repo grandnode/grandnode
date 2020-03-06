@@ -45,9 +45,6 @@ namespace Grand.Web.Infrastructure
             //widgetZone servie
             builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
 
-            //order service
-            builder.RegisterType<OrderViewModelService>().As<IOrderViewModelService>().InstancePerLifetimeScope();
-
             //checkout service
             builder.RegisterType<CheckoutViewModelService>().As<ICheckoutViewModelService>().InstancePerLifetimeScope();
 
