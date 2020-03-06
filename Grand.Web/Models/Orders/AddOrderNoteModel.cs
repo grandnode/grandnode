@@ -2,7 +2,7 @@
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Customer;
 
-namespace Grand.Web.Models.Order
+namespace Grand.Web.Models.Orders
 {
     [Validator(typeof(AddOrderNoteValidator))]
     public class AddOrderNoteModel : BaseGrandModel

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Grand.Web.Models.Order
+namespace Grand.Web.Models.Orders
 {
     public partial class CustomerReturnRequestsModel : BaseGrandModel
     {

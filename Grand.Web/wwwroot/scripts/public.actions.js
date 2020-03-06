@@ -44,6 +44,16 @@ $(document).ready(function () {
             }
         });
     });
-
+    $('.nc-action-form').magnificPopup({
+        type: 'inline',
+        fixedContentPos: false,
+        fixedBgPos: true,
+        overflowY: 'auto',
+        closeBtnInside: true,
+        closeOnBgClick: false,
+        preloader: false,
+        midClick: true,
+        mainClass: 'my-mfp-zoom-in'
+    });
 
 });

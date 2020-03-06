@@ -241,9 +241,9 @@ $(document).ready(function () {
                     $('.newsletter-button-container, #newsletter-email, .newsletter-subscribe-unsubscribe').hide();
                     $('#newsletter-result-block').addClass("d-block").show().css("bottom", "unset");
                     if (data.Showcategories) {
-                        $('#action_modal_form').html(data.ResultCategory);
+                        $('#nc_modal_form').html(data.ResultCategory);
                         window.setTimeout(function () {
-                            $('.popup-action-form').magnificPopup('open');
+                            $('.nc-action-form').magnificPopup('open');
                         }, 100);
                     }
                 } else {

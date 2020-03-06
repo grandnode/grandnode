@@ -1,8 +1,9 @@
 ﻿using Grand.Framework.Mvc.Models;
+using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 
-namespace Grand.Web.Models.Order
+namespace Grand.Web.Models.Orders
 {
     public partial class ShipmentDetailsModel : BaseGrandEntityModel
     {
@@ -20,7 +21,7 @@ namespace Grand.Web.Models.Order
         public bool ShowSku { get; set; }
         public IList<ShipmentItemModel> Items { get; set; }
 
-        public OrderDetailsModel Order { get; set; }
+        public OrderModel Order { get; set; }
 
 		#region Nested Classes
 
@@ -45,6 +46,14 @@ namespace Grand.Web.Models.Order
             public DateTime? Date { get; set; }
         }
 
-		#endregion
+        public partial class OrderModel : BaseGrandEntityModel
+        {
+            public int OrderNumber { get; set; }
+            public string ShippingMethod { get; set; }
+            public bool PickUpInStore { get; set; }
+            public AddressModel PickupAddress { get; set; }
+            public AddressModel ShippingAddress { get; set; }
+        }
+        #endregion
     }
 }

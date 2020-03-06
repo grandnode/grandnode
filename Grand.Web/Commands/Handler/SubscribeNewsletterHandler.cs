@@ -1,76 +1,41 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
-using Grand.Web.Interfaces;
+using Grand.Web.Commands.Models;
 using Grand.Web.Models.Newsletter;
+using MediatR;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grand.Web.Services
+namespace Grand.Web.Commands.Handler
 {
-    public partial class NewsletterViewModelService : INewsletterViewModelService
+    public class SubscribeNewsletterHandler : IRequestHandler<SubscribeNewsletterCommandModel, SubscribeNewsletterResultModel>
     {
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
-        private readonly INewsletterCategoryService _newsletterCategoryService;
         private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly CustomerSettings _customerSettings;
+        private readonly IWorkContext _workContext;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
 
-        public NewsletterViewModelService(INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ILocalizationService localizationService,
-            INewsletterCategoryService newsletterCategoryService,
-            IStoreContext storeContext,
-            IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService,
-            CustomerSettings customerSettings)
+
+        public SubscribeNewsletterHandler(INewsLetterSubscriptionService newsLetterSubscriptionService, ILocalizationService localizationService,
+            IStoreContext storeContext, IWorkflowMessageService workflowMessageService, IWorkContext workContext, INewsletterCategoryService newsletterCategoryService)
         {
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _localizationService = localizationService;
-            _newsletterCategoryService = newsletterCategoryService;
             _storeContext = storeContext;
-            _workContext = workContext;
             _workflowMessageService = workflowMessageService;
-            _customerSettings = customerSettings;
-
+            _workContext = workContext;
+            _newsletterCategoryService = newsletterCategoryService;
         }
 
-        public virtual async Task<NewsletterCategoryModel> PrepareNewsletterCategory(string id)
-        {
-            var model = new NewsletterCategoryModel();
-            model.NewsletterEmailId = id;
-            var categories = await _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
-            foreach (var item in categories)
-            {
-                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
-                    Id = item.Id,
-                    Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
-                    Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
-                    Selected = item.Selected
-                });
-            }
-            return model;
-        }
-
-        public virtual async Task<NewsletterBoxModel> PrepareNewsletterBox()
-        {
-            if (_customerSettings.HideNewsletterBlock)
-                return null;
-
-            var model = new NewsletterBoxModel()
-            {
-                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
-            };
-
-            return await Task.FromResult(model);
-        }
-        public virtual async Task<SubscribeNewsletterResultModel> SubscribeNewsletter(string email, bool subscribe)
+        public async Task<SubscribeNewsletterResultModel> Handle(SubscribeNewsletterCommandModel request, CancellationToken cancellationToken)
         {
             var model = new SubscribeNewsletterResultModel();
+            var email = request.Email;
 
             if (!CommonHelper.IsValidEmail(email))
             {
@@ -83,7 +48,7 @@ namespace Grand.Web.Services
                 var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
-                    if (subscribe)
+                    if (request.Subscribe)
                     {
                         if (!subscription.Active)
                         {
@@ -100,10 +65,9 @@ namespace Grand.Web.Services
                         model.Result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
                     }
                 }
-                else if (subscribe)
+                else if (request.Subscribe)
                 {
-                    subscription = new NewsLetterSubscription
-                    {
+                    subscription = new NewsLetterSubscription {
                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
                         Email = email,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -112,6 +76,7 @@ namespace Grand.Web.Services
                         CreatedOnUtc = DateTime.UtcNow
                     };
                     await _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
+
                     await _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
 
                     model.Result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
@@ -120,7 +85,6 @@ namespace Grand.Web.Services
                     {
                         model.NewsletterCategory = modelCategory;
                     }
-
                 }
                 else
                 {
@@ -130,25 +94,24 @@ namespace Grand.Web.Services
             }
 
             return model;
-
         }
-        public virtual async Task<SubscriptionActivationModel> PrepareSubscriptionActivation(NewsLetterSubscription subscription, bool active)
+
+        private async Task<NewsletterCategoryModel> PrepareNewsletterCategory(string id)
         {
-            var model = new SubscriptionActivationModel();
-
-            if (active)
+            var model = new NewsletterCategoryModel();
+            model.NewsletterEmailId = id;
+            var categories = await _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
+            foreach (var item in categories)
             {
-                subscription.Active = true;
-                await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
+                    Id = item.Id,
+                    Name = item.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id),
+                    Description = item.GetLocalized(x => x.Description, _workContext.WorkingLanguage.Id),
+                    Selected = item.Selected
+                });
             }
-            else
-                await _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
-
-            model.Result = active
-                ? _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
-
             return model;
         }
+
     }
 }

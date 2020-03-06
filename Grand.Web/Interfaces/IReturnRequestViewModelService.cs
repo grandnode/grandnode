@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
-using Grand.Web.Models.Order;
+using Grand.Web.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
