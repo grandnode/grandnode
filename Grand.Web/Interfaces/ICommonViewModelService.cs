@@ -22,15 +22,10 @@ namespace Grand.Web.Interfaces
         Task<ShoppingCartLinksModel> PrepareShoppingCartLinks(Customer customer);
         Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer);
         Task<FooterModel> PrepareFooter();
-        Task<ContactUsModel> PrepareContactUs();
-        Task<ContactUsModel> SendContactUs(ContactUsModel model);
         Task<SitemapModel> PrepareSitemap();
         Task<string> SitemapXml(int? id, IUrlHelper url);
         StoreThemeSelectorModel PrepareStoreThemeSelector();
         FaviconModel PrepareFavicon();
         Task<string> PrepareRobotsTextFile();
-        Task<string> ParseContactAttributes(IFormCollection form);
-        Task<IList<string>> GetContactAttributesWarnings(string contactAttributesXml);
-        Task<IList<ContactUsModel.ContactAttributeModel>> PrepareContactAttributeModel(string selectedContactAttributes);
     }
 }

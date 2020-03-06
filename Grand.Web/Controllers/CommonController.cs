@@ -16,12 +16,13 @@ using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Stores;
+using Grand.Web.Commands.Models;
 using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,8 +38,8 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IMediator _mediator;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IContactAttributeService _contactAttributeService;
         private readonly CaptchaSettings _captchaSettings;
 
         #endregion
@@ -50,16 +51,16 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
+            IMediator mediator,
             ICustomerActivityService customerActivityService,
-            IContactAttributeService contactAttributeService,
             CaptchaSettings captchaSettings)
         {
             _commonViewModelService = commonViewModelService;
             _localizationService = localizationService;
             _workContext = workContext;
             _storeContext = storeContext;
+            _mediator = mediator;
             _customerActivityService = customerActivityService;
-            _contactAttributeService = contactAttributeService;
             _captchaSettings = captchaSettings;
         }
 
@@ -216,7 +217,11 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual async Task<IActionResult> ContactUs()
         {
-            var model = await _commonViewModelService.PrepareContactUs();
+            var model = await _mediator.Send(new ContactUsCommandModel() { 
+                Customer = _workContext.CurrentCustomer,  
+                Language = _workContext.WorkingLanguage,
+                Store = _storeContext.CurrentStore
+            });
             return View(model);
         }
 
@@ -225,8 +230,7 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid,
-            [FromServices] IContactAttributeFormatter contactAttributeFormatter)
+        public virtual async Task<IActionResult> ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -234,29 +238,29 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            //parse contact attributes
-            var attributeXml = await _commonViewModelService.ParseContactAttributes(form);
-            var contactAttributeWarnings = await _commonViewModelService.GetContactAttributesWarnings(attributeXml);
-            if (contactAttributeWarnings.Any())
+            var result = await _mediator.Send(new ContactUsSendCommandModel() { 
+                CaptchaValid = captchaValid,
+                Form = form,
+                Model = model,
+                Store = _storeContext.CurrentStore
+            });
+
+            if (result.errors.Any())
             {
-                foreach (var item in contactAttributeWarnings)
+                foreach (var item in result.errors)
                 {
                     ModelState.AddModelError("", item);
                 }
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                model.ContactAttributeXml = attributeXml;
-                model.ContactAttributeInfo = await contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
-                model = await _commonViewModelService.SendContactUs(model);
+                model = result.model;
                 //activity log
                 await _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
                 return View(model);
             }
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
-            model.ContactAttributes = await _commonViewModelService.PrepareContactAttributeModel(attributeXml);
 
             return View(model);
         }
@@ -340,37 +344,25 @@ namespace Grand.Web.Controllers
         public virtual IActionResult StoreClosed() => View();
 
         [HttpPost]
-        public virtual async Task<IActionResult> ContactAttributeChange(IFormCollection form,
-            [FromServices] IContactAttributeParser contactAttributeParser)
+        public virtual async Task<IActionResult> ContactAttributeChange(IFormCollection form)
         {
-            var attributeXml = await _commonViewModelService.ParseContactAttributes(form);
-
-            var enabledAttributeIds = new List<string>();
-            var disabledAttributeIds = new List<string>();
-            var attributes = await _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
-            foreach (var attribute in attributes)
-            {
-                var conditionMet = await contactAttributeParser.IsConditionMet(attribute, attributeXml);
-                if (conditionMet.HasValue)
-                {
-                    if (conditionMet.Value)
-                        enabledAttributeIds.Add(attribute.Id);
-                    else
-                        disabledAttributeIds.Add(attribute.Id);
-                }
-            }
-
+            var result = await _mediator.Send(new ContactAttributeChangeCommandModel() { 
+                Form = form,
+                Customer = _workContext.CurrentCustomer,
+                Store = _storeContext.CurrentStore
+            });
             return Json(new
             {
-                enabledattributeids = enabledAttributeIds.ToArray(),
-                disabledattributeids = disabledAttributeIds.ToArray()
+                enabledattributeids = result.enabledAttributeIds.ToArray(),
+                disabledattributeids = result.disabledAttributeIds.ToArray()
             });
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> UploadFileContactAttribute(string attributeId, [FromServices] IDownloadService downloadService)
+        public virtual async Task<IActionResult> UploadFileContactAttribute(string attributeId, [FromServices] IDownloadService downloadService,
+            [FromServices] IContactAttributeService contactAttributeService)
         {
-            var attribute = await _contactAttributeService.GetContactAttributeById(attributeId);
+            var attribute = await contactAttributeService.GetContactAttributeById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
             {
                 return Json(new
@@ -447,6 +439,7 @@ namespace Grand.Web.Controllers
                 downloadGuid = download.DownloadGuid,
             });
         }
+
 
         [HttpPost, ActionName("PopupInteractiveForm")]
         public virtual async Task<IActionResult> PopupInteractiveForm(IFormCollection formCollection,
