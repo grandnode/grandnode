@@ -27,14 +27,15 @@ namespace Grand.Web.Commands.Handler
             ILocalizationService localizationService,
             IWorkContext workContext,
             IEmailAccountService emailAccountService,
-            IQueuedEmailService queuedEmailService)
+            IQueuedEmailService queuedEmailService,
+            ICustomerActivityService customerActivityService)
         {
             _interactiveFormService = interactiveFormService;
             _localizationService = localizationService;
             _workContext = workContext;
             _emailAccountService = emailAccountService;
             _queuedEmailService = queuedEmailService;
-
+            _customerActivityService = customerActivityService;
         }
 
         public async Task<IList<string>> Handle(PopupInteractiveCommandModel request, CancellationToken cancellationToken)
