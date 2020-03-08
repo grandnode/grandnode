@@ -28,11 +28,7 @@ namespace Grand.Web.Infrastructure
             builder.RegisterType<TopicViewModelService>().As<ITopicViewModelService>().InstancePerLifetimeScope();
 
             //customer service
-            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();
-
-            //common service
-            builder.RegisterType<CommonViewModelService>().As<ICommonViewModelService>().InstancePerLifetimeScope();
-
+            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();           
             //shipping service 
             builder.RegisterType<ShoppingCartViewModelService>().As<IShoppingCartViewModelService>().InstancePerLifetimeScope();
 

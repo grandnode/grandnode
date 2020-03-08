@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Web.Commands.Models;
@@ -25,12 +26,18 @@ namespace Grand.Web.Commands.Handler
         private readonly IDownloadService _downloadService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly CommonSettings _commonSettings;
 
-        public ContactUsSendCommandHandler(IWorkContext workContext, IContactAttributeService contactAttributeService,
-            IContactAttributeParser contactAttributeParser, IContactAttributeFormatter contactAttributeFormatter,
-            IDownloadService downloadService, ILocalizationService localizationService, IWorkflowMessageService workflowMessageService,
+        public ContactUsSendCommandHandler(IWorkContext workContext, 
+            IContactAttributeService contactAttributeService,
+            IContactAttributeParser contactAttributeParser, 
+            IContactAttributeFormatter contactAttributeFormatter,
+            IDownloadService downloadService, 
+            ILocalizationService localizationService, 
+            IWorkflowMessageService workflowMessageService,
+            ICustomerActivityService customerActivityService,
             CommonSettings commonSettings)
         {
             _workContext = workContext;
@@ -40,7 +47,7 @@ namespace Grand.Web.Commands.Handler
             _downloadService = downloadService;
             _localizationService = localizationService;
             _workflowMessageService = workflowMessageService;
-
+            _customerActivityService = customerActivityService;
             _commonSettings = commonSettings;
         }
 
@@ -62,6 +69,10 @@ namespace Grand.Web.Commands.Handler
                 request.Model.ContactAttributeXml = attributeXml;
                 request.Model.ContactAttributeInfo = await _contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
                 request.Model = await SendContactUs(request.Model);
+
+                //activity log
+                await _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
+
             }
             else
             {

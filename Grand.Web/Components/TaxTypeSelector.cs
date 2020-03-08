@@ -1,26 +1,39 @@
-﻿using Grand.Framework.Components;
-using Grand.Web.Interfaces;
+﻿using Grand.Core;
+using Grand.Core.Domain.Tax;
+using Grand.Framework.Components;
+using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {
     public class TaxTypeSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonViewModelService _commonViewModelService;
+        private readonly IWorkContext _workContext;
+        private readonly TaxSettings _taxSettings;
 
-        public TaxTypeSelectorViewComponent(ICommonViewModelService commonViewModelService)
+        public TaxTypeSelectorViewComponent(IWorkContext workContext, TaxSettings taxSettings)
         {
-            _commonViewModelService = commonViewModelService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonViewModelService.PrepareTaxTypeSelector();
+            var model = PrepareTaxTypeSelector();
             if (model == null)
                 return Content("");
 
             return View(model);
+        }
+        private TaxTypeSelectorModel PrepareTaxTypeSelector()
+        {
+            if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                return null;
 
+            var model = new TaxTypeSelectorModel {
+                CurrentTaxType = _workContext.TaxDisplayType
+            };
+            return model;
         }
     }
 }
